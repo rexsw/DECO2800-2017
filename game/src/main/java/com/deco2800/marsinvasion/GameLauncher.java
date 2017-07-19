@@ -1,4 +1,4 @@
-package com.deco2800.testgame;
+package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;

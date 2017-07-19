@@ -28,6 +28,6 @@ sourceSets.main.resources.srcDirs = [ "../core/resources/" ]
 //}
 
 task(run, dependsOn: "classes", type: JavaExec) {
-    main = "com.deco2800.testgame.GameLauncher"
+    main = "com.deco2800.marsinvasion.GameLauncher"
     classpath = sourceSets.main.runtimeClasspath
 }

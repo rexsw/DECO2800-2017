@@ -1,4 +1,4 @@
-package com.deco2800.testgame;
+package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.FPSLogger;
