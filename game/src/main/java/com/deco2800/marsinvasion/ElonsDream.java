@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.moos.Managers.SoundManager;
+import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.renderers.Render3D;
 import com.deco2800.moos.renderers.Renderer;
 import com.deco2800.moos.worlds.AbstractWorld;
@@ -23,7 +23,7 @@ import com.deco2800.moos.worlds.ExampleWorld;
  * This class handles the application rendering including selection of tileRenderer and creation of the world.
  * @Author Tim Hadwen
  */
-public class TestGame extends ApplicationAdapter implements ApplicationListener {
+public class ElonsDream extends ApplicationAdapter implements ApplicationListener {
 
 	FPSLogger fpsLogger = new FPSLogger();
 	/**
@@ -57,7 +57,7 @@ public class TestGame extends ApplicationAdapter implements ApplicationListener 
 		 *	Set up new stuff for this game
 		 */
 		/* Create an example world for the engine */
-		world = new ExampleWorld();
+		world = new InitialWorld();
 
 		/* Create a sound manager for the whole game */
 		soundManager = new SoundManager();
@@ -202,7 +202,7 @@ public class TestGame extends ApplicationAdapter implements ApplicationListener 
 		renderer.render(batch, world);
 
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 TestGame - FPS: "+ Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle("DECO2800 ElonsDream - FPS: "+ Gdx.graphics.getFramesPerSecond());
 
 		stage.act();
 		stage.draw();
