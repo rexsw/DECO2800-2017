@@ -1,5 +1,6 @@
 package com.deco2800.marsinvasion;
 
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.moos.entities.Tree;
 import com.deco2800.moos.worlds.AbstractWorld;
 
