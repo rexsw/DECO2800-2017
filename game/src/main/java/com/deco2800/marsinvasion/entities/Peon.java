@@ -7,8 +7,8 @@ import com.deco2800.moos.worlds.WorldEntity;
  */
 public class Peon extends WorldEntity {
 
-	public Peon(float posX, float posY, float posZ, float height, float width) {
-		super(posX, posY, posZ, height, width);
+	public Peon(float posX, float posY, float posZ) {
+		super(posX, posY, posZ, 1, 1, 1);
+		this.setTexture("tree");
 	}
-
 }

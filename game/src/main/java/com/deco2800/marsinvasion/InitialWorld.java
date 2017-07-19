@@ -1,10 +1,8 @@
 package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.moos.entities.Tree;
+import com.deco2800.marsinvasion.entities.Peon;
 import com.deco2800.moos.worlds.AbstractWorld;
-
-import java.util.Random;
 
 /**
  * Created by timhadwen on 19/7/17.
@@ -22,17 +20,7 @@ public class InitialWorld extends AbstractWorld {
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
-        /* Create random trees to test the engine */
-		for (int i = 0; i < this.getLength(); i++){
-			for (int j = 0; j < this.getWidth(); j++) {
-                /* Spawn trees with a 10% chance */
-				Random r = new Random();
-				if (r.nextInt(100) < 10) {
-					this.addEntity(new Tree(i, j, 0));
-				}
-
-			}
-		}
+		this.addEntity(new Peon(10, 10, 0));
 	}
 
 	@Override
