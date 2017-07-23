@@ -6,16 +6,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marsinvasion.handlers.MouseHandler;
 import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.renderers.Render3D;
 import com.deco2800.moos.renderers.Renderer;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.ExampleWorld;
 
 /**
  * Moos
@@ -23,7 +27,7 @@ import com.deco2800.moos.worlds.ExampleWorld;
  * This class handles the application rendering including selection of tileRenderer and creation of the world.
  * @Author Tim Hadwen
  */
-public class ElonsDream extends ApplicationAdapter implements ApplicationListener {
+public class MarsInvasion extends ApplicationAdapter implements ApplicationListener {
 
 	FPSLogger fpsLogger = new FPSLogger();
 	/**
@@ -42,6 +46,7 @@ public class ElonsDream extends ApplicationAdapter implements ApplicationListene
 	OrthographicCamera camera;
 
 	SoundManager soundManager;
+	MouseHandler mouseHandler;
 
 	Stage stage;
 	Window window;
@@ -61,6 +66,9 @@ public class ElonsDream extends ApplicationAdapter implements ApplicationListene
 
 		/* Create a sound manager for the whole game */
 		soundManager = new SoundManager();
+
+		/* Create a mouse handler for the game */
+		mouseHandler = new MouseHandler(world);
 
 		/**
 		 * Setup the game itself
@@ -128,6 +136,10 @@ public class ElonsDream extends ApplicationAdapter implements ApplicationListene
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 				originX = screenX;
 				originY = screenY;
+
+
+				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y);
 
 				return true;
 			}
@@ -202,7 +214,7 @@ public class ElonsDream extends ApplicationAdapter implements ApplicationListene
 		renderer.render(batch, world);
 
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 ElonsDream - FPS: "+ Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 
 		stage.act();
 		stage.draw();

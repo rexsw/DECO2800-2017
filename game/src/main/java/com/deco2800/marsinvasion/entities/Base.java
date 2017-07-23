@@ -6,10 +6,10 @@ import com.deco2800.moos.worlds.WorldEntity;
 /**
  * Created by timhadwen on 19/7/17.
  */
-public class Peon extends WorldEntity {
+public class Base extends WorldEntity {
 
-	public Peon(AbstractWorld world, float posX, float posY, float posZ) {
-		super(world, posX, posY, posZ, 1, 1, 1);
+	public Base(AbstractWorld world, float posX, float posY, float posZ) {
+		super(world, posX, posY, posZ, 1, 2, 2);
 		this.setTexture("tree");
 	}
 }

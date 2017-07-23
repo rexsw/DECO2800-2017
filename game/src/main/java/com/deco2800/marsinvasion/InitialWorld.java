@@ -1,6 +1,8 @@
 package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marsinvasion.entities.Base;
+import com.deco2800.marsinvasion.entities.Hero;
 import com.deco2800.marsinvasion.entities.Peon;
 import com.deco2800.moos.worlds.AbstractWorld;
 
@@ -20,16 +22,10 @@ public class InitialWorld extends AbstractWorld {
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
-		this.addEntity(new Peon(10, 10, 0));
-	}
-
-	@Override
-	public int getWidth() {
-		return 25;
-	}
-
-	@Override
-	public int getLength() {
-		return 25;
+		this.addEntity(new Peon(this, 10, 10, 0));
+		this.addEntity(new Peon(this, 11, 10, 0));
+		this.addEntity(new Peon(this, 11, 11, 0));
+		this.addEntity(new Hero(this, 10, 11, 0));
+		this.addEntity(new Base(this, 8, 8, 0));
 	}
 }

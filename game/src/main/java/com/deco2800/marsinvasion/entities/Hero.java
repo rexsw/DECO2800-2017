@@ -1,5 +1,6 @@
 package com.deco2800.marsinvasion.entities;
 
+import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
 /**
@@ -7,7 +8,8 @@ import com.deco2800.moos.worlds.WorldEntity;
  */
 public class Hero extends WorldEntity {
 
-	public Hero(float posX, float posY, float posZ, float height, float width) {
-		super(posX, posY, posZ, height, width);
+	public Hero(AbstractWorld world, float posX, float posY, float posZ) {
+		super(world, posX, posY, posZ, 1, 1, 1);
+		this.setTexture("tree");
 	}
 }
