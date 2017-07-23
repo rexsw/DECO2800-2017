@@ -14,10 +14,13 @@ import java.util.Optional;
 public class MouseHandler {
 	private AbstractWorld world;
 
+	/**
+	 * Constructor for the mouse handler
+	 * @param world
+	 */
 	public MouseHandler(AbstractWorld world) {
 		this.world = world;
 	}
-
 
 	/**
 	 * Currently only handles objects on height 0
@@ -32,8 +35,6 @@ public class MouseHandler {
 		proj_x = x/64f;
 		proj_y = -(y - 32f / 2f) / 32f + proj_x;
 		proj_x -= proj_y - proj_x;
-
-		System.out.printf("Object at %d %d\n\r", (int)proj_x, (int)proj_y);
 
 		Optional<WorldEntity> closest = WorldUtil.closestEntityToPosition(world, proj_x, proj_y, 2f);
 		if (closest.isPresent() &&  closest.get() instanceof Clickable) {

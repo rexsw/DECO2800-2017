@@ -12,7 +12,7 @@ import com.deco2800.moos.worlds.AbstractWorld;
 public class InitialWorld extends AbstractWorld {
 
 	/**
-	 * Consturtor for InitialWorld
+	 * Constructor for InitialWorld
 	 */
 	public InitialWorld() {
  		/* Load up the map for this world */
