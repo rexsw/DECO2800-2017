@@ -14,10 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.renderers.Render3D;
+import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.renderers.Renderer;
 import com.deco2800.moos.worlds.AbstractWorld;
 
@@ -50,6 +53,8 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 
 	Stage stage;
 	Window window;
+
+	long lastGameTick = 0;
 
 	/**
 	 * Creates the required objects for the game to start.
@@ -174,6 +179,15 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	 */
 	@Override
 	public void render () {
+
+		if(TimeUtils.nanoTime() - lastGameTick > 1000000000) {
+			for (Renderable e : world.getEntities()) {
+				if (e instanceof Tickable) {
+					((Tickable) e).onTick(0);
+				}
+				lastGameTick = TimeUtils.nanoTime();
+			}
+		}
 
         /*
          * Create a new render batch.

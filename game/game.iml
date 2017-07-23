@@ -48,7 +48,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/b957428a2975f9c2661892c4333fe1eee599bd1e/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/4712331980872e7f4a775bbf657ac352a1f92f0b/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -376,7 +376,7 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/b957428a2975f9c2661892c4333fe1eee599bd1e/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/4712331980872e7f4a775bbf657ac352a1f92f0b/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -704,7 +704,7 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/b957428a2975f9c2661892c4333fe1eee599bd1e/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/4712331980872e7f4a775bbf657ac352a1f92f0b/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
