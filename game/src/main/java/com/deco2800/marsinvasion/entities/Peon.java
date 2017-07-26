@@ -1,5 +1,6 @@
 package com.deco2800.marsinvasion.entities;
 
+import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
@@ -7,7 +8,7 @@ import com.deco2800.moos.worlds.WorldEntity;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Peon extends WorldEntity {
+public class Peon extends WorldEntity implements Tickable {
 
 	/**
 	 * Constructor for the Peon
@@ -18,6 +19,11 @@ public class Peon extends WorldEntity {
 	 */
 	public Peon(AbstractWorld world, float posX, float posY, float posZ) {
 		super(world, posX, posY, posZ, 1, 1, 1);
-		this.setTexture("tree");
+		this.setTexture("player");
+	}
+
+	@Override
+	public void onTick(int i) {
+
 	}
 }

@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.managers.SoundManager;
+import com.deco2800.moos.registers.TextureRegister;
 import com.deco2800.moos.renderers.Render3D;
 import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.renderers.Renderer;
@@ -62,6 +63,8 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	 */
 	@Override
 	public void create () {
+
+		TextureRegister.getInstance().saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
 
 		/**
 		 *	Set up new stuff for this game

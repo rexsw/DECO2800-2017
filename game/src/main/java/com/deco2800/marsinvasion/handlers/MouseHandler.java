@@ -1,5 +1,6 @@
 package com.deco2800.marsinvasion.handlers;
 
+import com.deco2800.marsinvasion.InitialWorld;
 import com.deco2800.marsinvasion.entities.Clickable;
 import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.worlds.AbstractWorld;
@@ -39,6 +40,10 @@ public class MouseHandler {
 		Optional<WorldEntity> closest = WorldUtil.closestEntityToPosition(world, proj_x, proj_y, 2f);
 		if (closest.isPresent() &&  closest.get() instanceof Clickable) {
 			((Clickable) closest.get()).onClick();
+		} else {
+			if (world instanceof InitialWorld) {
+				((InitialWorld)(world)).deSelectAll();
+			}
 		}
 	}
 }

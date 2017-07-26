@@ -1,7 +1,6 @@
 package com.deco2800.marsinvasion.entities;
 
 import com.deco2800.marsinvasion.actions.DecoAction;
-import com.deco2800.marsinvasion.actions.GenerateAction;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
@@ -13,10 +12,12 @@ import java.util.Optional;
  *
  * A home base for the empire
  */
-public class Base extends WorldEntity implements Clickable, Tickable {
+public class Base extends WorldEntity implements Clickable, Tickable, Selectable {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+
+	boolean selected = false;
 
 	/**
 	 * Constructor for the base
@@ -27,7 +28,7 @@ public class Base extends WorldEntity implements Clickable, Tickable {
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
 		super(world, posX, posY, posZ, 1, 2, 2);
-		this.setTexture("tree");
+		this.setTexture("station");
 	}
 
 	/**
@@ -36,8 +37,9 @@ public class Base extends WorldEntity implements Clickable, Tickable {
 	@Override
 	public void onClick() {
 		System.out.println("Base got clicked");
-		if (!currentAction.isPresent()) {
-			currentAction = Optional.of(new GenerateAction(new Peon(this.getParent(), this.getPosX() + 2, this.getPosY(), 0), this.getParent()));
+
+		if (!selected) {
+			selected = true;
 		}
 	}
 
@@ -47,6 +49,12 @@ public class Base extends WorldEntity implements Clickable, Tickable {
 	 */
 	@Override
 	public void onTick(int i) {
+
+		if (selected) {
+			this.setTexture("tree_selected");
+		} else {
+			this.setTexture("tree");
+		}
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();
 
@@ -54,5 +62,15 @@ public class Base extends WorldEntity implements Clickable, Tickable {
 				currentAction = Optional.empty();
 			}
 		}
+	}
+
+	@Override
+	public boolean isSelected() {
+		return selected;
+	}
+
+	@Override
+	public void deselect() {
+		selected = false;
 	}
 }
