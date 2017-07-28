@@ -317,6 +317,9 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
+
+		stage.getViewport().update(width, height, true);
+		window.setPosition(0, stage.getHeight());
 	}
 
 	/**
