@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marsinvasion.entities.Selectable;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.managers.SoundManager;
@@ -54,6 +55,7 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 
 	Stage stage;
 	Window window;
+	Button peonButton;
 
 	long lastGameTick = 0;
 
@@ -65,6 +67,7 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	public void create () {
 
 		TextureRegister.getInstance().saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
+		TextureRegister.getInstance().saveTexture("ground_1", "resources/placeholderassets/ground-1.png");
 
 		/**
 		 *	Set up new stuff for this game
@@ -95,6 +98,12 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 		/* Add a quit button to the menu */
 		Button button = new TextButton("Quit", skin);
 
+		/* Add another button to the menu */
+		Button anotherButton = new TextButton("Play Duck Sound", skin);
+
+		/* Add another button to the menu */
+		peonButton = new TextButton("Select a Unit", skin);
+
 		/* Add a programatic listener to the quit button */
 		button.addListener(new ChangeListener() {
 			@Override
@@ -102,9 +111,6 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 				System.exit(0);
 			}
 		});
-
-		/* Add another button to the menu */
-		Button anotherButton = new TextButton("Play Duck Sound", skin);
 
 		/* Add a handler to play a sound */
 		anotherButton.addListener(new ChangeListener() {
@@ -114,9 +120,24 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 			}
 		});
 
+		/* Add listener for peon button */
+		peonButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				for (Renderable r : world.getEntities()) {
+					if (r instanceof Selectable) {
+						if (((Selectable) r).isSelected()) {
+
+						}
+					}
+				}
+			}
+		});
+
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(anotherButton);
+		window.add(peonButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(0, stage.getHeight()); // Place it in the top left of the screen
@@ -184,12 +205,27 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	public void render () {
 
 		if(TimeUtils.nanoTime() - lastGameTick > 1000000000) {
+			window.removeActor(peonButton);
+			boolean somethingSelected = false;
 			for (Renderable e : world.getEntities()) {
 				if (e instanceof Tickable) {
 					((Tickable) e).onTick(0);
+
 				}
 				lastGameTick = TimeUtils.nanoTime();
+
+				if (e instanceof Selectable) {
+					if (((Selectable) e).isSelected()) {
+						peonButton = ((Selectable) e).getButton();
+						somethingSelected = true;
+					}
+				}
+
 			}
+			if (!somethingSelected) {
+				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
+			}
+			window.add(peonButton);
 		}
 
         /*
