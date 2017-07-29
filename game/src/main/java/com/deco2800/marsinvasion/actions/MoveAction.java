@@ -8,15 +8,15 @@ import com.deco2800.moos.worlds.WorldEntity;
  */
 public class MoveAction implements DecoAction {
 
-	int goalX = 0;
-	int goalY = 0;
+	float goalX = 0;
+	float goalY = 0;
 	WorldEntity entity;
 
 	float speed = 0.01f;
 
 	boolean completed = false;
 
-	public MoveAction(int goalX, int goalY, WorldEntity entity) {
+	public MoveAction(float goalX, float goalY, WorldEntity entity) {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;

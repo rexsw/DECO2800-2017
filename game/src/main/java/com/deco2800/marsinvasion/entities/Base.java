@@ -37,7 +37,7 @@ public class Base extends WorldEntity implements Clickable, Tickable, Selectable
 	 * @param posZ
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-		super(world, posX, posY, posZ, 1, 2, 2);
+		super(world, posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 	}
 

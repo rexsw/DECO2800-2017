@@ -45,17 +45,28 @@ public class WorldUtil {
 		return new ArrayList(entities.stream().filter(e -> e.getClass() == c).collect(Collectors.toList()));
 	}
 
-	public static WorldEntity getClosestEntityOfClass(AbstractWorld world, Class<?> c, float x, float y) {
+	public static Optional<WorldEntity> getClosestEntityOfClass(AbstractWorld world, Class<?> c, float x, float y) {
 		ArrayList<WorldEntity> entities = WorldUtil.getEntitiesOfClass(world.getEntities(), c);
 
 		WorldEntity closest = null;
 		float dist = Float.MAX_VALUE;
 		for (WorldEntity e : entities) {
-			double tmp_distance = Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2));
-//			if (closest == null || )
+			float tmp_distance = (float)(Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2)));
+			if (closest == null || dist > tmp_distance) {
+				dist = tmp_distance;
+				closest = e;
+			}
 		}
 
-		return null;
+		return Optional.of(closest);
+	}
 
+	public static Optional<WorldEntity> getEntityAtPosition(AbstractWorld world, float x, float y) {
+		for (Renderable e : world.getEntities()) {
+			if (Math.abs(e.getPosX() - x) < 1f && Math.abs(e.getPosY() - y) < 1f) {
+				return Optional.of((WorldEntity)e);
+			}
+		}
+		return Optional.empty();
 	}
 }

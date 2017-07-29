@@ -1,9 +1,12 @@
 package com.deco2800.marsinvasion.entities;
 
 import com.deco2800.marsinvasion.actions.DecoAction;
+import com.deco2800.marsinvasion.actions.GatherAction;
 import com.deco2800.marsinvasion.actions.MoveAction;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.entities.Tickable;
+import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
@@ -63,6 +66,12 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 
 	@Override
 	public void onRightClick(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+		Optional<WorldEntity> entity = WorldUtil.getEntityAtPosition(this.getParent(), x, y);
+		if (entity.isPresent()) {
+			currentAction = Optional.of(new GatherAction(this, Rock.class));
+		} else {
+			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+		}
+		SoundManager.getInstance().playSound();
 	}
 }
