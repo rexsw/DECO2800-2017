@@ -56,8 +56,7 @@ subprojects {
         compile group: 'org.apache.derby', name: 'derby', version: '10.9.1.0'
 
         compile(group: 'com.deco2800.4stroke', name: 'core', version: '0.1-SNAPSHOT', changing: true)
-        compile(group: 'uq.deco2800.soom', name: 'server', version: '0' +
-                '.1-SNAPSHOT', changing: true)
+        compile(group: 'uq.deco2800.soom', name: 'server', version: '0.1-SNAPSHOT', changing: true)
 
         // Unit testing with JUnit
         testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'

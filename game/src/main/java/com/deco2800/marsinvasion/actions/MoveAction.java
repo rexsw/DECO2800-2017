@@ -12,7 +12,7 @@ public class MoveAction implements DecoAction {
 	float goalY = 0;
 	WorldEntity entity;
 
-	float speed = 0.01f;
+	float speed = 0.5f;
 
 	boolean completed = false;
 
@@ -34,7 +34,7 @@ public class MoveAction implements DecoAction {
 				entity.setPosY(goalY);
 			}
 
-			if (entity.getPosX() == goalX && entity.getPosY() == goalY) {
+			if (Math.abs(entity.getPosX() - goalX) < 1 && Math.abs(entity.getPosY() - goalY) < 1) {
 				completed = true;
 				return;
 			}

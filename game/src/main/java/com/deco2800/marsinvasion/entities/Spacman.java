@@ -56,12 +56,15 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
+		} else {
+			currentAction = Optional.empty();
 		}
 	}
 
 	@Override
 	public void onClick(MouseHandler handler) {
 		handler.registerForRightClickNotification(this);
+		SoundManager.getInstance().playSound("ree1.wav");
 	}
 
 	@Override
@@ -72,6 +75,5 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
 		}
-		SoundManager.getInstance().playSound();
 	}
 }

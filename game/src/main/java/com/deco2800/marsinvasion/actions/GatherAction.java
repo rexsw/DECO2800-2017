@@ -1,6 +1,7 @@
 package com.deco2800.marsinvasion.actions;
 
 import com.deco2800.marsinvasion.entities.Base;
+import com.deco2800.marsinvasion.entities.HasHealth;
 import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.worlds.WorldEntity;
 
@@ -23,6 +24,11 @@ public class GatherAction implements DecoAction {
 	private State state = State.SETUP_MOVE;
 	private WorldEntity entity;
 	private Class type;
+	boolean completed = false;
+
+	Optional<WorldEntity> closest;
+
+	private int ticksCollect = 10;
 
 	public GatherAction(WorldEntity entity, Class<?> type) {
 		this.entity = entity;
@@ -34,10 +40,12 @@ public class GatherAction implements DecoAction {
 		switch(state) {
 			case SETUP_MOVE:
 				// Find the closest rock and move towards it
-				Optional<WorldEntity> closest = WorldUtil.getClosestEntityOfClass(entity.getParent(), type, entity.getPosX(), entity.getPosY());
+				closest = WorldUtil.getClosestEntityOfClass(entity.getParent(), type, entity.getPosX(), entity.getPosY());
 
 				if (closest.isPresent()) {
 					action = new MoveAction(closest.get().getPosX(), closest.get().getPosY(), entity);
+				} else {
+					this.completed = true;
 				}
 
 				state = State.MOVE_TOWARDS;
@@ -51,7 +59,14 @@ public class GatherAction implements DecoAction {
 				action.doAction();
 				break;
 			case COLLECT:
-				state = State.SETUP_RETURN;
+				ticksCollect--;
+				if (ticksCollect == 0) {
+					state = State.SETUP_RETURN;
+					if (closest.isPresent() && closest.get() instanceof HasHealth) {
+						((HasHealth) closest.get()).setHealth(((HasHealth) closest.get()).getHealth() - 10);
+					}
+					ticksCollect = 100;
+				}
 				break;
 			case SETUP_RETURN:
 				// Find the closest rock and move towards it
@@ -76,7 +91,7 @@ public class GatherAction implements DecoAction {
 
 	@Override
 	public boolean completed() {
-		return false;
+		return completed;
 	}
 
 	@Override

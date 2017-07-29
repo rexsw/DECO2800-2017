@@ -28,6 +28,8 @@ public class InitialWorld extends AbstractWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Rock(this, 5, 0, 0, 1, 1));
+		this.addEntity(new Rock(this, 10, 0, 0, 1, 1));
+		this.addEntity(new Rock(this, 10, 10, 0, 1, 1));
 	}
 
 	public void deSelectAll() {

@@ -5,6 +5,7 @@ import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,12 +42,12 @@ public class WorldUtil {
 		}
 	}
 
-	public static ArrayList getEntitiesOfClass(ArrayList<Renderable> entities, Class<?> c) {
+	public static ArrayList getEntitiesOfClass(List<WorldEntity> entities, Class<?> c) {
 		return new ArrayList(entities.stream().filter(e -> e.getClass() == c).collect(Collectors.toList()));
 	}
 
 	public static Optional<WorldEntity> getClosestEntityOfClass(AbstractWorld world, Class<?> c, float x, float y) {
-		ArrayList<WorldEntity> entities = WorldUtil.getEntitiesOfClass(world.getEntities(), c);
+		List<WorldEntity> entities = WorldUtil.getEntitiesOfClass(world.getEntities(), c);
 
 		WorldEntity closest = null;
 		float dist = Float.MAX_VALUE;
@@ -54,11 +55,15 @@ public class WorldUtil {
 			float tmp_distance = (float)(Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2)));
 			if (closest == null || dist > tmp_distance) {
 				dist = tmp_distance;
-				closest = e;
+				closest = (WorldEntity)e;
 			}
 		}
 
-		return Optional.of(closest);
+		if (closest == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(closest);
+		}
 	}
 
 	public static Optional<WorldEntity> getEntityAtPosition(AbstractWorld world, float x, float y) {

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marsinvasion.entities.Selectable;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.net.MarsWarsClientConnectionManager;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.registers.TextureRegister;
@@ -22,6 +23,10 @@ import com.deco2800.moos.renderers.Render3D;
 import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.renderers.Renderer;
 import com.deco2800.moos.worlds.AbstractWorld;
+import uq.deco2800.soom.client.SoomClient;
+import uq.deco2800.soom.client.game.GameClientConnectionManager;
+
+import java.io.IOException;
 
 /**
  * Moos
@@ -58,6 +63,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 
+	SoomClient networkClient;
+
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -75,11 +82,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		TextureRegister.getInstance().saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
 		TextureRegister.getInstance().saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
 
-
-		/**
+		/*
 		 *	Set up new stuff for this game
 		 */
-		/* Create an example world for the engine */
 		world = new InitialWorld();
 
 		/* Create a sound manager for the whole game */
@@ -88,14 +93,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Create a mouse handler for the game */
 		mouseHandler = new MouseHandler(world);
 
-		/**
+		GameClientConnectionManager connectionManager = new MarsWarsClientConnectionManager();
+		networkClient = new SoomClient(connectionManager);
+
+		try {
+			networkClient.connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		networkClient.joinLobby("timmy");
+
+		/*
 		 * Setup the game itself
 		 */
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
 		camera.translate(world.getWidth()*32, 0);
 
-		/**
+		/*
 		 * Setup GUI
 		 */
 		stage = new Stage(new ScreenViewport());
@@ -104,9 +120,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Add a quit button to the menu */
 		Button button = new TextButton("Quit", skin);
-
-		/* Add another button to the menu */
-		Button anotherButton = new TextButton("Play Duck Sound", skin);
 
 		/* Add another button to the menu */
 		peonButton = new TextButton("Select a Unit", skin);
@@ -119,33 +132,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		});
 
-		/* Add a handler to play a sound */
-		anotherButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				soundManager.playSound();
-			}
-		});
-
 		helpText = new Label("Welcome to MarsWars!", skin);
-
-		/* Add listener for peon button */
-		peonButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-			for (Renderable r : world.getEntities()) {
-				if (r instanceof Selectable) {
-					if (((Selectable) r).isSelected()) {
-
-					}
-				}
-			}
-			}
-		});
 
 		/* Add all buttons to the menu */
 		window.add(button);
-		window.add(anotherButton);
 		window.add(helpText);
 		window.add(peonButton);
 		window.pack();
@@ -156,8 +146,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Add the window to the stage */
 		stage.addActor(window);
 
-
-		/**
+		/*
 		 * Setup inputs for the buttons and the game itself
 		 */
 		/* Setup an Input Multiplexer so that input can be handled by both the UI and the game */
