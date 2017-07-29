@@ -6,6 +6,8 @@ import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,6 +16,8 @@ import java.util.Optional;
  */
 public class MouseHandler {
 	private AbstractWorld world;
+
+	private List<Clickable> listeners = new ArrayList<>();
 
 	/**
 	 * Constructor for the mouse handler
@@ -28,22 +32,44 @@ public class MouseHandler {
 	 * @param x
 	 * @param y
 	 */
-	public void handleMouseClick(float x, float y) {
-		System.out.printf("Clicked at %f %f\n\r", x, y);
+	public void handleMouseClick(float x, float y, int button) {
+		switch(button) {
+			case 0: // Left Click
+				System.out.printf("Clicked at %f %f\n\r", x, y);
+				// If we get another left click ignore the previous listeners
+				listeners.clear();
 
-		float proj_x = 0 , proj_y = 0;
+				float proj_x = 0 , proj_y = 0;
 
-		proj_x = x/64f;
-		proj_y = -(y - 32f / 2f) / 32f + proj_x;
-		proj_x -= proj_y - proj_x;
+				proj_x = x/55f;
+				proj_y = -(y - 32f / 2f) / 32f + proj_x;
+				proj_x -= proj_y - proj_x;
 
-		Optional<WorldEntity> closest = WorldUtil.closestEntityToPosition(world, proj_x, proj_y, 2f);
-		if (closest.isPresent() &&  closest.get() instanceof Clickable) {
-			((Clickable) closest.get()).onClick();
-		} else {
-			if (world instanceof InitialWorld) {
-				((InitialWorld)(world)).deSelectAll();
-			}
+				Optional<WorldEntity> closest = WorldUtil.closestEntityToPosition(world, proj_x, proj_y, 2f);
+				if (closest.isPresent() &&  closest.get() instanceof Clickable) {
+					((Clickable) closest.get()).onClick(this);
+				} else {
+					if (world instanceof InitialWorld) {
+						((InitialWorld)(world)).deSelectAll();
+					}
+				}
+
+				break;
+			case 1: // Right click
+				proj_x = x/64f;
+				proj_y = -(y - 32f / 2f) / 32f + proj_x;
+				proj_x -= proj_y - proj_x;
+
+				for (Clickable c : listeners) {
+					c.onRightClick(proj_x, proj_y);
+				}
+				listeners.clear();
+				break;
+
 		}
+	}
+
+	public void registerForRightClickNotification(Clickable thing) {
+		listeners.add(thing);
 	}
 }

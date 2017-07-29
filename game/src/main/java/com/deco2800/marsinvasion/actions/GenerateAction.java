@@ -13,7 +13,7 @@ public class GenerateAction implements DecoAction {
 	private WorldEntity actionResult;
 
 	/* The progress of the entities creation */
-	private int progress = 10;
+	private int progress = 100;
 
 	/* The world to spawn the entity into */
 	private AbstractWorld world;
@@ -45,6 +45,6 @@ public class GenerateAction implements DecoAction {
 
 	@Override
 	public int actionProgress() {
-		return progress;
+		return 100-progress;
 	}
 }
