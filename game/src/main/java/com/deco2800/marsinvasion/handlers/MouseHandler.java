@@ -36,6 +36,7 @@ public class MouseHandler {
 		switch(button) {
 			case 0: // Left Click
 				System.out.printf("Clicked at %f %f\n\r", x, y);
+
 				// If we get another left click ignore the previous listeners
 				listeners.clear();
 
@@ -56,7 +57,7 @@ public class MouseHandler {
 
 				break;
 			case 1: // Right click
-				proj_x = x/64f;
+				proj_x = x/55f;
 				proj_y = -(y - 32f / 2f) / 32f + proj_x;
 				proj_x -= proj_y - proj_x;
 

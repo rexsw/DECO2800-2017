@@ -4,7 +4,9 @@ import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * A utility class for the World instances
@@ -37,5 +39,23 @@ public class WorldUtil {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	public static ArrayList getEntitiesOfClass(ArrayList<Renderable> entities, Class<?> c) {
+		return new ArrayList(entities.stream().filter(e -> e.getClass() == c).collect(Collectors.toList()));
+	}
+
+	public static WorldEntity getClosestEntityOfClass(AbstractWorld world, Class<?> c, float x, float y) {
+		ArrayList<WorldEntity> entities = WorldUtil.getEntitiesOfClass(world.getEntities(), c);
+
+		WorldEntity closest = null;
+		float dist = Float.MAX_VALUE;
+		for (WorldEntity e : entities) {
+			double tmp_distance = Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2));
+//			if (closest == null || )
+		}
+
+		return null;
+
 	}
 }

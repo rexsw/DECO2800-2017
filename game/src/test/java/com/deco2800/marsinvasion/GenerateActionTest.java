@@ -16,9 +16,9 @@ public class GenerateActionTest {
 		Tree t = new Tree(w, 0,0,0);
 		GenerateAction a = new GenerateAction(t, w);
 
-		assertEquals(a.actionProgress(), 10);
+		assertEquals(a.actionProgress(), 0);
 
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 100; i++) {
 			a.doAction();
 		}
 
@@ -30,6 +30,6 @@ public class GenerateActionTest {
 		a.doAction();
 		verify(w, times(1)).addEntity(t);
 		assertEquals(a.completed(), true);
-		assertEquals(a.actionProgress(), 0);
+		assertEquals(a.actionProgress(), 100);
 	}
 }

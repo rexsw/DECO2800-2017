@@ -18,8 +18,6 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
-	private boolean clicked = false;
-
 	/**
 	 * Constructor for the Spacman
 	 * @param world

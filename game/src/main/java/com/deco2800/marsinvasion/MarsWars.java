@@ -66,10 +66,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 
 		TextureRegister.getInstance().saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
-		TextureRegister.getInstance().saveTexture("ground_1", "resources/placeholderassets/ground-1.png");
+		TextureRegister.getInstance().saveTexture("rock", "resources/placeholderassets/ground-1.png");
 		TextureRegister.getInstance().saveTexture("base", "resources/placeholderassets/base.png");
 		TextureRegister.getInstance().saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
-		TextureRegister.getInstance().saveTexture("spacman", "resources/placeholderassets/spacman_yellow.png");
+		TextureRegister.getInstance().saveTexture("spacman", "resources/placeholderassets/spacman.png");
 		TextureRegister.getInstance().saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
 		TextureRegister.getInstance().saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
 		TextureRegister.getInstance().saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");

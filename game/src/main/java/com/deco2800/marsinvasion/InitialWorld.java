@@ -1,10 +1,7 @@
 package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.marsinvasion.entities.Base;
-import com.deco2800.marsinvasion.entities.HeroSpacman;
-import com.deco2800.marsinvasion.entities.Spacman;
-import com.deco2800.marsinvasion.entities.Selectable;
+import com.deco2800.marsinvasion.entities.*;
 import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.worlds.AbstractWorld;
 
@@ -24,12 +21,13 @@ public class InitialWorld extends AbstractWorld {
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
-		for (int i = 0; i < 100; i++) {
-			this.addEntity(new Spacman(this, 2, 2, 0));
+		for (int i = 0; i < 3; i++) {
+			this.addEntity(new Spacman(this, i, i, 0));
 		}
 
-		this.addEntity(new HeroSpacman(this, 1, 1, 0));
-		this.addEntity(new Base(this, 8, 8, 2));
+		this.addEntity(new HeroSpacman(this, 4, 4, 0));
+		this.addEntity(new Base(this, 8, 8, 0));
+		this.addEntity(new Rock(this, 24, 24, 0, 1, 1));
 	}
 
 	public void deSelectAll() {

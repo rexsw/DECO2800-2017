@@ -20,7 +20,6 @@ public class MoveAction implements DecoAction {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;
-//		this.speed = 0.01f + new Random().nextInt(100)/1000f;
 	}
 
 	@Override
