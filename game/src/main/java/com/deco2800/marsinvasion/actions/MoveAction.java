@@ -62,4 +62,6 @@ public class MoveAction implements DecoAction {
 	public int actionProgress() {
 		return 0;
 	}
+
+
 }

@@ -29,7 +29,7 @@ import com.deco2800.moos.worlds.AbstractWorld;
  * This class handles the application rendering including selection of tileRenderer and creation of the world.
  * @Author Tim Hadwen
  */
-public class MarsInvasion extends ApplicationAdapter implements ApplicationListener {
+public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
 	FPSLogger fpsLogger = new FPSLogger();
 	/**
@@ -179,7 +179,9 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 
 
 				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y);
+				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+
+				System.out.println("Button: " + button);
 
 				return true;
 			}

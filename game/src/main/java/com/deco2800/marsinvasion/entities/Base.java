@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marsinvasion.actions.DecoAction;
 import com.deco2800.marsinvasion.actions.GenerateAction;
+import com.deco2800.marsinvasion.handlers.MouseHandler;
 import com.deco2800.moos.entities.HasProgress;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.worlds.AbstractWorld;
@@ -50,12 +51,17 @@ public class Base extends WorldEntity implements Clickable, Tickable, Selectable
 	 * On click handler
 	 */
 	@Override
-	public void onClick() {
+	public void onClick(MouseHandler handler) {
 		System.out.println("Base got clicked");
 
 		if (!selected) {
 			selected = true;
 		}
+	}
+
+	@Override
+	public void onRightClick(float x, float y) {
+
 	}
 
 	/**

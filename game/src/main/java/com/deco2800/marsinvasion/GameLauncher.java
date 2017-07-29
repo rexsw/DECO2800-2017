@@ -17,7 +17,7 @@ public class GameLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		config.title = "DECO2800 2017: MarsInvasion";
-		LwjglApplication game = new LwjglApplication(new MarsInvasion(), config);
+		config.title = "DECO2800 2017: MarsWars";
+		LwjglApplication game = new LwjglApplication(new MarsWars(), config);
 	}
 }
