@@ -9,10 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -56,8 +53,10 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	Stage stage;
 	Window window;
 	Button peonButton;
+	Label helpText;
 
 	long lastGameTick = 0;
+	long lastMenuTick = 0;
 
 	/**
 	 * Creates the required objects for the game to start.
@@ -68,6 +67,14 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 
 		TextureRegister.getInstance().saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
 		TextureRegister.getInstance().saveTexture("ground_1", "resources/placeholderassets/ground-1.png");
+		TextureRegister.getInstance().saveTexture("base", "resources/placeholderassets/base.png");
+		TextureRegister.getInstance().saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
+		TextureRegister.getInstance().saveTexture("spacman", "resources/placeholderassets/spacman_yellow.png");
+		TextureRegister.getInstance().saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
+		TextureRegister.getInstance().saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
+		TextureRegister.getInstance().saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
+		TextureRegister.getInstance().saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
+
 
 		/**
 		 *	Set up new stuff for this game
@@ -120,27 +127,31 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 			}
 		});
 
+		helpText = new Label("Welcome to MarsWars!", skin);
+
 		/* Add listener for peon button */
 		peonButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				for (Renderable r : world.getEntities()) {
-					if (r instanceof Selectable) {
-						if (((Selectable) r).isSelected()) {
+			for (Renderable r : world.getEntities()) {
+				if (r instanceof Selectable) {
+					if (((Selectable) r).isSelected()) {
 
-						}
 					}
 				}
+			}
 			}
 		});
 
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(anotherButton);
+		window.add(helpText);
 		window.add(peonButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(0, stage.getHeight()); // Place it in the top left of the screen
+		window.setPosition(0, 0); // Place at the bottom
+		window.setWidth(stage.getWidth());
 
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -204,19 +215,15 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastGameTick > 1000000000) {
+		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
 			window.removeActor(peonButton);
+			window.removeActor(helpText);
 			boolean somethingSelected = false;
 			for (Renderable e : world.getEntities()) {
-				if (e instanceof Tickable) {
-					((Tickable) e).onTick(0);
-
-				}
-				lastGameTick = TimeUtils.nanoTime();
-
 				if (e instanceof Selectable) {
 					if (((Selectable) e).isSelected()) {
 						peonButton = ((Selectable) e).getButton();
+						helpText = ((Selectable) e).getHelpText();
 						somethingSelected = true;
 					}
 				}
@@ -224,8 +231,21 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 			}
 			if (!somethingSelected) {
 				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
+				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
 			}
 			window.add(peonButton);
+			window.add(helpText);
+			lastMenuTick = TimeUtils.nanoTime();
+		}
+
+		if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+			for (Renderable e : world.getEntities()) {
+				if (e instanceof Tickable) {
+					((Tickable) e).onTick(0);
+
+				}
+			}
+			lastGameTick = TimeUtils.nanoTime();
 		}
 
         /*
@@ -319,7 +339,7 @@ public class MarsInvasion extends ApplicationAdapter implements ApplicationListe
 		camera.update();
 
 		stage.getViewport().update(width, height, true);
-		window.setPosition(0, stage.getHeight());
+		window.setPosition(0, 0);
 	}
 
 	/**

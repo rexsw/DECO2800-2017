@@ -4,14 +4,13 @@
     <exclude-output/>
     <orderEntry type="inheritedJdk"/>
     <content url="file://$MODULE_DIR$/">
+      <sourceFolder url="file:///Users/timhadwen/Documents/Development/DECO2800-2017/deco2800-2017-age-of-memeology/core/resources" isTestSource="false"/>
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
       <sourceFolder url="file://$MODULE_DIR$/src/main" isTestSource="false"/>
-      <sourceFolder url="file:///Users/timhadwen/Documents/Development/DECO2800-2017/deco2800-game/core/resources" isTestSource="false"/>
-      <sourceFolder url="file:///Users/timhadwen/Documents/Development/DECO2800-2017/deco2800-2017-age-of-memeology/core/resources" isTestSource="false"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true"/>
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="true"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true"/>
-      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="true"/>
       <excludeFolder url="file://$MODULE_DIR$/build"/>
       <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
     </content>
@@ -48,7 +47,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/ce31051d1b2ad79a742c4cff70296736c174782d/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -376,7 +375,7 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/ce31051d1b2ad79a742c4cff70296736c174782d/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -704,7 +703,7 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.moos/core/0.1-SNAPSHOT/ce31051d1b2ad79a742c4cff70296736c174782d/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
