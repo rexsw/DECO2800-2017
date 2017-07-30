@@ -25,6 +25,7 @@ import com.deco2800.moos.renderers.Renderer;
 import com.deco2800.moos.worlds.AbstractWorld;
 import uq.deco2800.soom.client.SoomClient;
 import uq.deco2800.soom.client.game.GameClientConnectionManager;
+import com.deco2800.moos.managers.*;
 
 import java.io.IOException;
 
@@ -72,15 +73,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 
-		TextureRegister.getInstance().saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
-		TextureRegister.getInstance().saveTexture("rock", "resources/placeholderassets/ground-1.png");
-		TextureRegister.getInstance().saveTexture("base", "resources/placeholderassets/base.png");
-		TextureRegister.getInstance().saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
-		TextureRegister.getInstance().saveTexture("spacman", "resources/placeholderassets/spacman.png");
-		TextureRegister.getInstance().saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
-		TextureRegister.getInstance().saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
-		TextureRegister.getInstance().saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-		TextureRegister.getInstance().saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
+		TextureRegister reg = (TextureRegister)(GameManager.get().getManager(TextureRegister.class));
+		reg.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
+		reg.saveTexture("rock", "resources/placeholderassets/ground-1.png");
+		reg.saveTexture("base", "resources/placeholderassets/base.png");
+		reg.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
+		reg.saveTexture("spacman", "resources/placeholderassets/spacman.png");
+		reg.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
+		reg.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
+		reg.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
+		reg.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
 
 		/*
 		 *	Set up new stuff for this game
@@ -342,6 +344,3 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 
 }
-
-
-

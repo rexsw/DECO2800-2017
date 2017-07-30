@@ -9,6 +9,7 @@ import com.deco2800.moos.worlds.WorldEntity;
 public class Water extends WorldEntity implements HasHealth {
 	public Water(AbstractWorld parent, float posX, float posY, float posZ, float height, float width) {
 		super(parent, posX, posY, posZ, height, width);
+		this.setTexture("water");
 	}
 
 	@Override

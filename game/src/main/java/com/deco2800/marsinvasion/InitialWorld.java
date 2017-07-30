@@ -14,6 +14,7 @@ public class InitialWorld extends AbstractWorld {
 	 * Constructor for InitialWorld
 	 */
 	public InitialWorld() {
+
  		/* Load up the map for this world */
 		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder.tmx");
 

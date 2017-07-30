@@ -6,6 +6,7 @@ import com.deco2800.marsinvasion.actions.MoveAction;
 import com.deco2800.marsinvasion.handlers.MouseHandler;
 import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.entities.Tickable;
+import com.deco2800.moos.managers.GameManager;
 import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.worlds.AbstractWorld;
 import com.deco2800.moos.worlds.WorldEntity;
@@ -64,7 +65,8 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 	@Override
 	public void onClick(MouseHandler handler) {
 		handler.registerForRightClickNotification(this);
-		SoundManager.getInstance().playSound("ree1.wav");
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("ree1.wav");
 	}
 
 	@Override
