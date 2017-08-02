@@ -3,7 +3,7 @@ package com.deco2800.marsinvasion.actions;
 import com.deco2800.marsinvasion.entities.Base;
 import com.deco2800.marsinvasion.entities.HasHealth;
 import com.deco2800.marsinvasion.util.WorldUtil;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
 
 import java.util.Optional;
 
@@ -22,15 +22,15 @@ public class GatherAction implements DecoAction {
 
 	MoveAction action = null;
 	private State state = State.SETUP_MOVE;
-	private WorldEntity entity;
+	private AbstractEntity entity;
 	private Class type;
 	boolean completed = false;
 
-	Optional<WorldEntity> closest;
+	Optional<AbstractEntity> closest;
 
 	private int ticksCollect = 10;
 
-	public GatherAction(WorldEntity entity, Class<?> type) {
+	public GatherAction(AbstractEntity entity, Class<?> type) {
 		this.entity = entity;
 		this.type = type;
 	}
@@ -40,7 +40,7 @@ public class GatherAction implements DecoAction {
 		switch(state) {
 			case SETUP_MOVE:
 				// Find the closest rock and move towards it
-				closest = WorldUtil.getClosestEntityOfClass(entity.getParent(), type, entity.getPosX(), entity.getPosY());
+				closest = WorldUtil.getClosestEntityOfClass(type, entity.getPosX(), entity.getPosY());
 
 				if (closest.isPresent()) {
 					action = new MoveAction(closest.get().getPosX(), closest.get().getPosY(), entity);
@@ -70,7 +70,7 @@ public class GatherAction implements DecoAction {
 				break;
 			case SETUP_RETURN:
 				// Find the closest rock and move towards it
-				closest = WorldUtil.getClosestEntityOfClass(entity.getParent(), Base.class, entity.getPosX(), entity.getPosY());
+				closest = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
 
 				if (closest.isPresent()) {
 					action = new MoveAction(closest.get().getPosX(), closest.get().getPosY(), entity);

@@ -13,7 +13,7 @@ public class GenerateActionTest {
 	@Test
 	public void TestActionCompleted() {
 		AbstractWorld w = mock(ExampleWorld.class);
-		Tree t = new Tree(w, 0,0,0);
+		Tree t = new Tree(0,0,0);
 		GenerateAction a = new GenerateAction(t, w);
 
 		assertEquals(a.actionProgress(), 0);

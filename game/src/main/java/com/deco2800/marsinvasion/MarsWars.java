@@ -1,7 +1,6 @@
 package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,18 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marsinvasion.entities.Selectable;
-import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.managers.MouseHandler;
 import com.deco2800.marsinvasion.net.MarsWarsClientConnectionManager;
 import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.managers.SoundManager;
-import com.deco2800.moos.registers.TextureRegister;
+import com.deco2800.moos.managers.GameManager;
+import com.deco2800.moos.managers.TextureManager;
 import com.deco2800.moos.renderers.Render3D;
 import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.renderers.Renderer;
-import com.deco2800.moos.worlds.AbstractWorld;
 import uq.deco2800.soom.client.SoomClient;
 import uq.deco2800.soom.client.game.GameClientConnectionManager;
-import com.deco2800.moos.managers.*;
 
 import java.io.IOException;
 
@@ -37,24 +34,19 @@ import java.io.IOException;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
-	FPSLogger fpsLogger = new FPSLogger();
 	/**
 	 * Set the renderer.
 	 * 3D is for Isometric worlds
 	 * 2D is for Side Scrolling worlds
-	 * Check the documentation for each renderer to see how it handles WorldEntity coordinates
+	 * Check the documentation for each renderer to see how it handles AbstractEntity coordinates
 	 */
 	Renderer renderer = new Render3D();
-	AbstractWorld world;
 
 	/**
 	 * Create a camera for panning and zooming.
 	 * Camera must be updated every render cycle.
 	 */
 	OrthographicCamera camera;
-
-	SoundManager soundManager;
-	MouseHandler mouseHandler;
 
 	Stage stage;
 	Window window;
@@ -73,7 +65,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 
-		TextureRegister reg = (TextureRegister)(GameManager.get().getManager(TextureRegister.class));
+		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
 		reg.saveTexture("rock", "resources/placeholderassets/ground-1.png");
 		reg.saveTexture("base", "resources/placeholderassets/base.png");
@@ -87,13 +79,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 *	Set up new stuff for this game
 		 */
-		world = new InitialWorld();
+		GameManager.get().setWorld(new InitialWorld());
 
 		/* Create a sound manager for the whole game */
-		soundManager = new SoundManager();
-
-		/* Create a mouse handler for the game */
-		mouseHandler = new MouseHandler(world);
 
 		GameClientConnectionManager connectionManager = new MarsWarsClientConnectionManager();
 		networkClient = new SoomClient(connectionManager);
@@ -111,7 +99,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
-		camera.translate(world.getWidth()*32, 0);
+		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
 		 * Setup GUI
@@ -156,7 +144,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		inputMultiplexer.addProcessor(stage); // Add the UI as a processor
 
         /*
-         * Set up some input handlers for panning with dragging.
+         * Set up some input managers for panning with dragging.
          */
 		inputMultiplexer.addProcessor(new InputAdapter() {
 
@@ -168,12 +156,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				originX = screenX;
 				originY = screenY;
 
-
 				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+				MouseHandler mouseHandler = (MouseHandler)(GameManager.get().getManager(MouseHandler.class));
 				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
-
-				System.out.println("Button: " + button);
-
 				return true;
 			}
 
@@ -212,7 +197,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			window.removeActor(peonButton);
 			window.removeActor(helpText);
 			boolean somethingSelected = false;
-			for (Renderable e : world.getEntities()) {
+			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if (e instanceof Selectable) {
 					if (((Selectable) e).isSelected()) {
 						peonButton = ((Selectable) e).getButton();
@@ -231,13 +216,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
-		if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
-			for (Renderable e : world.getEntities()) {
+		if(TimeUtils.nanoTime() - lastGameTick > 100000000) {
+			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if (e instanceof Tickable) {
 					((Tickable) e).onTick(0);
 
 				}
 			}
+
+			GameManager.get().onTick(0);
 			lastGameTick = TimeUtils.nanoTime();
 		}
 
@@ -248,7 +235,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		SpriteBatch batch = new SpriteBatch();
 
         /*
-         * Update the input handlers
+         * Update the input managers
          */
 		handleInput();
 
@@ -264,20 +251,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        /*
-         * Log FPS
-         */
-		fpsLogger.log();
-
         /* Render the tiles first */
-		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(world, batch);
+		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
 		tileRenderer.setView(camera);
 		tileRenderer.render();
 
 		/*
          * Use the selected renderer to render objects onto the map
          */
-		renderer.render(batch, world);
+		renderer.render(batch);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());

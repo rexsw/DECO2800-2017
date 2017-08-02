@@ -18,12 +18,12 @@ public class InitialWorld extends AbstractWorld {
  		/* Load up the map for this world */
 		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder.tmx");
 
-        /* Grab the width and length values from the map file to use as the world size */
+                /* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
 		for (int i = 0; i < 3; i++) {
-			this.addEntity(new Spacman(this, i, i, 0));
+			this.addEntity(new Spacman(i, i, 0));
 		}
 
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
@@ -31,6 +31,7 @@ public class InitialWorld extends AbstractWorld {
 		this.addEntity(new Rock(this, 5, 0, 0, 1, 1));
 		this.addEntity(new Rock(this, 10, 0, 0, 1, 1));
 		this.addEntity(new Rock(this, 10, 10, 0, 1, 1));
+		this.addEntity(new EnemySpacman(24, 24, 0));
 	}
 
 	public void deSelectAll() {

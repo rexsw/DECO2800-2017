@@ -2,6 +2,7 @@ package com.deco2800.marsinvasion;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import org.apache.log4j.BasicConfigurator;
 
 /**
  * DesktopLauncher
@@ -14,6 +15,7 @@ public class GameLauncher {
 	 * @param arg Command line arguments (we wont use these)
 	 */
 	public static void main (String[] arg) {
+		BasicConfigurator.configure();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;

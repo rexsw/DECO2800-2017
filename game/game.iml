@@ -18,11 +18,33 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/8e20852d05222dc286bf1c71d78d0531e177c317/slf4j-api-1.7.12.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/dd1c310d8c99ba0575a8662f5174b918d3520005/integration-1.8.0-alpha2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/58697792617f38bf86d8e26bc004aac505e516a9/slf4j-api-1.7.12-sources.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/6b52a87259fa78f1368e520ef2f342052c0ddea7/integration-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/36c53d2a10919a190dafb9379d465ab178684c09/slf4j-log4j12-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/86ab9adbb9b6c7ad7ac8e062b394e07b790d1c49/slf4j-log4j12-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/34fa1d87256bbdb376ae7f6fa7e479610cd07dce/slf4j-api-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/5818a2c13c12c71c2861315d90888104a875f438/slf4j-api-1.8.0-alpha2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -47,7 +69,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/a4c7d9d22ed6e8c8fa3b9127103a08b8d25adb9/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -184,6 +206,28 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/41fce2c8622eef60ba39a6f762c6b8069c26dff2/org.apache.felix.main-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/8a88434ff9b2738e2c36fb01f8877de6d2f9605f/org.apache.felix.main-5.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/1.3.9/40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf/jsr305-1.3.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -286,6 +330,17 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/cadce5b48edecd1137077ae6e5b28aaa60f6ac5a/org.apache.felix.framework-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/1af833de852a8de450521d9a5e338c9037e2c5d4/org.apache.felix.framework-5.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.esotericsoftware.minlog/minlog/1.2/59bfcd171d82f9981a5e242b9e840191f650e209/minlog-1.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -346,11 +401,33 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/8e20852d05222dc286bf1c71d78d0531e177c317/slf4j-api-1.7.12.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/dd1c310d8c99ba0575a8662f5174b918d3520005/integration-1.8.0-alpha2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/58697792617f38bf86d8e26bc004aac505e516a9/slf4j-api-1.7.12-sources.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/6b52a87259fa78f1368e520ef2f342052c0ddea7/integration-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/36c53d2a10919a190dafb9379d465ab178684c09/slf4j-log4j12-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/86ab9adbb9b6c7ad7ac8e062b394e07b790d1c49/slf4j-log4j12-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/34fa1d87256bbdb376ae7f6fa7e479610cd07dce/slf4j-api-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/5818a2c13c12c71c2861315d90888104a875f438/slf4j-api-1.8.0-alpha2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -375,7 +452,7 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/a4c7d9d22ed6e8c8fa3b9127103a08b8d25adb9/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -512,6 +589,28 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/41fce2c8622eef60ba39a6f762c6b8069c26dff2/org.apache.felix.main-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/8a88434ff9b2738e2c36fb01f8877de6d2f9605f/org.apache.felix.main-5.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/1.3.9/40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf/jsr305-1.3.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -614,6 +713,17 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/cadce5b48edecd1137077ae6e5b28aaa60f6ac5a/org.apache.felix.framework-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/1af833de852a8de450521d9a5e338c9037e2c5d4/org.apache.felix.framework-5.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.esotericsoftware.minlog/minlog/1.2/59bfcd171d82f9981a5e242b9e840191f650e209/minlog-1.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -674,11 +784,33 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/8e20852d05222dc286bf1c71d78d0531e177c317/slf4j-api-1.7.12.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/dd1c310d8c99ba0575a8662f5174b918d3520005/integration-1.8.0-alpha2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/58697792617f38bf86d8e26bc004aac505e516a9/slf4j-api-1.7.12-sources.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/integration/1.8.0-alpha2/6b52a87259fa78f1368e520ef2f342052c0ddea7/integration-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/36c53d2a10919a190dafb9379d465ab178684c09/slf4j-log4j12-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.8.0-alpha2/86ab9adbb9b6c7ad7ac8e062b394e07b790d1c49/slf4j-log4j12-1.8.0-alpha2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/34fa1d87256bbdb376ae7f6fa7e479610cd07dce/slf4j-api-1.8.0-alpha2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/5818a2c13c12c71c2861315d90888104a875f438/slf4j-api-1.8.0-alpha2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -703,7 +835,7 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/b6bb6c8545a0955aff943a4a110fe10a3f8c5a63/core-0.1-SNAPSHOT.jar!/"/>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/com.deco2800.4stroke/core/0.1-SNAPSHOT/a4c7d9d22ed6e8c8fa3b9127103a08b8d25adb9/core-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -906,6 +1038,28 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/41fce2c8622eef60ba39a6f762c6b8069c26dff2/org.apache.felix.main-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.main/5.6.1/8a88434ff9b2738e2c36fb01f8877de6d2f9605f/org.apache.felix.main-5.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.powermock/powermock-api-support/1.6.2/93b21413b4ee99b7bc0dd34e1416fdca96866aaf/powermock-api-support-1.6.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1013,6 +1167,17 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.5/82604cfeb87b9ab70ed70aa19a137de8ceb21504/jinput-2.0.5-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/cadce5b48edecd1137077ae6e5b28aaa60f6ac5a/org.apache.felix.framework-5.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/timhadwen/.gradle/caches/modules-2/files-2.1/org.apache.felix/org.apache.felix.framework/5.6.1/1af833de852a8de450521d9a5e338c9037e2c5d4/org.apache.felix.framework-5.6.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

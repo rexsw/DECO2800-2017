@@ -2,21 +2,21 @@ package com.deco2800.marsinvasion.entities;
 
 import com.deco2800.moos.managers.SoundManager;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 29/7/17.
  */
-public class Rock extends WorldEntity implements HasHealth {
+public class Rock extends AbstractEntity implements HasHealth {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Rock.class);
 
 	private int health = 100;
 
 	public Rock(AbstractWorld parent, float posX, float posY, float posZ, float height, float width) {
-		super(parent, posX, posY, posZ, height, width);
+		super(posX, posY, posZ, height, width, 1f);
 		this.setTexture("rock");
 	}
 

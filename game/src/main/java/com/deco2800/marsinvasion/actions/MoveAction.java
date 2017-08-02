@@ -1,6 +1,9 @@
 package com.deco2800.marsinvasion.actions;
 
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.util.Box3D;
+import com.deco2800.moos.entities.AbstractEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A MoveAction for moving units around
@@ -8,19 +11,23 @@ import com.deco2800.moos.worlds.WorldEntity;
  */
 public class MoveAction implements DecoAction {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MoveAction.class);
+
 	float goalX = 0;
 	float goalY = 0;
-	WorldEntity entity;
+	AbstractEntity entity;
 
-	float speed = 0.5f;
+	float speed = 0.2f;
 
 	boolean completed = false;
 
-	public MoveAction(float goalX, float goalY, WorldEntity entity) {
+	public MoveAction(float goalX, float goalY, AbstractEntity entity) {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;
-	}
+
+		LOGGER.info("new x: " + goalX + " y: " + goalY);
+        }
 
 	@Override
 	public void doAction() {
@@ -34,7 +41,7 @@ public class MoveAction implements DecoAction {
 				entity.setPosY(goalY);
 			}
 
-			if (Math.abs(entity.getPosX() - goalX) < 1 && Math.abs(entity.getPosY() - goalY) < 1) {
+			if (entity.getBox3D().distance(new Box3D(goalX, goalY, 0f, 0f, 0f, 0f)) < 1) {
 				completed = true;
 				return;
 			}
@@ -47,8 +54,13 @@ public class MoveAction implements DecoAction {
 			float changeX = (float)(speed * Math.cos(angle));
 			float changeY = (float)(speed * Math.sin(angle));
 
-			entity.setPosX(entity.getPosX() + changeX);
-			entity.setPosY(entity.getPosY() + changeY);
+			float newX = entity.getPosX() + changeX;
+			float newY = entity.getPosY() + changeY;
+
+			LOGGER.info("Moving to X:" + newX + " Y:" + newY);
+
+			entity.setPosX(newX);
+			entity.setPosY(newY);
 		}
 	}
 
@@ -61,6 +73,4 @@ public class MoveAction implements DecoAction {
 	public int actionProgress() {
 		return 0;
 	}
-
-
 }

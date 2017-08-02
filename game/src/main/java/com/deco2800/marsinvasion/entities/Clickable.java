@@ -1,6 +1,6 @@
 package com.deco2800.marsinvasion.entities;
 
-import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.managers.MouseHandler;
 
 /**
  * An interface to make an Entity clickable via the MouseHandler

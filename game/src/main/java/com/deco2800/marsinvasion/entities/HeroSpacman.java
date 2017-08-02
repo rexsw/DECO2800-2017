@@ -2,10 +2,10 @@ package com.deco2800.marsinvasion.entities;
 
 import com.deco2800.marsinvasion.actions.DecoAction;
 import com.deco2800.marsinvasion.actions.MoveAction;
-import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.managers.MouseHandler;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  * A hero for the game
  * Created by timhadwen on 19/7/17.
  */
-public class HeroSpacman extends WorldEntity implements Tickable, Clickable {
+public class HeroSpacman extends AbstractEntity implements Tickable, Clickable {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -25,7 +25,7 @@ public class HeroSpacman extends WorldEntity implements Tickable, Clickable {
 	 * @param posZ
 	 */
 	public HeroSpacman(AbstractWorld world, float posX, float posY, float posZ) {
-		super(world, posX, posY, posZ, 1, 1.2f, 1.2f);
+		super(posX, posY, posZ, 1, 1.2f, 1.2f);
 		this.setTexture("spacman");
 	}
 

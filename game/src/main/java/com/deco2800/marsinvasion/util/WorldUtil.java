@@ -1,13 +1,16 @@
 package com.deco2800.marsinvasion.util;
 
+import com.deco2800.moos.DesktopLauncher;
+import com.deco2800.moos.managers.GameManager;
 import com.deco2800.moos.renderers.Renderable;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * A utility class for the World instances
@@ -15,16 +18,18 @@ import java.util.stream.Collectors;
  */
 public class WorldUtil {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DesktopLauncher.class);
+
 	/**
 	 * Finds the closest entity to a position within a delta
 	 * @param world
 	 * @param x
 	 * @param y
 	 * @param delta
-	 * @return Optional of WorldEntity
+	 * @return Optional of AbstractEntity
 	 */
-	public static Optional<WorldEntity> closestEntityToPosition(AbstractWorld world, float x, float y, float delta) {
-		WorldEntity ret = null;
+	public static Optional<AbstractEntity> closestEntityToPosition(AbstractWorld world, float x, float y, float delta) {
+		AbstractEntity ret = null;
 		double distance = Double.MAX_VALUE;
 		for (Renderable e : world.getEntities()) {
 			double tmp_distance = Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2));
@@ -32,30 +37,38 @@ public class WorldUtil {
 			if (tmp_distance < distance) {
 				// Closer than current closest
 				distance = tmp_distance;
-				ret = (WorldEntity) e;
+				ret = (AbstractEntity) e;
 			}
 		}
 		if (distance < delta){
+			LOGGER.info("Closest is " + ret.toString());
 			return Optional.of(ret);
 		} else {
+			LOGGER.info("Nothing is that close");
 			return Optional.empty();
 		}
 	}
 
-	public static ArrayList getEntitiesOfClass(List<WorldEntity> entities, Class<?> c) {
-		return new ArrayList(entities.stream().filter(e -> e.getClass() == c).collect(Collectors.toList()));
+	public static List getEntitiesOfClass(List<AbstractEntity> entities, Class<?> c) {
+		List<AbstractEntity> classEntities = new ArrayList<>();
+		for (AbstractEntity w : entities) {
+			if (w.getClass() == c) {
+				classEntities.add(w);
+			}
+		}
+		return classEntities;
 	}
 
-	public static Optional<WorldEntity> getClosestEntityOfClass(AbstractWorld world, Class<?> c, float x, float y) {
-		List<WorldEntity> entities = WorldUtil.getEntitiesOfClass(world.getEntities(), c);
+	public static Optional<AbstractEntity> getClosestEntityOfClass(Class<?> c, float x, float y) {
+		List<AbstractEntity> entities = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), c);
 
-		WorldEntity closest = null;
+		AbstractEntity closest = null;
 		float dist = Float.MAX_VALUE;
-		for (WorldEntity e : entities) {
+		for (AbstractEntity e : entities) {
 			float tmp_distance = (float)(Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2)));
 			if (closest == null || dist > tmp_distance) {
 				dist = tmp_distance;
-				closest = (WorldEntity)e;
+				closest = e;
 			}
 		}
 
@@ -66,10 +79,10 @@ public class WorldUtil {
 		}
 	}
 
-	public static Optional<WorldEntity> getEntityAtPosition(AbstractWorld world, float x, float y) {
+	public static Optional<AbstractEntity> getEntityAtPosition(AbstractWorld world, float x, float y) {
 		for (Renderable e : world.getEntities()) {
 			if (Math.abs(e.getPosX() - x) < 1f && Math.abs(e.getPosY() - y) < 1f) {
-				return Optional.of((WorldEntity)e);
+				return Optional.of((AbstractEntity)e);
 			}
 		}
 		return Optional.empty();

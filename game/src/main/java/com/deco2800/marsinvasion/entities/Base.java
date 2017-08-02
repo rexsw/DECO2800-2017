@@ -9,11 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marsinvasion.actions.DecoAction;
 import com.deco2800.marsinvasion.actions.GenerateAction;
-import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.managers.MouseHandler;
 import com.deco2800.moos.entities.HasProgress;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
 
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ import java.util.Optional;
  *
  * A home base for the empire
  */
-public class Base extends WorldEntity implements Clickable, Tickable, Selectable, HasProgress {
+public class Base extends AbstractEntity implements Clickable, Tickable, Selectable, HasProgress {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -37,7 +37,7 @@ public class Base extends WorldEntity implements Clickable, Tickable, Selectable
 	 * @param posZ
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-		super(world, posX, posY, posZ, 1, 1, 1);
+		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 	}
 
@@ -72,7 +72,7 @@ public class Base extends WorldEntity implements Clickable, Tickable, Selectable
 	public void onTick(int i) {
 
 		if (selected) {
-			this.setTexture("tree");
+			this.setTexture("base");
 		} else {
 			this.setTexture("base");
 		}
@@ -111,7 +111,7 @@ public class Base extends WorldEntity implements Clickable, Tickable, Selectable
 	@Override
 	public void buttonWasPressed() {
 		/* We probably don't want these in random spots */
-		currentAction = Optional.of(new GenerateAction(new Spacman(this.getParent(), this.getPosX(), this.getPosY(), 0), this.getParent()));
+		currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0), this.getParent()));
 	}
 
 	@Override

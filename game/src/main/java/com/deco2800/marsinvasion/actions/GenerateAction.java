@@ -1,7 +1,7 @@
 package com.deco2800.marsinvasion.actions;
 
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
 
 /**
  * A generator action for deploying units from buildings
@@ -10,7 +10,7 @@ import com.deco2800.moos.worlds.WorldEntity;
 public class GenerateAction implements DecoAction {
 
 	/* The resultant entity to be created */
-	private WorldEntity actionResult;
+	private AbstractEntity actionResult;
 
 	/* The progress of the entities creation */
 	private int progress = 100;
@@ -23,7 +23,7 @@ public class GenerateAction implements DecoAction {
 	 * @param actionResult
 	 * @param world
 	 */
-	public GenerateAction(WorldEntity actionResult, AbstractWorld world) {
+	public GenerateAction(AbstractEntity actionResult, AbstractWorld world) {
 		this.actionResult = actionResult;
 		this.world = world;
 	}

@@ -3,50 +3,38 @@ package com.deco2800.marsinvasion.entities;
 import com.deco2800.marsinvasion.actions.DecoAction;
 import com.deco2800.marsinvasion.actions.GatherAction;
 import com.deco2800.marsinvasion.actions.MoveAction;
-import com.deco2800.marsinvasion.handlers.MouseHandler;
+import com.deco2800.marsinvasion.managers.MouseHandler;
 import com.deco2800.marsinvasion.util.WorldUtil;
 import com.deco2800.moos.entities.Tickable;
 import com.deco2800.moos.managers.GameManager;
 import com.deco2800.moos.managers.SoundManager;
-import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.worlds.WorldEntity;
+import com.deco2800.moos.entities.AbstractEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
-import java.util.Random;
 
 /**
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends WorldEntity implements Tickable, Clickable {
+public class Spacman extends AbstractEntity implements Tickable, Clickable, HasHealth {
 
-	Optional<DecoAction> currentAction = Optional.empty();
+	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
+
+	private Optional<DecoAction> currentAction = Optional.empty();
+
+	private int health = 100;
 
 	/**
 	 * Constructor for the Spacman
-	 * @param world
 	 * @param posX
 	 * @param posY
 	 * @param posZ
 	 */
-	public Spacman(AbstractWorld world, float posX, float posY, float posZ) {
-		super(world, posX, posY, posZ, 1, 1, 1);
-
-		Random rand = new Random();
-		switch(rand.nextInt(4)) {
-			case 0:
-				this.setTexture("spacman_red");
-				break;
-			case 1:
-				this.setTexture("spacman_yellow");
-				break;
-			case 2:
-				this.setTexture("spacman_blue");
-				break;
-			case 3:
-				this.setTexture("spacman_green");
-				break;
-		}
+	public Spacman(float posX, float posY, float posZ) {
+		super(posX, posY, posZ, 1, 1, 1);
+		this.setTexture("spacman_green");
 	}
 
 	@Override
@@ -56,8 +44,10 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 		}
 
 		if (!currentAction.get().completed()) {
+			LOGGER.info("Action is incomplete");
 			currentAction.get().doAction();
 		} else {
+			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 		}
 	}
@@ -67,15 +57,36 @@ public class Spacman extends WorldEntity implements Tickable, Clickable {
 		handler.registerForRightClickNotification(this);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound("ree1.wav");
+		this.setTexture("spacman_blue");
+		LOGGER.error("Clicked on spacman");
 	}
 
 	@Override
 	public void onRightClick(float x, float y) {
-		Optional<WorldEntity> entity = WorldUtil.getEntityAtPosition(this.getParent(), x, y);
+		Optional<AbstractEntity> entity = WorldUtil.getEntityAtPosition(this.getParent(), x, y);
 		if (entity.isPresent()) {
 			currentAction = Optional.of(new GatherAction(this, Rock.class));
+			LOGGER.error("Assigned action gather");
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+			LOGGER.error("Assigned action move to" + x + " " + y);
+		}
+		this.setTexture("spacman_green");
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
+	}
+
+	@Override
+	public void setHealth(int health) {
+		LOGGER.info("Set health to " + health);
+		this.health = health;
+
+		if (health < 0) {
+			GameManager.get().getWorld().removeEntity(this);
+			LOGGER.info("I am kill");
 		}
 	}
 }
