@@ -13,9 +13,6 @@ import java.util.Random;
  */
 public class InitialWorld extends World {
 
-
-
-
 	/**
 	 * Constructor for InitialWorld
 	 */
@@ -34,22 +31,35 @@ public class InitialWorld extends World {
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
 				this.collisionMap.set(x, y, new ArrayList<>());
+			}
+		}
 
+
+
+	}
+
+	public void loadEntities() {
+
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getLength(); y++) {
 				Random r = new Random();
 				if (r.nextInt(10) < 3) {
 					this.addEntity(new Water(this, x, y, 0, 1, 1));
 				}
+
+				if (r.nextInt(10) < 5) {
+					this.addEntity(new Spacman(x, y, 0));
+				}
 			}
 		}
 
-		for (int i = 0; i < 3; i++) {
-			this.addEntity(new Spacman(i, i, 0));
-		}
+		this.addEntity(new Spacman(0, 0, 0));
+
+
 
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
-
 	}
 
 	public void deSelectAll() {

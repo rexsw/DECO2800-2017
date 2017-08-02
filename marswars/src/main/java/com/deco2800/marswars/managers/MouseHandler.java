@@ -1,22 +1,25 @@
 package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.InitialWorld;
+import com.deco2800.marswars.World;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.util.WorldUtil;
 import com.deco2800.moos.managers.GameManager;
 import com.deco2800.moos.managers.Manager;
 import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.entities.AbstractEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Really crappy mouse handler for the game
  * Created by timhadwen on 23/7/17.
  */
 public class MouseHandler extends Manager {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MouseHandler.class);
 
 	private List<Clickable> listeners = new ArrayList<>();
 
@@ -43,13 +46,23 @@ public class MouseHandler extends Manager {
 				proj_y = -(y - 32f / 2f) / 32f + proj_x;
 				proj_x -= proj_y - proj_x;
 
-				Optional<AbstractEntity> closest = WorldUtil.closestEntityToPosition(world, proj_x, proj_y, 2f);
-				if (closest.isPresent() &&  closest.get() instanceof Clickable) {
-					((Clickable) closest.get()).onClick(this);
+				if (proj_x < 0 || proj_x > world.getWidth() || proj_y < 0 || proj_y > world.getLength()) {
+					return;
+				}
+
+				LOGGER.info("Clicked on tile x:" + proj_x + " y:" + proj_y);
+
+				List<BaseEntity> entities = ((World)GameManager.get().getWorld()).getEntities((int)proj_x, (int)proj_y);
+
+
+				if (entities.size() == 0) {
+					return;
+				}
+
+				if (entities.get(entities.size() - 1) instanceof Clickable) {
+					((Clickable) entities.get(entities.size() - 1)).onClick(this);
 				} else {
-					if (world instanceof InitialWorld) {
-						((InitialWorld)(world)).deSelectAll();
-					}
+					((InitialWorld)world).deSelectAll();
 				}
 
 				break;

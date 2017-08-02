@@ -38,22 +38,30 @@ public class BaseEntity extends AbstractEntity {
 
 	@Override
 	public void setPosition(float x, float y, float z) {
+		modifyCollisionMap(false);
 		super.setPosition(x, y, z);
+		modifyCollisionMap(true);
 	}
 
 	@Override
 	public void setPosX(float x) {
+		modifyCollisionMap(false);
 		super.setPosX(x);
+		modifyCollisionMap(true);
 	}
 
 	@Override
 	public void setPosY(float y) {
+		modifyCollisionMap(false);
 		super.setPosY(y);
+		modifyCollisionMap(true);
 	}
 
 	@Override
 	public void setPosZ(float z) {
+		modifyCollisionMap(false);
 		super.setPosZ(z);
+		modifyCollisionMap(true);
 	}
 
 	private void modifyCollisionMap(boolean add) {

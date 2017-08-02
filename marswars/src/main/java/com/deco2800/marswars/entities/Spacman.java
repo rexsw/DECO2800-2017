@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.Random;
 
 /**
  * A generic player instance for the game
@@ -35,6 +36,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
+
+		Random r = new Random();
+		currentAction = Optional.of(new MoveAction(r.nextInt(24), r.nextInt(24), this));
 	}
 
 	@Override
@@ -44,11 +48,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 
 		if (!currentAction.get().completed()) {
-			LOGGER.info("Action is incomplete");
+//			LOGGER.info("Action is incomplete");
 			currentAction.get().doAction();
 		} else {
 			LOGGER.info("Action is completed. Deleting");
-			currentAction = Optional.empty();
+//			currentAction = Optional.empty();
+
+			Random r = new Random();
+			currentAction = Optional.of(new MoveAction(r.nextInt(24), r.nextInt(24), this));
 		}
 	}
 

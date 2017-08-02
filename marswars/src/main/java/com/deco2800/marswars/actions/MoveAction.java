@@ -25,6 +25,7 @@ public class MoveAction implements DecoAction {
 	float speed = 0.05f;
 
 	boolean completed = false;
+	List<Point> path;
 
 	public MoveAction(float goalX, float goalY, AbstractEntity entity) {
 		this.goalX = goalX;
@@ -32,13 +33,14 @@ public class MoveAction implements DecoAction {
 		this.entity = entity;
 
 		LOGGER.info("new x: " + goalX + " y: " + goalY);
-        }
+
+		path = Pathfinder.aStar(new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY), (World) GameManager.get().getWorld());
+	}
 
 	@Override
 	public void doAction() {
-		List<Point> path = Pathfinder.aStar(new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY), (World) GameManager.get().getWorld());
 
-		LOGGER.info("PATH SIZE: " + path.size());
+//		LOGGER.info("PATH SIZE: " + path.size());
 
 		if (path.size() < 1) {
 			completed = true;
@@ -50,10 +52,10 @@ public class MoveAction implements DecoAction {
 			float tmpgoalX = path.get(0).getX();
 			float tmpgoalY = path.get(0).getY();
 
-			if (Math.abs(entity.getPosX() - goalX) < speed && Math.abs(entity.getPosY() - goalY) < speed) {
-				entity.setPosX(goalX);
-				entity.setPosY(goalY);
-				completed = true;
+			if (Math.abs(entity.getPosX() - tmpgoalX) < 0.01f && Math.abs(entity.getPosY() - tmpgoalY) < 0.01f) {
+				entity.setPosX(tmpgoalX);
+				entity.setPosY(tmpgoalY);
+				path.remove(0);
 				return;
 			}
 
@@ -68,7 +70,7 @@ public class MoveAction implements DecoAction {
 			float newX = entity.getPosX() + changeX;
 			float newY = entity.getPosY() + changeY;
 
-			LOGGER.info("Moving to X:" + newX + " Y:" + newY);
+//			LOGGER.info("Moving to X:" + newX + " Y:" + newY);
 
 			entity.setPosX(newX);
 			entity.setPosY(newY);

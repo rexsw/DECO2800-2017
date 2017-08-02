@@ -126,7 +126,7 @@ public class Pathfinder {
 	}
 
 	private static List<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
-		List<Point> result = new ArrayList<>();
+		List<Point> result = new LinkedList<>();
 
 		while (cameFrom.containsKey(current)) {
 			result.add(current);

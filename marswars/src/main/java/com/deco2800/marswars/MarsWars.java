@@ -76,11 +76,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		reg.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
 		reg.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
 		reg.saveTexture("spatman_blue", "spatman_blue.png");
+		reg.saveTexture("water", "w1.png");
 
 		/*
 		 *	Set up new stuff for this game
 		 */
 		GameManager.get().setWorld(new InitialWorld());
+		((InitialWorld)GameManager.get().getWorld()).loadEntities();
 
 		/* Create a sound manager for the whole game */
 
@@ -217,7 +219,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
-		if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+		if(TimeUtils.nanoTime() - lastGameTick > 16000000) {
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if (e instanceof Tickable) {
 					((Tickable) e).onTick(0);
