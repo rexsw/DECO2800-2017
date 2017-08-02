@@ -39,3 +39,6 @@ Thumbs.db
 # Local sonar installations
 sonar-project.properties
 .sonar/
+/nbproject/private/
+/MarsWars/.nb-gradle/
+/MarsWars2/.nb-gradle/
