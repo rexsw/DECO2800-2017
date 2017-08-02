@@ -1,10 +1,10 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.World;
+import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Pathfinder;
 import com.deco2800.marswars.util.Point;
-import com.deco2800.moos.entities.AbstractEntity;
-import com.deco2800.moos.managers.GameManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +32,23 @@ public class MoveAction implements DecoAction {
 		this.goalY = goalY;
 		this.entity = entity;
 
+		if (this.goalX < 0)
+			this.goalX = 0;
+		if (this.goalY < 0)
+			this.goalY = 0;
+
 		LOGGER.info("new x: " + goalX + " y: " + goalY);
 
-		path = Pathfinder.aStar(new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY), (World) GameManager.get().getWorld());
+		path = Pathfinder.aStar(new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY), (BaseWorld) GameManager.get().getWorld());
 	}
 
 	@Override
 	public void doAction() {
 
-//		LOGGER.info("PATH SIZE: " + path.size());
+		if (path == null) {
+			completed = true;
+			return;
+		}
 
 		if (path.size() < 1) {
 			completed = true;
@@ -69,8 +77,6 @@ public class MoveAction implements DecoAction {
 
 			float newX = entity.getPosX() + changeX;
 			float newY = entity.getPosY() + changeY;
-
-//			LOGGER.info("Moving to X:" + newX + " Y:" + newY);
 
 			entity.setPosX(newX);
 			entity.setPosY(newY);

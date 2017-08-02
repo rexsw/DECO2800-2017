@@ -1,9 +1,8 @@
 package com.deco2800.marswars.entities;
 
-import com.deco2800.marswars.World;
-import com.deco2800.moos.entities.AbstractEntity;
-import com.deco2800.moos.managers.GameManager;
-import com.deco2800.moos.util.Box3D;
+import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.util.Box3D;
 
 /**
  * Created by timhadwen on 2/8/17.
@@ -14,6 +13,7 @@ public class BaseEntity extends AbstractEntity {
 
 	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
+		this.modifyCollisionMap(true);
 	}
 
 	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength, float xRenderLength, float yRenderLength, boolean centered) {
@@ -65,8 +65,8 @@ public class BaseEntity extends AbstractEntity {
 	}
 
 	private void modifyCollisionMap(boolean add) {
-		if (GameManager.get().getWorld() instanceof World) {
-			World world = (World) GameManager.get().getWorld();
+		if (GameManager.get().getWorld() instanceof BaseWorld) {
+			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = (int) getPosX();
 			int right = (int) Math.ceil(getPosX() + getXLength());
 			int bottom = (int) getPosY();
@@ -74,9 +74,9 @@ public class BaseEntity extends AbstractEntity {
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
 					if (add)
-						world.getCollisionMap().get(x, y).add(this);
+						baseWorld.getCollisionMap().get(x, y).add(this);
 					else
-						world.getCollisionMap().get(x, y).remove(this);
+						baseWorld.getCollisionMap().get(x, y).remove(this);
 				}
 			}
 		}

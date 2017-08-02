@@ -1,15 +1,19 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasHealth;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.moos.entities.AbstractEntity;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
-/**
- * Created by timhadwen on 29/7/17.
- */
+import static com.deco2800.marswars.actions.GatherAction.State.SETUP_MOVE;
+import static com.deco2800.marswars.actions.GatherAction.State.SETUP_RETURN;
+
 public class GatherAction implements DecoAction {
 
 	enum State {
@@ -22,31 +26,25 @@ public class GatherAction implements DecoAction {
 
 	MoveAction action = null;
 	private State state = State.SETUP_MOVE;
-	private AbstractEntity entity;
+	private BaseEntity entity;
 	private Class type;
 	boolean completed = false;
 
-	Optional<AbstractEntity> closest;
-
 	private int ticksCollect = 10;
 
-	public GatherAction(AbstractEntity entity, Class<?> type) {
+	private BaseEntity goal;
+
+	public GatherAction(BaseEntity entity, BaseEntity goalEntity) {
+		this.goal = goalEntity;
 		this.entity = entity;
-		this.type = type;
 	}
 
 	@Override
 	public void doAction() {
 		switch(state) {
 			case SETUP_MOVE:
-				// Find the closest rock and move towards it
-				closest = WorldUtil.getClosestEntityOfClass(type, entity.getPosX(), entity.getPosY());
-
-				if (closest.isPresent()) {
-					action = new MoveAction(closest.get().getPosX(), closest.get().getPosY(), entity);
-				} else {
-					this.completed = true;
-				}
+				// Always move back to the goal entity position
+				action = new MoveAction(goal.getPosX(), goal.getPosY(), entity);
 
 				state = State.MOVE_TOWARDS;
 				break;
@@ -56,24 +54,46 @@ public class GatherAction implements DecoAction {
 					return;
 				}
 
+				// Do the move action
 				action.doAction();
 				break;
 			case COLLECT:
-				ticksCollect--;
-				if (ticksCollect == 0) {
-					state = State.SETUP_RETURN;
-					if (closest.isPresent() && closest.get() instanceof HasHealth) {
-						((HasHealth) closest.get()).setHealth(((HasHealth) closest.get()).getHealth() - 10);
+				if (GameManager.get().getWorld().getEntities().contains(goal)) {
+					// Our goal object still exists, mine it
+					ticksCollect--;
+					if (ticksCollect == 0) {
+						state = SETUP_RETURN;
+						if (goal instanceof HasHealth) {
+							((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 5);
+						}
+						ticksCollect = 100;
 					}
-					ticksCollect = 100;
+				} else {
+					// Find a new closest entity
+					BaseWorld world = GameManager.get().getWorld();
+
+					Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
+					if (surround.isPresent()) {
+						Point p = new Point(surround.get().getPosX(), surround.get().getPosY());
+						Point o = new Point(entity.getPosX(), entity.getPosY());
+
+						if (p.distanceTo(o) < 2f) {
+							this.goal = surround.get();
+							this.state = SETUP_MOVE;
+							return;
+						} else {
+							this.completed = true;
+							return;
+						}
+					}
 				}
+
 				break;
 			case SETUP_RETURN:
-				// Find the closest rock and move towards it
-				closest = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
+				Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
 
-				if (closest.isPresent()) {
-					action = new MoveAction(closest.get().getPosX(), closest.get().getPosY(), entity);
+				if (base.isPresent()) {
+					action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
 				}
 
 				state = State.RETURN_TO_BASE;
@@ -81,6 +101,8 @@ public class GatherAction implements DecoAction {
 			case RETURN_TO_BASE:
 				if (action.completed()) {
 					state = State.SETUP_MOVE;
+					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+					resourceManager.setRocks(resourceManager.getRocks() + 10);
 					return;
 				}
 

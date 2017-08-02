@@ -1,12 +1,12 @@
 package com.deco2800.marswars.util;
 
-import com.deco2800.marswars.World;
+import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 
 import java.util.*;
 
 public class Pathfinder {
-	public static List<Point> aStar(Point start, Point goal, World world) {
+	public static List<Point> aStar(Point start, Point goal, BaseWorld baseWorld) {
 		//Truncate points to the tile grid
 		Point truncGoal = new Point((int)goal.getX(), (int)goal.getY());
 
@@ -49,8 +49,8 @@ public class Pathfinder {
 			openSet.remove(current);
 			closedSet.add(current);
 
-			for (Point p : getAdjacentNodes(current, world)) {
-				List<BaseEntity> entities = world.getEntities((int)p.getX(), (int)p.getY());
+			for (Point p : getAdjacentNodes(current, baseWorld)) {
+				List<BaseEntity> entities = baseWorld.getEntities((int)p.getX(), (int)p.getY());
 
 				int cost = 0;
 				for (BaseEntity e : entities) {
@@ -99,26 +99,26 @@ public class Pathfinder {
 		return Math.pow(node.getX() - goal.getX(), 2) +  Math.pow(node.getY() - goal.getY(), 2);
 	}
 
-	private static List<Point> getAdjacentNodes(Point p, World world) {
+	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld) {
 		List<Point> adjacencies = new ArrayList<>();
 
 		// Up
-		if (p.getX() >= 0 && p.getX() < world.getWidth() && p.getY() - 1 >= 0 && p.getY() - 1 < world.getLength()) {
+		if (p.getX() >= 0 && p.getX() < baseWorld.getWidth() && p.getY() - 1 >= 0 && p.getY() - 1 < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX(), p.getY() - 1));
 		}
 
 		// Down
-		if (p.getX() >= 0 && p.getX() < world.getWidth() && p.getY() + 1 >= 0 && p.getY() + 1 < world.getLength()) {
+		if (p.getX() >= 0 && p.getX() < baseWorld.getWidth() && p.getY() + 1 >= 0 && p.getY() + 1 < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX(), p.getY() + 1));
 		}
 
 		// Left
-		if (p.getX() - 1 >= 0 && p.getX() - 1 < world.getWidth() && p.getY() >= 0 && p.getY() < world.getLength()) {
+		if (p.getX() - 1 >= 0 && p.getX() - 1 < baseWorld.getWidth() && p.getY() >= 0 && p.getY() < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX() - 1, p.getY()));
 		}
 
 		// Right
-		if (p.getX() + 1 >= 0 && p.getX() + 1 < world.getWidth() && p.getY() >= 0 && p.getY() < world.getLength()) {
+		if (p.getX() + 1 >= 0 && p.getX() + 1 < baseWorld.getWidth() && p.getY() >= 0 && p.getY() < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX() + 1, p.getY()));
 		}
 

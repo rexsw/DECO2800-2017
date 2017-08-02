@@ -3,15 +3,15 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.moos.entities.AbstractEntity;
-import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.managers.GameManager;
-import com.deco2800.moos.managers.SoundManager;
+import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.util.Point;
+import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -36,26 +36,41 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
+		this.setCost(100);
 
-		Random r = new Random();
-		currentAction = Optional.of(new MoveAction(r.nextInt(24), r.nextInt(24), this));
 	}
 
 	@Override
 	public void onTick(int i) {
 		if (!currentAction.isPresent()) {
+			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
+				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+				// We are stuck on a tile with another spacman
+				Random r = new Random();
+
+				BaseWorld world = GameManager.get().getWorld();
+
+				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
+
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
+					return;
+				}
+
+				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+					// No good
+					return;
+				}
+
+				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+			}
 			return;
 		}
 
 		if (!currentAction.get().completed()) {
-//			LOGGER.info("Action is incomplete");
 			currentAction.get().doAction();
 		} else {
 			LOGGER.info("Action is completed. Deleting");
-//			currentAction = Optional.empty();
-
-			Random r = new Random();
-			currentAction = Optional.of(new MoveAction(r.nextInt(24), r.nextInt(24), this));
+			currentAction = Optional.empty();
 		}
 	}
 
@@ -70,9 +85,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	@Override
 	public void onRightClick(float x, float y) {
-		Optional<AbstractEntity> entity = WorldUtil.getEntityAtPosition(this.getParent(), x, y);
-		if (entity.isPresent()) {
-			currentAction = Optional.of(new GatherAction(this, Rock.class));
+		List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)x, (int)y);
+		if (entities.size() > 0) {
+			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
 			LOGGER.error("Assigned action gather");
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));

@@ -13,14 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.net.MarsWarsClientConnectionManager;
-import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.managers.GameManager;
-import com.deco2800.moos.managers.TextureManager;
-import com.deco2800.moos.renderers.Render3D;
-import com.deco2800.moos.renderers.Renderable;
-import com.deco2800.moos.renderers.Renderer;
+import com.deco2800.marswars.renderers.Render3D;
+import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.InitialWorld;
 import uq.deco2800.soom.client.SoomClient;
 import uq.deco2800.soom.client.game.GameClientConnectionManager;
 
@@ -75,8 +77,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		reg.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
 		reg.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
 		reg.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
-		reg.saveTexture("spatman_blue", "spatman_blue.png");
-		reg.saveTexture("water", "w1.png");
+		reg.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
+		reg.saveTexture("water", "resources/placeholderassets/w1.png");
 
 		/*
 		 *	Set up new stuff for this game
@@ -95,7 +97,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			e.printStackTrace();
 		}
 
-		networkClient.joinLobby("timmy");
+		networkClient.joinLobby("marswarsuser");
 
 		/*
 		 * Setup the game itself
@@ -264,8 +266,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch);
 
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Rocks: " + resourceManager.getRocks() + " Fuel: " + resourceManager.getFuel());
 
 		stage.act();
 		stage.draw();

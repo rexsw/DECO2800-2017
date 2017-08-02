@@ -10,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.moos.entities.HasProgress;
-import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.Optional;
 
@@ -38,6 +36,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
+		this.setCost(10000000);
 	}
 
 	public void giveAction(DecoAction action) {
@@ -110,7 +109,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 	@Override
 	public void buttonWasPressed() {
 		/* We probably don't want these in random spots */
-		currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0), this.getParent()));
+		currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
 	}
 
 	@Override

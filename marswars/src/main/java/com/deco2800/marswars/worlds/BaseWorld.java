@@ -1,15 +1,14 @@
-package com.deco2800.marswars;
+package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.moos.util.Array2D;
-import com.deco2800.moos.worlds.AbstractWorld;
+import com.deco2800.marswars.util.Array2D;
 
 import java.util.List;
 
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class World extends AbstractWorld {
+public class BaseWorld extends AbstractWorld {
 	/* Crappy way of storing collision */
 	protected Array2D<List<BaseEntity>> collisionMap;
 
@@ -42,6 +41,4 @@ public class World extends AbstractWorld {
 	public List<BaseEntity> getEntities(int x, int y) {
 		return collisionMap.get(x, y);
 	}
-
-
 }

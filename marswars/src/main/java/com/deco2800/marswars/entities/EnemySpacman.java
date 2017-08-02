@@ -1,9 +1,8 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.LocalEnemyManager;
-import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.managers.GameManager;
 
 import java.util.Optional;
 

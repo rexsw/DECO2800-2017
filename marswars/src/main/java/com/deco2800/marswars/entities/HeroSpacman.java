@@ -5,8 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.moos.entities.Tickable;
-import com.deco2800.moos.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.Optional;
 

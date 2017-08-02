@@ -1,12 +1,10 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.InitialWorld;
-import com.deco2800.marswars.World;
+import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.moos.managers.GameManager;
-import com.deco2800.moos.managers.Manager;
-import com.deco2800.moos.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.AbstractWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,7 @@ public class MouseHandler extends Manager {
 
 				LOGGER.info("Clicked on tile x:" + proj_x + " y:" + proj_y);
 
-				List<BaseEntity> entities = ((World)GameManager.get().getWorld()).getEntities((int)proj_x, (int)proj_y);
+				List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)proj_x, (int)proj_y);
 
 
 				if (entities.size() == 0) {

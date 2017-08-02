@@ -4,13 +4,13 @@
  <tile id="0" probability="0.25">
   <image width="55" height="32" source="ground-1.png"/>
  </tile>
- <tile id="5">
+ <tile id="8">
   <image width="55" height="32" source="ground-2.png"/>
  </tile>
- <tile id="6">
+ <tile id="9">
   <image width="55" height="32" source="ground-3.png"/>
  </tile>
- <tile id="7">
+ <tile id="10">
   <image width="55" height="32" source="ground-4.png"/>
  </tile>
 </tileset>

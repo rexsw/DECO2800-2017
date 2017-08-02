@@ -1,7 +1,5 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.moos.managers.Manager;
-
 /**
  * Resource Manager
  *

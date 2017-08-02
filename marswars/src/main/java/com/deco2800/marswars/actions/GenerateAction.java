@@ -1,7 +1,8 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.moos.worlds.AbstractWorld;
-import com.deco2800.moos.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * A generator action for deploying units from buildings
@@ -10,22 +11,21 @@ import com.deco2800.moos.entities.AbstractEntity;
 public class GenerateAction implements DecoAction {
 
 	/* The resultant entity to be created */
-	private AbstractEntity actionResult;
+	private BaseEntity actionResult;
 
 	/* The progress of the entities creation */
 	private int progress = 100;
 
 	/* The world to spawn the entity into */
-	private AbstractWorld world;
+	private BaseWorld world;
 
 	/**
 	 * Constructor for the Generator action
 	 * @param actionResult
-	 * @param world
 	 */
-	public GenerateAction(AbstractEntity actionResult, AbstractWorld world) {
+	public GenerateAction(BaseEntity actionResult) {
 		this.actionResult = actionResult;
-		this.world = world;
+		this.world = GameManager.get().getWorld();
 	}
 
 	@Override

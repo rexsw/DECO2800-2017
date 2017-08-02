@@ -1,1 +1,1 @@
-include 'marswars'
+include 'core','marswars'
