@@ -270,11 +270,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		renderer.render(batch);
 
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Fuel: " + resourceManager.getFuel() + " Water: " + resourceManager.getWater());
 
-		rocksLabel.setText("Rocks: " + resourceManager.getRocks());
 
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Rocks: " + resourceManager.getRocks() + " Fuel: " + resourceManager.getFuel());
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 
 		stage.act();
 		stage.draw();

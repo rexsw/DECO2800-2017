@@ -9,7 +9,8 @@ public class Water extends BaseEntity implements HasHealth {
 	public Water(AbstractWorld parent, float posX, float posY, float posZ, float height, float width) {
 		super(posX, posY, posZ, height, width, 1f);
 		this.setTexture("water");
-		this.setCost(100);
+		this.setCost(10);
+		this.canWalkOver = true;
 	}
 
 	@Override

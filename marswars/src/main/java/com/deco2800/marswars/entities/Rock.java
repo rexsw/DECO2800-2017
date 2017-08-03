@@ -14,7 +14,7 @@ public class Rock extends BaseEntity implements HasHealth {
 		super(posX, posY, posZ, height, width, 1f);
 		this.setTexture("rock");
 		this.canWalkOver = true;
-		this.setCost(10);
+		this.setCost(100);
 	}
 
 

@@ -33,9 +33,6 @@ public class InitialWorld extends BaseWorld {
 				this.collisionMap.set(x, y, new ArrayList<>());
 			}
 		}
-
-
-
 	}
 
 	public void loadEntities() {
@@ -44,22 +41,20 @@ public class InitialWorld extends BaseWorld {
 			for (int y = 0; y < this.getLength(); y++) {
 				Random r = new Random();
 
-				if (r.nextInt(10) < 1) {
+				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Rock(x, y, 0, 1f, 1f));
 					continue;
 				}
 
-				if (r.nextInt(10) < 3) {
+				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Water(this, x, y, 0, 1, 1));
 					continue;
 				}
 
-				if (r.nextInt(10) < 1) {
+				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Spacman(x, y, 0));
 					continue;
 				}
-
-
 			}
 		}
 

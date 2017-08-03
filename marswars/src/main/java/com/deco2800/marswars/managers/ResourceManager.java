@@ -7,7 +7,7 @@ package com.deco2800.marswars.managers;
 public class ResourceManager extends Manager {
 	private int rocks = 0;
 	private int fuel = 0;
-	private int rarepepes = 0;
+	private int water = 0;
 
 	public int getRocks() {
 		return rocks;
@@ -29,11 +29,11 @@ public class ResourceManager extends Manager {
 		this.fuel = fuel;
 	}
 
-	public int getRarepepes() {
-		return rarepepes;
+	public int getWater() {
+		return water;
 	}
 
-	public void setRarepepes(int rarepepes) {
-		this.rarepepes = rarepepes;
+	public void setWater(int water) {
+		this.water = water;
 	}
 }
