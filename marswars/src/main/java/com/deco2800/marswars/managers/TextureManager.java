@@ -45,6 +45,7 @@ public class TextureManager extends Manager {
         textureMap.put("spacman_ded", new Texture("resources/placeholderassets/spacman_ded.png"));
         textureMap.put("selected", new Texture("resources/placeholderassets/selected.png"));
         textureMap.put("selected_black", new Texture("resources/placeholderassets/selected_black.png"));
+        textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
 
     }
 

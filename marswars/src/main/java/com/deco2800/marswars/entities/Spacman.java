@@ -42,7 +42,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void onTick(int i) {
 		if (!currentAction.isPresent()) {
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
+			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 				// We are stuck on a tile with another spacman
 				Random r = new Random();
