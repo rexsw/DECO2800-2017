@@ -78,7 +78,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		handler.registerForRightClickNotification(this);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("ree1.wav");
 		this.setTexture("spacman_blue");
 		LOGGER.error("Clicked on spacman");
 	}
@@ -94,6 +93,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_green");
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("endturn.wav");
+
 	}
 
 	@Override

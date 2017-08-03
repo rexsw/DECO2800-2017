@@ -14,6 +14,10 @@ public class ResourceManager extends Manager {
 	}
 
 	public void setRocks(int rocks) {
+		if (this.rocks < rocks) {
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound("closed.wav");
+		}
 		this.rocks = rocks;
 	}
 

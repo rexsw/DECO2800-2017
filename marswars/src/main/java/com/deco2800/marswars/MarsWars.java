@@ -54,6 +54,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Window window;
 	Button peonButton;
 	Label helpText;
+	Label rocksLabel;
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -128,11 +129,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		});
 
 		helpText = new Label("Welcome to MarsWars!", skin);
+		rocksLabel = new Label("Rocks: 0", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(helpText);
 		window.add(peonButton);
+		window.add(rocksLabel);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(0, 0); // Place at the bottom
@@ -268,6 +271,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 
+		rocksLabel.setText("Rocks: " + resourceManager.getRocks());
+
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Rocks: " + resourceManager.getRocks() + " Fuel: " + resourceManager.getFuel());
 
@@ -322,6 +327,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.getViewport().update(width, height, true);
 		window.setPosition(0, 0);
+		window.setWidth(stage.getWidth());
 	}
 
 	/**
