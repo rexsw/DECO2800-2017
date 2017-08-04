@@ -25,7 +25,10 @@ import java.util.List;
  */
 public class Render3D implements Renderer {
     
-    float autoRenderValue = 0.6f;
+    float autoRenderValue = 0.55f;
+
+    /* Enables debugging text to show the entity rendering order */
+    private static final boolean DEBUG = false;
 
     BitmapFont font;
 
@@ -132,7 +135,7 @@ public class Render3D implements Renderer {
             total++;
         }
 
-//        LOGGER.info("Rendered " + count + "/" + total + " entities");
+        LOGGER.info("Rendered " + count + "/" + total + " entities");
 
         for (int index = 0; index < entities.size(); index++) {
             Renderable entity = entities.get(index);
@@ -150,22 +153,19 @@ public class Render3D implements Renderer {
             }
         }
 
-//        /*
-//        Timmy approves this commented out code. Shut up sonar!
-//        Leaving this here.
-//        It renders the rendering order onto entites so you can see what gets rendered when
-//
-//         */
-//        for (int index = 0; index < entities.size(); index++) {
-//            Renderable entity = entities.get(index);
-//            float cartX = entity.getPosX();
-//            float cartY = (worldWidth-1) - entity.getPosY();
-//
-//            float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
-//            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
-//
-//            font.draw(batch, String.format("%d", index), isoX + 32, isoY + 32);
-//        }
+        if (DEBUG) {
+            for (int index = 0; index < entities.size(); index++) {
+                Renderable entity = entities.get(index);
+                float cartX = entity.getPosX();
+                float cartY = (worldWidth-1) - entity.getPosY();
+
+                float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
+                float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+
+                font.draw(batch, String.format("%d", index), isoX + 32, isoY + 32);
+            }
+        }
+
 
         batch.end();
 

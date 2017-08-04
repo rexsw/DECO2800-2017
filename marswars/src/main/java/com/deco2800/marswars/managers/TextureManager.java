@@ -47,6 +47,17 @@ public class TextureManager extends Manager {
         textureMap.put("selected_black", new Texture("resources/placeholderassets/selected_black.png"));
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
+        this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
+        this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
+        this.saveTexture("base", "resources/placeholderassets/base.png");
+        this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
+        this.saveTexture("spacman", "resources/placeholderassets/spacman.png");
+        this.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
+        this.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
+        this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
+        this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
+        this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
+        this.saveTexture("water", "resources/placeholderassets/w1.png");
     }
 
     /**

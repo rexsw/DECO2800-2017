@@ -19,7 +19,7 @@ public class InitialWorld extends BaseWorld {
 	public InitialWorld() {
 
  		/* Load up the map for this world */
-		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder200.tmx");
+		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder.tmx");
 
                 /* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
@@ -50,7 +50,7 @@ public class InitialWorld extends BaseWorld {
 					continue;
 				}
 
-				if (r.nextInt(10) < 100) {
+				if (r.nextInt(10) < 1) {
 					this.addEntity(new Spacman(x, y, 0));
 					continue;
 				}
@@ -64,7 +64,7 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
-		this.addEntity(new EnemyTank(25, 25, 0));
+		this.addEntity(new EnemyTank(20, 20, 0));
 	}
 
 	public void deSelectAll() {

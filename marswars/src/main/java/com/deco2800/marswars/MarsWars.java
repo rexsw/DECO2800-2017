@@ -73,17 +73,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		reg.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
-		reg.saveTexture("rock", "resources/placeholderassets/ground-1.png");
-		reg.saveTexture("base", "resources/placeholderassets/base.png");
-		reg.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
-		reg.saveTexture("spacman", "resources/placeholderassets/spacman.png");
-		reg.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
-		reg.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
-		reg.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-		reg.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
-		reg.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
-		reg.saveTexture("water", "resources/placeholderassets/w1.png");
 
 		/*
 		 *	Set up new stuff for this game
@@ -96,7 +85,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+					if(TimeUtils.nanoTime() - lastGameTick > 1000000) {
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
@@ -109,7 +98,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					}
 
 					try {
-						Thread.sleep(100);
+						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
