@@ -1,9 +1,8 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.util.Pathfinder;
+import com.deco2800.marswars.util.PathfindingThread;
 import com.deco2800.marswars.util.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +26,9 @@ public class MoveAction implements DecoAction {
 	boolean completed = false;
 	List<Point> path;
 
+	PathfindingThread pathfinder;
+	Thread thread;
+
 	public MoveAction(float goalX, float goalY, AbstractEntity entity) {
 		this.goalX = goalX;
 		this.goalY = goalY;
@@ -39,11 +41,19 @@ public class MoveAction implements DecoAction {
 
 		LOGGER.info("new x: " + goalX + " y: " + goalY);
 
-		path = Pathfinder.aStar(new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY), (BaseWorld) GameManager.get().getWorld());
+		pathfinder = new PathfindingThread(GameManager.get().getWorld(), new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY));
+		thread = new Thread(pathfinder);
+		thread.start();
 	}
 
 	@Override
 	public void doAction() {
+
+		if (thread.isAlive()) {
+			return;
+		} else {
+			path = pathfinder.getPath();
+		}
 
 		if (path == null) {
 			completed = true;

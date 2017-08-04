@@ -1,10 +1,13 @@
 package com.deco2800.marswars.renderers;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.managers.GameManager;
@@ -21,6 +24,8 @@ import java.util.List;
  * @Author Tim Hadwen
  */
 public class Render3D implements Renderer {
+    
+    float autoRenderValue = 0.6f;
 
     BitmapFont font;
 
@@ -32,7 +37,7 @@ public class Render3D implements Renderer {
      * @param batch Batch to render onto
      */
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, Camera camera) {
         if (font == null) {
             font = new BitmapFont();
             font.getData().setScale(0.25f);
@@ -66,6 +71,9 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
+        int count = 0;
+        int total = 0;
+
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < walkables.size(); index++) {
             Renderable entity = walkables.get(index);
@@ -83,8 +91,16 @@ public class Render3D implements Renderer {
             // We want to keep the aspect ratio of the image so...
             float aspect = (float)(tex.getWidth())/(float)(tileWidth);
 
-            batch.draw(tex, isoX, isoY, tileWidth*entity.getXRenderLength(),
-                    (tex.getHeight()/aspect)*entity.getYRenderLength());
+            Vector3 pos = camera.position;
+            OrthographicCamera cam = (OrthographicCamera) camera;
+
+            if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
+                    && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
+                        (tex.getHeight() / aspect) * entity.getYRenderLength());
+                count++;
+            }
+            total++;
         }
 
         /* Render each entity (backwards) in order to retain objects at the front */
@@ -104,9 +120,19 @@ public class Render3D implements Renderer {
             // We want to keep the aspect ratio of the image so...
             float aspect = (float)(tex.getWidth())/(float)(tileWidth);
 
-            batch.draw(tex, isoX, isoY, tileWidth*entity.getXRenderLength(),
-                    (tex.getHeight()/aspect)*entity.getYRenderLength());
+            Vector3 pos = camera.position;
+            OrthographicCamera cam = (OrthographicCamera) camera;
+
+            if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
+                    && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
+                        (tex.getHeight() / aspect) * entity.getYRenderLength());
+                count++;
+            }
+            total++;
         }
+
+//        LOGGER.info("Rendered " + count + "/" + total + " entities");
 
         for (int index = 0; index < entities.size(); index++) {
             Renderable entity = entities.get(index);
@@ -114,7 +140,8 @@ public class Render3D implements Renderer {
             float cartX = entity.getPosX();
             float cartY = (worldWidth-1) - entity.getPosY();
 
-            float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
+            float isoX = baseX + ((
+                    cartX - cartY) / 2.0f * tileWidth);
             float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
 
 

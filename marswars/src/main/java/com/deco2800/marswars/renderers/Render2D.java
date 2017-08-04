@@ -1,5 +1,6 @@
 package com.deco2800.marswars.renderers;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
@@ -30,7 +31,7 @@ public class Render2D implements Renderer {
      * @param batch Batch to render onto
      */
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, Camera camera) {
         List<BaseEntity> renderables = GameManager.get().getWorld().getEntities();
 
         batch.begin();

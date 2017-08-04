@@ -37,6 +37,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
 		this.setCost(10);
+
+		Random r = new Random();
+		this.currentAction = Optional.of(new MoveAction(r.nextInt(150) + 25, r.nextInt(150) + 25, this));
 	}
 
 	@Override
@@ -70,6 +73,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		} else {
 			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
+			Random r = new Random();
+			this.currentAction = Optional.of(new MoveAction(r.nextInt(150) + 25, r.nextInt(150) + 25, this));
 		}
 	}
 

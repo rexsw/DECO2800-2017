@@ -23,6 +23,8 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uq.deco2800.soom.client.SoomClient;
 import uq.deco2800.soom.client.game.GameClientConnectionManager;
 
@@ -35,6 +37,8 @@ import java.io.IOException;
  * @Author Tim Hadwen
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -86,6 +90,32 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// do something important here, asynchronously to the rendering thread
+				while(true) {
+					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						for (Renderable e : GameManager.get().getWorld().getEntities()) {
+							if (e instanceof Tickable) {
+								((Tickable) e).onTick(0);
+
+							}
+						}
+
+						GameManager.get().onTick(0);
+						lastGameTick = TimeUtils.nanoTime();
+					}
+
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 
 		/* Create a sound manager for the whole game */
 
@@ -224,18 +254,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
-		if(TimeUtils.nanoTime() - lastGameTick > 16000000) {
-			for (Renderable e : GameManager.get().getWorld().getEntities()) {
-				if (e instanceof Tickable) {
-					((Tickable) e).onTick(0);
-
-				}
-			}
-
-			GameManager.get().onTick(0);
-			lastGameTick = TimeUtils.nanoTime();
-		}
-
         /*
          * Create a new render batch.
          * At this stage we only want one but perhaps we need more for HUDs etc
@@ -267,7 +285,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
          * Use the selected renderer to render objects onto the map
          */
-		renderer.render(batch);
+		renderer.render(batch, camera);
 
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Fuel: " + resourceManager.getFuel() + " Water: " + resourceManager.getWater());
