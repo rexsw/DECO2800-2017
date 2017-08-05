@@ -40,16 +40,6 @@ dependencies {
 }
 
 sourceSets.main.resources.srcDirs = [ "../marswars/resources/" ]
-//apply plugin: 'org.flywaydb.flyway'
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//    }
-//    dependencies {
-//        classpath group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '3.2.1'
-//    }
-//
-//}
 
 task(run, dependsOn: "classes", type: JavaExec) {
     main = "com.deco2800.marswars.GameLauncher"

@@ -1,5 +1,5 @@
 allprojects {
-    group = 'com.deco2800.4stroke'
+    group = 'com.deco2800.spacwars'
     version = '0.1-SNAPSHOT'
 }
 
