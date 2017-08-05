@@ -45,7 +45,7 @@ public class Render3D implements Renderer {
         List<BaseEntity> entities = new ArrayList<>();
         List<BaseEntity> walkables = new ArrayList<>();
 
-        /* Gets a list of all entities in the renderables */
+        /* Sort entities into walkables and entities */
         for (BaseEntity r : renderables) {
             if (r.canWalOver()) {
                 walkables.add(r);
@@ -54,15 +54,9 @@ public class Render3D implements Renderer {
             }
         }
 
-        /* Sort these so that the objects don't render in the wrong order */
-        Collections.sort(entities);
-        Collections.sort(walkables);
-
         batch.begin();
-
         renderEntities(walkables, batch, camera);
         renderEntities(entities, batch, camera);
-
         batch.end();
 
     }
@@ -77,7 +71,14 @@ public class Render3D implements Renderer {
         return new IsometricTiledMapRenderer(GameManager.get().getWorld().getMap(), 1, batch);
     }
 
-    void renderEntities(List<BaseEntity> entities, SpriteBatch batch,  Camera camera) {
+    /**
+     * Renders entities given by entities onto the batch and camera
+     * @param entities
+     * @param batch
+     * @param camera
+     */
+    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch,  Camera camera) {
+        Collections.sort(entities);
         if (font == null) {
             font = new BitmapFont();
             font.getData().setScale(0.25f);

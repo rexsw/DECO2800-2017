@@ -17,18 +17,32 @@ public class MoveAction implements DecoAction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoveAction.class);
 
-	float goalX = 0;
-	float goalY = 0;
-	AbstractEntity entity;
+	/* Goal positions */
+	private float goalX = 0;
+	private float goalY = 0;
 
-	float speed = 0.05f;
+	/* Entity we are trying to move towards */
+	private AbstractEntity entity;
 
-	boolean completed = false;
-	List<Point> path;
+	/* Speed factor */
+	private float speed = 0.05f;
 
-	PathfindingThread pathfinder;
-	Thread thread;
+	/* Completed variable */
+	private boolean completed = false;
 
+	/* A* Path we have found - Be careful, it might be null */
+	private List<Point> path;
+
+	/* Threads so that the pathfidning runs seperately and doesnt pause other entities */
+	private PathfindingThread pathfinder;
+	private Thread thread;
+
+	/**
+	 * Constructor for the move action
+	 * @param goalX goal position X
+	 * @param goalY goal position Y
+	 * @param entity entity to move around
+	 */
 	public MoveAction(float goalX, float goalY, AbstractEntity entity) {
 		this.goalX = goalX;
 		this.goalY = goalY;
@@ -46,58 +60,67 @@ public class MoveAction implements DecoAction {
 		thread.start();
 	}
 
+	/**
+	 * Do action method
+	 * Completes the action 1 tick at a time
+	 */
 	@Override
 	public void doAction() {
 
+		/* Ensure the thread has died and therefore the path has been found, otherwise return */
 		if (thread.isAlive()) {
 			return;
 		} else {
 			path = pathfinder.getPath();
 		}
 
-		if (path == null) {
+		/* If the path is null its probably completed */
+		if (path == null || path.size() < 1) {
 			completed = true;
 			return;
 		}
 
-		if (path.size() < 1) {
-			completed = true;
+		/* grab the next point on the path and attempt to move towards it */
+		float tmpgoalX = path.get(0).getX();
+		float tmpgoalY = path.get(0).getY();
+
+		/* If we have arrived (or close enough to) then remove this point from the path and continue */
+		if (Math.abs(entity.getPosX() - tmpgoalX) < 0.01f && Math.abs(entity.getPosY() - tmpgoalY) < 0.01f) {
+			entity.setPosX(tmpgoalX);
+			entity.setPosY(tmpgoalY);
+			path.remove(0);
 			return;
 		}
 
-		if (entity != null) {
+		/* Calculate a deltaX and Y to move based on polar coordinates and speed to ensure
+				speed is constant regardless of direction
+		 */
+		float deltaX = entity.getPosX() - tmpgoalX;
+		float deltaY = entity.getPosY() - tmpgoalY;
+		float angle = (float)(Math.atan2(deltaY, deltaX)) + (float)(Math.PI);
+		float changeX = (float)(speed * Math.cos(angle));
+		float changeY = (float)(speed * Math.sin(angle));
+		float newX = entity.getPosX() + changeX;
+		float newY = entity.getPosY() + changeY;
 
-			float tmpgoalX = path.get(0).getX();
-			float tmpgoalY = path.get(0).getY();
-
-			if (Math.abs(entity.getPosX() - tmpgoalX) < 0.01f && Math.abs(entity.getPosY() - tmpgoalY) < 0.01f) {
-				entity.setPosX(tmpgoalX);
-				entity.setPosY(tmpgoalY);
-				path.remove(0);
-				return;
-			}
-
-			float deltaX = entity.getPosX() - tmpgoalX;
-			float deltaY = entity.getPosY() - tmpgoalY;
-
-			float angle = (float)(Math.atan2(deltaY, deltaX)) + (float)(Math.PI);
-
-			float changeX = (float)(speed * Math.cos(angle));
-			float changeY = (float)(speed * Math.sin(angle));
-
-			float newX = entity.getPosX() + changeX;
-			float newY = entity.getPosY() + changeY;
-
-			entity.setPosX(newX);
-			entity.setPosY(newY);
-		}
+		/* Apply these values to the entity */
+		entity.setPosX(newX);
+		entity.setPosY(newY);
 	}
 
+	/**
+	 * Returns true if action is completed and can therefore be removed
+	 * @return
+	 */
 	@Override
 	public boolean completed() {
 		return completed;
 	}
 
+	/**
+	 * Returns progress
+	 * @return
+	 */
 	@Override
 	public int actionProgress() {
 		return 0;

@@ -36,7 +36,7 @@ public class MouseHandler extends Manager {
 				AbstractWorld world = GameManager.get().getWorld();
 
 				// If we get another left click ignore the previous listeners
-				listeners.clear();
+//				listeners.clear();
 
 				float proj_x = 0 , proj_y = 0;
 

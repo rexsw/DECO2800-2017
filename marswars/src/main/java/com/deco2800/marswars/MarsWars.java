@@ -85,7 +85,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 1000000) {
+					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
@@ -294,7 +294,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Handles keyboard input.
 	 * There probably should be some way to pass this into another class
 	 */
-	//TODO Handle this elsewhere
 	private void handleInput() {
 		int speed = 10;
 

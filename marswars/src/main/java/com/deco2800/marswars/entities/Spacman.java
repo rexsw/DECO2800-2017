@@ -39,21 +39,31 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.setCost(10);
 	}
 
+	/**
+	 * On tick method for the spacman
+	 * @param i
+	 */
 	@Override
 	public void onTick(int i) {
+		/* Don't let spacman stand on a tile with another entity,
+			do really basic formation stuff instead
+		 */
 		if (!currentAction.isPresent()) {
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
-				// We are stuck on a tile with another spacman
-				Random r = new Random();
-
 				BaseWorld world = GameManager.get().getWorld();
 
+				/* We are stuck on a tile with another entity
+				 * therefore randomize a close by position and see if its a good
+				 * place to move to
+				 */
+				Random r = new Random();
 				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
 
+				/* Ensure new position is on the map */
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
 					return;
 				}
-
+				/* Check that the new position is free */
 				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
 					// No good
 					return;
@@ -61,11 +71,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
+				/* Finally move to that position using a move action */
 				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			return;
 		}
 
+		/* If the action is completed, remove it otherwise keep doing that action */
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
 		} else {
@@ -74,6 +86,11 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 	}
 
+	/**
+	 * On click method for the spacman
+	 * Should change to Blue
+	 * @param handler
+	 */
 	@Override
 	public void onClick(MouseHandler handler) {
 		handler.registerForRightClickNotification(this);
@@ -82,6 +99,11 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		LOGGER.error("Clicked on spacman");
 	}
 
+	/**
+	 * On rightclick method for spacman
+	 * @param x
+	 * @param y
+	 */
 	@Override
 	public void onRightClick(float x, float y) {
 		List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)x, (int)y);
@@ -98,11 +120,16 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	}
 
+	/**
+	 * Gets the health for this spacman
+	 * @return
+	 */
 	@Override
 	public int getHealth() {
 		return health;
 	}
 
+	/* Sets the health for this spacman */
 	@Override
 	public void setHealth(int health) {
 		LOGGER.info("Set health to " + health);

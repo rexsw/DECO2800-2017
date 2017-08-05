@@ -35,6 +35,9 @@ public class InitialWorld extends BaseWorld {
 		}
 	}
 
+	/**
+	 * Adds entities to the world
+	 */
 	public void loadEntities() {
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
@@ -58,15 +61,15 @@ public class InitialWorld extends BaseWorld {
 		}
 
 		this.addEntity(new Spacman(0, 0, 0));
-
-
-
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
 		this.addEntity(new EnemyTank(20, 20, 0));
 	}
 
+	/**
+	 * Deselects all entities
+	 */
 	public void deSelectAll() {
 		for (Renderable r : this.getEntities()) {
 			if (r instanceof Selectable) {
