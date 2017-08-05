@@ -31,17 +31,20 @@ public class MouseHandler extends Manager {
 	 * @param y
 	 */
 	public void handleMouseClick(float x, float y, int button) {
+		float tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+		float tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+
 		switch(button) {
 			case 0: // Left Click
 				AbstractWorld world = GameManager.get().getWorld();
 
 				// If we get another left click ignore the previous listeners
-//				listeners.clear();
+//				listeners.clear(); // Remove this to allow multiselect
 
 				float proj_x = 0 , proj_y = 0;
 
-				proj_x = x/55f;
-				proj_y = -(y - 32f / 2f) / 32f + proj_x;
+				proj_x = x/tileWidth;
+				proj_y = -(y - tileHeight / 2f) / tileHeight + proj_x;
 				proj_x -= proj_y - proj_x;
 
 				if (proj_x < 0 || proj_x > world.getWidth() || proj_y < 0 || proj_y > world.getLength()) {
@@ -65,8 +68,8 @@ public class MouseHandler extends Manager {
 
 				break;
 			case 1: // Right click
-				proj_x = x/55f;
-				proj_y = -(y - 32f / 2f) / 32f + proj_x;
+				proj_x = x/tileWidth;
+				proj_y = -(y - tileHeight / 2f) / tileHeight + proj_x;
 				proj_x -= proj_y - proj_x;
 
 				for (Clickable c : listeners) {

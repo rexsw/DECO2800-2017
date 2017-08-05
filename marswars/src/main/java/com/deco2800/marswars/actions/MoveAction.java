@@ -85,7 +85,7 @@ public class MoveAction implements DecoAction {
 		float tmpgoalY = path.get(0).getY();
 
 		/* If we have arrived (or close enough to) then remove this point from the path and continue */
-		if (Math.abs(entity.getPosX() - tmpgoalX) < 0.01f && Math.abs(entity.getPosY() - tmpgoalY) < 0.01f) {
+		if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {
 			entity.setPosX(tmpgoalX);
 			entity.setPosY(tmpgoalY);
 			path.remove(0);

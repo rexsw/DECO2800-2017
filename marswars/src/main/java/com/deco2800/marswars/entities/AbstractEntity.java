@@ -195,7 +195,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		float isoX_o = ((cartX_o - cartY_o) / 2.0f);
 		float isoY_o = ((cartX_o + cartY_o) / 2.0f);
 
-		if (isoY == isoY_o) {
+		if (Math.abs(isoY - isoY_o) < 0.000001f) {
 			if (isoX < isoX_o) {
 				return 1;
 			} else if (isoX > isoX_o) {

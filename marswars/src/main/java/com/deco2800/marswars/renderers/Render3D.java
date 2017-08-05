@@ -89,9 +89,9 @@ public class Render3D implements Renderer {
         int tileWidth = (int)GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
         int tileHeight = (int)GameManager.get().getWorld().getMap().getProperties().get("tileheight");
 
-        float baseX = tileWidth*(worldWidth/2.0f - 0.5f); // bad
+        float baseX = tileWidth*(worldWidth/2.0f - 0.5f);
 
-        float baseY = -tileHeight/2*worldLength + tileHeight/2f; // good
+        float baseY = -tileHeight/2*worldLength + tileHeight/2f;
 
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < entities.size(); index++) {

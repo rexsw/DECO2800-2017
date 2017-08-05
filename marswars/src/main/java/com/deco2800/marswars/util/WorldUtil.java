@@ -1,10 +1,8 @@
 package com.deco2800.marswars.util;
 
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.worlds.AbstractWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +38,10 @@ public class WorldUtil {
 				distance = tmp_distance;
 				ret = (BaseEntity) e;
 			}
+		}
+		if (ret == null) {
+			LOGGER.info("Found nothing");
+			return Optional.empty();
 		}
 		if (distance < delta){
 			LOGGER.info("Closest is " + ret.toString());

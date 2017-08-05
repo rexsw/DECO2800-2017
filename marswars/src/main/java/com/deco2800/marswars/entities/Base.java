@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.Optional;
@@ -37,7 +39,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 		this.setCost(10000000);
-		this.canWalkOver = true;
 	}
 
 	public void giveAction(DecoAction action) {
@@ -109,8 +110,11 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 
 	@Override
 	public void buttonWasPressed() {
-		/* We probably don't want these in random spots */
-		currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if (resourceManager.getRocks() > 30) {
+			resourceManager.setRocks(resourceManager.getRocks() - 30);
+			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+		}
 	}
 
 	@Override
