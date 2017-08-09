@@ -5,27 +5,40 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import java.util.List;
 
 /**
- * Created by timhadwen on 4/8/17.
+ * A pretty basic (and crapola) method of threading the pathfinding
  */
 public class PathfindingThread implements Runnable {
 
-	BaseWorld world;
-	Point position;
-	Point goal;
+	private BaseWorld world;
+	private Point position;
+	private Point goal;
 
-	List<Point> path;
+	private List<Point> path;
 
+	/**
+	 * Constructor for the pathfinding thread
+	 * @param world
+	 * @param position
+	 * @param goal
+	 */
 	public PathfindingThread(BaseWorld world, Point position, Point goal) {
 		this.world = world;
 		this.position = position;
 		this.goal = goal;
 	}
 
+	/**
+	 * Runs the thread
+	 */
 	@Override
 	public void run() {
 		this.path = Pathfinder.aStar(position, goal, world);
 	}
 
+	/**
+	 * Returns the path (only if the thread has completed
+	 * @return
+	 */
 	public List<Point> getPath() {
 		return path;
 	}

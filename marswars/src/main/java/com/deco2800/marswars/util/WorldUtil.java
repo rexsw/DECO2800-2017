@@ -52,6 +52,12 @@ public class WorldUtil {
 		}
 	}
 
+	/**
+	 * Lists the entities of a class
+	 * @param entities
+	 * @param c
+	 * @return
+	 */
 	public static List getEntitiesOfClass(List<BaseEntity> entities, Class<?> c) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
@@ -62,6 +68,13 @@ public class WorldUtil {
 		return classEntities;
 	}
 
+	/**
+	 * Gets the closest entity of a class
+	 * @param c
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public static Optional<BaseEntity> getClosestEntityOfClass(Class<?> c, float x, float y) {
 		List<BaseEntity> entities = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), c);
 
@@ -82,6 +95,14 @@ public class WorldUtil {
 		}
 	}
 
+	/**
+	 * Gets an entity at position X
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	@Deprecated
 	public static Optional<BaseEntity> getEntityAtPosition(BaseWorld world, float x, float y) {
 		for (Renderable e : world.getEntities()) {
 			if (Math.abs(e.getPosX() - x) < 1f && Math.abs(e.getPosY() - y) < 1f) {

@@ -18,9 +18,34 @@ public interface Renderable {
      * @return The texture to be rendered onto the screen
      */
     String getTexture();
+
+    /**
+     * Gets the X position
+     * @return
+     */
     float getPosX();
+
+    /**
+     * Gets the Y position
+     * @return
+     */
     float getPosY();
+
+    /**
+     * Gets the Z position
+     * @return
+     */
     float getPosZ();
+
+    /**
+     * Gets the X render length of the entity
+     * @return
+     */
     float getXRenderLength();
+
+    /**
+     * Gets the Y render length of the entity
+     * @return
+     */
     float getYRenderLength();
 }

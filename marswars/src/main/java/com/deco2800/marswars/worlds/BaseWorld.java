@@ -6,12 +6,16 @@ import com.deco2800.marswars.util.Array2D;
 import java.util.List;
 
 /**
- * Created by timhadwen on 2/8/17.
+ * A base world for the game. Use this not AbstractWorld
  */
 public class BaseWorld extends AbstractWorld {
 	/* Crappy way of storing collision */
 	protected Array2D<List<BaseEntity>> collisionMap;
 
+	/**
+	 * Adds an entity to this world
+	 * @param entity
+	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);
 
@@ -30,14 +34,31 @@ public class BaseWorld extends AbstractWorld {
 		}
 	}
 
+	/**
+	 * Gets the collision map of the world.
+	 * yes this uses a lot of memory.
+	 * @return
+	 */
 	public Array2D<List<BaseEntity>> getCollisionMap() {
 		return collisionMap;
 	}
 
+	/**
+	 * Returns true if there is an entity in here
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean hasEntity(int x, int y) {
 		return collisionMap.get(x, y).size() > 0;
 	}
 
+	/**
+	 * Gets the entity at an x y position
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public List<BaseEntity> getEntities(int x, int y) {
 		return collisionMap.get(x, y);
 	}

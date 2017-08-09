@@ -28,6 +28,9 @@ public class GenerateAction implements DecoAction {
 		this.world = GameManager.get().getWorld();
 	}
 
+	/**
+	 * Completes the GenerateAction
+	 */
 	@Override
 	public void doAction() {
 		if (progress > 0) {
@@ -38,11 +41,19 @@ public class GenerateAction implements DecoAction {
 		}
 	}
 
+	/**
+	 * Returns true if completed, otherwise false
+	 * @return
+	 */
 	@Override
 	public boolean completed() {
 		return actionResult == null;
 	}
 
+	/**
+	 * Returns a progress percentage (where available)
+	 * @return
+	 */
 	@Override
 	public int actionProgress() {
 		return 100-progress;

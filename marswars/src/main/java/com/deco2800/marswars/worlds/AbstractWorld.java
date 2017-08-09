@@ -36,26 +36,50 @@ public abstract class AbstractWorld {
     }
 
 
+    /**
+     * Adds an entity to the game
+     * @param entity
+     */
     public void addEntity(BaseEntity entity) {
         entities.add(entity);
     }
 
+    /**
+     * Removes an entity from the world
+     * @param entity
+     */
     public void removeEntity(BaseEntity entity) {
         entities.remove(entity);
     }
 
+    /**
+     * Sets a width for this world
+     * @param width
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Sets the world length
+     * @param length
+     */
     public void setLength(int length) {
         this.length = length;
     }
 
+    /**
+     * Gets the width of the world
+     * @return
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Gets the length of the world
+     * @return
+     */
     public int getLength() {
         return length;
     }

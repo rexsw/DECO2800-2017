@@ -6,6 +6,16 @@ import com.deco2800.marswars.entities.BaseEntity;
 import java.util.*;
 
 public class Pathfinder {
+	/**
+	 * Runs an A* Pathfinding algorithimn from start to goal on the baseWorld.
+	 * This code uses a lot of run time so its a good idea to multithread its use
+	 *
+	 * Retuns a path from start to goal
+	 * @param start
+	 * @param goal
+	 * @param baseWorld
+	 * @return
+	 */
 	public static List<Point> aStar(Point start, Point goal, BaseWorld baseWorld) {
 		//Truncate points to the tile grid
 		Point truncGoal = new Point((int)goal.getX(), (int)goal.getY());
@@ -79,6 +89,12 @@ public class Pathfinder {
 		return null;
 	}
 
+	/**
+	 * Gets the minimum point in a set of points
+	 * @param Points
+	 * @param fScores
+	 * @return
+	 */
 	private static Point getMinPoint(Set<Point> Points, Map<Point, Double> fScores) {
 		double minF = Integer.MAX_VALUE;
 		Point min = null;
@@ -95,10 +111,22 @@ public class Pathfinder {
 		return min;
 	}
 
+	/**
+	 * Estimates a heursitic
+	 * @param node
+	 * @param goal
+	 * @return
+	 */
 	private static double heuristicCostEstimate(Point node, Point goal) {
 		return Math.pow(node.getX() - goal.getX(), 2) +  Math.pow(node.getY() - goal.getY(), 2);
 	}
 
+	/**
+	 * Gets the adjacent nodes in the baseworld
+	 * @param p
+	 * @param baseWorld
+	 * @return
+	 */
 	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld) {
 		List<Point> adjacencies = new ArrayList<>();
 
@@ -125,6 +153,12 @@ public class Pathfinder {
 		return adjacencies;
 	}
 
+	/**
+	 * Reconstructs a path from point to point
+	 * @param cameFrom
+	 * @param current
+	 * @return
+	 */
 	private static List<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
 		List<Point> result = new LinkedList<>();
 

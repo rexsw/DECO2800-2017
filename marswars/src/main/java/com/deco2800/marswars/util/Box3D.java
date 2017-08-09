@@ -38,10 +38,6 @@ public class Box3D {
 		this.zLength = zLength;
 	}
 
-
-
-
-
 	/**
 	 * Constructs a new Box3D based on the given box.
 	 * 
@@ -142,6 +138,11 @@ public class Box3D {
 	}
 
 
+	/**
+	 *
+	 * @param box
+	 * @return
+	 */
 	public boolean overlaps(Box3D box) {
 		/*
 		 * Checking non-collision on all 6 directions.
@@ -180,6 +181,11 @@ public class Box3D {
 		return true;
 	}
 
+	/**
+	 * Calculates the distance between two box3ds
+	 * @param o
+	 * @return
+	 */
 	public float distance(Box3D o) {
 		return (float)(Math.sqrt(Math.pow((o.x - this.x), 2) + Math.pow((o.y - this.y), 2) + Math.pow((o.z - this.z), 2)));
 	}

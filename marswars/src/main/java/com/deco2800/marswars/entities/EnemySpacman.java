@@ -28,14 +28,26 @@ public class EnemySpacman extends BaseEntity implements Tickable {
 		GameManager.get().getManager(LocalEnemyManager.class);
 	}
 
+	/**
+	 * Gets the current action
+	 * @return
+	 */
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
 
+	/**
+	 * Sets the current action
+	 * @param currentAction
+	 */
 	public void setCurrentAction(DecoAction currentAction) {
 		this.currentAction = Optional.of(currentAction);
 	}
 
+	/**
+	 * On tick method for the spacman
+	 * @param i
+	 */
 	@Override
 	public void onTick(int i) {
 		if (currentAction.isPresent()) {

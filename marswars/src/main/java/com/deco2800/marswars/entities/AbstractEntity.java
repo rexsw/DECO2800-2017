@@ -210,6 +210,11 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		}
 	}
 
+	/**
+	 * Equals method
+	 * @param o
+	 * @return
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -224,6 +229,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		return texture != null ? texture.equals(that.texture) : that.texture == null;
 	}
 
+	/**
+	 * Hashcode method
+	 * @return
+	 */
 	@Override
 	public int hashCode() {
 		int result = position != null ? position.hashCode() : 0;
@@ -231,15 +240,30 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		return result;
 	}
 
+	/**
+	 * gets the parent world for this entity
+	 * NOTE: This is useless now that we have GameManager
+	 * @return
+	 */
 	@Deprecated
 	public AbstractWorld getParent() {
 		return GameManager.get().getWorld();
 	}
 
+	/**
+	 * Returns the distance between two entities
+	 * @param e
+	 * @return
+	 */
 	public float distance(AbstractEntity e) {
 		return this.getBox3D().distance(e.getBox3D());
 	}
 
+	/**
+	 * Returns true if this entity can be walked over.
+	 * Allows the renderer to render entitys ontop of eachother if required
+	 * @return
+	 */
 	public boolean canWalOver() {
 		return canWalkOver;
 	}
