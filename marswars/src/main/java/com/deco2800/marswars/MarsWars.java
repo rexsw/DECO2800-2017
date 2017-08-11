@@ -208,6 +208,24 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				return true;
 			}
+
+			@Override
+			public boolean scrolled(int amount) {
+				if (camera.zoom > 5 && amount == -1) { // zoom ins
+					camera.zoom -= 0.7;
+				} else if (camera.zoom > 3 && amount == -1) {
+					camera.zoom -= 0.3;
+				} else if (camera.zoom > 0.5 && amount == -1) {
+					camera.zoom -= 0.1;
+				} else if (camera.zoom < 2 && amount == 1) { // zoom outs
+					camera.zoom += 0.1;
+				} else if (camera.zoom < 5 && amount == 1) {
+					camera.zoom += 0.3;
+				} else if (camera.zoom < 8 && amount == 1) {
+					camera.zoom += 0.7;
+				}
+				return true;
+			}
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
