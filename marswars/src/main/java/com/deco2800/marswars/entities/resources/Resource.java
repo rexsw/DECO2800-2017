@@ -3,7 +3,11 @@
  */
 package com.deco2800.marswars.entities.resources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Rock;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -12,6 +16,8 @@ import com.deco2800.marswars.managers.GameManager;
  *
  */
 public class Resource extends BaseEntity {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Resource.class);
+
 	private ResourceType type;
 	private ResourceSize size;
 	private final double LARGE_SIZE = 5000.00;
@@ -149,10 +155,46 @@ public class Resource extends BaseEntity {
 	}
 	
 	/**
+	 * Sets the number of units currently harvesting on the resource. Does 
+	 * nothing if value being set is not between 0 and HARVEST_CAPACITY 
+	 * (inclusive).
+	 * @param value The number of units currently harvesting the resource.
+	 */
+	public void setHarvestNumber(int value) {
+		if ((value < HARVEST_CAPACITY) && (value >= 0)) {
+			System.err.println("Setting " + type + " harvester count to " + 
+					value);
+			harvester = value;
+		}
+	}
+	
+	/**
+	 * Sets the amount of resources left to a value.	
+	 * @param value The number of resource left in the resource
+	 */
+	public void setReserve(double value) {
+		if (value < capacity) {
+			System.err.println("Setting " + type + " reserves to " + value);
+			if (value <= 0) {
+				GameManager.get().getWorld().removeEntity(this);
+			}
+			reserves = value;
+		}
+	}
+	/**
 	 * When a unit come to harvest the resource. Number of unit harvesting the resource shouldn't exceed the capacity
 	 * Unit run away with gathered resource
 	 * @return GatheredResource
 	 */
+	 
+	/*
+	 * I feel like the below function would be handled somewhere else like in 
+	 * the actions package because if you look at GatherAction, you see that
+	 * the stuff for a unit harvesting stuff is there, but doesn't quote fit 
+	 * with what we have here. And to do the speed part we need to wait for the
+	 * people doing the entities to make like a speed property there. if not on
+	 * the unit then in a Manager class somewhere (because more efficiency in 
+	 * storage and less stuff to update if something is upgraded).
 	public GatheredResource harvestResource(Object farmUnit) {
 		if (harvester >= HARVEST_CAPACITY) {
 			return new GatheredResource(type, 0); // throw message that it's exceed the max capacity
@@ -184,6 +226,7 @@ public class Resource extends BaseEntity {
 		
 		
 	}
+	*/
 	
 	/**
 	 * Returns the type of the resource
