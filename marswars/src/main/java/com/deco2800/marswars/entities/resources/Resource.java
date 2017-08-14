@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Rock;
+import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -15,20 +15,20 @@ import com.deco2800.marswars.managers.GameManager;
  * @author Mason
  *
  */
-public class Resource extends BaseEntity {
+public class Resource extends BaseEntity implements HasHealth{
 	private static final Logger LOGGER = LoggerFactory.getLogger(Resource.class);
 
 	private ResourceType type;
 	private ResourceSize size;
-	private final double LARGE_SIZE = 5000.00;
-	private final double MEDIUM_SIZE = 3000.00;
-	private final double SMALL_SIZE = 1000.00;
+	private final int LARGE_SIZE = 5000;
+	private final int MEDIUM_SIZE = 3000;
+	private final int SMALL_SIZE = 1000;
 	private final int HARVEST_CAPACITY = 5; // max 5 farmer at the same time
 	private int harvestSpeed = 2000; // this value can be improved with tech tree? if so, this value should a para belongs to the unit
 	private final int HARVEST_AMOUNT = 10;
 	
-	private double reserves; // current reserves of this resource
-	private double capacity; // max capacity of the resource
+	private int reserves; // current reserves of this resource
+	private int capacity; // max capacity of the resource
 	private int harvester = 0; // no. of harvester on the resource
 	
 	/**
@@ -58,17 +58,17 @@ public class Resource extends BaseEntity {
 			// different size for water should be considered here
 			switch(size) {
 			case SMALL:
-				this.setTexture("smallWater"); 
+				this.setTexture("small_water"); 
 				this.reserves = SMALL_SIZE;
 				this.capacity = SMALL_SIZE;
 				break;
 			case MEDIUM:
-				this.setTexture("mediumWater"); 
+				this.setTexture("medium_water"); 
 				this.reserves = MEDIUM_SIZE;
 				this.capacity = MEDIUM_SIZE;
 				break;
 			case LARGE:
-				this.setTexture("largeWater"); 
+				this.setTexture("large_water"); 
 				this.reserves = LARGE_SIZE;
 				this.capacity = LARGE_SIZE;
 				break;
@@ -76,17 +76,17 @@ public class Resource extends BaseEntity {
 		case ROCK:
 			switch(size) {
 			case SMALL:
-				this.setTexture("smallRock"); 
+				this.setTexture("small_rock"); 
 				this.reserves = SMALL_SIZE;
 				this.capacity = SMALL_SIZE;
 				break;
 			case MEDIUM:
-				this.setTexture("mediumRock"); 
+				this.setTexture("medium_rock"); 
 				this.reserves = MEDIUM_SIZE;
 				this.capacity = MEDIUM_SIZE;
 				break;
 			case LARGE:
-				this.setTexture("largeRock"); 
+				this.setTexture("large_rock"); 
 				this.reserves = LARGE_SIZE;
 				this.capacity = LARGE_SIZE;
 				break;
@@ -94,17 +94,17 @@ public class Resource extends BaseEntity {
 		case CRYSTAL:
 			switch(size) {
 			case SMALL:
-				this.setTexture("smallCrystal"); 
+				this.setTexture("small_crystal"); 
 				this.reserves = SMALL_SIZE;
 				this.capacity = SMALL_SIZE;
 				break;
 			case MEDIUM:
-				this.setTexture("mediumCrystal"); 
+				this.setTexture("medium_crystal"); 
 				this.reserves = MEDIUM_SIZE;
 				this.capacity = MEDIUM_SIZE;
 				break;
 			case LARGE:
-				this.setTexture("largeCrystal"); 
+				this.setTexture("large_crystal"); 
 				this.reserves = LARGE_SIZE;
 				this.capacity = LARGE_SIZE;
 				break;
@@ -112,17 +112,17 @@ public class Resource extends BaseEntity {
 		case BIOMASS:
 			switch(size) {
 			case SMALL:
-				this.setTexture("smallBiomass"); 
+				this.setTexture("small_biomass"); 
 				this.reserves = SMALL_SIZE;
 				this.capacity = SMALL_SIZE;
 				break;
 			case MEDIUM:
-				this.setTexture("mediumBiomass"); 
+				this.setTexture("medium_biomass"); 
 				this.reserves = MEDIUM_SIZE;
 				this.capacity = MEDIUM_SIZE;
 				break;
 			case LARGE:
-				this.setTexture("largeBiomass"); 
+				this.setTexture("large_biomass"); 
 				this.reserves = LARGE_SIZE;
 				this.capacity = LARGE_SIZE;
 				break;
@@ -130,20 +130,14 @@ public class Resource extends BaseEntity {
 		}
 	}
 
-	/**
-	 * Returns the current reserves of the resource
-	 * @return current reserves
-	 */
-	public int getReserve() {
-		return (int) reserves;
-	}
+	
 	
 	/**
 	 * Returns the current reserves percentage of the resource
 	 * @return reserve percentage
 	 */
 	public int getReservePercentage() {
-		return (int) (reserves/capacity * 100);
+		return (reserves * 100/capacity );
 	}
 
 	/**
@@ -168,19 +162,7 @@ public class Resource extends BaseEntity {
 		}
 	}
 	
-	/**
-	 * Sets the amount of resources left to a value.	
-	 * @param value The number of resource left in the resource
-	 */
-	public void setReserve(double value) {
-		if (value < capacity) {
-			System.err.println("Setting " + type + " reserves to " + value);
-			if (value <= 0) {
-				GameManager.get().getWorld().removeEntity(this);
-			}
-			reserves = value;
-		}
-	}
+	
 	/**
 	 * When a unit come to harvest the resource. Number of unit harvesting the resource shouldn't exceed the capacity
 	 * Unit run away with gathered resource
@@ -242,5 +224,32 @@ public class Resource extends BaseEntity {
 	 */
 	public ResourceSize getSize() {
 		return size; // is enum mutable or immutable? need confirmation here
+	}
+
+	
+	/**
+	 * Returns the current reserves of the resource
+	 * @return current reserves
+	 */
+	@Override
+	public int getHealth() {
+		// TODO Auto-generated method stub
+		return (int) reserves;
+	}
+
+	/**
+	 * Sets the amount of resources left to a value.	
+	 * @param health The number of resource left in the resource
+	 */
+	@Override
+	public void setHealth(int health) {
+		if (health < capacity) {
+			System.err.println("Setting " + type + " reserves to " + health);
+			if (health <= 0) {
+				GameManager.get().getWorld().removeEntity(this);
+			}
+			reserves = health;
+		}
+		
 	}
 }

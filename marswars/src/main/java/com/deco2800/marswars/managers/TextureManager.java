@@ -58,6 +58,19 @@ public class TextureManager extends Manager {
         this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
         this.saveTexture("water", "resources/placeholderassets/w1.png");
+        this.saveTexture("small_water", "");
+        this.saveTexture("medium_water", "");
+        this.saveTexture("large_water", "");
+        this.saveTexture("small_rock", "");
+        this.saveTexture("medium_rock", "");
+        this.saveTexture("large_rock", "");
+        this.saveTexture("small_crystal", "");
+        this.saveTexture("medium_crystal", "");
+        this.saveTexture("large_crystal", "");
+        this.saveTexture("small_biomass", "");
+        this.saveTexture("medium_biomass", "");
+        this.saveTexture("large_biomass", "");
+        
     }
 
     /**
