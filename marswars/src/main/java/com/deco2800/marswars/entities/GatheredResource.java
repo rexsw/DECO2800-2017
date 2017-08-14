@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.deco2800.marswars.entities.resources;
+package com.deco2800.marswars.entities;
 
 /**
  * This class used for two purpose,

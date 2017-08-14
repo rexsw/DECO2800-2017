@@ -48,7 +48,7 @@ public class TextureManager extends Manager {
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
-        this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
+//        this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
         this.saveTexture("spacman", "resources/placeholderassets/spacman.png");
@@ -57,19 +57,19 @@ public class TextureManager extends Manager {
         this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
         this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
-        this.saveTexture("water", "resources/placeholderassets/w1.png");
-        this.saveTexture("small_water", "");
-        this.saveTexture("medium_water", "");
-        this.saveTexture("large_water", "");
-        this.saveTexture("small_rock", "");
-        this.saveTexture("medium_rock", "");
-        this.saveTexture("large_rock", "");
-        this.saveTexture("small_crystal", "");
-        this.saveTexture("medium_crystal", "");
-        this.saveTexture("large_crystal", "");
-        this.saveTexture("small_biomass", "");
-        this.saveTexture("medium_biomass", "");
-        this.saveTexture("large_biomass", "");
+//        this.saveTexture("water", "resources/placeholderassets/w1.png");
+        this.saveTexture("small_water", "resources/placeholderassets/w2.png");
+//        this.saveTexture("medium_water", "");
+//        this.saveTexture("large_water", "");
+        this.saveTexture("small_rock", "resources/placeholderassets/ground-1.png");
+//        this.saveTexture("medium_rock", "");
+//        this.saveTexture("large_rock", "");
+        this.saveTexture("small_crystal", "resources/placeholderassets/crystal_S.png");
+        this.saveTexture("medium_crystal", "resources/placeholderassets/crystal_M.png");
+        this.saveTexture("large_crystal", "resources/placeholderassets/crystal_L.png");
+//        this.saveTexture("small_biomass", "");
+//        this.saveTexture("medium_biomass", "");
+//        this.saveTexture("large_biomass", "");
         
     }
 

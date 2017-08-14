@@ -42,20 +42,37 @@ public class InitialWorld extends BaseWorld {
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
 				Random r = new Random();
-
+				
+				//LARGE CRYSTAL
 				if (r.nextInt(10) < 0.1) {
-					this.addEntity(new Rock(x, y, 0, 1f, 1f));
+//					this.addEntity(new Rock(x, y, 0, 1f, 1f));
+					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL, ResourceSize.LARGE));
 					continue;
 				}
 
+				// SMALL CRYSTAL
 				if (r.nextInt(10) < 0.1) {
-					this.addEntity(new Water(this, x, y, 0, 1, 1));
+//					this.addEntity(new Water(this, x, y, 0, 1, 1));
+					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL, ResourceSize.SMALL));
+					continue;
+				}
+				
+				// SMALL WATER
+				if (r.nextInt(10) < 0.1) {
+					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.WATER, ResourceSize.SMALL));
+					continue;
+				}
+				
+				// SMALL ROCK
+				if (r.nextInt(10) < 0.1) {
+					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK, ResourceSize.SMALL));
 					continue;
 				}
 			}
 		}
 
 		this.addEntity(new Spacman(0, 0, 0));
+		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));

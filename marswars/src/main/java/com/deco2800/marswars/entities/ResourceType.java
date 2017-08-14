@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.resources;
+package com.deco2800.marswars.entities;
 
 /**
  * @author Mason

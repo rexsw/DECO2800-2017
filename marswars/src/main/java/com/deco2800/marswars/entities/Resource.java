@@ -1,13 +1,11 @@
 /**
  * 
  */
-package com.deco2800.marswars.entities.resources;
+package com.deco2800.marswars.entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -36,98 +34,158 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * @param posX
 	 * @param posY
 	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
+	 * @param height
+	 * @param width
 	 * @param type
 	 * @param size
 	 */
-	public Resource(float posX, float posY, float posZ, float xLength,
-			float yLength, float zLength, ResourceType type, ResourceSize size) {
+	public Resource(float posX, float posY, float posZ, float height, float width, ResourceType type, ResourceSize size) {
 		// I'm thinking of make the constructor method shorter, 
 		// so for the constructor method, it only takes in type and size
 		// and in a separate function, takes in the position to draw it on the map
 		// what's your thought?
-		super(posX, posY, posZ, xLength, yLength, zLength);
+		super(posX, posY, posZ, height, width, 1f);
+		
+		if (type == ResourceType.ROCK) {
+			if(size == ResourceSize.SMALL) {
+				this.setTexture("small_rock"); 
+				this.reserves = SMALL_SIZE;
+				this.capacity = SMALL_SIZE;
+			} else if(size == ResourceSize.MEDIUM) {
+				this.setTexture("medium_rock"); 
+				this.reserves = MEDIUM_SIZE;
+				this.capacity = MEDIUM_SIZE;
+			} else {
+				this.setTexture("large_rock"); 
+				this.reserves = LARGE_SIZE;
+				this.capacity = LARGE_SIZE;
+			}
+		} else if (type == ResourceType.CRYSTAL) {
+			if(size == ResourceSize.SMALL) {
+				this.setTexture("small_crystal"); 
+				this.reserves = SMALL_SIZE;
+				this.capacity = SMALL_SIZE;
+			} else if(size == ResourceSize.MEDIUM) {
+				this.setTexture("medium_crystal"); 
+				this.reserves = MEDIUM_SIZE;
+				this.capacity = MEDIUM_SIZE;
+			} else {
+				this.setTexture("large_crystal"); 
+				this.reserves = LARGE_SIZE;
+				this.capacity = LARGE_SIZE;
+			}
+		} else if (type == ResourceType.WATER) {
+			if(size == ResourceSize.SMALL) {
+				this.setTexture("small_water"); 
+				this.reserves = SMALL_SIZE;
+				this.capacity = SMALL_SIZE;
+			} else if(size == ResourceSize.MEDIUM) {
+				this.setTexture("medium_water"); 
+				this.reserves = MEDIUM_SIZE;
+				this.capacity = MEDIUM_SIZE;
+			} else {
+				this.setTexture("large_water"); 
+				this.reserves = LARGE_SIZE;
+				this.capacity = LARGE_SIZE;
+			}
+		} else if (type == ResourceType.BIOMASS) {
+			if(size == ResourceSize.SMALL) {
+				this.setTexture("small_biomass"); 
+				this.reserves = SMALL_SIZE;
+				this.capacity = SMALL_SIZE;
+			} else if(size == ResourceSize.MEDIUM) {
+				this.setTexture("medium_biomass"); 
+				this.reserves = MEDIUM_SIZE;
+				this.capacity = MEDIUM_SIZE;
+			} else {
+				this.setTexture("large_biomass"); 
+				this.reserves = LARGE_SIZE;
+				this.capacity = LARGE_SIZE;
+			}
+		}
+//		switch(type) {
+//		case WATER:
+//			// different size for water should be considered here
+//			switch(size) {
+//			case SMALL:
+//				this.setTexture("small_water"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//				break;
+//			case MEDIUM:
+//				this.setTexture("medium_water"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//				break;
+//			case LARGE:
+//				this.setTexture("large_water"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//				break;
+//			}
+//			break;
+//		case ROCK:
+//			switch(size) {
+//			case SMALL:
+//				this.setTexture("small_rock"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//				break;
+//			case MEDIUM:
+//				this.setTexture("medium_rock"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//				break;
+//			case LARGE:
+//				this.setTexture("large_rock"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//				break;
+//			}
+//			break;
+//		case CRYSTAL:
+//			switch(size) {
+//			case SMALL:
+//				this.setTexture("small_crystal"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//				break;
+//			case MEDIUM:
+//				this.setTexture("medium_crystal"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//				break;
+//			case LARGE:
+//				this.setTexture("large_crystal"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//				break;	
+//			}
+//			break;
+//		case BIOMASS:
+//			switch(size) {
+//			case SMALL:
+//				this.setTexture("small_biomass"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//				break;
+//			case MEDIUM:
+//				this.setTexture("medium_biomass"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//				break;
+//			case LARGE:
+//				this.setTexture("large_biomass"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//				break;
+//			}
+//			break;
+//		}
 		this.canWalkOver = false; // i think resource shouldn't allow walk over
 		this.setCost(10); // don't know what should this value be, may vary for different size, to be changed later
 		this.type = type;
 		this.size = size;
-		switch(type) {
-		case WATER:
-			// different size for water should be considered here
-			switch(size) {
-			case SMALL:
-				this.setTexture("small_water"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-				break;
-			case MEDIUM:
-				this.setTexture("medium_water"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-				break;
-			case LARGE:
-				this.setTexture("large_water"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-				break;
-			}
-		case ROCK:
-			switch(size) {
-			case SMALL:
-				this.setTexture("small_rock"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-				break;
-			case MEDIUM:
-				this.setTexture("medium_rock"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-				break;
-			case LARGE:
-				this.setTexture("large_rock"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-				break;
-			}
-		case CRYSTAL:
-			switch(size) {
-			case SMALL:
-				this.setTexture("small_crystal"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-				break;
-			case MEDIUM:
-				this.setTexture("medium_crystal"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-				break;
-			case LARGE:
-				this.setTexture("large_crystal"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-				break;
-			}
-		case BIOMASS:
-			switch(size) {
-			case SMALL:
-				this.setTexture("small_biomass"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-				break;
-			case MEDIUM:
-				this.setTexture("medium_biomass"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-				break;
-			case LARGE:
-				this.setTexture("large_biomass"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-				break;
-			}
-		}
 	}
 
 	

@@ -4,6 +4,7 @@ import com.deco2800.marswars.managers.GameManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//Use Resource Class instead
 public class Rock extends BaseEntity implements HasHealth {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Rock.class);
