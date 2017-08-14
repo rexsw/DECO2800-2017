@@ -337,18 +337,24 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			camera.zoom += 0.1;
 		}
 
+		// Move the map dependant on the cursor position
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
-		if ((cursorX > pxTolerance && cursorX + pxTolerance <= 1280) && (cursorY > pxTolerance && cursorY + pxTolerance <= 720)) {
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
+		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
+				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
+			// skip checking for movement
 			return;
 		}
-		if (cursorX > 1280 - pxTolerance) { // moving right
+		// Got rid of moving the map down because it makes it difficult
+		if (cursorX > windowWidth - pxTolerance) { // moving right
 			if (cursorY < pxTolerance) {
 				// move up and right
 				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > 720 - pxTolerance) {
+			} else if (cursorY > windowHeight - pxTolerance) {
 				// move down and right
-				camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
+				//camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move right
 				camera.translate(1 * speed * camera.zoom, 0, 0);
@@ -357,16 +363,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (cursorY < pxTolerance) {
 				// move up and left
 				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > 720 - pxTolerance){
+			} else if (cursorY > windowHeight - pxTolerance){
 				// move down and left
-				camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
+				//camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move left
 				camera.translate(-1 * speed * camera.zoom, 0, 0);
 			}
-		} else if (cursorY > 720 - pxTolerance) {
+		} else if (cursorY > windowHeight - pxTolerance) {
 			// move down
-			camera.translate(0, -1 * speed * camera.zoom, 0);
+			//camera.translate(0, -1 * speed * camera.zoom, 0);
 		} else if (cursorY < pxTolerance) {
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
