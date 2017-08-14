@@ -313,8 +313,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * There probably should be some way to pass this into another class
 	 */
 	private void handleInput() {
-		int speed = 10;
-
+		final int speed = 10;
+		final int pxTolerance = 80; // modifies how close to the edge the cursor has to be before the map
+									// starts moving
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
 			camera.translate(0, 1*speed*camera.zoom, 0);
 		}
@@ -334,6 +335,41 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
 			camera.zoom += 0.1;
+		}
+
+		int cursorX = Gdx.input.getX();
+		int cursorY = Gdx.input.getY();
+		if ((cursorX > pxTolerance && cursorX + pxTolerance <= 1280) && (cursorY > pxTolerance && cursorY + pxTolerance <= 720)) {
+			return;
+		}
+		if (cursorX > 1280 - pxTolerance) { // moving right
+			if (cursorY < pxTolerance) {
+				// move up and right
+				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
+			} else if (cursorY > 720 - pxTolerance) {
+				// move down and right
+				camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
+			} else {
+				// move right
+				camera.translate(1 * speed * camera.zoom, 0, 0);
+			}
+		} else if (cursorX < pxTolerance) { // moving left
+			if (cursorY < pxTolerance) {
+				// move up and left
+				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
+			} else if (cursorY > 720 - pxTolerance){
+				// move down and left
+				camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
+			} else {
+				// move left
+				camera.translate(-1 * speed * camera.zoom, 0, 0);
+			}
+		} else if (cursorY > 720 - pxTolerance) {
+			// move down
+			camera.translate(0, -1 * speed * camera.zoom, 0);
+		} else if (cursorY < pxTolerance) {
+			// move up
+			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
 
 	}
