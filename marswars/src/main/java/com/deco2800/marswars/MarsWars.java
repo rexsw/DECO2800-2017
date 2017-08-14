@@ -211,18 +211,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean scrolled(int amount) {
-				if (camera.zoom > 5 && amount == -1) { // zoom ins
-					camera.zoom -= 0.7;
-				} else if (camera.zoom > 3 && amount == -1) {
-					camera.zoom -= 0.3;
-				} else if (camera.zoom > 0.5 && amount == -1) {
-					camera.zoom -= 0.1;
-				} else if (camera.zoom < 2 && amount == 1) { // zoom outs
-					camera.zoom += 0.1;
-				} else if (camera.zoom < 5 && amount == 1) {
-					camera.zoom += 0.3;
-				} else if (camera.zoom < 8 && amount == 1) {
-					camera.zoom += 0.7;
+				if (camera.zoom > 0.5 && amount == -1) { // zoom in
+					camera.zoom /= 1.2;
+					// TODO replace this with a smooth translate
+					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+					Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+				} else if (camera.zoom < 10 && amount == 1) { // zoom out
+					camera.zoom *= 1.2;
 				}
 				return true;
 			}
