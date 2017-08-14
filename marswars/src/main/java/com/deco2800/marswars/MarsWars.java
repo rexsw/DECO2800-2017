@@ -213,9 +213,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public boolean scrolled(int amount) {
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
 					camera.zoom /= 1.2;
-					// TODO replace this with a smooth translate
-					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-					Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+					// TODO implement moving the camera towards the cursor when you zoom in
+					//camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+					//Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
