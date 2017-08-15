@@ -37,6 +37,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
 		this.setCost(10);
+		this.setEntityType(EntityType.UNIT);
 	}
 
 	/**
@@ -97,6 +98,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		this.setTexture("spacman_blue");
 		LOGGER.error("Clicked on spacman");
+		this.makeSelected();
 	}
 
 	/**
