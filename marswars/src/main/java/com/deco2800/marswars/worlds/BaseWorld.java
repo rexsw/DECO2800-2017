@@ -60,6 +60,10 @@ public class BaseWorld extends AbstractWorld {
 	 * @return
 	 */
 	public List<BaseEntity> getEntities(int x, int y) {
-		return collisionMap.get(x, y);
+		try {
+			return collisionMap.get(x, y);
+		} catch (IndexOutOfBoundsException e) {
+			throw e;
+		}
 	}
 }
