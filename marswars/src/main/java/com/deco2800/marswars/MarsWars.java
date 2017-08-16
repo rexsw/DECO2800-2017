@@ -1,6 +1,7 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.net.MarsWarsClientConnectionManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
@@ -59,6 +61,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Button peonButton;
 	Label helpText;
 	Label rocksLabel;
+	Label gameTime;
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -149,12 +152,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		helpText = new Label("Welcome to MarsWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
+		gameTime = new Label(" Time: 00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(helpText);
 		window.add(peonButton);
 		window.add(rocksLabel);
+		window.add(gameTime);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(0, 0); // Place at the bottom
@@ -292,7 +297,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
 
-
+		/*
+		 * Update time & set color depending if night/day
+		 */
+		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+		gameTime.setText(" Time: " + timeManager.toString());
+		if (timeManager.isNight()){
+			gameTime.setColor(Color.FIREBRICK);
+		}
+		else{
+			gameTime.setColor(Color.BLUE);
+		}
+		
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 

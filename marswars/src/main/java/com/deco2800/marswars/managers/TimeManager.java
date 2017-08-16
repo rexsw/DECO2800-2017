@@ -1,23 +1,73 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.util.*;
+import java.util.concurrent.TimeUnit;
 
-import java.time.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class TimeManager extends TimerTask{
-	Time time = new Time();
+public class TimeManager extends Manager implements TickableManager{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeManager.class);
+	private static final int DAYBREAK = 6; //daybreak at 6am
+	private static final int NIGHT = 18; //night at 6pm
+	
+	private boolean isNight = false;
+	private boolean isPaused = false;
+	private long time = 0; //time in seconds
 	
 	@Override
-	public void run(){
-		time.addTime(1000);
-		if(time.getHours() > 18 || time.getHours() <6)
-			time.setNight();
+	public void onTick(long i){
+		time += 1;
+		if(getHours() > NIGHT || getHours() < DAYBREAK)
+			setNight();
 		else
-			time.setDay();
-		//System.out.println(time);
+			setDay();
 	}
 	
 	//bit of a lazy way of setting day/night tbh
+
+	/**
+	 * Convert time and find what hour
+	 * @return the hour of the day
+	 */
+	public long getHours(){
+		return TimeUnit.HOURS.convert(getSeconds(), TimeUnit.SECONDS)%24;
+	}
+	public long getMinutes(){
+		return TimeUnit.MINUTES.convert(getSeconds(), TimeUnit.SECONDS)%60;
+	}
+	
+	/**
+	 * Check if it is night or day in the system
+	 * @return true if it is 'Night'
+	 */
+	public boolean isNight(){
+		return isNight;
+	}
+	public void setNight(){
+		isNight = true;
+	}
+	public void setDay(){
+		isNight = false;
+	}
+	
+	/**
+	 * Check if the timer is paused
+	 * @return true if the timer is paused
+	 */
+	public boolean isPaused(){
+		return isPaused;
+	}
+	
+	public long getSeconds(){
+		return time;
+	}
+	
+	/**
+	 * Display time in hour:minute
+	 */
+	@Override
+	public String toString(){
+		return getHours() + ":" + getMinutes();
+	}
 }
