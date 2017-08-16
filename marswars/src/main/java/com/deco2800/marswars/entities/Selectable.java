@@ -51,21 +51,21 @@ public interface Selectable {
 	 * Returns a list of all of the actions the selected entity can make
 	 * @return A list containing the actions available to the entity
 	 */
-	List<DecoAction> getValidActions();
+	List<Class> getValidActions();
 
 	/**
 	 *Adds a new valid action to the entity
 	 * @param newAction The new action that is valid for the unit to perform
 	 * @return True if successful, false if the action was not added or if it was already in the list
 	 */
-	boolean addNewAction(DecoAction newAction);
+	boolean addNewAction(Class newAction);
 
 	/**
 	 *Removes a valid action from the entity
 	 * @param actionToRemove The new action that is valid for the unit to perform
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
-	boolean removeActions(DecoAction actionToRemove);
+	boolean removeActions(Class actionToRemove);
 
 	/**
 	 * This method returns a value denoting the type of entity it is
