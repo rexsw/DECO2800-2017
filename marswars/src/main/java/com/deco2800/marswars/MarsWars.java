@@ -117,7 +117,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		try {
 			networkClient.connect();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		networkClient.joinLobby("marswarsuser");
