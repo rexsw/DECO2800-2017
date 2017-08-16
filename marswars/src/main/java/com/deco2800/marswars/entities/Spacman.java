@@ -109,7 +109,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void onRightClick(float x, float y) {
 		List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)x, (int)y);
-		if (entities.size() > 0) {
+		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
 			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
 			LOGGER.error("Assigned action gather");
 		} else {
