@@ -73,6 +73,7 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
+		this.addEntity(new Base2(this, 10, 10, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
 		this.addEntity(new EnemyTank(20, 20, 0));
 	}
