@@ -1,15 +1,25 @@
 package com.deco2800.marswars.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 
+import java.util.List;
+
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class BaseEntity extends AbstractEntity {
+public class BaseEntity extends AbstractEntity implements Selectable {
 
 	private int cost = 0;
+	private EntityType entityType = EntityType.NOT_SET;
+	private  List<DecoAction> validActions;
+	private boolean selected = false;
 
 	/**
 	 * Constructor for the base entity
@@ -122,6 +132,122 @@ public class BaseEntity extends AbstractEntity {
 		modifyCollisionMap(false);
 		super.setPosZ(z);
 		modifyCollisionMap(true);
+	}
+
+	/**
+	 * Returns true if currently selected
+	 * @return
+	 */
+	public boolean isSelected() {
+		return this.selected;
+	}
+
+	public void makeSelected() {
+		this.selected = true;
+	}
+
+	/**
+	 * Deselects this object
+	 */
+	public void deselect() {
+		this.selected = false;
+	}
+
+	@Override
+	public List<DecoAction> getValidActions() {
+		return this.validActions;
+	}
+
+	/**
+	 *Adds a new valid action to the entity
+	 * @param newAction The new action that is valid for the unit to perform
+	 * @return True if successful, false if the action was not added or if it was already in the list
+	 */
+	@Override
+	public boolean addNewAction(DecoAction newAction) {
+		for (DecoAction d: this.validActions) {
+			if (d.getClass().equals(newAction.getClass())) {
+				return false;
+			}
+		}
+		this.validActions.add(newAction);
+		return true;
+	}
+
+	/**
+	 *Removes a valid action from the entity
+	 * @param actionToRemove The new action that is valid for the unit to perform
+	 * @return True if successful, false if the action failed to remove or did not exist in the list
+	 */
+	@Override
+	public boolean removeActions(DecoAction actionToRemove) {
+		for (DecoAction d: this.validActions) {
+			if (d.getClass().equals(actionToRemove.getClass())) {
+				this.validActions.remove(d);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This method returns a value denoting the type of entity it is
+	 * 0 = Unset
+	 * 1 = Resource
+	 * 2 = Building
+	 * 3 = Unit
+	 * 4 = Hero
+	 * @return the entity type
+	 */
+	@Override
+	public EntityType getEntityType() {
+		return this.entityType;
+	}
+
+	/**
+	 * This sets a value denoting the type of entity it is
+	 * 0 = Unset
+	 * 1 = Resource
+	 * 2 = Building
+	 * 3 = Unit
+	 * 4 = Hero
+	 * @return the new entity type
+	 */
+	@Override
+	public EntityType setEntityType(EntityType newType) {
+		this.entityType = newType;
+		return  this.entityType;
+	}
+
+	@Override
+	public Button getButton() {
+		return null;
+	}
+
+	@Override
+	public void buttonWasPressed() {return;}
+	@Override
+	public Label getHelpText() {
+		String message = "";
+		switch (this.entityType){
+			case NOT_SET:
+				 message ="This entity has not had its type set";
+				break;
+			case BUILDING:
+				message ="This is a building";
+				break;
+			case UNIT:
+				message ="This is a unit";
+				break;
+			case HERO:
+				message ="This is a hero";
+				break;
+			case RESOURCE:
+				message ="This is a resource";
+				break;
+
+		}
+		return new Label(message, new Skin(Gdx.files.internal("uiskin.json")));
 	}
 
 	/**

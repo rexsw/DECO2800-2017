@@ -39,10 +39,10 @@ public class InitialWorld extends BaseWorld {
 	 * Adds entities to the world
 	 */
 	public void loadEntities() {
-		for (int x = 0; x < this.getWidth(); x++) {
-			for (int y = 0; y < this.getLength(); y++) {
+		for (int x = 0; x < this.getWidth(); x+=5) {
+			for (int y = 0; y < this.getLength(); y+=5) {
 				Random r = new Random();
-				
+
 				//LARGE CRYSTAL
 				if (r.nextInt(10) < 0.1) {
 //					this.addEntity(new Rock(x, y, 0, 1f, 1f));
