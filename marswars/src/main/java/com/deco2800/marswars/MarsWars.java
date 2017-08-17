@@ -325,66 +325,78 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	private void handleInput() {
 		final int speed = 10;
-		final int pxTolerance = 80; // modifies how close to the edge the cursor has to be before the map
+		final int pxTolerance = 20; // modifies how close to the edge the cursor has to be before the map
 									// starts moving
-		if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-			camera.translate(0, 1*speed*camera.zoom, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-			camera.translate(0, -1*speed*camera.zoom, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-			camera.translate(-1*speed*camera.zoom, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-			camera.translate(1*speed*camera.zoom, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
-			if (camera.zoom > 0.1) {
-				camera.zoom -= 0.1;
-			}
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-			camera.zoom += 0.1;
-		}
-
-		// Move the map dependant on the cursor position
+		int cameraScaleFactor = 32; //the level of skewing caused by the orthographic camera
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		if ((Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
+				&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor/2) {
+			camera.translate(0, 1*speed*camera.zoom, 0);
+		}
+		if ((Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
+				&& camera.position.y + windowHeight*4.5 >= 0) {
+			camera.translate(0, -1*speed*camera.zoom, 0);
+		}
+		if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
+				&& camera.position.x - windowWidth/5 >= 0) {
+			camera.translate(-1*speed*camera.zoom, 0, 0);
+		}
+		if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
+				&& camera.position.x - windowWidth <= Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
+			camera.translate(1*speed*camera.zoom, 0, 0);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
+			if (camera.zoom > 0.5) {
+				camera.zoom /= 1.05;
+			}
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
+			if (camera.zoom < 10) {
+				camera.zoom *= 1.05;
+			}
+		}
+
+		// Move the map dependant on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
 			// skip checking for movement
 			return;
 		}
 		// Got rid of moving the map down because it makes it difficult
-		if (cursorX > windowWidth - pxTolerance) { // moving right
-			if (cursorY < pxTolerance) {
+		if (cursorX > windowWidth - pxTolerance
+				&& camera.position.x - windowWidth <= Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) { // moving right
+			if (cursorY < pxTolerance
+					&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor/2) {
 				// move up and right
 				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > windowHeight - pxTolerance) {
+			//} else if (cursorY > windowHeight - pxTolerance) {
 				// move down and right
 				//camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move right
 				camera.translate(1 * speed * camera.zoom, 0, 0);
 			}
-		} else if (cursorX < pxTolerance) { // moving left
-			if (cursorY < pxTolerance) {
+		} else if (cursorX < pxTolerance 
+				&& camera.position.x - windowWidth/5 >= 0) { // moving left
+			if (cursorY < pxTolerance
+					&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor/2) {
 				// move up and left
 				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > windowHeight - pxTolerance){
+			//} else if (cursorY > windowHeight - pxTolerance){
 				// move down and left
 				//camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move left
 				camera.translate(-1 * speed * camera.zoom, 0, 0);
 			}
-		} else if (cursorY > windowHeight - pxTolerance) {
+		//} else if (cursorY > windowHeight - pxTolerance) {
 			// move down
 			//camera.translate(0, -1 * speed * camera.zoom, 0);
-		} else if (cursorY < pxTolerance) {
+		} else if (cursorY < pxTolerance
+				&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor/2) {
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
