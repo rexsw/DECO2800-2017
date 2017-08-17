@@ -473,9 +473,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (cursorY < pxTolerance) {
 				// move up and right
 				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-				//} else if (cursorY > windowHeight - pxTolerance) {
-				// move down and right
-				//camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move right
 				camera.translate(1 * speed * camera.zoom, 0, 0);
@@ -484,16 +481,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (cursorY < pxTolerance) {
 				// move up and left
 				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-				//} else if (cursorY > windowHeight - pxTolerance){
-				// move down and left
-				//camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move left
 				camera.translate(-1 * speed * camera.zoom, 0, 0);
 			}
-			//} else if (cursorY > windowHeight - pxTolerance) {
-			// move down
-			//camera.translate(0, -1 * speed * camera.zoom, 0);
 		} else if (cursorY < pxTolerance) {
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
