@@ -8,16 +8,11 @@ public class technology {
 	private int[] cost;
 	private String name;
 	private List<technology> parents;
-	public technology(int id, int[] cost, String name, List<technology> parents) {
-		this.id = id;
+	public technology(int[] cost, String name, List<technology> parents) {
 		this.cost = cost;
 		this.name = name;
 		this. parents = parents;
 		
-	}
-	
-	public int getID(){
-		return id;
 	}
 	
 	public int[] getCost(){
