@@ -53,64 +53,6 @@ public class Resource extends BaseEntity implements HasHealth{
 			this.setTexture("large_biomass");
 			break;
 		}
-//		if (type == ResourceType.ROCK) {
-//			this.setTexture("large_rock"); 
-//			if(size == ResourceSize.SMALL) {
-//				
-//				this.reserves = SMALL_SIZE;
-//				this.capacity = SMALL_SIZE;
-//			} else if(size == ResourceSize.MEDIUM) {
-//				this.setTexture("medium_rock"); 
-//				this.reserves = MEDIUM_SIZE;
-//				this.capacity = MEDIUM_SIZE;
-//			} else {
-//				this.setTexture("large_rock"); 
-//				this.reserves = LARGE_SIZE;
-//				this.capacity = LARGE_SIZE;
-//			}
-//		} else if (type == ResourceType.CRYSTAL) {
-//			if(size == ResourceSize.SMALL) {
-//				this.setTexture("small_crystal"); 
-//				this.reserves = SMALL_SIZE;
-//				this.capacity = SMALL_SIZE;
-//			} else if(size == ResourceSize.MEDIUM) {
-//				this.setTexture("medium_crystal"); 
-//				this.reserves = MEDIUM_SIZE;
-//				this.capacity = MEDIUM_SIZE;
-//			} else {
-//				this.setTexture("large_crystal"); 
-//				this.reserves = LARGE_SIZE;
-//				this.capacity = LARGE_SIZE;
-//			}
-//		} else if (type == ResourceType.WATER) {
-//			if(size == ResourceSize.SMALL) {
-//				this.setTexture("small_water"); 
-//				this.reserves = SMALL_SIZE;
-//				this.capacity = SMALL_SIZE;
-//			} else if(size == ResourceSize.MEDIUM) {
-//				this.setTexture("medium_water"); 
-//				this.reserves = MEDIUM_SIZE;
-//				this.capacity = MEDIUM_SIZE;
-//			} else {
-//				this.setTexture("large_water"); 
-//				this.reserves = LARGE_SIZE;
-//				this.capacity = LARGE_SIZE;
-//			}
-//		} else if (type == ResourceType.BIOMASS) {
-//			if(size == ResourceSize.SMALL) {
-//				this.setTexture("small_biomass"); 
-//				this.reserves = SMALL_SIZE;
-//				this.capacity = SMALL_SIZE;
-//			} else if(size == ResourceSize.MEDIUM) {
-//				this.setTexture("medium_biomass"); 
-//				this.reserves = MEDIUM_SIZE;
-//				this.capacity = MEDIUM_SIZE;
-//			} else {
-//				this.setTexture("large_biomass"); 
-//				this.reserves = LARGE_SIZE;
-//				this.capacity = LARGE_SIZE;
-//			}
-//		}
 		this.canWalkOver = false; // i think resource shouldn't allow walk over
 		this.setCost(10); // don't know what should this value be, may vary for different size, to be changed later
 		this.type = type;
@@ -150,8 +92,7 @@ public class Resource extends BaseEntity implements HasHealth{
 				this.setTexture("medium_biomass");
 			} 
 			break;
-		}
-		
+		}	
 		//remain the same as large size
 	}
 
@@ -193,15 +134,6 @@ public class Resource extends BaseEntity implements HasHealth{
 		return type; 
 	}
 	
-//	/**
-//	 * Returns the size of the resource
-//	 * @return ResourceSize
-//	 */
-//	public ResourceSize getSize() {
-//		return size; 
-//	}
-
-	
 	/**
 	 * Returns the current reserves of the resource
 	 * @return current reserves
@@ -220,6 +152,7 @@ public class Resource extends BaseEntity implements HasHealth{
 		if (health < AMOUNT_CAPACITY) {
 			LOGGER.error("Setting " + type + " reserves to " + health);
 			if (health <= 0) {
+				LOGGER.error("Resource drained!");
 				GameManager.get().getWorld().removeEntity(this);
 			}
 			reserves = health;

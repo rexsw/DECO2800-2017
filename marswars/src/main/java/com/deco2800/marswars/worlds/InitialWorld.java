@@ -43,22 +43,27 @@ public class InitialWorld extends BaseWorld {
 			for (int y = 0; y < this.getLength(); y+=5) {
 				Random r = new Random();
 
-				//LARGE CRYSTAL
+				// CRYSTAL
 				if (r.nextInt(10) < 0.1) {
-//					this.addEntity(new Rock(x, y, 0, 1f, 1f));
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL));
 					continue;
 				}
 				
-				// SMALL WATER
+				// WATER
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.WATER));
 					continue;
 				}
 				
-				// SMALL ROCK
+				// ROCK
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK));
+					continue;
+				}
+				
+				// BIOMASS
+				if (r.nextInt(10) < 0.1) {
+					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS));
 					continue;
 				}
 			}
