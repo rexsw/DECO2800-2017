@@ -38,13 +38,11 @@ public class GatherAction implements DecoAction {
 
 	private BaseEntity goal;
 	
-//	private ResourceType resourceType;
 	private int harvestAmount;
 
 	public GatherAction(BaseEntity entity, BaseEntity goalEntity) {
 		this.goal = goalEntity;
 		this.entity = entity;
-//		resourceType = ((Resource) goal).getType();
 		harvestAmount = 10;
 	}
 

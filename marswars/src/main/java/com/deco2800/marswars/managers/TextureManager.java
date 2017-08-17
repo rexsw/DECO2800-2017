@@ -58,18 +58,18 @@ public class TextureManager extends Manager {
         this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
 //        this.saveTexture("water", "resources/placeholderassets/w1.png");
-        this.saveTexture("small_water", "resources/placeholderassets/w2.png");
-        this.saveTexture("medium_water", "resources/placeholderassets/w2.png");
-        this.saveTexture("large_water", "resources/placeholderassets/w2.png");
-        this.saveTexture("small_rock", "resources/placeholderassets/ground-1.png");
-        this.saveTexture("medium_rock", "resources/placeholderassets/ground-1.png");
-        this.saveTexture("large_rock", "resources/placeholderassets/ground-1.png");
-        this.saveTexture("small_crystal", "resources/placeholderassets/crystal_S.png");
-        this.saveTexture("medium_crystal", "resources/placeholderassets/crystal_M.png");
-        this.saveTexture("large_crystal", "resources/placeholderassets/crystal_L.png");
-//        this.saveTexture("small_biomass", "");
-//        this.saveTexture("medium_biomass", "");
-//        this.saveTexture("large_biomass", "");
+        this.saveTexture("small_water", "resources/resourceAssets/water_L.png");
+        this.saveTexture("medium_water", "resources/resourceAssets/water_L.png");
+        this.saveTexture("large_water", "resources/resourceAssets/water_L.png");
+        this.saveTexture("small_rock", "resources/resourceAssets/rock_L.png");
+        this.saveTexture("medium_rock", "resources/resourceAssets/rock_L.png");
+        this.saveTexture("large_rock", "resources/resourceAssets/rock_L.png");
+        this.saveTexture("small_crystal", "resources/resourceAssets/crystal_S.png");
+        this.saveTexture("medium_crystal", "resources/resourceAssets/crystal_M.png");
+        this.saveTexture("large_crystal", "resources/resourceAssets/crystal_L.png");
+        this.saveTexture("small_biomass", "resources/resourceAssets/biomass_L.png");
+        this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_L.png");
+        this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
         
     }
 
