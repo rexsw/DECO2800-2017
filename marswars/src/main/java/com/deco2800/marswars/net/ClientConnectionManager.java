@@ -4,6 +4,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 
+/**
+ * This is the listener for SpacClient, it will handle network events.
+ */
 public class ClientConnectionManager extends Listener {
 	@Override
 	public void disconnected(Connection connection) {

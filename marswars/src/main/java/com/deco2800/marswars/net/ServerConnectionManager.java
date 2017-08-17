@@ -7,7 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * This is the listener for SpacServer. It will handle network events
+ */
 public class ServerConnectionManager extends Listener {
+	/**
+	 * Utility class for storing username and connection
+	 */
 	private class User {
 		private String username;
 		private Connection connection;
@@ -26,8 +32,12 @@ public class ServerConnectionManager extends Listener {
 		}
 	}
 
+	// Lookup of connection id to User
 	private Map<Integer, User> idToUser = new HashMap<>();
 
+	/**
+	 * Helper function to send an action to all users
+	 */
 	private void broadcastAction(Object o) {
 		for (Integer id : this.idToUser.keySet()) {
 			User to = this.idToUser.get(id);
