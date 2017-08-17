@@ -19,18 +19,20 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.net.MarsWarsClientConnectionManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uq.deco2800.soom.client.SoomClient;
-import uq.deco2800.soom.client.game.GameClientConnectionManager;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Moos
@@ -66,7 +68,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 
-	SoomClient networkClient;
+	final int serverPort = 8080;
+	SpacClient networkClient;
+	SpacServer networkServer;
+
+	Skin skin;
+
+	Set<Integer> downKeys = new HashSet<>();
 
 	/**
 	 * Creates the required objects for the game to start.
@@ -109,19 +117,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}).start();
 
-		/* Create a sound manager for the whole game */
-
-		GameClientConnectionManager connectionManager = new MarsWarsClientConnectionManager();
-		networkClient = new SoomClient(connectionManager);
-
-		try {
-			networkClient.connect();
-		} catch (IOException e) {
-			//e.printStackTrace();
-		}
-
-		networkClient.joinLobby("marswarsuser");
-
 		/*
 		 * Setup the game itself
 		 */
@@ -133,7 +128,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 * Setup GUI
 		 */
 		stage = new Stage(new ScreenViewport());
-		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		window = new Window("Menu", skin);
 
 		/* Add a quit button to the menu */
@@ -141,6 +136,98 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Add another button to the menu */
 		peonButton = new TextButton("Select a Unit", skin);
+
+		/* Start server button */
+		Button startServerButton = new TextButton("Start Server", skin);
+		startServerButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Dialog ipDiag = new Dialog("Local IP", skin, "dialog") {};
+				try {
+					InetAddress ipAddr = InetAddress.getLocalHost();
+					String ip = ipAddr.getHostAddress();
+					ipDiag.text("IP Address: " + ip);
+
+					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
+					networkServer = new SpacServer(serverConnectionManager);
+
+
+					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
+					networkClient = new SpacClient(clientConnectionManager);
+					//Initiate Server
+					try {
+						networkServer.bind(serverPort);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					//Join it as a Client
+					try {
+						networkClient.connect(5000, ip, serverPort);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					JoinLobbyAction action = new JoinLobbyAction("Host");
+					networkClient.sendObject(action);
+
+					System.out.println(ip);
+				} catch (UnknownHostException ex) {
+					ipDiag.text("Something went wrong");
+					ex.printStackTrace();
+				}
+				ipDiag.button("Close", null);
+				ipDiag.show(stage);
+			}
+
+		});
+
+		/* Join server button */
+		Button joinServerButton = new TextButton("Join Server", skin);
+		joinServerButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// Construct inside of dialog
+				Table inner = new Table(skin);
+				Label ipLabel = new Label("IP", skin);
+				TextField ipInput = new TextField("localhost", skin);
+				Label usernameLabel = new Label("Username", skin);
+				TextField usernameInput = new TextField("wololo", skin);
+
+				inner.add(ipLabel);
+				inner.add(ipInput);
+				inner.row();
+				inner.add(usernameLabel);
+				inner.add(usernameInput);
+				inner.row();
+
+				Dialog ipDiag = new Dialog("IP", skin, "dialog") {
+					@Override
+					protected void result(Object o) {
+						if(o != null) {
+							String username = usernameInput.getText();
+							String ip = ipInput.getText();
+
+							ClientConnectionManager connectionManager = new ClientConnectionManager();
+							networkClient = new SpacClient(connectionManager);
+
+							try {
+								networkClient.connect(5000, ip, serverPort);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							JoinLobbyAction action = new JoinLobbyAction(username);
+							networkClient.sendObject(action);
+						}
+					}
+				};
+
+				ipDiag.getContentTable().add(inner);
+				ipDiag.button("Join", true);
+				ipDiag.button("Cancel", null);
+
+				ipDiag.show(stage);
+			}
+		});
 
 		/* Add a programatic listener to the quit button */
 		button.addListener(new ChangeListener() {
@@ -160,6 +247,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.add(peonButton);
 		window.add(rocksLabel);
 		window.add(gameTime);
+		window.add(startServerButton);
+		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(0, 0); // Place at the bottom
@@ -215,15 +304,33 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 
 			@Override
+			public boolean keyDown(int keyCode) {
+				downKeys.add(keyCode);
+				keyPressed(keyCode);
+				return true;
+			}
+
+			@Override
+			public boolean keyUp(int keyCode) {
+				downKeys.remove(keyCode);
+				return true;
+			}
+
+			@Override
 			public boolean scrolled(int amount) {
+				int cursorX = Gdx.input.getX();
+				int cursorY = Gdx.input.getY();
+				int windowWidth = Gdx.graphics.getWidth();
+				int windowHeight = Gdx.graphics.getHeight();
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
+					double xMag = cursorX - (windowWidth/2);
+					double yMag = (windowHeight/2) - cursorY;
 					camera.zoom /= 1.2;
-					// TODO implement moving the camera towards the cursor when you zoom in
-					//camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-					//Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+					camera.translate((float)xMag, (float)yMag);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
+				forceMapLimits();
 				return true;
 			}
 		});
@@ -308,7 +415,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
-		
+
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 
@@ -324,35 +431,38 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * There probably should be some way to pass this into another class
 	 */
 	private void handleInput() {
+		forceMapLimits(); //intentionally put at the start to create a nice animation
 		final int speed = 10;
-		final int pxTolerance = 80; // modifies how close to the edge the cursor has to be before the map
-									// starts moving
-		if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-			camera.translate(0, 1*speed*camera.zoom, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-			camera.translate(0, -1*speed*camera.zoom, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-			camera.translate(-1*speed*camera.zoom, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-			camera.translate(1*speed*camera.zoom, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
-			if (camera.zoom > 0.1) {
-				camera.zoom -= 0.1;
-			}
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-			camera.zoom += 0.1;
-		}
-
-		// Move the map dependant on the cursor position
+		final int pxTolerance = 20; // modifies how close to the edge the cursor has to be before the map
+		// starts moving
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
+			camera.translate(0, 1 * speed * camera.zoom, 0);
+		}
+		if (downKeys.contains(Input.Keys.DOWN) || downKeys.contains(Input.Keys.S)) {
+			camera.translate(0, -1 * speed * camera.zoom, 0);
+		}
+		if (downKeys.contains(Input.Keys.LEFT) || downKeys.contains(Input.Keys.A)) {
+			camera.translate(-1 * speed * camera.zoom, 0, 0);
+		}
+		if (downKeys.contains(Input.Keys.RIGHT) || downKeys.contains(Input.Keys.D)) {
+			camera.translate(1 * speed * camera.zoom, 0, 0);
+		}
+		if (downKeys.contains(Input.Keys.EQUALS)) {
+			if (camera.zoom > 0.5) {
+				camera.zoom /= 1.05;
+			}
+		}
+		if (downKeys.contains(Input.Keys.MINUS)) {
+			if (camera.zoom < 10) {
+				camera.zoom *= 1.05;
+			}
+		}
+
+		// Move the map dependant on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
 			// skip checking for movement
@@ -363,9 +473,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (cursorY < pxTolerance) {
 				// move up and right
 				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > windowHeight - pxTolerance) {
-				// move down and right
-				//camera.translate((float) 0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move right
 				camera.translate(1 * speed * camera.zoom, 0, 0);
@@ -374,21 +481,70 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (cursorY < pxTolerance) {
 				// move up and left
 				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else if (cursorY > windowHeight - pxTolerance){
-				// move down and left
-				//camera.translate((float) -0.7071 * speed * camera.zoom, (float) -0.7071 * speed * camera.zoom, 0);
 			} else {
 				// move left
 				camera.translate(-1 * speed * camera.zoom, 0, 0);
 			}
-		} else if (cursorY > windowHeight - pxTolerance) {
-			// move down
-			//camera.translate(0, -1 * speed * camera.zoom, 0);
 		} else if (cursorY < pxTolerance) {
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
+	}
 
+	/**
+	 * Called when a key has been pressed
+	 * @param keycode key that was pressed
+	 */
+	private void keyPressed(int keycode) {
+		if (keycode == Input.Keys.ENTER) {
+			if(this.networkClient != null) {
+				Table inner = new Table(skin);
+				TextField msgInput = new TextField("", skin);
+
+				inner.add(msgInput);
+
+				Dialog ipDiag = new Dialog("Message", skin, "dialog") {
+					@Override
+					protected void result(Object o) {
+						if(o != null) {
+							String msg = msgInput.getText();
+
+							MessageAction action = new MessageAction(msg);
+							networkClient.sendObject(action);
+						}
+					}
+				};
+
+				ipDiag.getContentTable().add(inner);
+				ipDiag.button("Send", true);
+				ipDiag.button("Cancel", null);
+				ipDiag.key(Input.Keys.ENTER, true);
+
+				ipDiag.show(stage);
+			}
+		}
+	}
+	
+	/**
+	 * Helper method called whenever the camera position is moved
+	 * to ensure the camera is never well of the map (in the black).
+	 */
+	private void forceMapLimits() {
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
+		int cameraScaleFactor = 32;
+		
+		if(camera.position.x - windowWidth > Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
+			camera.position.x = (float) (Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1) + windowWidth);
+		}else if(camera.position.x - windowWidth / 5 < 0) {
+			camera.position.x = windowWidth/5;
+		}
+		
+		if(camera.position.y > GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+			camera.position.y = GameManager.get().getWorld().getLength() * cameraScaleFactor / 2;
+		}else if(camera.position.y + windowHeight * 4.5 < 0) {
+			camera.position.y = (float) (-windowHeight * 4.5);
+		}
 	}
 
 	/**
