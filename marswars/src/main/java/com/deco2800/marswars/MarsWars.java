@@ -330,6 +330,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
+				forceMapLimits();
 				return true;
 			}
 		});
@@ -430,28 +431,24 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * There probably should be some way to pass this into another class
 	 */
 	private void handleInput() {
+		forceMapLimits(); //intentionally put at the start to create a nice animation
 		final int speed = 10;
 		final int pxTolerance = 20; // modifies how close to the edge the cursor has to be before the map
 		// starts moving
-		int cameraScaleFactor = 32; //the level of skewing caused by the orthographic camera
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-		if ((downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W))
-				&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
-		if ((downKeys.contains(Input.Keys.DOWN) || downKeys.contains(Input.Keys.S))
-				&& camera.position.y + windowHeight * 4.5 >= 0) {
+		if (downKeys.contains(Input.Keys.DOWN) || downKeys.contains(Input.Keys.S)) {
 			camera.translate(0, -1 * speed * camera.zoom, 0);
 		}
-		if ((downKeys.contains(Input.Keys.LEFT) || downKeys.contains(Input.Keys.A))
-				&& camera.position.x - windowWidth / 5 >= 0) {
+		if (downKeys.contains(Input.Keys.LEFT) || downKeys.contains(Input.Keys.A)) {
 			camera.translate(-1 * speed * camera.zoom, 0, 0);
 		}
-		if ((downKeys.contains(Input.Keys.RIGHT) || downKeys.contains(Input.Keys.D))
-				&& camera.position.x - windowWidth <= Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
+		if (downKeys.contains(Input.Keys.RIGHT) || downKeys.contains(Input.Keys.D)) {
 			camera.translate(1 * speed * camera.zoom, 0, 0);
 		}
 		if (downKeys.contains(Input.Keys.EQUALS)) {
@@ -472,10 +469,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			return;
 		}
 		// Got rid of moving the map down because it makes it difficult
-		if (cursorX > windowWidth - pxTolerance
-				&& camera.position.x - windowWidth <= Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) { // moving right
-			if (cursorY < pxTolerance
-					&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+		if (cursorX > windowWidth - pxTolerance) { // moving right
+			if (cursorY < pxTolerance) {
 				// move up and right
 				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
 				//} else if (cursorY > windowHeight - pxTolerance) {
@@ -485,10 +480,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				// move right
 				camera.translate(1 * speed * camera.zoom, 0, 0);
 			}
-		} else if (cursorX < pxTolerance
-				&& camera.position.x - windowWidth / 5 >= 0) { // moving left
-			if (cursorY < pxTolerance
-					&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+		} else if (cursorX < pxTolerance) { // moving left
+			if (cursorY < pxTolerance) {
 				// move up and left
 				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
 				//} else if (cursorY > windowHeight - pxTolerance){
@@ -501,8 +494,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			//} else if (cursorY > windowHeight - pxTolerance) {
 			// move down
 			//camera.translate(0, -1 * speed * camera.zoom, 0);
-		} else if (cursorY < pxTolerance
-				&& camera.position.y <= GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+		} else if (cursorY < pxTolerance) {
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -539,6 +531,28 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				ipDiag.show(stage);
 			}
+		}
+	}
+	
+	/**
+	 * Helper method called whenever the camera position is moved
+	 * to ensure the camera is never well of the map (in the black).
+	 */
+	private void forceMapLimits() {
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
+		int cameraScaleFactor = 32;
+		
+		if(camera.position.x - windowWidth > Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
+			camera.position.x = (float) (Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1) + windowWidth);
+		}else if(camera.position.x - windowWidth / 5 < 0) {
+			camera.position.x = windowWidth/5;
+		}
+		
+		if(camera.position.y > GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
+			camera.position.y = GameManager.get().getWorld().getLength() * cameraScaleFactor / 2;
+		}else if(camera.position.y + windowHeight * 4.5 < 0) {
+			camera.position.y = (float) (-windowHeight * 4.5);
 		}
 	}
 
