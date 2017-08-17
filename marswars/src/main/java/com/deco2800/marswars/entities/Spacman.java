@@ -26,6 +26,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
+	
+	// this is the resource gathered by this unit, it may shift to other unit in a later stage
+	private GatheredResource gatheredResource = null;
 
 	/**
 	 * Constructor for the Spacman
@@ -149,5 +152,33 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("I am kill");
 		}
+	}
+	
+	/**
+	 * Add gathered resource to unit's backpack
+	 * @param resource
+	 */
+	public void addGatheredResource(GatheredResource resource) {
+		this.gatheredResource = resource;
+		LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
+	}
+	
+	/**
+	 * check if the unit has resource in it's backpack
+	 * @return true if this unit carries something
+	 */
+	public boolean checkBackpack() {
+		return (gatheredResource != null);
+	}
+	
+	/**
+	 * remove the resource from unit's backpack
+	 * @return gatheredResource
+	 */
+	public GatheredResource removeGatheredResource() {
+		GatheredResource resource = new GatheredResource (gatheredResource.getType(), gatheredResource.getAmount());
+		LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
+		gatheredResource = null;
+		return resource;
 	}
 }
