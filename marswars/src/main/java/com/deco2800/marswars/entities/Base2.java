@@ -15,7 +15,7 @@ import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
-import technology.technology;
+import technology.Technology;
 
 import java.util.Optional;
 
@@ -112,7 +112,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 
 	public void buttonWasPressed() {
 		TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-		technology tech = techMan.getTech(1);
+		Technology tech = techMan.getTech(1);
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if (resourceManager.getRocks() > tech.getCost()[0]) {
 			resourceManager.setRocks(resourceManager.getRocks() - tech.getCost()[0]);
