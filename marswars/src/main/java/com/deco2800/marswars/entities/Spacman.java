@@ -41,6 +41,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.setTexture("spacman_green");
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
+		this.initActions();
+		this.addNewAction(GatherAction.class);
+		this.addNewAction(MoveAction.class);
+
 	}
 
 	/**
