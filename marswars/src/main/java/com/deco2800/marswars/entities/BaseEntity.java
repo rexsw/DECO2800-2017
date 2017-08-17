@@ -9,6 +9,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	private int cost = 0;
 	private EntityType entityType = EntityType.NOT_SET;
-	private  List<DecoAction> validActions;
+	private  List<Class> validActions;
 	private boolean selected = false;
 
 	/**
@@ -154,8 +155,12 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	}
 
 	@Override
-	public List<DecoAction> getValidActions() {
+	public List<Class> getValidActions() {
 		return this.validActions;
+	}
+
+	public void initActions() {
+		this.validActions = new ArrayList<Class>();
 	}
 
 	/**
@@ -163,10 +168,11 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @param newAction The new action that is valid for the unit to perform
 	 * @return True if successful, false if the action was not added or if it was already in the list
 	 */
+
 	@Override
-	public boolean addNewAction(DecoAction newAction) {
-		for (DecoAction d: this.validActions) {
-			if (d.getClass().equals(newAction.getClass())) {
+	public boolean addNewAction(Class newAction) {
+		for (Class d: this.validActions) {
+			if (d.equals(newAction)) {
 				return false;
 			}
 		}
@@ -180,9 +186,9 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
 	@Override
-	public boolean removeActions(DecoAction actionToRemove) {
-		for (DecoAction d: this.validActions) {
-			if (d.getClass().equals(actionToRemove.getClass())) {
+	public boolean removeActions(Class actionToRemove) {
+		for (Class d: this.validActions) {
+			if (d.equals(actionToRemove)) {
 				this.validActions.remove(d);
 				return true;
 			}
