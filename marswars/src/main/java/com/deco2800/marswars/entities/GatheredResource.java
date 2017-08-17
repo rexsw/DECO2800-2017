@@ -4,9 +4,7 @@
 package com.deco2800.marswars.entities;
 
 /**
- * This class used for two purpose,
- * 1. used for civilisation's stock pile
- * 2. used for resource harvest by a farm unit
+ * This class is used for resource carried by a unit (farmer)
  * @author Mason
  *
  */

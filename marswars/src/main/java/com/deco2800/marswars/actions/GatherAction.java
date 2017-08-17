@@ -68,9 +68,15 @@ public class GatherAction implements DecoAction {
 					ticksCollect--;
 					if (ticksCollect == 0) {
 						state = SETUP_RETURN;
-						if (goal instanceof HasHealth) {
-							((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 10);
+						if (((Resource) goal).getHarvesterNumber() < ((Resource) goal).getHarvesterCapacity()) {
+							((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() + 1);
+							if (goal instanceof HasHealth) {
+								((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 10);
+							}
+						} else {
+							// if the number of harvester over the capacity, should be handle here
 						}
+						
 						ticksCollect = 100;
 					}
 				} else {

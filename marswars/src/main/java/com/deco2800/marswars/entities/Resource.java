@@ -106,8 +106,6 @@ public class Resource extends BaseEntity implements HasHealth{
 		this.type = type;
 		this.size = size;
 	}
-
-	
 	
 	/**
 	 * Returns the current reserves percentage of the resource
@@ -121,8 +119,16 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * Returns the number of units currently harvesting on the resource
 	 * @return number of unit
 	 */
-	public int getHarvestNumber() {
+	public int getHarvesterNumber() {
 		return harvester;
+	}
+	
+	/**
+	 * Returns the max number of units can harvesting on the resource
+	 * @return capacity of harvester
+	 */
+	public int getHarvesterCapacity() {
+		return HARVEST_CAPACITY;
 	}
 	
 	/**
