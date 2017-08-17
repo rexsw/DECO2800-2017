@@ -13,7 +13,7 @@ import java.util.Optional;
  * A hero for the game
  * Created by timhadwen on 19/7/17.
  */
-public class HeroSpacman extends BaseEntity implements Tickable, Clickable, Selectable {
+public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -27,6 +27,7 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable, Sele
 	public HeroSpacman(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1f, 1f);
 		this.setTexture("spacman_red");
+		this.setEntityType(EntityType.HERO);
 	}
 
 	@Override
@@ -42,6 +43,7 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable, Sele
 
 	@Override
 	public void onClick(MouseHandler handler) {
+		this.makeSelected();
 		handler.registerForRightClickNotification(this);
 	}
 
@@ -60,18 +62,5 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable, Sele
 
 	}
 
-	@Override
-	public Button getButton() {
-		return null;
-	}
 
-	@Override
-	public void buttonWasPressed() {
-
-	}
-
-	@Override
-	public Label getHelpText() {
-		return null;
-	}
 }

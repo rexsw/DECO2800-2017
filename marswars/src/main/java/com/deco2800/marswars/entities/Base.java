@@ -21,7 +21,7 @@ import java.util.Optional;
  *
  * A home base for the empire
  */
-public class Base extends BaseEntity implements Clickable, Tickable, Selectable, HasProgress {
+public class Base extends BaseEntity implements Clickable, Tickable, HasProgress {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -96,7 +96,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 		selected = false;
 	}
 
-	@Override
 	public Button getButton() {
 		Button button = new TextButton("Make Spacman", new Skin(Gdx.files.internal("uiskin.json")));
 		button.addListener(new ChangeListener() {
@@ -108,7 +107,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 		return button;
 	}
 
-	@Override
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if (resourceManager.getRocks() > 30) {
@@ -117,7 +115,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, Selectable,
 		}
 	}
 
-	@Override
 	public Label getHelpText() {
 		return new Label("You have clicked on the base. Click 'Make Spacman' to 'Make Spacman'!", new Skin(Gdx.files.internal("uiskin.json")));
 	}

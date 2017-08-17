@@ -35,8 +35,8 @@ dependencies {
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-    compile(group: 'uq.deco2800.soom', name: 'server', version: '0.1-SNAPSHOT', changing: true)
-
+    // Kryonet for networking
+    compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 }
 
 sourceSets.main.resources.srcDirs = [ "../marswars/resources/" ]
