@@ -138,7 +138,7 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * @param value The number of units currently harvesting the resource.
 	 */
 	public void setHarvestNumber(int value) {
-		if ((value < HARVEST_CAPACITY) && (value >= 0)) {
+		if ((value <= HARVEST_CAPACITY) && (value >= 0)) {
 			System.err.println("Setting " + type + " harvester count to " + 
 					value);
 			harvester = value;

@@ -9,7 +9,7 @@ package com.deco2800.marswars.entities;
  *
  */
 public class GatheredResource {
-	private int reserves;
+	private int amount;
 	private ResourceType type;
 	
 	/**
@@ -17,29 +17,9 @@ public class GatheredResource {
 	 * @param type
 	 * @param numbOfResource
 	 */
-	GatheredResource(ResourceType type, int numbOfResource) {
+	public GatheredResource(ResourceType type, int amount) {
 		this.type = type;
-		this.reserves = numbOfResource;
-	}
-	
-	/**
-	 * Call this function when add resource to the stock pile
-	 */
-	public void addResource(GatheredResource resource) {
-		if (this.type != resource.type) {
-			return; // throw something here? error?
-		}
-		reserves += resource.getResource();
-	}
-	
-	/**
-	 * Call this function when trying to use a resource
-	 */
-	public void useResource(GatheredResource resource) {
-		if (this.type != resource.type) {
-			return; // throw something here? error?
-		}
-		reserves -= resource.getResource(); 
+		this.amount = amount;
 	}
 	
 	/**
@@ -54,7 +34,7 @@ public class GatheredResource {
 	 * Returns the storage of the resource
 	 * @return integer
 	 */
-	public int getResource() {
-		return reserves;
+	public int getAmount() {
+		return amount;
 	}
 }

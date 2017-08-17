@@ -2,8 +2,10 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.ResourceType;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -32,16 +34,18 @@ public class GatherAction implements DecoAction {
 	private Class type;
 	boolean completed = false;
 
-	private int ticksCollect = 10;
+	private int ticksCollect = 200;
 
 	private BaseEntity goal;
 	
-	private ResourceType resourceType;
+//	private ResourceType resourceType;
+	private int harvestAmount;
 
 	public GatherAction(BaseEntity entity, BaseEntity goalEntity) {
 		this.goal = goalEntity;
 		this.entity = entity;
-		resourceType = ((Resource) goal).getType();
+//		resourceType = ((Resource) goal).getType();
+		harvestAmount = 10;
 	}
 
 	@Override
@@ -64,20 +68,28 @@ public class GatherAction implements DecoAction {
 				break;
 			case COLLECT:
 				if (GameManager.get().getWorld().getEntities().contains(goal)) {
+					if (ticksCollect == 200) {
+						((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() + 1);
+					}
 					// Our goal object still exists, mine it
 					ticksCollect--;
 					if (ticksCollect == 0) {
 						state = SETUP_RETURN;
 						if (((Resource) goal).getHarvesterNumber() < ((Resource) goal).getHarvesterCapacity()) {
-							((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() + 1);
+							ResourceType resourceType = ((Resource) goal).getType();
 							if (goal instanceof HasHealth) {
-								((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 10);
+								((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
+								if (entity instanceof Spacman) {
+									((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
+								}
+								((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() - 1);
 							}
 						} else {
 							// if the number of harvester over the capacity, should be handle here
+							System.err.println("Resource has reach the maximum capacity of harvester");
 						}
 						
-						ticksCollect = 100;
+						ticksCollect = 200;
 					}
 				} else {
 					// Find a new closest entity
@@ -114,20 +126,32 @@ public class GatherAction implements DecoAction {
 					state = State.SETUP_MOVE;
 					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 					// check which type of resource and add it to the player's resource
-					switch (resourceType) {
-					case WATER:
-						resourceManager.setWater(resourceManager.getWater() + 10);
-						break;
-					case ROCK:
-						resourceManager.setRocks(resourceManager.getRocks() + 10);
-						break;
-					case CRYSTAL:
-						resourceManager.setCrystal(resourceManager.getCrystal() + 10);
-						break;
-					case BIOMASS:
-						resourceManager.setBiomass(resourceManager.getBiomass() + 10);
-						break;
+					if (entity instanceof Spacman) {
+						// check if this unit't actually has something to drop
+						if (((Spacman) entity).checkBackpack()) {
+							GatheredResource resource = ((Spacman) entity).removeGatheredResource();
+							ResourceType resourceType = resource.getType();
+							int amount = resource.getAmount();
+							switch (resourceType) {
+							case WATER:
+								resourceManager.setWater(resourceManager.getWater() + amount);
+								break;
+							case ROCK:
+								resourceManager.setRocks(resourceManager.getRocks() + amount);
+								break;
+							case CRYSTAL:
+								resourceManager.setCrystal(resourceManager.getCrystal() + amount);
+								break;
+							case BIOMASS:
+								resourceManager.setBiomass(resourceManager.getBiomass() + amount);
+								break;
+							}
+						} else {// if there is nothing
+							System.err.println("Bring back nothing");
+						}
+						
 					}
+					
 //					resourceManager.setRocks(resourceManager.getRocks() + 10);
 					return;
 				}
