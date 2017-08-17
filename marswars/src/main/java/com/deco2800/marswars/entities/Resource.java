@@ -17,14 +17,10 @@ public class Resource extends BaseEntity implements HasHealth{
 	private static final Logger LOGGER = LoggerFactory.getLogger(Resource.class);
 
 	private ResourceType type;
-	private ResourceSize size;
-	private final int LARGE_SIZE = 5000;
-	private final int MEDIUM_SIZE = 3000;
-	private final int SMALL_SIZE = 1000;
+	private final int AMOUNT_CAPACITY = 100;
 	private final int HARVEST_CAPACITY = 5; // max 5 farmer at the same time
 	
 	private int reserves; // current reserves of this resource
-	private int capacity; // max capacity of the resource
 	private int harvester = 0; // no. of harvester on the resource
 	
 	/**
@@ -35,84 +31,128 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * @param height
 	 * @param width
 	 * @param type
-	 * @param size
 	 */
-	public Resource(float posX, float posY, float posZ, float height, float width, ResourceType type, ResourceSize size) {
+	public Resource(float posX, float posY, float posZ, float height, float width, ResourceType type) {
 		// I'm thinking of make the constructor method shorter, 
 		// so for the constructor method, it only takes in type and size
 		// and in a separate function, takes in the position to draw it on the map
 		// what's your thought?
 		super(posX, posY, posZ, height, width, 1f);
-		
-		if (type == ResourceType.ROCK) {
-			if(size == ResourceSize.SMALL) {
-				this.setTexture("small_rock"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-			} else if(size == ResourceSize.MEDIUM) {
-				this.setTexture("medium_rock"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-			} else {
-				this.setTexture("large_rock"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-			}
-		} else if (type == ResourceType.CRYSTAL) {
-			if(size == ResourceSize.SMALL) {
-				this.setTexture("small_crystal"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-			} else if(size == ResourceSize.MEDIUM) {
-				this.setTexture("medium_crystal"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-			} else {
-				this.setTexture("large_crystal"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-			}
-		} else if (type == ResourceType.WATER) {
-			if(size == ResourceSize.SMALL) {
-				this.setTexture("small_water"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-			} else if(size == ResourceSize.MEDIUM) {
-				this.setTexture("medium_water"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-			} else {
-				this.setTexture("large_water"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-			}
-		} else if (type == ResourceType.BIOMASS) {
-			if(size == ResourceSize.SMALL) {
-				this.setTexture("small_biomass"); 
-				this.reserves = SMALL_SIZE;
-				this.capacity = SMALL_SIZE;
-			} else if(size == ResourceSize.MEDIUM) {
-				this.setTexture("medium_biomass"); 
-				this.reserves = MEDIUM_SIZE;
-				this.capacity = MEDIUM_SIZE;
-			} else {
-				this.setTexture("large_biomass"); 
-				this.reserves = LARGE_SIZE;
-				this.capacity = LARGE_SIZE;
-			}
+
+		switch (type) {
+		case ROCK:
+			this.setTexture("large_rock"); 
+			break;
+		case CRYSTAL:
+			this.setTexture("large_crystal"); 
+			break;
+		case WATER:
+			this.setTexture("large_water");
+			break;
+		case BIOMASS:
+			this.setTexture("large_biomass");
+			break;
 		}
+//		if (type == ResourceType.ROCK) {
+//			this.setTexture("large_rock"); 
+//			if(size == ResourceSize.SMALL) {
+//				
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//			} else if(size == ResourceSize.MEDIUM) {
+//				this.setTexture("medium_rock"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//			} else {
+//				this.setTexture("large_rock"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//			}
+//		} else if (type == ResourceType.CRYSTAL) {
+//			if(size == ResourceSize.SMALL) {
+//				this.setTexture("small_crystal"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//			} else if(size == ResourceSize.MEDIUM) {
+//				this.setTexture("medium_crystal"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//			} else {
+//				this.setTexture("large_crystal"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//			}
+//		} else if (type == ResourceType.WATER) {
+//			if(size == ResourceSize.SMALL) {
+//				this.setTexture("small_water"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//			} else if(size == ResourceSize.MEDIUM) {
+//				this.setTexture("medium_water"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//			} else {
+//				this.setTexture("large_water"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//			}
+//		} else if (type == ResourceType.BIOMASS) {
+//			if(size == ResourceSize.SMALL) {
+//				this.setTexture("small_biomass"); 
+//				this.reserves = SMALL_SIZE;
+//				this.capacity = SMALL_SIZE;
+//			} else if(size == ResourceSize.MEDIUM) {
+//				this.setTexture("medium_biomass"); 
+//				this.reserves = MEDIUM_SIZE;
+//				this.capacity = MEDIUM_SIZE;
+//			} else {
+//				this.setTexture("large_biomass"); 
+//				this.reserves = LARGE_SIZE;
+//				this.capacity = LARGE_SIZE;
+//			}
+//		}
 		this.canWalkOver = false; // i think resource shouldn't allow walk over
 		this.setCost(10); // don't know what should this value be, may vary for different size, to be changed later
 		this.type = type;
-		this.size = size;
+		this.reserves = AMOUNT_CAPACITY;
 	}
 	
 	/**
-	 * Returns the current reserves percentage of the resource
-	 * @return reserve percentage
+	 * Update the storage station according to the reserves percentage
 	 */
-	public int getReservePercentage() {
-		return (reserves * 100/capacity );
+	public void updateStorageState() {
+		switch (type) {
+		case ROCK:
+			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+				this.setTexture("small_rock");
+			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+				this.setTexture("medium_rock");
+			} 
+			break;
+		case CRYSTAL:
+			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+				this.setTexture("small_crystal");
+			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+				this.setTexture("medium_crystal");
+			} 
+			break;
+		case WATER:
+			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+				this.setTexture("small_water");
+			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+				this.setTexture("medium_water");
+			} 
+			break;
+		case BIOMASS:
+			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+				this.setTexture("small_biomass");
+			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+				this.setTexture("medium_biomass");
+			} 
+			break;
+		}
+		
+		//remain the same as large size
 	}
 
 	/**
@@ -139,7 +179,7 @@ public class Resource extends BaseEntity implements HasHealth{
 	 */
 	public void setHarvestNumber(int value) {
 		if ((value <= HARVEST_CAPACITY) && (value >= 0)) {
-			System.err.println("Setting " + type + " harvester count to " + 
+			LOGGER.error("Setting " + type + " harvester count to " + 
 					value);
 			harvester = value;
 		}
@@ -153,13 +193,13 @@ public class Resource extends BaseEntity implements HasHealth{
 		return type; 
 	}
 	
-	/**
-	 * Returns the size of the resource
-	 * @return ResourceSize
-	 */
-	public ResourceSize getSize() {
-		return size; 
-	}
+//	/**
+//	 * Returns the size of the resource
+//	 * @return ResourceSize
+//	 */
+//	public ResourceSize getSize() {
+//		return size; 
+//	}
 
 	
 	/**
@@ -177,8 +217,8 @@ public class Resource extends BaseEntity implements HasHealth{
 	 */
 	@Override
 	public void setHealth(int health) {
-		if (health < capacity) {
-			System.err.println("Setting " + type + " reserves to " + health);
+		if (health < AMOUNT_CAPACITY) {
+			LOGGER.error("Setting " + type + " reserves to " + health);
 			if (health <= 0) {
 				GameManager.get().getWorld().removeEntity(this);
 			}

@@ -79,6 +79,7 @@ public class GatherAction implements DecoAction {
 							ResourceType resourceType = ((Resource) goal).getType();
 							if (goal instanceof HasHealth) {
 								((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
+								((Resource) goal).updateStorageState();
 								if (entity instanceof Spacman) {
 									((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
 								}
