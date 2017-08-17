@@ -6,8 +6,9 @@ package com.deco2800.marswars.managers;
  */
 public class ResourceManager extends Manager {
 	private int rocks = 0;
-	private int fuel = 0;
+	private int crystal = 0;
 	private int water = 0;
+	private int biomass = 0;
 
 	/**
 	 * Gets the number of rocks
@@ -30,19 +31,23 @@ public class ResourceManager extends Manager {
 	}
 
 	/**
-	 * Gets the current fuel
+	 * Gets the current crystal
 	 * @return
 	 */
-	public int getFuel() {
-		return fuel;
+	public int getCrystal() {
+		return crystal;
 	}
 
 	/**
-	 * Sets the current fuel
-	 * @param fuel
+	 * Sets the current crystal
+	 * @param crystal
 	 */
-	public void setFuel(int fuel) {
-		this.fuel = fuel;
+	public void setCrystal(int crystal) {
+		if (this.crystal < crystal) {
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound("closed.wav");
+		}
+		this.crystal = crystal;
 	}
 
 	/**
@@ -58,6 +63,30 @@ public class ResourceManager extends Manager {
 	 * @param water
 	 */
 	public void setWater(int water) {
+		if (this.water < water) {
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound("closed.wav");
+		}
 		this.water = water;
+	}
+	
+	/**
+	 * Gets the current biomass
+	 * @return
+	 */
+	public int getBiomass() {
+		return biomass;
+	}
+
+	/**
+	 * Sets the current biomass
+	 * @param water
+	 */
+	public void setBiomass(int biomass) {
+		if (this.biomass < biomass) {
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound("closed.wav");
+		}
+		this.biomass = biomass;
 	}
 }

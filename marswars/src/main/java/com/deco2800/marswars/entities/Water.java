@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
+ * Use Resource Class instead
  * Created by timhadwen on 29/7/17.
  */
 public class Water extends BaseEntity implements HasHealth {

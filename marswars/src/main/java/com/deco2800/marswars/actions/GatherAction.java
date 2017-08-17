@@ -3,6 +3,8 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasHealth;
+import com.deco2800.marswars.entities.ResourceType;
+import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.util.Point;
@@ -33,10 +35,13 @@ public class GatherAction implements DecoAction {
 	private int ticksCollect = 10;
 
 	private BaseEntity goal;
+	
+	private ResourceType resourceType;
 
 	public GatherAction(BaseEntity entity, BaseEntity goalEntity) {
 		this.goal = goalEntity;
 		this.entity = entity;
+		resourceType = ((Resource) goal).getType();
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class GatherAction implements DecoAction {
 					if (ticksCollect == 0) {
 						state = SETUP_RETURN;
 						if (goal instanceof HasHealth) {
-							((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 5);
+							((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - 10);
 						}
 						ticksCollect = 100;
 					}
@@ -102,7 +107,22 @@ public class GatherAction implements DecoAction {
 				if (action.completed()) {
 					state = State.SETUP_MOVE;
 					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-					resourceManager.setRocks(resourceManager.getRocks() + 10);
+					// check which type of resource and add it to the player's resource
+					switch (resourceType) {
+					case WATER:
+						resourceManager.setWater(resourceManager.getWater() + 10);
+						break;
+					case ROCK:
+						resourceManager.setRocks(resourceManager.getRocks() + 10);
+						break;
+					case CRYSTAL:
+						resourceManager.setCrystal(resourceManager.getCrystal() + 10);
+						break;
+					case BIOMASS:
+						resourceManager.setBiomass(resourceManager.getBiomass() + 10);
+						break;
+					}
+//					resourceManager.setRocks(resourceManager.getRocks() + 10);
 					return;
 				}
 
