@@ -11,17 +11,19 @@ public class TimeManager extends Manager implements TickableManager{
 	private static final int DAYBREAK = 6; //daybreak at 6am
 	private static final int NIGHT = 18; //night at 6pm
 	
-	private boolean isNight = false;
+	private boolean isNight = true;
 	private boolean isPaused = false;
 	private long time = 0; //time in seconds
 	
 	@Override
 	public void onTick(long i){
-		time += 1;
+		if (!isPaused){
+		time += 10;
 		if(getHours() > NIGHT || getHours() < DAYBREAK)
 			setNight();
 		else
 			setDay();
+		}
 	}
 	
 	//bit of a lazy way of setting day/night tbh
@@ -58,9 +60,18 @@ public class TimeManager extends Manager implements TickableManager{
 	public boolean isPaused(){
 		return isPaused;
 	}
+	public void pause(){
+		isPaused = true;
+	}
+	public void unPause(){
+		isPaused = false;
+	}
 	
 	public long getSeconds(){
 		return time;
+	}
+	public void addTime(long seconds){
+		time += seconds;
 	}
 	
 	/**
