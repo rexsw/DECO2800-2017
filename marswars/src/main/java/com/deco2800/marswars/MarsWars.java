@@ -323,16 +323,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				int windowWidth = Gdx.graphics.getWidth();
 				int windowHeight = Gdx.graphics.getHeight();
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
-					double xMag = Math.sqrt(Math.pow(windowWidth/2, 2) + Math.pow(cursorX, 2));
-					//double xMul = Math.signum(windowWidth-cursorX)*(xMag-0)/((windowWidth/2)-0) * (1-0) + 0;
-					double yMag = Math.sqrt(Math.pow(windowHeight/2, 2) + Math.pow(cursorY, 2));
-					//double yMul = Math.signum(windowHeight-cursorY)*(yMag-0)/((windowHeight/2)-0) * (1-0) + 0;
-					System.out.println(windowWidth/2 + ":" + windowHeight/2 + " - " + cursorX + ":" + cursorY + " - " + xMag + ":" + yMag);
+					double xMag = cursorX - (windowWidth/2);
+					double yMag = (windowHeight/2) - cursorY;
 					camera.zoom /= 1.2;
 					camera.translate((float)xMag, (float)yMag);
-					// TODO implement moving the camera towards the cursor when you zoom in
-					//camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-					//Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
