@@ -77,6 +77,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	Set<Integer> downKeys = new HashSet<>();
 
+
+
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -92,6 +94,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld("resources/placeholderassets/placeholder200.tmx"));
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		GameManager.get().setMapWorld(new MapWorld("resources/placeholderassets/mega200.tmx"));
 
 		new Thread(new Runnable() {
 			@Override
@@ -464,8 +467,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}
 		if (downKeys.contains(Input.Keys.M)) {
-			// open mega map
-			MapWorld megaMap = new MapWorld();
+			// open or close mega map
+			GameManager.get().getMapWorld().toggle();
 		}
 
 		// Move the map dependant on the cursor position

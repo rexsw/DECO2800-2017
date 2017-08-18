@@ -7,11 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Render2D;
+import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.util.Array2D;
+import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -20,27 +25,38 @@ import java.util.logging.Logger;
 public class MapWorld extends BaseWorld {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapWorld.class);
-    private Renderer renderer = new Render2D();
     private OrthographicCamera camera = new OrthographicCamera();
+    //private int state; // 1 is active 0 is inactive
+    //private BaseWorld oldWorld; // the old game world
+    //private Array2D<List<BaseEntity>> oldCollisionMap; // the old game entities
 
-    public MapWorld() {
-        constructMap();
-        render();
+
+    public MapWorld(String filename) {
+        this.map = new TmxMapLoader().load(filename);
     }
 
-    /**
-     * constructs a map
-     */
-    private void constructMap() {
-        // TODO link the two maps being loaded somehow
-        this.map = new TmxMapLoader().load("resources/placeholderassets/mega200.tmx");
-        //LOGGER.info("Length: " + world.getLength() + ", Width: " + world.getWidth());
+    public void toggle() {
+        if (GameManager.get().getActiveView() == 1) {
+            toggleOn();
+        } else {
+            toggleOff();
+        }
+        GameManager.get().toggleActiveView();
     }
 
-    private void render() {
-        BaseWorld gameWorld = GameManager.get().getWorld(); // save the old world
+    private void toggleOn() {
+        LOGGER.info(GameManager.get().getWorld().toString());
+        GameManager.get().setMapWorld(GameManager.get().getWorld());
         GameManager.get().setWorld(this);
+    }
 
+    private void toggleOff() {
+        GameManager.get().setWorld(GameManager.get().getMapWorld());
+        GameManager.get().setMapWorld(this);
+        LOGGER.info(GameManager.get().getWorld().toString());
+    }
+
+    private void changeWorld(Renderer renderer) {
         SpriteBatch batch = new SpriteBatch();
 
         camera.update();
@@ -54,11 +70,5 @@ public class MapWorld extends BaseWorld {
         tileRenderer.render();
 
         renderer.render(batch, camera);
-        handleClick();
     }
-
-    private void handleClick() {
-
-    }
-
 }
