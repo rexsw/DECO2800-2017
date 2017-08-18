@@ -15,11 +15,12 @@ public class InitialWorld extends BaseWorld {
 
 	/**
 	 * Constructor for InitialWorld
+	 * @param worldFileName File name of the world to be loaded
 	 */
-	public InitialWorld() {
+	public InitialWorld(String worldFileName) {
 
  		/* Load up the map for this world */
-		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder200.tmx");
+		this.map = new TmxMapLoader().load(worldFileName);
 
                 /* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));

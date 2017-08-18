@@ -25,6 +25,7 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.worlds.MapWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,8 +88,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/*
 		 *	Set up new stuff for this game
+		 * TODO some way to choose which map is being loaded
 		 */
-		GameManager.get().setWorld(new InitialWorld());
+		GameManager.get().setWorld(new InitialWorld("resources/placeholderassets/placeholder200.tmx"));
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
 
 		new Thread(new Runnable() {
@@ -460,6 +462,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (camera.zoom < 10) {
 				camera.zoom *= 1.05;
 			}
+		}
+		if (downKeys.contains(Input.Keys.M)) {
+			// open mega map
+			MapWorld megaMap = new MapWorld((InitialWorld)GameManager.get().getWorld());
 		}
 
 		// Move the map dependant on the cursor position
