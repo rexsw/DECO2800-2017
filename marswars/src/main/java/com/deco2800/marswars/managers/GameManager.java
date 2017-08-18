@@ -119,8 +119,8 @@ public class GameManager implements TickableManager {
 	 * Gets the current map world.
 	 * @return
 	 */
-	public MapWorld getMapWorld() {
-		return (MapWorld) mapWorld;
+	public BaseWorld getMapWorld() {
+		return mapWorld;
 	}
 
 	/**
@@ -135,7 +135,27 @@ public class GameManager implements TickableManager {
 	 * Toggles activeView.
 	 */
 	public void toggleActiveView() {
-		activeView ^= 1;
+		if (activeView == 0) {
+			activeView = 1;
+			toggleMapOn();
+		} else {
+			activeView = 0;
+			toggleMapOff();
+		}
+	}
+
+	private void toggleMapOn() {
+		LOGGER.info("toggle map mode on");
+		BaseWorld temporary = getMapWorld();
+		setMapWorld(getWorld());
+		GameManager.get().setWorld(temporary);
+	}
+
+	private void toggleMapOff() {
+		LOGGER.info("toggle map mode off");
+		BaseWorld temporary = getWorld();
+		setWorld(getMapWorld());
+		setMapWorld(temporary);
 	}
 
 	public void setCamera(OrthographicCamera camera) {

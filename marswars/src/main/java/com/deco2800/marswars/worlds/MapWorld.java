@@ -36,7 +36,7 @@ public class MapWorld extends BaseWorld {
     }
 
     public void toggle() {
-        if (GameManager.get().getActiveView() == 1) {
+        if (GameManager.get().getActiveView() == 0) {
             toggleOn();
         } else {
             toggleOff();
@@ -45,30 +45,15 @@ public class MapWorld extends BaseWorld {
     }
 
     private void toggleOn() {
-        LOGGER.info(GameManager.get().getWorld().toString());
-        GameManager.get().setMapWorld(GameManager.get().getWorld());
+        LOGGER.info("toggle on");
+        GameManager.get().setMapWorld((BaseWorld) GameManager.get().getWorld());
         GameManager.get().setWorld(this);
     }
 
     private void toggleOff() {
         GameManager.get().setWorld(GameManager.get().getMapWorld());
         GameManager.get().setMapWorld(this);
-        LOGGER.info(GameManager.get().getWorld().toString());
+        LOGGER.info("toggle off");
     }
 
-    private void changeWorld(Renderer renderer) {
-        SpriteBatch batch = new SpriteBatch();
-
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
-        tileRenderer.setView(camera);
-        tileRenderer.render();
-
-        renderer.render(batch, camera);
-    }
 }

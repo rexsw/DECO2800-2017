@@ -24,6 +24,7 @@ import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.InitialWorld;
 import com.deco2800.marswars.worlds.MapWorld;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -94,7 +96,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld("resources/placeholderassets/placeholder200.tmx"));
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-		GameManager.get().setMapWorld(new MapWorld("resources/placeholderassets/mega200.tmx"));
+		GameManager.get().setMapWorld(new InitialWorld("resources/placeholderassets/mega200.tmx"));
 
 		new Thread(new Runnable() {
 			@Override
@@ -468,7 +470,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}
 		if (downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
-			GameManager.get().getMapWorld().toggle();
+			downKeys.remove(Input.Keys.M);
+			GameManager.get().toggleActiveView();
 		}
 
 		// Move the map dependant on the cursor position
