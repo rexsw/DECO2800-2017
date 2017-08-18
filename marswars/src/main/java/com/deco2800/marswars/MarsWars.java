@@ -24,9 +24,7 @@ import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.InitialWorld;
-import com.deco2800.marswars.worlds.MapWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +32,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -96,7 +93,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld("resources/placeholderassets/placeholder200.tmx"));
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-		GameManager.get().setMapWorld(new InitialWorld("resources/placeholderassets/mega200.tmx"));
 
 		new Thread(new Runnable() {
 			@Override
@@ -129,6 +125,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
+		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
@@ -281,12 +278,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				originX = screenX;
-				originY = screenY;
 
-				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-				MouseHandler mouseHandler = (MouseHandler)(GameManager.get().getManager(MouseHandler.class));
-				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+				if (GameManager.get().getActiveView() == 1) {
+					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+					camera.zoom = 1;
+					GameManager.get().toggleActiveView();
+				} else {
+
+					originX = screenX;
+					originY = screenY;
+
+					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+				}
 				return true;
 			}
 
@@ -325,6 +330,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean scrolled(int amount) {
+				if (GameManager.get().getActiveView() == 1) {
+					return false;
+				}
 				int cursorX = Gdx.input.getX();
 				int cursorY = Gdx.input.getY();
 				int windowWidth = Gdx.graphics.getWidth();
@@ -446,6 +454,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		int cursorY = Gdx.input.getY();
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		if (downKeys.contains(Input.Keys.M)) {
+			// open or close mega map
+			downKeys.remove(Input.Keys.M);
+			LOGGER.info("pos: " + camera.position.toString());
+			GameManager.get().toggleActiveView();
+		}
+		if (GameManager.get().getActiveView() == 1) {
+			// Don't process any inputs if in map view mode
+			return;
+		}
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -467,11 +485,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			if (camera.zoom < 10) {
 				camera.zoom *= 1.05;
 			}
-		}
-		if (downKeys.contains(Input.Keys.M)) {
-			// open or close mega map
-			downKeys.remove(Input.Keys.M);
-			GameManager.get().toggleActiveView();
 		}
 
 		// Move the map dependant on the cursor position

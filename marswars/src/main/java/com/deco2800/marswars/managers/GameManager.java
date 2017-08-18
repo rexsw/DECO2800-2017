@@ -2,14 +2,12 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.worlds.MapWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Game manager manages all the components of the game.
@@ -145,17 +143,13 @@ public class GameManager implements TickableManager {
 	}
 
 	private void toggleMapOn() {
-		LOGGER.info("toggle map mode on");
-		BaseWorld temporary = getMapWorld();
-		setMapWorld(getWorld());
-		GameManager.get().setWorld(temporary);
+		// move camera to centre and zoom out
+		camera.zoom = 10;
+		camera.position.set(5600, -300, 0); //TODO make this work with different map and window sizes
 	}
 
 	private void toggleMapOff() {
-		LOGGER.info("toggle map mode off");
-		BaseWorld temporary = getWorld();
-		setWorld(getMapWorld());
-		setMapWorld(temporary);
+		camera.zoom = 1;
 	}
 
 	public void setCamera(OrthographicCamera camera) {
