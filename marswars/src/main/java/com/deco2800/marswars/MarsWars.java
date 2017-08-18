@@ -465,7 +465,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}
 		if (downKeys.contains(Input.Keys.M)) {
 			// open mega map
-			MapWorld megaMap = new MapWorld((InitialWorld)GameManager.get().getWorld());
+			MapWorld megaMap = new MapWorld();
 		}
 
 		// Move the map dependant on the cursor position
