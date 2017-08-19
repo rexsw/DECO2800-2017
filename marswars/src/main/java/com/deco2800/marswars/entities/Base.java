@@ -7,8 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
+import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -36,9 +40,14 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 * @param posZ
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 1, 1, 1);
-		this.setTexture("base");
+		super(posX, posY, posZ, 4 , 4, 1, 4, 4, false);
+		this.setTexture("grass");
+		this.setEntityType(EntityType.BUILDING);
 		this.setCost(10000000);
+		this.setSpeed(2);
+		this.initActions();
+		this.addNewAction(BuildAction.class);
+		world.deSelectAll();
 	}
 
 	public void giveAction(DecoAction action) {
@@ -53,7 +62,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public void onClick(MouseHandler handler) {
 		System.out.println("Base got clicked");
-
+		this.currentAction = Optional.of(new BuildAction(this));
 		if (!selected) {
 			selected = true;
 		}
@@ -70,12 +79,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onTick(int i) {
-
-		if (selected) {
-			this.setTexture("base");
-		} else {
-			this.setTexture("base");
-		}
 
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();
@@ -111,7 +114,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if (resourceManager.getRocks() > 30) {
 			resourceManager.setRocks(resourceManager.getRocks() - 30);
-			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
 	}
 
