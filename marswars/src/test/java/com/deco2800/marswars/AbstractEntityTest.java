@@ -57,7 +57,7 @@ public class AbstractEntityTest {
 
 	@Test
 	public void OrderingTest() {
-		GameManager.get().setWorld(new BaseWorld());
+		GameManager.get().setWorld(new BaseWorld(200, 200));
 		AbstractEntity e1 = new TestEntity(0, 100, 0, 0, 1, 1);
 		AbstractEntity e2 = new TestEntity(100, 0, 0, 0, 1, 1);
 
@@ -80,7 +80,7 @@ public class AbstractEntityTest {
 
 	@Test
 	public void CollisionTest() {
-		GameManager.get().setWorld(new BaseWorld());
+		GameManager.get().setWorld(new BaseWorld(10, 10));
 
 		AbstractEntity e1 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
 		AbstractEntity e2 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, false);

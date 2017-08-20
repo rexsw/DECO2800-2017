@@ -2,22 +2,17 @@ package technology;
 
 import java.util.List;
 
-public class technology {
+public class Technology {
 	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list)
 	private int id;
 	private int[] cost;
 	private String name;
-	private List<technology> parents;
-	public technology(int id, int[] cost, String name, List<technology> parents) {
-		this.id = id;
+	private List<Technology> parents;
+	public Technology(int[] cost, String name, List<Technology> parents) {
 		this.cost = cost;
 		this.name = name;
 		this. parents = parents;
 		
-	}
-	
-	public int getID(){
-		return id;
 	}
 	
 	public int[] getCost(){
@@ -28,7 +23,7 @@ public class technology {
 		return name;
 	}
 	
-	public List<technology> getParents(){
+	public List<Technology> getParents(){
 		return parents;
 	}
 	

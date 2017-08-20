@@ -46,6 +46,7 @@ public class TextureManager extends Manager {
         textureMap.put("selected", new Texture("resources/placeholderassets/selected.png"));
         textureMap.put("selected_black", new Texture("resources/placeholderassets/selected_black.png"));
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
+        textureMap.put("base2", new Texture("resources/placeholderassets/base2.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
 //        this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
