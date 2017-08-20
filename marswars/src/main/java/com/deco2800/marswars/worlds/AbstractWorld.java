@@ -83,4 +83,13 @@ public abstract class AbstractWorld {
     public int getLength() {
         return length;
     }
+
+
+    /**
+     * Gets the number of tiles in the world
+     * @return
+     */
+    public int getNumberOfTiles(){
+        return width * length;
+    }
 }
