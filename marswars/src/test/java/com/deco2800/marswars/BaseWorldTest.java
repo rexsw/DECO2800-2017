@@ -1,16 +1,13 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.worlds.BaseWorld;
-
-
-/**
- * Tests for all methods of the BaseWorld class and the AbstractWorld class.
- *
- * @author @luanlucho
- *
- * @see com.deco2800.marswars.worlds.AbstractWorld
- * @see BaseWorld
- */
+///**
+// * Tests for all methods of the BaseWorld class and the AbstractWorld class.
+// *
+// * @author @luanlucho
+// *
+// * @see com.deco2800.marswars.worlds.AbstractWorld
+// * @see BaseWorld
+// */
 public class BaseWorldTest {
 
 //    // a base world mock object
