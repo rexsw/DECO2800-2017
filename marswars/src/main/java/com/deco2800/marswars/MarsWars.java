@@ -25,6 +25,7 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.hud.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +126,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
-		 * Setup GUI
+		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
 		 */
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -253,7 +254,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(0, 0); // Place at the bottom
 		window.setWidth(stage.getWidth());
-
+		
+		
+		new com.deco2800.marswars.hud.BasicLayout(stage, skin);
+		
 		/* Add the window to the stage */
 		stage.addActor(window);
 
