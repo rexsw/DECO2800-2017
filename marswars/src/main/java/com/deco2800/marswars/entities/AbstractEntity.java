@@ -57,7 +57,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	public float getPosX() {
 		float x = position.getX();
 		if (this.centered) {
-			x -= (1 - this.position.getYLength() / 2);
+			x -= (1 - this.position.getXLength() / 2);
 		}
 		return x;
 	}

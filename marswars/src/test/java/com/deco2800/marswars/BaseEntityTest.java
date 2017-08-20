@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class BaseEntityTest {
-	BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-	
+public class BaseEntityTest {	
+		
 	@Test
 	public void ConstructorTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
 		BaseEntity t = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
@@ -25,6 +25,7 @@ public class BaseEntityTest {
 	
 	@Test
 	public void FullBlownConstructorTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
 		BaseEntity t = new BaseEntity(0, 1, 2, 3, 4, 5, 3, 4, true);
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
@@ -36,6 +37,8 @@ public class BaseEntityTest {
 	
 	@Test
 	public void SetPositionsTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		t1.setPosition(0, 0, 0);
 		assertEquals(t1.getPosX(), 0, 0.1);
 		assertEquals(t1.getPosY(), 0, 0.1);
@@ -59,6 +62,8 @@ public class BaseEntityTest {
 	
 	@Test
 	public void SetCostTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t1.getCost(), 0);
 		t1.setCost(100);
 		assertEquals(t1.getCost(), 100);
@@ -66,11 +71,15 @@ public class BaseEntityTest {
 	
 	@Test
 	public void ColidableTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t1.isCollidable(), true);
 	}
 	
 	@Test
 	public void SelectedTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t1.isSelected(), false);
 		t1.makeSelected();
 		assertEquals(t1.isSelected(), true);
@@ -80,6 +89,8 @@ public class BaseEntityTest {
 	
 	@Test
 	public void EntityTypeTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t1.getEntityType(), EntityType.NOT_SET);
 		t1.setEntityType(EntityType.HERO);
 		assertEquals(t1.getEntityType(), EntityType.HERO);
@@ -93,6 +104,8 @@ public class BaseEntityTest {
 	 */
 	@Test
 	public void ActionsTest() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t1.getValidActions(), null);	
 	}
 }

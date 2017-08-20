@@ -17,22 +17,7 @@ public class InitialWorld extends BaseWorld {
 	 * Constructor for InitialWorld
 	 */
 	public InitialWorld() {
-
- 		/* Load up the map for this world */
-		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder200.tmx");
-
-                /* Grab the width and length values from the map file to use as the world size */
-		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
-		this.setLength(this.getMap().getProperties().get("height", Integer.class));
-
-		this.collisionMap = new Array2D<>(this.getWidth(), this.getLength());
-
-		/* Initialise the collision list */
-		for (int x = 0; x < this.getWidth(); x++) {
-			for (int y = 0; y < this.getLength(); y++) {
-				this.collisionMap.set(x, y, new ArrayList<>());
-			}
-		}
+		super("resources/placeholderassets/placeholder200.tmx");
 	}
 
 	/**
