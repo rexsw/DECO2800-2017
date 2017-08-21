@@ -68,7 +68,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 
-	final int serverPort = 8080;
+	final static int serverPort = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
 
@@ -111,7 +111,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 				}
 			}
@@ -158,14 +158,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						networkServer.bind(serverPort);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, serverPort);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -213,7 +213,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							try {
 								networkClient.connect(5000, ip, serverPort);
 							} catch (IOException e) {
-								e.printStackTrace();
+								LOGGER.error(e.toString());
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -323,8 +323,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				int windowWidth = Gdx.graphics.getWidth();
 				int windowHeight = Gdx.graphics.getHeight();
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
-					double xMag = cursorX - (windowWidth/2);
-					double yMag = (windowHeight/2) - cursorY;
+					double xMag = (double)cursorX - (windowWidth/2);
+					double yMag = (double)(windowHeight/2) - cursorY;
 					camera.zoom /= 1.2;
 					camera.translate((float)xMag, (float)yMag);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
