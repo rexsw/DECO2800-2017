@@ -11,17 +11,22 @@ public class TimeManager extends Manager implements TickableManager{
 	private static final int DAYBREAK = 6; //daybreak at 6am
 	private static final int NIGHT = 18; //night at 6pm
 	
-	private boolean isNight = false;
+	private boolean isNight = true;
 	private boolean isPaused = false;
 	private long time = 0; //time in seconds
+	private long gameStartTime = 0;
+	private long gameTimer = 0;
+
 	
 	@Override
 	public void onTick(long i){
-		time += 1;
+		if (!isPaused){
+		time += 10;
 		if(getHours() > NIGHT || getHours() < DAYBREAK)
 			setNight();
 		else
 			setDay();
+		}
 	}
 	
 	//bit of a lazy way of setting day/night tbh
@@ -58,11 +63,98 @@ public class TimeManager extends Manager implements TickableManager{
 	public boolean isPaused(){
 		return isPaused;
 	}
+	public void pause(){
+		isPaused = true;
+	}
+	public void unPause(){
+		isPaused = false;
+	}
 	
 	public long getSeconds(){
 		return time;
 	}
-	
+
+	/**
+	 * Returns the current system time in Milliseconds
+	 * @return long integer representing system time in milliseconds
+	 */
+	public long getGlobalTime(){
+		return System.currentTimeMillis();
+	}
+
+	/**
+	 * Returns the second value of the current time (for use when saving/ loading)
+	 * @return long integer (0 to 59) representing the current second
+	 */
+	public long getGlobalHours(){
+		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
+	}
+
+	/**
+	 * Returns the minute value of the current time (for use when saving/ loading)
+	 * @return long integer (0 to 59) representing the current minute
+	 */
+	public long getGlobalMinutes(){
+		return TimeUnit.MINUTES.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
+	}
+
+	/**
+	 * Returns the hour value of the current time (for use when saving/ loading)
+	 * @return long integer (0 to 23) representing the current hour
+	 */
+	public long getGlobalSeconds(){
+		return TimeUnit.SECONDS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
+	}
+
+	/**
+	 * Returns the millisecond value of the time elapsed since the current game was launched
+	 * (for use with game length timer)
+	 * @return long integer representing the current millisecond
+	 */
+	public long getGameTimer(){
+		gameTimer = getGlobalTime() - gameStartTime;
+		return gameTimer;
+	}
+
+	/**
+	 * Returns the current second value of the time elapsed since the current game was launched
+	 * (for use with game length timer)
+	 * @return long integer representing the current second
+	 */
+	public long getPlaySeconds(){
+		return TimeUnit.SECONDS.convert(getGameTimer(), TimeUnit.MILLISECONDS)%60;
+	}
+
+	/**
+	 * Returns the minutes value of the time elapsed since the current game was launched
+	 * (for use with game length timer)
+	 * @return long integer representing the current minute
+	 */
+	public long getPlayMinutes(){
+		return TimeUnit.MINUTES.convert(getGameTimer(), TimeUnit.MILLISECONDS)%60;
+	}
+
+	/**
+	 * Returns the hour value of the time elapsed since the current game was launched
+	 * (for use with game length timer)
+	 * @return long integer representing the current hour
+	 */
+	public long getPlayHours(){
+		return TimeUnit.HOURS.convert(getGameTimer(), TimeUnit.MILLISECONDS)%24;
+	}
+
+	/**
+	 * Sets the variable that stores the time of game launch to the current system time
+	 * (use when initalising game)
+	 */
+	public void setGameStartTime(){
+		gameStartTime = getGlobalTime();
+	}
+
+	public void addTime(long seconds){
+		time += seconds;
+	}
+
 	/**
 	 * Display time in hour:minute
 	 */
