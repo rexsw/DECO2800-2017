@@ -13,10 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOnwer;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.net.*;
@@ -90,6 +95,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
+			if(e instanceof HasOnwer) {
+				((HasOnwer) e).setOnwer(GameManager.get().getManager(PlayerManager.class));
+			}
+		}
+		Spacman ai = new Spacman(2, 2, 0);
+		ai.setOnwer(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(ai);
 
 		new Thread(new Runnable() {
 			@Override

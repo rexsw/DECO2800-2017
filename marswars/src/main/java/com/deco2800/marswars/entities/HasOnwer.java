@@ -2,7 +2,7 @@ package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.managers.Manager;
 
-public interface Onwer {
+public interface HasOnwer {
 	
 	void setOnwer(Manager onwer);
 	
@@ -10,6 +10,5 @@ public interface Onwer {
 	
 	boolean sameOnwer(AbstractEntity entity);
 	
-	boolean sameTeam(AbstractEntity enetity);
 
 }

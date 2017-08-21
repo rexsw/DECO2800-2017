@@ -1,6 +1,6 @@
 package com.deco2800.marswars.managers;
 
-public interface Team {
+public interface HasTeam {
 	
 	void setTeam(int teamid);
 	
