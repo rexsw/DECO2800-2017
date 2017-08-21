@@ -82,10 +82,11 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new EnemySpacman(x + 1, y -1, 0));
 	}
 
+	/**
+	 * Adds randomly placed spacman onto grid
+	 */
 	private void addRandomSpacman(){
 		Random r = new Random();
-		System.out.println(this.getLength());
-		System.out.println(r.nextInt(this.getLength()));
 		int x = r.nextInt(this.getLength()-1);
 		int y = r.nextInt(this.getWidth()-1);
 		this.addEntity(new HeroSpacman(this, x, y, 0));
