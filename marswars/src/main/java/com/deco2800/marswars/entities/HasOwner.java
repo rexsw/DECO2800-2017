@@ -3,13 +3,13 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.Manager;
 
-public interface HasOnwer {
+public interface HasOwner {
 	
-	void setOnwer(Manager onwer);
+	void setOwner(Manager owner);
 	
-	Manager getOnwer();
+	Manager getOwner();
 	
-	boolean sameOnwer(AbstractEntity entity);
+	boolean sameOwner(AbstractEntity entity);
 	
 	public boolean isWorking();
 	

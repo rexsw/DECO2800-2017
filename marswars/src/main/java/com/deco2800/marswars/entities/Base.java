@@ -24,7 +24,7 @@ import java.util.Optional;
  *
  * A home base for the empire
  */
-public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOnwer {
+public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -63,7 +63,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOnwer() instanceof PlayerManager) {
+		if(this.getOwner() instanceof PlayerManager) {
 		if (!selected) {
 			System.out.println("Base got clicked");
 			selected = true;
@@ -145,19 +145,19 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 
 	@Override
-	public void setOnwer(Manager onwer) {
+	public void setOwner(Manager owner) {
 		this.onwer = onwer;
 	}
 
 	@Override
-	public Manager getOnwer() {
+	public Manager getOwner() {
 		return this.onwer;
 	}
 
 	@Override
-	public boolean sameOnwer(AbstractEntity entity) {
-		if(entity instanceof HasOnwer) {
-			return this.onwer == ((HasOnwer) entity).getOnwer();
+	public boolean sameOwner(AbstractEntity entity) {
+		if(entity instanceof HasOwner) {
+			return this.onwer == ((HasOwner) entity).getOwner();
 		} else {
 			return false;
 		}
