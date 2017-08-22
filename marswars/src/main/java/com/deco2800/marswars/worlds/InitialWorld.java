@@ -1,11 +1,7 @@
 package com.deco2800.marswars.worlds;
 
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.util.Array2D;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -92,15 +88,4 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, x, y, 0));
 	}
 
-
-	/**
-	 * Deselects all entities
-	 */
-	public void deSelectAll() {
-		for (Renderable r : this.getEntities()) {
-			if (r instanceof Selectable) {
-				((Selectable) r).deselect();
-			}
-		}
-	}
 }

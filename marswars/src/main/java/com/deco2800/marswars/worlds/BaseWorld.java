@@ -2,6 +2,8 @@ package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -106,6 +108,17 @@ public class BaseWorld extends AbstractWorld {
 			return collisionMap.get(x, y);
 		} catch (IndexOutOfBoundsException e) {
 			throw e;
+		}
+	}
+
+	/**
+	 * Deselects all entities
+	 */
+	public void deSelectAll() {
+		for (Renderable r : this.getEntities()) {
+			if (r instanceof Selectable) {
+				((Selectable) r).deselect();
+			}
 		}
 	}
 }
