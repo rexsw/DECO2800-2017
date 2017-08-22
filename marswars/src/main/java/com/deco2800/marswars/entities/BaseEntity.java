@@ -145,6 +145,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	public void makeSelected() {
 		this.selected = true;
+
 	}
 
 	/**
