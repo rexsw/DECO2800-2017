@@ -386,7 +386,7 @@ public class HUDView extends ApplicationAdapter{
     	
     }
 
-    public void setEnitity(Selectable target) {
+    private void setEnitity(Selectable target) {
 		if (target.getEntityType() == Selectable.EntityType.UNIT) {
 			healthBar.setValue(100);
 		}
