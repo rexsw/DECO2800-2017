@@ -30,6 +30,7 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.hud.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,9 +79,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	SpacServer networkServer;
 
 	Skin skin;
+	
+	HUDView view; 
 
 	Set<Integer> downKeys = new HashSet<>();
-
+	
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -138,7 +141,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
-		 * Setup GUI
+		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
 		 */
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -264,11 +267,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(0, 0); // Place at the bottom
-		window.setWidth(stage.getWidth());
-
+		window.setPosition(300, 0); // Place at the bottom
+		window.setWidth(stage.getWidth()-300);
+		
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin);
+		
 		/* Add the window to the stage */
-		stage.addActor(window);
+		//stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -351,6 +356,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -418,7 +424,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+		/*TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 		gameTime.setText(" Time: " + timeManager.toString());
 		if (timeManager.isNight()){
 			gameTime.setColor(Color.FIREBRICK);
@@ -426,6 +432,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
+		*/
+		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
