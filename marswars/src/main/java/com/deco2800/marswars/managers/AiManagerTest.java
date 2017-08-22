@@ -1,19 +1,22 @@
 package com.deco2800.marswars.managers;
 
-	import com.deco2800.marswars.actions.GatherAction;
+import com.deco2800.marswars.actions.GatherAction;
+import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 	import com.deco2800.marswars.entities.AbstractEntity;
-	import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.BaseEntity;
 	import com.deco2800.marswars.entities.EnemySpacman;
 import com.deco2800.marswars.entities.HasOnwer;
 import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.Rock;
 import com.deco2800.marswars.entities.Spacman;
 	import com.deco2800.marswars.util.WorldUtil;
 
 	import java.util.List;
 import java.util.Optional;
 
-	public class AiManagerTest extends Manager implements TickableManager, HasTeam {
+public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 		private int teamid;
 
 		@Override
@@ -24,9 +27,21 @@ import java.util.Optional;
 					Spacman x = (Spacman)e;
 					if(!x.isWorking()) {
 						for( BaseEntity r : GameManager.get().getWorld().getEntities())
-						if(r instanceof Resource) {
+						if(r instanceof Rock) {
 							x.setAction(new GatherAction(x, r));
 							break;
+						}
+					}
+				}
+				if(e instanceof Base && ((HasOnwer) e).getOnwer() == this) {
+					Base x = (Base)e;
+					if(!x.isWorking()) {
+						ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+						if (resourceManager.getRocks() > 30) {
+							resourceManager.setRocks(resourceManager.getRocks() - 30);
+							Spacman r = new Spacman(16, 16, 0);
+							r.setOnwer(this);
+							x.setAction(new GenerateAction(r));							
 						}
 					}
 				}

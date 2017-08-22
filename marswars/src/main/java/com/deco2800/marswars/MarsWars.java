@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOnwer;
 import com.deco2800.marswars.entities.Selectable;
@@ -104,8 +105,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}
 		Spacman ai = new Spacman(2, 2, 0);
+		Spacman ai1 = new Spacman(3, 3, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), 15, 15, 0);
 		ai.setOnwer(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(ai);
+		ai1.setOnwer(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(ai1);
+		aibase.setOnwer(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(aibase);
 
 		new Thread(new Runnable() {
 			@Override
@@ -424,7 +431,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		/*TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 		gameTime.setText(" Time: " + timeManager.toString());
 		if (timeManager.isNight()){
 			gameTime.setColor(Color.FIREBRICK);
@@ -432,7 +439,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
-		*/
 		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */

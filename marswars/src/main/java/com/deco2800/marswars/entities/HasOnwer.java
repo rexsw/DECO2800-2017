@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.Manager;
 
 public interface HasOnwer {
@@ -10,5 +11,8 @@ public interface HasOnwer {
 	
 	boolean sameOnwer(AbstractEntity entity);
 	
+	public boolean isWorking();
+	
+	public void setAction(DecoAction action);
 
 }
