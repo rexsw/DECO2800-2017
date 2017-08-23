@@ -19,6 +19,9 @@ import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by timhadwen on 19/7/17.
  *
@@ -28,6 +31,8 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
 	
 	private Manager onwer = null;
 
@@ -64,10 +69,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public void onClick(MouseHandler handler) {
 		if(this.getOwner() instanceof PlayerManager) {
-		if (!selected) {
-			System.out.println("Base got clicked");
-			selected = true;
-		}
+			if (!selected) {
+				selected = true;
+				LOGGER.error("clicked on base");
+			}
+		} else {
+			LOGGER.error("clicked on ai base");
 		}
 	}
 
@@ -146,7 +153,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 
 	@Override
 	public void setOwner(Manager owner) {
-		this.onwer = onwer;
+		this.onwer = owner;
 	}
 
 	@Override
