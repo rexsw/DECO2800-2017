@@ -257,7 +257,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setPosition(400, 0); // Place at the bottom
 		window.setWidth((stage.getWidth())-300);
 		
-		view = new com.deco2800.marswars.hud.HUDView(stage, skin);
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
