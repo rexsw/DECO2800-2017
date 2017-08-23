@@ -279,6 +279,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
 		view.getMessage().row();
+		view.getMessage().setPosition(stage.getWidth(), stage.getHeight()-100);
 		view.getMessage().add(startServerButton);
 		view.getMessage().add(joinServerButton);
 		view.getMessage().pack();

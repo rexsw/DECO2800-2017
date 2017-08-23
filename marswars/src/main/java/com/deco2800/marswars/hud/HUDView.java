@@ -112,10 +112,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		timeDisp = new Label("Time: 0:00", skin);
 		
-		overheadRight.add(timeDisp);
-		overheadRight.add(messageButton);
-		overheadRight.add(helpButton);
-		overheadRight.add(quitButton);
+		overheadRight.add(timeDisp).pad(10);
+		overheadRight.add(messageButton).pad(10);
+		overheadRight.add(helpButton).pad(10);
+		overheadRight.add(quitButton).pad(10);
 		
 				
 		stage.addActor(overheadRight);
@@ -171,11 +171,11 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void topLeft(){
 		//Adds in welcome text
-		Label welcomeLabel = new Label("Welcome to SpacWars", skin);
+		Label welcomeLabel = new Label("Welcome to SpacWars!", skin);
 		Table welcomeTable = new Table();
 		welcomeTable.align(Align.top | Align.center);
 		welcomeTable.setWidth(gameWidth);
-		welcomeTable.add(welcomeLabel);
+		welcomeTable.add(welcomeLabel).pad(10);
 		welcomeTable.setPosition(0, gameHeight);
 		stage.addActor(welcomeTable);
 
@@ -207,18 +207,17 @@ public class HUDView extends ApplicationAdapter{
 		Table playerdetails = new Table();
 		playerdetails.setDebug(true);
 		playerdetails.setWidth(100);
-		//playerdetails.setHeight(70);
 		playerdetails.align(Align.left | Align.top);
 		playerdetails.setPosition(0, stage.getHeight());
 				
 		Label playerName = new Label("Name", skin);
-		playerdetails.add(playerName);
+		playerdetails.pad(10).add(playerName);
 		
 		stage.addActor(playerdetails);
 	}
 	
 	/**
-	 * Adds in progress bar to the top left 
+	 * Adds in progress bar to the top left of the screen 
 	 */
 	private void addProgressBar(){
 		Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
@@ -319,10 +318,8 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				new WorkInProgress("Unimplemented", skin).show(stage);
-			}
-			
+			}	
 		});
-		
 	}	
 	
 	/**
@@ -359,7 +356,6 @@ public class HUDView extends ApplicationAdapter{
 		inventory.setPosition(220, 0);
 		
 		stage.addActor(inventory);
-		
 	}
 	
 	/**
