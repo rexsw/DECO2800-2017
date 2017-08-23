@@ -8,9 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 
 /**
  * Test chat functionality
@@ -18,17 +16,48 @@ import java.io.PrintStream;
 public class ChatTest {
 	int TEST_PORT = 9876;
 
-	@Test
-	public void ConnectionTest() {
-		ServerConnectionManager servManager = new ServerConnectionManager();
-		SpacServer server = new SpacServer(servManager);
+	SpacServer server;
+	SpacClient alice;
+	SpacClient bob;
 
-		ClientConnectionManager aliceManager = new ClientConnectionManager();
-		SpacClient alice = new SpacClient(aliceManager);
+	ServerConnectionManager servManager;
+	ClientConnectionManager aliceManager;
+	ClientConnectionManager bobManager;
 
-		ClientConnectionManager bobManager = new ClientConnectionManager();
-		SpacClient bob = new SpacClient(bobManager);
+	@Before
+	public void setup() {
+		servManager = new ServerConnectionManager();
+		server = new SpacServer(servManager);
 
+		aliceManager = new ClientConnectionManager();
+		alice = new SpacClient(aliceManager);
+
+		bobManager = new ClientConnectionManager();
+		bob = new SpacClient(bobManager);
+	}
+
+	@After
+	public void teardown() {
+		alice.stop();
+		bob.stop();
+		server.stop();
+	}
+
+	/**
+	 * Helper function to wait for messages. This is horrible, I hate it
+	 */
+	void sleepThread() {
+		try {
+			Thread.sleep(1000);
+		} catch(InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 * Helper function to connect the clients to the server
+	 */
+	void startServerAndClients() {
 		try {
 			server.bind(TEST_PORT);
 		} catch (IOException e) {
@@ -46,12 +75,19 @@ public class ChatTest {
 		} catch(IOException e) {
 			fail("Bob failed to connect");
 		}
+	}
+
+	@Test
+	public void ConnectionTest() {
+		startServerAndClients();
 
 		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
 		alice.sendObject(aliceJoin);
 
 		JoinLobbyAction bobJoin = new JoinLobbyAction("Bob");
 		bob.sendObject(bobJoin);
+
+		sleepThread();
 
 		assertEquals(
 				servManager.getLog(),
