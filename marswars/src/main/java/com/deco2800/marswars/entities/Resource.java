@@ -65,7 +65,7 @@ public class Resource extends BaseEntity implements HasHealth{
 	/**
 	 * Update the storage station according to the reserves percentage
 	 */
-	public void updateStorageState() {
+	private void updateStorageState() {
 		switch (type) {
 		case ROCK:
 			resetTexture("small_rock", "medium_rock");
@@ -159,7 +159,8 @@ public class Resource extends BaseEntity implements HasHealth{
 	}
 
 	/**
-	 * Sets the amount of resources left to a value.	
+	 * Sets the amount of resources left to a value.
+	 * Also update the depletion state
 	 * @param health The number of resource left in the resource
 	 */
 	@Override
@@ -171,7 +172,7 @@ public class Resource extends BaseEntity implements HasHealth{
 				GameManager.get().getWorld().removeEntity(this);
 			}
 			reserves = health;
-		}
-		
+			updateStorageState(); // update the depletion state
+		}	
 	}
 }
