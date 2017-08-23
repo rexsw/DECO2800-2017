@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds.map.tools;
 
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EntityTypes;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.buildings.Building;
@@ -9,6 +8,7 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -27,6 +27,8 @@ public class MapContainer {
     private int height;
     // randomizer
     private Random r = new Random();
+    //Entity list
+    private ArrayList<BaseEntity> entities = new ArrayList<>();
 
     /**
      * Creates a new Map container from a given map with random elements.
@@ -37,8 +39,22 @@ public class MapContainer {
     public MapContainer( String mapPath, boolean random){
         this.mapPath = mapPath;
         if(random){
-            //fill later
+            entities.add(new EnemySpacman(0, 0, 0));
         }
+    }
+
+    public ArrayList<BaseEntity> getEntities(){
+        return entities;
+    }
+
+    /**
+     * Sets dimensions from loaded map file
+     * @param height height of tmx file
+     * @param width width of tmx file
+     */
+    public void setDimensions(int height, int width){
+        this.height = height;
+        this.width = width;
     }
 
     /**
@@ -97,7 +113,6 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      */
     public void setStructure(Building[][] buildings){
-
     }
 
     /**
