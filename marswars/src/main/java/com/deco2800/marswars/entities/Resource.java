@@ -75,7 +75,7 @@ public class Resource extends BaseEntity implements HasHealth{
 			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
 				this.setTexture("small_crystal");
 			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
-				this.setTexture("medium_crystal");
+				this.setTexture("medium_crystsal");
 			} 
 			break;
 		case WATER:
