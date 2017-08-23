@@ -59,8 +59,8 @@ public void onTick(long l) {
 }
 
 		@Override
-		public void setTeam(int teamid) {
-			teamid = teamid;
+		public void setTeam(int teamId) {
+			this.teamid = teamId;
 		}
 
 		@Override
