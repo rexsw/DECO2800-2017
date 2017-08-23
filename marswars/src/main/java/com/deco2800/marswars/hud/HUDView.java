@@ -261,12 +261,15 @@ public class HUDView extends ApplicationAdapter{
 		Button dispResource = new TextButton("Resources", skin);
 		Button dispMap = new TextButton("Map", skin);
 		Button dispInventory = new TextButton("Display\nPanel", skin);
+		Button dispTechTree = new TextButton("Technology Tree", skin);
 		
-		//Set button positions 
+		//Set button positions
+		dispTechTree.setPosition(gameWidth-80, 200);
 		dispResource.setPosition(gameWidth-80, 150);
 		dispMap.setPosition(gameWidth-80, 100);
 		dispInventory.setPosition(gameWidth-80, 50);
-		
+
+		stage.addActor(dispTechTree);
 		stage.addActor(dispResource);
 		stage.addActor(dispMap);
 		stage.addActor(dispInventory);
@@ -306,6 +309,14 @@ public class HUDView extends ApplicationAdapter{
 				new WorkInProgress("Unimplemented", skin).show(stage);
 			}
 			
+		});
+
+		dispTechTree.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				new TechTreeView("TechTree", skin).show(stage);
+			}
+
 		});
 		
 	}	
