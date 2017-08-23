@@ -55,8 +55,9 @@ public class BaseWorld extends AbstractWorld {
 	}
 
 	/**
-	 * Adds an entity to this world
-	 * @param entity the entity to be added
+	 * Adds an entity to this world.
+	 *
+	 * @param entity the entity to be added.
 	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);

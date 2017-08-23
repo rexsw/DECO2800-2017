@@ -1,22 +1,15 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.entities.Base;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.HasHealth;
-import com.deco2800.marswars.entities.ResourceType;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
 import com.deco2800.marswars.worlds.BaseWorld;
-
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 import static com.deco2800.marswars.actions.GatherAction.State.SETUP_MOVE;
 import static com.deco2800.marswars.actions.GatherAction.State.SETUP_RETURN;
@@ -33,10 +26,10 @@ public class GatherAction implements DecoAction {
 		RETURN_TO_BASE
 	}
 
-	MoveAction action = null;
+	private MoveAction action = null;
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
-	boolean completed = false;
+	private boolean completed = false;
 
 	private int ticksCollect = 200;
 

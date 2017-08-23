@@ -29,7 +29,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
 
-	boolean selected = false;
+	private boolean selected = false;
 
 	/**
 	 * Constructor for the base
