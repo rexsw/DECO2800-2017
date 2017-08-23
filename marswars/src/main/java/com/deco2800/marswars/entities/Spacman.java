@@ -111,6 +111,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
+		} else {
+			LOGGER.error("Clicked on ai spacman");
 		}
 	}
 
