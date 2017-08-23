@@ -1,9 +1,11 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 public class ResourceTest {
@@ -80,6 +82,15 @@ public class ResourceTest {
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		Resource t3 = new Resource(0, 1, 2, 3, 4, ResourceType.CRYSTAL);
 		Resource t4 = new Resource(0, 1, 2, 3, 4, ResourceType.BIOMASS);
+		
+		t1.setHealth(initialStorage - 1);
+		t2.setHealth(initialStorage - 1);
+		t3.setHealth(initialStorage - 1);
+		t4.setHealth(initialStorage - 1);
+		assertEquals(t1.getTexture(), "large_water");
+		assertEquals(t2.getTexture(), "large_rock");
+		assertEquals(t3.getTexture(), "large_crystal");
+		assertEquals(t4.getTexture(), "large_biomass");
 		
 		t1.setHealth(initialStorage / 2);
 		t2.setHealth(initialStorage / 2);
