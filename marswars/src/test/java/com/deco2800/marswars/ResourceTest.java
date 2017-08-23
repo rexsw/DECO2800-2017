@@ -1,9 +1,11 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 public class ResourceTest {
@@ -33,6 +35,9 @@ public class ResourceTest {
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		
 		assertEquals(t1.getHarvesterCapacity(), 5);
+		
+		t1.setHarvestNumber(-1);
+		assertEquals(t1.getHarvesterNumber(), 0);
 		
 		t1.setHarvestNumber(0);
 		assertEquals(t1.getHarvesterNumber(), 0);
@@ -74,25 +79,55 @@ public class ResourceTest {
 	public void StorageStateTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
+		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
+		Resource t3 = new Resource(0, 1, 2, 3, 4, ResourceType.CRYSTAL);
+		Resource t4 = new Resource(0, 1, 2, 3, 4, ResourceType.BIOMASS);
+		
+		t1.setHealth(initialStorage - 1);
+		t2.setHealth(initialStorage - 1);
+		t3.setHealth(initialStorage - 1);
+		t4.setHealth(initialStorage - 1);
+		assertEquals(t1.getTexture(), "large_water");
+		assertEquals(t2.getTexture(), "large_rock");
+		assertEquals(t3.getTexture(), "large_crystal");
+		assertEquals(t4.getTexture(), "large_biomass");
 		
 		t1.setHealth(initialStorage / 2);
+		t2.setHealth(initialStorage / 2);
+		t3.setHealth(initialStorage / 2);
+		t4.setHealth(initialStorage / 2);
 		assertEquals(t1.getTexture(), "medium_water");
+		assertEquals(t2.getTexture(), "medium_rock");
+		assertEquals(t3.getTexture(), "medium_crystal");
+		assertEquals(t4.getTexture(), "medium_biomass");
 		
 		t1.setHealth(initialStorage / 5);
+		t2.setHealth(initialStorage / 5);
+		t3.setHealth(initialStorage / 5);
+		t4.setHealth(initialStorage / 5);
 		assertEquals(t1.getTexture(), "small_water");
+		assertEquals(t2.getTexture(), "small_rock");
+		assertEquals(t3.getTexture(), "small_crystal");
+		assertEquals(t4.getTexture(), "small_biomass");
 	}
 	
 	@Test
-	public void RemovedTest() { // NOT COMPLETE
+	public void RemovedTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
+		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		GameManager.get().getWorld().addEntity(t1);
 		
 		//GameManager.get().getWorld().getEntities(0, 1);
-		assertTrue(GameManager.get().getWorld().getEntities(0, 1).contains(t1));
+		assertTrue(GameManager.get().getWorld().getEntities().contains(t1));
 		
 		// normally when health is 0, the resource will get removed, however it still exist in the world
-//		t1.setHealth(0);
-//		assertFalse(GameManager.get().getWorld().getEntities(0, 1).contains(t1));
+		// update: it doesn't exist in the world but in that position
+
+		t1.setHealth(0);
+		assertFalse(GameManager.get().getWorld().getEntities().contains(t1));
+		
+		t2.setHealth(-1);
+		assertFalse(GameManager.get().getWorld().getEntities().contains(t2));
 	}
 }

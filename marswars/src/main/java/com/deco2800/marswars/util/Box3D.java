@@ -186,5 +186,33 @@ public class Box3D {
 	public float distance(Box3D o) {
 		return (float)(Math.sqrt(Math.pow((o.x - this.x), 2) + Math.pow((o.y - this.y), 2) + Math.pow((o.z - this.z), 2)));
 	}
+	
+	@Override
+	/**
+	 * Check if two Box3d Objects are the same
+	 * @param o
+	 * @return
+	 */
+	public boolean equals(Object object) {
+		if (!(object instanceof Box3D)) {
+			return false;
+		}
+		Box3D other = (Box3D) object;
+		return (this.x == other.x) && (this.y == other.y) && (this.z == other.z) && (this.xLength == other.xLength) && (this.yLength == other.yLength) && (this.zLength == other.zLength);
+	}
 
+	/**
+	 * HashCode method
+	 */
+	@Override
+	public int hashCode() {
+		int result = 31;
+		result = result * 37 + ((Float)this.x).hashCode();
+		result = result * 37 + ((Float)this.y).hashCode();
+		result = result * 37 + ((Float)this.z).hashCode();
+		result = result * 37 + ((Float)this.xLength).hashCode();
+		result = result * 37 + ((Float)this.yLength).hashCode();
+		result = result * 37 + ((Float)this.zLength).hashCode();
+		return result;
+	}
 }

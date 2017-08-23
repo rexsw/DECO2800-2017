@@ -49,11 +49,8 @@ public class Resource extends BaseEntity implements HasHealth{
 		case WATER:
 			this.setTexture("large_water");
 			break;
-		case BIOMASS:
-			this.setTexture("large_biomass");
-			break;
 		default:
-			LOGGER.debug("This resource does not belongs to any of the existing resource");
+			this.setTexture("large_biomass");
 			break;
 		}
 		this.canWalkOver = false; // i think resource shouldn't allow walk over
@@ -89,9 +86,9 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * @param medium
 	 */
 	private void resetTexture(String small, String medium) {
-		if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+		if ((reserves * 100/AMOUNT_CAPACITY) < 33) {
 			this.setTexture(small);
-		} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+		} else if ((reserves * 100/AMOUNT_CAPACITY) < 66) {
 			this.setTexture(medium);
 		} 
 	}
@@ -134,21 +131,6 @@ public class Resource extends BaseEntity implements HasHealth{
 		return type; 
 	}
 	
-	public String testResource() {
-		switch (type) {
-		case ROCK:
-			return "rock";
-		case CRYSTAL:
-			return "crystal";
-		case WATER:
-			return "water";
-		case BIOMASS:
-			return "biomass";
-		default:
-			return null;
-		}
-	}
-	
 	/**
 	 * Returns the current reserves of the resource
 	 * @return current reserves
@@ -169,7 +151,7 @@ public class Resource extends BaseEntity implements HasHealth{
 			LOGGER.error("Setting " + type + " reserves to " + health);
 			if (health <= 0) {
 				LOGGER.error("Resource drained!");
-				GameManager.get().getWorld().removeEntity(this);
+				GameManager.get().getWorld().removeEntity((BaseEntity) this);
 			}
 			reserves = health;
 			updateStorageState(); // update the depletion state
