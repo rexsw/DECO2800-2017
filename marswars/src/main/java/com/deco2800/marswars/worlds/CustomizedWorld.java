@@ -19,6 +19,10 @@ public final class CustomizedWorld extends BaseWorld {
     public CustomizedWorld(MapContainer mapContainer) {
         super(mapContainer.getMap());
         mapContainer.setDimensions(this.getLength(), this.getWidth());
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
         loadMapContainer(mapContainer);
     }
 

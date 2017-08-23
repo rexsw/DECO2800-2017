@@ -39,7 +39,7 @@ public class MapContainer {
     public MapContainer( String mapPath, boolean random){
         this.mapPath = mapPath;
         if(random){
-            entities.add(new EnemySpacman(0, 0, 0));
+            //
         }
     }
 
@@ -154,7 +154,7 @@ public class MapContainer {
      * @param entity the entity to be placed.
      */
     public void setEntity(BaseEntity entity){
-
+        entities.add(new EnemySpacman(0, 0, 0));
     }
 
     /**
@@ -164,6 +164,26 @@ public class MapContainer {
      */
     public void setEntities(BaseEntity[][] entities){
 
+    }
+
+    /**
+     * Adds cluster of enemy spacman, needs to be improved
+     */
+    public void addEnemyGroup(){
+        int x = r.nextInt(this.height-1);
+        int y = r.nextInt(this.width-1);
+        if(x-1 < 0 || y-1 < 0 || y +1 >= this.height || x + 1 >= this.width){
+            return;
+        }
+        entities.add(new EnemySpacman(x, y, 0));
+        entities.add(new EnemySpacman(x - 1, y, 0));
+        entities.add(new EnemySpacman(x, y - 1, 0));
+        entities.add(new EnemySpacman(x + 1, y, 0));
+        entities.add(new EnemySpacman(x, y+1, 0));
+        entities.add(new EnemySpacman(x + 1, y + 1, 0));
+        entities.add(new EnemySpacman(x - 1, y - 1, 0));
+        entities.add(new EnemySpacman(x - 1, y + 1, 0));
+        entities.add(new EnemySpacman(x + 1, y -1, 0));
     }
 
     /**
