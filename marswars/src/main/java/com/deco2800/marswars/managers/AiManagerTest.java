@@ -4,6 +4,8 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.util.WorldUtil;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,13 @@ public void onTick(long l) {
 				//set all spacmen the ai owns to gather rocks
 				Spacman x = (Spacman)e;
 				if(!x.isWorking()) {
+				/*
+				 Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
+				 if(((Resource) resource.get()).getType() == ResourceType.ROCK){
+					 x.setAction(new GatherAction(x, (Resource) resource.get()));
+					 LOGGER.error("ai - set spacman to grather");
+				 }
+				 */
 					for( BaseEntity r : GameManager.get().getWorld().getEntities())
 						if(r instanceof Resource) {
 							if(((Resource) r).getType() == ResourceType.ROCK) { //Simple call getType() for the type of resource
@@ -28,6 +37,7 @@ public void onTick(long l) {
 								break;
 							}
 					}
+				
 				}
 			}
 			if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
@@ -38,7 +48,7 @@ public void onTick(long l) {
 					if (resourceManager.getRocks() > 30) {
 						LOGGER.error("ai - set base to make spacman");
 						resourceManager.setRocks(resourceManager.getRocks() - 30);
-						Spacman r = new Spacman(16, 16, 0);
+						Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
 						r.setOwner(this);
 						x.setAction(new GenerateAction(r));							
 					}
