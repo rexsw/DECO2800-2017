@@ -43,6 +43,10 @@ public class MapContainer {
         }
     }
 
+    /**
+     * Returns the list of entities created
+     * @return entities list
+     */
     public ArrayList<BaseEntity> getEntities(){
         return entities;
     }
@@ -131,7 +135,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      * @param random whether the position should be random.
      */
-    public void setstructure(Building[][] buildings, boolean random){
+    public void setStructure(Building[][] buildings, boolean random){
 
     }
 
