@@ -13,10 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.net.*;
@@ -69,7 +75,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 
-	final int serverPort = 8080;
+	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
 
@@ -93,6 +99,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
+			if(e instanceof HasOwner) {
+				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
+			}
+		}
+		Spacman ai = new Spacman(2, 2, 0);
+		Spacman ai1 = new Spacman(3, 3, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), 15, 15, 0);
+		ai.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(ai);
+		ai1.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(ai1);
+		aibase.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(aibase);
 
 		new Thread(new Runnable() {
 			@Override
@@ -114,7 +134,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 				}
 			}
@@ -159,16 +179,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					networkClient = new SpacClient(clientConnectionManager);
 					//Initiate Server
 					try {
-						networkServer.bind(serverPort);
+						networkServer.bind(SERVER_PORT);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 
 					//Join it as a Client
 					try {
-						networkClient.connect(5000, ip, serverPort);
+						networkClient.connect(5000, ip, SERVER_PORT);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.error(e.toString());
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -214,9 +234,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							networkClient = new SpacClient(connectionManager);
 
 							try {
-								networkClient.connect(5000, ip, serverPort);
+								networkClient.connect(5000, ip, SERVER_PORT);
 							} catch (IOException e) {
-								e.printStackTrace();
+								LOGGER.error(e.toString());
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -328,8 +348,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				int windowWidth = Gdx.graphics.getWidth();
 				int windowHeight = Gdx.graphics.getHeight();
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
-					double xMag = cursorX - (windowWidth/2);
-					double yMag = (windowHeight/2) - cursorY;
+					double xMag = (double)cursorX - (windowWidth/2);
+					double yMag = (double)(windowHeight/2) - cursorY;
 					camera.zoom /= 1.2;
 					camera.translate((float)xMag, (float)yMag);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
@@ -351,17 +371,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
-			window.removeActor(peonButton);
-			window.removeActor(helpText);
+		if(TimeUtils.nanoTime() - lastMenuTick > 100) {
+			view.getInventory().removeActor(peonButton);
+			view.getInventory().removeActor(helpText);
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
-				if (e instanceof Selectable) {
-					if (((Selectable) e).isSelected()) {
-						peonButton = ((Selectable) e).getButton();
-						helpText = ((Selectable) e).getHelpText();
-						somethingSelected = true;
-					}
+				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
+					peonButton = ((Selectable) e).getButton();
+					helpText = ((Selectable) e).getHelpText();
+					somethingSelected = true;
 				}
 
 			}
@@ -369,8 +387,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
 				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
 			}
-			window.add(peonButton);
-			window.add(helpText);
+			view.getInventory().add(peonButton);
+			view.getInventory().add(helpText);
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
@@ -415,7 +433,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		/*TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 		gameTime.setText(" Time: " + timeManager.toString());
 		if (timeManager.isNight()){
 			gameTime.setColor(Color.FIREBRICK);
@@ -423,7 +441,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
-		*/
 		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
@@ -461,15 +478,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if (downKeys.contains(Input.Keys.RIGHT) || downKeys.contains(Input.Keys.D)) {
 			camera.translate(1 * speed * camera.zoom, 0, 0);
 		}
-		if (downKeys.contains(Input.Keys.EQUALS)) {
-			if (camera.zoom > 0.5) {
-				camera.zoom /= 1.05;
-			}
+		if ((downKeys.contains(Input.Keys.EQUALS)) && (camera.zoom > 0.5)) {
+			camera.zoom /= 1.05;
 		}
-		if (downKeys.contains(Input.Keys.MINUS)) {
-			if (camera.zoom < 10) {
-				camera.zoom *= 1.05;
-			}
+		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
+			camera.zoom *= 1.05;
 		}
 
 		// Move the map dependant on the cursor position
@@ -506,32 +519,30 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * @param keycode key that was pressed
 	 */
 	private void keyPressed(int keycode) {
-		if (keycode == Input.Keys.ENTER) {
-			if(this.networkClient != null) {
-				Table inner = new Table(skin);
-				TextField msgInput = new TextField("", skin);
+		if ((keycode == Input.Keys.ENTER) && (this.networkClient != null)) {			
+			Table inner = new Table(skin);
+			TextField msgInput = new TextField("", skin);
 
-				inner.add(msgInput);
+			inner.add(msgInput);
 
-				Dialog ipDiag = new Dialog("Message", skin, "dialog") {
-					@Override
-					protected void result(Object o) {
-						if(o != null) {
-							String msg = msgInput.getText();
+			Dialog ipDiag = new Dialog("Message", skin, "dialog") {
+				@Override
+				protected void result(Object o) {
+					if(o != null) {
+						String msg = msgInput.getText();
 
-							MessageAction action = new MessageAction(msg);
-							networkClient.sendObject(action);
-						}
+						MessageAction action = new MessageAction(msg);
+						networkClient.sendObject(action);
 					}
-				};
+				}
+			};
 
-				ipDiag.getContentTable().add(inner);
-				ipDiag.button("Send", true);
-				ipDiag.button("Cancel", null);
-				ipDiag.key(Input.Keys.ENTER, true);
+			ipDiag.getContentTable().add(inner);
+			ipDiag.button("Send", true);
+			ipDiag.button("Cancel", null);
+			ipDiag.key(Input.Keys.ENTER, true);
 
-				ipDiag.show(stage);
-			}
+			ipDiag.show(stage);
 		}
 	}
 	

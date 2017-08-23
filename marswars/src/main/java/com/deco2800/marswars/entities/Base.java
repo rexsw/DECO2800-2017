@@ -10,9 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
@@ -21,10 +24,12 @@ import java.util.Optional;
  *
  * A home base for the empire
  */
-public class Base extends BaseEntity implements Clickable, Tickable, HasProgress {
+public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+	
+	private Manager onwer = null;
 
 	boolean selected = false;
 
@@ -41,6 +46,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		this.setCost(10000000);
 	}
 
+	public Base(BaseWorld world, int posX, int posY, int posZ) {
+		super(posX, posY, posZ, 1, 1, 1);
+		this.setTexture("base");
+		this.setCost(10000000);
+	}
+
 	public void giveAction(DecoAction action) {
 		if (!currentAction.isPresent()) {
 			currentAction = Optional.of(action);
@@ -52,10 +63,11 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		System.out.println("Base got clicked");
-
+		if(this.getOwner() instanceof PlayerManager) {
 		if (!selected) {
+			System.out.println("Base got clicked");
 			selected = true;
+		}
 		}
 	}
 
@@ -131,4 +143,36 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	public boolean showProgress() {
 		return currentAction.isPresent();
 	}
+
+	@Override
+	public void setOwner(Manager owner) {
+		this.onwer = onwer;
+	}
+
+	@Override
+	public Manager getOwner() {
+		return this.onwer;
+	}
+
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		if(entity instanceof HasOwner) {
+			return this.onwer == ((HasOwner) entity).getOwner();
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isWorking() {
+		if(currentAction.isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
+	}
+	
 }

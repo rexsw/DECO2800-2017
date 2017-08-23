@@ -4,7 +4,9 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -19,13 +21,15 @@ import java.util.Random;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth {
+public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
-	private Optional<DecoAction> currentAction = Optional.empty();
+	public Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
+	
+	private Manager owner = null;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
@@ -101,11 +105,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		handler.registerForRightClickNotification(this);
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		this.setTexture("spacman_blue");
-		LOGGER.error("Clicked on spacman");
-		this.makeSelected();
+		if(owner instanceof PlayerManager) {
+			handler.registerForRightClickNotification(this);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			this.setTexture("spacman_blue");
+			LOGGER.error("Clicked on spacman");
+			this.makeSelected();
+		}
 	}
 
 	/**
@@ -185,4 +191,36 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		gatheredResource = null;
 		return resource;
 	}
+
+	@Override
+	public void setOwner(Manager owner) {
+		this.owner = owner;
+	}
+
+	@Override
+	public Manager getOwner() {
+		return this.owner;
+	}
+
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		if(entity instanceof HasOwner) {
+			return this.owner == ((HasOwner) entity).getOwner();
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isWorking() {
+		if(currentAction.isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
+	}
+
 }
