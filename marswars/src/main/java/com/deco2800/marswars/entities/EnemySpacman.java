@@ -38,7 +38,7 @@ public class EnemySpacman extends BaseEntity implements Tickable {
 
 	/**
 	 * Sets the current action
-	 * @param currentAction
+	 * @param currentAction the new action
 	 */
 	public void setCurrentAction(DecoAction currentAction) {
 		this.currentAction = Optional.of(currentAction);

@@ -2,19 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.actions.MoveAction;
-	import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.Base;
-import com.deco2800.marswars.entities.BaseEntity;
-	import com.deco2800.marswars.entities.EnemySpacman;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.Resource;
-import com.deco2800.marswars.entities.Rock;
-import com.deco2800.marswars.entities.Spacman;
-	import com.deco2800.marswars.util.WorldUtil;
-
-	import java.util.List;
-import java.util.Optional;
+import com.deco2800.marswars.entities.*;
 
 public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 		private int teamid;
@@ -29,8 +17,8 @@ public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 						for( BaseEntity r : GameManager.get().getWorld().getEntities())
 						if(r instanceof Resource) {
 							if(((Resource) r).testResource() == "rock") {
-							x.setAction(new GatherAction(x, r));
-							break;
+								x.setAction(new GatherAction(x, r));
+								break;
 							}
 						}
 					}
@@ -63,11 +51,8 @@ public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 
 		@Override
 		public boolean sameTeam(Manager otherMember) {
-			if(otherMember instanceof HasTeam) {
-				return this.teamid == ((HasTeam) otherMember).getTeam();
-			} else {
-				return false;
-			}
+			boolean isInstance = otherMember instanceof HasTeam;
+			return isInstance && this.teamid == ((HasTeam) otherMember).getTeam();
 		}
 		
 	}
