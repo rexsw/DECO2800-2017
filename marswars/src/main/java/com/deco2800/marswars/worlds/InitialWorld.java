@@ -58,6 +58,7 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));
+		this.addEntity(new GrayGround(5,5,0,1f,1f));//this is used for testing the fog of war
 	}
 
 	/**
