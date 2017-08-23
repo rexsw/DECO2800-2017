@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -72,7 +74,7 @@ public class GameManager implements TickableManager {
 			this.addManager((Manager) ctor.newInstance());
 		} catch (Exception e) {
 			// Gotta catch 'em all
-			e.printStackTrace();
+			LOGGER.error(e.toString());
 		}
 
 		/* And then return it */
@@ -115,7 +117,10 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		for (Manager m : managers) {
+		List<Manager> deepcopy = new ArrayList<Manager>(((List<Manager>) managers));
+		Iterator<Manager> managersIter =  deepcopy.iterator();
+		while(managersIter.hasNext()) {
+			Manager m = managersIter.next();
 			if (m instanceof TickableManager) {
 				((TickableManager) m).onTick(0);
 			}
