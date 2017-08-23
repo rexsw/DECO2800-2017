@@ -21,7 +21,7 @@ import java.util.Random;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOnwer {
+public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -29,7 +29,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	private int health = 100;
 	
-	private Manager onwer = null;
+	private Manager owner = null;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
@@ -105,7 +105,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(onwer instanceof PlayerManager) {
+		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
@@ -193,19 +193,19 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 
 	@Override
-	public void setOnwer(Manager onwer) {
-		this.onwer = onwer;
+	public void setOwner(Manager owner) {
+		this.owner = owner;
 	}
 
 	@Override
-	public Manager getOnwer() {
-		return this.onwer;
+	public Manager getOwner() {
+		return this.owner;
 	}
 
 	@Override
-	public boolean sameOnwer(AbstractEntity entity) {
-		if(entity instanceof HasOnwer) {
-			return this.onwer == ((HasOnwer) entity).getOnwer();
+	public boolean sameOwner(AbstractEntity entity) {
+		if(entity instanceof HasOwner) {
+			return this.owner == ((HasOwner) entity).getOwner();
 		} else {
 			return false;
 		}
