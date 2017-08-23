@@ -168,7 +168,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 	
 	public boolean isWorking() {
-		return (currentAction.isPresent());
+		return currentAction.isPresent();
 	}
 	
 	public void setAction(DecoAction action) {
