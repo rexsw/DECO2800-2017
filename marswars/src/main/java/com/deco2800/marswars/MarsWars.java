@@ -254,13 +254,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(300, 0); // Place at the bottom
-		window.setWidth(stage.getWidth()-300);
+		window.setPosition(400, 0); // Place at the bottom
+		window.setWidth((stage.getWidth())-300);
 		
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin);
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -407,8 +407,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch, camera);
 
+		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
+		
 
 		/*
 		 * Update time & set color depending if night/day
@@ -567,7 +569,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 
 		stage.getViewport().update(width, height, true);
-		window.setPosition(0, 0);
+		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
 	}
 
