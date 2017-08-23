@@ -27,9 +27,11 @@ public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 					Spacman x = (Spacman)e;
 					if(!x.isWorking()) {
 						for( BaseEntity r : GameManager.get().getWorld().getEntities())
-						if(r instanceof Rock) {
+						if(r instanceof Resource) {
+							if(((Resource) r).testResource() == "rock") {
 							x.setAction(new GatherAction(x, r));
 							break;
+							}
 						}
 					}
 				}
