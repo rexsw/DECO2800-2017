@@ -140,8 +140,8 @@ public class Box3D {
 
 	/**
 	 *
-	 * @param box
-	 * @return
+	 * @param box the box that will be compared.
+	 * @return whether the two boxes overlap.
 	 */
 	public boolean overlaps(Box3D box) {
 		/*
@@ -174,17 +174,14 @@ public class Box3D {
 		}
 
 		// z larger
-		if (z > box.z + box.zLength) {
-			return false;
-		}
-
-		return true;
+		return  (z <= box.z + box.zLength);
 	}
 
 	/**
-	 * Calculates the distance between two box3ds
-	 * @param o
-	 * @return
+	 * Calculates the distance between two box3ds.
+	 *
+	 * @param o the box that marks the second point.
+	 * @return the distance between the 2 points.
 	 */
 	public float distance(Box3D o) {
 		return (float)(Math.sqrt(Math.pow((o.x - this.x), 2) + Math.pow((o.y - this.y), 2) + Math.pow((o.z - this.z), 2)));
