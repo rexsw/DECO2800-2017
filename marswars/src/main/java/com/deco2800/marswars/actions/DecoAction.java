@@ -11,14 +11,12 @@ public interface DecoAction {
 	void doAction();
 
 	/**
-	 * Returns true if the action is completed
-	 * @return
+	 * @return Returns true if the action is completed
 	 */
 	boolean completed();
 
 	/**
-	 * Returns the action progress if available
-	 * @return
+	 * @return Returns the action progress if available
 	 */
 	int actionProgress();
 }

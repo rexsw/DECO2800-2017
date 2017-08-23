@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EnemySpacman;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
@@ -99,20 +100,29 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		/*
+		 * sets all starting entities to be player owned
+		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
 				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
-		Spacman ai = new Spacman(2, 2, 0);
-		Spacman ai1 = new Spacman(3, 3, 0);
+		/*
+		 * adds entities for the ai and set then to be ai owned
+		 */
+		Spacman ai = new Spacman(16, 16, 0);
+		Spacman ai1 = new Spacman(17, 16, 0);
 		Base aibase = new Base(GameManager.get().getWorld(), 15, 15, 0);
+		EnemySpacman aienemy = new EnemySpacman(18, 19, 0);
 		ai.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(ai1);
 		aibase.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(aibase);
+		aienemy.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(aienemy);
 
 		new Thread(new Runnable() {
 			@Override

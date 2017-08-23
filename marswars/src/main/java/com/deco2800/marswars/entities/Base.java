@@ -19,6 +19,9 @@ import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by timhadwen on 19/7/17.
  *
@@ -29,16 +32,18 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
+	
 	private Manager onwer = null;
 
 	boolean selected = false;
 
 	/**
-	 * Constructor for the base
-	 * @param world
-	 * @param posX
-	 * @param posY
-	 * @param posZ
+	 * Constructor for the base.
+	 * @param world The world that will hold the base.
+	 * @param posX its x position on the world.
+	 * @param posY its y position on the world.
+	 * @param posZ its z position on the world.
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
@@ -64,10 +69,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public void onClick(MouseHandler handler) {
 		if(this.getOwner() instanceof PlayerManager) {
-		if (!selected) {
-			System.out.println("Base got clicked");
-			selected = true;
-		}
+			if (!selected) {
+				selected = true;
+				LOGGER.error("clicked on base");
+			}
+		} else {
+			LOGGER.error("clicked on ai base");
 		}
 	}
 
@@ -146,7 +153,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 
 	@Override
 	public void setOwner(Manager owner) {
-		this.onwer = onwer;
+		this.onwer = owner;
 	}
 
 	@Override
@@ -156,19 +163,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
-		if(entity instanceof HasOwner) {
-			return this.onwer == ((HasOwner) entity).getOwner();
-		} else {
-			return false;
-		}
+		return entity instanceof  HasOwner &&
+				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
 	public boolean isWorking() {
-		if(currentAction.isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
+		return (currentAction.isPresent());
 	}
 	
 	public void setAction(DecoAction action) {
