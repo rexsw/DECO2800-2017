@@ -277,10 +277,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setPosition(300, 0); // Place at the bottom
 		window.setWidth(stage.getWidth()-300);
 		
-		view = new com.deco2800.marswars.hud.HUDView(stage, skin);
+		//view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -371,7 +371,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
+		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			window.removeActor(peonButton);
 			window.removeActor(helpText);
 			boolean somethingSelected = false;
@@ -439,7 +439,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
-		view.render();
+		//view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
