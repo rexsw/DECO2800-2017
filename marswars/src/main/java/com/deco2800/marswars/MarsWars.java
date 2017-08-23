@@ -371,9 +371,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
-			window.removeActor(peonButton);
-			window.removeActor(helpText);
+		if(TimeUtils.nanoTime() - lastMenuTick > 100) {
+			view.getInventory().removeActor(peonButton);
+			view.getInventory().removeActor(helpText);
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
@@ -387,8 +387,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
 				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
 			}
-			window.add(peonButton);
-			window.add(helpText);
+			view.getInventory().add(peonButton);
+			view.getInventory().add(helpText);
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 

@@ -317,7 +317,7 @@ public class HUDView extends ApplicationAdapter{
 		inventory = new Window("Inventory", skin);
 		Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
 	
-		inventory.add(resources);
+		//inventory.add(resources);
 		inventory.setMovable(false);
 		inventory.align(Align.topLeft);
 		//inventory.pack();
@@ -391,6 +391,10 @@ public class HUDView extends ApplicationAdapter{
 			healthBar.setValue(100);
 		}
 	}
+
+	public Window getInventory() {
+        return inventory;
+    }
 
 }
 
