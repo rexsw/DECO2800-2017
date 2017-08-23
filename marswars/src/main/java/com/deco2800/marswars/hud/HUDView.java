@@ -43,6 +43,7 @@ public class HUDView extends ApplicationAdapter{
 	private Skin skin;
 	private Table overheadLeft;
 	private Table overheadRight;
+	private Table resourceTable; 
 	
 	private Button quitButton;
 	private Button helpButton;
@@ -299,10 +300,12 @@ public class HUDView extends ApplicationAdapter{
 				if (inventoryToggle) {
 					inventory.setVisible(true);
 					minimap.setVisible(true);
+					resourceTable.setVisible(true);
 					inventoryToggle = false;
 				} else {
 					inventory.setVisible(false);
 					minimap.setVisible(false);
+					resourceTable.setVisible(false);
 					inventoryToggle = true;
 				}
 			}	
@@ -337,7 +340,7 @@ public class HUDView extends ApplicationAdapter{
 		inventory = new Window("Actions", skin);
 		//Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
 		
-		Table resourceTable = new Table();
+		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(80);
 		resourceTable.setWidth(500);
