@@ -131,21 +131,6 @@ public class Resource extends BaseEntity implements HasHealth{
 		return type; 
 	}
 	
-	public String testResource() {
-		switch (type) {
-		case ROCK:
-			return "rock";
-		case CRYSTAL:
-			return "crystal";
-		case WATER:
-			return "water";
-		case BIOMASS:
-			return "biomass";
-		default:
-			return null;
-		}
-	}
-	
 	/**
 	 * Returns the current reserves of the resource
 	 * @return current reserves
