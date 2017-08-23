@@ -59,14 +59,16 @@ public class HUDView extends ApplicationAdapter{
 	private Window messageWindow; 
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
+	private boolean menuToggle; 
 	private Label timeDisp; 
 	
-	private Window resources; 
+	private Window mainMenu; 
 	private Window minimap;
 	private Window inventory;
 	
 	private ProgressBar healthBar;
 	private GameManager gameManager;
+	
 	
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -94,6 +96,11 @@ public class HUDView extends ApplicationAdapter{
 		addPlayerIcon();
 		addMessages();
 		addBottomPanel();
+	}
+	
+	/*To allow for old menu use - will be removed later*/
+	public void setMenu(Window window){
+		mainMenu = window; 
 	}
 	
 	/**
@@ -270,18 +277,17 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addInventoryMenu();
 		addMiniMapMenu();
-		//addResources();
 		
-		Button dispResource = new TextButton("Resources", skin);
+		Button dispMainMenu = new TextButton("Old Menu", skin);
 		Button dispMap = new TextButton("Map", skin);
 		Button dispInventory = new TextButton("Display\nPanel", skin);
 		
 		//Set button positions 
-		dispResource.setPosition(gameWidth-80, 150);
+		dispMainMenu.setPosition(gameWidth-80, 150);
 		dispMap.setPosition(gameWidth-80, 100);
 		dispInventory.setPosition(gameWidth-80, 50);
 		
-		stage.addActor(dispResource);
+		stage.addActor(dispMainMenu);
 		stage.addActor(dispMap);
 		stage.addActor(dispInventory);
 		
@@ -293,23 +299,25 @@ public class HUDView extends ApplicationAdapter{
 				if (inventoryToggle) {
 					inventory.setVisible(true);
 					minimap.setVisible(true);
-					//resources.setVisible(true);
 					inventoryToggle = false;
 				} else {
 					inventory.setVisible(false);
 					minimap.setVisible(false);
-					//resources.setVisible(false);
 					inventoryToggle = true;
 				}
-			}
-			
-			
+			}	
 		});
 		
-		dispResource.addListener(new ChangeListener() {
+		dispMainMenu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new WorkInProgress("Unimplemented", skin).show(stage);
+				if(menuToggle){
+					mainMenu.setVisible(true);
+					menuToggle = false;
+				} else {
+					mainMenu.setVisible(false);
+					menuToggle = true;
+				}
 			}
 			
 		});
@@ -366,8 +374,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		Label label = new Label("Not sure if this will still be \n implemented, but here's a \n placeholder anyway", skin);
 		label.setWrap(true);
-		
-		
+				
 		minimap.add(label);
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
@@ -379,21 +386,6 @@ public class HUDView extends ApplicationAdapter{
 		
 	}
 	
-	/**
-	 * Adds in the resources count 
-	 */
-	/*private void addResources(){
-		resources = new Window("Resources", skin);
-		
-		resources.setPosition(200, 0);
-		resources.setMovable(false);
-		resources.setWidth(150);
-		resources.setHeight(200);
-		
-		stage.addActor(resources);
-		
-	}
-	*/
 	/**
 	 * Updates any features of the HUD that may change through time/ game actions
 	 */
