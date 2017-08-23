@@ -39,11 +39,11 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	boolean selected = false;
 
 	/**
-	 * Constructor for the base
-	 * @param world
-	 * @param posX
-	 * @param posY
-	 * @param posZ
+	 * Constructor for the base.
+	 * @param world The world that will hold the base.
+	 * @param posX its x position on the world.
+	 * @param posY its y position on the world.
+	 * @param posZ its z position on the world.
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
@@ -163,19 +163,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
-		if(entity instanceof HasOwner) {
-			return this.onwer == ((HasOwner) entity).getOwner();
-		} else {
-			return false;
-		}
+		return entity instanceof  HasOwner &&
+				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
 	public boolean isWorking() {
-		if(currentAction.isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
+		return (currentAction.isPresent());
 	}
 	
 	public void setAction(DecoAction action) {

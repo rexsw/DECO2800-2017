@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,12 +17,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -47,10 +52,12 @@ public class HUDView extends ApplicationAdapter{
 	private Window resources; 
 	private Window minimap;
 	private Window inventory;
-	
-	public HUDView(Stage stage, Skin skin) {
+	private ProgressBar healthBar;
+	private GameManager gameManager;
+	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
 		this.skin = skin;
 		this.stage = stage;
+		this.gameManager = gameManager;
 		this.gameWidth = (int) stage.getWidth();
 		this.gameHeight = (int) stage.getHeight();
 		messageToggle = true; 
@@ -155,11 +162,11 @@ public class HUDView extends ApplicationAdapter{
 		overheadLeft.align(Align.left | Align.top);
 		overheadLeft.setPosition(60, stage.getHeight());
 		
-		test = new Label("Health bar goes here", skin);
+		addProgressBar();
 		Label healthLabel = new Label("Health: ", skin);
 		healthLabel.setAlignment(Align.left);
 		
-		overheadLeft.add(test);
+		overheadLeft.add(healthBar);
 		
 		overheadLeft.row();
 		overheadLeft.add(healthLabel);
@@ -198,12 +205,31 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in progress bar to the top left 
 	 */
 	private void addProgressBar(){
-		//I feel the progress bar needs a class of itself
-		;
+		Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.DARK_GRAY);
+		pixmap.fill();
+		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
+		barStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		pixmap = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GREEN);
+		pixmap.fill();
+		barStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GREEN);
+		pixmap.fill();
+		barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		healthBar = new ProgressBar(0,100, 1, false, barStyle);
+		healthBar.setValue(100);
 		
 	}
-	
-	
+
+
 	/**
 	 * Implements a collapsible tab for the chat lobby 
 	 */
@@ -291,7 +317,7 @@ public class HUDView extends ApplicationAdapter{
 		inventory = new Window("Inventory", skin);
 		Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
 	
-		inventory.add(resources);
+		//inventory.add(resources);
 		inventory.setMovable(false);
 		inventory.align(Align.topLeft);
 		//inventory.pack();
@@ -351,7 +377,23 @@ public class HUDView extends ApplicationAdapter{
 		else{
 			timeDisp.setColor(Color.BLUE);
 		}
+		healthBar.setValue(0);
+		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
+			if (e.isSelected()) {
+				setEnitity(e);
+			}
+		}
     	
+    }
+
+    private void setEnitity(Selectable target) {
+		if (target.getEntityType() == Selectable.EntityType.UNIT) {
+			healthBar.setValue(100);
+		}
+	}
+
+	public Window getInventory() {
+        return inventory;
     }
 
 }

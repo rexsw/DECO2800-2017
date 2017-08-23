@@ -191,14 +191,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						networkServer.bind(SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when initiating server", e);
 					}
 
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when joinging as client", e);
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -206,7 +206,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					System.out.println(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
-					ex.printStackTrace();
+					LOGGER.error("Unknown Host", ex);
 				}
 				ipDiag.button("Close", null);
 				ipDiag.show(stage);
@@ -246,7 +246,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							try {
 								networkClient.connect(5000, ip, SERVER_PORT);
 							} catch (IOException e) {
-								LOGGER.error(e.toString());
+								LOGGER.error("Join server error", e);
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -287,10 +287,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setPosition(300, 0); // Place at the bottom
 		window.setWidth(stage.getWidth()-300);
 		
-		view = new com.deco2800.marswars.hud.HUDView(stage, skin);
+		//view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -381,7 +381,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
+		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			window.removeActor(peonButton);
 			window.removeActor(helpText);
 			boolean somethingSelected = false;
@@ -394,8 +394,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			}
 			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
-				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
+				peonButton = new TextButton("Select a Unit", skin);
+				helpText = new Label("Welcome to MarsWars!", skin);
 			}
 			window.add(peonButton);
 			window.add(helpText);
@@ -449,7 +449,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		else{
 			gameTime.setColor(Color.BLUE);
 		}
-		view.render();
+		//view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
