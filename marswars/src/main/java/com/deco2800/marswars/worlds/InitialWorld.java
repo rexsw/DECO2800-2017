@@ -2,6 +2,7 @@ package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
@@ -24,8 +25,8 @@ public class InitialWorld extends BaseWorld {
 	 * Adds entities to the world
 	 */
 	public void loadEntities() {
-		for (int x = 0; x < this.getWidth(); x+=5) {
-			for (int y = 0; y < this.getLength(); y+=5) {
+		for (int x = 0; x < this.getWidth(); x += 5) {
+			for (int y = 0; y < this.getLength(); y += 5) {
 				Random r = new Random();
 
 				// CRYSTAL
@@ -33,19 +34,19 @@ public class InitialWorld extends BaseWorld {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL));
 					continue;
 				}
-				
+
 				// WATER
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.WATER));
 					continue;
 				}
-				
+
 				// ROCK
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK));
 					continue;
 				}
-				
+
 				// BIOMASS
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS));
@@ -58,7 +59,18 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));
-		this.addEntity(new GrayGround(4,4,0,1f,1f));//this is used for testing the fog of war
+		this.addEntity(new GrayGround(4, 4, 0, 1f, 1f));//this is used for testing the fog of war
+
+
+		//trying fog of war
+//		for (int x = 0; x < this.getWidth(); x+=1) {
+//			for (int y = 0; y < this.getLength(); y+=1) {
+//				for( BaseEntity each : ((BaseWorld) GameManager.get().getWorld()).getEntities(x,y)) {//on each cell
+//					if(!(each.getEntityType()== Selectable.EntityType.UNIT))
+//						this.addEntity(new GrayGround(x, y, 0, 1f, 1f));
+//				}
+//			}
+//		}
 	}
 
 	/**
