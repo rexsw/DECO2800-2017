@@ -17,8 +17,8 @@ public class Resource extends BaseEntity implements HasHealth{
 	private static final Logger LOGGER = LoggerFactory.getLogger(Resource.class);
 
 	private ResourceType type;
-	private final int AMOUNT_CAPACITY = 100;
-	private final int HARVEST_CAPACITY = 5; // max 5 farmer at the same time
+	private static final int AMOUNT_CAPACITY = 100;
+	private static final int HARVEST_CAPACITY = 5; // max 5 farmer at the same time
 	
 	private int reserves; // current reserves of this resource
 	private int harvester = 0; // no. of harvester on the resource
@@ -52,6 +52,9 @@ public class Resource extends BaseEntity implements HasHealth{
 		case BIOMASS:
 			this.setTexture("large_biomass");
 			break;
+		default:
+			LOGGER.debug("This resource does not belongs to any of the existing resource");
+			break;
 		}
 		this.canWalkOver = false; // i think resource shouldn't allow walk over
 		this.setCost(10); // don't know what should this value be, may vary for different size, to be changed later
@@ -65,37 +68,34 @@ public class Resource extends BaseEntity implements HasHealth{
 	public void updateStorageState() {
 		switch (type) {
 		case ROCK:
-			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
-				this.setTexture("small_rock");
-			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
-				this.setTexture("medium_rock");
-			} 
+			resetTexture("small_rock", "medium_rock");
 			break;
 		case CRYSTAL:
-			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
-				this.setTexture("small_crystal");
-			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
-				this.setTexture("medium_crystal");
-			} 
+			resetTexture("small_crystal", "medium_crystal");
 			break;
 		case WATER:
-			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
-				this.setTexture("small_water");
-			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
-				this.setTexture("medium_water");
-			} 
+			resetTexture("small_water", "medium_water");
 			break;
-		case BIOMASS:
-			if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
-				this.setTexture("small_biomass");
-			} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
-				this.setTexture("medium_biomass");
-			} 
+		default:
+			resetTexture("small_biomass", "medium_biomass");
 			break;
 		}	
 		//remain the same as large size
 	}
 
+	/**
+	 * Set the display to small texture or medium texture
+	 * @param small
+	 * @param medium
+	 */
+	private void resetTexture(String small, String medium) {
+		if ((reserves * 100/AMOUNT_CAPACITY) <= 33) {
+			this.setTexture(small);
+		} else if ((reserves * 100/AMOUNT_CAPACITY) <= 66) {
+			this.setTexture(medium);
+		} 
+	}
+	
 	/**
 	 * Returns the number of units currently harvesting on the resource
 	 * @return number of unit
@@ -144,8 +144,9 @@ public class Resource extends BaseEntity implements HasHealth{
 			return "water";
 		case BIOMASS:
 			return "biomass";
+		default:
+			return null;
 		}
-		return null;
 	}
 	
 	/**
@@ -154,7 +155,7 @@ public class Resource extends BaseEntity implements HasHealth{
 	 */
 	@Override
 	public int getHealth() {
-		return (int) reserves;
+		return reserves;
 	}
 
 	/**
