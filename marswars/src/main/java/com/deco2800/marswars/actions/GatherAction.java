@@ -15,11 +15,16 @@ import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static com.deco2800.marswars.actions.GatherAction.State.SETUP_MOVE;
 import static com.deco2800.marswars.actions.GatherAction.State.SETUP_RETURN;
 
 public class GatherAction implements DecoAction {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GatherAction.class);
+    
 	enum State {
 		SETUP_MOVE,
 		MOVE_TOWARDS,
@@ -31,7 +36,6 @@ public class GatherAction implements DecoAction {
 	MoveAction action = null;
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
-	private Class type;
 	boolean completed = false;
 
 	private int ticksCollect = 200;
@@ -85,7 +89,7 @@ public class GatherAction implements DecoAction {
 							}
 						} else {
 							// if the number of harvester over the capacity, should be handle here
-							System.err.println("Resource has reach the maximum capacity of harvester");
+							LOGGER.error("Resource has reach the maximum capacity of harvester");
 						}
 						
 						ticksCollect = 200;
@@ -144,14 +148,14 @@ public class GatherAction implements DecoAction {
 							case BIOMASS:
 								resourceManager.setBiomass(resourceManager.getBiomass() + amount);
 								break;
+							default :
+							    break;
 							}
 						} else {// if there is nothing
-							System.err.println("Bring back nothing");
+							LOGGER.error("Bring back nothing");
 						}
 						
 					}
-					
-//					resourceManager.setRocks(resourceManager.getRocks() + 10);
 					return;
 				}
 

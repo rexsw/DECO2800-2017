@@ -181,14 +181,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						networkServer.bind(SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when initiating server", e);
 					}
 
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when joinging as client", e);
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -196,7 +196,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					System.out.println(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
-					ex.printStackTrace();
+					LOGGER.error("Unknown Host", ex);
 				}
 				ipDiag.button("Close", null);
 				ipDiag.show(stage);
@@ -236,7 +236,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							try {
 								networkClient.connect(5000, ip, SERVER_PORT);
 							} catch (IOException e) {
-								LOGGER.error(e.toString());
+								LOGGER.error("Join server error", e);
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -384,8 +384,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			}
 			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
-				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
+				peonButton = new TextButton("Select a Unit", skin);
+				helpText = new Label("Welcome to MarsWars!", skin);
 			}
 			window.add(peonButton);
 			window.add(helpText);
