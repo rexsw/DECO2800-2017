@@ -55,7 +55,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		System.out.println("Base got clicked");
+		System.out.println("Base2 got clicked");
 
 		if (!selected) {
 			selected = true;
@@ -104,6 +104,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 		button.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("The button was pressed\n");
 				buttonWasPressed();
 			}
 		});
@@ -111,12 +112,22 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	}
 
 	public void buttonWasPressed() {
+		System.out.println("The button was pressed\n");
 		TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-		Technology tech = techMan.getTech(1);
+		Technology tech1 = techMan.getTech(1);
+		Technology tech2 = techMan.getTech(2);
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > tech.getCost()[0]) {
-			resourceManager.setRocks(resourceManager.getRocks() - tech.getCost()[0]);
-			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+		if (!techMan.getActive().contains(tech2)) {
+			if (resourceManager.getRocks() > tech1.getCost()[0]) {
+				resourceManager.setRocks(resourceManager.getRocks() - tech1.getCost()[0]);
+				currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+				techMan.addActiveTech(tech2);
+			}
+		} else {
+			if (resourceManager.getRocks() > tech2.getCost()[0]) {
+				resourceManager.setRocks(resourceManager.getRocks() - tech2.getCost()[0]);
+				currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+			}
 		}
 	}
 
