@@ -35,7 +35,10 @@ public class MapContainer {
      * @param random elements in the container.
      */
     public MapContainer( String mapPath, boolean random){
-
+        this.mapPath = mapPath;
+        if(random){
+            //fill later
+        }
     }
 
     /**
@@ -44,24 +47,21 @@ public class MapContainer {
      * @param mapPath .tmx file to be loaded
      */
     public MapContainer(String mapPath){
-
+        this.mapPath = mapPath;
     }
 
     /**
      * Creates a Map container from a random map with random elements.
-     *
-     * @param random map and elements in the container
      */
-    public MapContainer(boolean random){
-
+    public MapContainer(){
+        //random map
     }
 
     /**
      * @return the map .tmx been used
      */
     public String getMap(){
-
-        return "";
+        return this.mapPath;
     }
 
     /**
@@ -80,7 +80,6 @@ public class MapContainer {
      * @param random whether the position of the terrain element should be random.
      */
     public void setTerrainElement(TerrainElement terrainElement, boolean random){
-
     }
 
     /**
