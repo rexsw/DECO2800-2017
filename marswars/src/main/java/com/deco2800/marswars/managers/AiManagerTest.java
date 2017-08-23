@@ -22,13 +22,11 @@ public void onTick(long l) {
 				//set all spacmen the ai owns to gather rocks
 				Spacman x = (Spacman)e;
 				if(!x.isWorking()) {
-				/*
-				 Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
-				 if(((Resource) resource.get()).getType() == ResourceType.ROCK){
-					 x.setAction(new GatherAction(x, (Resource) resource.get()));
-					 LOGGER.error("ai - set spacman to grather");
-				 }
-				 */
+					//allow spacmans to collect the closest resources
+					Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
+					x.setAction(new GatherAction(x, (Resource) resource.get()));
+					LOGGER.error("ai - set spacman to grather");
+				 /*
 					for( BaseEntity r : GameManager.get().getWorld().getEntities())
 						if(r instanceof Resource) {
 							if(((Resource) r).getType() == ResourceType.ROCK) { //Simple call getType() for the type of resource
@@ -37,9 +35,28 @@ public void onTick(long l) {
 								break;
 							}
 					}
+					*/
 				
 				}
 			}
+			generateSpacman(e);
+			if(e instanceof EnemySpacman && ((HasOwner) e).getOwner() == this) {
+				//lets the ai target player spacman with it's enemyspacmen
+				EnemySpacman x = (EnemySpacman)e;
+				for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
+					if(r instanceof Spacman && ((HasOwner) r).getOwner() instanceof PlayerManager) {
+						x.setAction(new MoveAction(r.getPosX(), r.getPosY(), x));
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+		/**
+		 * generate new spacman when a base have more than 30 rocks
+		 */
+		private void generateSpacman(BaseEntity e) {
 			if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
 				Base x = (Base)e;
 				if(!x.isWorking()) {
@@ -54,20 +71,7 @@ public void onTick(long l) {
 					}
 				}
 			}
-			if(e instanceof EnemySpacman && ((HasOwner) e).getOwner() == this) {
-				//lets the ai target player spacman with it's enemyspacmen
-				EnemySpacman x = (EnemySpacman)e;
-				for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-					if(r instanceof Spacman && ((HasOwner) r).getOwner() instanceof PlayerManager) {
-						x.setAction(new MoveAction(r.getPosX(), r.getPosY(), x));
-						break;
-					}
-				}
-			}
 		}
-	}
-}
-
 		@Override
 		public void setTeam(int teamId) {
 			this.teamid = teamId;
