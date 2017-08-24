@@ -8,9 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.FogOfWarLayer;
+import com.deco2800.marswars.entities.LineOfSight;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +49,8 @@ public class Render3D implements Renderer {
         List<BaseEntity> entities = new ArrayList<>();
         List<BaseEntity> walkables = new ArrayList<>();
 
+        List<FogOfWarLayer> fogs = FogWorld.getFogMap();
+
         /* Sort entities into walkables and entities */
         for (BaseEntity r : renderables) {
             if (r.canWalOver()) {
@@ -55,8 +61,10 @@ public class Render3D implements Renderer {
         }
 
         batch.begin();
+
         renderEntities(walkables, batch, camera);
         renderEntities(entities, batch, camera);
+        renderFog(fogs,batch,camera);
         batch.end();
 
     }
@@ -76,8 +84,53 @@ public class Render3D implements Renderer {
      * @param entities list of entities to be rendered.
      * @param batch the batch that is going to contain all the sprites
      * @param camera the camera being use to display the game.
+
      */
-    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch,  Camera camera) {
+
+    public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera){
+        Collections.sort(entities);
+        if (font == null) {
+            font = new BitmapFont();
+            font.getData().setScale(0.25f);
+        }
+        int worldLength = GameManager.get().getWorld().getLength();
+        int worldWidth = GameManager.get().getWorld().getWidth();
+
+        int tileWidth = (int)GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
+        int tileHeight = (int)GameManager.get().getWorld().getMap().getProperties().get("tileheight");
+
+        float baseX = tileWidth*(worldWidth/2.0f - 0.5f);
+
+        float baseY = -tileHeight/2*worldLength + tileHeight/2f;
+
+        /* Render each entity (backwards) in order to retain objects at the front */
+        for (int index = 0; index < entities.size(); index++) {
+            Renderable entity = entities.get(index);
+
+            String textureString = entity.getTexture();
+            TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
+            Texture tex = reg.getTexture(textureString);
+
+            float cartX = entity.getPosX();
+            float cartY = (worldWidth-1) - entity.getPosY();
+
+            float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
+            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+
+            // We want to keep the aspect ratio of the image so...
+            float aspect = (float)(tex.getWidth())/(float)(tileWidth);
+
+            Vector3 pos = camera.position;
+            OrthographicCamera cam = (OrthographicCamera) camera;
+
+            if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
+                    && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
+                        (tex.getHeight() / aspect) * entity.getYRenderLength());
+            }
+        }
+    }
+    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
         Collections.sort(entities);
         if (font == null) {
             font = new BitmapFont();

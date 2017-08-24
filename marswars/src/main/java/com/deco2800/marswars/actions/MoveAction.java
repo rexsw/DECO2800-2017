@@ -4,8 +4,6 @@ import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.PathfindingThread;
 import com.deco2800.marswars.util.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,7 +13,6 @@ import java.util.List;
  */
 public class MoveAction implements DecoAction {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MoveAction.class);
 
 	/* Goal positions */
 	private float goalX = 0;
@@ -74,7 +71,7 @@ public class MoveAction implements DecoAction {
 		}
 
 		/* If the path is null its probably completed */
-		if (path == null || path.size() < 1) {
+		if (path == null || path.isEmpty()) {
 			completed = true;
 			return;
 		}
