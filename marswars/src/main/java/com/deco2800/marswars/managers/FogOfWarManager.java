@@ -47,6 +47,17 @@ public class FogOfWarManager extends Manager {
 	}
 	
 	/**
+	 * Gets the fog value of a coordinate
+	 * 
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the fog value: 0, 1 or 2
+	 */
+	public int getFog(int x, int y) {
+		return fogOfWar.get(x, y);
+	}
+	
+	/**
 	 * Updates the FogOfWar after each clock tick
 	 */
 	public void updateFog() {
