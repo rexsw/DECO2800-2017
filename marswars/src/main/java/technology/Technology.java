@@ -28,14 +28,17 @@ public class Technology {
 	public List<Technology> getParents(){
 		return parents;
 	}
+
+    /**
+     *technology upgrade which does Spacman.changeCost(5)
+     *
+     */
+
+    public void costUpgrade(){
+        print("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
+        Spacman.changeCost(5);
+    }
 	
 }
 
-/**
-*technology upgrade which does Spacman.changeCost(5)
-*
-*/
 
-public void costUpgrade(){
-    Spacman.changeCost(5);
-}
