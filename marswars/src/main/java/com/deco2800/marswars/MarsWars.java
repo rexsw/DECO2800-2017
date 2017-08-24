@@ -71,7 +71,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Button peonButton;
 	Label helpText;
 	Label rocksLabel;
-	Label gameTime;
+	Label gameTimeDisp;
+	Label gameLengthDisp;
+
+	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -93,6 +96,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 
+		// zero game length clock (i.e. Tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		/*
@@ -272,14 +277,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		helpText = new Label("Welcome to MarsWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
-		gameTime = new Label(" Time: 00:00", skin);
+		gameTimeDisp = new Label(" Time: 00:00", skin);
+		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(helpText);
 		window.add(peonButton);
 		window.add(rocksLabel);
-		window.add(gameTime);
+		window.add(gameTimeDisp);
+		window.add(gameLengthDisp);
 		window.add(startServerButton);
 		window.add(joinServerButton);
 		window.pack();
@@ -441,13 +448,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update in-game time display & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-		gameTime.setText(" Time: " + timeManager.toString());
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
 		if (timeManager.isNight()){
-			gameTime.setColor(Color.FIREBRICK);
+			gameTimeDisp.setColor(Color.FIREBRICK);
+			gameLengthDisp.setColor(Color.FIREBRICK);
 		}
 		else{
-			gameTime.setColor(Color.BLUE);
+			gameTimeDisp.setColor(Color.BLUE);
+			gameLengthDisp.setColor(Color.BLUE);
 		}
 		//view.render();
 

@@ -13,11 +13,10 @@ public class TimeManager extends Manager implements TickableManager{
 	
 	private boolean isNight = true;
 	private boolean isPaused = false;
-	private long time = 0; //time in seconds
+	private long time = 0; //in-game time in seconds
 	private long gameStartTime = 0;
 	private long gameTimer = 0;
 
-	
 	@Override
 	public void onTick(long i){
 		if (!isPaused){
@@ -80,15 +79,13 @@ public class TimeManager extends Manager implements TickableManager{
 	public long getGlobalTime(){
 		return System.currentTimeMillis();
 	}
-	//not sure how to test system time stuff, will it change too fast?
-	//could have a go at it
 
 	/**
 	 * Returns the second value of the current time (for use when saving/ loading)
 	 * @return long integer (0 to 59) representing the current second
 	 */
 	public long getGlobalHours(){
-		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
+		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%24;
 	}
 	//think the comments for these two got switched around
 		
@@ -118,7 +115,7 @@ public class TimeManager extends Manager implements TickableManager{
 		return gameTimer;
 	}
 	//facility for pausing?
-	//need to initialise this!
+	//need to initialise?
 
 	/**
 	 * Returns the current second value of the time elapsed since the current game was launched
@@ -162,10 +159,18 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 
 	/**
+	 *
+	 * @return the String representation of the real time spent in the current game
+	 */
+	public String getPlayClockTime() {
+		return getPlayHours() + ":" + getPlayMinutes() + ":" + getPlaySeconds();
+	}
+
+	/**
 	 * Display time in hour:minute
 	 */
 	@Override
 	public String toString(){
 		return getHours() + ":" + getMinutes();
 	}
-}
+	}

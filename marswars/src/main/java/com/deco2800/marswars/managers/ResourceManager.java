@@ -5,6 +5,8 @@ package com.deco2800.marswars.managers;
  *
  */
 public class ResourceManager extends Manager {
+
+	private static final String CLOSED = "closed.wav";
 	private int rocks = 0;
 	private int crystal = 0;
 	private int water = 0;
@@ -25,7 +27,7 @@ public class ResourceManager extends Manager {
 	public void setRocks(int rocks) {
 		if (this.rocks < rocks) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound("closed.wav");
+			sound.playSound(CLOSED);
 		}
 		this.rocks = rocks;
 	}
@@ -45,7 +47,7 @@ public class ResourceManager extends Manager {
 	public void setCrystal(int crystal) {
 		if (this.crystal < crystal) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound("closed.wav");
+			sound.playSound(CLOSED);
 		}
 		this.crystal = crystal;
 	}
@@ -65,7 +67,7 @@ public class ResourceManager extends Manager {
 	public void setWater(int water) {
 		if (this.water < water) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound("closed.wav");
+			sound.playSound(CLOSED);
 		}
 		this.water = water;
 	}
@@ -85,7 +87,7 @@ public class ResourceManager extends Manager {
 	public void setBiomass(int biomass) {
 		if (this.biomass < biomass) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound("closed.wav");
+			sound.playSound(CLOSED);
 		}
 		this.biomass = biomass;
 	}

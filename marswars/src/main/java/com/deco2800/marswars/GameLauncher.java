@@ -13,7 +13,11 @@ public class GameLauncher {
 	/**
 	 * Main function for the game
 	 * @param arg Command line arguments (we wont use these)
+	 *
+	 *
 	 */
+
+	private GameLauncher(){}
 	public static void main (String[] arg) {
 		BasicConfigurator.configure();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

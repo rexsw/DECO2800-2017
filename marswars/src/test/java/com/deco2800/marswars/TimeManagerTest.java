@@ -6,6 +6,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 //how do i delete this manager
 //test extreme cases
 public class TimeManagerTest {
@@ -88,27 +92,60 @@ public class TimeManagerTest {
 	}
 	
 	@Test
-	public void testGetGlobalTime(){}
+	public void testGetGlobalTime(){
+		TimeManager timeManager = (TimeManager) GameManager.get()
+				.getManager(TimeManager.class);
+		assertEquals(System.currentTimeMillis(), timeManager.getGlobalTime());
+	}
 	
 	@Test
-	public void testGetGlobalHours(){}
+	public void testGetGlobalHours(){
+		TimeManager timeManager = (TimeManager) GameManager.get()
+				.getManager(TimeManager.class);
+		Date date = new Date();
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
+		//assertEquals(calendar.get(Calendar.HOUR_OF_DAY), timeManager.getGlobalHours());
+		//assertTrue(calendar.get(Calendar.HOUR_OF_DAY) == timeManager.getGlobalHours());
+	}
 	@Test
-	public void testGetGlobalMinutes(){}
+	public void testGetGlobalMinutes(){
+		TimeManager timeManager = (TimeManager) GameManager.get()
+				.getManager(TimeManager.class);
+		Date date = new Date();
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
+		assertEquals(calendar.get(Calendar.MINUTE), timeManager.getGlobalMinutes());
+	} //am i testing different types here?
 	@Test
-	public void testGetGlobalSeconds(){}
+	public void testGetGlobalSeconds(){
+		TimeManager timeManager = (TimeManager) GameManager.get()
+				.getManager(TimeManager.class);
+		Date date = new Date();
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
+		//assertTrue(calendar.get(Calendar.SECOND) == timeManager.getGlobalSeconds());
+	}
 	
 	@Test
-	public void testGetGameTimer(){}
+	public void testGetGameTimer(){
+		TimeManager timeManager = (TimeManager) GameManager.get()
+				.getManager(TimeManager.class);
+	} //idk how to test this!!
 	
 	@Test
 	public void testGetPlaySeconds(){}
 	@Test
 	public void testGetPlayMinutes(){}
 	@Test
-	public void testGetPlayHours(){}
+	public void testGetPlayHours(){} //not sure how to test these 3 either
 	
 	@Test
-	public void testSetGameStartTime(){}
+	public void testSetGameStartTime(){} //could we rename this maybe?
+	//again not sure how to test
+	
+	@Test
+	public void testGetPlayClockTime(){} //test??
 	
 	@Test
 	public void testAddTime(){

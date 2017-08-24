@@ -3,19 +3,14 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -48,13 +43,18 @@ public class HUDView extends ApplicationAdapter{
 	private Window messageWindow; 
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
-	private Label timeDisp; 
+	private Label gameTimeDisp;
+	private Label gameLengthDisp;
 	private Window resources; 
 	private Window minimap;
 	private Window inventory;
 	private ProgressBar healthBar;
 	private GameManager gameManager;
+	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+
 	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
+		// zero game length clock (i.e. tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
@@ -89,9 +89,12 @@ public class HUDView extends ApplicationAdapter{
 		Button quitButton = new TextButton("Quit (X)", skin);
 		Button messageButton = new TextButton("Messages", skin);
 		
-		timeDisp = new Label("Time: 0:00", skin);
-		
-		overheadRight.add(timeDisp);
+		gameTimeDisp = new Label("Time: 0:00", skin);
+		gameLengthDisp = new Label("00:00:00", skin);
+
+
+		overheadRight.add(gameTimeDisp);
+		overheadRight.add(gameLengthDisp);
 		overheadRight.add(messageButton);
 		overheadRight.add(helpButton);
 		overheadRight.add(quitButton);
@@ -369,13 +372,15 @@ public class HUDView extends ApplicationAdapter{
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-		timeDisp.setText(" Time: " + timeManager.toString());
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
 		if (timeManager.isNight()){
-			timeDisp.setColor(Color.FIREBRICK);
+			gameTimeDisp.setColor(Color.FIREBRICK);
+			gameLengthDisp.setColor(Color.FIREBRICK);
 		}
 		else{
-			timeDisp.setColor(Color.BLUE);
+			gameTimeDisp.setColor(Color.BLUE);
+			gameLengthDisp.setColor(Color.BLUE);
 		}
 		healthBar.setValue(0);
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
