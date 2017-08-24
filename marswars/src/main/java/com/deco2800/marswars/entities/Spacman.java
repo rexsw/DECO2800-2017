@@ -33,7 +33,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-
+//Hello wo
 	/**
 	 * Constructor for the Spacman
 	 * @param posX
