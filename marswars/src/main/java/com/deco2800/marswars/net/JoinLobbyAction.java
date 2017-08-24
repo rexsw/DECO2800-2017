@@ -6,7 +6,9 @@ package com.deco2800.marswars.net;
 public class JoinLobbyAction implements Action {
     private String username;
 
-    public JoinLobbyAction() {}
+    public JoinLobbyAction() {
+        // Blank constructor needed due to Kryonet
+    }
 
     public JoinLobbyAction(String username) {
         this.username = username;

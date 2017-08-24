@@ -1,7 +1,6 @@
 package com.deco2800.marswars.net;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +38,8 @@ public class ServerConnectionManager extends ConnectionManager {
 	 * Helper function to send an action to all users
 	 */
 	private void broadcastAction(Object o) {
-		for (Integer id : this.idToUser.keySet()) {
-			User to = this.idToUser.get(id);
-			to.getConnection().sendTCP(o);
+		for (Map.Entry<Integer, User> entry : this.idToUser.entrySet()) {
+			entry.getValue().getConnection().sendTCP(o);
 		}
 	}
 
