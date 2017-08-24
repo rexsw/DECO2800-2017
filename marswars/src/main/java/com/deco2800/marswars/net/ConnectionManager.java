@@ -7,11 +7,17 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Base Class for Connection Managers.
  */
 public class ConnectionManager extends Listener {
+    // List of actions received
     protected List<Action> actionLog = new ArrayList<>();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
 
     /**
      * Helper function to format the log message before outputting it
@@ -25,7 +31,7 @@ public class ConnectionManager extends Listener {
      */
     protected void logAction(Action action) {
         this.actionLog.add(action);
-        System.out.println(this.formatLogMessage(action.toString()));
+        LOGGER.debug(this.formatLogMessage(action.toString()));
     }
 
     /**

@@ -9,7 +9,9 @@ public class MessageAction implements Action {
     private String username;
     private String message;
 
-    public MessageAction() {}
+    public MessageAction() {
+        // Blank constructor needed due to Kryonet
+    }
 
     /**
      * Constructor that clients use, they can't set the username.
@@ -34,6 +36,7 @@ public class MessageAction implements Action {
         return this.username;
     }
 
+    @Override
     public String toString() {
         return this.username + ": " + this.message;
     }
