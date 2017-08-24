@@ -74,7 +74,7 @@ public class MoveAction implements DecoAction {
 		}
 
 		/* If the path is null its probably completed */
-		if (path == null || path.size() < 1) {
+		if (path == null || path.isEmpty()) {
 			completed = true;
 			return;
 		}
