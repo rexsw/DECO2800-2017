@@ -35,7 +35,7 @@ public class Technology {
      */
 
     public void costUpgrade(){
-        print("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
+        System.out.println("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
         Spacman.changeCost(5);
     }
 	
