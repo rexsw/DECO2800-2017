@@ -183,7 +183,9 @@ public class MapContainer {
      * @param random whether its position should be random or not.
      */
     public void setEntity(BaseEntity entity, boolean random){
-
+        BaseEntity newEntity = getRandomEntity();
+        // add checks like entity not overlapping a building
+        addEntity(newEntity);
     }
 
     /**
@@ -258,7 +260,14 @@ public class MapContainer {
      */
     private BaseEntity getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
-        return null;
+        BaseEntity newEntity;
+        if(random == EntityTypes.SPACMAN){
+            newEntity = new Spacman(r.nextInt(width),r.nextInt(length),1);
+        }else {
+            newEntity = new BaseEntity(r.nextInt(width),r.nextInt(length),1,1,1,1);
+        }
+        ///////ADD MORE ELSE IF BRANCHES with EntityTypes
+        return newEntity;
     }
 
     /**
@@ -270,6 +279,24 @@ public class MapContainer {
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         return "";
+    }
+
+    /**
+     * Adds an entity to the temporary collision map
+     * @param entity the entity to be added
+     */
+    public void addEntity(BaseEntity entity) {
+
+        //Add to the collision map
+        int left = (int)entity.getPosX();
+        int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+        int bottom = (int)entity.getPosY();
+        int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+        for (int x = left; x < right; x++) {
+            for (int y = bottom; y < top; y++) {
+                newCollisionMap.get(x, y).add(entity);
+            }
+        }
     }
 
 

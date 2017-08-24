@@ -15,18 +15,12 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
-import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.InitialWorld;
-import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +28,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -91,10 +84,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 *	Set up new stuff for this game
 		 */
-//		GameManager.get().setWorld(new InitialWorld());
-//		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx", true);
-		GameManager.get().setWorld(new CustomizedWorld(map));
+		GameManager.get().setWorld(new InitialWorld());
+		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+//		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx", true);
+//		GameManager.get().setWorld(new CustomizedWorld(map));
 
 
 		new Thread(new Runnable() {
