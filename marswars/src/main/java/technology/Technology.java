@@ -1,5 +1,7 @@
 package technology;
 
+import com.deco2800.marswars.entities.Spacman;
+
 import java.util.List;
 
 public class Technology {
@@ -27,4 +29,13 @@ public class Technology {
 		return parents;
 	}
 	
+}
+
+/**
+*technology upgrade which does Spacman.changeCost(5)
+*
+*/
+
+public void costUpgrade(){
+    Spacman.changeCost(5);
 }
