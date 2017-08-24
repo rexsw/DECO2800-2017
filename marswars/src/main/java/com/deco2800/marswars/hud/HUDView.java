@@ -26,12 +26,17 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by Naziah Siddique on 19/08
  * Initiates the HUD for SpacWars, with the help of instantiations of 
  * other components from other classes in the packages
  */
 public class HUDView extends ApplicationAdapter{
+	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+
 	private Stage stage;
 	private Skin skin;
 	private Table overheadLeft;
@@ -78,6 +83,7 @@ public class HUDView extends ApplicationAdapter{
 
 	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
 		// zero game length clock (i.e. tell TimeManager new game has been launched)
+		LOGGER.debug("Creating Hud");
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
@@ -114,11 +120,13 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setWidth(stage.getWidth());
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
-		
+
+		LOGGER.debug("Add help, quit and message buttons");
 		helpButton = new TextButton("Help (?)", skin);
 		quitButton = new TextButton("Quit (X)", skin);
 		messageButton = new TextButton("Messages", skin);
-		
+
+		LOGGER.debug("Creating time labels");
 		gameTimeDisp = new Label("Time: 0:00", skin);
 		gameLengthDisp = new Label("00:00:00", skin);
 
@@ -132,13 +140,14 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(overheadRight);
 		
 		//can we make this a method of it's own? 
+		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				new WorkInProgress("help text", skin).show(stage);
 			}
 		});
-		
+		LOGGER.debug("Creating quit button listener");
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			
@@ -159,7 +168,9 @@ public class HUDView extends ApplicationAdapter{
 					}	
 				}.show(stage);	
 		}});
-		
+
+
+		LOGGER.debug("Creating message button listener");
 		messageButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
@@ -196,7 +207,7 @@ public class HUDView extends ApplicationAdapter{
 		overheadLeft.setWidth(stage.getWidth());
 		overheadLeft.align(Align.left | Align.top);
 		overheadLeft.setPosition(60, stage.getHeight());
-		
+		LOGGER.debug("Creating health bar");
 		addProgressBar();
 		Label healthLabel = new Label("Health: ", skin);
 		healthLabel.setAlignment(Align.left);
@@ -215,6 +226,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds the player Icon and name to the huD (goes into top left) 
 	 */
 	private void addPlayerIcon(){
+		LOGGER.debug("Adding player icon");
 		Table playerdetails = new Table();
 		playerdetails.setDebug(true);
 		playerdetails.setWidth(100);
@@ -260,6 +272,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Implements a collapsible tab for the chat lobby 
 	 */
 	private void addMessages(){
+		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
 		Label message = new Label("Implementing the chat lobby here", skin);
 		
@@ -281,7 +294,8 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addInventoryMenu();
 		addMiniMapMenu();
-		
+
+		LOGGER.debug("Creating HUD manipulation buttons");
 		Button dispMainMenu = new TextButton("Old Menu", skin);
 		Button dispMap = new TextButton("Map", skin);
 		Button dispInventory = new TextButton("Display\nPanel", skin);
@@ -301,11 +315,13 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
+					LOGGER.debug("Enable hud");
 					inventory.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
 					inventoryToggle = false;
 				} else {
+					LOGGER.debug("Disable Hud");
 					inventory.setVisible(false);
 					minimap.setVisible(false);
 					resourceTable.setVisible(false);
@@ -318,9 +334,11 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				if(menuToggle){
+					LOGGER.debug("Enable old hud");
 					mainMenu.setVisible(true);
 					menuToggle = false;
 				} else {
+					LOGGER.debug("Disable old Hud");
 					mainMenu.setVisible(false);
 					menuToggle = true;
 				}
@@ -331,6 +349,7 @@ public class HUDView extends ApplicationAdapter{
 		dispMap.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
+				LOGGER.debug("Opening map");
 				new WorkInProgress("Unimplemented", skin).show(stage);
 			}	
 		});
@@ -340,6 +359,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the selectable menu for the inventory for resources 
 	 */
 	private void addInventoryMenu(){
+		LOGGER.debug("Create inventory");
 		inventory = new Window("Actions", skin);
 		//Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
 		
@@ -349,7 +369,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setWidth(500);
 		resourceTable.setColor(Color.DARK_GRAY);
 		resourceTable.setPosition(240, 140);
-		
+		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
 		biomassCount = new Label("Biomass: 0", skin);
@@ -376,6 +396,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the minimap window 
 	 */
 	private void addMiniMapMenu(){
+		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
 		Label label = new Label("Not sure if this will still be \n implemented, but here's a \n placeholder anyway", skin);
