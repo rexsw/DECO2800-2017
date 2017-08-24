@@ -18,7 +18,7 @@ public class TechnologyManager extends Manager{
 	
 	public TechnologyManager() {
 		techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Test Technology", new ArrayList<Technology>()));
-		techMap.put(2, new Technology(new int[]{200, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>()));
+		techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>()));
 	}
 	
 	public Technology getTech(int id){
