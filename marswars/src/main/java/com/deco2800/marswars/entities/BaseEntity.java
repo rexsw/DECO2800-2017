@@ -18,6 +18,7 @@ import java.util.Optional;
 public class BaseEntity extends AbstractEntity implements Selectable {
 
 	private int cost = 0;
+	private float buildSpeed = 0;
 	private EntityType entityType = EntityType.NOT_SET;
 	private  List<Class> validActions;
 	private boolean selected = false;
@@ -78,6 +79,22 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+	
+	/**
+	 * Gets the build speed modifier for this entity
+	 * @return
+	 */
+	public float getSpeed() {
+		return buildSpeed;
+	}
+
+	/**
+	 * Sets the build speed modifier for this entity
+	 * @param cost
+	 */
+	public void setSpeed(float speed) {
+		this.buildSpeed = speed;
 	}
 
 	/**

@@ -94,5 +94,9 @@ public class InitialWorld extends BaseWorld {
 				((Selectable) r).deselect();
 			}
 		}
+		this.addEntity(new Base2(this, 14, 18, 0));
+		this.addEntity(new EnemySpacman(24, 24, 0));
+		this.addEntity(new EnemyTank(20, 20, 0));
 	}
+
 }

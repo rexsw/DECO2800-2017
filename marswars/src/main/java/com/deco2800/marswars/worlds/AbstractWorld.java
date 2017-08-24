@@ -2,6 +2,8 @@ package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +94,6 @@ public abstract class AbstractWorld {
         return length;
     }
 
-
     /**
      * Gets the number of tiles in the world.
      *
@@ -101,4 +102,15 @@ public abstract class AbstractWorld {
     public int getNumberOfTiles(){
         return width * length;
     }
+    
+	/**
+	 * Deselects all entities
+	 */
+	public void deSelectAll() {
+		for (Renderable r : this.getEntities()) {
+			if (r instanceof Selectable) {
+				((Selectable) r).deselect();
+			}
+		}
+	}
 }
