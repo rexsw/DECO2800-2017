@@ -53,7 +53,6 @@ public class ChatBox extends Table {
         setUpInputElements();
         setUpChatMessages();        
         setUpLayout();
-        
     }
     
     /**
