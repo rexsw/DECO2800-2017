@@ -4,6 +4,8 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.util.WorldUtil;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,11 @@ public void onTick(long l) {
 				//set all spacmen the ai owns to gather rocks
 				Spacman x = (Spacman)e;
 				if(!x.isWorking()) {
+					//allow spacmans to collect the closest resources
+					Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
+					x.setAction(new GatherAction(x, (Resource) resource.get()));
+					LOGGER.error("ai - set spacman to grather");
+				 /*
 					for( BaseEntity r : GameManager.get().getWorld().getEntities())
 						if(r instanceof Resource) {
 							if(((Resource) r).getType() == ResourceType.ROCK) { //Simple call getType() for the type of resource
@@ -28,22 +35,11 @@ public void onTick(long l) {
 								break;
 							}
 					}
+					*/
+				
 				}
 			}
-			if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
-				Base x = (Base)e;
-				if(!x.isWorking()) {
-					//sets the ai base to make more spacman if possible
-					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-					if (resourceManager.getRocks() > 30) {
-						LOGGER.error("ai - set base to make spacman");
-						resourceManager.setRocks(resourceManager.getRocks() - 30);
-						Spacman r = new Spacman(16, 16, 0);
-						r.setOwner(this);
-						x.setAction(new GenerateAction(r));							
-					}
-				}
-			}
+			generateSpacman(e);
 			if(e instanceof EnemySpacman && ((HasOwner) e).getOwner() == this) {
 				//lets the ai target player spacman with it's enemyspacmen
 				EnemySpacman x = (EnemySpacman)e;
@@ -57,7 +53,25 @@ public void onTick(long l) {
 		}
 	}
 }
-
+		/**
+		 * generate new spacman when a base have more than 30 rocks
+		 */
+		private void generateSpacman(BaseEntity e) {
+			if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
+				Base x = (Base)e;
+				if(!x.isWorking()) {
+					//sets the ai base to make more spacman if possible
+					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+					if (resourceManager.getRocks() > 30) {
+						LOGGER.error("ai - set base to make spacman");
+						resourceManager.setRocks(resourceManager.getRocks() - 30);
+						Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
+						r.setOwner(this);
+						x.setAction(new GenerateAction(r));							
+					}
+				}
+			}
+		}
 		@Override
 		public void setTeam(int teamId) {
 			this.teamid = teamId;
