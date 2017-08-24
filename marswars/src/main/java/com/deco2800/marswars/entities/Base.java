@@ -77,10 +77,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
+
 		System.out.println("Base got clicked");
 		this.currentAction = Optional.of(new BuildAction(this));
 		if (!selected) {
 			selected = true;
+
 		if(this.getOwner() instanceof PlayerManager) {
 			if (!selected) {
 				selected = true;
@@ -88,7 +90,9 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 			}
 		} else {
 			LOGGER.error("clicked on ai base");
+
 		}
+
 		}
 	}
 
