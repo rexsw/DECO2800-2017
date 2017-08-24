@@ -2,9 +2,9 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
-import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.Before;
+
+import static org.junit.Assert.*;
 
 public class TimeManagerTest {
 	

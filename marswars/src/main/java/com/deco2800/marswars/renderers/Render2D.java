@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Render2D is a 2D renderer for side scrolling games.
  * It impliments the Renderer interface in order to talk to LibGDX
- * @Author Tim Hadwen
+ * @author Tim Hadwen
  */
 public class Render2D implements Renderer {
 

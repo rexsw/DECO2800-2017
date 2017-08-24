@@ -25,7 +25,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
-	public Optional<DecoAction> currentAction = Optional.empty();
+	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
 	
@@ -111,6 +111,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
+		} else {
+			LOGGER.error("Clicked on ai spacman");
 		}
 	}
 
@@ -204,19 +206,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
-		if(entity instanceof HasOwner) {
-			return this.owner == ((HasOwner) entity).getOwner();
-		} else {
-			return false;
-		}
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 	
 	public boolean isWorking() {
-		if(currentAction.isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
+		return (currentAction.isPresent());
 	}
 	
 	public void setAction(DecoAction action) {

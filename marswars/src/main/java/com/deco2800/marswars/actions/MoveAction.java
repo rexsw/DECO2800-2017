@@ -53,7 +53,6 @@ public class MoveAction implements DecoAction {
 		if (this.goalY < 0)
 			this.goalY = 0;
 
-		LOGGER.info("new x: " + goalX + " y: " + goalY);
 
 		pathfinder = new PathfindingThread(GameManager.get().getWorld(), new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY));
 		thread = new Thread(pathfinder);
