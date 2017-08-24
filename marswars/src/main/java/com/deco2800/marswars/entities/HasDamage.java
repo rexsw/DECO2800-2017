@@ -18,4 +18,16 @@ public interface HasDamage {
 	 * @param damage
 	 */
 	void setDamage(int damage);
+	
+	/**
+	 * Set the armor damage of an entity
+	 * @param armorDamage
+	 */
+	void setArmorDamage(int armorDamage);
+	
+	/**
+	 * Return the armor damage of an entity
+	 * @return the armor damage.
+	 */
+	int getArmorDamage();
 }

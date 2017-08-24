@@ -1,6 +1,13 @@
 package com.deco2800.marswars.entities;
 
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -9,7 +16,20 @@ import com.deco2800.marswars.worlds.BaseWorld;
  *
  */
 public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage, HasArmor,
-	HasAttackRange{
+	HasAttackRange, HasAttackSpeed, HasOwner{
+	
+	private int maxHealth; // maximum health of the entity
+	private int health; // current health of the entity
+	private int maxArmor; // maximum armor of the entity
+	private int armor; // current armor of the entity
+	private int armorDamage; // armorDamage of the entity
+	private int attackRange; // attackrange of the entity
+	private int damage; // the damage of the entity
+	private Manager owner = null; // the owner of the player
+	private Optional<DecoAction> currentAction = Optional.empty(); 
+	private int attackSpeed;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
 	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
@@ -25,15 +45,7 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 		super(position, xRenderLength, yRenderLength, centered);
 		// TODO Auto-generated constructor stub
 	}
-
-	private int maxHealth; // maximum health of the entity
-	private int health; // current health of the entity
-	private int maxArmor; // maximum armor of the entity
-	private int armor; // current armor of the entity
-	private int attackRange; // attackrange of the entity
-	private int damage; // the damage of the entity
-
-
+	
 	/**
 	 * Return the attack range of the entity
 	 * @return attack range
@@ -67,6 +79,10 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	 */
 	@Override
 	public void setArmor(int armor) {
+		if (armor < 0) {
+			this.armor = 0;
+			return;
+		}
 		this.armor = armor;
 	}
 	
@@ -135,7 +151,15 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	 */
 	@Override
 	public void setHealth(int health) {
+		if (health < 0) {
+			//GameManager.get().getWorld().removeEntity(this);
+			LOGGER.info("DEAD");
+		}
 		this.health  = health;
+	}
+	
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 
 	/**
@@ -159,5 +183,54 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 			}
 		}
 	}
+
+	public void setEmptyAction() {
+		currentAction = Optional.empty();
+	}
 	
+	@Override
+	public void setOwner(Manager owner) {
+		this.owner = owner;
+	}
+
+	@Override
+	public Manager getOwner() {
+		return this.owner;
+	}
+
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+
+	@Override
+	public boolean isWorking() {
+		return (currentAction.isPresent());
+	}
+
+	@Override
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
+	}
+
+	@Override
+	public void setArmorDamage(int armorDamage) {
+		this.armorDamage = armorDamage;
+	}
+
+	@Override
+	public int getArmorDamage() {
+		return armorDamage;
+	}
+
+	@Override
+	public void setAttackSpeed(int attackSpeed) {
+		this.attackSpeed = attackSpeed;
+	}
+
+	@Override
+	public int getAttackSpeed() {
+		return attackSpeed;
+	}
 }

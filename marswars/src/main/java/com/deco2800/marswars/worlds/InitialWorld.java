@@ -54,6 +54,8 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));
+		this.addEntity(new Soldier(50, 10, 0)); // test for combat
+		this.addEntity(new Soldier(50, 15, 0)); // test for combat
 	}
 
 	/**
