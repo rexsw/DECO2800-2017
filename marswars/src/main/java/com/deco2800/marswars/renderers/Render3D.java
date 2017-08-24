@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.FogOfWarLayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ public class Render3D implements Renderer {
 
         List<BaseEntity> entities = new ArrayList<>();
         List<BaseEntity> walkables = new ArrayList<>();
+
+        List<FogOfWarLayer> fogOfWar = new ArrayList<>();
 
         /* Sort entities into walkables and entities */
         for (BaseEntity r : renderables) {

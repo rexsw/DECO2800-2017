@@ -13,6 +13,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -22,6 +23,7 @@ import java.util.Random;
  * Created by timhadwen on 19/7/17.
  */
 public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -48,9 +50,43 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.initActions();
 		this.addNewAction(GatherAction.class);
 		this.addNewAction(MoveAction.class);
+		this.lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+	}
+
+	@Override
+	public void setPosition(float x, float y, float z) {
+
+		super.setPosition(x, y, z);
+		lineOfSight.setPosition(x,y,z);
+
 
 	}
 
+	@Override
+	public void setPosX(float x) {
+		super.setPosX(x);
+		lineOfSight.setPosX(x);
+	}
+
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
+	@Override
+	public void setPosY(float y) {
+		super.setPosY(y);
+		lineOfSight.setPosY(y);
+	}
+
+	/**
+	 * Sets the position Z
+	 * @param z
+	 */
+	@Override
+	public void setPosZ(float z) {
+		super.setPosZ(z);
+		lineOfSight.setPosZ(z);
+	}
 	/**
 	 * On tick method for the spacman
 	 * @param i
@@ -85,6 +121,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 				/* Finally move to that position using a move action */
 				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+
 			}
 			return;
 		}
@@ -97,6 +134,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			currentAction = Optional.empty();
 		}
 	}
+
+	public LineOfSight getLineOfSight(){return lineOfSight;}
 
 	/**
 	 * On click method for the spacman
@@ -135,6 +174,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.error("Assigned action gather");
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_green");

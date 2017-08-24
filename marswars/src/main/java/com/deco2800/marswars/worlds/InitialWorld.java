@@ -54,23 +54,16 @@ public class InitialWorld extends BaseWorld {
 				}
 			}
 		}
-		this.addEntity(new Spacman(0, 0, 0));
-		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
+
+		this.addEntity(new Spacman(0,0,0));
+		this.addEntity(new Spacman(1, 1, 1)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));
-		this.addEntity(new GrayGround(4, 4, 0, 1f, 1f));//this is used for testing the fog of war
 
 
-		//trying fog of war
-//		for (int x = 0; x < this.getWidth(); x+=1) {
-//			for (int y = 0; y < this.getLength(); y+=1) {
-//				for( BaseEntity each : ((BaseWorld) GameManager.get().getWorld()).getEntities(x,y)) {//on each cell
-//					if(!(each.getEntityType()== Selectable.EntityType.UNIT))
-//						this.addEntity(new GrayGround(x, y, 0, 1f, 1f));
-//				}
-//			}
-//		}
+
+
 	}
 
 	/**
