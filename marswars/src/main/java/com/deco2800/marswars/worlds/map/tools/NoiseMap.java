@@ -1,13 +1,9 @@
 package com.deco2800.marswars.worlds.map.tools;
 
 import java.util.Random;
-//import com.deco2800.marswars.worlds.map.tools.OpenSimplexNoise;
 
 /**
- * NOT FUNCTIONAL YET!
- * Creates a map of simplex noise.
- * Very useful for placing natural looking patterns of tiles, i.e. patches of grass.
- * Very useful as a natural heightmap when terrain z height is introduced.
+ * interface for simplex noise to be treated as an addressable map
  */
 public class NoiseMap {
     //2d array to hold noise
