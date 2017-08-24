@@ -1,6 +1,7 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -21,8 +22,8 @@ public class InitialWorld extends BaseWorld {
 	 * Adds entities to the world
 	 */
 	public void loadEntities() {
-		for (int x = 0; x < this.getWidth(); x+=5) {
-			for (int y = 0; y < this.getLength(); y+=5) {
+		for (int x = 0; x < this.getWidth(); x += 5) {
+			for (int y = 0; y < this.getLength(); y += 5) {
 				Random r = new Random();
 
 				// CRYSTAL
@@ -30,27 +31,28 @@ public class InitialWorld extends BaseWorld {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL));
 					continue;
 				}
-				
+
 				// WATER
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.WATER));
 					continue;
 				}
-				
+
 				// ROCK
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK));
 					continue;
 				}
-				
+
 				// BIOMASS
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS));
 				}
 			}
 		}
-		this.addEntity(new Spacman(0, 0, 0));
-		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
+
+		this.addEntity(new Spacman(0,0,0));
+		this.addEntity(new Spacman(1, 1, 1)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));

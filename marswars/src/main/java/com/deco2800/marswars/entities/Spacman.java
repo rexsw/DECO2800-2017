@@ -10,9 +10,11 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -22,6 +24,7 @@ import java.util.Random;
  * Created by timhadwen on 19/7/17.
  */
 public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -48,9 +51,54 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.initActions();
 		this.addNewAction(GatherAction.class);
 		this.addNewAction(MoveAction.class);
+		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		FogWorld fogWorld = GameManager.get().getFogWorld();
+		fogWorld.addEntity(lineOfSight);
+	}
+
+	/**
+	 * Sets the position of this spacman
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	@Override
+	public void setPosition(float x, float y, float z) {
+		super.setPosition(x, y, z);
+		lineOfSight.setPosition(x,y,z);
+
 
 	}
 
+	/**
+	 * Sets the position X
+	 * @param x
+	 */
+	@Override
+	public void setPosX(float x) {
+		super.setPosX(x);
+		lineOfSight.setPosX(x);
+	}
+
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
+	@Override
+	public void setPosY(float y) {
+		super.setPosY(y);
+		lineOfSight.setPosY(y);
+	}
+
+	/**
+	 * Sets the position Z
+	 * @param z
+	 */
+	@Override
+	public void setPosZ(float z) {
+		super.setPosZ(z);
+		lineOfSight.setPosZ(z);
+	}
 	/**
 	 * On tick method for the spacman
 	 * @param i
@@ -85,6 +133,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 				/* Finally move to that position using a move action */
 				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+
 			}
 			return;
 		}
@@ -96,6 +145,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 		}
+	}
+
+	/**
+	 * Get the line of sight of this spacman
+	 * @return LineOfSight
+	 */
+	public LineOfSight getLineOfSight(){
+		return lineOfSight;
 	}
 
 	/**
@@ -137,6 +194,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.error("Assigned action gather");
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_green");
@@ -154,7 +212,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return health;
 	}
 
-	/* Sets the health for this spacman */
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
 	@Override
 	public void setHealth(int health) {
 		LOGGER.info("Set health to " + health);
@@ -194,26 +255,47 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return resource;
 	}
 
+	/**
+	 * Set the owner of this spacman
+	 * @param owner
+	 */
 	@Override
 	public void setOwner(Manager owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * Get the owner of this spacman
+	 * @return owner
+	 */
 	@Override
 	public Manager getOwner() {
 		return this.owner;
 	}
 
+	/**
+	 * Check if this spacman has the same owner as the other Abstract enitity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	/**
+	 * Check if this spacman currently has an action
+	 * @return true if an action is present
+	 */
 	public boolean isWorking() {
 		return (currentAction.isPresent());
 	}
 	
+	/**
+	 * Set an current action for this spac man
+	 * @param action
+	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}

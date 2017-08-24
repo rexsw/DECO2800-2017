@@ -54,6 +54,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	/**
 	 * Outdated constructor for the base entity
+	 * @deprecated
 	 * @param position
 	 * @param xRenderLength
 	 * @param yRenderLength
@@ -100,6 +101,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		super.setPosition(x, y, z);
 		modifyCollisionMap(true);
 	}
+
 
 
 	/**
