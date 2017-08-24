@@ -29,14 +29,14 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
 
-	boolean selected = false;
+	private boolean selected = false;
 
 	/**
 	 * Constructor for the base
-	 * @param world
-	 * @param posX
-	 * @param posY
-	 * @param posZ
+	 * @param world The world that will hold the base.
+	 * @param posX its x position on the world.
+	 * @param posY its y position on the world.
+	 * @param posZ its z position on the world.
 	 */
 	public Base2(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);

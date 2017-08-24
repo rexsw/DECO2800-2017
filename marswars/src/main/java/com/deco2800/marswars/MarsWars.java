@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EnemySpacman;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
@@ -99,20 +100,29 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		/*
+		 * sets all starting entities to be player owned
+		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
 				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
-		Spacman ai = new Spacman(2, 2, 0);
-		Spacman ai1 = new Spacman(3, 3, 0);
+		/*
+		 * adds entities for the ai and set then to be ai owned
+		 */
+		Spacman ai = new Spacman(16, 16, 0);
+		Spacman ai1 = new Spacman(17, 16, 0);
 		Base aibase = new Base(GameManager.get().getWorld(), 15, 15, 0);
+		EnemySpacman aienemy = new EnemySpacman(18, 19, 0);
 		ai.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(ai1);
 		aibase.setOwner(GameManager.get().getManager(AiManagerTest.class));
 		GameManager.get().getWorld().addEntity(aibase);
+		aienemy.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		GameManager.get().getWorld().addEntity(aienemy);
 
 		new Thread(new Runnable() {
 			@Override
@@ -181,14 +191,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						networkServer.bind(SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when initiating server", e);
 					}
 
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when joinging as client", e);
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -196,7 +206,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					System.out.println(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
-					ex.printStackTrace();
+					LOGGER.error("Unknown Host", ex);
 				}
 				ipDiag.button("Close", null);
 				ipDiag.show(stage);
@@ -236,7 +246,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							try {
 								networkClient.connect(5000, ip, SERVER_PORT);
 							} catch (IOException e) {
-								LOGGER.error(e.toString());
+								LOGGER.error("Join server error", e);
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -384,8 +394,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			}
 			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
-				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
+				peonButton = new TextButton("Select a Unit", skin);
+				helpText = new Label("Welcome to MarsWars!", skin);
 			}
 			window.add(peonButton);
 			window.add(helpText);
@@ -567,9 +577,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 
 	/**
-	 * Resizes the viewport
-	 * @param width
-	 * @param height
+	 * Resizes the viewport.
+	 *
+	 * @param width the new width of the viewport.
+	 * @param height the new height of the viewport.
 	 */
 	@Override
 	public void resize(int width, int height) {

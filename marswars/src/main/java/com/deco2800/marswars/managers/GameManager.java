@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Adds a manager component to the GM
-	 * @param manager
+	 * @param manager the manager to be added.
 	 */
 	public void addManager(Manager manager) {
 		managers.add(manager);
@@ -89,7 +88,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Sets the current game world
-	 * @param world
+	 * @param world the world to be set
 	 */
 	public void setWorld(BaseWorld world) {
 		this.gameWorld = world;
@@ -97,7 +96,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Gets the current game world
-	 * @return
+	 * @return the currently loaded world
 	 */
 	public BaseWorld getWorld() {
 		return gameWorld;
