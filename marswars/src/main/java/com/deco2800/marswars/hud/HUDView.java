@@ -66,6 +66,7 @@ public class HUDView extends ApplicationAdapter{
 	private ProgressBar healthBar;
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+	private ChatBox chatbox;
 	
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -83,6 +84,7 @@ public class HUDView extends ApplicationAdapter{
 		this.gameManager = gameManager;
 		this.gameWidth = (int) stage.getWidth();
 		this.gameHeight = (int) stage.getHeight();
+		this.chatbox = new ChatBox(skin);
 		messageToggle = true; 
 		createLayout();
 	}
@@ -161,7 +163,7 @@ public class HUDView extends ApplicationAdapter{
 		messageButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
-				System.out.println("Just let me die");
+				//System.out.println("Just let me die");
 				if (messageToggle){
 					messageWindow.setVisible(true);
 					messageToggle = false; 
@@ -263,11 +265,11 @@ public class HUDView extends ApplicationAdapter{
 		
 		messageWindow.add(message);
 		messageWindow.setWidth(400);
-		messageWindow.setHeight(gameHeight-200);
+		messageWindow.setHeight(400);
 		messageWindow.pack();
 		messageWindow.setMovable(false);
 		messageWindow.setPosition(gameWidth, gameHeight-50, Align.right);
-		
+		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
 		
 		stage.addActor(messageWindow);
