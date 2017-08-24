@@ -1,5 +1,8 @@
 package com.deco2800.marswars.worlds;
 
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityTypes;
+import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 
 
@@ -15,6 +18,11 @@ public final class CustomizedWorld extends BaseWorld {
      */
     public CustomizedWorld(MapContainer mapContainer) {
         super(mapContainer.getMap());
+        mapContainer.setDimensions(this.getLength(), this.getWidth());
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
+        mapContainer.addEnemyGroup();
         loadMapContainer(mapContainer);
     }
 
@@ -24,7 +32,10 @@ public final class CustomizedWorld extends BaseWorld {
      * @param mapContainer the container to be read.
      */
     private void loadMapContainer(MapContainer mapContainer){
-        // add entities and other elements to the collisionMap, etc.
+        for (BaseEntity e: mapContainer.getEntities()
+             ) {
+            this.addEntity(e);
+        }
     }
 
 

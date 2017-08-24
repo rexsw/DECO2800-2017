@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds.map.tools;
 
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EntityTypes;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.buildings.Building;
@@ -9,6 +8,7 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -27,6 +27,8 @@ public class MapContainer {
     private int height;
     // randomizer
     private Random r = new Random();
+    //Entity list
+    private ArrayList<BaseEntity> entities = new ArrayList<>();
 
     /**
      * Creates a new Map container from a given map with random elements.
@@ -35,7 +37,28 @@ public class MapContainer {
      * @param random elements in the container.
      */
     public MapContainer( String mapPath, boolean random){
+        this.mapPath = mapPath;
+        if(random){
+            //
+        }
+    }
 
+    /**
+     * Returns the list of entities created
+     * @return entities list
+     */
+    public ArrayList<BaseEntity> getEntities(){
+        return entities;
+    }
+
+    /**
+     * Sets dimensions from loaded map file
+     * @param height height of tmx file
+     * @param width width of tmx file
+     */
+    public void setDimensions(int height, int width){
+        this.height = height;
+        this.width = width;
     }
 
     /**
@@ -44,24 +67,21 @@ public class MapContainer {
      * @param mapPath .tmx file to be loaded
      */
     public MapContainer(String mapPath){
-
+        this.mapPath = mapPath;
     }
 
     /**
      * Creates a Map container from a random map with random elements.
-     *
-     * @param random map and elements in the container
      */
-    public MapContainer(boolean random){
-
+    public MapContainer(){
+        //random map
     }
 
     /**
      * @return the map .tmx been used
      */
     public String getMap(){
-
-        return "";
+        return this.mapPath;
     }
 
     /**
@@ -80,7 +100,6 @@ public class MapContainer {
      * @param random whether the position of the terrain element should be random.
      */
     public void setTerrainElement(TerrainElement terrainElement, boolean random){
-
     }
 
     /**
@@ -98,7 +117,6 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      */
     public void setStructure(Building[][] buildings){
-
     }
 
     /**
@@ -117,7 +135,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      * @param random whether the position should be random.
      */
-    public void setstructure(Building[][] buildings, boolean random){
+    public void setStructure(Building[][] buildings, boolean random){
 
     }
 
@@ -136,7 +154,7 @@ public class MapContainer {
      * @param entity the entity to be placed.
      */
     public void setEntity(BaseEntity entity){
-
+        entities.add(new EnemySpacman(0, 0, 0));
     }
 
     /**
@@ -146,6 +164,26 @@ public class MapContainer {
      */
     public void setEntities(BaseEntity[][] entities){
 
+    }
+
+    /**
+     * Adds cluster of enemy spacman, needs to be improved
+     */
+    public void addEnemyGroup(){
+        int x = r.nextInt(this.height-1);
+        int y = r.nextInt(this.width-1);
+        if(x-1 < 0 || y-1 < 0 || y +1 >= this.height || x + 1 >= this.width){
+            return;
+        }
+        entities.add(new EnemySpacman(x, y, 0));
+        entities.add(new EnemySpacman(x - 1, y, 0));
+        entities.add(new EnemySpacman(x, y - 1, 0));
+        entities.add(new EnemySpacman(x + 1, y, 0));
+        entities.add(new EnemySpacman(x, y+1, 0));
+        entities.add(new EnemySpacman(x + 1, y + 1, 0));
+        entities.add(new EnemySpacman(x - 1, y - 1, 0));
+        entities.add(new EnemySpacman(x - 1, y + 1, 0));
+        entities.add(new EnemySpacman(x + 1, y -1, 0));
     }
 
     /**
