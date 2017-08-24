@@ -439,7 +439,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
 
 		/*
-		 * Update time & set color depending if night/day
+		 * Update in-game time display & set color depending if night/day
 		 */
 		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 		gameTime.setText(" Time: " + timeManager.toString());

@@ -41,6 +41,9 @@ public class TimeManager extends Manager implements TickableManager{
 	public long getMinutes(){
 		return TimeUnit.MINUTES.convert(getSeconds(), TimeUnit.SECONDS)%60;
 	}
+	public long getSeconds(){
+		return time;
+	}
 	
 	/**
 	 * Check if it is night or day in the system
@@ -69,10 +72,6 @@ public class TimeManager extends Manager implements TickableManager{
 	public void unPause(){
 		isPaused = false;
 	}
-	
-	public long getSeconds(){
-		return time;
-	}
 
 	/**
 	 * Returns the current system time in Milliseconds
@@ -81,6 +80,8 @@ public class TimeManager extends Manager implements TickableManager{
 	public long getGlobalTime(){
 		return System.currentTimeMillis();
 	}
+	//not sure how to test system time stuff, will it change too fast?
+	//could have a go at it
 
 	/**
 	 * Returns the second value of the current time (for use when saving/ loading)
@@ -89,7 +90,8 @@ public class TimeManager extends Manager implements TickableManager{
 	public long getGlobalHours(){
 		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
 	}
-
+	//think the comments for these two got switched around
+		
 	/**
 	 * Returns the minute value of the current time (for use when saving/ loading)
 	 * @return long integer (0 to 59) representing the current minute
@@ -115,6 +117,8 @@ public class TimeManager extends Manager implements TickableManager{
 		gameTimer = getGlobalTime() - gameStartTime;
 		return gameTimer;
 	}
+	//facility for pausing?
+	//need to initialise this!
 
 	/**
 	 * Returns the current second value of the time elapsed since the current game was launched
@@ -151,8 +155,10 @@ public class TimeManager extends Manager implements TickableManager{
 		gameStartTime = getGlobalTime();
 	}
 
+	//this will do negative time but it's bad practice. Consider doing abs(seconds)?
+	//can't think of any reason we would go back in time so gonna change it
 	public void addTime(long seconds){
-		time += seconds;
+		time += Math.abs(seconds);
 	}
 
 	/**
