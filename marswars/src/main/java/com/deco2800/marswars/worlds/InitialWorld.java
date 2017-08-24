@@ -1,11 +1,8 @@
 package com.deco2800.marswars.worlds;
 
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.util.Array2D;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -49,7 +46,6 @@ public class InitialWorld extends BaseWorld {
 				// BIOMASS
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS));
-					continue;
 				}
 			}
 		}

@@ -9,9 +9,13 @@ package com.deco2800.marswars.util;
  */
 public class Box3D {
 
-	private float x, y, z;
+	private float x;
+	private float y;
+	private float z;
 
-	private float xLength, yLength, zLength;
+	private float xLength;
+	private float yLength;
+	private float zLength;
 
 	/**
 	 * Constructs a new Box3D with the given corner point and dimensions.
@@ -140,8 +144,8 @@ public class Box3D {
 
 	/**
 	 *
-	 * @param box
-	 * @return
+	 * @param box the box that will be compared.
+	 * @return whether the two boxes overlap.
 	 */
 	public boolean overlaps(Box3D box) {
 		/*
@@ -174,20 +178,49 @@ public class Box3D {
 		}
 
 		// z larger
-		if (z > box.z + box.zLength) {
-			return false;
-		}
-
-		return true;
+		return  z <= box.z + box.zLength;
 	}
 
 	/**
-	 * Calculates the distance between two box3ds
+	 * Calculates the distance between two box3ds.
+	 *
+	 * @param o the box that marks the second point.
+	 * @return the distance between the 2 points.
+	 */
+	public float distance(Box3D o) {
+		return (float)(Math.sqrt(Math.pow(o.x - this.x, 2) + Math.pow(o.y - this.y, 2) + Math.pow(o.z - this.z, 2)));
+	}
+	
+	@Override
+	/**
+	 * Check if two Box3d Objects are the same
 	 * @param o
 	 * @return
 	 */
-	public float distance(Box3D o) {
-		return (float)(Math.sqrt(Math.pow((o.x - this.x), 2) + Math.pow((o.y - this.y), 2) + Math.pow((o.z - this.z), 2)));
-	}
+	public boolean equals(Object object) {
+		final double EPSILON = 0.00001;
+		if (!(object instanceof Box3D)) {
+			return false;
+		}
+		Box3D other = (Box3D) object;
+		if (Math.abs(this.x - other.x) > EPSILON && Math.abs(this.y - other.y) > EPSILON && Math.abs(this.z - other.z) > EPSILON) {
+			return false;
+		}
+		return (Math.abs(this.x - other.x) < EPSILON && Math.abs(this.y - other.y) < EPSILON && Math.abs(this.z - other.z) < EPSILON);
+		}
 
+	/**
+	 * HashCode method
+	 */
+	@Override
+	public int hashCode() {
+		int result = 31;
+		result = result * 37 + ((Float)this.x).hashCode();
+		result = result * 37 + ((Float)this.y).hashCode();
+		result = result * 37 + ((Float)this.z).hashCode();
+		result = result * 37 + ((Float)this.xLength).hashCode();
+		result = result * 37 + ((Float)this.yLength).hashCode();
+		result = result * 37 + ((Float)this.zLength).hashCode();
+		return result;
+	}
 }

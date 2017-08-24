@@ -22,10 +22,10 @@ public class BaseWorld extends AbstractWorld {
 	public BaseWorld(int wide, int len) {
 		this.setWidth(wide);
 		this.setLength(len);
-		this.collisionMap = new Array2D<List<BaseEntity>> (wide, len);
+		this.collisionMap = new Array2D<> (wide, len);
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
-				this.collisionMap.set(x, y, new ArrayList<BaseEntity>());
+				this.collisionMap.set(x, y, new ArrayList<>());
 			}
 		}
 	}
@@ -49,14 +49,15 @@ public class BaseWorld extends AbstractWorld {
 		/* Initialise the collision list */
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
-				this.collisionMap.set(x, y, new ArrayList<BaseEntity>());
+				this.collisionMap.set(x, y, new ArrayList<>());
 			}
 		}		
 	}
 
 	/**
-	 * Adds an entity to this world
-	 * @param entity
+	 * Adds an entity to this world.
+	 *
+	 * @param entity the entity to be added.
 	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);
@@ -79,33 +80,36 @@ public class BaseWorld extends AbstractWorld {
 	/**
 	 * Gets the collision map of the world.
 	 * yes this uses a lot of memory.
-	 * @return
+	 *
+	 * @return the map of collisions of the world.
 	 */
 	public Array2D<List<BaseEntity>> getCollisionMap() {
 		return collisionMap;
 	}
 
 	/**
-	 * Returns true if there is an entity in here
-	 * @param x
-	 * @param y
-	 * @return
+	 * Returns true if there is an entity in here.
+	 *
+	 * @param x a tile x coordinate.
+	 * @param y a tile y coordinate.
+	 * @return whether it contains an entity
 	 */
 	public boolean hasEntity(int x, int y) {
 		return collisionMap.get(x, y).size() > 0;
 	}
 
 	/**
-	 * Gets the entity at an x y position
-	 * @param x
-	 * @param y
-	 * @return
+	 * Gets the entity at an x y position.
+	 *
+	 * @param x a tile x coordinate
+	 * @param y a tile y coordinate
+	 * @return a list of entities found at the given tile.
 	 */
 	public List<BaseEntity> getEntities(int x, int y) {
 		try {
 			return collisionMap.get(x, y);
 		} catch (IndexOutOfBoundsException e) {
-			throw e;
+			throw new IndexOutOfBoundsException("Invalid tile coordinate.");
 		}
 	}
 }

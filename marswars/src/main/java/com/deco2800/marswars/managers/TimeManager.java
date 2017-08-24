@@ -17,7 +17,6 @@ public class TimeManager extends Manager implements TickableManager{
 	private long gameStartTime = 0;
 	private long gameTimer = 0;
 
-	
 	@Override
 	public void onTick(long i){
 		if (!isPaused){
@@ -156,10 +155,18 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 
 	/**
+	 *
+	 * @return the String representation of the real time spent in the current game
+	 */
+	public String getPlayClockTime() {
+		return getPlayHours() + ":" + getPlayMinutes() + ":" + getPlaySeconds();
+	}
+
+	/**
 	 * Display time in hour:minute
 	 */
 	@Override
 	public String toString(){
 		return getHours() + ":" + getMinutes();
 	}
-}
+	}

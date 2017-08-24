@@ -3,19 +3,14 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -37,8 +32,6 @@ import com.deco2800.marswars.managers.TimeManager;
  * other components from other classes in the packages
  */
 public class HUDView extends ApplicationAdapter{
-	Label test;
-	Label test1;
 	private Stage stage;
 	private Skin skin;
 	private Table overheadLeft;
@@ -64,12 +57,15 @@ public class HUDView extends ApplicationAdapter{
 	private Label timeDisp; 
 	
 	private Window mainMenu; 
+	private Label gameTimeDisp;
+	private Label gameLengthDisp;
+	private Window resources; 
 	private Window minimap;
 	private Window inventory;
 	
 	private ProgressBar healthBar;
 	private GameManager gameManager;
-	
+	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
 	
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -78,7 +74,10 @@ public class HUDView extends ApplicationAdapter{
 	 * @param skin the look of the HUD, depending on the world/level the game is being played at
 	 * @param gameManager handles selectables
 	 */
+
 	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
+		// zero game length clock (i.e. tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
@@ -118,14 +117,16 @@ public class HUDView extends ApplicationAdapter{
 		quitButton = new TextButton("Quit (X)", skin);
 		messageButton = new TextButton("Messages", skin);
 		
-		timeDisp = new Label("Time: 0:00", skin);
-		
+		gameTimeDisp = new Label("Time: 0:00", skin);
+		gameLengthDisp = new Label("00:00:00", skin);
+
+		overheadRight.add(gameTimeDisp).pad(10);
+		overheadRight.add(gameLengthDisp).pad(10);
 		overheadRight.add(timeDisp).pad(10);
 		overheadRight.add(messageButton).pad(10);
 		overheadRight.add(helpButton).pad(10);
 		overheadRight.add(quitButton).pad(10);
-		
-				
+						
 		stage.addActor(overheadRight);
 		
 		//can we make this a method of it's own? 
@@ -396,16 +397,20 @@ public class HUDView extends ApplicationAdapter{
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-		timeDisp.setText(" Time: " + timeManager.toString());
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
+		
 		if (timeManager.isNight()){
-			timeDisp.setColor(Color.FIREBRICK);
+			gameTimeDisp.setColor(Color.FIREBRICK);
+			gameLengthDisp.setColor(Color.FIREBRICK);
 		}
 		else{
-			timeDisp.setColor(Color.BLUE);
+			gameTimeDisp.setColor(Color.BLUE);
+			gameLengthDisp.setColor(Color.BLUE);
 		}
 		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		
 		rockCount.setText("Rocks: " + resourceManager.getRocks());
 		crystalCount.setText(" Crystal: " + resourceManager.getCrystal()); 
 		waterCount.setText(" Water: " + resourceManager.getWater());

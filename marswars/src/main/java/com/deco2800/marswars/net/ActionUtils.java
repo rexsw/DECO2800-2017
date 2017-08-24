@@ -11,6 +11,8 @@ public class ActionUtils {
      * and in the same order.
      * This function will register all action classes.
      */
+    private ActionUtils(){}
+
     public static void registerActions(Kryo kryo) {
         kryo.register(JoinLobbyAction.class);
         kryo.register(MessageAction.class);
