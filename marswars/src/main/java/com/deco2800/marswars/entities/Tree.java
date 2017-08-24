@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Simple tree to test the engine.
  * This tree is a hasProgress to test that interface
- * @Author Tim Hadwen
+ * @author Tim Hadwen
  */
 public class Tree extends BaseEntity implements HasProgress {
 

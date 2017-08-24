@@ -13,11 +13,10 @@ public class TimeManager extends Manager implements TickableManager{
 	
 	private boolean isNight = true;
 	private boolean isPaused = false;
-	private long time = 0; //time in seconds
+	private long time = 0; //in-game time in seconds
 	private long gameStartTime = 0;
 	private long gameTimer = 0;
 
-	
 	@Override
 	public void onTick(long i){
 		if (!isPaused){
@@ -40,6 +39,9 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 	public long getMinutes(){
 		return TimeUnit.MINUTES.convert(getSeconds(), TimeUnit.SECONDS)%60;
+	}
+	public long getSeconds(){
+		return time;
 	}
 	
 	/**
@@ -69,10 +71,6 @@ public class TimeManager extends Manager implements TickableManager{
 	public void unPause(){
 		isPaused = false;
 	}
-	
-	public long getSeconds(){
-		return time;
-	}
 
 	/**
 	 * Returns the current system time in Milliseconds
@@ -87,9 +85,10 @@ public class TimeManager extends Manager implements TickableManager{
 	 * @return long integer (0 to 59) representing the current second
 	 */
 	public long getGlobalHours(){
-		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%60;
+		return TimeUnit.HOURS.convert(getGlobalTime(), TimeUnit.MILLISECONDS)%24;
 	}
-
+	//think the comments for these two got switched around
+		
 	/**
 	 * Returns the minute value of the current time (for use when saving/ loading)
 	 * @return long integer (0 to 59) representing the current minute
@@ -115,6 +114,8 @@ public class TimeManager extends Manager implements TickableManager{
 		gameTimer = getGlobalTime() - gameStartTime;
 		return gameTimer;
 	}
+	//facility for pausing?
+	//need to initialise?
 
 	/**
 	 * Returns the current second value of the time elapsed since the current game was launched
@@ -151,8 +152,18 @@ public class TimeManager extends Manager implements TickableManager{
 		gameStartTime = getGlobalTime();
 	}
 
+	//this will do negative time but it's bad practice. Consider doing abs(seconds)?
+	//can't think of any reason we would go back in time so gonna change it
 	public void addTime(long seconds){
-		time += seconds;
+		time += Math.abs(seconds);
+	}
+
+	/**
+	 *
+	 * @return the String representation of the real time spent in the current game
+	 */
+	public String getPlayClockTime() {
+		return getPlayHours() + ":" + getPlayMinutes() + ":" + getPlaySeconds();
 	}
 
 	/**
@@ -162,4 +173,4 @@ public class TimeManager extends Manager implements TickableManager{
 	public String toString(){
 		return getHours() + ":" + getMinutes();
 	}
-}
+	}
