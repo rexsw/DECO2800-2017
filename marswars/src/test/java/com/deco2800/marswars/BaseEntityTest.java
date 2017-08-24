@@ -7,14 +7,20 @@ import com.deco2800.marswars.worlds.BaseWorld;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class BaseEntityTest {	
-		
+	private BaseEntity t;
+	
+	@Before
+	public void initialise() {
+		GameManager.get().setWorld(new BaseWorld(10,10));
+		t = new BaseEntity(0, 1, 2, 3, 4, 5);
+	}
+	
 	@Test
 	public void ConstructorTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t = new BaseEntity(0, 1, 2, 3, 4, 5);
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
 		assertEquals(t.getPosZ(), 2, 0.1);
@@ -25,8 +31,6 @@ public class BaseEntityTest {
 	
 	@Test
 	public void FullBlownConstructorTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t = new BaseEntity(0, 1, 2, 3, 4, 5, 3, 4, true);
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
 		assertEquals(t.getPosZ(), 2, 0.1);
@@ -37,65 +41,55 @@ public class BaseEntityTest {
 	
 	@Test
 	public void SetPositionsTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		t1.setPosition(0, 0, 0);
-		assertEquals(t1.getPosX(), 0, 0.1);
-		assertEquals(t1.getPosY(), 0, 0.1);
-		assertEquals(t1.getPosZ(), 0, 0.1);
+		t.setPosition(0, 0, 0);
+		assertEquals(t.getPosX(), 0, 0.1);
+		assertEquals(t.getPosY(), 0, 0.1);
+		assertEquals(t.getPosZ(), 0, 0.1);
 		
-		t1.setPosX(3);
-		assertEquals(t1.getPosX(), 3, 0.1);
-		assertEquals(t1.getPosY(), 0, 0.1);
-		assertEquals(t1.getPosZ(), 0, 0.1);
+		t.setPosX(3);
+		assertEquals(t.getPosX(), 3, 0.1);
+		assertEquals(t.getPosY(), 0, 0.1);
+		assertEquals(t.getPosZ(), 0, 0.1);
 		
-		t1.setPosY(2);
-		assertEquals(t1.getPosX(), 3, 0.1);
-		assertEquals(t1.getPosY(), 2, 0.1);
-		assertEquals(t1.getPosZ(), 0, 0.1);
+		t.setPosY(2);
+		assertEquals(t.getPosX(), 3, 0.1);
+		assertEquals(t.getPosY(), 2, 0.1);
+		assertEquals(t.getPosZ(), 0, 0.1);
 		
-		t1.setPosZ(1);
-		assertEquals(t1.getPosX(), 3, 0.1);
-		assertEquals(t1.getPosY(), 2, 0.1);
-		assertEquals(t1.getPosZ(), 1, 0.1);
+		t.setPosZ(1);
+		assertEquals(t.getPosX(), 3, 0.1);
+		assertEquals(t.getPosY(), 2, 0.1);
+		assertEquals(t.getPosZ(), 1, 0.1);
 	}
 	
 	@Test
 	public void SetCostTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		assertEquals(t1.getCost(), 0);
-		t1.setCost(100);
-		assertEquals(t1.getCost(), 100);
+		assertEquals(t.getCost(), 0);
+		t.setCost(100);
+		assertEquals(t.getCost(), 100);
 	}
 	
 	@Test
 	public void ColidableTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		assertEquals(t1.isCollidable(), true);
+		assertEquals(t.isCollidable(), true);
 	}
 	
 	@Test
 	public void SelectedTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		assertEquals(t1.isSelected(), false);
-		t1.makeSelected();
-		assertEquals(t1.isSelected(), true);
-		t1.deselect();
-		assertEquals(t1.isSelected(), false);
+		assertEquals(t.isSelected(), false);
+		t.makeSelected();
+		assertEquals(t.isSelected(), true);
+		t.deselect();
+		assertEquals(t.isSelected(), false);
 	}
 	
 	@Test
 	public void EntityTypeTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		assertEquals(t1.getEntityType(), EntityType.NOT_SET);
-		t1.setEntityType(EntityType.HERO);
-		assertEquals(t1.getEntityType(), EntityType.HERO);
-		t1.setEntityType(EntityType.NOT_SET);
-		assertEquals(t1.getEntityType(), EntityType.NOT_SET);
+		assertEquals(t.getEntityType(), EntityType.NOT_SET);
+		t.setEntityType(EntityType.HERO);
+		assertEquals(t.getEntityType(), EntityType.HERO);
+		t.setEntityType(EntityType.NOT_SET);
+		assertEquals(t.getEntityType(), EntityType.NOT_SET);
 	}
 	
 	/**
@@ -104,8 +98,6 @@ public class BaseEntityTest {
 	 */
 	@Test
 	public void ActionsTest() {
-		GameManager.get().setWorld(new BaseWorld(10,10));
-		BaseEntity t1 = new BaseEntity(0, 1, 2, 3, 4, 5);
-		assertEquals(t1.getValidActions(), null);	
+		assertEquals(t.getValidActions(), null);	
 	}
 }
