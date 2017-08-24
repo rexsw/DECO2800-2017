@@ -153,13 +153,17 @@ public class TimeManagerTest {
 				.getManager(TimeManager.class);
 		assertEquals("Hours Not 6", 6, timeManager.getHours());
 		assertEquals("Minutes not 0", 0, timeManager.getMinutes());
-		assertEquals("Seconds not 108000 as expected", 108000, timeManager.getSeconds());
+		assertEquals("Seconds not 108000 as expected", 108000, 
+				timeManager.getInGameTime());
 		timeManager.addTime(0); 
-		assertEquals("Seconds not 108000 as expected", 108000, timeManager.getSeconds());
+		assertEquals("Seconds not 108000 as expected", 108000, 
+				timeManager.getInGameTime());
 		timeManager.addTime(1);
-		assertEquals("Seconds not 108001 as expected", 108001, timeManager.getSeconds());
+		assertEquals("Seconds not 108001 as expected", 108001, 
+				timeManager.getInGameTime());
 		timeManager.addTime(-1);
-		assertEquals("Seconds not 108002 as expected", 108002, timeManager.getSeconds());
+		assertEquals("Seconds not 108002 as expected", 108002, 
+				timeManager.getInGameTime());
 	}
 	
 	@Test

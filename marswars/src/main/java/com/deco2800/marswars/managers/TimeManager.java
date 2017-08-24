@@ -18,42 +18,60 @@ public class TimeManager extends Manager implements TickableManager{
 	private long gameTimer = 0;
 
 	@Override
+	/**
+	 * Updates time if the game is not paused
+	 * Changes the time of day to night at 6pm, and to day at 6am
+	 */
 	public void onTick(long i){
 		if (!isPaused){
-		time += 10;
+		time += 5;
 		if(getHours() > NIGHT || getHours() < DAYBREAK)
 			setNight();
 		else
 			setDay();
 		}
 	}
-	
-	//bit of a lazy way of setting day/night tbh
 
 	/**
-	 * Convert time and find what hour
-	 * @return the hour of the day
+	 * Calculate the current in-game hour
+	 * @return the in-game hour of the day
 	 */
 	public long getHours(){
-		return TimeUnit.HOURS.convert(getSeconds(), TimeUnit.SECONDS)%24;
+		return TimeUnit.HOURS.convert(getInGameTime(), TimeUnit.SECONDS)%24;
 	}
+	/**
+	 * Calculate the current in-game minute
+	 * @return the in-game minute of the hour (i.e. will return between 0 
+	 * and 59 inclusive)
+	 */
 	public long getMinutes(){
-		return TimeUnit.MINUTES.convert(getSeconds(), TimeUnit.SECONDS)%60;
+		return TimeUnit.MINUTES.convert(getInGameTime(), TimeUnit.SECONDS)%60;
 	}
-	public long getSeconds(){
+	/**
+	 * Get the current in-game time
+	 * @return the time in the game in seconds. Counting starts at 0 when the game is
+	 * initialised
+	 */
+	public long getInGameTime(){
 		return time;
 	}
 	
 	/**
 	 * Check if it is night or day in the system
-	 * @return true if it is 'Night'
+	 * @return true if it is 'Night', false otherwise
 	 */
 	public boolean isNight(){
 		return isNight;
 	}
+	/**
+	 * Set the time of day to night
+	 */
 	public void setNight(){
 		isNight = true;
 	}
+	/**
+	 * Set the time of day to day
+	 */
 	public void setDay(){
 		isNight = false;
 	}
@@ -65,9 +83,15 @@ public class TimeManager extends Manager implements TickableManager{
 	public boolean isPaused(){
 		return isPaused;
 	}
+	/**
+	 * Set the game to be paused
+	 */
 	public void pause(){
 		isPaused = true;
 	}
+	/**
+	 * Set the game to stop being paused
+	 */
 	public void unPause(){
 		isPaused = false;
 	}
@@ -114,8 +138,6 @@ public class TimeManager extends Manager implements TickableManager{
 		gameTimer = getGlobalTime() - gameStartTime;
 		return gameTimer;
 	}
-	//facility for pausing?
-	//need to initialise?
 
 	/**
 	 * Returns the current second value of the time elapsed since the current game was launched
@@ -152,8 +174,12 @@ public class TimeManager extends Manager implements TickableManager{
 		gameStartTime = getGlobalTime();
 	}
 
-	//this will do negative time but it's bad practice. Consider doing abs(seconds)?
-	//can't think of any reason we would go back in time so gonna change it
+	/**
+	 * Add time to the In-Game time.
+	 * Note: This will only increase the time (i.e. you cannot go backwards in time).
+	 * Trying to add a negative value will add the absolute value.
+	 * @param seconds The magnitude of seconds to be added
+	 */
 	public void addTime(long seconds){
 		time += Math.abs(seconds);
 	}
@@ -167,7 +193,8 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 
 	/**
-	 * Display time in hour:minute
+	 * Display the in-game time as a string
+	 * @return in-game time in the format Hours:Minutes
 	 */
 	@Override
 	public String toString(){
