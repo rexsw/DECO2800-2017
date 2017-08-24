@@ -22,7 +22,7 @@ public void onTick(long l) {
 				if(!x.isWorking()) {
 					for( BaseEntity r : GameManager.get().getWorld().getEntities())
 						if(r instanceof Resource) {
-							if(((Resource) r).testResource() == "rock") {
+							if(((Resource) r).getType() == ResourceType.ROCK) { //Simple call getType() for the type of resource
 								x.setAction(new GatherAction(x, r));
 								LOGGER.error("ai - set spacman to grather");
 								break;
@@ -59,8 +59,8 @@ public void onTick(long l) {
 }
 
 		@Override
-		public void setTeam(int teamid) {
-			teamid = teamid;
+		public void setTeam(int teamId) {
+			this.teamid = teamId;
 		}
 
 		@Override

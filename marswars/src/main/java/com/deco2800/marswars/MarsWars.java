@@ -586,9 +586,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 
 	/**
-	 * Resizes the viewport
-	 * @param width
-	 * @param height
+	 * Resizes the viewport.
+	 *
+	 * @param width the new width of the viewport.
+	 * @param height the new height of the viewport.
 	 */
 	@Override
 	public void resize(int width, int height) {

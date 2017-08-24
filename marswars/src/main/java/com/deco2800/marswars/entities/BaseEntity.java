@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
@@ -252,6 +251,8 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 				break;
 			case RESOURCE:
 				message ="This is a resource";
+				break;
+			default:
 				break;
 
 		}
