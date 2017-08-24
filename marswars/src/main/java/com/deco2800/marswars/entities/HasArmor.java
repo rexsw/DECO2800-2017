@@ -6,6 +6,7 @@ package com.deco2800.marswars.entities;
  *
  */
 public interface HasArmor {
+	
 	/**
 	 * Returns the armor of an entity
 	 * @return

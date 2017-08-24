@@ -11,12 +11,11 @@ public interface HasDamage {
 	 * Returns the damage of an entity
 	 * @return
 	 */
-	int getDamage();
+	int getDamageDeal();
 	
 	/**
 	 * Set the damage of an entity
 	 * @param damage
 	 */
 	void setDamage(int damage);
-
 }
