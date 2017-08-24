@@ -42,13 +42,4 @@ public class ConnectionManager extends Listener {
                 .map(Action::toString)
                 .collect(Collectors.joining("\n"));
     }
-
-    @Override
-    public void disconnected(Connection connection) {}
-
-    @Override
-    public void received(Connection connection, Object o) {}
-
-    @Override
-    public void idle(Connection connection) {}
 }
