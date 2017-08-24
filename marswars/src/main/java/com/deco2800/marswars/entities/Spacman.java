@@ -10,6 +10,7 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.initActions();
 		this.addNewAction(GatherAction.class);
 		this.addNewAction(MoveAction.class);
-		this.lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		FogWorld fogWorld = GameManager.get().getFogWorld();
+		fogWorld.addEntity(lineOfSight);
 	}
 
 	@Override
