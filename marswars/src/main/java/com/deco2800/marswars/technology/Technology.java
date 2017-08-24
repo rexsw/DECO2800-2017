@@ -2,6 +2,7 @@ package com.deco2800.marswars.technology;
 
 import com.deco2800.marswars.entities.Spacman;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Technology {
@@ -58,7 +59,51 @@ public class Technology {
         System.out.println("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
         Spacman.changeCost(5);
     }
-	
+
+    /* Generic Java Object methods, feel free to change toString() and stuff
+    if you like */
+
+	/** Returns a string representation of a technlogy
+	 *
+	 * @Author Alec Bassingthwaighte (alecbass)
+	 * @return a string representation of this technlogy
+	 */
+	@Override
+	public String toString() {
+    	String description =  "Technology: " + name + '\n' + "Cost: " + cost[0]
+				+ ", " + cost[1] + ", " + cost[2] + ", " + cost[3] + '\n' + "Parent techs: ";
+    	for (Technology tech: parents) {
+    		// add in each parent
+    		description += tech.getName() + ", ";
+		}
+		return description;
+	}
+
+	/** IntelliJ auto-generated */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Technology that = (Technology) o;
+
+		if (id != that.id) return false;
+		if (!Arrays.equals(cost, that.cost)) return false;
+		if (!name.equals(that.name)) return false;
+		return parents.equals(that.parents);
+	}
+
+	/** IntelliJ auto-generated because I'm bad at hashcodes
+	 * @return the hashcode
+	 */
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + Arrays.hashCode(cost);
+		result = 31 * result + name.hashCode();
+		result = 31 * result + parents.hashCode();
+		return result;
+	}
 }
 
 

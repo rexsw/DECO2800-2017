@@ -7,7 +7,7 @@ import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
-import technology.Technology;
+import com.deco2800.marswars.technology.*;
 
 import java.util.Optional;
 
