@@ -7,4 +7,6 @@ package com.deco2800.marswars.entities.TerrainElements;
  * Example: a pond of 3X3 with a sand border of 1 tile
  */
 public class TerrainElement {
+
+    //implement me please
 }

@@ -5,10 +5,12 @@ import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.buildings.Building;
 import com.deco2800.marswars.entities.buildings.BuildingTypes;
+import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -20,45 +22,33 @@ import java.util.Random;
 public class MapContainer {
 
     // path of the .tmx map file
-    private String mapPath;
+    private String mapPath = "";
     // width of the map loaded
     private int width;
     // height of the map loaded
-    private int height;
+    private int length;
     // randomizer
     private Random r = new Random();
-    //Entity list
-    private ArrayList<BaseEntity> entities = new ArrayList<>();
+    //
+    private Array2D<List<BaseEntity>> newCollisionMap;
 
     /**
      * Creates a new Map container from a given map with random elements.
      *
-     * @param mapPath .tmx file to be loaded
+     * @param width the width of the map.
+     * @param length the length of the map.
      * @param random elements in the container.
      */
-    public MapContainer( String mapPath, boolean random){
-        this.mapPath = mapPath;
-        if(random){
-            //
-        }
-    }
-
-    /**
-     * Returns the list of entities created
-     * @return entities list
-     */
-    public ArrayList<BaseEntity> getEntities(){
-        return entities;
-    }
-
-    /**
-     * Sets dimensions from loaded map file
-     * @param height height of tmx file
-     * @param width width of tmx file
-     */
-    public void setDimensions(int height, int width){
-        this.height = height;
+    public MapContainer(String mapPath, int width, int length, boolean random){
         this.width = width;
+        this.length = length;
+        this.mapPath = mapPath;
+        newCollisionMap = new Array2D<> (width, length);
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.length; y++) {
+                this.newCollisionMap.set(x, y, new ArrayList<>());
+            }
+        }
     }
 
     /**
@@ -154,7 +144,7 @@ public class MapContainer {
      * @param entity the entity to be placed.
      */
     public void setEntity(BaseEntity entity){
-        entities.add(new EnemySpacman(0, 0, 0));
+       // entities.add(new EnemySpacman(0, 0, 0));
     }
 
     /**
@@ -166,25 +156,25 @@ public class MapContainer {
 
     }
 
-    /**
-     * Adds cluster of enemy spacman, needs to be improved
-     */
-    public void addEnemyGroup(){
-        int x = r.nextInt(this.height-1);
-        int y = r.nextInt(this.width-1);
-        if(x-1 < 0 || y-1 < 0 || y +1 >= this.height || x + 1 >= this.width){
-            return;
-        }
-        entities.add(new EnemySpacman(x, y, 0));
-        entities.add(new EnemySpacman(x - 1, y, 0));
-        entities.add(new EnemySpacman(x, y - 1, 0));
-        entities.add(new EnemySpacman(x + 1, y, 0));
-        entities.add(new EnemySpacman(x, y+1, 0));
-        entities.add(new EnemySpacman(x + 1, y + 1, 0));
-        entities.add(new EnemySpacman(x - 1, y - 1, 0));
-        entities.add(new EnemySpacman(x - 1, y + 1, 0));
-        entities.add(new EnemySpacman(x + 1, y -1, 0));
-    }
+//    /**
+//     * Adds cluster of enemy spacman, needs to be improved
+//     */
+//    public void addEnemyGroup(){
+//        int x = r.nextInt(this.length-1);
+//        int y = r.nextInt(this.width-1);
+//        if(x-1 < 0 || y-1 < 0 || y +1 >= this.length || x + 1 >= this.width){
+//            return;
+//        }
+//        entities.add(new EnemySpacman(x, y, 0));
+//        entities.add(new EnemySpacman(x - 1, y, 0));
+//        entities.add(new EnemySpacman(x, y - 1, 0));
+//        entities.add(new EnemySpacman(x + 1, y, 0));
+//        entities.add(new EnemySpacman(x, y+1, 0));
+//        entities.add(new EnemySpacman(x + 1, y + 1, 0));
+//        entities.add(new EnemySpacman(x - 1, y - 1, 0));
+//        entities.add(new EnemySpacman(x - 1, y + 1, 0));
+//        entities.add(new EnemySpacman(x + 1, y -1, 0));
+//    }
 
     /**
      * Places an entity on the map in a random location.
@@ -257,6 +247,7 @@ public class MapContainer {
      */
     private Building[][] getRandomStructure(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+
         return null;
     }
 

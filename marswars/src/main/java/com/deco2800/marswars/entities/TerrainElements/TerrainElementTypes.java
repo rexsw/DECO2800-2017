@@ -8,3 +8,5 @@ package com.deco2800.marswars.entities.TerrainElements;
 public enum TerrainElementTypes {
     POND, LAKE, CAVE, QUICKSAND
 }
+
+// add me new types

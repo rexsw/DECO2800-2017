@@ -21,3 +21,6 @@ public class Building extends BaseEntity{
         super(posX, posY, posZ, xLength, yLength, zLength);
     }
 }
+
+
+//buildings people implement me please!!!

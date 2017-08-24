@@ -6,3 +6,5 @@ package com.deco2800.marswars.entities.buildings;
 public enum BuildingTypes {
     BASE, HOUSE, CAMP, FORT
 }
+
+// Add me new types
