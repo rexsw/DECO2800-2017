@@ -109,7 +109,22 @@ public class ChatTest {
 		);
 	}
 
+	@Test
+	public void MessageTest() {
+		Connection alice = createConnection(aliceManager);
+
+		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
+		MessageAction aliceMessage = new MessageAction("new phone who dis");
+
+		servManager.received(alice, aliceJoin);
+		servManager.received(alice, aliceMessage);
+
+		String log = "*Alice* joined the lobby.\nAlice: new phone who dis";
+
+		assertEquals(servManager.getLog(), log);
+		assertEquals(aliceManager.getLog(), log);
+	}
 	// TODO: Test JoinLobbyAction sent twice
 	// TODO: Test JoinLobbyAction with same name
-	// TODO: Test MessageAction
+	// TODO: Test MessageAction sent before JoinLobbyAction
 }
