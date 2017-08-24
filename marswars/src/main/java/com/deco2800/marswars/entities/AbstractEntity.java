@@ -57,7 +57,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	public float getPosX() {
 		float x = position.getX();
 		if (this.centered) {
-			x -= (1 - this.position.getYLength() / 2);
+			x -= (1 - this.position.getXLength() / 2);
 		}
 		return x;
 	}
@@ -156,9 +156,9 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	/**
 	 * Gives the string for the texture of this entity. This does not mean the
-	 * texture is currently registered
+	 * texture is currently registered.
 	 * 
-	 * @return texture string
+	 * @return texture string.
 	 */
 	public String getTexture() {
 		return texture;
@@ -166,10 +166,9 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	/**
 	 * Sets the texture string for this entity. Check the texture is registered with
-	 * the TextureRegister
+	 * the TextureRegister.
 	 * 
-	 * @param texture
-	 *            String texture id
+	 * @param texture String texture id.
 	 */
 	public void setTexture(String texture) {
 		this.texture = texture;
@@ -178,22 +177,22 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	/**
 	 * Allows sorting of WorldEntities for Isometric rendering
 	 * 
-	 * @param o
-	 * @return
+	 * @param o the object to be compared to.
+	 * @return -1 if less than, 0 if equal or 1 if more than.
 	 */
 	@Override
 	public int compareTo(AbstractEntity o) {
 		float cartX = this.position.getX();
 		float cartY = this.getParent().getLength() - this.position.getY();
 
-		float isoX = ((cartX - cartY) / 2.0f);
-		float isoY = ((cartX + cartY) / 2.0f);
+		float isoX = (cartX - cartY) / 2.0f;
+		float isoY = (cartX + cartY) / 2.0f;
 
 		float cartX_o = o.getPosX();
 		float cartY_o = o.getParent().getLength() - o.getPosY();
 
-		float isoX_o = ((cartX_o - cartY_o) / 2.0f);
-		float isoY_o = ((cartX_o + cartY_o) / 2.0f);
+		float isoX_o = (cartX_o - cartY_o) / 2.0f;
+		float isoY_o = (cartX_o + cartY_o) / 2.0f;
 
 		if (Math.abs(isoY - isoY_o) < 0.000001f) {
 			if (isoX < isoX_o) {
@@ -212,8 +211,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	/**
 	 * Equals method
-	 * @param o
-	 * @return
+	 *
+	 * @param o the object to compare to.
+	 * @return returns whhether two objects are instances of AbstractEntity &
+	 * 			equal.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -231,7 +232,8 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	/**
 	 * Hashcode method
-	 * @return
+	 *
+	 * @return returns a hashcode for an instance of the AbstractEntity class
 	 */
 	@Override
 	public int hashCode() {
@@ -243,7 +245,8 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	/**
 	 * gets the parent world for this entity
 	 * NOTE: This is useless now that we have GameManager
-	 * @return
+	 *
+	 * @return returns the world loaded on the game manager.
 	 */
 	@Deprecated
 	public AbstractWorld getParent() {
@@ -252,8 +255,9 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	/**
 	 * Returns the distance between two entities
-	 * @param e
-	 * @return
+	 *
+	 * @param e the end point.
+	 * @return Returns the distance between two entities
 	 */
 	public float distance(AbstractEntity e) {
 		return this.getBox3D().distance(e.getBox3D());
@@ -262,7 +266,8 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	/**
 	 * Returns true if this entity can be walked over.
 	 * Allows the renderer to render entitys ontop of eachother if required
-	 * @return
+	 *
+	 * @return Returns true if this entity can be walked over.
 	 */
 	public boolean canWalOver() {
 		return canWalkOver;

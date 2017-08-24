@@ -2,7 +2,6 @@ package com.deco2800.marswars.entities;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.deco2800.marswars.actions.DecoAction;
 
 import java.util.List;
 

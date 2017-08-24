@@ -21,7 +21,7 @@ public class GenerateAction implements DecoAction {
 
 	/**
 	 * Constructor for the Generator action
-	 * @param actionResult
+	 * @param actionResult the new action result
 	 */
 	public GenerateAction(BaseEntity actionResult) {
 		this.actionResult = actionResult;

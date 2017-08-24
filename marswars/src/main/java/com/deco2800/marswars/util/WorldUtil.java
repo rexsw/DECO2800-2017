@@ -17,6 +17,8 @@ import java.util.Optional;
  */
 public class WorldUtil {
 
+	private WorldUtil(){}
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldUtil.class);
 
 	/**
@@ -31,7 +33,7 @@ public class WorldUtil {
 		BaseEntity ret = null;
 		double distance = Double.MAX_VALUE;
 		for (Renderable e : world.getEntities()) {
-			double tmp_distance = Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2));
+			double tmp_distance = Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2));
 
 			if (tmp_distance < distance) {
 				// Closer than current closest
@@ -81,7 +83,7 @@ public class WorldUtil {
 		BaseEntity closest = null;
 		float dist = Float.MAX_VALUE;
 		for (BaseEntity e : entities) {
-			float tmp_distance = (float)(Math.sqrt(Math.pow((e.getPosX() - x), 2) + Math.pow((e.getPosY() - y), 2)));
+			float tmp_distance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
 			if (closest == null || dist > tmp_distance) {
 				dist = tmp_distance;
 				closest = e;

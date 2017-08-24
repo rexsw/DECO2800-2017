@@ -1,11 +1,8 @@
 package com.deco2800.marswars.worlds;
 
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.util.Array2D;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -17,22 +14,7 @@ public class InitialWorld extends BaseWorld {
 	 * Constructor for InitialWorld
 	 */
 	public InitialWorld() {
-
- 		/* Load up the map for this world */
-		this.map = new TmxMapLoader().load("resources/placeholderassets/placeholder200.tmx");
-
-                /* Grab the width and length values from the map file to use as the world size */
-		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
-		this.setLength(this.getMap().getProperties().get("height", Integer.class));
-
-		this.collisionMap = new Array2D<>(this.getWidth(), this.getLength());
-
-		/* Initialise the collision list */
-		for (int x = 0; x < this.getWidth(); x++) {
-			for (int y = 0; y < this.getLength(); y++) {
-				this.collisionMap.set(x, y, new ArrayList<>());
-			}
-		}
+		super("resources/placeholderassets/placeholder200.tmx");
 	}
 
 	/**
@@ -64,11 +46,9 @@ public class InitialWorld extends BaseWorld {
 				// BIOMASS
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS));
-					continue;
 				}
 			}
 		}
-
 		this.addEntity(new Spacman(0, 0, 0));
 		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
@@ -79,4 +59,43 @@ public class InitialWorld extends BaseWorld {
 	}
 
 
+	/**
+	 * Adds cluster of enemy spacman, needs to be improved
+	 */
+	private void addEnemyGroup(int x, int y){
+		if(x-1 < 0 || y-1 < 0 || y +1 >= this.getLength() || x + 1 >= this.getWidth()){
+			return;
+		}
+		this.addEntity(new EnemySpacman(x, y, 0));
+		this.addEntity(new EnemySpacman(x - 1, y, 0));
+		this.addEntity(new EnemySpacman(x, y - 1, 0));
+		this.addEntity(new EnemySpacman(x + 1, y, 0));
+		this.addEntity(new EnemySpacman(x, y+1, 0));
+		this.addEntity(new EnemySpacman(x + 1, y + 1, 0));
+		this.addEntity(new EnemySpacman(x - 1, y - 1, 0));
+		this.addEntity(new EnemySpacman(x - 1, y + 1, 0));
+		this.addEntity(new EnemySpacman(x + 1, y -1, 0));
+	}
+
+	/**
+	 * Adds randomly placed spacman onto grid
+	 */
+	private void addRandomSpacman(){
+		Random r = new Random();
+		int x = r.nextInt(this.getLength()-1);
+		int y = r.nextInt(this.getWidth()-1);
+		this.addEntity(new HeroSpacman(this, x, y, 0));
+	}
+
+
+	/**
+	 * Deselects all entities
+	 */
+	public void deSelectAll() {
+		for (Renderable r : this.getEntities()) {
+			if (r instanceof Selectable) {
+				((Selectable) r).deselect();
+			}
+		}
+	}
 }

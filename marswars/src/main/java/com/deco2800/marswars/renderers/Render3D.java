@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * A simple isometric renderer for DECO2800 games
- * @Author Tim Hadwen
+ * @author Tim Hadwen
  */
 public class Render3D implements Renderer {
     
@@ -73,9 +73,9 @@ public class Render3D implements Renderer {
 
     /**
      * Renders entities given by entities onto the batch and camera
-     * @param entities
-     * @param batch
-     * @param camera
+     * @param entities list of entities to be rendered.
+     * @param batch the batch that is going to contain all the sprites
+     * @param camera the camera being use to display the game.
      */
     private void renderEntities(List<BaseEntity> entities, SpriteBatch batch,  Camera camera) {
         Collections.sort(entities);

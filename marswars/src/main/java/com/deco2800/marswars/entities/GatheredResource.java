@@ -15,7 +15,7 @@ public class GatheredResource {
 	/**
 	 * constructor for the GatheredResource class
 	 * @param type
-	 * @param numbOfResource
+	 * @param amount
 	 */
 	public GatheredResource(ResourceType type, int amount) {
 		this.type = type;

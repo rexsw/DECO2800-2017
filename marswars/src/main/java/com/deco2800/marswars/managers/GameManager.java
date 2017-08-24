@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Adds a manager component to the GM
-	 * @param manager
+	 * @param manager the manager to be added.
 	 */
 	public void addManager(Manager manager) {
 		managers.add(manager);
@@ -72,7 +73,7 @@ public class GameManager implements TickableManager {
 			this.addManager((Manager) ctor.newInstance());
 		} catch (Exception e) {
 			// Gotta catch 'em all
-			e.printStackTrace();
+			LOGGER.error(e.toString());
 		}
 
 		/* And then return it */
@@ -87,7 +88,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Sets the current game world
-	 * @param world
+	 * @param world the world to be set
 	 */
 	public void setWorld(BaseWorld world) {
 		this.gameWorld = world;
@@ -95,7 +96,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Gets the current game world
-	 * @return
+	 * @return the currently loaded world
 	 */
 	public BaseWorld getWorld() {
 		return gameWorld;
@@ -115,7 +116,10 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		for (Manager m : managers) {
+		List<Manager> deepcopy = new ArrayList<Manager>((List<Manager>) managers);
+		Iterator<Manager> managersIter =  deepcopy.iterator();
+		while(managersIter.hasNext()) {
+			Manager m = managersIter.next();
 			if (m instanceof TickableManager) {
 				((TickableManager) m).onTick(0);
 			}

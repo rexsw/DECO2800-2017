@@ -21,31 +21,31 @@ public interface Renderable {
 
     /**
      * Gets the X position
-     * @return
+     * @return the x position
      */
     float getPosX();
 
     /**
      * Gets the Y position
-     * @return
+     * @return the y position
      */
     float getPosY();
 
     /**
      * Gets the Z position
-     * @return
+     * @return the z position
      */
     float getPosZ();
 
     /**
      * Gets the X render length of the entity
-     * @return
+     * @return the x render length of the entity
      */
     float getXRenderLength();
 
     /**
      * Gets the Y render length of the entity
-     * @return
+     * @return the y render length of the entity
      */
     float getYRenderLength();
 }

@@ -17,7 +17,7 @@ public class PathfindingThread implements Runnable {
 
 	/**
 	 * Constructor for the pathfinding thread
-	 * @param world
+	 * @param world the world where to search.
 	 * @param position
 	 * @param goal
 	 */

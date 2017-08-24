@@ -10,11 +10,10 @@ public class Pathfinder {
 	 * Runs an A* Pathfinding algorithimn from start to goal on the baseWorld.
 	 * This code uses a lot of run time so its a good idea to multithread its use
 	 *
-	 * Retuns a path from start to goal
-	 * @param start
-	 * @param goal
-	 * @param baseWorld
-	 * @return
+	 * @param start the starting coordinate
+	 * @param goal the end coordinate
+	 * @param baseWorld the world where the search is run.
+	 * @return a path from start to goal
 	 */
 	public static List<Point> aStar(Point start, Point goal, BaseWorld baseWorld) {
 		//Truncate points to the tile grid
@@ -91,7 +90,7 @@ public class Pathfinder {
 
 	/**
 	 * Gets the minimum point in a set of points
-	 * @param Points
+	 * @param Points a set of points
 	 * @param fScores
 	 * @return
 	 */
@@ -115,17 +114,18 @@ public class Pathfinder {
 	 * Estimates a heursitic
 	 * @param node
 	 * @param goal
-	 * @return
+	 * @return a cost estimate.
 	 */
 	private static double heuristicCostEstimate(Point node, Point goal) {
 		return Math.pow(node.getX() - goal.getX(), 2) +  Math.pow(node.getY() - goal.getY(), 2);
 	}
 
 	/**
-	 * Gets the adjacent nodes in the baseworld
-	 * @param p
-	 * @param baseWorld
-	 * @return
+	 * Gets the adjacent nodes in the BaseWorld.
+	 *
+	 * @param p middle point.
+	 * @param baseWorld the world that contains all adjacent nodes.
+	 * @return  a list of adjacent node points.
 	 */
 	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld) {
 		List<Point> adjacencies = new ArrayList<>();
@@ -155,9 +155,9 @@ public class Pathfinder {
 
 	/**
 	 * Reconstructs a path from point to point
-	 * @param cameFrom
-	 * @param current
-	 * @return
+	 * @param cameFrom initial point.
+	 * @param current current point
+	 * @return the list of points that make up the path.
 	 */
 	private static List<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
 		List<Point> result = new LinkedList<>();
