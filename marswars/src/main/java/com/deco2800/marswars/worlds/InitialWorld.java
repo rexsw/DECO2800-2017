@@ -1,6 +1,7 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.worlds.map.tools.NoiseMap;
 
 import java.util.Random;
 
@@ -20,6 +21,7 @@ public class InitialWorld extends BaseWorld {
 	 * Adds entities to the world
 	 */
 	public void loadEntities() {
+		this.testNoise();
 		for (int x = 0; x < this.getWidth(); x+=5) {
 			for (int y = 0; y < this.getLength(); y+=5) {
 				Random r = new Random();
@@ -86,6 +88,16 @@ public class InitialWorld extends BaseWorld {
 		int x = r.nextInt(this.getLength()-1);
 		int y = r.nextInt(this.getWidth()-1);
 		this.addEntity(new HeroSpacman(this, x, y, 0));
+	}
+
+	private void testNoise(){
+		NoiseMap noise = new NoiseMap(this.getLength(), this.getWidth(), 10);
+		for (int ix=0; ix<this.getLength(); ix++){
+			for (int iy=0; iy<this.getWidth(); iy++){
+				double n = noise.getNoiseAt(ix,iy);
+				if (n>0.35){ this.addEntity(new Resource(ix, iy, 0, 1f, 1f, ResourceType.WATER)); }
+			}
+		}
 	}
 
 }
