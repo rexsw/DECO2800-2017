@@ -1,13 +1,16 @@
 package com.deco2800.marswars.net;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 
 
 /**
  * This is the listener for SpacClient, it will handle network events.
  */
-public class ClientConnectionManager extends Listener {
+public class ClientConnectionManager extends ConnectionManager {
+	protected String formatLogMessage(String original) {
+		return "| " + original;
+	}
+
 	@Override
 	public void disconnected(Connection connection) {
 
@@ -17,11 +20,10 @@ public class ClientConnectionManager extends Listener {
 	public void received(Connection connection, Object o) {
 		if (o instanceof JoinLobbyAction) {
 			JoinLobbyAction action = (JoinLobbyAction) o;
-			String username = action.getUsername();
-			System.out.println("| *" + username + " joined the lobby.*");
+			this.logAction(action);
 		} else if (o instanceof MessageAction) {
 			MessageAction action = (MessageAction) o;
-			System.out.println("| " + action.getUsername() + ": " + action.getMessage());
+			this.logAction(action);
 		}
 	}
 

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * This is the listener for SpacServer. It will handle network events
  */
-public class ServerConnectionManager extends Listener {
+public class ServerConnectionManager extends ConnectionManager {
 	/**
 	 * Utility class for storing username and connection
 	 */
@@ -55,16 +55,18 @@ public class ServerConnectionManager extends Listener {
 		if (o instanceof JoinLobbyAction) {
 			JoinLobbyAction action = (JoinLobbyAction) o;
 			String username = action.getUsername();
-			System.out.println("*" + username + " joined the lobby.*");
+			this.logAction(action);
 			this.idToUser.put(connection.getID(), new User(username, connection));
 
 			this.broadcastAction(action);
 		} else if (o instanceof MessageAction) {
 			MessageAction action = (MessageAction) o;
 			User from = this.idToUser.get(connection.getID());
-			System.out.println(from.getUsername() + ": " + action.getMessage());
 
-			this.broadcastAction(new MessageAction(from.getUsername(), action.getMessage()));
+			MessageAction newAction = new MessageAction(from.getUsername(), action.getMessage());
+			this.logAction(newAction);
+
+			this.broadcastAction(newAction);
 		}
 	}
 
