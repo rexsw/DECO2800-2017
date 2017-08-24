@@ -175,6 +175,14 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 
 	/**
+	 *
+	 * @return the String representation of the real time spent in the current game
+	 */
+	public String getPlayClockTime() {
+		return getPlayHours() + ":" + getPlayMinutes() + ":" + getPlaySeconds();
+	}
+
+	/**
 	 * Display time in hour:minute
 	 */
 	@Override
