@@ -5,12 +5,9 @@ import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.buildings.Building;
 import com.deco2800.marswars.entities.buildings.BuildingTypes;
-import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.CivilizationTypes;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -30,8 +27,7 @@ public class MapContainer {
     // randomizer
     private Random r = new Random();
     //
-    private Array2D<List<BaseEntity>> newCollisionMap;
-
+    private CustomizedWorld world;
     /**
      * Creates a new Map container from a given map with random elements.
      *
@@ -43,13 +39,8 @@ public class MapContainer {
         this.width = width;
         this.length = length;
         this.mapPath = mapPath;
-        newCollisionMap = new Array2D<> (width, length);
-        for (int x = 0; x < this.width; x++) {
-            for (int y = 0; y < this.length; y++) {
-                this.newCollisionMap.set(x, y, new ArrayList<>());
-            }
-        }
     }
+
 
     /**
      * Creates a new Map container from a given map.
@@ -64,7 +55,18 @@ public class MapContainer {
      * Creates a Map container from a random map with random elements.
      */
     public MapContainer(){
-        //random map
+    }
+
+    /**
+     * Generates entities for world
+     */
+    public void generateEntities(){
+        for (int i = 0; i < 20; i ++){
+            this.getRandomBuilding();
+            this.getRandomEntity();
+            this.getRandomResource();
+        }
+
     }
 
     /**
@@ -72,6 +74,16 @@ public class MapContainer {
      */
     public String getMap(){
         return this.mapPath;
+    }
+
+
+    /**
+     * Passed world to map container so entities can be accessed
+     */
+    public void passWorld(CustomizedWorld world){
+        this.world = world;
+        this.length = world.getLength();
+        this.width = world.getWidth();
     }
 
     /**
@@ -144,7 +156,7 @@ public class MapContainer {
      * @param entity the entity to be placed.
      */
     public void setEntity(BaseEntity entity){
-       // entities.add(new EnemySpacman(0, 0, 0));
+        this.world.addEntity(entity);
     }
 
     /**
@@ -152,29 +164,12 @@ public class MapContainer {
      *
      * @param entities the set of entities to be placed.
      */
-    public void setEntities(BaseEntity[][] entities){
-
+    public void setEntities(BaseEntity[] entities){
+        for (BaseEntity e: entities
+             ) {
+            this.world.addEntity(e);
+        }
     }
-
-//    /**
-//     * Adds cluster of enemy spacman, needs to be improved
-//     */
-//    public void addEnemyGroup(){
-//        int x = r.nextInt(this.length-1);
-//        int y = r.nextInt(this.width-1);
-//        if(x-1 < 0 || y-1 < 0 || y +1 >= this.length || x + 1 >= this.width){
-//            return;
-//        }
-//        entities.add(new EnemySpacman(x, y, 0));
-//        entities.add(new EnemySpacman(x - 1, y, 0));
-//        entities.add(new EnemySpacman(x, y - 1, 0));
-//        entities.add(new EnemySpacman(x + 1, y, 0));
-//        entities.add(new EnemySpacman(x, y+1, 0));
-//        entities.add(new EnemySpacman(x + 1, y + 1, 0));
-//        entities.add(new EnemySpacman(x - 1, y - 1, 0));
-//        entities.add(new EnemySpacman(x - 1, y + 1, 0));
-//        entities.add(new EnemySpacman(x + 1, y -1, 0));
-//    }
 
     /**
      * Places an entity on the map in a random location.
@@ -183,9 +178,7 @@ public class MapContainer {
      * @param random whether its position should be random or not.
      */
     public void setEntity(BaseEntity entity, boolean random){
-        BaseEntity newEntity = getRandomEntity();
-        // add checks like entity not overlapping a building
-        addEntity(newEntity);
+        //Can't implement as entity requires x/y before being passed if random
     }
 
     /**
@@ -194,8 +187,8 @@ public class MapContainer {
      * @param entities the set of entities to be placed.
      * @param random whether their position should be random or not.
      */
-    public void setEntities(BaseEntity[][] entities, boolean random){
-
+    public void setEntities(BaseEntity[] entities, boolean random){
+        //Can't implement as entity requires x/y before being passed if random
     }
 
 
@@ -237,39 +230,88 @@ public class MapContainer {
      *
      * @return the new Building.
      */
-    private Building getRandomBuilding(){
+    private void getRandomBuilding(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
-        return null;
+        BaseEntity newBuilding;
+        if(random == BuildingTypes.BASE){
+            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),1);
+        }
+        //Doesn't exist yet
+//        if(random == BuildingTypes.FORT){
+//            newBuilding = new Fort(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//        }
+//        if(random == BuildingTypes.HOUSE){
+//            newBuilding = new House(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//        }
+//        if(random == BuildingTypes.CAMP){
+//            newBuilding = new Camp(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//        }
+        else {
+            return;
+        }
+        world.addEntity(newBuilding);
     }
+
 
     /**
      * Creates a random group of same type of buildings.
      *
      * @return the new group of buildings.
      */
-    private Building[][] getRandomStructure(){
+    public Building[][] getRandomStructure(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
-
         return null;
     }
 
     /**
      * Creates a random entity.
-     *
-     * @return the new entity.
      */
-    private BaseEntity getRandomEntity(){
+    private void getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
         BaseEntity newEntity;
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(r.nextInt(width),r.nextInt(length),1);
-        }else {
-            newEntity = new BaseEntity(r.nextInt(width),r.nextInt(length),1,1,1,1);
+            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),1);
         }
-        ///////ADD MORE ELSE IF BRANCHES with EntityTypes
-        return newEntity;
+        else if(random == EntityTypes.ENEMYSPACMAN){
+            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),1);
+        }
+        //Does not exist yet
+//        if(random == EntityTypes.ALIEN){
+//            newEntity = new Alien(r.nextInt(width-1),r.nextInt(length-1),1);
+//        }
+//        if(random == EntityTypes.PIG){
+//            newEntity = new Pig(r.nextInt(width-1),r.nextInt(length-1),1);
+//        }
+        else {
+            return;
+        }
+
+        world.addEntity(newEntity);
     }
 
+    /**
+     * Creates a random entity.
+     */
+    private void getRandomResource(){
+        ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
+        BaseEntity newEntity;
+        if(random == ResourceType.BIOMASS){
+            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.BIOMASS);
+        }
+        else if(random == ResourceType.CRYSTAL){
+            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.CRYSTAL);
+        }
+        else if(random == ResourceType.ROCK){
+            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.ROCK);
+        }
+        else if(random == ResourceType.WATER){
+            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.WATER);
+        }
+        else{
+            return;
+        }
+        world.addEntity(newEntity);
+    }
     /**
      * Chooses a random map (.tmx file) of a random size
      *
@@ -281,23 +323,23 @@ public class MapContainer {
         return "";
     }
 
-    /**
-     * Adds an entity to the temporary collision map
-     * @param entity the entity to be added
-     */
-    public void addEntity(BaseEntity entity) {
-
-        //Add to the collision map
-        int left = (int)entity.getPosX();
-        int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
-        int bottom = (int)entity.getPosY();
-        int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
-        for (int x = left; x < right; x++) {
-            for (int y = bottom; y < top; y++) {
-                newCollisionMap.get(x, y).add(entity);
-            }
-        }
-    }
+//    /**
+//     * Adds an entity to the temporary collision map
+//     * @param entity the entity to be added
+//     */
+//    public void addEntity(BaseEntity entity) {
+//
+//        //Add to the collision map
+//        int left = (int)entity.getPosX();
+//        int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+//        int bottom = (int)entity.getPosY();
+//        int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+//        for (int x = left; x < right; x++) {
+//            for (int y = bottom; y < top; y++) {
+//                newCollisionMap.get(x, y).add(entity);
+//            }
+//        }
+//    }
 
 
 

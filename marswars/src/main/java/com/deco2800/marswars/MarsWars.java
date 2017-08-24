@@ -21,6 +21,8 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,11 +86,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 *	Set up new stuff for this game
 		 */
-		GameManager.get().setWorld(new InitialWorld());
-		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-//		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx", true);
-//		GameManager.get().setWorld(new CustomizedWorld(map));
-
+//		GameManager.get().setWorld(new InitialWorld());
+//		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx");
+		GameManager.get().setWorld(new CustomizedWorld(map));
 
 		new Thread(new Runnable() {
 			@Override

@@ -8,7 +8,7 @@ package com.deco2800.marswars.entities;
  */
 /*A more suitable name will be appreciated8*/
 public enum EntityTypes {
-    SPACMAN, ALIEN, PIG, EnemySpacman
+    SPACMAN, ENEMYSPACMAN //ALIEN, PIG
 }
 
 // Add me new types

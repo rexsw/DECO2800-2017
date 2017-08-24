@@ -15,11 +15,7 @@ public final class CustomizedWorld extends BaseWorld {
      */
     public CustomizedWorld(MapContainer mapContainer) {
         super(mapContainer.getMap());
-//        mapContainer.setDimensions(this.getLength(), this.getWidth());
-//        mapContainer.addEnemyGroup();
-//        mapContainer.addEnemyGroup();
-//        mapContainer.addEnemyGroup();
-//        mapContainer.addEnemyGroup();
+        mapContainer.passWorld(this);
         loadMapContainer(mapContainer);
     }
 
@@ -29,10 +25,7 @@ public final class CustomizedWorld extends BaseWorld {
      * @param mapContainer the container to be read.
      */
     private void loadMapContainer(MapContainer mapContainer){
-//        for (BaseEntity e: mapContainer.getEntities()
-//             ) {
-//            this.addEntity(e);
-//        }
+        mapContainer.generateEntities();
     }
 
 
