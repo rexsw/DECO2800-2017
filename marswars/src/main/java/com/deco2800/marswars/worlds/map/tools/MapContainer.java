@@ -1,5 +1,7 @@
 package com.deco2800.marswars.worlds.map.tools;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityTypes;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
@@ -27,6 +29,8 @@ public class MapContainer {
     private int height;
     // randomizer
     private Random r = new Random();
+    // tilemap
+    protected TiledMap map;
 
     /**
      * Creates a new Map container from a given map with random elements.
@@ -35,7 +39,7 @@ public class MapContainer {
      * @param random elements in the container.
      */
     public MapContainer( String mapPath, boolean random){
-
+        //this.map = new TmxMapLoader().load(mapPath);
     }
 
     /**
@@ -44,7 +48,7 @@ public class MapContainer {
      * @param mapPath .tmx file to be loaded
      */
     public MapContainer(String mapPath){
-
+        //this.map = new TmxMapLoader().load(mapPath);
     }
 
     /**

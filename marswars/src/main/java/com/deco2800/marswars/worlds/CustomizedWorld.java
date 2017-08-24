@@ -8,6 +8,7 @@ import com.deco2800.marswars.worlds.map.tools.MapContainer;
  */
 public final class CustomizedWorld extends BaseWorld {
 
+
     /**
      * Constructor of the customized world.
      *
