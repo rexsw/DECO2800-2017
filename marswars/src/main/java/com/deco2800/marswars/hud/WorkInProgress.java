@@ -3,6 +3,12 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+/**
+ * Dialog box class notifying players that the selected feature/component
+ * is currently in development 
+ * @author naziah
+ *
+ */
 public class WorkInProgress extends Dialog{
 
 	public WorkInProgress(String title, Skin skin) {
@@ -16,8 +22,5 @@ public class WorkInProgress extends Dialog{
 	@Override 
 	protected void result(final Object object){
 		
-	}
-	
+	}	
 }
-
-

@@ -71,7 +71,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Button peonButton;
 	Label helpText;
 	Label rocksLabel;
-	Label gameTime;
+	Label gameTimeDisp;
+	Label gameLengthDisp;
+
+	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -93,6 +96,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 
+		// zero game length clock (i.e. Tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		/*
@@ -272,23 +277,31 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		helpText = new Label("Welcome to MarsWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
-		gameTime = new Label(" Time: 00:00", skin);
+		gameTimeDisp = new Label(" Time: 00:00", skin);
+		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
 		window.add(helpText);
 		window.add(peonButton);
 		window.add(rocksLabel);
-		window.add(gameTime);
+		window.add(gameTimeDisp);
+		window.add(gameLengthDisp);
 		window.add(startServerButton);
 		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(300, 0); // Place at the bottom
-		window.setWidth(stage.getWidth()-300);
+		window.setPosition(400, 0); // Place at the bottom
+		window.setWidth((stage.getWidth())-300);
 		
-		//view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
-		
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
+		view.setMenu(window);
+/*		view.getMessage().row();
+		view.getMessage().setPosition(stage.getWidth(), stage.getHeight()-100);
+		view.getMessage().add(startServerButton);
+		view.getMessage().add(joinServerButton);
+		view.getMessage().pack();
+*/		
 		/* Add the window to the stage */
 		stage.addActor(window);
 
@@ -435,21 +448,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch, camera);
 
+		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
+		
 
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-		gameTime.setText(" Time: " + timeManager.toString());
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
 		if (timeManager.isNight()){
-			gameTime.setColor(Color.FIREBRICK);
+			gameTimeDisp.setColor(Color.FIREBRICK);
+			gameLengthDisp.setColor(Color.FIREBRICK);
 		}
 		else{
-			gameTime.setColor(Color.BLUE);
+			gameTimeDisp.setColor(Color.BLUE);
+			gameLengthDisp.setColor(Color.BLUE);
 		}
-		//view.render();
+		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -589,7 +606,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 
 		stage.getViewport().update(width, height, true);
-		window.setPosition(0, 0);
+		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
 	}
 
