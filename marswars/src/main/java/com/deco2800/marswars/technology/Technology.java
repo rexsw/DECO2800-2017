@@ -1,4 +1,4 @@
-package technology;
+package com.deco2800.marswars.technology;
 
 import com.deco2800.marswars.entities.Spacman;
 
@@ -11,6 +11,26 @@ public class Technology {
 	private String name;
 	private List<Technology> parents;
 	public Technology(int[] cost, String name, List<Technology> parents) {
+		if (cost.length != 4) {
+			// bad resource cost length
+			throw new IllegalArgumentException("Resource costs must not be " +
+					"an array of 4 integers");
+		} else if (name == null) {
+			// bad technology name
+			throw new IllegalArgumentException("Technology names cannot be " +
+					"null");
+		} else if (parents == null) {
+			throw new IllegalArgumentException("The list of parent " +
+					"technologies must not be null");
+		}
+		for (int thisCost: cost) {
+			// check each resource cost
+			if (thisCost < 0) {
+				// negative cost - bad!!!!!!!!!!!
+				throw new IllegalArgumentException("A technology resource " +
+						"cost must not be negative");
+			}
+		}
 		this.cost = cost;
 		this.name = name;
 		this. parents = parents;
@@ -30,7 +50,7 @@ public class Technology {
 	}
 
     /**
-     *technology upgrade which does Spacman.changeCost(5)
+     *com.deco2800.marswars.technology upgrade which does Spacman.changeCost(5)
      *
      */
 

@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
  * @Author Alec Bassingthwaighte (alecbass)
  *
  * Tests to see if technologies work properly
+ *
+ * Hi Sam :)
  */
 public class TechnologyTest {
     private Technology technology;
@@ -32,6 +34,9 @@ public class TechnologyTest {
      */
     @Test (expected = IllegalArgumentException.class)
     public void illegalArgumentTechnologyTest() {
+        // not four resources, only one for this test
+        technology = new Technology(new int[]{2000}, "Not enough resources",
+                new ArrayList<>());
         // the resource costs are negative
         technology = new Technology(new int[]{-1, -1, -1, -1}, "Bad resource" +
                 " cost technology", new ArrayList<>());
