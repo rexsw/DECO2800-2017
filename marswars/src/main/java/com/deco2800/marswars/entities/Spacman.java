@@ -56,15 +56,24 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		fogWorld.addEntity(lineOfSight);
 	}
 
+	/**
+	 * Sets the position of this spacman
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	@Override
 	public void setPosition(float x, float y, float z) {
-
 		super.setPosition(x, y, z);
 		lineOfSight.setPosition(x,y,z);
 
 
 	}
 
+	/**
+	 * Sets the position X
+	 * @param x
+	 */
 	@Override
 	public void setPosX(float x) {
 		super.setPosX(x);
@@ -138,7 +147,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 	}
 
-	public LineOfSight getLineOfSight(){return lineOfSight;}
+	/**
+	 * Get the line of sight of this spacman
+	 * @return LineOfSight
+	 */
+	public LineOfSight getLineOfSight(){
+		return lineOfSight;
+	}
 
 	/**
 	 * On click method for the spacman
@@ -197,7 +212,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return health;
 	}
 
-	/* Sets the health for this spacman */
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
 	@Override
 	public void setHealth(int health) {
 		LOGGER.info("Set health to " + health);
@@ -237,26 +255,47 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return resource;
 	}
 
+	/**
+	 * Set the owner of this spacman
+	 * @param owner
+	 */
 	@Override
 	public void setOwner(Manager owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * Get the owner of this spacman
+	 * @return owner
+	 */
 	@Override
 	public Manager getOwner() {
 		return this.owner;
 	}
 
+	/**
+	 * Check if this spacman has the same owner as the other Abstract enitity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	/**
+	 * Check if this spacman currently has an action
+	 * @return true if an action is present
+	 */
 	public boolean isWorking() {
 		return (currentAction.isPresent());
 	}
 	
+	/**
+	 * Set an current action for this spac man
+	 * @param action
+	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
