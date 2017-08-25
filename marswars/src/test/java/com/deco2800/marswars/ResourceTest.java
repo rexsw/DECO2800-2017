@@ -11,7 +11,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class ResourceTest {
 	private int initialStorage = 100;// 100 here is the default capacity
 	@Test
-	public void ConstructorTest() {
+	public void constructorTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
@@ -30,7 +30,7 @@ public class ResourceTest {
 	}
 	
 	@Test
-	public void HarvesterTest() {
+	public void harvesterTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		
@@ -62,7 +62,7 @@ public class ResourceTest {
 	}
 	
 	@Test
-	public void StorageTest() {
+	public void storageTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		
@@ -76,7 +76,7 @@ public class ResourceTest {
 	}
 	
 	@Test
-	public void StorageStateTest() {
+	public void storageStateTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
@@ -112,7 +112,7 @@ public class ResourceTest {
 	}
 	
 	@Test
-	public void RemovedTest() {
+	public void removedTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);

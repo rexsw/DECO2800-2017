@@ -26,7 +26,7 @@ public class SpacmanTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 	
 	@Test
-	public void ConstructorTest() {
+	public void constructorTest() {
 		Spacman man = new Spacman(1,1,1);
 		assertEquals(man.getHealth(), 100);
 		assertEquals(man.getOwner(), null);
@@ -36,7 +36,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void SetPositionTest() {
+	public void setPositionTest() {
 		Spacman man = new Spacman(1,1,1);
 		man.setPosition(0, 0, 0);
 		
@@ -46,7 +46,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void BackPackTest() {
+	public void backPackTest() {
 		Spacman man = new Spacman(1,1,1);
 		man.addGatheredResource(new GatheredResource(ResourceType.ROCK, 10));
 		
@@ -59,7 +59,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void HealthTest() {
+	public void healthTest() {
 		Spacman man = new Spacman(1,1,1);
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		GameManager.get().getWorld().addEntity(man);
@@ -72,7 +72,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void OwnerTest() {
+	public void ownerTest() {
 		Spacman man = new Spacman(1,1,1);
 		Spacman man2 = new Spacman(1,1,1);
 		Spacman man3 = new Spacman(1,1,1);
@@ -90,7 +90,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void ActionTest() {
+	public void actionTest() {
 		Spacman man = new Spacman(1,1,1);
 		DecoAction action = Mockito.mock(DecoAction.class);
 		man.setAction(action);
@@ -99,7 +99,7 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void OnClickTest() {
+	public void onClickTest() {
 		Spacman man = new Spacman(1,1,1);
 		MouseHandler mockHandler = Mockito.mock(MouseHandler.class);
 		PlayerManager mockManager = Mockito.mock(PlayerManager.class);

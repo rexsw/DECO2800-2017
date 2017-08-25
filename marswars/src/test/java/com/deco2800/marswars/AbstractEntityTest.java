@@ -32,7 +32,7 @@ class TestEntity extends AbstractEntity {
 
 public class AbstractEntityTest {
 	@Test
-	public void WorldEntityConstructorTest() {
+	public void worldEntityConstructorTest() {
 		AbstractEntity e = new TestEntity(0, 0, 0, 1, 1, 1);
 		assertEquals(e.getPosX(), 0, 0.1);
 		assertEquals(e.getPosY(), 0, 0.1);
@@ -53,7 +53,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void TextureTest() {
+	public void textureTest() {
 		AbstractEntity e = new TestEntity(0, 0, 0, 0, 1, 1);
 
 		e.setTexture("blah");
@@ -61,7 +61,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void OrderingTest() {
+	public void orderingTest() {
 		GameManager.get().setWorld(new BaseWorld(200, 200));
 		AbstractEntity e1 = new TestEntity(0, 100, 0, 0, 1, 1);
 		AbstractEntity e2 = new TestEntity(100, 0, 0, 0, 1, 1);
@@ -84,7 +84,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void CollisionTest() {
+	public void collisionTest() {
 		GameManager.get().setWorld(new BaseWorld(10, 10));
 
 		AbstractEntity e1 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
@@ -114,7 +114,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void Box3DConstructorTest() {
+	public void box3DConstructorTest() {
 		Box3D position = new Box3D(0f, 1f, 2f, 1f, 1f, 1f);
 		AbstractEntity e = new TestEntity(position, 1, 2, false);
 		assertEquals(e.getPosX(), 0, 0.1);
@@ -129,7 +129,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void PositionTest() {
+	public void positionTest() {
 		AbstractEntity e1 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
 		AbstractEntity e2 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
 		
@@ -147,7 +147,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void CompareTest() {
+	public void compareTest() {
 		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
 		
@@ -155,7 +155,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void EqualsTest() {
+	public void equalsTest() {
 		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e3 = new TestEntity(1, 1, 1, 1, 1, 1);
@@ -172,7 +172,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void DistanceTest() {
+	public void distanceTest() {
 		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e3 = new TestEntity(2, 2, 2, 1, 1, 1);
@@ -182,7 +182,7 @@ public class AbstractEntityTest {
 	}
 	
 	@Test
-	public void WalkOverTest() {
+	public void walkOverTest() {
 		AbstractEntity e = new TestEntity(0, 0, 0, 1, 1, 1);
 		assertEquals(e.canWalOver(), false);
 	}
