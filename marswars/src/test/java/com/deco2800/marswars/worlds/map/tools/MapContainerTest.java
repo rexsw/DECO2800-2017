@@ -1,16 +1,34 @@
 package com.deco2800.marswars.worlds.map.tools;
 
+import com.deco2800.marswars.BaseTest;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class MapContainerTest {
+public class MapContainerTest extends BaseTest {
+
+
+    MapContainer map;
+    CustomizedWorld world;
+
+    @Before
+    public void setup(){
+        map = new MapContainer();
+        //world = new CustomizedWorld(map);
+    }
     @Test
     public void generateEntities() throws Exception {
+        //Assert.assertFalse(world.getEntities().isEmpty());
     }
 
     @Test
     public void getMap() throws Exception {
+        map = new MapContainer("marswars/out/production/resources/mapAssets/mediumMars.tmx");
+        Assert.assertEquals("marswars/out/production/resources/mapAssets/mediumMars.tmx", map.getMap());
     }
 
     @Test

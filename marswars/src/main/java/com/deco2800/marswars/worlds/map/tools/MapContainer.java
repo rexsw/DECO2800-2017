@@ -75,7 +75,7 @@ public class MapContainer {
      * @return true if empty
      */
     public boolean checkForEntity(int x, int y){
-        if( world.getCollisionMap().get(x, y).isEmpty()){
+        if(world.getCollisionMap().get(x, y).isEmpty()){
             return true;
         }
         return false;
