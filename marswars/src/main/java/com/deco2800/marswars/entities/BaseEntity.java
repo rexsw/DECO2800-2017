@@ -5,9 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 
 import java.util.ArrayList;
