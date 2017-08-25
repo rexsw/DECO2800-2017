@@ -121,21 +121,41 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
+		Spacman a = new Spacman(95, 95, 0);
+		a.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(a);
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
-		Spacman ai = new Spacman(16, 16, 0);
-		Spacman ai1 = new Spacman(17, 16, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 15, 15, 0);
-		EnemySpacman aienemy = new EnemySpacman(18, 19, 0);
-		ai.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		AiManagerTest aim1 = new AiManagerTest();
+		GameManager.get().addManager(aim1);
+		Spacman ai = new Spacman(95, 95, 0);
+		Spacman ai1 = new Spacman(101, 101, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), 100, 100, 0);
+		EnemySpacman aienemy = new EnemySpacman(102, 90, 0);
+		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		ai1.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		aibase.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(GameManager.get().getManager(AiManagerTest.class));
+		aienemy.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(aienemy);
+		
+		AiManagerTest aim2 = new AiManagerTest();
+		GameManager.get().addManager(aim2);
+		Spacman ai2 = new Spacman(119, 95, 0);
+		Spacman ai21 = new Spacman(125, 105, 0);
+		Base aibase2 = new Base(GameManager.get().getWorld(), 120, 100, 0);
+		EnemySpacman aienemy2 = new EnemySpacman(122, 110, 0);
+		ai2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(ai2);
+		ai21.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(ai21);
+		aibase2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(aibase2);
+		aienemy2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(aienemy2);
 
 		new Thread(new Runnable() {
 			@Override
@@ -382,7 +402,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				downKeys.remove(keyCode);
 				return true;
 			}
-
+			/**
+			 * Enable player to zoom in and zoom out through scroll wheel
+			 */
 			@Override
 			public boolean scrolled(int amount) {
 				if (GameManager.get().getActiveView() == 1) {

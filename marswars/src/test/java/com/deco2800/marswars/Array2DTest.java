@@ -16,14 +16,14 @@ public class Array2DTest {
     public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
-	public void ConstructorTest() {
+	public void constructorTest() {
 		Array2D<Integer> arr = new Array2D<>(3,4);
 		assertEquals(arr.getWidth(), 3);
 		assertEquals(arr.getLength(), 4);
 	}
 	
 	@Test
-	public void SetTestException() {
+	public void setTestException() {
 		Array2D<Integer> arr = new Array2D<>(3,4);
 		thrown.expect(IndexOutOfBoundsException.class);
 		// x >= 3
@@ -42,27 +42,27 @@ public class Array2DTest {
 	}
 	
 	@Test
-	public void SetTest() {
+	public void setTest() {
 		Array2D<Integer> arr = new Array2D<>(3,4);
 		arr.set(2, 1, 1);
 	}
 	
 	@Test
-	public void GetTestException() {
+	public void getTestException() {
 		Array2D<Integer> arr = new Array2D<>(5,5);
 		thrown.expect(IndexOutOfBoundsException.class);
 		arr.get(5, 5);
 	}
 	
 	@Test
-	public void GetTest() {
+	public void getTest() {
 		Array2D<Integer> arr = new Array2D<>(5,5);
 		arr.set(3, 4, 1);
 		assertTrue(arr.get(3, 4).equals(1));
 	}
 	
 	@Test
-	public void GetListTest() {
+	public void getListTest() {
 		Array2D<Integer> arr = new Array2D<>(5,5);
 		arr.set(3, 4, 1);
 		arr.set(4, 4, 2);

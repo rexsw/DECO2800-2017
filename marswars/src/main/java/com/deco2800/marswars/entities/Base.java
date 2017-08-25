@@ -222,14 +222,17 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
 	/**
 	 * This method is a duplication of the showProgress method, consider delete one of them
+	 * sadly two different interfaces
 	 * @return boolean
 	 */
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
 	
+	@Override
 	/**
 	 * Set the action of this base
 	 * @param action

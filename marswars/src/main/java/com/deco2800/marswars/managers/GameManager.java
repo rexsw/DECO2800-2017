@@ -181,6 +181,8 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
+		//this is need to let managers use other managers ontick
+		//please don't change it
 		List<Manager> deepcopy = new ArrayList<Manager>((List<Manager>) managers);
 		Iterator<Manager> managersIter =  deepcopy.iterator();
 		while(managersIter.hasNext()) {

@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -223,6 +224,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 		if (health < 0) {
 			GameManager.get().getWorld().removeEntity(this);
+			if(owner instanceof AiManagerTest) {
+				((AiManagerTest) owner).isKill();
+			}
 			LOGGER.info("I am kill");
 		}
 	}
@@ -288,6 +292,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Check if this spacman currently has an action
 	 * @return true if an action is present
 	 */
+	@Override
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
@@ -296,6 +301,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Set an current action for this spac man
 	 * @param action
 	 */
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
