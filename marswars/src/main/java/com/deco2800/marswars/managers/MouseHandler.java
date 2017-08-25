@@ -1,6 +1,6 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.worlds.InitialWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
@@ -63,7 +63,7 @@ public class MouseHandler extends Manager {
 				if (entities.get(entities.size() - 1) instanceof Clickable) {
 					((Clickable) entities.get(entities.size() - 1)).onClick(this);
 				} else {
-					((InitialWorld)world).deSelectAll();
+					((CustomizedWorld)world).deSelectAll();
 				}
 
 				break;
@@ -76,6 +76,8 @@ public class MouseHandler extends Manager {
 					c.onRightClick(proj_x, proj_y);
 				}
 				listeners.clear();
+				break;
+			default:
 				break;
 		}
 	}

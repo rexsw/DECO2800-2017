@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +25,10 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.TextureManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Naziah Siddique on 19/08
@@ -32,13 +36,18 @@ import com.deco2800.marswars.managers.TimeManager;
  * other components from other classes in the packages
  */
 public class HUDView extends ApplicationAdapter{
+	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+	
+	private static final int BUTTONSIZE = 30;
+	private static final int BUTTONPAD = 10; 
+
 	private Stage stage;
 	private Skin skin;
 	private Table overheadLeft;
 	private Table overheadRight;
 	private Table resourceTable; 
 	
-	private Button quitButton;
+	private ImageButton quitButton;
 	private Button helpButton;
 	private Button messageButton;
 	
@@ -59,32 +68,35 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu; 
 	private Label gameTimeDisp;
 	private Label gameLengthDisp;
-	private Window resources; 
 	private Window minimap;
 	private Window inventory;
 	
 	private ProgressBar healthBar;
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+	private TextureManager textureManager;
 	private ChatBox chatbox;
-	
+		
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
 	 * of the HUD and is mostly for simply displaying components on screen. 
 	 * @param stage the game stage
 	 * @param skin the look of the HUD, depending on the world/level the game is being played at
 	 * @param gameManager handles selectables
+	 * @param textureManager 
 	 */
 
-	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
+	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
 		// zero game length clock (i.e. tell TimeManager new game has been launched)
+		LOGGER.debug("Creating Hud");
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
+		this.textureManager = textureManager;
 		this.gameWidth = (int) stage.getWidth();
 		this.gameHeight = (int) stage.getHeight();
-		this.chatbox = new ChatBox(skin);
+		this.chatbox = new ChatBox(skin, textureManager);
 		messageToggle = true; 
 		createLayout();
 	}
@@ -114,31 +126,50 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setWidth(stage.getWidth());
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
+
+		LOGGER.debug("Add help, quit and message buttons");
+
+		//create message button + image for it 
+		Texture helpImage = textureManager.getTexture("help_button");
+		TextureRegion helpRegion = new TextureRegion(helpImage);
+		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
+		helpButton = new ImageButton(helpRegionDraw);
 		
-		helpButton = new TextButton("Help (?)", skin);
-		quitButton = new TextButton("Quit (X)", skin);
-		messageButton = new TextButton("Messages", skin);
-		
+		//create message button + image for it 
+		Texture messageImage = textureManager.getTexture("chat_button");
+		TextureRegion messageRegion = new TextureRegion(messageImage);
+		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
+		messageButton = new ImageButton(messageRegionDraw);
+	
+		//add quit button + image for it 
+		Texture quitImage = textureManager.getTexture("quit_button");
+		TextureRegion quitRegion = new TextureRegion(quitImage);
+		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
+		quitButton = new ImageButton(quitRegionDraw);
+
+		LOGGER.debug("Creating time labels");
 		gameTimeDisp = new Label("Time: 0:00", skin);
 		gameLengthDisp = new Label("00:00:00", skin);
 
-		overheadRight.add(gameTimeDisp).pad(10);
-		overheadRight.add(gameLengthDisp).pad(10);
-		overheadRight.add(timeDisp).pad(10);
-		overheadRight.add(messageButton).pad(10);
-		overheadRight.add(helpButton).pad(10);
-		overheadRight.add(quitButton).pad(10);
+		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
+		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
+		overheadRight.add(timeDisp).pad(BUTTONPAD);
+		overheadRight.add(messageButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		overheadRight.add(helpButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		overheadRight.add(quitButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
 						
+		quitButton.setSize(40, 40);
 		stage.addActor(overheadRight);
 		
 		//can we make this a method of it's own? 
+		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				new WorkInProgress("help text", skin).show(stage);
 			}
 		});
-		
+		LOGGER.debug("Creating quit button listener");
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			
@@ -159,11 +190,12 @@ public class HUDView extends ApplicationAdapter{
 					}	
 				}.show(stage);	
 		}});
-		
+
+		//Creates the message button listener 
+		LOGGER.debug("Creating message button listener");
 		messageButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
-				//System.out.println("Just let me die");
 				if (messageToggle){
 					messageWindow.setVisible(true);
 					messageToggle = false; 
@@ -186,7 +218,7 @@ public class HUDView extends ApplicationAdapter{
 		Table welcomeTable = new Table();
 		welcomeTable.align(Align.top | Align.center);
 		welcomeTable.setWidth(gameWidth);
-		welcomeTable.add(welcomeLabel).pad(10);
+		welcomeTable.add(welcomeLabel).pad(BUTTONPAD);
 		welcomeTable.setPosition(0, gameHeight);
 		stage.addActor(welcomeTable);
 
@@ -197,6 +229,7 @@ public class HUDView extends ApplicationAdapter{
 		overheadLeft.align(Align.left | Align.top);
 		overheadLeft.setPosition(60, stage.getHeight());
 		
+		LOGGER.debug("Creating health bar");
 		addProgressBar();
 		Label healthLabel = new Label("Health: ", skin);
 		healthLabel.setAlignment(Align.left);
@@ -215,6 +248,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds the player Icon and name to the huD (goes into top left) 
 	 */
 	private void addPlayerIcon(){
+		LOGGER.debug("Adding player icon");
 		Table playerdetails = new Table();
 		playerdetails.setDebug(true);
 		playerdetails.setWidth(100);
@@ -222,7 +256,7 @@ public class HUDView extends ApplicationAdapter{
 		playerdetails.setPosition(0, stage.getHeight());
 				
 		Label playerName = new Label("Name", skin);
-		playerdetails.pad(10).add(playerName);
+		playerdetails.pad(BUTTONPAD).add(playerName);
 		
 		stage.addActor(playerdetails);
 	}
@@ -252,7 +286,6 @@ public class HUDView extends ApplicationAdapter{
 
 		healthBar = new ProgressBar(0,100, 1, false, barStyle);
 		healthBar.setValue(100);
-		
 	}
 
 
@@ -260,17 +293,16 @@ public class HUDView extends ApplicationAdapter{
 	 * Implements a collapsible tab for the chat lobby 
 	 */
 	private void addMessages(){
+		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
-		Label message = new Label("Implementing the chat lobby here", skin);
 		
-		messageWindow.add(message);
+		messageWindow.setHeight(800);
 		messageWindow.setWidth(400);
-		messageWindow.setHeight(400);
-		messageWindow.pack();
 		messageWindow.setMovable(false);
-		messageWindow.setPosition(gameWidth, gameHeight-50, Align.right);
+		messageWindow.setPosition(gameWidth, 460); //height hardcoded in will need to be changed
 		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
+		messageWindow.pack();
 		
 		stage.addActor(messageWindow);
 	}
@@ -281,31 +313,39 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addInventoryMenu();
 		addMiniMapMenu();
+
+		LOGGER.debug("Creating HUD manipulation buttons");
 		
 		Button dispMainMenu = new TextButton("Old Menu", skin);
-		Button dispMap = new TextButton("Map", skin);
-		Button dispInventory = new TextButton("Display\nPanel", skin);
+			
+		//add dispActions button + image for it 
+		Texture arrowImage = textureManager.getTexture("arrow_button");
+		TextureRegion arrowRegion = new TextureRegion(arrowImage);
+		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
+		ImageButton dispActions = new ImageButton(arrowRegionDraw);
 		
-		//Set button positions 
-		dispMainMenu.setPosition(gameWidth-80, 150);
-		dispMap.setPosition(gameWidth-80, 100);
-		dispInventory.setPosition(gameWidth-80, 50);
+		Table HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(gameWidth-50, 50);
+		HUDManip.setSize(50, 80);
+		HUDManip.add(dispMainMenu);
+		HUDManip.row();
+		HUDManip.add(dispActions).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
 		
-		stage.addActor(dispMainMenu);
-		stage.addActor(dispMap);
-		stage.addActor(dispInventory);
+		stage.addActor(HUDManip);
 		
 		// can we make this a method of it's own?
-		dispInventory.addListener(new ChangeListener() {
+		dispActions.addListener(new ChangeListener() {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
+					LOGGER.debug("Enable hud");
 					inventory.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
 					inventoryToggle = false;
 				} else {
+					LOGGER.debug("Disable Hud");
 					inventory.setVisible(false);
 					minimap.setVisible(false);
 					resourceTable.setVisible(false);
@@ -318,9 +358,11 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				if(menuToggle){
+					LOGGER.debug("Enable old hud");
 					mainMenu.setVisible(true);
 					menuToggle = false;
 				} else {
+					LOGGER.debug("Disable old Hud");
 					mainMenu.setVisible(false);
 					menuToggle = true;
 				}
@@ -328,28 +370,21 @@ public class HUDView extends ApplicationAdapter{
 			
 		});
 		
-		dispMap.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				new WorkInProgress("Unimplemented", skin).show(stage);
-			}	
-		});
 	}	
 	
 	/**
 	 * Adds in the selectable menu for the inventory for resources 
 	 */
 	private void addInventoryMenu(){
+		LOGGER.debug("Create inventory");
 		inventory = new Window("Actions", skin);
-		//Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
 		
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(80);
 		resourceTable.setWidth(500);
-		resourceTable.setColor(Color.DARK_GRAY);
 		resourceTable.setPosition(240, 140);
-		
+		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
 		biomassCount = new Label("Biomass: 0", skin);
@@ -361,7 +396,6 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(waterCount).pad(20);
 		
 		stage.addActor(resourceTable);
-		
 		
 		inventory.setMovable(false);
 		inventory.align(Align.topLeft);
@@ -376,20 +410,19 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the minimap window 
 	 */
 	private void addMiniMapMenu(){
+		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
-		Label label = new Label("Not sure if this will still be \n implemented, but here's a \n placeholder anyway", skin);
+		Label label = new Label("Minimap goes here", skin);
 		label.setWrap(true);
 				
 		minimap.add(label);
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
-		minimap.setWidth(220);
-		minimap.setHeight(220);
+		minimap.setSize(220, 220);
 		
 		stage.addActor(minimap);
-		
 	}
 	
 	/**
@@ -429,7 +462,7 @@ public class HUDView extends ApplicationAdapter{
     }
 
     /**
-     * Currently sets the health to 100 once a selectable unit is selected. 
+     * Currently sets the health to BUTTONPAD0 once a selectable unit is selected. 
      * @param target unit clicked on by player
      */
     private void setEnitity(Selectable target) {
@@ -438,12 +471,16 @@ public class HUDView extends ApplicationAdapter{
 		}
 	}
 
-	public Window getInventory() {
-        return inventory;
-    }
 	
 	public Window getMessage() {
 		return messageWindow; 
+	}
+	
+	/**
+	 * Returns the Actions window to display helper text
+	 */
+	public Window getActionWindow() {
+		return inventory;
 	}
 
 }

@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class BaseEntity extends AbstractEntity implements Selectable {
+public class BaseEntity extends AbstractEntity implements Selectable{
 
 	private int cost = 0;
 	private EntityType entityType = EntityType.NOT_SET;
@@ -235,6 +235,10 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	@Override
 	public void buttonWasPressed() {return;}
+	
+	/**
+	 * Returns a label to display into 'Actions' of the HUD 
+	 */
 	@Override
 	public Label getHelpText() {
 		String message = "";
@@ -289,4 +293,6 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	public EntityStats getStats() {
 		return new EntityStats(0,0,0,0, null, Optional.empty(), this);
 	}
+	
+	
 }
