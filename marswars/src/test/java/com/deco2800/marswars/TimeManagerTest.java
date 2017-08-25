@@ -29,13 +29,14 @@ public class TimeManagerTest {
 		timeManager.addTime(3600);
 		// remove the following line when conditional implemented
 		timeManager.setDay();
-		assertTrue((!timeManager.isNight()) &&
-				timeManager.getHours() > 6 && timeManager.getHours() < 18);
+		assertTrue(timeManager.getHours() > 6 &&
+				timeManager.getHours() < 18);
+		assertTrue(!timeManager.isNight());
 		timeManager.addTime(43200);
 		// remove the following line when conditional implemented
 		timeManager.setNight();
-		assertTrue(timeManager.isNight() &&
-				timeManager.getHours() > 18);
+		assertTrue(timeManager.getHours() > 18);
+		assertTrue(timeManager.isNight());
 	}
 
 	@Test
