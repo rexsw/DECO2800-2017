@@ -70,13 +70,11 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
-		if(entity instanceof HasOwner) {
-			return this.owner == ((HasOwner) entity).getOwner();
-		} else {
-			return false;
-		}
+		return entity instanceof  HasOwner &&
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
 	public boolean isWorking() {
 		if(currentAction.isPresent()) {
 			return true;
@@ -85,6 +83,7 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 		}
 	}
 	
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}

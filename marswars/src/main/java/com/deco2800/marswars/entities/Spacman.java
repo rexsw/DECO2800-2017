@@ -292,6 +292,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Check if this spacman currently has an action
 	 * @return true if an action is present
 	 */
+	@Override
 	public boolean isWorking() {
 		return (currentAction.isPresent());
 	}
@@ -300,6 +301,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Set an current action for this spac man
 	 * @param action
 	 */
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}

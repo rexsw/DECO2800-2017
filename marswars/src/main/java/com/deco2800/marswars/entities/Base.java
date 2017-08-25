@@ -167,10 +167,12 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
 	
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}

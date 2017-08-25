@@ -113,6 +113,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
+		Spacman a = new Spacman(95, 95, 0);
+		a.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(a);
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */

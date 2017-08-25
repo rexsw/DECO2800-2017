@@ -9,7 +9,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * Created by Scott Whittington on 22/08
+ * control the current ai, every tick the ai looks at it's units and 
+ * ensures they're doing something useful 
+ */
 public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 		private int teamid;
 		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
@@ -41,7 +45,7 @@ public void onTick(long l) {
 				//lets the ai target player spacman with it's enemyspacmen
 				EnemySpacman x = (EnemySpacman)e;
 				for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-					if(r instanceof Spacman && ((Spacman) r).getOwner() != this && !(((Spacman) r).getOwner() instanceof PlayerManager)) {
+					if(r instanceof Spacman && !((Spacman) r).sameOwner(x) && !(((Spacman) r).getOwner() instanceof PlayerManager)) {
 						if (e.distance(r) < 3f) {
 							if(cooldown + 60 < time) {
 								LOGGER.error("ai - attacked spacman");
@@ -97,6 +101,10 @@ public void onTick(long l) {
 			return isInstance && this.teamid == ((HasTeam) otherMember).getTeam();
 		}
 		
+		/**
+		 * if the ai has no more spacman under it's control, removes it's units
+		 * and sets it to "dead" so it won't tick anymore 
+		 */
 		public void isKill() {
 			for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 				if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
