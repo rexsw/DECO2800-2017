@@ -74,8 +74,7 @@ public class TextureManager extends Manager {
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
-
-        this.saveTexture("map", "resources/HUDassets/map.png");
+        this.saveTexture("map", "resources/HUDAssets/map.png");
     }
 
     /**
