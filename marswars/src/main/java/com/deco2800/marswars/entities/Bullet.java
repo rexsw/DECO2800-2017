@@ -1,14 +1,17 @@
 package com.deco2800.marswars.entities;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.DamageAction;
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.managers.GameManager;
 
 public class Bullet extends MissileEntity implements Tickable {
+	
+	private Optional<DecoAction> currentAction = Optional.empty();
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bullet.class);
 	private int damage;
@@ -19,19 +22,21 @@ public class Bullet extends MissileEntity implements Tickable {
         super(posX, posY, posZ, 1, 1, 1, target, armorDamage, armorDamage);
         this.setTexture("spacman_blue"); //Placeholder texture
         this.initActions();
+        this.addNewAction(MoveAction.class);
         this.addNewAction(ImpactAction.class);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
+        currentAction = Optional.of(new ImpactAction(this, target));
     }
 
     @Override
     public void onTick(int tick) {
-        //If target still exists move towards and hit
-        //Remove the bullet and lower the health of the target
-    	//Move towards target, if not at target move again
-    	if (!isWorking()) { //Bullet not currently moving
-    		this.setAction(new ImpactAction(this, target));
-    	}
-    	//Once at target impact action
+		/* If the action is completed, remove it otherwise keep doing that action */
+		if (!currentAction.get().completed()) {
+			currentAction.get().doAction();
+		} else {
+			LOGGER.info("Action is completed. Deleting");
+			currentAction = Optional.empty();
+		}
     }
 }

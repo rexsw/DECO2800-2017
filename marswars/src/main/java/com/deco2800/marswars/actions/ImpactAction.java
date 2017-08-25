@@ -47,6 +47,8 @@ public class ImpactAction implements DecoAction {
 					if (action.completed()) {
 						if (target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY()) {
 							state = State.IMPACT;
+						} else {
+							state = State.SETUP_MOVE;
 						}
 					}
 					action.doAction();

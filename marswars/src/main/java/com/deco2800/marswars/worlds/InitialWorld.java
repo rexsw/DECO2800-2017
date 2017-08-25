@@ -58,6 +58,10 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new Base2(this, 10, 10, 0));
 		this.addEntity(new Soldier(50, 10, 0)); // test for combat
 		this.addEntity(new Soldier(50, 15, 0)); // test for combat
+		//Missile Test
+		Soldier a = new Soldier(30, 30, 0);
+		this.addEntity(a);
+		this.addEntity(new Bullet(50, 50, 0, a, 100, 100));
 	}
 
 	/**
