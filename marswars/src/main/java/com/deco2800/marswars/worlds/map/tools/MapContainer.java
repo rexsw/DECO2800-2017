@@ -247,17 +247,17 @@ public class MapContainer {
         LOGGER.info("chosen building type: " + random);
         BaseEntity newBuilding;
         if(random == BuildingTypes.BASE){
-            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),1);
+            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),0);
         }
         //Doesn't exist yet
 //        if(random == BuildingTypes.FORT){
-//            newBuilding = new Fort(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//            newBuilding = new Fort(world, r.nextInt(width-1),r.nextInt(length-1),0);
 //        }
 //        if(random == BuildingTypes.HOUSE){
-//            newBuilding = new House(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//            newBuilding = new House(world, r.nextInt(width-1),r.nextInt(length-1),0);
 //        }
 //        if(random == BuildingTypes.CAMP){
-//            newBuilding = new Camp(world, r.nextInt(width-1),r.nextInt(length-1),1);
+//            newBuilding = new Camp(world, r.nextInt(width-1),r.nextInt(length-1),0);
 //        }
         else {
             return;
@@ -302,17 +302,17 @@ public class MapContainer {
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),1);
+            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),0);
         }
         else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),1);
+            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),0);
         }
         //Does not exist yet
 //        if(random == EntityTypes.ALIEN){
-//            newEntity = new Alien(r.nextInt(width-1),r.nextInt(length-1),1);
+//            newEntity = new Alien(r.nextInt(width-1),r.nextInt(length-1), 0);
 //        }
 //        if(random == EntityTypes.PIG){
-//            newEntity = new Pig(r.nextInt(width-1),r.nextInt(length-1),1);
+//            newEntity = new Pig(r.nextInt(width-1),r.nextInt(length-1), 0);
 //        }
         else {
             return;
