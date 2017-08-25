@@ -1,6 +1,7 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class GameManager implements TickableManager {
 	private BaseWorld mapWorld;
 	
 	private OrthographicCamera camera;
+	
+	private Vector3 cameraPos;
 
 	private int activeView = 0; // 0 is gameWorld, 1 is mapWorld
 
@@ -148,16 +151,19 @@ public class GameManager implements TickableManager {
 		} else {
 			activeView = 0;
 			toggleMapOff();
+			
 		}
 	}
 
 	private void toggleMapOn() {
 		// move camera to centre and zoom out
+		cameraPos = camera.position.cpy();
 		camera.zoom = 10;
 		camera.position.set(5600, -300, 0); //TODO make this work with different map and window sizes
 	}
 
 	private void toggleMapOff() {
+		camera.position.set(cameraPos);
 		camera.zoom = 1;
 	}
 

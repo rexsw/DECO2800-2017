@@ -104,7 +104,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 *	Set up new stuff for this game
 		 * TODO some way to choose which map is being loaded
 		 */
-		GameManager.get().setWorld(new InitialWorld("resources/placeholderassets/placeholder200.tmx"));
+		GameManager.get().setWorld(new InitialWorld());
 		((InitialWorld)GameManager.get().getWorld()).loadEntities();
 		/*
 		 * sets all starting entities to be player owned
