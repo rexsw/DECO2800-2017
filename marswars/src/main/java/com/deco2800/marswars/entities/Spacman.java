@@ -241,7 +241,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @return true if this unit carries something
 	 */
 	public boolean checkBackpack() {
-		return (gatheredResource != null);
+		return gatheredResource != null;
 	}
 	
 	/**
@@ -289,7 +289,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @return true if an action is present
 	 */
 	public boolean isWorking() {
-		return (currentAction.isPresent());
+		return currentAction.isPresent();
 	}
 	
 	/**

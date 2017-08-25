@@ -2,15 +2,12 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.LineOfSight;
@@ -24,7 +21,6 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 public class SpacmanTest {
-private static HeadlessApplication game;
 	
 	@Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -111,6 +107,5 @@ private static HeadlessApplication game;
 		man.onClick(mockHandler);
 		
 		assertEquals(man.getTexture(), "spacman_blue");
-		
 	}
 }
