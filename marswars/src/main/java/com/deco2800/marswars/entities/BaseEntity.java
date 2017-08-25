@@ -55,6 +55,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	/**
 	 * Outdated constructor for the base entity
+	 * @deprecated
 	 * @param position
 	 * @param xRenderLength
 	 * @param yRenderLength
@@ -117,6 +118,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		super.setPosition(x, y, z);
 		modifyCollisionMap(true);
 	}
+
 
 
 	/**
@@ -250,6 +252,10 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	@Override
 	public void buttonWasPressed() {return;}
+	
+	/**
+	 * Returns a label to display into 'Actions' of the HUD 
+	 */
 	@Override
 	public Label getHelpText() {
 		String message = "";

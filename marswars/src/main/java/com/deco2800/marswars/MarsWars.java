@@ -275,15 +275,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		});
 
-		helpText = new Label("Welcome to MarsWars!", skin);
+		helpText = new Label("Welcome to SpacWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
 		gameTimeDisp = new Label(" Time: 00:00", skin);
 		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
-		window.add(helpText);
-		window.add(peonButton);
+		//window.add(helpText);
+		//window.add(peonButton);
 		window.add(rocksLabel);
 		window.add(gameTimeDisp);
 		window.add(gameLengthDisp);
@@ -291,10 +291,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(300, 0); // Place at the bottom
-		window.setWidth(stage.getWidth()-300);
+		window.setPosition(400, 0); // Place at the bottom
+		window.setWidth((stage.getWidth())-300);
 		
-		//view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
+		view.setMenu(window);
+		view.getActionWindow().add(peonButton);
+		view.getActionWindow().add(helpText);
+		view.getMessage().row();
+		view.getMessage().setPosition(stage.getWidth(), stage.getHeight()-100);
+		view.getMessage().add(startServerButton);
+		view.getMessage().add(joinServerButton);
+		view.getMessage().pack();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -389,8 +397,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void render () {
 
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
-			window.removeActor(peonButton);
-			window.removeActor(helpText);
+			view.getActionWindow().removeActor(peonButton);
+			view.getActionWindow().removeActor(helpText);
+			
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
@@ -402,10 +411,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 			if (!somethingSelected) {
 				peonButton = new TextButton("Select a Unit", skin);
-				helpText = new Label("Welcome to MarsWars!", skin);
+				helpText.setText("Welcome to SpacWars");
 			}
-			window.add(peonButton);
-			window.add(helpText);
+			view.getActionWindow().add(peonButton);
+			view.getActionWindow().add(helpText);
+
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
@@ -442,11 +452,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch, camera);
 
+		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
+		
 
 		/*
-		 * Update in-game time display & set color depending if night/day
+		 * Update time & set color depending if night/day
 		 */
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
@@ -458,7 +470,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
-		//view.render();
+
+		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -598,7 +611,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 
 		stage.getViewport().update(width, height, true);
-		window.setPosition(0, 0);
+		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
 	}
 

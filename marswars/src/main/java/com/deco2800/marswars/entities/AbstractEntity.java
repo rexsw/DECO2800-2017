@@ -24,11 +24,31 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	protected boolean canWalkOver = false;
 
+	/**
+	 * Constructor for the abstract entity
+	 * @param posX
+	 * @param posY
+	 * @param posZ
+	 * @param xLength
+	 * @param yLength
+	 * @param zLength
+	 */
 	public AbstractEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		this(posX, posY, posZ, xLength, yLength, zLength, xLength, yLength, false);
 	}
 
-
+	/**
+	 * Full blown constructor for the abstract entity
+	 * @param
+	 * @param posY
+	 * @param posZ
+	 * @param xLength
+	 * @param yLength
+	 * @param zLength
+	 * @param xRenderLength
+	 * @param yRenderLength
+	 * @param centered
+	 */
 	public AbstractEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
 						  float xRenderLength, float yRenderLength, boolean centered) {
 		this.xRenderLength = xRenderLength;
@@ -42,6 +62,13 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.position = new Box3D(posX, posY, posZ, xLength, yLength, zLength);
 	}
 
+	/**
+	 * Constructor for the abstract entity with Box3D position passed in
+	 * @param position
+	 * @param xRenderLength
+	 * @param yRenderLength
+	 * @param centered
+	 */
 	public AbstractEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		this.position = new Box3D(position);
 		this.xRenderLength = xRenderLength;
@@ -84,7 +111,12 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		return position.getZ();
 	}
 
-
+	/**
+	 * Sets the current position of the abstract Entity
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void setPosition(float x, float y, float z) {
 		if (this.centered) {
 			y += (1 - this.position.getYLength() / 2);
@@ -95,6 +127,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.position.setZ(z);
 	}
 
+	/**
+	 * Sets the Position X
+	 * @param x
+	 */
 	public void setPosX(float x) {
 		if (this.centered) {
 			x += (1-this.position.getXLength() / 2);
@@ -102,6 +138,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.position.setX(x);
 	}
 
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
 	public void setPosY(float y) {
 		if (this.centered) {
 			y += (1 - this.position.getYLength() / 2);
@@ -109,6 +149,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.position.setY(y);
 	}
 
+	/**
+	 * Sets the position Z
+	 * @param z
+	 */
 	public void setPosZ(float z) {
 		this.position.setZ(z);
 	}
@@ -123,23 +167,49 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		return position.getZLength();
 	}
 
+	/**
+	 * Get the item's x direction length
+	 * 
+	 * @return xLength
+	 */
 	public float getXLength() {
 		return position.getXLength();
 	}
 
+	/**
+	 * Get the item's y direction length
+	 * 
+	 * @return xLength
+	 */
 	public float getYLength() {
 		return position.getYLength();
 	}
 
+	/**
+	 * Check if this abstract entity is colliding with another abstract entity
+	 * 
+	 * @param entity
+	 * @return True if collides, False if not
+	 */
 	public boolean collidesWith(AbstractEntity entity) {
 		return this.position.overlaps(entity.position);
 	}
 
+	/**
+	 * Get the x Render length of the entity
+	 * 
+	 * @return xRenderLength
+	 */
 	@Override
 	public float getXRenderLength() {
 		return this.xRenderLength;
 	}
 
+	/**
+	 * Get the y Render length of the entity
+	 * 
+	 * @return yRenderLength
+	 */
 	@Override
 	public float getYRenderLength() {
 		return this.yRenderLength;
@@ -246,6 +316,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * gets the parent world for this entity
 	 * NOTE: This is useless now that we have GameManager
 	 *
+	 * @deprecated
 	 * @return returns the world loaded on the game manager.
 	 */
 	@Deprecated
