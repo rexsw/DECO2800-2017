@@ -80,7 +80,6 @@ public void onTick(long l) {
 						LOGGER.error("ai - set base to make spacman");
 						resourceManager.setRocks(resourceManager.getRocks() - 30);
 						Spacman r = new Spacman(x.getPosX() + 1, x.getPosY(), 0);
-						r.setEntityType(EntityType.AISPACMAN);
 						r.setOwner(this);
 						x.setAction(new GenerateAction(r));							
 					}
