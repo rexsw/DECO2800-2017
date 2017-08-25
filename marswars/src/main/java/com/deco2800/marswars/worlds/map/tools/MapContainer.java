@@ -10,7 +10,6 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,8 +63,8 @@ public class MapContainer {
     public MapContainer(){
         mapPath = getRandomMap();
         TiledMap mockMap = new TmxMapLoader().load(mapPath);
-        width = (mockMap.getProperties().get("width", Integer.class));
-        length = (mockMap.getProperties().get("height", Integer.class));
+        width = mockMap.getProperties().get("width", Integer.class);
+        length = mockMap.getProperties().get("height", Integer.class);
         LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
     }
 
@@ -75,7 +74,7 @@ public class MapContainer {
     public void generateEntities(boolean random){
         if(random) {
             this.generateResourcePattern();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 4; i++) {
                 this.getRandomBuilding();
                 this.getRandomEntity();
                 this.getRandomResource();
@@ -99,8 +98,6 @@ public class MapContainer {
         this.world = world;
         this.length = world.getLength();
         this.width = world.getWidth();
-        System.out.println("This is length " + length);
-        System.out.println("This is the width " + width);
     }
 
     /**
@@ -109,7 +106,7 @@ public class MapContainer {
      * @param terrainElement the terrain element to be placed.
      */
     public void setTerrainElement(TerrainElement terrainElement){
-
+        //Waiting on terrain
     }
 
     /**
@@ -119,6 +116,7 @@ public class MapContainer {
      * @param random whether the position of the terrain element should be random.
      */
     public void setTerrainElement(TerrainElement terrainElement, boolean random){
+        //Waiting on terrain
     }
 
     /**
@@ -127,7 +125,7 @@ public class MapContainer {
      * @param building the building to be placed.
      */
     public void setStructure(Building building){
-
+        //Waiting on building
     }
 
     /**
@@ -136,6 +134,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      */
     public void setStructure(Building[][] buildings){
+        //Waiting on building
     }
 
     /**
@@ -145,7 +144,7 @@ public class MapContainer {
      * @param random whether the position should be random.
      */
     public void setStructure(Building building, boolean random){
-
+        //Waiting on building
     }
 
     /**
@@ -155,7 +154,7 @@ public class MapContainer {
      * @param random whether the position should be random.
      */
     public void setStructure(Building[][] buildings, boolean random){
-
+        //Waiting on building
     }
 
     /**
@@ -164,7 +163,7 @@ public class MapContainer {
      * @param civilizationContainer the container with all the civilization elements.
      */
     public void setCivilization(CivilizationContainer civilizationContainer){
-
+        //Waiting on civilization
     }
 
     /**
@@ -215,9 +214,8 @@ public class MapContainer {
      * @return the new CivilizationContainer.
      */
     public CivilizationContainer createCivilization(CivilizationTypes civilizationTypes){
-        CivilizationContainer civilizationContainer = new CivilizationContainer(this, civilizationTypes);
+        return new CivilizationContainer(this, civilizationTypes);
         // this method has not been implemented yet!!!!!!!!!!!
-        return civilizationContainer;
     }
 
     /**
@@ -226,9 +224,8 @@ public class MapContainer {
      * @return the new CivilizationContainer.
      */
     public CivilizationContainer createRandomCivilization(){
-        CivilizationContainer civilizationContainer = new CivilizationContainer(this);
+        return new CivilizationContainer(this);
         // this method has not been implemented yet!!!!!!!!!!!
-        return civilizationContainer;
     }
 
     /**
@@ -250,18 +247,8 @@ public class MapContainer {
         LOGGER.info("chosen building type: " + random);
         BaseEntity newBuilding;
         if(random == BuildingTypes.BASE){
-            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),1);
+            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),0);
         }
-        //Doesn't exist yet
-//        if(random == BuildingTypes.FORT){
-//            newBuilding = new Fort(world, r.nextInt(width-1),r.nextInt(length-1),1);
-//        }
-//        if(random == BuildingTypes.HOUSE){
-//            newBuilding = new House(world, r.nextInt(width-1),r.nextInt(length-1),1);
-//        }
-//        if(random == BuildingTypes.CAMP){
-//            newBuilding = new Camp(world, r.nextInt(width-1),r.nextInt(length-1),1);
-//        }
         else {
             return;
         }
@@ -286,11 +273,11 @@ public class MapContainer {
     private void generateResourcePattern(){
         int xLength = this.length;
         int yWidth = this.width;
-        NoiseMap noise = new NoiseMap(xLength, yWidth, 5);
+        NoiseMap noise = new NoiseMap(xLength, yWidth, 15);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
-                if (n>0.35){
+                if (n>0.4){
                     this.getRandomResource(ix, iy);
                 }
             }
@@ -305,18 +292,11 @@ public class MapContainer {
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),1);
+            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),0);
         }
         else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),1);
+            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),0);
         }
-        //Does not exist yet
-//        if(random == EntityTypes.ALIEN){
-//            newEntity = new Alien(r.nextInt(width-1),r.nextInt(length-1),1);
-//        }
-//        if(random == EntityTypes.PIG){
-//            newEntity = new Pig(r.nextInt(width-1),r.nextInt(length-1),1);
-//        }
         else {
             return;
         }
@@ -387,6 +367,7 @@ public class MapContainer {
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
         String newPath = "";
+        String mapDoesntExit = "The given Map type doesn't exits";
         if(randomSize == MapSizeTypes.TINY){
             if(randomType == MapTypes.MARS){
                 newPath = "resources/mapAssets/tinyMars.tmx";
@@ -395,7 +376,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/tinySun.tmx";
             } else {
-                LOGGER.error("The given Map type doesn't exits");
+                LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.SMALL){
             if(randomType == MapTypes.MARS){
@@ -405,7 +386,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/smallSun.tmx";
             } else {
-                LOGGER.error("The given Map type doesn't exits");
+                LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.MEDIUM){
             if(randomType == MapTypes.MARS){
@@ -415,7 +396,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/mediumSun.tmx";
             } else {
-                LOGGER.error("The given Map type doesn't exits");
+                LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.LARGE){
             if(randomType == MapTypes.MARS){
@@ -425,7 +406,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/largeSun.tmx";
             } else {
-                LOGGER.error("The given Map type doesn't exits");
+                LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.VERY_LARGE){
             if(randomType == MapTypes.MARS){
@@ -435,10 +416,10 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/veryLargeSun.tmx";
             } else {
-                LOGGER.error("The given Map type doesn't exits");
+                LOGGER.error(mapDoesntExit);
             }
         } else {
-            LOGGER.error("The given Map size doesn't exits");
+            LOGGER.error(mapDoesntExit);
         }
         return newPath;
     }

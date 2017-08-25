@@ -5,7 +5,6 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +87,6 @@ public class GatherAction implements DecoAction {
 					}
 				} else {
 					// Find a new closest entity
-					BaseWorld world = GameManager.get().getWorld();
 
 					Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
 					if (surround.isPresent()) {
@@ -152,6 +150,8 @@ public class GatherAction implements DecoAction {
 				}
 
 				action.doAction();
+				break;
+			default:
 				break;
 		}
 	}
