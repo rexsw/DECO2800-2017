@@ -45,14 +45,14 @@ public class DamageAction implements DecoAction {
 			case MOVE_TOWARDS:
 				// When close to the enemy's attack range, attack.
 				if (action.completed()) {
-					state = state.ATTACK;
+					state = State.ATTACK;
 					return;
 				}
 				float diffX = enemy.getPosX() - entity.getPosX();
 				float diffY = enemy.getPosY() - entity.getPosY();
 				float distance = Math.abs(diffX+diffY);
 				if (distance < enemy.getAttackRange()) {
-					state = state.ATTACK;
+					state = State.ATTACK;
 					return;
 				}
 				action.doAction();
@@ -63,24 +63,23 @@ public class DamageAction implements DecoAction {
 					if (attackInterval <= 0) {
 						// should spawn missile, missile carry the damage info but now 
 						// test attack without missile
-						entity.getMissile().setTarget(enemy);
-						
-						if (enemy.getArmor() > 0) {
-							enemy.setHealth(enemy.getHealth() - entity.getDamageDeal()/2);
-							enemy.setArmor(enemy.getArmor() - entity.getArmorDamage());
-						} else {
-							enemy.setHealth(enemy.getHealth() - entity.getDamageDeal());
-						}
+						setUpMissile();
 						LOGGER.info("Enemy health " + enemy.getHealth());
 						attackInterval = 1000;
 					}
 				} else {
+					LOGGER.info("Set action empty");
 					entity.setEmptyAction();
 				}
 				break;
 		}
 	}
 
+	private void setUpMissile() {
+		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
+				enemy, entity.getDamageDeal(), entity.getArmorDamage()));
+	}
+	
 	@Override
 	public boolean completed() {
 		return completed;

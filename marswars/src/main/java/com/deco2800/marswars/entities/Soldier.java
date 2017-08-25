@@ -24,7 +24,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
-	private boolean leftClick = false;
 	private MissileEntity missile;
 	
 
@@ -50,7 +49,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onClick(MouseHandler handler) {
-		leftClick = true;
 		if(this.getOwner() instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -73,7 +71,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			this.setTexture("spacman_yellow");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity && leftClick == true) {
+		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
 			if (!this.sameOwner(entities.get(0))) {
 				this.setAction(new MoveAction((int) x, (int) y, this));
@@ -83,7 +81,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				this.setAction(new DamageAction(this, target));
 				LOGGER.error("Assigned action attack target at " + x + " " + y);
 			}
-			leftClick = false;
 		} else {
 			this.setAction(new MoveAction((int) x, (int) y, this));
 			LOGGER.error("Assigned action move to" + x + " " + y);
@@ -98,6 +95,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		if (!this.getCurrentAction().isPresent()) {
 			// make stances here.
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
+				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY());
+				
+				for (int i = 0; i < entities.size(); i++) {
+					if(entities.get(i) instanceof MissileEntity) {
+						return;
+					}
+				}
 				BaseWorld world = GameManager.get().getWorld();
 
 				/* We are stuck on a tile with another entity
@@ -142,7 +146,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	@Override
 	public void setHealth(int health) {
 		if (health < 0) {
-			GameManager.get().getWorld().removeEntity(this);
+			//GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;

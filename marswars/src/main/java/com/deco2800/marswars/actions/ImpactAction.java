@@ -52,6 +52,7 @@ public class ImpactAction implements DecoAction {
 						}
 					}
 					action.doAction();
+					//LOGGER.info("MOVING TO TARGET");
 				} else {
 					GameManager.get().getWorld().removeEntity(missile);
 				}
@@ -65,6 +66,11 @@ public class ImpactAction implements DecoAction {
 				}
 				LOGGER.info("target health " + target.getHealth());
 				GameManager.get().getWorld().removeEntity(missile);
+				if (target.getHealth() <= 0) {
+					GameManager.get().getWorld().removeEntity(target);
+					LOGGER.info("TARGET unit removed");
+				}
+				LOGGER.info("missile removed");
 				completed = true;
 				break;
 		}
