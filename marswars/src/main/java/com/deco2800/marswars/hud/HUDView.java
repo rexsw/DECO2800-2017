@@ -316,7 +316,7 @@ public class HUDView extends ApplicationAdapter{
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 		
-		Button dispMainMenu = new TextButton("Old Menu", skin);
+		Button dispMainMenu = new TextButton("Menu", skin);
 			
 		//add dispActions button + image for it 
 		Texture arrowImage = textureManager.getTexture("arrow_button");
