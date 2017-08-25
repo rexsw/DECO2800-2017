@@ -69,6 +69,7 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
+            this.generateResourcePattern();
             for (int i = 0; i < 20; i++) {
                 this.getRandomBuilding();
                 this.getRandomEntity();
@@ -273,6 +274,21 @@ public class MapContainer {
     }
 
     /**
+     * Creates random pattern of resources
+     */
+    private void generateResourcePattern(){
+        NoiseMap noise = new NoiseMap(this.length, this.width, 5);
+        for (int ix=0; ix<this.length; ix++){
+            for (int iy=0; iy<this.width; iy++){
+                double n = noise.getNoiseAt(ix,iy);
+                if (n>0.35){
+                    this.getRandomResource(ix, iy);
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a random entity.
      */
     private void getRandomEntity(){
@@ -297,9 +313,32 @@ public class MapContainer {
 
         world.addEntity(newEntity);
     }
+    /**
+     * Creates a random resource in a given position
+     */
+    private void getRandomResource(int x, int y){
+        ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
+        BaseEntity newEntity;
+        if(random == ResourceType.BIOMASS){
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
+        }
+        else if(random == ResourceType.CRYSTAL) {
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL);
+        }
+        else if(random == ResourceType.ROCK){
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
+        }
+        else if(random == ResourceType.WATER){
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
+        }
+        else{
+            return;
+        }
+        world.addEntity(newEntity);
+    }
 
     /**
-     * Creates a random entity.
+     * Creates a random resource in a random position
      */
     private void getRandomResource(){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
