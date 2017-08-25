@@ -183,52 +183,92 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 			}
 		}
 	}
-
+	
+	/**
+	 * Removes any current action and set action to empty
+	 */
 	public void setEmptyAction() {
 		currentAction = Optional.empty();
 	}
-	
+
+	/**
+	 * Set the owner of the entity
+	 * @param the owner of the entity
+	 */
 	@Override
 	public void setOwner(Manager owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * Return the owner of the entity
+	 * @return the owner of the entity
+	 */
 	@Override
 	public Manager getOwner() {
 		return this.owner;
 	}
 
+	/**
+	 * Check if an entity shares the same owner
+	 * @param an entity
+	 * @return true if the parameter shares the same owner, false otherwise
+	 */
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 
+	/**
+	 * Check if the entity currently has an action
+	 * @return true if there is an ongoing action
+	 */
 	@Override
 	public boolean isWorking() {
 		return (currentAction.isPresent());
 	}
 
+	/**
+	 * Set a new action for an entity
+	 * @param an action for the entity to take
+	 */
 	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
 
+	/**
+	 * Set the armor damage of the entity
+	 * @param the new armor damage of the entity
+	 */
 	@Override
 	public void setArmorDamage(int armorDamage) {
 		this.armorDamage = armorDamage;
 	}
 
+	/**
+	 * Return the armor damage of the entity
+	 * @return the armor damage of the entity
+	 */
 	@Override
 	public int getArmorDamage() {
 		return armorDamage;
 	}
 
+	/**
+	 * Set the attack speed of the entity
+	 * @param the new attack speed of the entity
+	 */
 	@Override
 	public void setAttackSpeed(int attackSpeed) {
 		this.attackSpeed = attackSpeed;
 	}
 
+	/**
+	 * Set the attack speed of the entity
+	 * @return the attack speed of the entity
+	 */
 	@Override
 	public int getAttackSpeed() {
 		return attackSpeed;
