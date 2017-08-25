@@ -43,16 +43,25 @@ public class ImpactAction implements DecoAction {
 				state = State.MOVE_TOWARDS;
 				break;
 			case MOVE_TOWARDS:
-				if (action.completed()) {
-					if (target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY()) {
-						state = State.IMPACT;
-					} else {
-						action.doAction();
+				if (GameManager.get().getWorld().getEntities().contains(target)) {
+					if (action.completed()) {
+						if (target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY()) {
+							state = State.IMPACT;
+						}
 					}
+					action.doAction();
+				} else {
+					GameManager.get().getWorld().removeEntity(missile);
 				}
 				break;
 			case IMPACT:
-				target.setHealth(target.getHealth() - missile.getDamageDeal());
+				if (target.getArmor() > 0) {
+					target.setHealth(target.getHealth() - missile.getDamageDeal()/2);
+					target.setArmor(target.getArmor() - missile.getArmorDamage());
+				} else {
+					target.setHealth(target.getHealth() - missile.getDamageDeal());
+				}
+				LOGGER.info("target health " + target.getHealth());
 				GameManager.get().getWorld().removeEntity(missile);
 				completed = true;
 				break;

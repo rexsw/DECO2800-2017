@@ -28,6 +28,7 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	private Manager owner = null; // the owner of the player
 	private Optional<DecoAction> currentAction = Optional.empty(); 
 	private int attackSpeed;
+	private MissileEntity missile;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -272,5 +273,13 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	@Override
 	public int getAttackSpeed() {
 		return attackSpeed;
+	}
+	
+	public MissileEntity getMissile() {
+		return missile;
+	}
+	
+	public void setMissile(MissileEntity missile) {
+		this.missile = missile;
 	}
 }

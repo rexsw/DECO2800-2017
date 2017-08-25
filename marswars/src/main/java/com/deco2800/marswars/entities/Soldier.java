@@ -25,6 +25,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private boolean leftClick = false;
+	private MissileEntity missile;
 	
 
 	public Soldier(float posX, float posY, float posZ) {
@@ -41,8 +42,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setDamage(50);
 		this.setArmor(250);
 		this.setArmorDamage(50);
-		this.setAttackRange(1);
+		this.setAttackRange(2);
 		this.setAttackSpeed(50);
+		this.missile = new Bullet(this.getPosX(), this.getPosY(), this.getPosZ(), null,
+				this.getDamageDeal(), this.getArmorDamage());
 	}
 
 	@Override
@@ -170,4 +173,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		return this.health;
 	}
 	
+	public MissileEntity getMissile() {
+		return missile;
+	}
+	
+	public void setMissile(MissileEntity missile) {
+		this.missile = missile;
+	}
 }

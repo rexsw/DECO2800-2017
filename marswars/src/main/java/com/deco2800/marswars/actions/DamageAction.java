@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.AttackableEntity;
+import com.deco2800.marswars.entities.Bullet;
+import com.deco2800.marswars.entities.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -59,14 +61,17 @@ public class DamageAction implements DecoAction {
 				if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 					attackInterval -= attackSpeed;
 					if (attackInterval <= 0) {
-						// should spawn missle, missle carry the damage info but now 
-						// test attack without missle
+						// should spawn missile, missile carry the damage info but now 
+						// test attack without missile
+						entity.getMissile().setTarget(enemy);
+						
 						if (enemy.getArmor() > 0) {
 							enemy.setHealth(enemy.getHealth() - entity.getDamageDeal()/2);
 							enemy.setArmor(enemy.getArmor() - entity.getArmorDamage());
 						} else {
 							enemy.setHealth(enemy.getHealth() - entity.getDamageDeal());
 						}
+						LOGGER.info("Enemy health " + enemy.getHealth());
 						attackInterval = 1000;
 					}
 				} else {
