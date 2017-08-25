@@ -6,6 +6,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -146,7 +147,7 @@ public class AbstractEntityTest {
 		assertEquals(e2.getPosZ(), 6, 0.1);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void compareTest() {
 		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
 		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
