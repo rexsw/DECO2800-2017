@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -55,7 +56,9 @@ public class HUDView extends ApplicationAdapter{
 	private Label rockCount; 
 	private Label crystalCount; 
 	private Label biomassCount; 
-	private Label waterCount; 
+	private Label waterCount;
+
+	private Label healthLabel, nameLabel;
 	
 	private int gameWidth;
 	private int gameHeight; 
@@ -77,6 +80,8 @@ public class HUDView extends ApplicationAdapter{
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
 	private TextureManager textureManager;
 	private ChatBox chatbox;
+
+	private BaseEntity selectedEntity;
 		
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -249,7 +254,7 @@ public class HUDView extends ApplicationAdapter{
 				
 		Label playerName = new Label("Name", skin);
 		playerdetails.pad(BUTTONPAD).add(playerName);
-		
+		this.nameLabel = playerName;
 		stage.addActor(playerdetails);
 	}
 	
@@ -457,10 +462,23 @@ public class HUDView extends ApplicationAdapter{
      * Currently sets the health to BUTTONPAD0 once a selectable unit is selected. 
      * @param target unit clicked on by player
      */
-    private void setEnitity(Selectable target) {
-		if (target.getEntityType() == Selectable.EntityType.UNIT) {
-			healthBar.setValue(100);
+    private void setEnitity(BaseEntity target) {
+		if (selectedEntity == null) {
+			selectedEntity = target;
 		}
+
+		if (selectedEntity.equals(target)) {
+			return;
+		}
+			selectedEntity = target;
+			EntityStats stats = target.getStats();
+			updateSelectedStats(stats);
+
+    }
+
+    private void updateSelectedStats (EntityStats stats) {
+		healthBar.setValue(stats.getHealth());
+		nameLabel.setText(stats.getName());
 	}
 
 	
