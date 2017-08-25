@@ -62,6 +62,8 @@ public class InitialWorld extends BaseWorld {
 		Soldier a = new Soldier(30, 30, 0);
 		this.addEntity(a);
 		this.addEntity(new Bullet(50, 50, 0, a, 100, 100));
+		//Priest Test
+		this.addEntity(new Priest(25, 35, 0));
 	}
 
 	/**
