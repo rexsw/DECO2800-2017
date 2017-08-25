@@ -54,6 +54,7 @@ public class ImpactAction implements DecoAction {
 			case IMPACT:
 				target.setHealth(target.getHealth() - missile.getDamageDeal());
 				GameManager.get().getWorld().removeEntity(missile);
+				completed = true;
 				break;
 		}
 	}
