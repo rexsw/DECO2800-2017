@@ -2,9 +2,6 @@ package com.deco2800.marswars.managers;
 
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TimeManager extends Manager implements TickableManager{
 	
 	private static final int DAYBREAK = 6; //daybreak at 6am
@@ -62,13 +59,15 @@ public class TimeManager extends Manager implements TickableManager{
 	 * @return true if it is 'Night', false otherwise
 	 */
 	public boolean isNight() {
-//		if (this.getHours() < DAYBREAK || this.getHours() > NIGHT) {
-//			setNight();
-//		} else {
-//			setDay();
-//		}
 		return isNight;
 	}
+/*	Add this so night can't be set during the day:
+	if (this.getHours() < DAYBREAK || this.getHours() > NIGHT) {
+			setNight();
+		} else {
+			setDay();
+		}
+*/
 
 	/**
 	 * Set the time of day to night
