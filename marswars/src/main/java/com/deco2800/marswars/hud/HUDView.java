@@ -459,12 +459,16 @@ public class HUDView extends ApplicationAdapter{
 		}
 	}
 
-	public Window getInventory() {
-        return inventory;
-    }
 	
 	public Window getMessage() {
 		return messageWindow; 
+	}
+	
+	/**
+	 * Returns the Actions window to display helper text
+	 */
+	public Window getActionWindow() {
+		return inventory;
 	}
 
 }

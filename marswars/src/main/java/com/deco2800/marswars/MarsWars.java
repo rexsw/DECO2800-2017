@@ -275,15 +275,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		});
 
-		helpText = new Label("Welcome to MarsWars!", skin);
+		helpText = new Label("Welcome to SpacWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
 		gameTimeDisp = new Label(" Time: 00:00", skin);
 		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
-		window.add(helpText);
-		window.add(peonButton);
+		//window.add(helpText);
+		//window.add(peonButton);
 		window.add(rocksLabel);
 		window.add(gameTimeDisp);
 		window.add(gameLengthDisp);
@@ -296,12 +296,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
 		view.setMenu(window);
-/*		view.getMessage().row();
+		view.getActionWindow().add(peonButton);
+		view.getActionWindow().add(helpText);
+		view.getMessage().row();
 		view.getMessage().setPosition(stage.getWidth(), stage.getHeight()-100);
 		view.getMessage().add(startServerButton);
 		view.getMessage().add(joinServerButton);
 		view.getMessage().pack();
-*/		
+		
 		/* Add the window to the stage */
 		stage.addActor(window);
 
@@ -395,8 +397,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void render () {
 
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
-			window.removeActor(peonButton);
-			window.removeActor(helpText);
+			view.getActionWindow().removeActor(peonButton);
+			view.getActionWindow().removeActor(helpText);
+			
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
@@ -408,10 +411,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 			if (!somethingSelected) {
 				peonButton = new TextButton("Select a Unit", skin);
-				helpText = new Label("Welcome to MarsWars!", skin);
+				helpText.setText("Welcome to SpacWars");
 			}
-			window.add(peonButton);
-			window.add(helpText);
+			view.getActionWindow().add(peonButton);
+			view.getActionWindow().add(helpText);
+
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
@@ -466,6 +470,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
+
 		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */

@@ -235,6 +235,10 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	@Override
 	public void buttonWasPressed() {return;}
+	
+	/**
+	 * Returns a label to display into 'Actions' of the HUD 
+	 */
 	@Override
 	public Label getHelpText() {
 		String message = "";
