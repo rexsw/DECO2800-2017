@@ -35,9 +35,8 @@ public class TextureManager extends Manager {
     public TextureManager() {
     	
     	//Buildings
-    	textureMap.put("Draft_Homebase1", new Texture("resources/BuildingAssets/Homebase-01.png"));
-        textureMap.put("Draft_Homebase2", new Texture("resources/BuildingAssets/Homebase2.png"));
-        textureMap.put("draft_barracks1",new Texture("resources/BuildingAssets/Draft_Barracks1.png"));
+    	textureMap.put("home_base", new Texture("resources/BuildingAssets/FinalDraft_Homebase4.png"));
+        textureMap.put("barracks",new Texture("resources/BuildingAssets/Draft_Barracks1.png"));
         textureMap.put("turret",new Texture("resources/BuildingAssets/turret.png"));
         textureMap.put("bunker",new Texture("resources/BuildingAssets/bunker.png"));
         //Environment
@@ -80,7 +79,6 @@ public class TextureManager extends Manager {
         this.saveTexture("small_biomass", "resources/resourceAssets/biomass_S.png");
         this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_M.png");
         this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
-        this.saveTexture("draft_barracks1", "resources/resourceAssets/Draft_Barracks1.png");
         
     }
 

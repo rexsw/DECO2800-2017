@@ -56,8 +56,9 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new Base2(this, 14, 18, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
 		this.addEntity(new EnemyTank(20, 20, 0));
-
 		this.addEntity(new Base2(this, 10, 10, 0));
+		this.addEntity(new Bunker(this, 35, 35, 0));
+		this.addEntity(new Turret(this, 30, 30, 0));
 
 	}
 
