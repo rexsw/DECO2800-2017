@@ -24,6 +24,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
 
 import org.slf4j.Logger;
@@ -64,7 +65,6 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu; 
 	private Label gameTimeDisp;
 	private Label gameLengthDisp;
-	private Window resources; 
 	private Window minimap;
 	private Window inventory;
 	
@@ -397,17 +397,20 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addMiniMapMenu(){
 		LOGGER.debug("Creating minimap menu");
+		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		int width = 220;
+		int height = 220;
 		minimap = new Window("Map", skin);
 		
-		Label label = new Label("Not sure if this will still be \n implemented, but here's a \n placeholder anyway", skin);
-		label.setWrap(true);
-				
-		minimap.add(label);
+		Image image = new Image(reg.getTexture("minimap"));
+		image.setSize(220, 220);
+		
+		minimap.add(image);
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
-		minimap.setWidth(220);
-		minimap.setHeight(220);
+		minimap.setWidth(width);
+		minimap.setHeight(height);
 		
 		stage.addActor(minimap);
 		

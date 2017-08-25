@@ -4,6 +4,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -11,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.Base;
@@ -82,6 +86,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
+	
+	private boolean gameStarted = false;
 
 	Skin skin;
 	
@@ -99,7 +105,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
+		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+		
 		/*
 		 *	Set up new stuff for this game
 		 * TODO some way to choose which map is being loaded
@@ -315,7 +322,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Setup an Input Multiplexer so that input can be handled by both the UI and the game */
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(stage); // Add the UI as a processor
-
+		
         /*
          * Set up some input managers for panning with dragging.
          */
@@ -399,6 +406,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		GameManager.get().toggleActiveView();
 	}
 
 
@@ -408,7 +416,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void render () {
-
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			view.getActionWindow().removeActor(peonButton);
 			view.getActionWindow().removeActor(helpText);
@@ -491,8 +498,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-
+		
 		batch.dispose();
+		if(!gameStarted) {
+			renderMiniMap();
+			GameManager.get().toggleActiveView();
+			gameStarted = true;
+		}
 	}
 
 
@@ -619,6 +631,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y + windowHeight * 4.5 < 0) {
 			camera.position.y = (float) (-windowHeight * 4.5);
 		}
+	}
+	
+	private void renderMiniMap() {
+		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
+		pixmap.dispose();
 	}
 
 	/**
