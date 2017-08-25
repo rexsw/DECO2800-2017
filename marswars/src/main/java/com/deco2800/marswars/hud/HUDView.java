@@ -482,7 +482,8 @@ public class HUDView extends ApplicationAdapter{
      */
 	public void resize(int width, int height) {
         //Top Left
-        playerdetails.setWidth(100);
+        LOGGER.debug("Window resized, rescaling hud");
+		playerdetails.setWidth(100);
         playerdetails.align(Align.left | Align.top);
         playerdetails.setPosition(0, stage.getHeight());
         overheadLeft.setWidth(stage.getWidth());
@@ -493,6 +494,22 @@ public class HUDView extends ApplicationAdapter{
         overheadRight.align(Align.right | Align.top);
         overheadRight.setPosition(0, Gdx.graphics.getHeight());
         //Bottom Panel
+		//Map
+		minimap.align(Align.topLeft);
+		minimap.setPosition(0, 0);
+		minimap.setMovable(false);
+		minimap.setSize(220, 220);
+		//Inventory
+		inventory.align(Align.topLeft);
+		inventory.setWidth(gameWidth-700);
+		inventory.setHeight(150);
+		inventory.setPosition(220, 0);
+		//Resources
+		resourceTable.align(Align.left | Align.top);
+		resourceTable.setHeight(80);
+		resourceTable.setWidth(Math.min(500, width));
+		resourceTable.setPosition(minimap.getWidth(), 140);
+
     }
 }
 
