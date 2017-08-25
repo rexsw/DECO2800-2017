@@ -6,12 +6,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Technology {
-	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list)
+	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list) and a description
 	private int id;
 	private int[] cost;
 	private String name;
 	private List<Technology> parents;
-	public Technology(int[] cost, String name, List<Technology> parents) {
+	private String description;
+
+	public Technology(int[] cost, String name, List<Technology> parents, String description) {
 		if (cost.length != 4) {
 			// bad resource cost length
 			throw new IllegalArgumentException("Resource costs must not be " +
@@ -23,6 +25,9 @@ public class Technology {
 		} else if (parents == null) {
 			throw new IllegalArgumentException("The list of parent " +
 					"technologies must not be null");
+		} else if (description == null) {
+			throw new IllegalArgumentException("Technology description " +
+					"must not be null");
 		}
 		for (int thisCost: cost) {
 			// check each resource cost
@@ -34,7 +39,8 @@ public class Technology {
 		}
 		this.cost = cost;
 		this.name = name;
-		this. parents = parents;
+		this.parents = parents;
+		this.description = description;
 		
 	}
 	
@@ -50,6 +56,9 @@ public class Technology {
 		return parents;
 	}
 
+	public String getDescription() {
+		return description;
+	}
     /**
      *com.deco2800.marswars.technology upgrade which does Spacman.changeCost(5)
      *
@@ -76,6 +85,7 @@ public class Technology {
     		// add in each parent
     		description += tech.getName() + ", ";
 		}
+		description += '\n' + "Description: " + this.description;
 		return description;
 	}
 
