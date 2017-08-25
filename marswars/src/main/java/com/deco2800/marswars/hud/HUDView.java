@@ -45,7 +45,8 @@ public class HUDView extends ApplicationAdapter{
 	private Skin skin;
 	private Table overheadLeft;
 	private Table overheadRight;
-	private Table resourceTable; 
+	private Table resourceTable;
+    private Table playerdetails;
 	
 	private ImageButton quitButton;
 	private Button helpButton;
@@ -213,15 +214,6 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the top left section of the HUD. This includes the  
 	 */
 	private void topLeft(){
-		//Adds in welcome text
-		Label welcomeLabel = new Label("Welcome to SpacWars!", skin);
-		Table welcomeTable = new Table();
-		welcomeTable.align(Align.top | Align.center);
-		welcomeTable.setWidth(gameWidth);
-		welcomeTable.add(welcomeLabel).pad(BUTTONPAD);
-		welcomeTable.setPosition(0, gameHeight);
-		stage.addActor(welcomeTable);
-
 		//Adds in the container managing the health status + player deets 
 		overheadLeft = new Table();
 		overheadLeft.setDebug(true);
@@ -249,7 +241,7 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addPlayerIcon(){
 		LOGGER.debug("Adding player icon");
-		Table playerdetails = new Table();
+		playerdetails = new Table();
 		playerdetails.setDebug(true);
 		playerdetails.setWidth(100);
 		playerdetails.align(Align.left | Align.top);
@@ -299,7 +291,7 @@ public class HUDView extends ApplicationAdapter{
 		messageWindow.setHeight(800);
 		messageWindow.setWidth(400);
 		messageWindow.setMovable(false);
-		messageWindow.setPosition(gameWidth, 460); //height hardcoded in will need to be changed
+		messageWindow.setPosition(gameWidth, 460); //TODO: hardcoded in will need to be changed
 		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
 		messageWindow.pack();
@@ -483,6 +475,25 @@ public class HUDView extends ApplicationAdapter{
 		return inventory;
 	}
 
+    /**
+     * This function is used to refit the hud when the window size changes
+     * @param width the stages width
+     * @param height the stages height
+     */
+	public void resize(int width, int height) {
+        //Top Left
+        playerdetails.setWidth(100);
+        playerdetails.align(Align.left | Align.top);
+        playerdetails.setPosition(0, stage.getHeight());
+        overheadLeft.setWidth(stage.getWidth());
+        overheadLeft.align(Align.left | Align.top);
+        overheadLeft.setPosition(playerdetails.getWidth(), stage.getHeight());
+        //Top Right
+        overheadRight.setWidth(stage.getWidth());
+        overheadRight.align(Align.right | Align.top);
+        overheadRight.setPosition(0, Gdx.graphics.getHeight());
+        //Bottom Panel
+    }
 }
 
 

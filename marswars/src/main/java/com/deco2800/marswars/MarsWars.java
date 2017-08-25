@@ -608,6 +608,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		stage.getViewport().update(width, height, true);
 		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
+		view.resize(width, height);
 	}
 
 	/**
