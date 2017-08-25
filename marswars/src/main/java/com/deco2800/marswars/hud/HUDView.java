@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	
-	private static final int BUTTONSIZE = 30;
+	private static final int BUTTONSIZE = 40;
 	private static final int BUTTONPAD = 10; 
 
 	private Stage stage;
@@ -68,6 +68,7 @@ public class HUDView extends ApplicationAdapter{
 	private boolean inventoryToggle; 
 	private boolean menuToggle; 
 	private Label timeDisp; 
+	private Table HUDManip;
 	
 	private Window mainMenu; 
 	private Label gameTimeDisp;
@@ -321,7 +322,7 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
 		ImageButton dispActions = new ImageButton(arrowRegionDraw);
 		
-		Table HUDManip = new Table(); //adding buttons into a table
+		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(gameWidth-50, 50);
 		HUDManip.setSize(50, 80);
 		HUDManip.add(dispMainMenu);
@@ -381,6 +382,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(80);
 		resourceTable.setWidth(500);
 		resourceTable.setPosition(240, 140);
+		
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
@@ -527,7 +529,10 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(80);
 		resourceTable.setWidth(Math.min(500, width));
 		resourceTable.setPosition(minimap.getWidth(), 140);
-
+		//Menu manipulator
+		HUDManip.setSize(50, 80);
+		HUDManip.setPosition(stage.getWidth()-50, 50);
+		HUDManip.align(Align.right| Align.bottom);
     }
 }
 
