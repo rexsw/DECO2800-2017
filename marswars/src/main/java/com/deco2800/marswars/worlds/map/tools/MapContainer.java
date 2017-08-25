@@ -69,6 +69,19 @@ public class MapContainer {
     }
 
     /**
+     * Checks if an x y position on the grid is empty
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return true if empty
+     */
+    public boolean checkForEntity(int x, int y){
+        if( world.getCollisionMap().get(x, y).isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Generates entities for world
      */
     public void generateEntities(boolean random){
@@ -246,8 +259,13 @@ public class MapContainer {
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
         LOGGER.info("chosen building type: " + random);
         BaseEntity newBuilding;
+        int x = r.nextInt(width-1);
+        int y = r.nextInt(length-1);
+        if(!checkForEntity(x, y)){
+            return;
+        }
         if(random == BuildingTypes.BASE){
-            newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),0);
+            newBuilding = new Base(world, x,y,0);
         }
         else {
             return;
@@ -273,12 +291,14 @@ public class MapContainer {
     private void generateResourcePattern(){
         int xLength = this.length;
         int yWidth = this.width;
-        NoiseMap noise = new NoiseMap(xLength, yWidth, 15);
+        NoiseMap noise = new NoiseMap(xLength, yWidth, 14);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
                 if (n>0.4){
-                    this.getRandomResource(ix, iy);
+                    if(r.nextInt(10) > 5 && checkForEntity(ix, iy)){
+                        this.getRandomResource(ix, iy);
+                    }
                 }
             }
         }
@@ -291,11 +311,16 @@ public class MapContainer {
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
+        int x = r.nextInt(width-1);
+        int y = r.nextInt(length-1);
+        if(!checkForEntity(x, y)){
+            return;
+        }
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),0);
+            newEntity = new Spacman(x, y,0);
         }
         else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(r.nextInt(width-1),r.nextInt(length-1),0);
+            newEntity = new EnemySpacman(x, y,0);
         }
         else {
             return;
@@ -314,6 +339,9 @@ public class MapContainer {
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
         BaseEntity newEntity;
+        if(!checkForEntity(x, y)){
+            return;
+        }
         if(random == ResourceType.BIOMASS){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
         }
@@ -339,17 +367,22 @@ public class MapContainer {
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
         BaseEntity newEntity;
+        int x = r.nextInt(width-1);
+        int y = r.nextInt(length-1);
+        if(!checkForEntity(x, y)){
+            return;
+        }
         if(random == ResourceType.BIOMASS){
-            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.BIOMASS);
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
         }
         else if(random == ResourceType.CRYSTAL){
-            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.CRYSTAL);
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL);
         }
         else if(random == ResourceType.ROCK){
-            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.ROCK);
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
         }
         else if(random == ResourceType.WATER){
-            newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.WATER);
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
         }
         else{
             return;

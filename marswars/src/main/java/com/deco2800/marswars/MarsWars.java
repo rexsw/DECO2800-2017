@@ -107,6 +107,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
+		int length = GameManager.get().getWorld().getLength();
+		int width = GameManager.get().getWorld().getWidth();
 		AiManagerTest aim1 = new AiManagerTest();
 		GameManager.get().addManager(aim1);
 		Spacman ai = new Spacman(1, 1, 0);
@@ -126,8 +128,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().addManager(aim2);
 		Spacman ai2 = new Spacman(1, 2, 0);
 		Spacman ai21 = new Spacman(0, 1, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(9, 8, 0);
+		Base aibase2 = new Base(GameManager.get().getWorld(), length-2, width-1, 0);
+		EnemySpacman aienemy2 = new EnemySpacman(length-1, width-1, 0);
 		ai2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(ai2);
 		ai21.setOwner(aim2);
