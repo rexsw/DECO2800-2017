@@ -87,7 +87,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 //		GameManager.get().setWorld(new InitialWorld());
 //		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-		//MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx");
+//		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx");
 		MapContainer map = new MapContainer();
 		GameManager.get().setWorld(new CustomizedWorld(map));
 

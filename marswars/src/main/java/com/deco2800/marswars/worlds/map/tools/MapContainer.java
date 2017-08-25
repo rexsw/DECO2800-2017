@@ -10,6 +10,8 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
@@ -21,6 +23,8 @@ import java.util.Random;
  */
 public class MapContainer {
 
+    // logger of the class
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapContainer.class);
     // path of the .tmx map file
     private String mapPath = "";
     // width of the map loaded
@@ -29,7 +33,7 @@ public class MapContainer {
     private int length;
     // randomizer
     private Random r = new Random();
-    //
+    // the world that will hold the content of the container
     private CustomizedWorld world;
     /**
      * Creates a new Map container from a given map with random elements.
@@ -61,7 +65,7 @@ public class MapContainer {
         TiledMap mockMap = new TmxMapLoader().load(mapPath);
         width = (mockMap.getProperties().get("width", Integer.class));
         length = (mockMap.getProperties().get("height", Integer.class));
-
+        LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
     }
 
     /**
@@ -82,6 +86,7 @@ public class MapContainer {
      * @return the map .tmx been used
      */
     public String getMap(){
+        LOGGER.info("Map: " + mapPath);
         return this.mapPath;
     }
 
@@ -174,8 +179,7 @@ public class MapContainer {
      * @param entities the set of entities to be placed.
      */
     public void setEntities(BaseEntity[] entities){
-        for (BaseEntity e: entities
-             ) {
+        for (BaseEntity e: entities) {
             this.world.addEntity(e);
         }
     }
@@ -240,10 +244,9 @@ public class MapContainer {
      */
     private void getRandomBuilding(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        LOGGER.info("chosen building type: " + random);
         BaseEntity newBuilding;
         if(random == BuildingTypes.BASE){
-            System.out.println(getMap());
-            System.out.println(width + " " + length);
             newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),1);
         }
         //Doesn't exist yet
@@ -270,6 +273,7 @@ public class MapContainer {
      */
     public Building[][] getRandomStructure(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        LOGGER.info("chosen building type: " + random);
         return null;
     }
 
@@ -277,7 +281,9 @@ public class MapContainer {
      * Creates random pattern of resources
      */
     private void generateResourcePattern(){
-        NoiseMap noise = new NoiseMap(this.length, this.width, 5);
+        int xLength = this.length;
+        int yWidth = this.width;
+        NoiseMap noise = new NoiseMap(xLength, yWidth, 5);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
@@ -293,6 +299,7 @@ public class MapContainer {
      */
     private void getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
+        LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
         if(random == EntityTypes.SPACMAN){
             newEntity = new Spacman(r.nextInt(width-1),r.nextInt(length-1),1);
@@ -313,11 +320,16 @@ public class MapContainer {
 
         world.addEntity(newEntity);
     }
+
     /**
-     * Creates a random resource in a given position
+     * Creates a random resource in a given position.
+     *
+     * @param x the x coordinate.
+     * @param y the y coordinate.
      */
     private void getRandomResource(int x, int y){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
+        LOGGER.info("chosen resource type: " + random);
         BaseEntity newEntity;
         if(random == ResourceType.BIOMASS){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
@@ -342,6 +354,7 @@ public class MapContainer {
      */
     private void getRandomResource(){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
+        LOGGER.info("chosen resource type: " + random);
         BaseEntity newEntity;
         if(random == ResourceType.BIOMASS){
             newEntity = new Resource(r.nextInt(length-1), r.nextInt(width-1), 0, 1f, 1f, ResourceType.BIOMASS);
@@ -360,6 +373,7 @@ public class MapContainer {
         }
         world.addEntity(newEntity);
     }
+
     /**
      * Chooses a random map (.tmx file) of a random size
      *
@@ -368,6 +382,7 @@ public class MapContainer {
     private String getRandomMap(){
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
+        LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
         String newPath = "";
         if(randomSize == MapSizeTypes.TINY){
             if(randomType == MapTypes.MARS){
@@ -377,7 +392,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/tinySun.tmx";
             } else {
-                System.out.println("Something went wrong");
+                LOGGER.error("The given Map type doesn't exits");
             }
         }else if(randomSize == MapSizeTypes.SMALL){
             if(randomType == MapTypes.MARS){
@@ -387,7 +402,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/smallSun.tmx";
             } else {
-                System.out.println("Something went wrong");
+                LOGGER.error("The given Map type doesn't exits");
             }
         }else if(randomSize == MapSizeTypes.MEDIUM){
             if(randomType == MapTypes.MARS){
@@ -397,7 +412,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/mediumSun.tmx";
             } else {
-                System.out.println("Something went wrong");
+                LOGGER.error("The given Map type doesn't exits");
             }
         }else if(randomSize == MapSizeTypes.LARGE){
             if(randomType == MapTypes.MARS){
@@ -407,7 +422,7 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/largeSun.tmx";
             } else {
-                System.out.println("Something went wrong");
+                LOGGER.error("The given Map type doesn't exits");
             }
         }else if(randomSize == MapSizeTypes.VERY_LARGE){
             if(randomType == MapTypes.MARS){
@@ -417,10 +432,10 @@ public class MapContainer {
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/veryLargeSun.tmx";
             } else {
-                System.out.println("Something went wrong");
+                LOGGER.error("The given Map type doesn't exits");
             }
         } else {
-            System.out.println("Something went wrong");
+            LOGGER.error("The given Map size doesn't exits");
         }
         return newPath;
     }
