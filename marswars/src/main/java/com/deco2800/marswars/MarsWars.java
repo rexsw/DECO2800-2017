@@ -314,15 +314,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setPosition(400, 0); // Place at the bottom
 		window.setWidth((stage.getWidth())-300);
 		
-		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get());
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
-		view.getMessage().row();
-		view.getMessage().setPosition(stage.getWidth(), stage.getHeight()-100);
-		view.getMessage().add(startServerButton);
-		view.getMessage().add(joinServerButton);
-		view.getMessage().pack();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
