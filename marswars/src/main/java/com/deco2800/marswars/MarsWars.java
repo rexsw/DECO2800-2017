@@ -365,7 +365,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				downKeys.remove(keyCode);
 				return true;
 			}
-
+			/**
+			 * Enable player to zoom in and zoom out through scroll wheel
+			 */
 			@Override
 			public boolean scrolled(int amount) {
 				int cursorX = Gdx.input.getX();
