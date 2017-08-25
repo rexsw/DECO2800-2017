@@ -1,5 +1,9 @@
 package com.deco2800.marswars;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.graphics.GL20;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -14,6 +18,7 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class BaseEntityTest {	
 	private BaseEntity t;
@@ -31,7 +36,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void ConstructorTest() {
+	public void constructorTest() {
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
 		assertEquals(t.getPosZ(), 2, 0.1);
@@ -41,7 +46,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void ConstructorsTest() {
+	public void constructorsTest() {
 		assertEquals(t1.getPosX(), 0, 0.1);
 		assertEquals(t1.getPosY(), 1, 0.1);
 		assertEquals(t1.getPosZ(), 2, 0.1);
@@ -58,7 +63,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void FullBlownConstructorTest() {
+	public void fullBlownConstructorTest() {
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 1, 0.1);
 		assertEquals(t.getPosZ(), 2, 0.1);
@@ -68,7 +73,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void SetPositionsTest() {
+	public void setPositionsTest() {
 		t.setPosition(0, 0, 0);
 		assertEquals(t.getPosX(), 0, 0.1);
 		assertEquals(t.getPosY(), 0, 0.1);
@@ -91,19 +96,19 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void SetCostTest() {
+	public void setCostTest() {
 		assertEquals(t.getCost(), 0);
 		t.setCost(100);
 		assertEquals(t.getCost(), 100);
 	}
 	
 	@Test
-	public void ColidableTest() {
+	public void colidableTest() {
 		assertEquals(t.isCollidable(), true);
 	}
 	
 	@Test
-	public void SelectedTest() {
+	public void selectedTest() {
 		assertEquals(t.isSelected(), false);
 		t.makeSelected();
 		assertEquals(t.isSelected(), true);
@@ -112,7 +117,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void EntityTypeTest() {
+	public void entityTypeTest() {
 		assertEquals(t.getEntityType(), EntityType.NOT_SET);
 		t.setEntityType(EntityType.HERO);
 		assertEquals(t.getEntityType(), EntityType.HERO);
@@ -121,7 +126,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void ActionsTest() {
+	public void actionsTest() {
 		assertEquals(t.getValidActions(), null);	
 		
 		t.initActions();
@@ -129,7 +134,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void AddActionTest() {
+	public void addActionTest() {
 		ArrayList<Class> expected = new ArrayList<>();
 		expected.add(GatherAction.class);
 		
@@ -146,7 +151,7 @@ public class BaseEntityTest {
 	}
 	
 	@Test
-	public void RemoveActionTest() {
+	public void removeActionTest() {
 		t.initActions();
 		t.addNewAction(GatherAction.class);
 		t.addNewAction(MoveAction.class);
@@ -159,11 +164,41 @@ public class BaseEntityTest {
 	}
 	
 	@Test
+	public void helpTextTest() {
+		MarsWars mockWar = Mockito.mock(MarsWars.class);
+		HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
+		new HeadlessApplication(mockWar, conf);
+		Gdx.gl20 = Mockito.mock(GL20.class);
+        Gdx.gl = Gdx.gl20;
+		String notSet = "This entity has not had its type set";
+		String building = "This is a building";
+		String unit = "This is a unit";
+		String hero = "This is a hero";
+		String resource = "This is a resource";
+		
+		t.setEntityType(EntityType.NOT_SET);
+		assertEquals(t.getHelpText().getText().toString(), notSet);
+		
+		t.setEntityType(EntityType.BUILDING);
+		assertEquals(t.getHelpText().getText().toString(), building);
+		
+		t.setEntityType(EntityType.UNIT);
+		assertEquals(t.getHelpText().getText().toString(), unit);
+		
+		t.setEntityType(EntityType.HERO);
+		assertEquals(t.getHelpText().getText().toString(), hero);
+		
+		t.setEntityType(EntityType.RESOURCE);
+		assertEquals(t.getHelpText().getText().toString(), resource);
+	}
+
+	
+	@Test
 	/*
 	 * The method currently doesn't make any sense, this test method will need update
 	 * when the actual function get changed
 	 */
-	public void ButtonTest() { 
+	public void buttonTest() { 
 		assertEquals(t.getButton(), null);
 		t.buttonWasPressed();
 	}

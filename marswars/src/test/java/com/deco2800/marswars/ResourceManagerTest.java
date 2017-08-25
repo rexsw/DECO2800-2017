@@ -29,7 +29,7 @@ public class ResourceManagerTest {
 	}
 
 	@Test
-	public void RocksTest() {		
+	public void rocksTest() {		
 		rm.setRocks(100);
 		assertEquals(rm.getRocks(), 100);
 		rm.setRocks(80);
@@ -37,7 +37,7 @@ public class ResourceManagerTest {
 	}
 	
 	@Test
-	public void BiomassTest() {
+	public void biomassTest() {
 		rm.setBiomass(100);
 		assertEquals(rm.getBiomass(), 100);
 		rm.setBiomass(80);
@@ -45,7 +45,7 @@ public class ResourceManagerTest {
 	}
 	
 	@Test
-	public void WaterTest() {
+	public void waterTest() {
 		rm.setWater(100);
 		assertEquals(rm.getWater(), 100);
 		rm.setWater(80);
@@ -53,7 +53,7 @@ public class ResourceManagerTest {
 	}
 	
 	@Test
-	public void CrystalTest() {	
+	public void crystalTest() {	
 		rm.setCrystal(100);
 		assertEquals(rm.getCrystal(), 100);
 		rm.setCrystal(80);
