@@ -170,7 +170,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
 		} else {
+			this.makeSelected();
+			this.setEntityType(EntityType.AISPACMAN);
 			LOGGER.error("Clicked on ai spacman");
+			
 		}
 	}
 

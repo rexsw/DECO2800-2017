@@ -260,6 +260,12 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 			case RESOURCE:
 				message ="This is a resource";
 				break;
+			case AISPACMAN:
+				message = "This is an AI spacman";
+				break;
+			case TECHTREE:
+				message = "You have clicked on the base";
+				break;
 			default:
 				break;
 

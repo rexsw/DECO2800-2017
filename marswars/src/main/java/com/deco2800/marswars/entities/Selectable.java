@@ -12,7 +12,7 @@ import java.util.List;
 public interface Selectable {
 
 	enum EntityType {
-		NOT_SET, BUILDING, UNIT, HERO, RESOURCE;
+		NOT_SET, BUILDING, UNIT, HERO, RESOURCE , AISPACMAN, TECHTREE;
 	}
 
 	/**

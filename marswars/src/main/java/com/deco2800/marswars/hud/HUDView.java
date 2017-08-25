@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -22,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -59,9 +59,6 @@ public class HUDView extends ApplicationAdapter{
 	private Label waterCount;
 
 	private Label healthLabel, nameLabel;
-	
-	private int gameWidth;
-	private int gameHeight; 
 	
 	private Window messageWindow; 
 	private boolean messageToggle; 
@@ -101,8 +98,6 @@ public class HUDView extends ApplicationAdapter{
 		this.stage = stage;
 		this.gameManager = gameManager;
 		this.textureManager = textureManager;
-		this.gameWidth = (int) stage.getWidth();
-		this.gameHeight = (int) stage.getHeight();
 		this.chatbox = new ChatBox(skin, textureManager);
 		messageToggle = true; 
 		createLayout();
@@ -293,11 +288,9 @@ public class HUDView extends ApplicationAdapter{
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
-		
-		messageWindow.setHeight(800);
-		messageWindow.setWidth(400);
 		messageWindow.setMovable(false);
-		messageWindow.setPosition(gameWidth, 460); //TODO: hardcoded in will need to be changed
+		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
+				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE)); 
 		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
 		messageWindow.pack();
@@ -309,8 +302,9 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the bottom panel of the HUD 
 	 */
 	private void addBottomPanel(){
-		addInventoryMenu();
 		addMiniMapMenu();
+		addInventoryMenu();
+
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 		
@@ -323,7 +317,7 @@ public class HUDView extends ApplicationAdapter{
 		ImageButton dispActions = new ImageButton(arrowRegionDraw);
 		
 		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(gameWidth-50, 50);
+		HUDManip.setPosition(stage.getWidth()-50, 50);
 		HUDManip.setSize(50, 80);
 		HUDManip.add(dispMainMenu);
 		HUDManip.row();
@@ -379,9 +373,8 @@ public class HUDView extends ApplicationAdapter{
 		
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
-		resourceTable.setHeight(80);
-		resourceTable.setWidth(500);
-		resourceTable.setPosition(240, 140);
+		resourceTable.setHeight(40);
+		resourceTable.setPosition(minimap.getWidth(), inventory.getHeight());
 		
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
@@ -389,16 +382,33 @@ public class HUDView extends ApplicationAdapter{
 		biomassCount = new Label("Biomass: 0", skin);
 		waterCount = new Label("Water: 0", skin);
 		
-		resourceTable.add(rockCount).pad(20);
-		resourceTable.add(crystalCount).pad(20);
-		resourceTable.add(biomassCount).pad(20);
-		resourceTable.add(waterCount).pad(20);
+		//add rock image 
+		Texture rockTex = textureManager.getTexture("large_rock");
+		Image rock = new Image(rockTex);
+		//add water image
+		Texture waterTex = textureManager.getTexture("large_water");
+		Image water = new Image(waterTex);
+		//add biomass image
+		Texture biomassTex = textureManager.getTexture("large_biomass");
+		Image biomass = new Image(biomassTex);
+		//add crystal image
+		Texture crystalTex = textureManager.getTexture("large_crystal");
+		Image crystal = new Image(crystalTex);
+
+		resourceTable.add(rock).width(40).height(40).pad(10);
+		resourceTable.add(rockCount).padRight(60);
+		resourceTable.add(crystal).width(40).height(40).pad(10);
+		resourceTable.add(crystalCount).padRight(60);
+		resourceTable.add(biomass).width(40).height(40).pad(10);
+		resourceTable.add(biomassCount).padRight(60);
+		resourceTable.add(water).width(40).height(40).pad(10);
+		resourceTable.add(waterCount).padRight(60);
 		
 		stage.addActor(resourceTable);
 		
 		inventory.setMovable(false);
 		inventory.align(Align.topLeft);
-		inventory.setWidth(gameWidth-700);
+		inventory.setWidth(stage.getWidth()-700);
 		inventory.setHeight(150);
 		inventory.setPosition(220, 0);
 		
@@ -445,10 +455,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		
-		rockCount.setText("Rocks: " + resourceManager.getRocks());
-		crystalCount.setText(" Crystal: " + resourceManager.getCrystal()); 
-		waterCount.setText(" Water: " + resourceManager.getWater());
-		biomassCount.setText(" Biomass: " + resourceManager.getBiomass());
+		rockCount.setText("" + resourceManager.getRocks());
+		crystalCount.setText("" + resourceManager.getCrystal()); 
+		waterCount.setText("" + resourceManager.getWater());
+		biomassCount.setText("" + resourceManager.getBiomass());
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
@@ -461,7 +471,7 @@ public class HUDView extends ApplicationAdapter{
     }
 
     /**
-     * Currently sets the health to BUTTONPAD0 once a selectable unit is selected. 
+     * Currently sets the health to 100 once a selectable unit is selected. 
      * @param target unit clicked on by player
      */
     private void setEnitity(BaseEntity target) {
@@ -475,7 +485,6 @@ public class HUDView extends ApplicationAdapter{
 			selectedEntity = target;
 			EntityStats stats = target.getStats();
 			updateSelectedStats(stats);
-
     }
 
     private void updateSelectedStats (EntityStats stats) {
@@ -483,7 +492,10 @@ public class HUDView extends ApplicationAdapter{
 		nameLabel.setText(stats.getName());
 	}
 
-	
+	/**
+	 * Returns the chat window 
+	 * @return chat window
+	 */
 	public Window getMessage() {
 		return messageWindow; 
 	}
@@ -513,6 +525,9 @@ public class HUDView extends ApplicationAdapter{
         overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);
         overheadRight.setPosition(0, Gdx.graphics.getHeight());
+        messageWindow.align(Align.right | Align.top);
+        messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
+				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
         //Bottom Panel
 		//Map
 		minimap.align(Align.topLeft);
@@ -521,14 +536,13 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setSize(220, 220);
 		//Inventory
 		inventory.align(Align.topLeft);
-		inventory.setWidth(gameWidth-700);
+		inventory.setWidth(stage.getWidth()-700);
 		inventory.setHeight(150);
 		inventory.setPosition(220, 0);
 		//Resources
-		resourceTable.align(Align.left | Align.top);
-		resourceTable.setHeight(80);
-		resourceTable.setWidth(Math.min(500, width));
-		resourceTable.setPosition(minimap.getWidth(), 140);
+		resourceTable.align(Align.left | Align.center);
+		resourceTable.setHeight(60);
+		resourceTable.setPosition(minimap.getWidth(), inventory.getHeight());
 		//Menu manipulator
 		HUDManip.setSize(50, 80);
 		HUDManip.setPosition(stage.getWidth()-50, 50);

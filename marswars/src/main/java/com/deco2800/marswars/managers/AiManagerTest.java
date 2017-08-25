@@ -4,6 +4,7 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.util.WorldUtil;
 import java.util.Optional;
 
@@ -79,6 +80,7 @@ public void onTick(long l) {
 						LOGGER.error("ai - set base to make spacman");
 						resourceManager.setRocks(resourceManager.getRocks() - 30);
 						Spacman r = new Spacman(x.getPosX() + 1, x.getPosY(), 0);
+						r.setEntityType(EntityType.AISPACMAN);
 						r.setOwner(this);
 						x.setAction(new GenerateAction(r));							
 					}
