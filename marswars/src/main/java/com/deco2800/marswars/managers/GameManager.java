@@ -2,11 +2,13 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,6 +25,8 @@ public class GameManager implements TickableManager {
 	private List<Manager> managers = new ArrayList<>();
 
 	private BaseWorld gameWorld;
+
+	private static FogWorld fogWorld = new FogWorld();
 	
 	private OrthographicCamera camera;
 
@@ -46,7 +50,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Adds a manager component to the GM
-	 * @param manager
+	 * @param manager the manager to be added.
 	 */
 	public void addManager(Manager manager) {
 		managers.add(manager);
@@ -87,7 +91,7 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Sets the current game world
-	 * @param world
+	 * @param world the world to be set
 	 */
 	public void setWorld(BaseWorld world) {
 		this.gameWorld = world;
@@ -95,10 +99,14 @@ public class GameManager implements TickableManager {
 
 	/**
 	 * Gets the current game world
-	 * @return
+	 * @return the currently loaded world
 	 */
 	public BaseWorld getWorld() {
 		return gameWorld;
+	}
+
+	public FogWorld getFogWorld() {
+		return fogWorld;
 	}
 	
 	public void setCamera(OrthographicCamera camera) {
@@ -115,7 +123,12 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		for (Manager m : managers) {
+		//this is need to let managers use other managers ontick
+		//please don't change it
+		List<Manager> deepcopy = new ArrayList<Manager>((List<Manager>) managers);
+		Iterator<Manager> managersIter =  deepcopy.iterator();
+		while(managersIter.hasNext()) {
+			Manager m = managersIter.next();
 			if (m instanceof TickableManager) {
 				((TickableManager) m).onTick(0);
 			}

@@ -8,7 +8,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
  * Renderers provide an interface between lists of objects and the LibGDX Graphics Backend.
  * Renderers can be used to create both 2D and 3D worlds currently, however further renderers could be created to render
  * other objects such as minimaps etc.
- * @Author Tim Hadwen
+ * @author Tim Hadwen
  */
 public interface Renderer {
 

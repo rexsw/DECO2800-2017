@@ -3,8 +3,10 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -23,11 +25,15 @@ class TestEntity extends AbstractEntity {
 	public TestEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
 	}
+	
+	public TestEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
+		super(position, xRenderLength, yRenderLength, centered);
+	}
 }
 
 public class AbstractEntityTest {
 	@Test
-	public void WorldEntityConstructorTest() {
+	public void worldEntityConstructorTest() {
 		AbstractEntity e = new TestEntity(0, 0, 0, 1, 1, 1);
 		assertEquals(e.getPosX(), 0, 0.1);
 		assertEquals(e.getPosY(), 0, 0.1);
@@ -48,7 +54,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void TextureTest() {
+	public void textureTest() {
 		AbstractEntity e = new TestEntity(0, 0, 0, 0, 1, 1);
 
 		e.setTexture("blah");
@@ -56,7 +62,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void OrderingTest() {
+	public void orderingTest() {
 		GameManager.get().setWorld(new BaseWorld(200, 200));
 		AbstractEntity e1 = new TestEntity(0, 100, 0, 0, 1, 1);
 		AbstractEntity e2 = new TestEntity(100, 0, 0, 0, 1, 1);
@@ -79,7 +85,7 @@ public class AbstractEntityTest {
 	}
 
 	@Test
-	public void CollisionTest() {
+	public void collisionTest() {
 		GameManager.get().setWorld(new BaseWorld(10, 10));
 
 		AbstractEntity e1 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
@@ -106,5 +112,79 @@ public class AbstractEntityTest {
 		AbstractEntity e11 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
 		AbstractEntity e12 = new TestEntity(1.2f, 1.2f, 0, 0.1f, 0.1f, 1, 1, 1, true);
 		assertFalse(e11.collidesWith(e12));
+	}
+	
+	@Test
+	public void box3DConstructorTest() {
+		Box3D position = new Box3D(0f, 1f, 2f, 1f, 1f, 1f);
+		AbstractEntity e = new TestEntity(position, 1, 2, false);
+		assertEquals(e.getPosX(), 0, 0.1);
+		assertEquals(e.getPosY(), 1, 0.1);
+		assertEquals(e.getPosZ(), 2, 0.1);
+		assertEquals(e.getXLength(), 1, 0.1);
+		assertEquals(e.getYLength(), 1, 0.1);
+		assertEquals(e.getZLength(), 1, 0.1);
+		assertEquals(e.getXRenderLength(), 1, 0.1);
+		assertEquals(e.getYRenderLength(), 2, 0.1);	
+		assertEquals(e.getBox3D(), position);
+	}
+	
+	@Test
+	public void positionTest() {
+		AbstractEntity e1 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
+		AbstractEntity e2 = new TestEntity(1, 1, 0, 0.1f, 0.1f, 1, 1, 1, true);
+		
+		e1.setPosition(2, 4, 6);
+		assertEquals(e1.getPosX(), 2, 0.1);
+		assertEquals(e1.getPosY(), 4, 0.1);
+		assertEquals(e1.getPosZ(), 6, 0.1);
+		
+		e2.setPosX(2);
+		assertEquals(e2.getPosX(), 2, 0.1);
+		e2.setPosY(4);
+		assertEquals(e2.getPosY(), 4, 0.1);
+		e2.setPosZ(6);
+		assertEquals(e2.getPosZ(), 6, 0.1);
+	}
+	
+	@Test @Ignore
+	public void compareTest() {
+		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
+		
+		assertEquals(e1.compareTo(e2), 0);
+	}
+	
+	@Test
+	public void equalsTest() {
+		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e3 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e4 = new TestEntity(1, 1, 1, 1, 1, 1);
+		
+		e1.setTexture("small_water");
+		e2.setTexture("large_water");
+		e4.setTexture("small_water");
+		assertFalse(e1.equals(null));
+		assertFalse(e1.equals(e2));
+		assertFalse(e1.equals(e3));
+		assertTrue(e1.equals(e4));
+		assertTrue(e1.hashCode() == e4.hashCode());	
+	}
+	
+	@Test
+	public void distanceTest() {
+		AbstractEntity e1 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e2 = new TestEntity(1, 1, 1, 1, 1, 1);
+		AbstractEntity e3 = new TestEntity(2, 2, 2, 1, 1, 1);
+		
+		assertEquals(e1.distance(e2), 0, 0.1);
+		assertEquals(e3.distance(e2), Math.sqrt(3), 0.1);
+	}
+	
+	@Test
+	public void walkOverTest() {
+		AbstractEntity e = new TestEntity(0, 0, 0, 1, 1, 1);
+		assertEquals(e.canWalOver(), false);
 	}
 }

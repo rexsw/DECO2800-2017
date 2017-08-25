@@ -29,4 +29,11 @@ public class SpacServer {
         ActionUtils.registerActions(this.server.getKryo());
         this.server.bind(port);
     }
+
+    /**
+     * Stop server
+     */
+    public void stop() {
+        this.server.stop();
+    }
 }

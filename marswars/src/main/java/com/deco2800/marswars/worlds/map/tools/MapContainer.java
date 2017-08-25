@@ -10,6 +10,7 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +99,8 @@ public class MapContainer {
         this.world = world;
         this.length = world.getLength();
         this.width = world.getWidth();
+        System.out.println("This is length " + length);
+        System.out.println("This is the width " + width);
     }
 
     /**

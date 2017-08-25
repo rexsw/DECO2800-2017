@@ -13,13 +13,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EnemySpacman;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
@@ -60,7 +72,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Button peonButton;
 	Label helpText;
 	Label rocksLabel;
-	Label gameTime;
+	Label gameTimeDisp;
+	Label gameLengthDisp;
+
+	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -70,9 +85,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	SpacServer networkServer;
 
 	Skin skin;
+	
+	HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
-
+	
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -80,16 +97,58 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 
+		// zero game length clock (i.e. Tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		/*
 		 *	Set up new stuff for this game
 		 */
-//		GameManager.get().setWorld(new InitialWorld());
-//		((InitialWorld)GameManager.get().getWorld()).loadEntities();
-//		MapContainer map = new MapContainer("resources/placeholderassets/placeholder200.tmx");
 		MapContainer map = new MapContainer();
 		GameManager.get().setWorld(new CustomizedWorld(map));
+		/*
+		 * sets all starting entities to be player owned
+		 */
+		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
+			if(e instanceof HasOwner) {
+				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
+			}
+		}
+		Spacman a = new Spacman(0, 0, 0);
+		a.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(a);
+		/*
+		 * adds entities for the ai and set then to be ai owned
+		 */
+		AiManagerTest aim1 = new AiManagerTest();
+		GameManager.get().addManager(aim1);
+		Spacman ai = new Spacman(1, 1, 0);
+		Spacman ai1 = new Spacman(1, 0, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
+		EnemySpacman aienemy = new EnemySpacman(7, 5, 0);
+		ai.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai);
+		ai1.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai1);
+		aibase.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aibase);
+		aienemy.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aienemy);
+		
+		AiManagerTest aim2 = new AiManagerTest();
+		GameManager.get().addManager(aim2);
+		Spacman ai2 = new Spacman(1, 2, 0);
+		Spacman ai21 = new Spacman(0, 1, 0);
+		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
+		EnemySpacman aienemy2 = new EnemySpacman(9, 8, 0);
+		ai2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(ai2);
+		ai21.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(ai21);
+		aibase2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(aibase2);
+		aienemy2.setOwner(aim2);
+		GameManager.get().getWorld().addEntity(aienemy2);
 
 		new Thread(new Runnable() {
 			@Override
@@ -125,7 +184,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
-		 * Setup GUI
+		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
 		 */
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -158,14 +217,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					try {
 						networkServer.bind(SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when initiating server", e);
 					}
 
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
 					} catch (IOException e) {
-						LOGGER.error(e.toString());
+						LOGGER.error("Error when joinging as client", e);
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
@@ -173,7 +232,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					System.out.println(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
-					ex.printStackTrace();
+					LOGGER.error("Unknown Host", ex);
 				}
 				ipDiag.button("Close", null);
 				ipDiag.show(stage);
@@ -213,7 +272,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							try {
 								networkClient.connect(5000, ip, SERVER_PORT);
 							} catch (IOException e) {
-								LOGGER.error(e.toString());
+								LOGGER.error("Join server error", e);
 							}
 							JoinLobbyAction action = new JoinLobbyAction(username);
 							networkClient.sendObject(action);
@@ -237,23 +296,30 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		});
 
-		helpText = new Label("Welcome to MarsWars!", skin);
+		helpText = new Label("Welcome to SpacWars!", skin);
 		rocksLabel = new Label("Rocks: 0", skin);
-		gameTime = new Label(" Time: 00:00", skin);
+		gameTimeDisp = new Label(" Time: 00:00", skin);
+		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
 
 		/* Add all buttons to the menu */
 		window.add(button);
-		window.add(helpText);
-		window.add(peonButton);
+		//window.add(helpText);
+		//window.add(peonButton);
 		window.add(rocksLabel);
-		window.add(gameTime);
+		window.add(gameTimeDisp);
+		window.add(gameLengthDisp);
 		window.add(startServerButton);
 		window.add(joinServerButton);
 		window.pack();
 		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(0, 0); // Place at the bottom
-		window.setWidth(stage.getWidth());
-
+		window.setPosition(400, 0); // Place at the bottom
+		window.setWidth((stage.getWidth())-300);
+		
+		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
+		view.setMenu(window);
+		view.getActionWindow().add(peonButton);
+		view.getActionWindow().add(helpText);
+		
 		/* Add the window to the stage */
 		stage.addActor(window);
 
@@ -315,7 +381,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				downKeys.remove(keyCode);
 				return true;
 			}
-
+			/**
+			 * Enable player to zoom in and zoom out through scroll wheel
+			 */
 			@Override
 			public boolean scrolled(int amount) {
 				int cursorX = Gdx.input.getX();
@@ -338,6 +406,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -345,9 +414,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void render () {
 
-		if(TimeUtils.nanoTime() - lastMenuTick > 1000000000) {
-			window.removeActor(peonButton);
-			window.removeActor(helpText);
+		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
+			view.getActionWindow().removeActor(peonButton);
+			view.getActionWindow().removeActor(helpText);
+			
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
@@ -358,11 +428,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			}
 			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", new Skin(Gdx.files.internal("uiskin.json")));
-				helpText = new Label("Welcome to MarsWars!", new Skin(Gdx.files.internal("uiskin.json")));
+				peonButton = new TextButton("Select a Unit", skin);
+				helpText.setText("Welcome to SpacWars");
 			}
-			window.add(peonButton);
-			window.add(helpText);
+			view.getActionWindow().add(peonButton);
+			view.getActionWindow().add(helpText);
+
 			lastMenuTick = TimeUtils.nanoTime();
 		}
 
@@ -399,20 +470,26 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch, camera);
 
+		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
+		
 
 		/*
 		 * Update time & set color depending if night/day
 		 */
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-		gameTime.setText(" Time: " + timeManager.toString());
-		if (timeManager.isNight()){
-			gameTime.setColor(Color.FIREBRICK);
-		}
-		else{
-			gameTime.setColor(Color.BLUE);
-		}
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
+//		if (timeManager.isNight()){
+//			gameTimeDisp.setColor(Color.FIREBRICK);
+//			gameLengthDisp.setColor(Color.FIREBRICK);
+//		}
+//		else{
+//			gameTimeDisp.setColor(Color.BLUE);
+//			gameLengthDisp.setColor(Color.BLUE);
+//		}
+
+		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -540,9 +617,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 
 	/**
-	 * Resizes the viewport
-	 * @param width
-	 * @param height
+	 * Resizes the viewport.
+	 *
+	 * @param width the new width of the viewport.
+	 * @param height the new height of the viewport.
 	 */
 	@Override
 	public void resize(int width, int height) {
@@ -551,7 +629,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 
 		stage.getViewport().update(width, height, true);
-		window.setPosition(0, 0);
+		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
 	}
 
