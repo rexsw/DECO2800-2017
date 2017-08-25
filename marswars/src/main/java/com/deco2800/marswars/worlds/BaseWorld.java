@@ -2,6 +2,8 @@ package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -39,8 +41,7 @@ public class BaseWorld extends AbstractWorld {
 	public BaseWorld(String path) {
 		/* Load up the map for this world */
 		this.map = new TmxMapLoader().load(path);
-
-                /* Grab the width and length values from the map file to use as the world size */
+				/* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
@@ -51,8 +52,9 @@ public class BaseWorld extends AbstractWorld {
 			for (int y = 0; y < this.getLength(); y++) {
 				this.collisionMap.set(x, y, new ArrayList<>());
 			}
-		}		
+		}
 	}
+
 
 	/**
 	 * Adds an entity to this world.
@@ -110,6 +112,17 @@ public class BaseWorld extends AbstractWorld {
 			return collisionMap.get(x, y);
 		} catch (IndexOutOfBoundsException e) {
 			throw new IndexOutOfBoundsException("Invalid tile coordinate.");
+		}
+	}
+
+	/**
+	 * Deselects all entities
+	 */
+	public void deSelectAll() {
+		for (Renderable r : this.getEntities()) {
+			if (r instanceof Selectable) {
+				((Selectable) r).deselect();
+			}
 		}
 	}
 }

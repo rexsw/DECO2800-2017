@@ -70,12 +70,11 @@ public class TextureManager extends Manager {
         this.saveTexture("small_biomass", "resources/resourceAssets/biomass_S.png");
         this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_M.png");
         this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
-        //this.saveTexture("chat_button", "resources/HUDassets/chatbutton.png");
-        this.saveTexture("help_button", "resources/HUDassets/helpbutton.png");
-        this.saveTexture("quit_button", "resources/HUDassets/quitbutton.png");
-        this.saveTexture("arrow_button", "resources/HUDassets/arrowbutton.png");
-
-        this.saveTexture("map", "resources/HUDassets/map.png");
+        this.saveTexture("chat_button", "resources/HUDAssets/chatbutton.png");
+        this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
+        this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
+        this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
+        this.saveTexture("map", "resources/HUDAssets/map.png");
     }
 
     /**

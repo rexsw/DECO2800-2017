@@ -98,6 +98,8 @@ public class MapContainer {
         this.world = world;
         this.length = world.getLength();
         this.width = world.getWidth();
+        System.out.println("This is length " + length);
+        System.out.println("This is the width " + width);
     }
 
     /**
@@ -437,8 +439,6 @@ public class MapContainer {
         } else {
             LOGGER.error("The given Map size doesn't exits");
         }
-        //return newPath = "resources/mapAssets/veryLargeSun.tmx";
-        return newPath = "resources/mapAssets/tinySun.tmx";
-        //return newPath;
+        return newPath;
     }
 }
