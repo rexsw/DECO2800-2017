@@ -8,6 +8,8 @@ import com.deco2800.marswars.util.Array2D;
  * 0 = unseen (black zone)
  * 1 = seen, but not currently in sight (grayed out)
  * 2 = In sight (normal vision)
+ * 
+ * @author jdtran21 - Joseph Tran
  */
 public class FogOfWarManager extends Manager {
 	private Array2D<Integer> fogOfWar;		
@@ -59,9 +61,23 @@ public class FogOfWarManager extends Manager {
 	
 	/**
 	 * Updates the FogOfWar after each clock tick
+	 * NOT FINISHED, REQUIRES ENTITY SIGHT
 	 */
 	public void updateFog() {
-		
+		Array2D<Integer> updatedFog = new Array2D<Integer>(fogOfWar.getWidth(),
+				fogOfWar.getLength());
+		//gets Sight areas of allied entities, to be implemented
+		for (int i = 0; i < fogOfWar.getWidth(); i++) {
+			for (int j = 0; j < fogOfWar.getLength(); j++) {
+				if (updatedFog.get(i, j) != fogOfWar.get(i, j)) {
+					if (updatedFog.get(i, j) == 2) {
+						fogOfWar.set(i, j, 2);						
+					} else if (fogOfWar.get(i, j) == 2) {
+						fogOfWar.set(i, j, 1);
+					}
+				}
+			}
+		}
 	}
 	
 	
