@@ -8,6 +8,8 @@ import com.deco2800.marswars.worlds.map.tools.MapContainer;
  */
 public final class CustomizedWorld extends BaseWorld {
 
+
+
     /**
      * Constructor of the customized world.
      *
@@ -25,7 +27,7 @@ public final class CustomizedWorld extends BaseWorld {
      * @param mapContainer the container to be read.
      */
     private void loadMapContainer(MapContainer mapContainer){
-        mapContainer.generateEntities();
+        mapContainer.generateEntities(true);
     }
 
 

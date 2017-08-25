@@ -41,8 +41,7 @@ public class BaseWorld extends AbstractWorld {
 	public BaseWorld(String path) {
 		/* Load up the map for this world */
 		this.map = new TmxMapLoader().load(path);
-
-                /* Grab the width and length values from the map file to use as the world size */
+				/* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
@@ -53,8 +52,9 @@ public class BaseWorld extends AbstractWorld {
 			for (int y = 0; y < this.getLength(); y++) {
 				this.collisionMap.set(x, y, new ArrayList<BaseEntity>());
 			}
-		}		
+		}
 	}
+
 
 	/**
 	 * Adds an entity to this world

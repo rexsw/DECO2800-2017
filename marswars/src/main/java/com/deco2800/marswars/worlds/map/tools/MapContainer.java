@@ -1,5 +1,7 @@
 package com.deco2800.marswars.worlds.map.tools;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
@@ -8,6 +10,7 @@ import com.deco2800.marswars.entities.buildings.BuildingTypes;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
+
 import java.util.Random;
 
 
@@ -33,9 +36,8 @@ public class MapContainer {
      *
      * @param width the width of the map.
      * @param length the length of the map.
-     * @param random elements in the container.
      */
-    public MapContainer(String mapPath, int width, int length, boolean random){
+    public MapContainer(String mapPath, int width, int length){
         this.width = width;
         this.length = length;
         this.mapPath = mapPath;
@@ -55,18 +57,24 @@ public class MapContainer {
      * Creates a Map container from a random map with random elements.
      */
     public MapContainer(){
+        mapPath = getRandomMap();
+        TiledMap mockMap = new TmxMapLoader().load(mapPath);
+        width = (mockMap.getProperties().get("width", Integer.class));
+        length = (mockMap.getProperties().get("height", Integer.class));
+
     }
 
     /**
      * Generates entities for world
      */
-    public void generateEntities(){
-        for (int i = 0; i < 20; i ++){
-            this.getRandomBuilding();
-            this.getRandomEntity();
-            this.getRandomResource();
+    public void generateEntities(boolean random){
+        if(random) {
+            for (int i = 0; i < 20; i++) {
+                this.getRandomBuilding();
+                this.getRandomEntity();
+                this.getRandomResource();
+            }
         }
-
     }
 
     /**
@@ -228,12 +236,13 @@ public class MapContainer {
     /**
      * Creates a random building object.
      *
-     * @return the new Building.
      */
     private void getRandomBuilding(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
         BaseEntity newBuilding;
         if(random == BuildingTypes.BASE){
+            System.out.println(getMap());
+            System.out.println(width + " " + length);
             newBuilding = new Base(world, r.nextInt(width-1),r.nextInt(length-1),1);
         }
         //Doesn't exist yet
@@ -320,28 +329,60 @@ public class MapContainer {
     private String getRandomMap(){
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
-        return "";
+        String newPath = "";
+        if(randomSize == MapSizeTypes.TINY){
+            if(randomType == MapTypes.MARS){
+                newPath = "resources/mapAssets/tinyMars.tmx";
+            } else if (randomType == MapTypes.MOON){
+                newPath = "resources/mapAssets/tinyMoon.tmx";
+            } else if (randomType == MapTypes.SUN){
+                newPath = "resources/mapAssets/tinySun.tmx";
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }else if(randomSize == MapSizeTypes.SMALL){
+            if(randomType == MapTypes.MARS){
+                newPath = "resources/mapAssets/smallMars.tmx";
+            } else if (randomType == MapTypes.MOON){
+                newPath = "resources/mapAssets/smallMoon.tmx";
+            } else if (randomType == MapTypes.SUN){
+                newPath = "resources/mapAssets/smallSun.tmx";
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }else if(randomSize == MapSizeTypes.MEDIUM){
+            if(randomType == MapTypes.MARS){
+                newPath = "resources/mapAssets/mediumMars.tmx";
+            } else if (randomType == MapTypes.MOON){
+                newPath = "resources/mapAssets/mediumMoon.tmx";
+            } else if (randomType == MapTypes.SUN){
+                newPath = "resources/mapAssets/mediumSun.tmx";
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }else if(randomSize == MapSizeTypes.LARGE){
+            if(randomType == MapTypes.MARS){
+                newPath = "resources/mapAssets/largeMars.tmx";
+            } else if (randomType == MapTypes.MOON){
+                newPath = "resources/mapAssets/largeMoon.tmx";
+            } else if (randomType == MapTypes.SUN){
+                newPath = "resources/mapAssets/largeSun.tmx";
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }else if(randomSize == MapSizeTypes.VERY_LARGE){
+            if(randomType == MapTypes.MARS){
+                newPath = "resources/mapAssets/veryLargeSun.tmx";
+            } else if (randomType == MapTypes.MOON){
+                newPath = "resources/mapAssets/veryLargeSun.tmx";
+            } else if (randomType == MapTypes.SUN){
+                newPath = "resources/mapAssets/veryLargeSun.tmx";
+            } else {
+                System.out.println("Something went wrong");
+            }
+        } else {
+            System.out.println("Something went wrong");
+        }
+        return newPath;
     }
-
-//    /**
-//     * Adds an entity to the temporary collision map
-//     * @param entity the entity to be added
-//     */
-//    public void addEntity(BaseEntity entity) {
-//
-//        //Add to the collision map
-//        int left = (int)entity.getPosX();
-//        int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
-//        int bottom = (int)entity.getPosY();
-//        int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
-//        for (int x = left; x < right; x++) {
-//            for (int y = bottom; y < top; y++) {
-//                newCollisionMap.get(x, y).add(entity);
-//            }
-//        }
-//    }
-
-
-
-
 }
