@@ -74,7 +74,7 @@ public class MapContainer {
     public void generateEntities(boolean random){
         if(random) {
             this.generateResourcePattern();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 4; i++) {
                 this.getRandomBuilding();
                 this.getRandomEntity();
                 this.getRandomResource();
@@ -273,11 +273,11 @@ public class MapContainer {
     private void generateResourcePattern(){
         int xLength = this.length;
         int yWidth = this.width;
-        NoiseMap noise = new NoiseMap(xLength, yWidth, 5);
+        NoiseMap noise = new NoiseMap(xLength, yWidth, 15);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
-                if (n>0.35){
+                if (n>0.4){
                     this.getRandomResource(ix, iy);
                 }
             }
