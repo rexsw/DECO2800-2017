@@ -27,11 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by timhadwen on 19/7/17.
+ * Created by JudahBennett on 25/8/17.
  *
- * A home base for the empire
+ * A barracks to build an army
  */
-public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Barracks extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -43,15 +43,15 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	boolean selected = false;
 
 	/**
-	 * Constructor for the base.
+	 * Constructor for the barracks.
 	 * @param world The world that will hold the base.
 	 * @param posX its x position on the world.
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Base(AbstractWorld world, float posX, float posY, float posZ) {
+	public Barracks(AbstractWorld world, float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 4 , 4, 1, 4, 4, false);
-		this.setTexture("home_base");
+		this.setTexture("barracks");
 		this.setEntityType(EntityType.BUILDING);
 		this.setCost(10000000);
 		this.setSpeed(2);
@@ -61,15 +61,15 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 
 	/**
-	 * Constructor for the base.
-	 * @param world The BaseWorld that will hold the base.
+	 * Constructor for the barracks.
+	 * @param world The BaseWorld that will hold the barracks.
 	 * @param posX its x position on the world.
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Base(BaseWorld world, int posX, int posY, int posZ) {
+	public Barracks(BaseWorld world, int posX, int posY, int posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
-		this.setTexture("home_base");
+		this.setTexture("barracks");
 		this.setCost(10000000);
 	}
 	
@@ -89,7 +89,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public void onClick(MouseHandler handler) {
 
-		System.out.println("Base got clicked");
+		System.out.println("Barracks got clicked");
 		this.currentAction = Optional.of(new BuildAction(this));
 		if (!selected) {
 			selected = true;
@@ -97,10 +97,10 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		if(this.getOwner() instanceof PlayerManager) {
 			if (!selected) {
 				selected = true;
-				LOGGER.error("clicked on base");
+				LOGGER.error("clicked on barracks");
 			}
 		} else {
-			LOGGER.error("clicked on ai base");
+			LOGGER.error("clicked on ai barracks");
 
 		}
 
@@ -134,7 +134,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 
 	/**
-	 * Check is the base has been selected
+	 * Check is the barracks has been selected
 	 * @return true if is selected, false otherwise
 	 */
 	@Override
@@ -143,7 +143,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 	
 	/**
-	 * Deselect the base
+	 * Deselect the barracks
 	 */
 	@Override
 	public void deselect() {
@@ -182,7 +182,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 * @return Label
 	 */
 	public Label getHelpText() {
-		return new Label("You have clicked on the base. Click 'Make Spacman' to 'Make Spacman'!", new Skin(Gdx.files.internal("uiskin.json")));
+		return new Label("You have clicked on the Barracks. Click 'Make Atacman' to 'Make Atacman'!", new Skin(Gdx.files.internal("uiskin.json")));
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	}
 	
 	/**
-	 * Set the action of this base
+	 * Set the action of this barracks
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
