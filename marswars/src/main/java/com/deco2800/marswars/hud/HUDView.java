@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +26,7 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,7 @@ public class HUDView extends ApplicationAdapter{
 	private Table overheadRight;
 	private Table resourceTable; 
 	
-	private Button quitButton;
+	private ImageButton quitButton;
 	private Button helpButton;
 	private Button messageButton;
 	
@@ -71,23 +73,26 @@ public class HUDView extends ApplicationAdapter{
 	private ProgressBar healthBar;
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+	private TextureManager textureManager;
 	private ChatBox chatbox;
-	
+		
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
 	 * of the HUD and is mostly for simply displaying components on screen. 
 	 * @param stage the game stage
 	 * @param skin the look of the HUD, depending on the world/level the game is being played at
 	 * @param gameManager handles selectables
+	 * @param textureManager 
 	 */
 
-	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
+	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
 		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		LOGGER.debug("Creating Hud");
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
+		this.textureManager = textureManager;
 		this.gameWidth = (int) stage.getWidth();
 		this.gameHeight = (int) stage.getHeight();
 		this.chatbox = new ChatBox(skin);
@@ -122,9 +127,15 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
 
 		LOGGER.debug("Add help, quit and message buttons");
+		
 		helpButton = new TextButton("Help (?)", skin);
-		quitButton = new TextButton("Quit (X)", skin);
 		messageButton = new TextButton("Messages", skin);
+	
+		//add quit button + image for it 
+		Texture quitImage = textureManager.getTexture("quit_button");
+		TextureRegion quitRegion = new TextureRegion(quitImage);
+		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
+		quitButton = new ImageButton(quitRegionDraw);
 
 		LOGGER.debug("Creating time labels");
 		gameTimeDisp = new Label("Time: 0:00", skin);
@@ -135,8 +146,9 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.add(timeDisp).pad(10);
 		overheadRight.add(messageButton).pad(10);
 		overheadRight.add(helpButton).pad(10);
-		overheadRight.add(quitButton).pad(10);
+		overheadRight.add(quitButton).pad(10).height(30).width(30);
 						
+		quitButton.setSize(40, 40);
 		stage.addActor(overheadRight);
 		
 		//can we make this a method of it's own? 
@@ -274,16 +286,16 @@ public class HUDView extends ApplicationAdapter{
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
-		Label message = new Label("Implementing the chat lobby here", skin);
 		
-		messageWindow.add(message);
 		messageWindow.setWidth(400);
 		messageWindow.setHeight(400);
 		messageWindow.pack();
 		messageWindow.setMovable(false);
 		messageWindow.setPosition(gameWidth, gameHeight-50, Align.right);
 		messageWindow.add(chatbox);
+		messageWindow.row();
 		messageWindow.setVisible(false);
+		messageWindow.pack();
 		
 		stage.addActor(messageWindow);
 	}
