@@ -24,6 +24,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
+	private boolean leftClick = false;
 	
 
 	public Soldier(float posX, float posY, float posZ) {
@@ -40,12 +41,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setDamage(50);
 		this.setArmor(250);
 		this.setArmorDamage(50);
-		this.setAttackRange(0);
-		this.setAttackSpeed(10);
+		this.setAttackRange(1);
+		this.setAttackSpeed(50);
 	}
 
 	@Override
 	public void onClick(MouseHandler handler) {
+		leftClick = true;
 		if(this.getOwner() instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -68,7 +70,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			this.setTexture("spacman_yellow");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
+		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity && leftClick == true) {
 			// we cant assign different owner yet
 			if (!this.sameOwner(entities.get(0))) {
 				this.setAction(new MoveAction((int) x, (int) y, this));
@@ -78,6 +80,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				this.setAction(new DamageAction(this, target));
 				LOGGER.error("Assigned action attack target at " + x + " " + y);
 			}
+			leftClick = false;
 		} else {
 			this.setAction(new MoveAction((int) x, (int) y, this));
 			LOGGER.error("Assigned action move to" + x + " " + y);

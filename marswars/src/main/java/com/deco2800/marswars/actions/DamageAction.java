@@ -28,8 +28,8 @@ public class DamageAction implements DecoAction {
 	}
 	
 	public DamageAction(AttackableEntity entity, AttackableEntity goalEntity) {
-		this.entity = goalEntity;
-		this.enemy= entity;
+		this.entity = entity;
+		this.enemy= goalEntity;
 		attackSpeed = entity.getAttackSpeed();
 	}
 
@@ -43,6 +43,13 @@ public class DamageAction implements DecoAction {
 			case MOVE_TOWARDS:
 				// When close to the enemy's attack range, attack.
 				if (action.completed()) {
+					state = state.ATTACK;
+					return;
+				}
+				float diffX = enemy.getPosX() - entity.getPosX();
+				float diffY = enemy.getPosY() - entity.getPosY();
+				float distance = Math.abs(diffX+diffY);
+				if (distance < enemy.getAttackRange()) {
 					state = state.ATTACK;
 					return;
 				}
