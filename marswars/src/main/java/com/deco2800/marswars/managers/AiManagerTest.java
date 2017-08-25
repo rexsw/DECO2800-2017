@@ -13,9 +13,16 @@ import org.slf4j.LoggerFactory;
 public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 		private int teamid;
 		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
+		private int cooldown = 0;
+		private int time = 0;
+		private boolean alive = true;
 
 @Override
 public void onTick(long l) {
+	if(!alive) {
+		return;
+	}
+	time += 5;
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 		if(e instanceof HasOwner) {
 			if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
@@ -26,16 +33,6 @@ public void onTick(long l) {
 					Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 					x.setAction(new GatherAction(x, (Resource) resource.get()));
 					LOGGER.error("ai - set spacman to grather");
-				 /*
-					for( BaseEntity r : GameManager.get().getWorld().getEntities())
-						if(r instanceof Resource) {
-							if(((Resource) r).getType() == ResourceType.ROCK) { //Simple call getType() for the type of resource
-								x.setAction(new GatherAction(x, r));
-								LOGGER.error("ai - set spacman to grather");
-								break;
-							}
-					}
-					*/
 				
 				}
 			}
@@ -44,8 +41,20 @@ public void onTick(long l) {
 				//lets the ai target player spacman with it's enemyspacmen
 				EnemySpacman x = (EnemySpacman)e;
 				for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-					if(r instanceof Spacman && ((HasOwner) r).getOwner() instanceof PlayerManager) {
-						x.setAction(new MoveAction(r.getPosX(), r.getPosY(), x));
+					if(r instanceof Spacman && ((Spacman) r).getOwner() != this && !(((Spacman) r).getOwner() instanceof PlayerManager)) {
+						if (e.distance(r) < 3f) {
+							if(cooldown + 60 < time) {
+								LOGGER.error("ai - attacked spacman");
+								Spacman y = (Spacman)r;
+								(y).setHealth(y.getHealth() - 2);
+								cooldown = time;
+							}
+							break;
+						} else if(cooldown + 10 < time) {
+							x.setAction(new MoveAction(r.getPosX(), r.getPosY(), x));
+							cooldown = time;
+							break;
+						}
 						break;
 					}
 				}
@@ -65,7 +74,7 @@ public void onTick(long l) {
 					if (resourceManager.getRocks() > 30) {
 						LOGGER.error("ai - set base to make spacman");
 						resourceManager.setRocks(resourceManager.getRocks() - 30);
-						Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
+						Spacman r = new Spacman(x.getPosX() + 1, x.getPosY(), 0);
 						r.setOwner(this);
 						x.setAction(new GenerateAction(r));							
 					}
@@ -86,6 +95,21 @@ public void onTick(long l) {
 		public boolean sameTeam(Manager otherMember) {
 			boolean isInstance = otherMember instanceof HasTeam;
 			return isInstance && this.teamid == ((HasTeam) otherMember).getTeam();
+		}
+		
+		public void isKill() {
+			for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
+				if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
+					return;
+				}
+			}
+			for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
+				if(e instanceof HasOwner && ((HasOwner) e).getOwner() == this) {
+					GameManager.get().getWorld().removeEntity(e);
+				}
+			}
+			LOGGER.error("ai - is kill");
+			alive = false;
 		}
 		
 	}

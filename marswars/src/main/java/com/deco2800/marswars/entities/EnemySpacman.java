@@ -28,7 +28,7 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 		this.setTexture("spatman_blue");
 
 		// Ensure the LocalEnemey manager has been created!
-		GameManager.get().getManager(LocalEnemyManager.class);
+		//GameManager.get().getManager(LocalEnemyManager.class);
 	}
 
 	/**
