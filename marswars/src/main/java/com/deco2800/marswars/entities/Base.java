@@ -10,32 +10,48 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 19/7/17.
  *
  * A home base for the empire
  */
-public class Base extends BaseEntity implements Clickable, Tickable, HasProgress {
+public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
+	
+	private Manager onwer = null;
 
 	boolean selected = false;
 
 	/**
-	 * Constructor for the base
-	 * @param world
-	 * @param posX
-	 * @param posY
-	 * @param posZ
+	 * Constructor for the base.
+	 * @param world The world that will hold the base.
+	 * @param posX its x position on the world.
+	 * @param posY its y position on the world.
+	 * @param posZ its z position on the world.
 	 */
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
+		super(posX, posY, posZ, 1, 1, 1);
+		this.setTexture("base");
+		this.setCost(10000000);
+	}
+
+	public Base(BaseWorld world, int posX, int posY, int posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 		this.setCost(10000000);
@@ -52,10 +68,13 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		System.out.println("Base got clicked");
-
-		if (!selected) {
-			selected = true;
+		if(this.getOwner() instanceof PlayerManager) {
+			if (!selected) {
+				selected = true;
+				LOGGER.error("clicked on base");
+			}
+		} else {
+			LOGGER.error("clicked on ai base");
 		}
 	}
 
@@ -131,4 +150,29 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	public boolean showProgress() {
 		return currentAction.isPresent();
 	}
+
+	@Override
+	public void setOwner(Manager owner) {
+		this.onwer = owner;
+	}
+
+	@Override
+	public Manager getOwner() {
+		return this.onwer;
+	}
+
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		return entity instanceof  HasOwner &&
+				this.onwer == ((HasOwner) entity).getOwner();
+	}
+	
+	public boolean isWorking() {
+		return currentAction.isPresent();
+	}
+	
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
+	}
+	
 }

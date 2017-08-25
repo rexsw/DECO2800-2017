@@ -46,6 +46,7 @@ subprojects {
 
     repositories {
         mavenLocal()
+        mavenCentral()
         maven { url 'http://deco2800-artifactory.uqcloud.net/artifactory/libs-release/' }
     }
 
