@@ -21,20 +21,35 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     private int damage; // the damage of the entity
     private Manager owner = null; // the owner of the player
     private Optional<DecoAction> currentAction = Optional.empty();
-    private AttackableEntity target;
+    private AttackableEntity target; //Missile should only be created once target is confirmed viable target
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MissileEntity.class);
 
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
-                         float xRenderLength, float yRenderLength, boolean centered, AttackableEntity target) {
+                         AttackableEntity target, int damage, int armorDamage) {
+        super(posX, posY, posZ, xLength, yLength, zLength);
+        this.modifyCollisionMap(true);
+        this.target = target;
+        this.damage = damage;
+        this.armorDamage = armorDamage;
+    }
+
+    public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
+                         float xRenderLength, float yRenderLength, boolean centered, AttackableEntity target,
+                         int damage, int armorDamage) {
         super(posX, posY, posZ, xLength, yLength, zLength, xRenderLength, yRenderLength, centered);
         this.target = target;
+        this.damage = damage;
+        this.armorDamage = armorDamage;
     }
 
     @SuppressWarnings("deprecation")
-    public MissileEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered, AttackableEntity target) {
+    public MissileEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered, AttackableEntity target,
+                         int damage, int armorDamage) {
         super(position, xRenderLength, yRenderLength, centered);
         this.target = target;
+        this.damage = damage;
+        this.armorDamage = armorDamage;
         // TODO Auto-generated constructor stub
     }
 
