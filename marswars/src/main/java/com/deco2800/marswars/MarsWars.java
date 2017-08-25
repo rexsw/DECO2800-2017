@@ -150,23 +150,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		aienemy2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(aienemy2);
 
+		// do something important here, asynchronously to the rendering thread
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				// do something important here, asynchronously to the rendering thread
 				while(true) {
 					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
-
 							}
 						}
-
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
 					}
-
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -206,11 +203,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					String ip = ipAddr.getHostAddress();
 					ipDiag.text("IP Address: " + ip);
-
 					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
 					networkServer = new SpacServer(serverConnectionManager);
-
-
 					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
 					networkClient = new SpacClient(clientConnectionManager);
 					//Initiate Server
@@ -219,7 +213,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					} catch (IOException e) {
 						LOGGER.error("Error when initiating server", e);
 					}
-
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
@@ -228,7 +221,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					}
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
-
 					System.out.println(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
