@@ -51,7 +51,7 @@ public class DamageAction implements DecoAction {
 				float diffX = enemy.getPosX() - entity.getPosX();
 				float diffY = enemy.getPosY() - entity.getPosY();
 				float distance = Math.abs(diffX+diffY);
-				if (distance < enemy.getAttackRange()) {
+				if (distance < entity.getAttackRange()) {
 					state = State.ATTACK;
 					return;
 				}
