@@ -18,8 +18,8 @@ public class GatheredResource {
 	 * @param amount
 	 */
 	public GatheredResource(ResourceType type, int amount) {
+		this.amount = amount < 0 ? 0: amount;
 		this.type = type;
-		this.amount = amount;
 	}
 	
 	/**

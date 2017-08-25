@@ -2,15 +2,12 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.LineOfSight;
@@ -24,13 +21,12 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 public class SpacmanTest {
-private static HeadlessApplication game;
 	
 	@Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 	
 	@Test
-	public void ConstructorTest() {
+	public void constructorTest() {
 		Spacman man = new Spacman(1,1,1);
 		assertEquals(man.getHealth(), 100);
 		assertEquals(man.getOwner(), null);
@@ -40,7 +36,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void SetPositionTest() {
+	public void setPositionTest() {
 		Spacman man = new Spacman(1,1,1);
 		man.setPosition(0, 0, 0);
 		
@@ -50,7 +46,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void BackPackTest() {
+	public void backPackTest() {
 		Spacman man = new Spacman(1,1,1);
 		man.addGatheredResource(new GatheredResource(ResourceType.ROCK, 10));
 		
@@ -63,7 +59,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void HealthTest() {
+	public void healthTest() {
 		Spacman man = new Spacman(1,1,1);
 		GameManager.get().setWorld(new BaseWorld(10,10));
 		GameManager.get().getWorld().addEntity(man);
@@ -76,7 +72,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void OwnerTest() {
+	public void ownerTest() {
 		Spacman man = new Spacman(1,1,1);
 		Spacman man2 = new Spacman(1,1,1);
 		Spacman man3 = new Spacman(1,1,1);
@@ -94,7 +90,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void ActionTest() {
+	public void actionTest() {
 		Spacman man = new Spacman(1,1,1);
 		DecoAction action = Mockito.mock(DecoAction.class);
 		man.setAction(action);
@@ -103,7 +99,7 @@ private static HeadlessApplication game;
 	}
 	
 	@Test
-	public void OnClickTest() {
+	public void onClickTest() {
 		Spacman man = new Spacman(1,1,1);
 		MouseHandler mockHandler = Mockito.mock(MouseHandler.class);
 		PlayerManager mockManager = Mockito.mock(PlayerManager.class);
@@ -111,6 +107,5 @@ private static HeadlessApplication game;
 		man.onClick(mockHandler);
 		
 		assertEquals(man.getTexture(), "spacman_blue");
-		
 	}
 }
