@@ -39,6 +39,11 @@ public class Bullet extends MissileEntity implements Tickable {
 
     @Override
     public void onTick(int tick) {
+    	//If there is no action delete
+    	if (!currentAction.isPresent() || currentAction.get().completed()) {
+    		GameManager.get().getWorld().removeEntity(this);
+    	} 
+    	
     	/* If the action is completed, remove it otherwise keep doing that action */
     	try {
 			if (!currentAction.get().completed()) {

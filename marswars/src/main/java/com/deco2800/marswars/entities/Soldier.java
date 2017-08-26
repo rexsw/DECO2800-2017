@@ -51,10 +51,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setDamage(50);
 		this.setArmor(250);
 		this.setArmorDamage(50);
-		this.setAttackRange(2);
-		this.setAttackSpeed(50);
-		this.missile = new Bullet(this.getPosX(), this.getPosY(), this.getPosZ(), null,
-				this.getDamageDeal(), this.getArmorDamage());
+		this.setAttackRange(8);
+		this.setAttackSpeed(30);
 	}
 
 	@Override
@@ -187,11 +185,4 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		return this.health;
 	}
 	
-	public MissileEntity getMissile() {
-		return missile;
-	}
-	
-	public void setMissile(MissileEntity missile) {
-		this.missile = missile;
-	}
 }

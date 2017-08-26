@@ -10,7 +10,7 @@ import com.deco2800.marswars.entities.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
- * Created by timhadwen on 30/7/17.
+ * Created by Vinson Yeung on 21/8/17.
  * Edited by Tze Thong Khor on 22/8/17
  */
 public class ImpactAction implements DecoAction {
@@ -41,23 +41,27 @@ public class ImpactAction implements DecoAction {
 			case SETUP_MOVE:
 				action = new MoveAction(target.getPosX(), target.getPosY(), missile);
 				state = State.MOVE_TOWARDS;
-				return;
+				break;
 			case MOVE_TOWARDS:
 				if (GameManager.get().getWorld().getEntities().contains(target)) {
 					if (action.completed()) {
 						if (target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY()) {
 							state = State.IMPACT;
+							break;
 						} else {
 							state = State.SETUP_MOVE;
+							break;
 						}
 					}
 					action.doAction();
+					return;
 					//LOGGER.info("MOVING TO TARGET");
 				} else {
 					completed = true;
+					GameManager.get().getWorld().removeEntity(missile);
 					return;
 				}
-				break;
+				
 			case IMPACT:
 				if (target.getArmor() > 0) {
 					target.setHealth(target.getHealth() - missile.getDamageDeal()/2);
@@ -65,6 +69,7 @@ public class ImpactAction implements DecoAction {
 				} else {
 					target.setHealth(target.getHealth() - missile.getDamageDeal());
 				}
+				GameManager.get().getWorld().removeEntity(missile);
 				LOGGER.info("target health " + target.getHealth());
 				completed = true;
 				return;
