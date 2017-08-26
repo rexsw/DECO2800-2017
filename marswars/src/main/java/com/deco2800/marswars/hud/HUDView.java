@@ -49,6 +49,7 @@ public class HUDView extends ApplicationAdapter{
 	private Stage stage;
 	private Skin skin;
 	
+	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
 	private Table overheadLeft;
 	private Table overheadRight;
@@ -298,7 +299,7 @@ public class HUDView extends ApplicationAdapter{
 		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.DARK_GRAY);
 		pixmap.fill();
-		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
+		barStyle = new ProgressBar.ProgressBarStyle();
 		barStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 		pixmap.dispose();
 
@@ -423,7 +424,6 @@ public class HUDView extends ApplicationAdapter{
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
 		inventory = new Window("Actions", skin);
-		
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
@@ -556,6 +556,14 @@ public class HUDView extends ApplicationAdapter{
 		healthBar.setValue(stats.getHealth());
 		nameLabel.setText(stats.getName());
 		healthLabel.setText("Health: " + stats.getHealth());
+		//Update the health progress bad to red once health is below 20 
+		if (stats.getHealth() < 20) {
+			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+			pixmap.setColor(Color.RED);
+			pixmap.fill();
+			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+			pixmap.dispose();
+		}
 	}
 
 	private void enterActions(List<ActionType> actions) {
@@ -636,6 +644,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
+		
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
