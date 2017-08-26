@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	
-	private static final int BUTTONSIZE = 30;
 	private static final int BUTTONPAD = 10; 
 
 	private Stage stage;
@@ -48,8 +47,8 @@ public class HUDView extends ApplicationAdapter{
 	private Table resourceTable; 
 	
 	private ImageButton quitButton;
-	private Button helpButton;
-	private Button messageButton;
+	private ImageButton helpButton;
+	private ImageButton messageButton;
 	
 	private Label rockCount; 
 	private Label crystalCount; 
@@ -154,11 +153,11 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
 		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
 		overheadRight.add(timeDisp).pad(BUTTONPAD);
-		overheadRight.add(messageButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
-		overheadRight.add(helpButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
-		overheadRight.add(quitButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		overheadRight.add(messageButton).pad(BUTTONPAD);
+		overheadRight.add(helpButton).pad(BUTTONPAD);
+		overheadRight.add(quitButton).pad(BUTTONPAD);
 						
-		quitButton.setSize(40, 40);
+		
 		stage.addActor(overheadRight);
 		
 		//can we make this a method of it's own? 
@@ -329,7 +328,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setSize(50, 80);
 		HUDManip.add(dispMainMenu);
 		HUDManip.row();
-		HUDManip.add(dispActions).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
 		
