@@ -18,7 +18,11 @@ import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
-
+/**
+ * A combat unit.
+ * @author Tze Thong Khor
+ *
+ */
 public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);

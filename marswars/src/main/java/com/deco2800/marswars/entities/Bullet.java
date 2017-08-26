@@ -10,6 +10,11 @@ import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.GameManager;
 
+/**
+ * A missile.
+ * @author Tze Thong Khor
+ *
+ */
 public class Bullet extends MissileEntity implements Tickable {
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
@@ -21,7 +26,7 @@ public class Bullet extends MissileEntity implements Tickable {
 	private AttackableEntity target;
 
     public Bullet(float posX, float posY, float posZ, AttackableEntity target, int damage, int armorDamage) {
-        super(posX, posY, posZ, 1, 1, 1, target, armorDamage, armorDamage);
+        super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage);
         this.setTexture("bullet");
         this.initActions();
         //this.addNewAction(MoveAction.class);
@@ -49,8 +54,15 @@ public class Bullet extends MissileEntity implements Tickable {
     	} 
     }
     
+    /**
+     * Return the movement speed of the bullet.
+     * @return speed of the bullet
+     */
     public float getSpeed() { return speed; }
     
+    /**
+     * Set the speed of the bullet.
+     */
     public void setSpeed(float speed) { this.speed = speed; }
     
 }

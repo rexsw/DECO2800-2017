@@ -12,6 +12,7 @@ import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
+ * A super class of a combat unit.
  * @author Tze Thong Khor on 25/8/17
  *
  */
@@ -26,9 +27,9 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	private int attackRange; // attackrange of the entity
 	private int damage; // the damage of the entity
 	private Manager owner = null; // the owner of the player
-	private Optional<DecoAction> currentAction = Optional.empty(); 
-	private int attackSpeed;
-	private MissileEntity missile;
+	private Optional<DecoAction> currentAction = Optional.empty(); // current action
+	private int attackSpeed; // attack speed of the entity
+	private MissileEntity missile; // the type of missile
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -275,10 +276,18 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 		return attackSpeed;
 	}
 	
+	/**
+	 * Return the missile of the entity.
+	 * @return missile
+	 */
 	public MissileEntity getMissile() {
 		return missile;
 	}
 	
+	/**
+	 * Set the missile of the entity
+	 * @param missile the type of missile
+	 */
 	public void setMissile(MissileEntity missile) {
 		this.missile = missile;
 	}
