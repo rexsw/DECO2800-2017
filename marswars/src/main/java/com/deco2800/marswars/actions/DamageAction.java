@@ -69,7 +69,7 @@ public class DamageAction implements DecoAction {
 					}
 				} else {
 					LOGGER.info("Set action empty");
-					entity.setEmptyAction();
+					completed = true;
 				}
 				break;
 		}

@@ -137,6 +137,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		aienemy2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(aienemy2);
 
+		// add soldier for combat testing
+		Soldier soldierA = new Soldier(7, 7, 0);
+		Soldier soldierB = new Soldier(5, 5, 0);
+		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
+		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(soldierA);
+		GameManager.get().getWorld().addEntity(soldierB);
+		
 		// do something important here, asynchronously to the rendering thread
 		new Thread(new Runnable() {
 			@Override
