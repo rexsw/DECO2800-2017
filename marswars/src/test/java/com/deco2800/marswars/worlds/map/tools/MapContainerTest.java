@@ -52,7 +52,6 @@ public class MapContainerTest extends BaseTest{
     @Test
     public void generateResourcePattern() throws Exception {
         map.generateResourcePattern();
-        System.out.println(world.getEntities());
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
