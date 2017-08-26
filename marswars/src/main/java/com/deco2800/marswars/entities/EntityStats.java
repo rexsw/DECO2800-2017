@@ -20,19 +20,17 @@ public class EntityStats {
     private float posZ;
     private GatheredResource resourceCarried;
     private Optional<DecoAction> currentAction;
-    private BaseEntity entity;
     private Selectable.EntityType type;
 
 
-    public EntityStats(String name, int health, float posX, float posY, float posZ, GatheredResource resourceCarried, Optional<DecoAction> currentAction, BaseEntity entity) {
+    public EntityStats(String name, int health, GatheredResource resourceCarried, Optional<DecoAction> currentAction, BaseEntity entity) {
         this.name = name;
         this.health = health;
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
+        this.posX = entity.getPosX();
+        this.posY = entity.getPosY();
+        this.posZ = entity.getPosZ();
         this.resourceCarried = resourceCarried;
         this.currentAction = currentAction;
-        this.entity = entity;
         this.type = entity.getEntityType();
     }
 

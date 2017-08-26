@@ -399,51 +399,51 @@ public class MapContainer {
         String mapDoesntExit = "The given Map type doesn't exits";
         if(randomSize == MapSizeTypes.TINY){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/tinyMars.tmx";
+                newPath = "resources/basicMap/tinyMars1.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/tinyMoon.tmx";
+                newPath = "resources/basicMap/tinyMoon1.tmx";
             } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/tinySun.tmx";
+                newPath = "resources/basicMap/spacewars.tmx";
             } else {
                 LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.SMALL){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/smallMars.tmx";
+                newPath = "resources/basicMap/smallMars1.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/smallMoon.tmx";
+                newPath = "resources/basicMap/smallMoon1.tmx";
             } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/smallSun.tmx";
+                newPath = "resources/basicMap/spacewars.tmx";
             } else {
                 LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.MEDIUM){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/mediumMars.tmx";
+                newPath = "resources/basicMap/mediumMars1.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/mediumMoon.tmx";
+                newPath = "resources/basicMap/mediumMoon1.tmx";
             } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/mediumSun.tmx";
+                newPath = "resources/basicMap/spacewars.tmx";
             } else {
                 LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.LARGE){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/largeMars.tmx";
+                newPath = "resources/basicMap/largeMars1.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/largeMoon.tmx";
+                newPath = "resources/basicMap/largeMoon1.tmx";
             } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/largeSun.tmx";
+                newPath = "resources/basicMap/spacewars.tmx";
             } else {
                 LOGGER.error(mapDoesntExit);
             }
         }else if(randomSize == MapSizeTypes.VERY_LARGE){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/veryLargeMars.tmx";
+                newPath = "resources/basicMap/largeMars1.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/veryLargeMoon.tmx";
+                newPath = "resources/basicMap/largeMoon1.tmx";
             } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
+                newPath = "resources/basicMap/spacewars.tmx";
             } else {
                 LOGGER.error(mapDoesntExit);
             }

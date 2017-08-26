@@ -23,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.GameManager;
@@ -64,13 +62,13 @@ public class HUDView extends ApplicationAdapter{
 	private Label biomassCount; 
 	private Label waterCount;
 
-	private Label healthLabel, nameLabel;
+	private Label healthLabel;
+	private Label nameLabel;
 	
 	private Window messageWindow; 
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
-	private boolean menuToggle; 
-	private Label timeDisp; 
+	private boolean menuToggle;
 	private Table HUDManip;
 	
 	private Window mainMenu; 
@@ -165,7 +163,6 @@ public class HUDView extends ApplicationAdapter{
 
 		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
 		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
-		overheadRight.add(timeDisp).pad(BUTTONPAD);
 		overheadRight.add(messageButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
 		overheadRight.add(helpButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
 		overheadRight.add(quitButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
@@ -234,7 +231,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		LOGGER.debug("Creating health bar");
 		addProgressBar();
-		Label healthLabel = new Label("Health: ", skin);
+		healthLabel = new Label("Health: ", skin);
 		healthLabel.setAlignment(Align.left);
 		
 		overheadLeft.add(healthBar);
@@ -567,6 +564,7 @@ public class HUDView extends ApplicationAdapter{
     private void updateSelectedStats (EntityStats stats) {
 		healthBar.setValue(stats.getHealth());
 		nameLabel.setText(stats.getName());
+		healthLabel.setText("Health: " + stats.getHealth());
 	}
 
 	private void enterActions(List<ActionType> actions) {
@@ -584,6 +582,8 @@ public class HUDView extends ApplicationAdapter{
 				case GATHER:
 					enableButton(gatherButton);
 					break;
+				default:
+					LOGGER.error("Unrecognised action type, please implement in HUDView");
 			}
         }
 

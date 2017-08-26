@@ -300,7 +300,7 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("UNNAMED",0,0,0,0, null, Optional.empty(), this);
+		return new EntityStats("UNNAMED",0, null, Optional.empty(), this);
 	}
 
 	/**

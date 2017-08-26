@@ -3,7 +3,6 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
@@ -16,9 +15,6 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sound.sampled.Line;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -41,9 +37,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-//Hello wo
+	//Hello wo
 	private ActionType nextAction;
-	private ActionSetter actionSetter;
 
 	/**
 	 * Constructor for the Spacman
@@ -181,7 +176,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
@@ -329,7 +323,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 
 	public EntityStats getStats() {
-		return new EntityStats("Spacman",this.health,this.getPosX(),this.getPosY(),this.getPosZ(), this.gatheredResource, this.currentAction, this);
+		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
 	}
 
 }
