@@ -28,12 +28,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private MissileEntity missile;
+	private String selectedTextureName = "soldierSelected";
+	private String defaultTextureName = "soldier";
 	
 
 	public Soldier(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		// Everything is just testing
-		this.setTexture("spacman_yellow"); // just for testing
+		this.setTexture(defaultTextureName); // just for testing
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
@@ -56,7 +58,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		if(this.getOwner() instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			this.setTexture("spacman_blue");
+			this.setTexture(selectedTextureName);
 			LOGGER.error("Clicked on soldier");
 			this.makeSelected();
 		} else {
@@ -72,24 +74,29 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
-			this.setTexture("spacman_yellow");
+			this.setTexture(defaultTextureName);
 			return;
 		}
 		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
-			if (!this.sameOwner(entities.get(0))) {
-				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-				LOGGER.error("Same owner");
-			} else {
-				AttackableEntity target = (AttackableEntity) entities.get(0);
+			AttackableEntity target = (AttackableEntity) entities.get(0);
+			if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`
+					 this!= target //prevent soldier suicide when owner is not set
+					) {
 				currentAction = Optional.of(new DamageAction(this, target));
 				LOGGER.error("Assigned action attack target at " + x + " " + y);
+			} 
+			else 
+			{
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+				LOGGER.error("Same owner");
 			}
+			
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
-		this.setTexture("spacman_yellow");
+		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound("endturn.wav");
 	}
