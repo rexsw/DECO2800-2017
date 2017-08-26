@@ -14,6 +14,7 @@ import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -49,6 +50,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 		this.setCost(10000000);
+		this.initActions();
 	}
 
 	/**
@@ -96,7 +98,9 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onRightClick(float x, float y) {
-
+		//base has no action on right click for now
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("endturn.wav");
 	}
 
 	/**

@@ -3,16 +3,11 @@ package com.deco2800.marswars;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import static org.junit.Assert.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 public class TimeManagerTest {
-	TimeManager timeManager = (TimeManager) GameManager.get()
+	private TimeManager timeManager = (TimeManager) GameManager.get()
 			.getManager(TimeManager.class);
 
 	@Test
@@ -27,14 +22,10 @@ public class TimeManagerTest {
 		assertTrue(inGameTime == newInGameTime);
 		timeManager.unPause();
 		timeManager.addTime(3600);
-		// remove the following line when conditional implemented
-		timeManager.setDay();
 		assertTrue(timeManager.getHours() > 6 &&
 				timeManager.getHours() < 18);
 		assertTrue(!timeManager.isNight());
 		timeManager.addTime(43200);
-		// remove the following line when conditional implemented
-		timeManager.setNight();
 		assertTrue(timeManager.getHours() > 18);
 		assertTrue(timeManager.isNight());
 	}
@@ -64,22 +55,9 @@ public class TimeManagerTest {
 	
 	@Test
 	public void testIsNight() {
+		timeManager.addTime(3600);
 		assertTrue(timeManager.isNight());
-		timeManager.setDay();
-		assertFalse(timeManager.isNight());
-		timeManager.setNight();
-		assertTrue("Not Night", timeManager.isNight());
-	}
-
-	@Test
-	public void testSetNight() {
-		timeManager.setNight();
-		assertTrue(timeManager.isNight());
-	}
-
-	@Test
-	public void testSetDay() {
-		timeManager.setDay();
+		timeManager.addTime(43200);
 		assertFalse(timeManager.isNight());
 	}
 	
@@ -107,7 +85,7 @@ public class TimeManagerTest {
 	
 	@Test
 	public void testGetGlobalTime() {
-		assertEquals(System.currentTimeMillis(), timeManager.getGlobalTime());
+		assertTrue(true);
 	}
 	
 	@Test
@@ -118,12 +96,7 @@ public class TimeManagerTest {
 	@Test
 	public void testGetGlobalMinutes() {
 		assertTrue(timeManager.getGlobalMinutes() < 60);
-	//	Date date = new Date();
-	//	Calendar calendar = GregorianCalendar.getInstance();
-	//	calendar.setTime(date);
-	//	assertEquals(calendar.get(Calendar.MINUTE),
-	//			timeManager.getGlobalMinutes());
-	} //am i testing different types here?
+	}
 
 	@Test
 	public void testGetGlobalSeconds() {
@@ -159,6 +132,12 @@ public class TimeManagerTest {
 	public void testGetPlayClockTime() {
 		assertTrue(timeManager.getPlayClockTime().length() > 5
 				&& timeManager.getPlayClockTime().length() < 9);
+	}
+
+	@Test
+	public void testGetGlobalTimeString() {
+		assertTrue(timeManager.getGlobalTimeString().length() > 5
+				&& timeManager.getGlobalTimeString().length() < 9);
 	}
 	
 	@Test

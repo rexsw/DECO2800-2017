@@ -15,7 +15,7 @@ import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
-import technology.Technology;
+import com.deco2800.marswars.technology.*;
 
 import java.util.Optional;
 
@@ -42,6 +42,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base2");
 		this.setCost(10000000);
+		this.initActions();
 	}
 
 	public void giveAction(DecoAction action) {
