@@ -27,14 +27,10 @@ public class TimeManagerTest {
 		assertTrue(inGameTime == newInGameTime);
 		timeManager.unPause();
 		timeManager.addTime(3600);
-		// remove the following line when conditional implemented
-		timeManager.setDay();
 		assertTrue(timeManager.getHours() > 6 &&
 				timeManager.getHours() < 18);
 		assertTrue(!timeManager.isNight());
 		timeManager.addTime(43200);
-		// remove the following line when conditional implemented
-		timeManager.setNight();
 		assertTrue(timeManager.getHours() > 18);
 		assertTrue(timeManager.isNight());
 	}
@@ -64,22 +60,9 @@ public class TimeManagerTest {
 	
 	@Test
 	public void testIsNight() {
+		timeManager.addTime(3600);
 		assertTrue(timeManager.isNight());
-		timeManager.setDay();
-		assertFalse(timeManager.isNight());
-		timeManager.setNight();
-		assertTrue("Not Night", timeManager.isNight());
-	}
-
-	@Test
-	public void testSetNight() {
-		timeManager.setNight();
-		assertTrue(timeManager.isNight());
-	}
-
-	@Test
-	public void testSetDay() {
-		timeManager.setDay();
+		timeManager.addTime(43200);
 		assertFalse(timeManager.isNight());
 	}
 	

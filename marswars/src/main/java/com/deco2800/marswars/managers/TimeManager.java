@@ -59,27 +59,25 @@ public class TimeManager extends Manager implements TickableManager{
 	 * @return true if it is 'Night', false otherwise
 	 */
 	public boolean isNight() {
-		return isNight;
-	}
-/*	Add this so night can't be set during the day:
-	if (this.getHours() < DAYBREAK || this.getHours() > NIGHT) {
+		if (this.getHours() < DAYBREAK || this.getHours() > NIGHT) {
 			setNight();
 		} else {
 			setDay();
 		}
-*/
+		return isNight;
+	}
 
 	/**
 	 * Set the time of day to night
 	 */
-	public void setNight() {
+	private void setNight() {
 		isNight = true;
 	}
 
 	/**
 	 * Set the time of day to day
 	 */
-	public void setDay() {
+	private void setDay() {
 		isNight = false;
 	}
 	
