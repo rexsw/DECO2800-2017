@@ -510,6 +510,7 @@ public class HUDView extends ApplicationAdapter{
             Button newButton = buttonGenerator.getButton(c, this.selectedEntity);
             inventory.add(newButton);
         }
+
     }
 
 
