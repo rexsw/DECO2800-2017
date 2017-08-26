@@ -1,3 +1,4 @@
+package com.deco2800.marswars.entities;
 
 import static org.junit.Assert.*;
 
