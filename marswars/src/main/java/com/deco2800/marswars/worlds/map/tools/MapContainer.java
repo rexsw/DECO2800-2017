@@ -42,9 +42,7 @@ public class MapContainer {
      * @param length the length of the map.
      */
     public MapContainer(String mapPath, int width, int length){
-        this.width = width;
-        this.length = length;
-        this.mapPath = mapPath;
+        //not yet implemented
     }
 
 
@@ -248,7 +246,8 @@ public class MapContainer {
      */
     protected TerrainElement getRandomTerrainElement(){
         TerrainElementTypes random = TerrainElementTypes.values()[r.nextInt(TerrainElementTypes.values().length)];
-        return null;
+        LOGGER.info("chosen terrain type: " + random);
+        return new TerrainElement();
     }
 
     /**
@@ -279,10 +278,10 @@ public class MapContainer {
      *
      * @return the new group of buildings.
      */
-    protected Building[][] getRandomStructure(){
+    protected void getRandomStructure(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
         LOGGER.info("chosen building type: " + random);
-        return null;
+        return;
     }
 
     /**
@@ -301,10 +300,8 @@ public class MapContainer {
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
-                if (n>0.4){
-                    if(r.nextInt(10) > scale && checkForEntity(ix, iy)){
+                if (n>0.4 && r.nextInt(10) > scale && checkForEntity(ix, iy)){
                         this.getRandomResource(ix, iy);
-                    }
                 }
             }
         }

@@ -22,9 +22,15 @@ public class MapContainerTest extends BaseTest{
         world = new CustomizedWorld(map);
     }
     @Test
-    public void generateEntities() throws Exception {
+    public void generateEntitiesRandom() throws Exception {
         world.loadMapContainer(map);
         Assert.assertFalse(world.getEntities().isEmpty());
+    }
+
+    @Test
+    public void generateEntities() throws Exception {
+        map.generateEntities(false);
+        Assert.assertTrue(world.getEntities().isEmpty());
     }
 
     @Test
