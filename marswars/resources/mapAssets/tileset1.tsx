@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="tileset1" tilewidth="58" tileheight="36" tilecount="19" columns="0">
+<tileset name="tileset1" tilewidth="58" tileheight="36" tilecount="20" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="10">
   <image width="58" height="36" source="tileset/mars006.png"/>
@@ -57,5 +57,8 @@
  </tile>
  <tile id="37">
   <image width="58" height="36" source="tileset/moon009.png"/>
+ </tile>
+ <tile id="38">
+  <image width="58" height="36" source="tileset/moon010.png"/>
  </tile>
 </tileset>
