@@ -14,14 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.entities.Base;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EnemySpacman;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.Soldier;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -157,7 +150,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(aibase2);
 		aienemy2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(aienemy2);
-
 
 		// add soldier for combat testing
 		Soldier soldierA = new Soldier(7, 7, 0);

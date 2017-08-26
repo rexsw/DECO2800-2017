@@ -30,7 +30,6 @@ public class Bullet extends MissileEntity implements Tickable {
         super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage);
         this.setTexture("bullet");
         this.initActions();
-        //this.addNewAction(MoveAction.class);
         this.addNewAction(ActionType.IMPACT);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
