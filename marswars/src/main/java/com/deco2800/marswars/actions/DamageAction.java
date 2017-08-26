@@ -53,7 +53,7 @@ public class DamageAction implements DecoAction {
 				}
 				diffX = enemy.getPosX() - entity.getPosX();
 				diffY = enemy.getPosY() - entity.getPosY();
-				distance = Math.abs(diffX+diffY);
+				distance = Math.abs(diffX) + Math.abs(diffY);
 				if (distance <= entity.getAttackRange()) {
 					state = State.ATTACK;
 					return;
@@ -65,7 +65,7 @@ public class DamageAction implements DecoAction {
 					attackInterval -= attackSpeed;
 					diffX = enemy.getPosX() - entity.getPosX();
 					diffY = enemy.getPosY() - entity.getPosY();
-					distance = Math.abs(diffX+diffY);
+					distance = Math.abs(diffX) + Math.abs(diffY);
 					if (attackInterval <= 0 && distance <= entity.getAttackRange()) {
 						// should spawn missile, missile carry the damage info but now 
 						// test attack without missile
