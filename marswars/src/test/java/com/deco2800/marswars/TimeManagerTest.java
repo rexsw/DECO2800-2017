@@ -12,10 +12,35 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class TimeManagerTest {
-	
+	TimeManager timeManager = (TimeManager) GameManager.get()
+			.getManager(TimeManager.class);
+
 	@Test
-	public void testGetHours(){
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	public void testOnTick() {
+		int count = 500;
+		timeManager.pause();
+		float inGameTime = timeManager.getInGameTime();
+		while (count != 0){
+			count--;
+		}
+		float newInGameTime = timeManager.getInGameTime();
+		assertTrue(inGameTime == newInGameTime);
+		timeManager.unPause();
+		timeManager.addTime(3600);
+		// remove the following line when conditional implemented
+		timeManager.setDay();
+		assertTrue(timeManager.getHours() > 6 &&
+				timeManager.getHours() < 18);
+		assertTrue(!timeManager.isNight());
+		timeManager.addTime(43200);
+		// remove the following line when conditional implemented
+		timeManager.setNight();
+		assertTrue(timeManager.getHours() > 18);
+		assertTrue(timeManager.isNight());
+	}
+
+	@Test
+	public void testGetHours() {
 		assertEquals(0, timeManager.getHours());
 		timeManager.addTime(21600);
 		assertEquals(6, timeManager.getHours());
@@ -26,8 +51,7 @@ public class TimeManagerTest {
 	}
 	
 	@Test
-	public void testGetMinutes(){
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	public void testGetMinutes() {
 		assertEquals(0, timeManager.getMinutes());
 		timeManager.addTime(60);
 		assertEquals(1, timeManager.getMinutes());
@@ -39,102 +63,106 @@ public class TimeManagerTest {
 	}
 	
 	@Test
-	public void testIsNight(){
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	public void testIsNight() {
 		assertTrue(timeManager.isNight());
-		
 		timeManager.setDay();
 		assertFalse(timeManager.isNight());
-		
 		timeManager.setNight();
 		assertTrue("Not Night", timeManager.isNight());
 	}
+
+	@Test
+	public void testSetNight() {
+		timeManager.setNight();
+		assertTrue(timeManager.isNight());
+	}
+
+	@Test
+	public void testSetDay() {
+		timeManager.setDay();
+		assertFalse(timeManager.isNight());
+	}
 	
 	@Test
-	public void testIsPaused(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
+	public void testIsPaused() {
 		assertFalse("Is paused", timeManager.isPaused());
 	}
 	@Test
-	public void testPause(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
+	public void testPause() {
 		assertFalse("Is paused", timeManager.isPaused());
-		
 		timeManager.pause();
 		assertTrue("Not paused", timeManager.isPaused());
 	}
 	@Test
-	public void testUnPause(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
+	public void testUnPause() {
 		assertTrue("Not paused", timeManager.isPaused());
-		
 		timeManager.unPause();
 		assertFalse("Is paused", timeManager.isPaused());
 	}
+
+	@Test
+	public void testGetInGameTime() {
+		assertTrue(true);
+	}
 	
-	@Test @Ignore
-	public void testGetGlobalTime(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
+	@Test
+	public void testGetGlobalTime() {
 		assertEquals(System.currentTimeMillis(), timeManager.getGlobalTime());
 	}
 	
-	@Test @Ignore
-	public void testGetGlobalHours(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
-		Date date = new Date();
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setTime(date);
-		//assertEquals(calendar.get(Calendar.HOUR_OF_DAY), timeManager.getGlobalHours());
-		//assertTrue(calendar.get(Calendar.HOUR_OF_DAY) == timeManager.getGlobalHours());
+	@Test
+	public void testGetGlobalHours() {
+		assertTrue(timeManager.getGlobalHours() < 24);
 	}
-	@Test @Ignore
-	public void testGetGlobalMinutes(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
-		Date date = new Date();
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setTime(date);
-		assertEquals(calendar.get(Calendar.MINUTE), timeManager.getGlobalMinutes());
+
+	@Test
+	public void testGetGlobalMinutes() {
+		assertTrue(timeManager.getGlobalMinutes() < 60);
+	//	Date date = new Date();
+	//	Calendar calendar = GregorianCalendar.getInstance();
+	//	calendar.setTime(date);
+	//	assertEquals(calendar.get(Calendar.MINUTE),
+	//			timeManager.getGlobalMinutes());
 	} //am i testing different types here?
-	@Test @Ignore
-	public void testGetGlobalSeconds(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
-		Date date = new Date();
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setTime(date);
-		//assertTrue(calendar.get(Calendar.SECOND) == timeManager.getGlobalSeconds());
+
+	@Test
+	public void testGetGlobalSeconds() {
+		assertTrue(timeManager.getGlobalSeconds() < 60);
 	}
 	
 	@Test
-	public void testGetGameTimer(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
-	} //idk how to test this!!
+	public void testGetGameTimer() {
+		assertTrue(timeManager.getGameTimer() != 0);
+	}
 	
 	@Test
-	public void testGetPlaySeconds(){}
+	public void testGetPlaySeconds() {
+		assertTrue(timeManager.getPlaySeconds() < 60);
+	}
+
 	@Test
-	public void testGetPlayMinutes(){}
+	public void testGetPlayMinutes() {
+		assertTrue(timeManager.getPlayMinutes() < 60);
+	}
+
 	@Test
-	public void testGetPlayHours(){} //not sure how to test these 3 either
+	public void testGetPlayHours() {
+		assertTrue(timeManager.getPlayHours() < 60);
+	}
 	
 	@Test
-	public void testSetGameStartTime(){} //could we rename this maybe?
-	//again not sure how to test
+	public void testSetGameStartTime() {
+		assertTrue(true);
+	}
 	
 	@Test
-	public void testGetPlayClockTime(){} //test??
+	public void testGetPlayClockTime() {
+		assertTrue(timeManager.getPlayClockTime().length() > 5
+				&& timeManager.getPlayClockTime().length() < 9);
+	}
 	
 	@Test
-	public void testAddTime(){
-		TimeManager timeManager = (TimeManager) GameManager.get()
-				.getManager(TimeManager.class);
+	public void testAddTime() {
 		assertEquals("Hours Not 6", 6, timeManager.getHours());
 		assertEquals("Minutes not 0", 0, timeManager.getMinutes());
 		assertEquals("Seconds not 108000 as expected", 108000, 
@@ -151,8 +179,7 @@ public class TimeManagerTest {
 	}
 	
 	@Test
-	public void testToString(){
-		TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	public void testToString() {
 		assertEquals(6, timeManager.getHours());
 		assertEquals("6:0", timeManager.toString());
 	}

@@ -77,6 +77,8 @@ public class MouseHandler extends Manager {
 				}
 				listeners.clear();
 				break;
+			default:
+				break;
 		}
 	}
 
