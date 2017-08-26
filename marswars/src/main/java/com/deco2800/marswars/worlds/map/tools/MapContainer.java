@@ -401,10 +401,6 @@ public class MapContainer {
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
         String newPath = "resources/mapAssets/";
-        String mapDoesntExit = "The given Map type doesn't exits";
-
-        String mapSize;
-        String mapType;
         switch (randomSize){
             case TINY:
                 newPath+="tiny";

@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -23,7 +24,6 @@ import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
@@ -76,6 +76,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Label gameLengthDisp;
 
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -466,6 +467,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// Render background first
+		String backgroundString = bgManager.getBackground();
+		TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		Texture background = textureManager.getTexture(backgroundString);
+		batch.begin();
+		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
+		batch.end();
+
         /* Render the tiles first */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
 		tileRenderer.setView(camera);
@@ -638,6 +647,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		stage.getViewport().update(width, height, true);
 		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
+		view.resize(width, height);
 	}
 
 	/**
