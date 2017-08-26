@@ -19,7 +19,6 @@ public class TechTreeView extends Dialog{
 			text("This will display the technology tree");
 			button("Upgrade Tech", 1);
 			button("OK");
-
 		}
 	}
 	

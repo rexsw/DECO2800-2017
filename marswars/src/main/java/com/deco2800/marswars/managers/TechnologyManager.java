@@ -24,7 +24,16 @@ public class TechnologyManager extends Manager{
 	public Technology getTech(int id){
 		return techMap.get(id);
 	}
-	
+
+	public String[] listNames(){
+		String[] names = new String[techMap.size()];
+		int i = 0;
+		for (int key : techMap.keySet()) {
+			i++;
+			Technology tech = techMap.get(key);
+			names[i] = tech.getName();
+		}
+	}
 	public Set<Technology> getActive(){ return activeTech; }
 
 	public void addActiveTech(Technology tech) {activeTech.add(tech); }
