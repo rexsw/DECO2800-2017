@@ -428,8 +428,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		Texture background = bgManager.getBackground();
-		batch.draw(background, 0, 0, window.getWidth(), window.getHeight());
+		// Render background first
+		String backgroundString = bgManager.getBackground();
+		TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		Texture background = textureManager.getTexture(backgroundString);
+		batch.begin();
+		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
+		batch.end();
 
         /* Render the tiles first */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
