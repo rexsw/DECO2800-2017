@@ -1,6 +1,7 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,13 +13,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EnemySpacman;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
@@ -109,20 +122,23 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setAI(length -1, width -1);
 		setAI(1, 1);
 
-		// do something important here, asynchronously to the rendering thread
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				// do something important here, asynchronously to the rendering thread
 				while(true) {
 					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
+
 							}
 						}
+
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
 					}
+
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -162,8 +178,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					String ip = ipAddr.getHostAddress();
 					ipDiag.text("IP Address: " + ip);
+
 					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
 					networkServer = new SpacServer(serverConnectionManager);
+
+
 					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
 					networkClient = new SpacClient(clientConnectionManager);
 					//Initiate Server
@@ -172,6 +191,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					} catch (IOException e) {
 						LOGGER.error("Error when initiating server", e);
 					}
+
 					//Join it as a Client
 					try {
 						networkClient.connect(5000, ip, SERVER_PORT);
@@ -182,10 +202,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					networkClient.sendObject(action);
 
 					System.out.println(ip);
-
-
-					LOGGER.info("IP Address: " + ip);
-
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
 					LOGGER.error("Unknown Host", ex);
