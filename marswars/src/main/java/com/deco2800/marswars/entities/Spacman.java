@@ -17,7 +17,6 @@ import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -36,10 +35,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	private int health = 100;
 	
 	private Manager owner = null;
+
+	public static int cost = 10;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-
+//Hello wo
 	private ActionType nextAction;
 	private ActionSetter actionSetter;
 
@@ -52,7 +53,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
-		this.setCost(10);
+		this.setCost(cost);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
 		this.addNewAction(ActionType.MOVE);
@@ -76,6 +77,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 
 	}
+
+    /**
+     * function to change the cost of making a Spacman
+     * @param c
+     */
+	public static void changeCost(int c){
+	    cost = c;
+    }
 
 	/**
 	 * Sets the position X
@@ -171,7 +180,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();

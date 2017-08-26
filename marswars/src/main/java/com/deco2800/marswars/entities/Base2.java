@@ -15,7 +15,7 @@ import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
-import technology.Technology;
+import com.deco2800.marswars.technology.*;
 
 import java.util.Optional;
 

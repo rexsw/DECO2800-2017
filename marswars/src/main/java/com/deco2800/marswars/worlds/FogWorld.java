@@ -11,8 +11,7 @@ import java.util.List;
  * Created by Treenhan on 8/24/17.
  */
 public class FogWorld {
-    private int width;
-    private int length;
+
 
     protected static ArrayList<FogOfWarLayer> fogMap = new ArrayList<FogOfWarLayer>();
 
