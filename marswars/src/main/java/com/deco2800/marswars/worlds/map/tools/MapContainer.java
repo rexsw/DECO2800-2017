@@ -395,60 +395,37 @@ public class MapContainer {
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
-        String newPath = "";
+        String newPath = "resources/mapAssets/";
         String mapDoesntExit = "The given Map type doesn't exits";
-        if(randomSize == MapSizeTypes.TINY){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/tinyMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/tinyMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/tinySun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.SMALL){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/smallMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/smallMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/smallSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.MEDIUM){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/mediumMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/mediumMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/mediumSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.LARGE){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/largeMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/largeMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/largeSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.VERY_LARGE){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/veryLargeMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/veryLargeMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        } else {
-            LOGGER.error(mapDoesntExit);
+
+        String mapSize;
+        String mapType;
+        switch (randomSize){
+            case TINY:
+                newPath+="tiny";
+                break;
+            case SMALL:
+                newPath+="small";
+                break;
+            case MEDIUM:
+                newPath+="medium";
+                break;
+            case LARGE:
+                newPath+="large";
+                break;
+            case VERY_LARGE:
+                newPath+="veryLarge";
+        }
+        switch (randomType){
+            case MARS:
+                newPath+="Mars.tmx";
+                break;
+            case MOON:
+                newPath+="Moon.tmx";
+                break;
+            case SUN:
+                newPath+="Sun.tmx";
+                break;
         }
         return newPath;
     }
