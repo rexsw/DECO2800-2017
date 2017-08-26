@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
@@ -21,7 +22,7 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 
 	private int cost = 0;
 	private EntityType entityType = EntityType.NOT_SET;
-	private  List<Class> validActions;
+	private  List<ActionType> validActions;
 	private boolean selected = false;
 
 	/**
@@ -160,12 +161,12 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	}
 
 	@Override
-	public List<Class> getValidActions() {
+	public List<ActionType> getValidActions() {
 		return this.validActions;
 	}
 
 	public void initActions() {
-		this.validActions = new ArrayList<Class>();
+		this.validActions = new ArrayList<ActionType>();
 	}
 
 	/**
@@ -175,9 +176,9 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	 */
 
 	@Override
-	public boolean addNewAction(Class newAction) {
-		for (Class d: this.validActions) {
-			if (d.equals(newAction)) {
+	public boolean addNewAction(ActionType newAction) {
+		for (ActionType d: this.validActions) {
+			if (d == newAction) {
 				return false;
 			}
 		}
@@ -191,9 +192,9 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
 	@Override
-	public boolean removeActions(Class actionToRemove) {
-		for (Class d: this.validActions) {
-			if (d.equals(actionToRemove)) {
+	public boolean removeActions(ActionType actionToRemove) {
+		for (ActionType d: this.validActions) {
+			if (d == actionToRemove) {
 				this.validActions.remove(d);
 				return true;
 			}
@@ -301,6 +302,13 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	public EntityStats getStats() {
 		return new EntityStats("UNNAMED",0,0,0,0, null, Optional.empty(), this);
 	}
-	
-	
+
+
+	public void setNextAction(ActionType nextAction) {
+		return;
+	}
+
+	public void setAction(DecoAction action) {
+		return;
+	}
 }

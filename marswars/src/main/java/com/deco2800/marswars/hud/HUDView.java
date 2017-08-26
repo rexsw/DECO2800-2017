@@ -21,6 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.GameManager;
@@ -30,6 +33,8 @@ import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created by Naziah Siddique on 19/08
@@ -80,6 +85,8 @@ public class HUDView extends ApplicationAdapter{
 	private ChatBox chatbox;
 
 	private BaseEntity selectedEntity;
+
+    private ButtonGenerator buttonGenerator;
 		
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -99,7 +106,8 @@ public class HUDView extends ApplicationAdapter{
 		this.gameManager = gameManager;
 		this.textureManager = textureManager;
 		this.chatbox = new ChatBox(skin, textureManager);
-		messageToggle = true; 
+		messageToggle = true;
+        buttonGenerator = new ButtonGenerator(skin);
 		createLayout();
 	}
 
@@ -462,11 +470,15 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
+        selectedEntity = null;
+        inventory.clear();
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
-				setEnitity(e);
+				selectedEntity = e;
+
 			}
 		}
+        setEnitity(selectedEntity);
     	
     }
 
@@ -475,16 +487,13 @@ public class HUDView extends ApplicationAdapter{
      * @param target unit clicked on by player
      */
     private void setEnitity(BaseEntity target) {
-		if (selectedEntity == null) {
-			selectedEntity = target;
-		}
-
-		if (selectedEntity.equals(target)) {
-			return;
-		}
-			selectedEntity = target;
-			EntityStats stats = target.getStats();
-			updateSelectedStats(stats);
+        if (selectedEntity == null) {
+            return;
+        }
+        selectedEntity = target;
+		EntityStats stats = target.getStats();
+		updateSelectedStats(stats);
+        enterActions(target.getValidActions());
     }
 
     private void updateSelectedStats (EntityStats stats) {
@@ -492,7 +501,20 @@ public class HUDView extends ApplicationAdapter{
 		nameLabel.setText(stats.getName());
 	}
 
-	/**
+	private void enterActions(List<ActionType> actions) {
+        inventory.clear();
+        if (actions == null) {
+            return;
+        }
+        for (ActionType c : actions) {
+            Button newButton = buttonGenerator.getButton(c, this.selectedEntity);
+            inventory.add(newButton);
+        }
+    }
+
+
+
+    /**
 	 * Returns the chat window 
 	 * @return chat window
 	 */

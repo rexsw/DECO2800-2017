@@ -49,6 +49,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 		this.setCost(10000000);
+		this.initActions();
 	}
 
 	/**
