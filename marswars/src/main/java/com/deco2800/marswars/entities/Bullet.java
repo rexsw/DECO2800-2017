@@ -17,6 +17,7 @@ public class Bullet extends MissileEntity implements Tickable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bullet.class);
 	private int damage;
 	private int armorDamage;
+	private float speed;
 	private AttackableEntity target;
 
     public Bullet(float posX, float posY, float posZ, AttackableEntity target, int damage, int armorDamage) {
@@ -27,6 +28,7 @@ public class Bullet extends MissileEntity implements Tickable {
         this.addNewAction(ImpactAction.class);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
+        this.setSpeed(0.04f); //Unused
         currentAction = Optional.of(new ImpactAction(this, target));
     }
 
@@ -46,4 +48,9 @@ public class Bullet extends MissileEntity implements Tickable {
     		return;
     	} 
     }
+    
+    public float getSpeed() { return speed; }
+    
+    public void setSpeed(float speed) { this.speed = speed; }
+    
 }

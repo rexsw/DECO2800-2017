@@ -19,6 +19,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
 
     private int armorDamage; // armorDamage of the entity
     private int damage; // the damage of the entity
+    private float speed;
     private Manager owner = null; // the owner of the player
     private Optional<DecoAction> currentAction = Optional.empty();
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
@@ -178,4 +179,8 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
      * @param an new target for the missile
      */
     public void setTarget(AttackableEntity target) { this.target = target; }
+    
+    public float getSpeed() { return speed; }
+    
+    public void setSpeed(float speed) { this.speed = speed; }
 }
