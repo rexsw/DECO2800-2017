@@ -8,7 +8,7 @@ public class PlayerManager extends Manager implements HasTeam {
 
 	@Override
 	public void setTeam(int teamid) {
-		teamid = teamid;
+		this.teamid = teamid;
 	}
 
 	@Override

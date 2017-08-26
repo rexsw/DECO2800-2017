@@ -46,8 +46,24 @@ public class NoiseMap {
      */
     public double getNoiseAt(int x, int y){
         if (x>=width||x<0||y>=height||y<0){
-            throw new IllegalArgumentException("x & y must be in range of the dimensions");
+            throw new IndexOutOfBoundsException("x & y must be in range of the dimensions");
         }
         return noise.eval(x/featureSize, y/featureSize);
+    }
+
+    /**
+     * gets the width of the noise map
+     * @return width of the map
+     */
+    public int getWidth(){
+        return width;
+    }
+
+    /**
+     * gets the height of the noise map
+     * @return height of the map
+     */
+    public int getHeight(){
+        return height;
     }
 }

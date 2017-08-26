@@ -32,6 +32,17 @@ public class BaseWorldTest {
         entity = new HeroSpacman(baseWorld,0f,0f,0f);
     }
 
+
+    /**
+     * Test constructor with a string parameter
+     */
+    @Test
+    public void testBaseWorldConstructorWithStrings(){
+        baseWorld = new BaseWorld("resources/mapAssets/tinyMars.tmx");
+        //This test proofs a collisionMap was instantiated therefore map was successfully loaded
+        Assert.assertTrue(baseWorld.getEntities().size() == 0);
+    }
+
     /**
      * Test adding entity in a world that hasn't load its map yet.
      */
@@ -74,6 +85,15 @@ public class BaseWorldTest {
         baseWorld.addEntity(entity);
         BaseEntity clone = baseWorld.getEntities(0,0).get(0);
         Assert.assertTrue(clone.equals(entity));
+    }
+
+    /**
+     * Test if can get an entity with invalid coordinates.
+     */
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetEntityWithIndexOutOfBounds(){
+        baseWorld.addEntity(entity);
+        baseWorld.getEntities(-10,0).get(0);
     }
 
     /**
