@@ -1,8 +1,6 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.LocalEnemyManager;
 import com.deco2800.marswars.managers.Manager;
 
 import java.util.Optional;
@@ -26,9 +24,6 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 	public EnemySpacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 0.75f, 0.75f, 1);
 		this.setTexture("spatman_blue");
-
-		// Ensure the LocalEnemey manager has been created!
-		GameManager.get().getManager(LocalEnemyManager.class);
 	}
 
 	/**
@@ -70,21 +65,16 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
-		if(entity instanceof HasOwner) {
-			return this.owner == ((HasOwner) entity).getOwner();
-		} else {
-			return false;
-		}
+		return entity instanceof  HasOwner &&
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
 	public boolean isWorking() {
-		if(currentAction.isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
+		return currentAction.isPresent();
 	}
 	
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}

@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -10,6 +11,7 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import java.util.Random;
  * Created by timhadwen on 19/7/17.
  */
 public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -50,6 +53,22 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.initActions();
 		this.addNewAction(GatherAction.class);
 		this.addNewAction(MoveAction.class);
+		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		FogWorld fogWorld = GameManager.get().getFogWorld();
+		fogWorld.addEntity(lineOfSight);
+	}
+
+	/**
+	 * Sets the position of this spacman
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	@Override
+	public void setPosition(float x, float y, float z) {
+		super.setPosition(x, y, z);
+		lineOfSight.setPosition(x,y,z);
+
 
 	}
 
@@ -61,6 +80,35 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	    cost = c;
     }
 
+	/**
+	 * Sets the position X
+	 * @param x
+	 */
+	@Override
+	public void setPosX(float x) {
+		super.setPosX(x);
+		lineOfSight.setPosX(x);
+	}
+
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
+	@Override
+	public void setPosY(float y) {
+		super.setPosY(y);
+		lineOfSight.setPosY(y);
+	}
+
+	/**
+	 * Sets the position Z
+	 * @param z
+	 */
+	@Override
+	public void setPosZ(float z) {
+		super.setPosZ(z);
+		lineOfSight.setPosZ(z);
+	}
 	/**
 	 * On tick method for the spacman
 	 * @param i
@@ -95,6 +143,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 				/* Finally move to that position using a move action */
 				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+
 			}
 			return;
 		}
@@ -109,6 +158,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 
 	/**
+	 * Get the line of sight of this spacman
+	 * @return LineOfSight
+	 */
+	public LineOfSight getLineOfSight(){
+		return lineOfSight;
+	}
+
+	/**
 	 * On click method for the spacman
 	 * Should change to Blue
 	 * @param handler
@@ -117,7 +174,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
@@ -139,14 +195,16 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
+			LOGGER.error("can't move spacman out of game world");
 			this.setTexture("spacman_green");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
+		if (!entities.isEmpty() && entities.get(0) instanceof Resource) {
 			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
 			LOGGER.error("Assigned action gather");
 		} else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_green");
@@ -164,7 +222,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return health;
 	}
 
-	/* Sets the health for this spacman */
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
 	@Override
 	public void setHealth(int health) {
 		LOGGER.info("Set health to " + health);
@@ -172,6 +233,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 		if (health < 0) {
 			GameManager.get().getWorld().removeEntity(this);
+			if(owner instanceof AiManagerTest) {
+				((AiManagerTest) owner).isKill();
+			}
 			LOGGER.info("I am kill");
 		}
 	}
@@ -190,7 +254,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @return true if this unit carries something
 	 */
 	public boolean checkBackpack() {
-		return (gatheredResource != null);
+		return gatheredResource != null;
 	}
 	
 	/**
@@ -204,26 +268,49 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return resource;
 	}
 
+	/**
+	 * Set the owner of this spacman
+	 * @param owner
+	 */
 	@Override
 	public void setOwner(Manager owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * Get the owner of this spacman
+	 * @return owner
+	 */
 	@Override
 	public Manager getOwner() {
 		return this.owner;
 	}
 
+	/**
+	 * Check if this spacman has the same owner as the other Abstract enitity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	/**
+	 * Check if this spacman currently has an action
+	 * @return true if an action is present
+	 */
+	@Override
 	public boolean isWorking() {
-		return (currentAction.isPresent());
+		return currentAction.isPresent();
 	}
 	
+	/**
+	 * Set an current action for this spac man
+	 * @param action
+	 */
+	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
