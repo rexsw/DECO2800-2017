@@ -26,13 +26,14 @@ import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
-import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.worlds.InitialWorld;
 import com.deco2800.marswars.hud.*;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +86,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	Skin skin;
 	
-	HUDView view; 
+	HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
 	
@@ -103,28 +104,34 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 *	Set up new stuff for this game
 		 */
-		GameManager.get().setWorld(new InitialWorld());
-		((InitialWorld)GameManager.get().getWorld()).loadEntities();
+		MapContainer map = new MapContainer();
+		CustomizedWorld world = new CustomizedWorld(map);
+		world.loadMapContainer(map);
+		GameManager.get().setWorld(world);
+
+
 		/*
 		 * sets all starting entities to be player owned
 		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
+				((HasOwner) e).setOwner(GameManager.get().getManager(AiManagerTest.class));
 			}
 		}
-		Spacman a = new Spacman(95, 95, 0);
-		a.setOwner(GameManager.get().getManager(PlayerManager.class));
-		GameManager.get().getWorld().addEntity(a);
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
+		int length = GameManager.get().getWorld().getLength();
+		int width = GameManager.get().getWorld().getWidth();
+		setAI(length -1, width -1);
+		setAI(1, 1);
+
 		AiManagerTest aim1 = new AiManagerTest();
 		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(95, 95, 0);
-		Spacman ai1 = new Spacman(101, 101, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 100, 100, 0);
-		EnemySpacman aienemy = new EnemySpacman(102, 90, 0);
+		Spacman ai = new Spacman(0, 1, 0);
+		Spacman ai1 = new Spacman(1, 0, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
+		EnemySpacman aienemy = new EnemySpacman(length-1, width-1, 0);
 		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(aim1);
@@ -136,10 +143,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		AiManagerTest aim2 = new AiManagerTest();
 		GameManager.get().addManager(aim2);
-		Spacman ai2 = new Spacman(119, 95, 0);
-		Spacman ai21 = new Spacman(125, 105, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), 120, 100, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(122, 110, 0);
+		Spacman ai2 = new Spacman(1, 2, 0);
+		Spacman ai21 = new Spacman(0, 1, 0);
+		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
+		EnemySpacman aienemy2 = new EnemySpacman(length-2, length-2, 0);
 		ai2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(ai2);
 		ai21.setOwner(aim2);
@@ -313,14 +320,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(400, 0); // Place at the bottom
 		window.setWidth((stage.getWidth())-300);
-		
+
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
 		
 		/* Add the window to the stage */
-		stage.addActor(window);
+		//stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -477,16 +484,17 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update time & set color depending if night/day
 		 */
+
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
-		if (timeManager.isNight()){
-			gameTimeDisp.setColor(Color.FIREBRICK);
-			gameLengthDisp.setColor(Color.FIREBRICK);
-		}
-		else{
-			gameTimeDisp.setColor(Color.BLUE);
-			gameLengthDisp.setColor(Color.BLUE);
-		}
+//		if (timeManager.isNight()){
+//			gameTimeDisp.setColor(Color.FIREBRICK);
+//			gameLengthDisp.setColor(Color.FIREBRICK);
+//		}
+//		else{
+//			gameTimeDisp.setColor(Color.BLUE);
+//			gameLengthDisp.setColor(Color.BLUE);
+//		}
 
 		view.render();
 
@@ -639,6 +647,27 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void dispose () {
 		// Don't need this at the moment
+	}
+	
+	/**
+	 * generates a new AI team with basic unit at a give x-y co-ord
+	 * @ensure the x,y pair are within the game map
+	 */
+	public void setAI(int x, int y) {
+		AiManagerTest aim1 = new AiManagerTest();
+		GameManager.get().addManager(aim1);
+		Spacman ai = new Spacman(x, y, 0);
+		Spacman ai1 = new Spacman(x, y, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+		EnemySpacman aienemy = new EnemySpacman(x, y, 0);
+		ai.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai);
+		ai1.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai1);
+		aibase.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aibase);
+		aienemy.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aienemy);
 	}
 
 }
