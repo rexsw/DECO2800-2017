@@ -81,7 +81,7 @@ public class MapContainerTest extends BaseTest{
 
     @Test
     public void getRandomMap() throws Exception {
-        map.getRandomMap();
+        String randomMap = map.getRandomMap();
         ArrayList<String> listOfMaps = new ArrayList<>();
         listOfMaps.add("resources/mapAssets/tinyMars.tmx");
         listOfMaps.add("resources/mapAssets/tinyMoon.tmx");
@@ -98,21 +98,24 @@ public class MapContainerTest extends BaseTest{
         listOfMaps.add("resources/mapAssets/veryLargeSun.tmx");
         listOfMaps.add("resources/mapAssets/veryLargeMoon.tmx");
         listOfMaps.add("resources/mapAssets/veryLargeMars.tmx");
-        Assert.assertTrue(listOfMaps.contains(map.getMap()));
+        Assert.assertTrue(listOfMaps.contains(randomMap));
     }
 
+    // This method has not been implemented yet
     @Test
     public void setTerrainElement() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setTerrainElement1() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setStructure() throws Exception {
     }
-
+    
     @Test
     public void setStructure1() throws Exception {
     }
@@ -125,6 +128,7 @@ public class MapContainerTest extends BaseTest{
     public void setStructure3() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setCivilization() throws Exception {
     }
@@ -144,10 +148,12 @@ public class MapContainerTest extends BaseTest{
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
+    // This method has not been implemented yet
     @Test
     public void createCivilization() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void createRandomCivilization() throws Exception {
     }

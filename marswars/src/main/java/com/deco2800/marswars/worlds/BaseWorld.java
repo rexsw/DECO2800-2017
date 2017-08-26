@@ -13,6 +13,7 @@ import java.util.List;
  * A base world for the game. Use this not AbstractWorld
  */
 public class BaseWorld extends AbstractWorld {
+	
 	/* Crappy way of storing collision */
 	protected Array2D<List<BaseEntity>> collisionMap;
 	
@@ -39,9 +40,11 @@ public class BaseWorld extends AbstractWorld {
 	 * @param path	Path of the map file.
 	 */
 	public BaseWorld(String path) {
+		
 		/* Load up the map for this world */
 		this.map = new TmxMapLoader().load(path);
-				/* Grab the width and length values from the map file to use as the world size */
+		
+		/* Grab the width and length values from the map file to use as the world size */
 		this.setWidth(this.getMap().getProperties().get("width", Integer.class));
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
