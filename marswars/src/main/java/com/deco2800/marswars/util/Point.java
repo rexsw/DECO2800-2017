@@ -59,8 +59,8 @@ public class Point {
 	 */
 	@Override
 	public int hashCode() {
-		int result = (x != 0 ? Float.floatToIntBits(x) : 0);
-		result = 31 * result + (y != 0 ? Float.floatToIntBits(y) : 0);
+		int result = (Float.compare(x, +0.0f) != 0 ? Float.floatToIntBits(x) : 0);
+		result = 31 * result + (Float.compare(y, +0.0f) != 0 ? Float.floatToIntBits(y) : 0);
 		return result;
 	}
 
