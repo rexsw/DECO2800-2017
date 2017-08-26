@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public class EntityStats {
 
+
+
+    private String name;
     private int health;
     private float posX;
     private float posY;
@@ -18,8 +21,11 @@ public class EntityStats {
     private GatheredResource resourceCarried;
     private Optional<DecoAction> currentAction;
     private BaseEntity entity;
+    private Selectable.EntityType type;
 
-    public EntityStats(int health, float posX, float posY, float posZ, GatheredResource resourceCarried, Optional<DecoAction> currentAction, BaseEntity entity) {
+
+    public EntityStats(String name, int health, float posX, float posY, float posZ, GatheredResource resourceCarried, Optional<DecoAction> currentAction, BaseEntity entity) {
+        this.name = name;
         this.health = health;
         this.posX = posX;
         this.posY = posY;
@@ -27,8 +33,12 @@ public class EntityStats {
         this.resourceCarried = resourceCarried;
         this.currentAction = currentAction;
         this.entity = entity;
+        this.type = entity.getEntityType();
     }
 
+    public String getName() {
+        return name;
+    }
     /**
      * This function returns the health of the unit
      * @return
@@ -55,5 +65,10 @@ public class EntityStats {
 
     public Optional<DecoAction> getCurrentAction() {
         return currentAction;
+    }
+
+
+    public Selectable.EntityType getType() {
+        return type;
     }
 }
