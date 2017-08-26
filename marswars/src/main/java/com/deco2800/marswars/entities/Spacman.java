@@ -15,7 +15,6 @@ import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -34,10 +33,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	private int health = 100;
 	
 	private Manager owner = null;
+
+	public static int cost = 10;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-
+//Hello wo
 	/**
 	 * Constructor for the Spacman
 	 * @param posX
@@ -47,7 +48,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
-		this.setCost(10);
+		this.setCost(cost);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
 		this.addNewAction(GatherAction.class);
@@ -70,6 +71,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 
 	}
+
+    /**
+     * function to change the cost of making a Spacman
+     * @param c
+     */
+	public static void changeCost(int c){
+	    cost = c;
+    }
 
 	/**
 	 * Sets the position X
@@ -165,7 +174,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
@@ -187,10 +195,11 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
+			LOGGER.error("can't move spacman out of game world");
 			this.setTexture("spacman_green");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
+		if (!entities.isEmpty() && entities.get(0) instanceof Resource) {
 			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
 			LOGGER.error("Assigned action gather");
 		} else {
