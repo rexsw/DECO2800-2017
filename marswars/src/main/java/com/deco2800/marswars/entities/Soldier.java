@@ -56,7 +56,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			LOGGER.error("Clicked on soldier");
 			this.makeSelected();
 		} else {
-			LOGGER.error("Clicked on ai spacman");
+			LOGGER.error("Clicked on ai soldier");
 		}
 	}
 
@@ -92,6 +92,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onTick(int tick) {
+		LOGGER.info("I'm still ALIVE");
 		if (!this.getCurrentAction().isPresent()) {
 			// make stances here.
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
@@ -146,7 +147,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	@Override
 	public void setHealth(int health) {
 		if (health < 0) {
-			//GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;

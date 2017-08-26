@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.managers.GameManager;
 
 public class Bullet extends MissileEntity implements Tickable {
 	
@@ -31,12 +32,14 @@ public class Bullet extends MissileEntity implements Tickable {
 
     @Override
     public void onTick(int tick) {
+    	LOGGER.info("BULLET EXIST");
 		/* If the action is completed, remove it otherwise keep doing that action */
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
 		} else {
 			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
+			GameManager.get().getWorld().removeEntity(this);
 		}
     }
 }
