@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -20,14 +21,8 @@ import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
-import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -75,6 +70,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Label gameLengthDisp;
 
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -431,6 +427,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		Texture background = bgManager.getBackground();
+		batch.draw(background, 0, 0, window.getWidth(), window.getHeight());
 
         /* Render the tiles first */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);

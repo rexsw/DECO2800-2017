@@ -48,6 +48,12 @@ public class TextureManager extends Manager {
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
         textureMap.put("base2", new Texture("resources/placeholderassets/base2.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
+
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
+        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
+
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
@@ -55,7 +61,7 @@ public class TextureManager extends Manager {
         this.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
         this.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
         this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-        this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
+        this.saveTexture("spacman_ded", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
         this.saveTexture("medium_water", "resources/resourceAssets/water_M.png");

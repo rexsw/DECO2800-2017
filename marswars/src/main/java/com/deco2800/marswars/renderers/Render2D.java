@@ -39,7 +39,8 @@ public class Render2D implements Renderer {
         for (Renderable e : renderables) {
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
             Texture tex = reg.getTexture(e.getTexture());
-            batch.draw(tex, e.getPosY()*COORDINATEMULTIPLIER, e.getPosZ()*COORDINATEMULTIPLIER, e.getXRenderLength()*COORDINATEMULTIPLIER, e.getYRenderLength()*COORDINATEMULTIPLIER);
+            batch.draw(tex, e.getPosY()*COORDINATEMULTIPLIER, e.getPosZ()*COORDINATEMULTIPLIER,
+                    e.getXRenderLength()*COORDINATEMULTIPLIER, e.getYRenderLength()*COORDINATEMULTIPLIER);
         }
 
         batch.end();
