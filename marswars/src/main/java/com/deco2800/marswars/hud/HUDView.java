@@ -87,7 +87,6 @@ public class HUDView extends ApplicationAdapter{
 
 	private BaseEntity selectedEntity;
 
-    private ButtonGenerator buttonGenerator;
 	private Button attackButton;
 	private Button gatherButton;
 	private Button moveButton;
@@ -111,7 +110,6 @@ public class HUDView extends ApplicationAdapter{
 		this.textureManager = textureManager;
 		this.chatbox = new ChatBox(skin, textureManager);
 		messageToggle = true;
-        buttonGenerator = new ButtonGenerator(skin);
 		createLayout();
 	}
 
