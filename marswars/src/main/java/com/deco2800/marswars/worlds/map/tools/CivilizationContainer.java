@@ -21,13 +21,14 @@ public class CivilizationContainer {
      * @param civilizationTypes the civilization to be use
      */
     public CivilizationContainer(MapContainer mapContainer, CivilizationTypes civilizationTypes) {
-
+    	//Not yet implemented, waiting for further input element from other team.
     }
 
     /** Constructor of a civilization container of a random civilization.
      * @param mapContainer the map that will contain the civilization
      */
     public CivilizationContainer(MapContainer mapContainer) {
-        CivilizationTypes random = CivilizationTypes.values()[r.nextInt(CivilizationTypes.values().length)];
+        //Not yet implemented 
+    	CivilizationTypes random = CivilizationTypes.values()[r.nextInt(CivilizationTypes.values().length)];
     }
 }

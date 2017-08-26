@@ -49,6 +49,10 @@ public class TextureManager extends Manager {
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
+        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
@@ -56,7 +60,7 @@ public class TextureManager extends Manager {
         this.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
         this.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
         this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-        this.saveTexture("deded_spacman", "resources/placeholderassets/spacman_ded.png");
+        this.saveTexture("spacman_ded", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
         //everything above here must be replaced
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
@@ -75,6 +79,7 @@ public class TextureManager extends Manager {
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
+        this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         
         //Unit Assets:

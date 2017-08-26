@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -30,7 +31,7 @@ public class Bullet extends MissileEntity implements Tickable {
         this.setTexture("bullet");
         this.initActions();
         //this.addNewAction(MoveAction.class);
-        this.addNewAction(ImpactAction.class);
+        this.addNewAction(ActionType.IMPACT);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
         this.setSpeed(0.04f); //Unused

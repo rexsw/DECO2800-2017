@@ -7,6 +7,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -32,7 +33,7 @@ public class Priest extends AttackableEntity implements Clickable, Tickable {
 		this.setCost(40);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		this.addNewAction(MoveAction.class);
+		this.addNewAction(ActionType.MOVE);//MoveAction.class);
 		// set all the attack attributes
 		this.setMaxHealth(200);
 		this.setHealth(200);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -130,37 +131,37 @@ public class BaseEntityTest {
 		assertEquals(t.getValidActions(), null);	
 		
 		t.initActions();
-		assertEquals(t.getValidActions(), new ArrayList<Class>());		 
+		assertEquals(t.getValidActions(), new ArrayList<ActionType>());
 	}
 	
 	@Test
 	public void addActionTest() {
-		ArrayList<Class> expected = new ArrayList<>();
-		expected.add(GatherAction.class);
+		ArrayList<ActionType> expected = new ArrayList<>();
+		expected.add(ActionType.GATHER);
 		
 		t.initActions();
-		assertTrue(t.addNewAction(GatherAction.class));
+		assertTrue(t.addNewAction(ActionType.GATHER));
 		assertEquals(t.getValidActions(), expected);
 		
-		assertFalse(t.addNewAction(GatherAction.class));
+		assertFalse(t.addNewAction(ActionType.GATHER));
 		assertEquals(t.getValidActions(), expected);
 		
-		t.addNewAction(MoveAction.class);
-		expected.add(MoveAction.class);
+		t.addNewAction(ActionType.MOVE);
+		expected.add(ActionType.MOVE);
 		assertEquals(t.getValidActions(), expected);
 	}
 	
 	@Test
 	public void removeActionTest() {
 		t.initActions();
-		t.addNewAction(GatherAction.class);
-		t.addNewAction(MoveAction.class);
-		assertTrue(t.removeActions(MoveAction.class));
+		t.addNewAction(ActionType.GATHER);
+		t.addNewAction(ActionType.MOVE);
+		assertTrue(t.removeActions(ActionType.MOVE));
 		
-		assertFalse(t.removeActions(MoveAction.class));
+		assertFalse(t.removeActions(ActionType.MOVE));
 		
-		ArrayList<Class> expected = new ArrayList<>();
-		expected.add(GatherAction.class);	
+		ArrayList<ActionType> expected = new ArrayList<>();
+		expected.add(ActionType.GATHER);
 	}
 	
 	@Test
