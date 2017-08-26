@@ -10,7 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  *
  */
 public class WorkInProgress extends Dialog{
-
+	
+	/**
+	 * Dialog notifying player that the feature selected 
+	 * is still in progress
+	 * @param title of the dialog box
+	 * @param skin 
+	 */
 	public WorkInProgress(String title, Skin skin) {
 		super(title, skin);		
 		{
@@ -18,9 +24,4 @@ public class WorkInProgress extends Dialog{
 			button("OK");
 		}
 	}
-	
-	@Override 
-	protected void result(final Object object){
-		
-	}	
 }
