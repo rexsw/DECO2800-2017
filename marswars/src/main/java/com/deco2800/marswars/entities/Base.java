@@ -14,6 +14,7 @@ import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -51,12 +52,23 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		this.setCost(10000000);
 	}
 
+	/**
+	 * Constructor for the base.
+	 * @param world The BaseWorld that will hold the base.
+	 * @param posX its x position on the world.
+	 * @param posY its y position on the world.
+	 * @param posZ its z position on the world.
+	 */
 	public Base(BaseWorld world, int posX, int posY, int posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base");
 		this.setCost(10000000);
 	}
-
+	
+	/**
+	 * Give action to the base
+	 * @param action
+	 */
 	public void giveAction(DecoAction action) {
 		if (!currentAction.isPresent()) {
 			currentAction = Optional.of(action);
@@ -78,9 +90,16 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		}
 	}
 
+	/**
+	 * Perform some action when right clicked at x, y
+	 * @param x
+	 * @param y
+	 */
 	@Override
 	public void onRightClick(float x, float y) {
-
+		//base has no action on right click for now
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("endturn.wav");
 	}
 
 	/**
@@ -105,16 +124,27 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		}
 	}
 
+	/**
+	 * Check is the base has been selected
+	 * @return true if is selected, false otherwise
+	 */
 	@Override
 	public boolean isSelected() {
 		return selected;
 	}
-
+	
+	/**
+	 * Deselect the base
+	 */
 	@Override
 	public void deselect() {
 		selected = false;
 	}
 
+	/**
+	 * Get the 'Make Spacman' button object
+	 * @return Button
+	 */
 	public Button getButton() {
 		Button button = new TextButton("Make Spacman", new Skin(Gdx.files.internal("uiskin.json")));
 		button.addListener(new ChangeListener() {
@@ -126,6 +156,10 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		return button;
 	}
 
+	/**
+	 * Handler for button pressed action
+	 * Reduce the resource the generate spacman
+	 */
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if (resourceManager.getRocks() > 30) {
@@ -133,11 +167,19 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
 		}
 	}
-
+	
+	/**
+	 * Get the help text label of this base
+	 * @return Label
+	 */
 	public Label getHelpText() {
 		return new Label("You have clicked on the base. Click 'Make Spacman' to 'Make Spacman'!", new Skin(Gdx.files.internal("uiskin.json")));
 	}
 
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
 	@Override
 	public int getProgress() {
 		if (currentAction.isPresent()) {
@@ -146,31 +188,58 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		return 0;
 	}
 
+	/**
+	 * Check if there is an action currently assigned to the base
+	 * @return boolean
+	 */
 	@Override
 	public boolean showProgress() {
 		return currentAction.isPresent();
 	}
 
+	/**
+	 * Set the owner of this base
+	 * @param owner
+	 */
 	@Override
 	public void setOwner(Manager owner) {
 		this.onwer = owner;
 	}
 
+	/**
+	 * Get the owner of this base
+	 * @return owner
+	 */
 	@Override
 	public Manager getOwner() {
 		return this.onwer;
 	}
 
+	/**
+	 * Check if the AbstractEntity passed in and this entity has the same owner
+	 * @return boolean
+	 */
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
 				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
+	/**
+	 * This method is a duplication of the showProgress method, consider delete one of them
+	 * sadly two different interfaces
+	 * @return boolean
+	 */
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
 	
+	@Override
+	/**
+	 * Set the action of this base
+	 * @param action
+	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
