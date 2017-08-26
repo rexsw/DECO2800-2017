@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -87,7 +88,10 @@ public class HUDView extends ApplicationAdapter{
 	private BaseEntity selectedEntity;
 
     private ButtonGenerator buttonGenerator;
-		
+	private Button attackButton;
+	private Button gatherButton;
+	private Button moveButton;
+
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
 	 * of the HUD and is mostly for simply displaying components on screen. 
@@ -420,9 +424,57 @@ public class HUDView extends ApplicationAdapter{
 		inventory.setHeight(150);
 		inventory.setPosition(220, 0);
 		
+		//Add move button
+		addMoveButton();
+		addGatherButton();
+		addAttackButton();
+		addCreateUnitButtons();
+		
 		stage.addActor(inventory);
 	}
-	
+
+	private void addCreateUnitButtons() {
+	}
+
+	private void addAttackButton() {
+		attackButton = new TextButton("Attack", skin);
+		attackButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Attack button pressed");
+				selectedEntity.setNextAction(ActionType.DAMAGE);
+			}
+		});
+		inventory.add(attackButton);
+		enableButton(attackButton);
+	}
+
+	private void addGatherButton() {
+		gatherButton = new TextButton("Gather", skin);
+		gatherButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Gather button pressed");
+				selectedEntity.setNextAction(ActionType.GATHER);
+			}
+		});
+		inventory.add(gatherButton);
+		enableButton(gatherButton);
+	}
+
+	private void addMoveButton() {
+		moveButton = new TextButton("Move", skin);
+		moveButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Move button pressed");
+				selectedEntity.setNextAction(ActionType.MOVE);
+			}
+		});
+		inventory.add(moveButton);
+		enableButton(moveButton);
+	}
+
 	/**
 	 * Adds in the minimap window 
 	 */
@@ -471,7 +523,6 @@ public class HUDView extends ApplicationAdapter{
 		/*Set value for health bar*/
 		healthBar.setValue(0);
         selectedEntity = null;
-        inventory.clear();
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
 				selectedEntity = e;
@@ -487,7 +538,10 @@ public class HUDView extends ApplicationAdapter{
      * @param target unit clicked on by player
      */
     private void setEnitity(BaseEntity target) {
-        if (selectedEntity == null) {
+		disableButton(moveButton);
+		disableButton(attackButton);
+		disableButton(gatherButton);
+		if (selectedEntity == null) {
             return;
         }
         selectedEntity = target;
@@ -502,17 +556,36 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	private void enterActions(List<ActionType> actions) {
-        inventory.clear();
-        if (actions == null) {
-            return;
-        }
+		if (actions == null) {
+			return;
+		}
         for (ActionType c : actions) {
-            Button newButton = buttonGenerator.getButton(c, this.selectedEntity);
-            inventory.add(newButton);
+			switch (c) {
+				case MOVE:
+					enableButton(moveButton);
+					break;
+				case DAMAGE:
+					enableButton(attackButton);
+					break;
+				case GATHER:
+					enableButton(gatherButton);
+					break;
+			}
         }
 
     }
 
+
+    private void disableButton(Button b) {
+		b.setTouchable(Touchable.disabled);
+		b.setVisible(false);
+		b.align(Align.right | Align.bottom);
+	}
+    private void enableButton(Button b) {
+		b.setTouchable(Touchable.enabled);
+		b.setVisible(true);
+		b.align(Align.left | Align.top);
+	}
 
 
     /**
