@@ -25,14 +25,19 @@ public class MapContainer {
 
     // logger of the class
     private static final Logger LOGGER = LoggerFactory.getLogger(MapContainer.class);
+   
     // path of the .tmx map file
     private String mapPath = "";
+    
     // width of the map loaded
     private int width;
+    
     // height of the map loaded
     private int length;
+    
     // randomizer
     private Random r = new Random();
+    
     // the world that will hold the content of the container
     protected CustomizedWorld world;
     /**
@@ -42,7 +47,7 @@ public class MapContainer {
      * @param length the length of the map.
      */
     public MapContainer(String mapPath, int width, int length){
-        //not yet implemented
+        //Not yet implemented
     }
 
 
@@ -117,7 +122,7 @@ public class MapContainer {
      * @param terrainElement the terrain element to be placed.
      */
     public void setTerrainElement(TerrainElement terrainElement){
-        //Waiting on terrain
+        //Waiting on terrain (Not yet implemented)
     }
 
     /**
@@ -127,7 +132,7 @@ public class MapContainer {
      * @param random whether the position of the terrain element should be random.
      */
     public void setTerrainElement(TerrainElement terrainElement, boolean random){
-        //Waiting on terrain
+        //Waiting on terrain (Not yet implemented)
     }
 
     /**
@@ -136,7 +141,7 @@ public class MapContainer {
      * @param building the building to be placed.
      */
     public void setStructure(Building building){
-        //Waiting on building
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -145,7 +150,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      */
     public void setStructure(Building[][] buildings){
-        //Waiting on building
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -155,7 +160,7 @@ public class MapContainer {
      * @param random whether the position should be random.
      */
     public void setStructure(Building building, boolean random){
-        //Waiting on building
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -165,7 +170,7 @@ public class MapContainer {
      * @param random whether the position should be random.
      */
     public void setStructure(Building[][] buildings, boolean random){
-        //Waiting on building
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -174,7 +179,7 @@ public class MapContainer {
      * @param civilizationContainer the container with all the civilization elements.
      */
     public void setCivilization(CivilizationContainer civilizationContainer){
-        //Waiting on civilization
+        //Waiting on civilization (Not yet implemented)
     }
 
     /**
@@ -226,7 +231,7 @@ public class MapContainer {
      */
     public CivilizationContainer createCivilization(CivilizationTypes civilizationTypes){
         return new CivilizationContainer(this, civilizationTypes);
-        // this method has not been implemented yet!!!!!!!!!!!
+        // this method has not been implemented yet
     }
 
     /**
@@ -236,7 +241,7 @@ public class MapContainer {
      */
     public CivilizationContainer createRandomCivilization(){
         return new CivilizationContainer(this);
-        // this method has not been implemented yet!!!!!!!!!!!
+        // this method has not been implemented yet
     }
 
     /**

@@ -101,18 +101,21 @@ public class MapContainerTest extends BaseTest{
         Assert.assertTrue(listOfMaps.contains(randomMap));
     }
 
+    // This method has not been implemented yet
     @Test
     public void setTerrainElement() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setTerrainElement1() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setStructure() throws Exception {
     }
-
+    
     @Test
     public void setStructure1() throws Exception {
     }
@@ -125,6 +128,7 @@ public class MapContainerTest extends BaseTest{
     public void setStructure3() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void setCivilization() throws Exception {
     }
@@ -144,10 +148,12 @@ public class MapContainerTest extends BaseTest{
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
+    // This method has not been implemented yet
     @Test
     public void createCivilization() throws Exception {
     }
 
+    // This method has not been implemented yet
     @Test
     public void createRandomCivilization() throws Exception {
     }
