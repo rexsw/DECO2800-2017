@@ -98,46 +98,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
+				((HasOwner) e).setOwner(GameManager.get().getManager(AiManagerTest.class));
 			}
 		}
-		Spacman a = new Spacman(0, 0, 0);
-		a.setOwner(GameManager.get().getManager(PlayerManager.class));
-		GameManager.get().getWorld().addEntity(a);
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		AiManagerTest aim1 = new AiManagerTest();
-		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(1, 1, 0);
-		Spacman ai1 = new Spacman(1, 0, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
-		EnemySpacman aienemy = new EnemySpacman(7, 5, 0);
-		ai.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
-		
-		AiManagerTest aim2 = new AiManagerTest();
-		GameManager.get().addManager(aim2);
-		Spacman ai2 = new Spacman(1, 2, 0);
-		Spacman ai21 = new Spacman(0, 1, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), length-2, width-1, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(length-1, width-1, 0);
-		ai2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai2);
-		ai21.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai21);
-		aibase2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aibase2);
-		aienemy2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aienemy2);
+		setAI(length -1, width -1);
+		setAI(1, 1);
 
 		// do something important here, asynchronously to the rendering thread
 		new Thread(new Runnable() {
@@ -625,6 +595,27 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void dispose () {
 		// Don't need this at the moment
+	}
+	
+	/**
+	 * generates a new AI team with basic unit at a give x-y co-ord
+	 * @ensure the x,y pair are within the game map
+	 */
+	public void setAI(int x, int y) {
+		AiManagerTest aim1 = new AiManagerTest();
+		GameManager.get().addManager(aim1);
+		Spacman ai = new Spacman(x, y, 0);
+		Spacman ai1 = new Spacman(x, y, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+		EnemySpacman aienemy = new EnemySpacman(x, y, 0);
+		ai.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai);
+		ai1.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(ai1);
+		aibase.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aibase);
+		aienemy.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(aienemy);
 	}
 
 }
