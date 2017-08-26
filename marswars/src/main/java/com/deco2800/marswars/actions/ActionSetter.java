@@ -5,6 +5,9 @@ import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -14,8 +17,7 @@ import java.util.List;
 
 public final class ActionSetter {
 
-    private GameManager manager;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActionSetter.class);
     private ActionSetter() {
 
     }
@@ -25,7 +27,7 @@ public final class ActionSetter {
         try {
             entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
         } catch (IndexOutOfBoundsException e) {
-            // if the right click occurs outside of the game world, nothing will happen
+            LOGGER.error("Attempted to click off map", e);
             return false;
         }
         //Clear Entities Selection
@@ -33,13 +35,11 @@ public final class ActionSetter {
                 e.deselect();
         }
         //Check entities found
-        if (entities.size() > 0) {
+        if (!entities.isEmpty()) {
             switch (designatedAction) {
                 case GATHER:
                     return doGather(performer, entities.get(0));
-                case DAMAGE:
-                    return false;
-                case GENERATE:
+                default:
                     return false;
             }
         }
@@ -74,7 +74,8 @@ public final class ActionSetter {
                 return "Attack";
             case GENERATE:
                 return "Create";
+            default:
+                return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }
-        return "";
     }
 }
