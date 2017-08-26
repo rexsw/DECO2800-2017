@@ -41,7 +41,7 @@ public class ImpactAction implements DecoAction {
 			case SETUP_MOVE:
 				action = new MoveAction(target.getPosX(), target.getPosY(), missile);
 				state = State.MOVE_TOWARDS;
-				break;
+				return;
 			case MOVE_TOWARDS:
 				if (GameManager.get().getWorld().getEntities().contains(target)) {
 					if (action.completed()) {
@@ -55,6 +55,7 @@ public class ImpactAction implements DecoAction {
 					//LOGGER.info("MOVING TO TARGET");
 				} else {
 					completed = true;
+					return;
 				}
 				break;
 			case IMPACT:
@@ -66,7 +67,7 @@ public class ImpactAction implements DecoAction {
 				}
 				LOGGER.info("target health " + target.getHealth());
 				completed = true;
-				break;
+				return;
 		}
 	}
 	@Override

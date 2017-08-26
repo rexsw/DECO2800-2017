@@ -32,14 +32,18 @@ public class Bullet extends MissileEntity implements Tickable {
 
     @Override
     public void onTick(int tick) {
-    	//LOGGER.info("BULLET EXIST");
-		/* If the action is completed, remove it otherwise keep doing that action */
-		if (!currentAction.get().completed()) {
-			currentAction.get().doAction();
-		} else {
-			LOGGER.info("Action is completed. Deleting");
-			currentAction = Optional.empty();
-			GameManager.get().getWorld().removeEntity(this);
-		}
+    	/* If the action is completed, remove it otherwise keep doing that action */
+    	try {
+			if (!currentAction.get().completed()) {
+				currentAction.get().doAction();
+			} else {
+				LOGGER.info("Action is completed. Deleting");
+				currentAction = Optional.empty();
+			}
+    	} catch (Exception e) {
+    		//Bullets are freezing for an unknown reason fix needed
+    		GameManager.get().getWorld().removeEntity(this);
+    		return;
+    	} 
     }
 }

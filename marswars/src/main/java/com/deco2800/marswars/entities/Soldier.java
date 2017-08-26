@@ -22,6 +22,9 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
+	
+	private Optional<DecoAction> currentAction = Optional.empty();
+	
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private MissileEntity missile;
@@ -35,6 +38,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
 		this.addNewAction(MoveAction.class);
+		this.addNewAction(DamageAction.class);
 		// set all the attack attributes
 		this.setMaxHealth(500);
 		this.setHealth(500);
@@ -74,15 +78,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
 			if (!this.sameOwner(entities.get(0))) {
-				this.setAction(new MoveAction((int) x, (int) y, this));
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 				LOGGER.error("Same owner");
 			} else {
 				AttackableEntity target = (AttackableEntity) entities.get(0);
-				this.setAction(new DamageAction(this, target));
+				currentAction = Optional.of(new DamageAction(this, target));
 				LOGGER.error("Assigned action attack target at " + x + " " + y);
 			}
 		} else {
-			this.setAction(new MoveAction((int) x, (int) y, this));
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_yellow");
@@ -92,17 +96,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onTick(int tick) {
-		//LOGGER.info("I'm still ALIVE");
-		if (!this.getCurrentAction().isPresent()) {
+		if (!currentAction.isPresent()) {
 			// make stances here.
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
 				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY());
 				
-				for (int i = 0; i < entities.size(); i++) {
-					if(entities.get(i) instanceof MissileEntity) {
-						return;
-					}
-				}
 				BaseWorld world = GameManager.get().getWorld();
 
 				/* We are stuck on a tile with another entity
@@ -125,16 +123,16 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
 				/* Finally move to that position using a move action */
-				this.setAction(new MoveAction((int)p.getX(), (int)p.getY(), this));
+				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			return;
 		}
 		
-		if (!this.getCurrentAction().get().completed()) {
-			this.getCurrentAction().get().doAction();
+		if (!currentAction.get().completed()) {
+			currentAction.get().doAction();
 		} else {
 			LOGGER.info("Action is completed. Deleting");
-			this.setEmptyAction();
+			currentAction = Optional.empty();
 		}
 		
 	}

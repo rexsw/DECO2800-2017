@@ -41,7 +41,7 @@ public class DamageAction implements DecoAction {
 			case SETUP_MOVE:
 				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
 				state = State.MOVE_TOWARDS;
-				break;
+				return;
 			case MOVE_TOWARDS:
 				// When close to the enemy's attack range, attack.
 				if (action.completed()) {
@@ -56,7 +56,7 @@ public class DamageAction implements DecoAction {
 					return;
 				}
 				action.doAction();
-				break;
+				return;
 			case ATTACK:
 				if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 					attackInterval -= attackSpeed;
@@ -70,6 +70,7 @@ public class DamageAction implements DecoAction {
 				} else {
 					LOGGER.info("Set action empty");
 					completed = true;
+					return;
 				}
 				break;
 		}
