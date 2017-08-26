@@ -318,10 +318,18 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		currentAction = Optional.of(action);
 	}
 
+	/**
+	 * Forces the spacman to only try the chosen action on the next rightclick
+	 * @param nextAction the action to be forced
+	 */
 	@Override
 	public void setNextAction(ActionType nextAction) {
 		this.nextAction = nextAction;
 		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
+	}
+
+	public EntityStats getStats() {
+		return new EntityStats("Spacman",this.health,this.getPosX(),this.getPosY(),this.getPosZ(), this.gatheredResource, this.currentAction, this);
 	}
 
 }

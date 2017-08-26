@@ -303,11 +303,18 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 		return new EntityStats("UNNAMED",0,0,0,0, null, Optional.empty(), this);
 	}
 
-
+	/**
+	 * Forces the unit to only try the chosen action on the next rightclick
+	 * @param nextAction the action to be forced
+	 */
 	public void setNextAction(ActionType nextAction) {
 		return;
 	}
 
+	/**
+	 * Causes the entity to perform the action
+	 * @param action the action to perform
+	 */
 	public void setAction(DecoAction action) {
 		return;
 	}
