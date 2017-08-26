@@ -315,7 +315,7 @@ public class HUDView extends ApplicationAdapter{
 		addMiniMapMenu();
 
 		LOGGER.debug("Creating HUD manipulation buttons");
-		
+
 		Button dispMainMenu = new TextButton("Old Menu", skin);
 			
 		//add dispActions button + image for it 
@@ -323,6 +323,12 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
 		ImageButton dispActions = new ImageButton(arrowRegionDraw);
+
+		//add tech button (uses arrow icon for now)
+		Texture techImage = textureManager.getTexture("tech_button");
+		TextureRegion techRegion = new TextureRegion(techImage);
+		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
+		ImageButton dispTech = new ImageButton(techRegionDraw);
 		
 		Table HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(gameWidth-50, 50);
@@ -330,7 +336,9 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.add(dispMainMenu);
 		HUDManip.row();
 		HUDManip.add(dispActions).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
-		
+		HUDManip.row();
+		HUDManip.add(dispTech).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+
 		stage.addActor(HUDManip);
 		
 		// can we make this a method of it's own?
@@ -368,6 +376,14 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 			
+		});
+
+		dispTech.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				new TechTreeView("TechTree", skin).show(stage);
+			}
+
 		});
 		
 	}	
