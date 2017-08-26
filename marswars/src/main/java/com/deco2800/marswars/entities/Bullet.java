@@ -32,7 +32,7 @@ public class Bullet extends MissileEntity implements Tickable {
 
     @Override
     public void onTick(int tick) {
-    	LOGGER.info("BULLET EXIST");
+    	//LOGGER.info("BULLET EXIST");
 		/* If the action is completed, remove it otherwise keep doing that action */
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
