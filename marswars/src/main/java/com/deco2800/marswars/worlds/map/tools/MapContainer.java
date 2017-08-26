@@ -34,7 +34,7 @@ public class MapContainer {
     // randomizer
     private Random r = new Random();
     // the world that will hold the content of the container
-    private CustomizedWorld world;
+    protected CustomizedWorld world;
     /**
      * Creates a new Map container from a given map with random elements.
      *
@@ -246,7 +246,7 @@ public class MapContainer {
      *
      * @return the new TerrainElement.
      */
-    private TerrainElement getRandomTerrainElement(){
+    protected TerrainElement getRandomTerrainElement(){
         TerrainElementTypes random = TerrainElementTypes.values()[r.nextInt(TerrainElementTypes.values().length)];
         return null;
     }
@@ -255,7 +255,7 @@ public class MapContainer {
      * Creates a random building object.
      *
      */
-    private void getRandomBuilding(){
+    protected void getRandomBuilding(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
         LOGGER.info("chosen building type: " + random);
         BaseEntity newBuilding;
@@ -279,7 +279,7 @@ public class MapContainer {
      *
      * @return the new group of buildings.
      */
-    public Building[][] getRandomStructure(){
+    protected Building[][] getRandomStructure(){
         BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
         LOGGER.info("chosen building type: " + random);
         return null;
@@ -288,15 +288,21 @@ public class MapContainer {
     /**
      * Creates random pattern of resources
      */
-    private void generateResourcePattern(){
+    protected void generateResourcePattern(){
         int xLength = this.length;
         int yWidth = this.width;
-        NoiseMap noise = new NoiseMap(xLength, yWidth, 14);
+        int featureSize = 5;
+        int scale = 2;
+        if (xLength * yWidth > 110){
+            featureSize = 14;
+            scale = 5;
+        }
+        NoiseMap noise = new NoiseMap(xLength, yWidth, featureSize);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
                 if (n>0.4){
-                    if(r.nextInt(10) > 5 && checkForEntity(ix, iy)){
+                    if(r.nextInt(10) > scale && checkForEntity(ix, iy)){
                         this.getRandomResource(ix, iy);
                     }
                 }
@@ -307,7 +313,7 @@ public class MapContainer {
     /**
      * Creates a random entity.
      */
-    private void getRandomEntity(){
+    protected void getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
@@ -335,43 +341,36 @@ public class MapContainer {
      * @param x the x coordinate.
      * @param y the y coordinate.
      */
-    private void getRandomResource(int x, int y){
+    protected void getRandomResource(int x, int y){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
-        BaseEntity newEntity;
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == ResourceType.BIOMASS){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
-        }
-        else if(random == ResourceType.CRYSTAL) {
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL);
-        }
-        else if(random == ResourceType.ROCK){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
-        }
-        else if(random == ResourceType.WATER){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
-        }
-        else{
-            return;
-        }
-        world.addEntity(newEntity);
+        setRandomResource(random, x, y);
     }
 
     /**
      * Creates a random resource in a random position
      */
-    private void getRandomResource(){
+    protected void getRandomResource(){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
-        BaseEntity newEntity;
         int x = r.nextInt(width-1);
         int y = r.nextInt(length-1);
         if(!checkForEntity(x, y)){
             return;
         }
+        setRandomResource(random, x, y);
+    }
+
+    /**
+     * Sets a random resource in specific x y
+     * @param x x coordinate
+     * @param y y coordinate
+     */
+    public void setRandomResource(ResourceType random, int x, int y){
+        BaseEntity newEntity;
         if(random == ResourceType.BIOMASS){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
         }
@@ -395,7 +394,7 @@ public class MapContainer {
      *
      * @return the new map file path.
      */
-    private String getRandomMap(){
+    protected String getRandomMap(){
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
@@ -443,9 +442,9 @@ public class MapContainer {
             }
         }else if(randomSize == MapSizeTypes.VERY_LARGE){
             if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
+                newPath = "resources/mapAssets/veryLargeMars.tmx";
             } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
+                newPath = "resources/mapAssets/veryLargeMoon.tmx";
             } else if (randomType == MapTypes.SUN){
                 newPath = "resources/mapAssets/veryLargeSun.tmx";
             } else {

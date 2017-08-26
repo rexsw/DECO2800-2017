@@ -105,7 +105,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 *	Set up new stuff for this game
 		 */
 		MapContainer map = new MapContainer();
-		GameManager.get().setWorld(new CustomizedWorld(map));
+		CustomizedWorld world = new CustomizedWorld(map);
+		world.loadMapContainer(map);
+		GameManager.get().setWorld(world);
+
+
 		/*
 		 * sets all starting entities to be player owned
 		 */
@@ -120,12 +124,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
+
+		int length = world.getLength();
+		int width = world.getWidth();
 		AiManagerTest aim1 = new AiManagerTest();
 		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(1, 1, 0);
+		Spacman ai = new Spacman(0, 1, 0);
 		Spacman ai1 = new Spacman(1, 0, 0);
 		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
-		EnemySpacman aienemy = new EnemySpacman(7, 5, 0);
+		EnemySpacman aienemy = new EnemySpacman(length-1, width-1, 0);
 		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(aim1);
@@ -140,7 +147,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Spacman ai2 = new Spacman(1, 2, 0);
 		Spacman ai21 = new Spacman(0, 1, 0);
 		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(9, 8, 0);
+		EnemySpacman aienemy2 = new EnemySpacman(length-2, length-2, 0);
 		ai2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(ai2);
 		ai21.setOwner(aim2);
