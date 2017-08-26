@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,8 @@ public class GameManager implements TickableManager {
 	private List<Manager> managers = new ArrayList<>();
 
 	private BaseWorld gameWorld;
+
+	private static FogWorld fogWorld = new FogWorld();
 	
 	private OrthographicCamera camera;
 
@@ -101,6 +104,10 @@ public class GameManager implements TickableManager {
 	public BaseWorld getWorld() {
 		return gameWorld;
 	}
+
+	public FogWorld getFogWorld() {
+		return fogWorld;
+	}
 	
 	public void setCamera(OrthographicCamera camera) {
 		this.camera = camera;
@@ -116,7 +123,9 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		List<Manager> deepcopy = new ArrayList<Manager>(((List<Manager>) managers));
+		//this is need to let managers use other managers ontick
+		//please don't change it
+		List<Manager> deepcopy = new ArrayList<Manager>((List<Manager>) managers);
 		Iterator<Manager> managersIter =  deepcopy.iterator();
 		while(managersIter.hasNext()) {
 			Manager m = managersIter.next();

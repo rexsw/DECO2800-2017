@@ -7,7 +7,7 @@ import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
-import technology.Technology;
+import com.deco2800.marswars.technology.*;
 
 import java.util.Optional;
 
@@ -24,6 +24,7 @@ public class TechTreeView extends Dialog{
 	
 	@Override 
 	protected void result(final Object object){
+
 		TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		if (object == (Object) 1) {
 			Technology tech2 = techMan.getTech(2);
@@ -33,6 +34,7 @@ public class TechTreeView extends Dialog{
 					resourceManager.setRocks(resourceManager.getRocks() - tech2.getCost()[0]);
 					techMan.addActiveTech(tech2);
 					System.out.println("YOu just upgraded the tech");
+					tech2.costUpgrade();
 				}
 			} else {
 				//You already have tech 2, do something else

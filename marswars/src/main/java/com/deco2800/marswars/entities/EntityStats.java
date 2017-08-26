@@ -12,7 +12,9 @@ import java.util.Optional;
 public class EntityStats {
 
     private int health;
-    private float posX, posY, posZ;
+    private float posX;
+    private float posY;
+    private float posZ;
     private GatheredResource resourceCarried;
     private Optional<DecoAction> currentAction;
     private BaseEntity entity;
