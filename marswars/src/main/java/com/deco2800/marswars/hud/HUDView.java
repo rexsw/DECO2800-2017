@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -645,14 +646,21 @@ public class HUDView extends ApplicationAdapter{
 		/*Set value for health bar*/
 		healthBar.setValue(0);
 		
+		int spacmenCount = 0; 
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
 				selectedEntity = e;
 	
 			}
+			if (e instanceof Spacman) {
+				//System.out.println("class of spacman: " + e.getClass());
+				spacmenCount++; 
+			}
 		}
 	    setEnitity(selectedEntity);
+	    
+	    playerSpacmen.setText("Aliv Spacmen: " + spacmenCount);
 		
 	}
 
