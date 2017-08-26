@@ -320,14 +320,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		window.setMovable(false); // So it doesn't fly around the screen
 		window.setPosition(400, 0); // Place at the bottom
 		window.setWidth((stage.getWidth())-300);
-		
+
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
 		
 		/* Add the window to the stage */
-		stage.addActor(window);
+		//stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -484,6 +484,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Update time & set color depending if night/day
 		 */
+
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 //		if (timeManager.isNight()){

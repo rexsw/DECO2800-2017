@@ -52,7 +52,6 @@ public class MapContainerTest extends BaseTest{
     @Test
     public void generateResourcePattern() throws Exception {
         map.generateResourcePattern();
-        System.out.println(world.getEntities());
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
@@ -82,7 +81,7 @@ public class MapContainerTest extends BaseTest{
 
     @Test
     public void getRandomMap() throws Exception {
-        map.getRandomMap();
+        String randomMap = map.getRandomMap();
         ArrayList<String> listOfMaps = new ArrayList<>();
         listOfMaps.add("resources/mapAssets/tinyMars.tmx");
         listOfMaps.add("resources/mapAssets/tinyMoon.tmx");
@@ -99,7 +98,7 @@ public class MapContainerTest extends BaseTest{
         listOfMaps.add("resources/mapAssets/veryLargeSun.tmx");
         listOfMaps.add("resources/mapAssets/veryLargeMoon.tmx");
         listOfMaps.add("resources/mapAssets/veryLargeMars.tmx");
-        Assert.assertTrue(listOfMaps.contains(map.getMap()));
+        Assert.assertTrue(listOfMaps.contains(randomMap));
     }
 
     @Test
