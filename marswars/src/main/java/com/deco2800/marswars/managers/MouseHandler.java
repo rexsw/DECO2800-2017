@@ -51,7 +51,7 @@ public class MouseHandler extends Manager {
 					return;
 				}
 
-				LOGGER.info("Clicked on tile x:" + proj_x + " y:" + proj_y);
+				LOGGER.info(String.format("Clicked on tile x:%f y:%f", proj_x,proj_y));
 
 				List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)proj_x, (int)proj_y);
 
