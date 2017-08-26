@@ -27,7 +27,7 @@ public class AiManagerTest extends Manager implements TickableManager, HasTeam {
 
 @Override
 public void onTick(long l) {
-	alive = false; //TODO: Reenable
+	//alive = false; //TODO: Reenable
 	if(!alive) {
 		return;
 	}
