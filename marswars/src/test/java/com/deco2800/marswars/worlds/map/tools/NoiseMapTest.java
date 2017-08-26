@@ -30,4 +30,9 @@ public class NoiseMapTest {
         noise.getNoiseAt(-1,-1);
     }
 
+    @Test (expected = IndexOutOfBoundsException.class)
+    public void getNoiseAtExceptionTest2(){
+        noise.getNoiseAt(200,200);
+    }
+
 }
