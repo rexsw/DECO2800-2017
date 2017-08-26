@@ -420,6 +420,9 @@ public class MapContainer {
                 break;
             case VERY_LARGE:
                 newPath+="veryLarge";
+                break;
+            default:
+                LOGGER.error("Unknown Size type");
         }
         switch (randomType){
             case MARS:
@@ -431,6 +434,8 @@ public class MapContainer {
             case SUN:
                 newPath+="Sun.tmx";
                 break;
+            default:
+                LOGGER.error("Unknown Size type");
         }
         return newPath;
     }
