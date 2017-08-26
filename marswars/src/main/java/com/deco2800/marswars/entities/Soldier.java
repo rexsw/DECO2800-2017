@@ -98,11 +98,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
 				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY());
 				
-				for (int i = 0; i < entities.size(); i++) {
-					if(entities.get(i) instanceof MissileEntity) {
-						return;
-					}
-				}
 				BaseWorld world = GameManager.get().getWorld();
 
 				/* We are stuck on a tile with another entity
