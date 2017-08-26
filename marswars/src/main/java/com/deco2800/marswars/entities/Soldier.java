@@ -92,7 +92,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onTick(int tick) {
-		LOGGER.info("I'm still ALIVE");
+		//LOGGER.info("I'm still ALIVE");
 		if (!this.getCurrentAction().isPresent()) {
 			// make stances here.
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
