@@ -43,51 +43,63 @@ import java.util.List;
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	
-	private static final int BUTTONSIZE = 40;
-	private static final int BUTTONPAD = 10; 
+	private static final int BUTTONSIZE = 40; //sets size of image buttons 
+	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 
 	private Stage stage;
 	private Skin skin;
+	
+	//HUD elements 
 	private Table overheadLeft;
 	private Table overheadRight;
 	private Table resourceTable;
     private Table playerdetails;
-	
-	private ImageButton quitButton;
-	private Button helpButton;
-	private Button messageButton;
-	
-	private Label rockCount; 
-	private Label crystalCount; 
-	private Label biomassCount; 
-	private Label waterCount;
-
-	private Label healthLabel;
-	private Label nameLabel;
-	
-	private Window messageWindow; 
-	private boolean messageToggle; 
-	private boolean inventoryToggle; 
-	private boolean menuToggle;
-	private Table HUDManip;
-	
+    private Table HUDManip;
+	private ChatBox chatbox;
+	private Window messageWindow;
 	private Window mainMenu; 
-	private Label gameTimeDisp;
-	private Label gameLengthDisp;
 	private Window minimap;
 	private Window inventory;
 	
+    //Action buttons 
+	private Button quitButton; // quits game
+	private Button helpButton; // calls help
+	private Button messageButton; //opens or closes chatbox
+	
+	//Resources count  
+	private Label rockCount;   
+	private Label crystalCount; 
+	private Label biomassCount; 
+	private Label waterCount;
+	
+	//Player stats 
+	private Label playerSpacmen;
+	private Label playerOverallHealth; 
+	private Label healthLabel;
+	private Label nameLabel;
 	private ProgressBar healthBar;
-	private GameManager gameManager;
-	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
-	private TextureManager textureManager;
-	private ChatBox chatbox;
-
-	private BaseEntity selectedEntity;
-
+	private Pixmap pixmap; 
+	
+	//Action buttons 
 	private Button attackButton;
 	private Button gatherButton;
 	private Button moveButton;
+
+	//Toggles; checks if the feature is visible on-screen or not
+	private boolean messageToggle; 
+	private boolean inventoryToggle; 
+	private boolean menuToggle;
+	
+	//Time displays 
+	private Label gameTimeDisp;
+	private Label gameLengthDisp;
+	
+	//Managers 
+	private GameManager gameManager;
+	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+	private TextureManager textureManager;
+
+	private BaseEntity selectedEntity;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -97,7 +109,6 @@ public class HUDView extends ApplicationAdapter{
 	 * @param gameManager handles selectables
 	 * @param textureManager 
 	 */
-
 	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
 		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		LOGGER.debug("Creating Hud");
@@ -115,9 +126,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in all components of the HUD 
 	 */
 	private void createLayout(){
-		topLeft();
 		topRight();
-		addPlayerIcon();
+		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
 	}
@@ -217,55 +227,75 @@ public class HUDView extends ApplicationAdapter{
 		});
 	}
 	
-	
-	/**
-	 * Adds in the top left section of the HUD. This includes the  
-	 */
-	private void topLeft(){
-		//Adds in the container managing the health status + player deets 
-		overheadLeft = new Table();
-		overheadLeft.setDebug(true);
-		overheadLeft.setWidth(stage.getWidth());
-		overheadLeft.align(Align.left | Align.top);
-		overheadLeft.setPosition(60, stage.getHeight());
 		
+	/**
+	 * Adds the player Icon, health for a single spacman, and name to the huD (goes into top left).
+	 * Does this by creating a nested table. The basic layout is shown below: 
+	 * +---------------------------+
+	 * |    :)    |______________  |
+	 * |  Player  |______________| |
+	 * |   img    |           100  |
+	 * |__________|----------------+
+	 * | p. Name  |
+	 * |          |
+	 * |          |
+	 * | Spacmen  |
+	 * |   10     |
+	 * |          |
+	 * | Overall  |
+	 * | health   |
+	 * +----------+
+	 * 
+	 */
+	private void addPlayerDetails(){
+		LOGGER.debug("Adding player icon");
+		playerdetails = new Table();
+		playerdetails.pad(10);
+		playerdetails.setWidth(150);
+		playerdetails.align(Align.left | Align.top);
+		playerdetails.setPosition(0, stage.getHeight());
+		
+		//Icon for player- 
+		//TODO get main menu working to select an icon and then display 
+		Image playerIcon = new Image(textureManager.getTexture("spacman_blue"));
+		playerdetails.add(playerIcon).height(100).width(100);
+		
+		//create table for health bar display
+		Table healthTable = new Table();
+		//Create the health bar 
 		LOGGER.debug("Creating health bar");
 		addProgressBar();
 		healthLabel = new Label("Health: ", skin);
-		healthLabel.setAlignment(Align.left);
+		healthTable.add(healthLabel).align(Align.left);
+		healthTable.row();
+		healthTable.add(healthBar);
 		
-		overheadLeft.add(healthBar);
-		
-		overheadLeft.row();
-		overheadLeft.add(healthLabel);
+		playerdetails.add(healthTable);
 
-		stage.addActor(overheadLeft);
-	}
-	
-	
-	/**
-	 * HELPER METHOD: 
-	 * Adds the player Icon and name to the huD (goes into top left) 
-	 */
-	private void addPlayerIcon(){
-		LOGGER.debug("Adding player icon");
-		playerdetails = new Table();
-		playerdetails.setDebug(true);
-		playerdetails.setWidth(100);
-		playerdetails.align(Align.left | Align.top);
-		playerdetails.setPosition(0, stage.getHeight());
-				
+		//add in player name
+		playerdetails.row();
 		Label playerName = new Label("Name", skin);
-		playerdetails.pad(BUTTONPAD).add(playerName);
+		playerdetails.add(playerName);
+		
 		this.nameLabel = playerName;
+		
+		//add in player stats 
+		playerSpacmen = new Label("Aliv spacmen: 0", skin);
+		playerOverallHealth = new Label("Total health", skin);
+		
+		playerdetails.row();
+		playerdetails.add(playerSpacmen).padTop(100).padLeft(10).align(Align.left);
+		playerdetails.row();
+		playerdetails.add(playerOverallHealth).padTop(40).padLeft(10).align(Align.left);
 		stage.addActor(playerdetails);
 	}
+	
 	
 	/**
 	 * Adds in progress bar to the top left of the screen 
 	 */
 	private void addProgressBar(){
-		Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.DARK_GRAY);
 		pixmap.fill();
 		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
@@ -506,45 +536,6 @@ public class HUDView extends ApplicationAdapter{
 	}
 	
 	/**
-	 * Updates any features of the HUD that may change through time/ game actions
-	 */
-    public void render(){
-		/*
-		 * Update time & set color depending if night/day
-		 */
-		gameTimeDisp.setText(" Time: " + timeManager.toString());
-		gameLengthDisp.setText(timeManager.getPlayClockTime());
-		
-		if (timeManager.isNight()){
-			gameTimeDisp.setColor(Color.FIREBRICK);
-			gameLengthDisp.setColor(Color.FIREBRICK);
-		}
-		else{
-			gameTimeDisp.setColor(Color.BLUE);
-			gameLengthDisp.setColor(Color.BLUE);
-		}
-		
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		
-		rockCount.setText("" + resourceManager.getRocks());
-		crystalCount.setText("" + resourceManager.getCrystal()); 
-		waterCount.setText("" + resourceManager.getWater());
-		biomassCount.setText("" + resourceManager.getBiomass());
-		
-		/*Set value for health bar*/
-		healthBar.setValue(0);
-        selectedEntity = null;
-		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
-			if (e.isSelected()) {
-				selectedEntity = e;
-
-			}
-		}
-        setEnitity(selectedEntity);
-    	
-    }
-
-    /**
      * Currently sets the health to 100 once a selectable unit is selected. 
      * @param target unit clicked on by player
      */
@@ -618,6 +609,45 @@ public class HUDView extends ApplicationAdapter{
 	}
 
     /**
+	 * Updates any features of the HUD that may change through time/ game actions
+	 */
+	public void render(){
+		/*
+		 * Update time & set color depending if night/day
+		 */
+		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameLengthDisp.setText(timeManager.getPlayClockTime());
+		
+		if (timeManager.isNight()){
+			gameTimeDisp.setColor(Color.FIREBRICK);
+			gameLengthDisp.setColor(Color.FIREBRICK);
+		}
+		else{
+			gameTimeDisp.setColor(Color.BLUE);
+			gameLengthDisp.setColor(Color.BLUE);
+		}
+		
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		
+		rockCount.setText("" + resourceManager.getRocks());
+		crystalCount.setText("" + resourceManager.getCrystal()); 
+		waterCount.setText("" + resourceManager.getWater());
+		biomassCount.setText("" + resourceManager.getBiomass());
+		
+		/*Set value for health bar*/
+		healthBar.setValue(0);
+		selectedEntity = null;
+		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
+			if (e.isSelected()) {
+				selectedEntity = e;
+	
+			}
+		}
+	    setEnitity(selectedEntity);
+		
+	}
+
+	/**
      * This function is used to refit the hud when the window size changes
      * @param width the stages width
      * @param height the stages height
@@ -628,9 +658,6 @@ public class HUDView extends ApplicationAdapter{
 		playerdetails.setWidth(100);
         playerdetails.align(Align.left | Align.top);
         playerdetails.setPosition(0, stage.getHeight());
-        overheadLeft.setWidth(stage.getWidth());
-        overheadLeft.align(Align.left | Align.top);
-        overheadLeft.setPosition(playerdetails.getWidth(), stage.getHeight());
         //Top Right
         overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);

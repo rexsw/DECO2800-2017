@@ -328,7 +328,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.getActionWindow().add(helpText);
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -336,7 +336,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Setup an Input Multiplexer so that input can be handled by both the UI and the game */
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(stage); // Add the UI as a processor
-
+		
         /*
          * Set up some input managers for panning with dragging.
          */
