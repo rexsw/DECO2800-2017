@@ -117,8 +117,7 @@ public class TimeManager extends Manager implements TickableManager{
 		return TimeUnit.HOURS.convert(getGlobalTime(),
 				TimeUnit.MILLISECONDS) % 24;
 	}
-	//think the comments for these two got switched around
-		
+
 	/**
 	 * Returns the minute value of the current time (for use when saving/
 	 * loading)
@@ -200,7 +199,8 @@ public class TimeManager extends Manager implements TickableManager{
 	}
 
 	/**
-	 *
+	 * Gets a string representation of the time since the current game was
+	 * started.
 	 * @return the String representation of the real time spent in the current
 	 * game
 	 */

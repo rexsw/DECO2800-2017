@@ -3,13 +3,8 @@ package com.deco2800.marswars;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import static org.junit.Assert.*;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class TimeManagerTest {
 	TimeManager timeManager = (TimeManager) GameManager.get()
@@ -101,12 +96,7 @@ public class TimeManagerTest {
 	@Test
 	public void testGetGlobalMinutes() {
 		assertTrue(timeManager.getGlobalMinutes() < 60);
-	//	Date date = new Date();
-	//	Calendar calendar = GregorianCalendar.getInstance();
-	//	calendar.setTime(date);
-	//	assertEquals(calendar.get(Calendar.MINUTE),
-	//			timeManager.getGlobalMinutes());
-	} //am i testing different types here?
+	}
 
 	@Test
 	public void testGetGlobalSeconds() {
