@@ -38,7 +38,7 @@ public class BaseWorldTest {
      */
     @Test
     public void testBaseWorldConstructorWithStrings(){
-        baseWorld = new BaseWorld("resources/mapAssets/tinyMars.tmx");
+        baseWorld = new BaseWorld("mapAssets/tinySun.tmx");
         //This test proofs a collisionMap was instantiated therefore map was successfully loaded
         Assert.assertTrue(baseWorld.getEntities().size() == 0);
     }
