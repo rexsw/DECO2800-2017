@@ -17,6 +17,7 @@ import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -180,6 +181,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
