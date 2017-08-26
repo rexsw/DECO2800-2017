@@ -80,12 +80,14 @@ public class Render3D implements Renderer {
     }
 
     /**
-     * Renders entities given by entities onto the batch and camera
+     * It looks similiar to renderEntities but it will be modified later to fulfill the fog's functionality
+     * Renders fog-of-war tiles onto the batch and camera
      * @param entities list of entities to be rendered.
      * @param batch the batch that is going to contain all the sprites
      * @param camera the camera being use to display the game.
 
      */
+
 
     public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera){
         Collections.sort(entities);
@@ -130,6 +132,16 @@ public class Render3D implements Renderer {
             }
         }
     }
+
+
+    /**
+     * Renders entities given by entities onto the batch and camera
+     * @param entities list of entities to be rendered.
+     * @param batch the batch that is going to contain all the sprites
+     * @param camera the camera being use to display the game.
+
+     */
+
     private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
         Collections.sort(entities);
         if (font == null) {
