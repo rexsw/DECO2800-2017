@@ -43,8 +43,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		this.addNewAction(MoveAction.class);
-		this.addNewAction(DamageAction.class);
+		//this.addNewAction(MoveAction.class);
+		//this.addNewAction(DamageAction.class);
 		// set all the attack attributes
 		this.setMaxHealth(500);
 		this.setHealth(500);

@@ -32,7 +32,7 @@ public class Priest extends AttackableEntity implements Clickable, Tickable {
 		this.setCost(40);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		this.addNewAction(MoveAction.class);
+		//this.addNewAction(MoveAction.class);
 		// set all the attack attributes
 		this.setMaxHealth(200);
 		this.setHealth(200);
