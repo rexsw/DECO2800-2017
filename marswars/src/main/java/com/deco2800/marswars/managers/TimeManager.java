@@ -97,8 +97,8 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return long integer (0 to 23) representing the current hour
 	 */
 	public long getGlobalHours() {
-		return TimeUnit.HOURS.convert(getGlobalTime(),
-				TimeUnit.MILLISECONDS) % 24;
+		return (TimeUnit.HOURS.convert(getGlobalTime(),
+				TimeUnit.MILLISECONDS) + 10) % 24;
 	}
 
 	/**
@@ -179,6 +179,15 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public void addTime(long seconds) {
 		time += Math.abs(seconds);
+	}
+
+	/**
+	 * Provides the System Time (AEST) in human-readable string format.
+	 * @return the String representation of the System Time
+	 */
+	public String getGlobalTimeString() {
+		return getGlobalHours() + ":" + getGlobalMinutes() + ":" +
+				getGlobalSeconds();
 	}
 
 	/**
