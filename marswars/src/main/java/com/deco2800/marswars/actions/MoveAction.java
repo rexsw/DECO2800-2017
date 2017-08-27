@@ -1,7 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.MissileEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.PathfindingThread;
 import com.deco2800.marswars.util.Point;

@@ -1,6 +1,6 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.entities.AttackableEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.GameManager;

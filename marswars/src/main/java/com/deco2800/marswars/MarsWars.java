@@ -1,12 +1,9 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -14,11 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -30,7 +27,6 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
-import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
@@ -105,6 +101,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+		// TODO get rid of this once the minimap loads based on the randomly loaded map
 		
 		/*
 		 *	Set up new stuff for this game
@@ -114,6 +111,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		GameManager.get().setMiniMap(new MiniMap(map.getMap(), 220, 220));
 
 
 		/*
@@ -121,7 +119,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(AiManagerTest.class));
+				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
 		/*
@@ -131,36 +129,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		int width = GameManager.get().getWorld().getWidth();
 		setAI(length -1, width -1);
 		setAI(1, 1);
-
-		AiManagerTest aim1 = new AiManagerTest();
-		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(0, 1, 0);
-		Spacman ai1 = new Spacman(1, 0, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
-		EnemySpacman aienemy = new EnemySpacman(length-1, width-1, 0);
-		ai.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
-		
-		AiManagerTest aim2 = new AiManagerTest();
-		GameManager.get().addManager(aim2);
-		Spacman ai2 = new Spacman(1, 2, 0);
-		Spacman ai21 = new Spacman(0, 1, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(length-2, length-2, 0);
-		ai2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai2);
-		ai21.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai21);
-		aibase2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aibase2);
-		aienemy2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aienemy2);
+		setAI(1, width -1);
+		setAI(length -1, 1);
 
 		// add soldier for combat testing
 		Soldier soldierA = new Soldier(7, 7, 0);
@@ -169,8 +139,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
+		Tank tankA = new Tank(6, 6, 0);
+		Tank tankB = new Tank(4, 5, 0);
+		tankA.setOwner(GameManager.get().getManager(PlayerManager.class));
+		tankB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(tankA);
+		GameManager.get().getWorld().addEntity(tankB);		
 		
 		// do something important here, asynchronously to the rendering thread
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -341,6 +318,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
+		view.disableHUD();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -371,6 +349,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 					originX = screenX;
 					originY = screenY;
+					// if the click is on the minimap
+					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+						return true;
+					}
 
 					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
 					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
@@ -541,7 +523,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		batch.dispose();
 		if(!gameStarted) {
-			renderMiniMap();
+			GameManager.get().getMiniMap().render(view);
+			GameManager.get().getMiniMap().updateMap();
+			view.enableHUD();
 			GameManager.get().toggleActiveView();
 			gameStarted = true;
 		}
@@ -670,14 +654,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y < 0-mapLength/2) {
 			camera.position.y = 0-mapLength/2;
 		}
-	}
-	
-	private void renderMiniMap() {
-		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
-		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
-		pixmap.dispose();
 	}
 
 	/**
