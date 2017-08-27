@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.util.Point;
@@ -138,6 +139,13 @@ public class GatherAction implements DecoAction {
 	private void returnToBase() {
 		if (action.completed()) {
 			state = State.SETUP_MOVE;
+			if (entity instanceof Spacman && ((Spacman) entity).getOwner() instanceof AiManagerTest) {
+				//if controlled by the ai added the resources to the ai's pile
+				AiManagerTest manager = (AiManagerTest) ((Spacman) entity).getOwner();
+				ResourceManager resourceManager = manager.getResources();
+				depositHarvest(resourceManager);
+				return;
+			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			// check which type of resource and add it to the player's resource
 			if (entity instanceof Spacman) {

@@ -64,10 +64,6 @@ public class Technology {
 	 *
 	 */
 
-	public void costUpgrade(){
-		System.out.println("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
-		Spacman.changeCost(5);
-	}
 
 	/* Generic Java Object methods, feel free to change toString() and stuff
 	if you like */

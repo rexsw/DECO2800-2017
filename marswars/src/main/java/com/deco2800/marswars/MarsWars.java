@@ -14,11 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -27,6 +24,7 @@ import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,8 +97,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
-		// TODO get rid of this once the minimap loads based on the randomly loaded map
-		
+
 		/*
 		 *	Set up new stuff for this game
 		 * TODO some way to choose which map is being loaded
@@ -109,7 +106,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
-		GameManager.get().setMiniMap(new MiniMap(map.getMap(), 220, 220));
+		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
 
 
 		/*
@@ -117,7 +114,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(AiManagerTest.class));
+				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
 			}
 		}
 		/*
@@ -127,46 +124,30 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		int width = GameManager.get().getWorld().getWidth();
 		setAI(length -1, width -1);
 		setAI(1, 1);
+		setAI(1, width -1);
+		setAI(length -1, 1);
 
-		AiManagerTest aim1 = new AiManagerTest();
-		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(0, 1, 0);
-		Spacman ai1 = new Spacman(1, 0, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
-		EnemySpacman aienemy = new EnemySpacman(length-1, width-1, 0);
-		ai.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
-		
-		AiManagerTest aim2 = new AiManagerTest();
-		GameManager.get().addManager(aim2);
-		Spacman ai2 = new Spacman(1, 2, 0);
-		Spacman ai21 = new Spacman(0, 1, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(length-2, length-2, 0);
-		ai2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai2);
-		ai21.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai21);
-		aibase2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aibase2);
-		aienemy2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aienemy2);
-
-		// add soldier for combat testing
-		Soldier soldierA = new Soldier(7, 7, 0);
-		Soldier soldierB = new Soldier(5, 5, 0);
-		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		// add soldier for combat testing (belongs to player)
+		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+		playerManager.setColour("Blue");
+		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
+		Tank tankA = new Tank(6, 6, 0, playerManager);
+		Tank tankB = new Tank(4, 5, 0, playerManager);
+		GameManager.get().getWorld().addEntity(tankA);
+		GameManager.get().getWorld().addEntity(tankB);		
+		
+		// Attackable entity (belongs to AI) Does not work. Not sure why.
+		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		aiManagerTest.setColour("Yellow");
+		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
+		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));
+		
 		
 		// do something important here, asynchronously to the rendering thread
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -359,7 +340,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
 				if (GameManager.get().getActiveView() == 1) {
 					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
 					camera.zoom = 1;
