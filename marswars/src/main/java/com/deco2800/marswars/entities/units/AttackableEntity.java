@@ -94,7 +94,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	/**
 	 * Set the maximum armor of the entity
-	 * @param maxarmor the maximum armor of the entity
+	 * @param maxArmor the maximum armor of the entity
 	 */
 	public void setMaxArmor(int maxArmor) {
 		this.maxArmor = maxArmor;
