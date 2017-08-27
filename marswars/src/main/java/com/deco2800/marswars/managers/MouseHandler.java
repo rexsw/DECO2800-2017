@@ -50,17 +50,45 @@ public class MouseHandler extends Manager {
 			LOGGER.info(String.format("Clicked on tile x:%f y:%f", projX,projY));
 
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
+			
 
 
 			if (entities.isEmpty()) {
+				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				return;
 			}
 
-			if (entities.get(entities.size() - 1) instanceof Clickable) {
-				((Clickable) entities.get(entities.size() - 1)).onClick(this);
-			} else {
+/*			for (BaseEntity e: entities) {
+				if (e instanceof Clickable) {
+					LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
+					((Clickable) entities.get(entities.size() - 1)).onClick(this);
+					break;
+				}
+			}
+			((CustomizedWorld)world).deSelectAll();*/
+			
+			
+			List<BaseEntity> staticEntities = new ArrayList<BaseEntity>(entities);
+			boolean isClickable=false;
+			for (BaseEntity e: staticEntities) {
+				if (e instanceof Clickable) {
+					LOGGER.info(String.format("Clicked on %s", e).toString());
+					((Clickable) e).onClick(this);
+					isClickable =true;
+					break;
+				}
+			}
+			if(isClickable){
 				((CustomizedWorld)world).deSelectAll();
 			}
+			
+			/*if (entities.get(entities.size() - 1) instanceof Clickable) {
+				LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
+				((Clickable) entities.get(entities.size() - 1)).onClick(this);
+			} else {
+				
+				((CustomizedWorld)world).deSelectAll();*/
+			//}
 		} else if (button == 1) {
 			// Right click
 			projX = x/tileWidth;
