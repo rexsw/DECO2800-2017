@@ -6,6 +6,10 @@ public class PlayerManager extends Manager implements HasTeam {
 	 */
 	private int teamid = 0;
 
+	/**
+	 * note team methods where a wip system and have been pushed back and as such
+	 * are not used for now		
+	 */
 	@Override
 	public void setTeam(int teamid) {
 		this.teamid = teamid;
