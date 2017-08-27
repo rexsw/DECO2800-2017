@@ -37,7 +37,7 @@ public final class ActionSetter {
         //Check entities found
         switch(designatedAction) { //breaks not necessary here because of the returns.
         	case GATHER:
-        		return (entities.isEmpty())? false : doGather(performer, entities.get(0));
+        		return entities.isEmpty()? false : doGather(performer, entities.get(0));
         	case MOVE:
         		return doMove(performer, x, y);
         	default: //other actions were not implemented yet.
