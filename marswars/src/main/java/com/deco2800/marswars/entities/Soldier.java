@@ -7,6 +7,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -43,8 +44,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		//this.addNewAction(MoveAction.class);
-		//this.addNewAction(DamageAction.class);
+		this.addNewAction(ActionType.DAMAGE);
+		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
 		this.setMaxHealth(500);
 		this.setHealth(500);
@@ -79,7 +80,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			this.setTexture(defaultTextureName);
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
 			AttackableEntity target = (AttackableEntity) entities.get(0);
 			if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`

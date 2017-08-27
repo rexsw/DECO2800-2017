@@ -6,10 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * @author Vinson Yeung on 25/8/17
@@ -95,28 +93,6 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     }
 
     /**
-     * Updates the collision map
-     * @param add
-     */
-    private void modifyCollisionMap(boolean add) {
-        if (GameManager.get().getWorld() instanceof BaseWorld) {
-            BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
-            int left = (int) getPosX();
-            int right = (int) Math.ceil(getPosX() + getXLength());
-            int bottom = (int) getPosY();
-            int top = (int) Math.ceil(getPosY() + getYLength());
-            for (int x = left; x < right; x++) {
-                for (int y = bottom; y < top; y++) {
-                    if (add)
-                        baseWorld.getCollisionMap().get(x, y).add(this);
-                    else
-                        baseWorld.getCollisionMap().get(x, y).remove(this);
-                }
-            }
-        }
-    }
-
-    /**
      * Removes any current action and set action to empty
      */
     public void setEmptyAction() {
@@ -157,7 +133,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
      * @return true if there is an ongoing action
      */
     @Override
-    public boolean isWorking() { return (currentAction.isPresent()); }
+    public boolean isWorking() { return currentAction.isPresent(); }
 
     /**
      * Set a new action for an entity

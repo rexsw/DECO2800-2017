@@ -42,7 +42,7 @@ public class Rock extends BaseEntity implements HasHealth {
 	 */
 	@Override
 	public void setHealth(int health) {
-		System.err.println("Setting health to " + health);
+		LOGGER.debug("Setting health to " + health);
 
 		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);

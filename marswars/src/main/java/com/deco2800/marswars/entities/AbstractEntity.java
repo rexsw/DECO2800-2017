@@ -258,21 +258,21 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		float isoX = (cartX - cartY) / 2.0f;
 		float isoY = (cartX + cartY) / 2.0f;
 
-		float cartX_o = o.getPosX();
-		float cartY_o = o.getParent().getLength() - o.getPosY();
+		float oCartX = o.getPosX();
+		float oCartY = o.getParent().getLength() - o.getPosY();
 
-		float isoX_o = (cartX_o - cartY_o) / 2.0f;
-		float isoY_o = (cartX_o + cartY_o) / 2.0f;
+		float oIsoX = (oCartX - oCartY) / 2.0f;
+		float oIsoY = (oCartX + oCartY) / 2.0f;
 
-		if (Math.abs(isoY - isoY_o) < 0.000001f) {
-			if (isoX < isoX_o) {
+		if (Math.abs(isoY - oIsoY) < 0.000001f) {
+			if (isoX < oIsoX) {
 				return 1;
-			} else if (isoX > isoX_o) {
+			} else if (isoX > oIsoX) {
 				return -1;
 			} else {
 				return 0;
 			}
-		} else if (isoY < isoY_o) {
+		} else if (isoY < oIsoY) {
 			return 1;
 		} else {
 			return -1;

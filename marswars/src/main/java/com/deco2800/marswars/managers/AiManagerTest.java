@@ -4,7 +4,6 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.util.WorldUtil;
 import java.util.Optional;
 
