@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Holds the minimap information, and provides useful methods
@@ -20,6 +23,7 @@ public class MiniMap {
     private Image backgroundImage; //the image of the map
     private int width; //the width of the minimap in pixels
     private int height; //the height of the minimap in pixels
+    private List<MiniMapEntity> entitiesOnMap; //a list of every entity displayed on the minimap
 
     /**
 	 * Creates a new minimap instance 
@@ -32,6 +36,7 @@ public class MiniMap {
         backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
+        entitiesOnMap = new ArrayList<MiniMapEntity>();
     }
     
     /**
@@ -63,17 +68,23 @@ public class MiniMap {
 		pixmap.dispose();
 	}
 
-	/**
-	 * Work in progress method for hotswapping entity textures within the minimap
-	 * @param x
-	 * the entity x location
-	 * @param y
-	 * the entity y location
-	 */
-    public void addFriendlyEntity(int x, int y) {
-        TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-        reg.getTexture("friendly_unit");
+    /**
+     * Adds the entity to the MiniMap
+     * @param team 0: friendly, 1: allied, 2: enemy
+     * @param x x coordinate of entity
+     * @param y y coordinate of entity
+     */
+    public void addEntity(int team, float x, float y) {
+        // TODO convert to map coordinates
+        entitiesOnMap.add(new MiniMapEntity(team, x, y));
+    }
 
+    /**
+     * Gets the entities on the map.
+     * @return List of MiniMapEntities.
+     */
+    public List<MiniMapEntity> getEntitiesOnMap() {
+        return entitiesOnMap;
     }
 
     /**

@@ -64,7 +64,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`
+		if (	!this.sameOwner(target)&&//(belongs to another player, currently always true)`
 				 this!= target //prevent soldier suicide when owner is not set
 				) {
 			

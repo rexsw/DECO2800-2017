@@ -131,15 +131,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 		playerManager.setColour("Blue");
 		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		GameManager.get().getMiniMap().addEntity(0, 7, 7);
 		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
+		GameManager.get().getMiniMap().addEntity(0, 5, 5);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
 		Tank tankA = new Tank(2, 2, 0, playerManager);
 		Tank tankB = new Tank(3, 3, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
-		GameManager.get().getWorld().addEntity(tankB);
-		Astronaut astronautA = new Astronaut(1, 1, 0, playerManager);
-		GameManager.get().getWorld().addEntity(astronautA);
+		GameManager.get().getWorld().addEntity(tankB);	
+		Spacman spac = new Spacman(9, 9, 0);
+		spac.setOwner(playerManager);
+		GameManager.get().getWorld().addEntity(spac);
 		
 		// Attackable entity (belongs to AI) Does not work. Not sure why.
 		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
@@ -495,8 +498,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.begin();
 		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
 		batch.end();
-
-        /* Render the tiles first */
+		
+        /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
 		tileRenderer.setView(camera);
 		tileRenderer.render();
