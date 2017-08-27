@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -116,6 +117,12 @@ public class TextureManager extends Manager {
             String path;
             //Determine the unit type
             String unitType = unit.getClass().toString();
+            //filter out class name qualifier, this may be changed later to extend it 
+            // to other entity types
+            Scanner sc = new Scanner (unitType);
+            sc.useDelimiter("units.");
+            unitType=sc.next();
+            sc.close();
             //find the team colour of the owner:
             String teamColour = ((PlayerManager) soldier.getOwner()).getColour();
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
