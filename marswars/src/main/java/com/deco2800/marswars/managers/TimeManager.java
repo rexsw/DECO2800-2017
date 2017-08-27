@@ -128,8 +128,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return long integer representing the current millisecond
 	 */
 	public long getGameTimer() {
-		long gameTimer = getGlobalTime() - gameStartTime;
-		return gameTimer;
+		return getGlobalTime() - gameStartTime;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.worlds.AbstractWorld;
@@ -22,10 +21,6 @@ public class MouseHandler extends Manager {
 	private List<Clickable> listeners = new ArrayList<>();
 
 	/**
-	 * Constructor for the mouse handler
-	 * @param world
-	 */
-	/**
 	 * Currently only handles objects on height 0
 	 * @param x
 	 * @param y
@@ -34,49 +29,48 @@ public class MouseHandler extends Manager {
 		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
-		switch(button) {
-			case 0: // Left Click
-				AbstractWorld world = GameManager.get().getWorld();
+		float projX;
+		float projY;
 
-				// If we get another left click ignore the previous listeners
+		if (button == 0) {
+			// Left click
+			AbstractWorld world = GameManager.get().getWorld();
+
+			// If we get another left click ignore the previous listeners
 //				listeners.clear(); // Remove this to allow multiselect
 
-				float proj_x = 0 , proj_y = 0;
+			projX = x/tileWidth;
+			projY = -(y - tileHeight / 2f) / tileHeight + projX;
+			projX -= projY - projX;
 
-				proj_x = x/tileWidth;
-				proj_y = -(y - tileHeight / 2f) / tileHeight + proj_x;
-				proj_x -= proj_y - proj_x;
+			if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
+				return;
+			}
 
-				if (proj_x < 0 || proj_x > world.getWidth() || proj_y < 0 || proj_y > world.getLength()) {
-					return;
-				}
+			LOGGER.info(String.format("Clicked on tile x:%f y:%f", projX,projY));
 
-				LOGGER.info(String.format("Clicked on tile x:%f y:%f", proj_x,proj_y));
-
-				List<BaseEntity> entities = ((BaseWorld)GameManager.get().getWorld()).getEntities((int)proj_x, (int)proj_y);
+			List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
 
 
-				if (entities.size() == 0) {
-					return;
-				}
+			if (entities.isEmpty()) {
+				return;
+			}
 
-				if (entities.get(entities.size() - 1) instanceof Clickable) {
-					((Clickable) entities.get(entities.size() - 1)).onClick(this);
-				} else {
-					((CustomizedWorld)world).deSelectAll();
-				}
+			if (entities.get(entities.size() - 1) instanceof Clickable) {
+				((Clickable) entities.get(entities.size() - 1)).onClick(this);
+			} else {
+				((CustomizedWorld)world).deSelectAll();
+			}
+		} else if (button == 1) {
+			// Right click
+			projX = x/tileWidth;
+			projY = -(y - tileHeight / 2f) / tileHeight + projX;
+			projX -= projY - projX;
 
-				break;
-			case 1: // Right click
-				proj_x = x/tileWidth;
-				proj_y = -(y - tileHeight / 2f) / tileHeight + proj_x;
-				proj_x -= proj_y - proj_x;
-
-				for (Clickable c : listeners) {
-					c.onRightClick(proj_x, proj_y);
-				}
-				listeners.clear();
-				break;
+			for (Clickable c : listeners) {
+				c.onRightClick(projX, projY);
+			}
+			listeners.clear();
 		}
 	}
 
