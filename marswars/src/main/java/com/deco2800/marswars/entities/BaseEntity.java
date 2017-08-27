@@ -41,7 +41,7 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 
 	/**
 	 * Full blown constructor for the base entity
-	 * @param
+	 * @param posX
 	 * @param posY
 	 * @param posZ
 	 * @param xLength
