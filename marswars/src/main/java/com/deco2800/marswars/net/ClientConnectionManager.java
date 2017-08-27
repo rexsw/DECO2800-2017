@@ -13,7 +13,7 @@ public class ClientConnectionManager extends ConnectionManager {
 
 	@Override
 	public void disconnected(Connection connection) {
-
+		this.logAction(new ServerShutdownAction());
 	}
 
 	@Override
@@ -23,6 +23,9 @@ public class ClientConnectionManager extends ConnectionManager {
 			this.logAction(action);
 		} else if (o instanceof MessageAction) {
 			MessageAction action = (MessageAction) o;
+			this.logAction(action);
+		} else if (o instanceof LeaveLobbyAction) {
+			LeaveLobbyAction action = (LeaveLobbyAction) o;
 			this.logAction(action);
 		}
 	}
