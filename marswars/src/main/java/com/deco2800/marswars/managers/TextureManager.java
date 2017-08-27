@@ -121,7 +121,8 @@ public class TextureManager extends Manager {
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-
+        this.saveTexture("star_1", "resources/Backgrounds/star1.png");
+        this.saveTexture("star_2", "resources/Backgrounds/star2.png");
     }
     /*
      *
@@ -181,9 +182,7 @@ public class TextureManager extends Manager {
     public void saveTexture(String id, String filename) {
         LOGGER.info("Saving texture" + id + " with Filename " + filename);
         try{
-            if (!textureMap.containsKey(id)) {
-                textureMap.put(id, new Texture(filename));
-            }
+            textureMap.put(id, new Texture(filename));
         }
         catch(Exception e){
             LOGGER.error(String.format("Failed to load texture %s from %s", id,filename));

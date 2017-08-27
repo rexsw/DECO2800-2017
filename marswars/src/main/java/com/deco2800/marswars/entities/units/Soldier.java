@@ -124,7 +124,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();
-			boolean moveAway = GameManager.get().getWorld().getEntities(xPosition, yPosition).size() > 2;
+			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+			int entitiesSize = entities.size();
+			for (BaseEntity e: entities) {
+				if (e instanceof MissileEntity) {
+					entitiesSize--;
+				}
+			}
+			boolean moveAway = entitiesSize > 2;
 			if (moveAway) {
 			
 				BaseWorld world = GameManager.get().getWorld();
@@ -148,7 +155,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
-				List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
@@ -162,6 +169,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			currentAction = Optional.empty();
 		}
 		
+	}
+	@Override
+	public String toString(){
+		return "Soldier";
 	}
 	
 	public void setAllTextture() {
