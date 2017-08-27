@@ -130,7 +130,7 @@ public class TextureManager extends Manager {
 			//try to load the texture into the textureMap
             LOGGER.info(String.format("Loading texture %s for %s from %s", 
             		textureType, unitType, path));
-            String retVal = textureType+unitType;
+            String retVal = textureType + teamColour + unitType;
             saveTexture(retVal,path);
             return retVal;
         } else {

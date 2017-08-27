@@ -172,10 +172,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(tankB);		
 		
 		// Attackable entity (belongs to AI) Does not work. Not sure why.
-/*		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
 		aiManagerTest.setColour("Yellow");
 		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
-		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));*/
+		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));
 		
 		
 		// do something important here, asynchronously to the rendering thread
