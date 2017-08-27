@@ -130,7 +130,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 		playerManager.setColour("Blue");
 		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		GameManager.get().getMiniMap().addEntity(0, 7, 7);
 		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
+		GameManager.get().getMiniMap().addEntity(0, 5, 5);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
 		Tank tankA = new Tank(6, 6, 0, playerManager);
