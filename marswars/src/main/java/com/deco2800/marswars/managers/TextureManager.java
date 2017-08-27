@@ -62,7 +62,9 @@ public class TextureManager extends Manager {
         this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
         this.saveTexture("spacman_ded", "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
-        //everything above here must be replaced
+        
+        
+        //--------------------------everything above here must be replaced
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
         this.saveTexture("medium_water", "resources/resourceAssets/water_M.png");
         this.saveTexture("large_water", "resources/resourceAssets/water_L.png");
@@ -82,10 +84,24 @@ public class TextureManager extends Manager {
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         
-        //Unit Assets:
-        this.saveTexture("bullet", "resources/UnitAssets/bullet.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Astronaut_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Astronaut_2.png");
+        //----------Unit Assets:
+        //Soldier:
+        this.saveTexture("bullet", "resources/UnitAssets/bullet_1.png");
+        this.saveTexture("soldier", "resources/UnitAssets/Soldier_1.png");
+        this.saveTexture("soldierSelected", "resources/UnitAssets/Soldier_2.png");
+        //Tank:
+        
+        this.saveTexture("missile", "resources/UnitAssets/Missile_3.png");
+        this.saveTexture("tank", "resources/UnitAssets/Tank_1.png");
+        this.saveTexture("tankSelected", "resources/UnitAssets/Tank_2.png");
+        
+        
+        //Backgrounds:
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
+        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
+
     }
 
     /**

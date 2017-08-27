@@ -33,9 +33,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private MissileEntity missile;
-	private String selectedTextureName = "soldierSelected";
-	private String defaultTextureName = "soldier";
-	
+	protected String selectedTextureName = "soldierSelected";
+	protected String defaultTextureName = "soldier";
+	protected String movementSound = "endturn.wav";
 
 	public Soldier(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
@@ -54,6 +54,23 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setArmorDamage(50);
 		this.setAttackRange(8);
 		this.setAttackSpeed(30);
+	}
+	
+	private void attack(AttackableEntity target){
+		int x = (int) target.getPosX();
+		int y = (int) target.getPosY();
+		if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`
+				 this!= target //prevent soldier suicide when owner is not set
+				) {
+			
+			currentAction = Optional.of(new DamageAction(this, target));
+			LOGGER.error("Assigned action attack target at " + x + " " + y);
+		} 
+		else 
+		{
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			LOGGER.error("Same owner");
+		}
 	}
 
 	@Override
@@ -83,17 +100,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
 			AttackableEntity target = (AttackableEntity) entities.get(0);
-			if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`
-					 this!= target //prevent soldier suicide when owner is not set
-					) {
-				currentAction = Optional.of(new DamageAction(this, target));
-				LOGGER.error("Assigned action attack target at " + x + " " + y);
-			} 
-			else 
-			{
-				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-				LOGGER.error("Same owner");
-			}
+			attack(target);
 			
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
@@ -101,7 +108,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("endturn.wav");
+		sound.playSound(movementSound);
 	}
 
 	@Override
