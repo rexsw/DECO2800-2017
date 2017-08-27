@@ -491,20 +491,14 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addMiniMapMenu(){
 		LOGGER.debug("Creating minimap menu");
-		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		int width = 220;
-		int height = 220;
 		minimap = new Window("Map", skin);
 		
-		Image image = new Image(reg.getTexture("minimap"));
-		image.setSize(width, height);
-		
-		minimap.add(image);
+		minimap.add(GameManager.get().getMiniMap().getBackground());
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
-		minimap.setWidth(width);
-		minimap.setHeight(height);
+		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
+		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
 		
 		stage.addActor(minimap);
 	}

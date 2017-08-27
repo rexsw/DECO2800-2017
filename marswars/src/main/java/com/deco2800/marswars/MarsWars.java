@@ -102,6 +102,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+		// TODO get rid of this once the minimap loads based on the randomly loaded map
 		
 		/*
 		 *	Set up new stuff for this game
@@ -111,6 +112,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		GameManager.get().setMiniMap(new MiniMap(map.getMap(), 220, 220));
 
 
 		/*
@@ -369,6 +371,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 					originX = screenX;
 					originY = screenY;
+					// if the click is on the minimap
+					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+						return true;
+					}
 
 					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
 					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
