@@ -14,13 +14,17 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,13 +33,16 @@ import java.util.Random;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth {
+public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
+	
+	private Manager owner = null;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
@@ -55,8 +62,52 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.addNewAction(GatherAction.class);
 		this.addNewAction(MoveAction.class);
 		this.addNewAction(BuildAction.class);
+		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		FogWorld fogWorld = GameManager.get().getFogWorld();
+		fogWorld.addEntity(lineOfSight);
 	}
 
+	/**
+	 * Sets the position of this spacman
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	@Override
+	public void setPosition(float x, float y, float z) {
+		super.setPosition(x, y, z);
+		lineOfSight.setPosition(x,y,z);
+	}
+
+	/**
+	 * Sets the position X
+	 * @param x
+	 */
+	@Override
+	public void setPosX(float x) {
+		super.setPosX(x);
+		lineOfSight.setPosX(x);
+	}
+
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
+	@Override
+	public void setPosY(float y) {
+		super.setPosY(y);
+		lineOfSight.setPosY(y);
+	}
+
+	/**
+	 * Sets the position Z
+	 * @param z
+	 */
+	@Override
+	public void setPosZ(float z) {
+		super.setPosZ(z);
+		lineOfSight.setPosZ(z);
+	}
 	/**
 	 * On tick method for the spacman
 	 * @param i
@@ -90,6 +141,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 				/* Finally move to that position using a move action */
 				this.currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+
 			}
 			return;
 		}
@@ -104,23 +156,34 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 
 	/**
+	 * Get the line of sight of this spacman
+	 * @return LineOfSight
+	 */
+	public LineOfSight getLineOfSight(){
+		return lineOfSight;
+	}
+
+	/**
 	 * On click method for the spacman
 	 * Should change to Blue
 	 * @param handler
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		// If Spacman is building, left click will finalise selection
+		// If Spacman is building, cannot interrupt with left click
 		if (currentAction.isPresent()) {
 			if(currentAction.get() instanceof BuildAction) {
 				return;
 			}
 		}
-		handler.registerForRightClickNotification(this);
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		this.setTexture("spacman_blue");
-		LOGGER.error("Clicked on spacman");
-		this.makeSelected();
+		if(owner instanceof PlayerManager) {
+			handler.registerForRightClickNotification(this);
+			this.setTexture("spacman_blue");
+			LOGGER.error("Clicked on spacman");
+			this.makeSelected();
+		} else {
+			LOGGER.error("Clicked on ai spacman");
+		}
 	}
 
 	/**
@@ -150,11 +213,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
 			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
-			LOGGER.error("Assigned action gather");
+			//LOGGER.error("Assigned action gather");
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
-			LOGGER.error("Assigned action move to" + x + " " + y);
+
+			//LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture("spacman_green");
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -171,7 +235,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		return health;
 	}
 
-	/* Sets the health for this spacman */
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
 	@Override
 	public void setHealth(int health) {
 		LOGGER.info("Set health to " + health);
@@ -189,7 +256,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	public void addGatheredResource(GatheredResource resource) {
 		this.gatheredResource = resource;
-		LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
+		//LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
 	}
 	
 	/**
@@ -197,7 +264,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @return true if this unit carries something
 	 */
 	public boolean checkBackpack() {
-		return (gatheredResource != null);
+		return gatheredResource != null;
 	}
 	
 	/**
@@ -206,28 +273,76 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	public GatheredResource removeGatheredResource() {
 		GatheredResource resource = new GatheredResource (gatheredResource.getType(), gatheredResource.getAmount());
-		LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
+		//LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
 		gatheredResource = null;
 		return resource;
 	}
 	
+	/**
+	 * Interactive button for building structures
+	 */
 	public Button getButton() {
-		Button button = new TextButton("Make Base", new Skin(Gdx.files.internal("uiskin.json")));
+		Button button = new TextButton("Make Base", new Skin((Gdx.files.internal("uiskin.json"))));
 		button.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				buttonWasPressed();
+				LOGGER.error("DID SOMETHING");
 			}
 		});
 		return button;
 	}
 
+	/**
+	 * Allows build functionality on press
+	 */
 	public void buttonWasPressed() {
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() >= 150) {
-			resourceManager.setRocks(resourceManager.getRocks() - 150);
-		}
-		currentAction = Optional.of(new BuildAction(this));
+		
+		currentAction = Optional.of(new BuildAction(this, BuildingType.BASE));
+	}
+	
+	/**
+	 * Set the owner of this spacman
+	 * @param owner
+	 */
+	@Override
+	public void setOwner(Manager owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Get the owner of this spacman
+	 * @return owner
+	 */
+	@Override
+	public Manager getOwner() {
+		return this.owner;
+	}
+
+	/**
+	 * Check if this spacman has the same owner as the other Abstract enitity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+	
+	/**
+	 * Check if this spacman currently has an action
+	 * @return true if an action is present
+	 */
+	public boolean isWorking() {
+		return currentAction.isPresent();
+	}
+	
+	/**
+	 * Set an current action for this spac man
+	 * @param action
+	 */
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
 	}
 
 }

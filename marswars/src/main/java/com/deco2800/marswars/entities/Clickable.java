@@ -9,7 +9,7 @@ import com.deco2800.marswars.managers.MouseHandler;
 public interface Clickable {
 	/**
 	 * Called on entity click
-	 * @param handler
+	 * @param handler a mouse handler.
 	 */
 	void onClick(MouseHandler handler);
 

@@ -32,6 +32,13 @@ public class SpacClient {
     }
 
     /**
+     * Stop client / disconnect
+     */
+    public void stop() {
+        this.client.stop();
+    }
+
+    /**
      * Send object to host
      */
     public void sendObject(Object o) {

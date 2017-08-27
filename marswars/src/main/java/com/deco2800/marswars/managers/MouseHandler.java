@@ -31,8 +31,8 @@ public class MouseHandler extends Manager {
 	 * @param y
 	 */
 	public void handleMouseClick(float x, float y, int button) {
-		float tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-		float tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
 		switch(button) {
 			case 0: // Left Click

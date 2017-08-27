@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * Created by timhadwen on 2/8/17.
  */
 public class BaseEntity extends AbstractEntity implements Selectable {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseEntity.class);
 	private int cost = 0;
 	private float buildSpeed = 0;
 	private EntityType entityType = EntityType.NOT_SET;
@@ -58,6 +57,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	/**
 	 * Outdated constructor for the base entity
+	 * @deprecated
 	 * @param position
 	 * @param xRenderLength
 	 * @param yRenderLength
@@ -143,6 +143,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		}
 	}
 
+
 	/**
 	 * Sets the Position X
 	 * @param x
@@ -186,6 +187,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	public void makeSelected() {
 		this.selected = true;
+
 	}
 
 	/**
@@ -273,6 +275,10 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	@Override
 	public void buttonWasPressed() {return;}
+	
+	/**
+	 * Returns a label to display into 'Actions' of the HUD 
+	 */
 	@Override
 	public Label getHelpText() {
 		String message = "";
@@ -291,6 +297,8 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 				break;
 			case RESOURCE:
 				message ="This is a resource";
+				break;
+			default:
 				break;
 
 		}
@@ -311,7 +319,6 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
 					if (add) {
-						LOGGER.error("x cord: "+ x + " y cord: " + y + this);
 						baseWorld.getCollisionMap().get(x, y).add(this);
 					}
 					else {
@@ -320,5 +327,12 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats(0,0,0,0, null, Optional.empty(), this);
 	}
 }

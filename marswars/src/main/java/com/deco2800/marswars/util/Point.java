@@ -7,9 +7,10 @@ public class Point {
 	private float x, y;
 
 	/**
-	 * Constructor for the point class
-	 * @param x
-	 * @param y
+	 * Constructor for the point class.
+	 *
+	 * @param x the x coordinate.
+	 * @param y the y coordinate.
 	 */
 	public Point(float x, float y) {
 		this.x = x;
@@ -17,25 +18,28 @@ public class Point {
 	}
 
 	/**
-	 * Gets the X coordiante
-	 * @return
+	 * Gets the X coordiante.
+	 *
+	 * @return the x coordinate.
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * Gets the Y coordinate
-	 * @return
+	 * Gets the Y coordinate.
+	 *
+	 * @return the y coordinate.
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * Equals method
-	 * @param o
-	 * @return
+	 * Equals method.
+	 *
+	 * @param o the object to be compared to.
+	 * @return whether another object is instance of Point and is equal to this.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -49,8 +53,9 @@ public class Point {
 	}
 
 	/**
-	 * hashcode method
-	 * @return
+	 * hashcode method.
+	 *
+	 * @return the hashcode of a Point object.
 	 */
 	@Override
 	public int hashCode() {
@@ -60,8 +65,9 @@ public class Point {
 	}
 
 	/**
-	 * Returns a string representaiton of the point
-	 * @return
+	 * Returns a string representation of the point.
+	 *
+	 * @return the string representation of a Point object.
 	 */
 	@Override
 	public String toString() {
@@ -69,9 +75,10 @@ public class Point {
 	}
 
 	/**
-	 * Calcualtes the distance between two points
-	 * @param other
-	 * @return
+	 * Calculates the distance between two points.
+	 *
+	 * @param other the point that will be compared to.
+	 * @return the distance between the two points.
 	 */
 	public float distanceTo(Point other) {
 		float dx = other.x - x;
