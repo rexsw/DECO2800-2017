@@ -32,14 +32,14 @@ public void onTick(long l) {
 	}
 	time += 5;
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof HasOwner) {
-			if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
+		if(e instanceof HasOwner && ((HasOwner) e).getOwner() == this) {
+			if(e instanceof Spacman) {
 				Spacman x = (Spacman)e;
 				useSpacman(x);
-			} else if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
+			} else if(e instanceof Base) {
 				Base x = (Base)e;
 				generateSpacman(x);
-			} else if(e instanceof EnemySpacman && ((HasOwner) e).getOwner() == this) {
+			} else if(e instanceof EnemySpacman) {
 				EnemySpacman x = (EnemySpacman)e;
 				useEnemy(x);
 			}
@@ -47,9 +47,10 @@ public void onTick(long l) {
 	}
 }
 		/**
-		 * generate new spacman when a base have more than 30 rocks
+		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
+<<<<<<< HEAD
 	if(!x.isWorking()) {
 	//sets the ai base to make more spacman if possible
 		if (resources.getRocks() > 30) {
@@ -59,6 +60,16 @@ private void generateSpacman(Base x) {
 			r.setOwner(this);
 			x.setAction(new GenerateAction(r));							
 		}
+=======
+	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	if(!x.isWorking() && resourceManager.getRocks() > 30) {
+		//sets the ai base to make more spacman if possible
+		LOGGER.error("ai - set base to make spacman");
+		resourceManager.setRocks(resourceManager.getRocks() - 30);
+		Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
+		r.setOwner(this);
+		x.setAction(new GenerateAction(r));							
+>>>>>>> Ai
 	}
 }
 		

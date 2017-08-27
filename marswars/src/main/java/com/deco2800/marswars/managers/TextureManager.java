@@ -67,9 +67,14 @@ public class TextureManager extends Manager {
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
         textureMap.put("base2", new Texture("resources/placeholderassets/base2.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
+<<<<<<< HEAD
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
+=======
+        textureMap.put("tree1", new Texture("resources/placeholderassets/tree1.png"));
+        textureMap.put("tree1sele", new Texture("resources/placeholderassets/tree1sele.png"));
+>>>>>>> Ai
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
         this.saveTexture("tree", "resources/placeholderassets/tree.png");
@@ -94,6 +99,15 @@ public class TextureManager extends Manager {
         this.saveTexture("small_biomass", "resources/resourceAssets/biomass_S.png");
         this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_M.png");
         this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
+        this.saveTexture("large_tree", "resources/resourceAssets/tree1sele.png");
+        this.saveTexture("medium_tree", "resources/resourceAssets/treem.png");
+        this.saveTexture("small_tree", "resources/resourceAssets/treesl.png");
+        this.saveTexture("large_mine", "resources/resourceAssets/minel.png");
+        this.saveTexture("medium_mine", "resources/resourceAssets/minem.png");
+        this.saveTexture("small_mine", "resources/resourceAssets/mines.png");       
+        this.saveTexture("large_flower", "resources/resourceAssets/flowerl.png");
+        this.saveTexture("medium_flower", "resources/resourceAssets/flowerm.png");
+        this.saveTexture("small_flower", "resources/resourceAssets/flowers.png");   
         this.saveTexture("chat_button", "resources/HUDAssets/chatbutton.png");
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
@@ -102,6 +116,7 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
+<<<<<<< HEAD
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
         //----------Unit Assets:
@@ -157,6 +172,8 @@ public class TextureManager extends Manager {
         } else {
         	return null;
         }
+=======
+>>>>>>> Ai
         
     }
 
