@@ -9,21 +9,14 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.deco2800.marswars.actions.GatherAction.State;
+import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.BuildingEntity;
 import com.deco2800.marswars.entities.BuildingType;
 import com.deco2800.marswars.entities.CheckSelect;
-import com.deco2800.marswars.entities.Resource;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.SoundManager;
-import com.deco2800.marswars.util.Point;
-import com.deco2800.marswars.worlds.BaseWorld;
+
 
 /**
  * A BuildSelectAction for selecting a valid area to build on
@@ -48,12 +41,12 @@ public class BuildAction implements DecoAction{
 	private float proj_y;
 	private int relocateSelect = 10;
 	private CheckSelect temp;
-	private float buildingHeight = 1;
-	private float buildingLength = 1;
+	private float buildingHeight = 3;
+	private float buildingLength = 3;
 	private boolean validBuild;
 	private int buildProgress = 0;
 	private State state = State.SELECT_SPACE;
-	private float speedMultiplier = .05f;
+	private float speedMultiplier = .33f;
 	private float progress = 0;
 	private float buildingSpeed = 1;
 	private BuildingEntity base;
@@ -61,11 +54,20 @@ public class BuildAction implements DecoAction{
 	private MoveAction moveAction = null;
 	private BuildingType building;
 	
+	/**
+	 * Constructor for the BuildAction
+	 * @param builder The unit assigned the construction
+	 * @param building Type of building to be constructed
+	 */
 	public BuildAction(BaseEntity builder, BuildingType building) {
 		this.spac = builder;
 		this.building = building;
 	}
-
+	
+	/**
+	 * Keeps getting current position of mouse pointer and checks if it's a valid build area
+	 * When called on, switches state to move builder and begin building
+	 */
 	public void doAction() {
 		if (state == State.SELECT_SPACE) {
 			relocateSelect --;
@@ -81,7 +83,8 @@ public class BuildAction implements DecoAction{
 				proj_x -= proj_y - proj_x;
 				proj_x = (int) proj_x;
 				proj_y = (int) proj_y;
-				if (!(proj_x < ((buildingHeight+1)/2) || proj_x > (GameManager.get().getWorld().getWidth() - ((buildingHeight+1.5)/2)) || proj_y < ((buildingHeight+1)/2) || proj_y > GameManager.get().getWorld().getLength() - buildingLength)) {
+				if (!(proj_x < ((buildingHeight+1)/2) || proj_x > (GameManager.get().getWorld().getWidth() - ((buildingHeight+1.5)/2)) 
+						|| proj_y < ((buildingHeight+1)/2) || proj_y > GameManager.get().getWorld().getLength() - buildingLength)) {
 					temp = new CheckSelect(proj_x-((buildingHeight+1)/2), proj_y, 0f, buildingHeight, buildingLength, 0f);
 					int left = (int)temp.getPosX();
 					int right = (int)Math.ceil(temp.getPosX() + temp.getXLength());
@@ -110,15 +113,15 @@ public class BuildAction implements DecoAction{
 		} else if (state == State.BUILD_STRUCTURE) {
 			if (base != null) {
 				if (progress >= 100) {
-					base.setTexture("Draft_Homebase3");
+					base.setTexture("homeBase");
 					this.completed = true;
 				}
 				else if (progress > 50){
-					base.setTexture("Draft_Homebase2");
+					base.setTexture("homeBase2");
 					progress = progress + (buildingSpeed * speedMultiplier);
 				}
 				else {
-					base.setTexture("Draft_Homebase1");
+					base.setTexture("homeBase1");
 					progress = progress + (buildingSpeed * speedMultiplier);
 				}
 			}
@@ -134,12 +137,22 @@ public class BuildAction implements DecoAction{
 			}
 		
 	}
-
+	
+	/**
+	 * Checks completed state
+	 * @return returns boolean stating if building was completed
+	 */
+	
 	@Override
 	public boolean completed() {
 		return completed;
 	}
-
+	
+	/**
+	 * Returns number from 0 to 100 representing completion
+	 * @return percentage of completion 
+	 */
+	
 	@Override
 	public int actionProgress() {
 		return buildProgress;
@@ -148,6 +161,7 @@ public class BuildAction implements DecoAction{
 	/**
 	 * Can be called on to force this action to begin building.
 	 */
+	
 	public void finaliseBuild() {
 		if (temp != null && validBuild == true) {
 			GameManager.get().getWorld().removeEntity(temp);
@@ -155,8 +169,11 @@ public class BuildAction implements DecoAction{
 			base = new BuildingEntity((int)proj_x-((buildingHeight+1)/2), (int)proj_y, 0f, building);
 			if (resourceManager.getRocks() >= base.getCost()) {
 				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
-				GameManager.get().getWorld().addEntity(base);
-				base.fixPosition((int)(proj_x-(int)((buildingHeight)/2)), (int)(proj_y-(int)((buildingLength)/2)), 0);
+				if (building == BuildingType.BASE) {
+					base.setTexture("homeBase1");
+					GameManager.get().getWorld().addEntity(base);
+				}
+				
 				this.buildingSpeed = base.getSpeed();
 				state = State.SETUP_MOVE;
 				LOGGER.error("BUILDING NEW STRUCTURE");

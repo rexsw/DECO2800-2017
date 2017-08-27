@@ -44,7 +44,7 @@ public class TextureManager extends Manager {
         this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
         //Buildings
         textureMap.put("homeBase1", new Texture("resources/BuildingAssets/homeBase1.png"));
-        textureMap.put("homeBase2", new Texture("resources/BuildingAssets/Homebase2.png"));
+        textureMap.put("homeBase2", new Texture("resources/BuildingAssets/FinalDraft_Homebase5.png"));
     	textureMap.put("homeBase", new Texture("resources/BuildingAssets/FinalDraft_Homebase4.png"));
         textureMap.put("barracks",new Texture("resources/BuildingAssets/Draft_Barracks1.png"));
         textureMap.put("turret",new Texture("resources/BuildingAssets/turret.png"));
@@ -121,7 +121,8 @@ public class TextureManager extends Manager {
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-
+        this.saveTexture("star_1", "resources/Backgrounds/star1.png");
+        this.saveTexture("star_2", "resources/Backgrounds/star2.png");
     }
     /*
      *

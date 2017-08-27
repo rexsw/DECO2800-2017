@@ -53,6 +53,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	private int spacManCost = 10;
 	
+	private BuildAction build = null;
+	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
 	private ActionType nextAction;
@@ -128,7 +130,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			do really basic formation stuff instead
 		 */
 		if (!currentAction.isPresent()) {
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
+			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
 				BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
@@ -179,22 +181,22 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		// If Spacman is building, cannot interrupt with left click
-		if (currentAction.isPresent()) {
-			if(currentAction.get() instanceof BuildAction) {
-				return;
-			}
-		}
 		if(owner instanceof PlayerManager) {
+			// If Spacman is building, cannot interrupt with left click
+			if (currentAction.isPresent()) {
+				if(currentAction.get() instanceof BuildAction) {
+					return;
+				}
+			}
 			handler.registerForRightClickNotification(this);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
+			build = ActionSetter.setAction(this, BuildingType.BASE);
 			this.makeSelected();
 		} else {
 			this.makeSelected();
 			this.setEntityType(EntityType.AISPACMAN);
 			LOGGER.error("Clicked on ai spacman");
-			
 		}
 	}
 
@@ -216,8 +218,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 		if (currentAction.isPresent()) {
 			if(currentAction.get() instanceof BuildAction) {
-				BuildAction tempCast = (BuildAction) currentAction.get();
-				tempCast.finaliseBuild();
+				build.finaliseBuild();
 				this.setTexture("spacman_green");
 				this.deselect();
 				return;
@@ -298,11 +299,11 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Interactive button for building structures
 	 */
 	public Button getButton() {
-		Button button = new TextButton("Make Base", new Skin((Gdx.files.internal("uiskin.json"))));
+		Button button = new TextButton("Please integrate listener so build fnc can be run", new Skin((Gdx.files.internal("uiskin.json"))));
 		button.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.error("DID SOMETHING");
+				buttonWasPressed();
 			}
 		});
 		return button;
@@ -312,7 +313,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * Allows build functionality on press
 	 */
 	public void buttonWasPressed() {
-		currentAction = Optional.of(new BuildAction(this, BuildingType.BASE));
+		build = ActionSetter.setAction(this, BuildingType.BASE);
+		LOGGER.info("Begin Building!");
 	}
 	
 	/**

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseEntity extends AbstractEntity implements Selectable {
 	private int cost = 0;
-	private float buildSpeed = 0;
+	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
 	private  List<ActionType> validActions;
 	private boolean selected = false;
