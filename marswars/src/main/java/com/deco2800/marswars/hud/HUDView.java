@@ -585,6 +585,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
+		//set the properties of the minimap window
 		minimap.add(GameManager.get().getMiniMap().getBackground());
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
@@ -592,7 +593,19 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
 		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
 		
+		//add the map window to the stage
 		stage.addActor(minimap);
+	}
+	
+	/**
+     * Clears the currently displayed minimap
+     * then updates the image from the texture manager.
+     */
+	public void updateMiniMapMenu() {
+		//clear the current image
+		minimap.clearChildren();
+		//get the new image
+		minimap.add(GameManager.get().getMiniMap().getBackground());
 	}
 	
 	/**
@@ -756,7 +769,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 	
 	/**
-	 * Disable the HUD by setting all components to invisible
+	 * Sets every HUD element invisible
 	 */
 	public void disableHUD() {
 		overheadRight.setVisible(false);
@@ -771,7 +784,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 	
 	/**
-	 * Renable the hud and display all components 
+	 * Sets every HUD element visible
 	 */
 	public void enableHUD() {
 		overheadRight.setVisible(true);
