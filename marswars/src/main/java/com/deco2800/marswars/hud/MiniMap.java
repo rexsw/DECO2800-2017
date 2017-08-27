@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.math.Vector2;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class MiniMap {
     private Image backgroundImage;
     private int width;
     private int height;
-    private List<Entity> entitiesOnMap;
+    private List<MiniMapEntity> entitiesOnMap;
 
     public MiniMap(String mapId, int width, int height) {
         // TODO select appropriate background image based on mapPath
@@ -28,7 +26,7 @@ public class MiniMap {
         backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
-        entitiesOnMap = new ArrayList<Entity>();
+        entitiesOnMap = new ArrayList<MiniMapEntity>();
     }
     
     public void updateMap() {
@@ -48,14 +46,31 @@ public class MiniMap {
 		pixmap.dispose();
 	}
 
-    public void addFriendlyEntity(int x, int y) {
-        TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-        reg.getTexture("friendly_unit");
-
+    /**
+     * Gets the entities on the map.
+     * @return List of MiniMapEntities.
+     */
+	public List<MiniMapEntity> getEntitiesOnMap() {
+        return entitiesOnMap;
     }
 
-    public void removeEntity() {
+    /**
+     * Adds the entity to the MiniMap
+     * @param team 0: friendly, 1: allied, 2: enemy
+     * @param x x coordinate of entity
+     * @param y y coordinate of entity
+     */
+    public void addEntity(int team, float x, float y) {
+        // TODO convert to map coordinates
+        entitiesOnMap.add(new MiniMapEntity(team, x, y));
+    }
 
+    /**
+     * Removes the input from the minimap.
+     * @param toRemove MiniMapEntity to be removed
+     */
+    public void removeEntity(MiniMapEntity toRemove) {
+        entitiesOnMap.remove(toRemove);
     }
 
     /**
@@ -101,9 +116,3 @@ public class MiniMap {
     }
 }
 
-class Entity {
-    public int team; // 0, player's team, 1 allied, 2 enemy
-    public int x; // x coordinate of the entity in pixels: 0 <= x < width
-    public int y; // y coordinate of the entity in pixels: window height - height <= y < window height
-
-}

@@ -23,10 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EnemySpacman;
-import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -592,6 +589,20 @@ public class HUDView extends ApplicationAdapter{
 		
 		stage.addActor(minimap);
 	}
+
+	/**
+	 *
+	 * adds everything in GameManager.get().getMiniMap().getEntitiesOnMap() to the minimap
+	 */
+	private void addEntitiesToMiniMap() {
+		List<MiniMapEntity> entities = GameManager.get().getMiniMap().getEntitiesOnMap();
+		for (int i = 0; i < entities.size(); i++) {
+			Image unit = new Image(textureManager.getTexture(entities.get(i).getTexture()));
+			unit.setPosition(entities.get(i).x, entities.get(i).y);
+			stage.addActor(unit);
+			entities.remove(entities.get(i));
+		}
+	}
 	
 	/**
      * Currently sets the health to 100 once a selectable unit is selected. 
@@ -704,7 +715,9 @@ public class HUDView extends ApplicationAdapter{
 		/* Update time & set color depending if night/day */
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
-		
+
+		addEntitiesToMiniMap();
+
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
 			gameLengthDisp.setColor(Color.FIREBRICK);
@@ -741,7 +754,7 @@ public class HUDView extends ApplicationAdapter{
 		}
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
-	    
+
 	    /* Update the spacmen + enemy spatmen counts */
 	    playerSpacmen.setText("" + spacmenCount);
 		playerEnemySpacmen.setText("" + enemySpacmanCount);

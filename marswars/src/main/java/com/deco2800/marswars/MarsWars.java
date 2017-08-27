@@ -109,9 +109,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
+		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
-		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
 
 
 		/*
@@ -134,7 +134,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		// add soldier for combat testing
 		Soldier soldierA = new Soldier(7, 7, 0);
+		GameManager.get().getMiniMap().addEntity(0, 7, 7);
 		Soldier soldierB = new Soldier(5, 5, 0);
+		GameManager.get().getMiniMap().addEntity(0, 5, 5);
 		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
 		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
 		GameManager.get().getWorld().addEntity(soldierA);

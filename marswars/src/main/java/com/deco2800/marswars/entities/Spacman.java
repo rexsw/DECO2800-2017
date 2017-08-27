@@ -69,8 +69,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y, z);
 		lineOfSight.setPosition(x,y,z);
-
-
 	}
 
 	/**
