@@ -14,6 +14,7 @@ public class TimeManagerTest {
 	public void testOnTick() {
 		int count = 500;
 		timeManager.pause();
+		timeManager.onTick(1);
 		float inGameTime = timeManager.getInGameTime();
 		while (count != 0){
 			count--;
@@ -27,9 +28,11 @@ public class TimeManagerTest {
 		System.out.println(timeManager.getHours());
 		assertTrue(timeManager.getHours() > 6 &&
 				timeManager.getHours() < 18);
+		timeManager.onTick(1);
 		assertTrue(!timeManager.isNight());
 		timeManager.addTime(43200);
 		assertTrue(timeManager.getHours() > 18);
+		timeManager.onTick(1);
 		assertTrue(timeManager.isNight());
 		timeManager.resetInGameTime();
 	}
@@ -68,17 +71,25 @@ public class TimeManagerTest {
 		assertFalse(timeManager.isNight());
 		timeManager.resetInGameTime();
 	}
+
+	@Test
+	public void setGameStartTime() {
+		timeManager.setGameStartTime();
+		assertTrue(timeManager.getGameTimer() == 0);
+	}
 	
 	@Test
 	public void testIsPaused() {
 		assertFalse("Is paused", timeManager.isPaused());
 	}
+
 	@Test
 	public void testPause() {
 		assertFalse("Is paused", timeManager.isPaused());
 		timeManager.pause();
 		assertTrue("Not paused", timeManager.isPaused());
 	}
+
 	@Test
 	public void testUnPause() {
 		assertTrue("Not paused", timeManager.isPaused());
@@ -135,16 +146,10 @@ public class TimeManagerTest {
 	public void testSetGameStartTime() {
 		assertTrue(true);
 	}
-
-	@Test
-	public void resetInGameTime() {
-		timeManager.resetInGameTime();
-		assertTrue(timeManager.getInGameTime() == 0);
-	}
 	
 	@Test
 	public void testGetPlayClockTime() {
-		assertTrue(timeManager.getPlayClockTime().length() > 5
+		assertTrue(timeManager.getPlayClockTime().length() > 1
 				&& timeManager.getPlayClockTime().length() < 9);
 	}
 
@@ -170,6 +175,12 @@ public class TimeManagerTest {
 		assertEquals("Seconds not 108002 as expected", 108002, 
 				timeManager.getInGameTime());
 		timeManager.resetInGameTime();
+	}
+
+	@Test
+	public void resetInGameTime() {
+		timeManager.resetInGameTime();
+		assertTrue(timeManager.getInGameTime() == 0);
 	}
 	
 	@Test
