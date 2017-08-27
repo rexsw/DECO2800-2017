@@ -341,7 +341,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
-		view.toggleHUD();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -679,7 +678,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
 		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
 		pixmap.dispose();
-		view.toggleHUD();
 	}
 
 	/**
