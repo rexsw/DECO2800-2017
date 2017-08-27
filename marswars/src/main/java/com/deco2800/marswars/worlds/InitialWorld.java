@@ -8,6 +8,9 @@ import com.deco2800.marswars.util.Array2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by timhadwen on 19/7/17.
  */
@@ -72,8 +75,8 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new Spacman(0, 0, 0));
 		this.addEntity(new Spacman(1, 1, 0)); // this spac man is for resource gather test
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
-		this.addEntity(new Base(this, 8, 8, 0));
-		this.addEntity(new Base2(this, 14, 18, 0));
+		this.addEntity(new Base(8, 8, 0));
+		this.addEntity(new Base2(14, 18, 0));
 		this.addEntity(new EnemySpacman(24, 24, 0));
 		this.addEntity(new EnemyTank(20, 20, 0));
 	}

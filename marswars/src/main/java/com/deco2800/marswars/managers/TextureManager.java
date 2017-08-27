@@ -33,10 +33,13 @@ public class TextureManager extends Manager {
      * need to.
      */
     public TextureManager() {
+    	textureMap.put("greenSelect", new Texture("resources/buildSelect/greenSelect.png"));
+    	textureMap.put("redSelect", new Texture("resources/buildSelect/redSelect.png"));
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
         textureMap.put("Draft_Homebase1", new Texture("resources/BuildingAssets/Homebase-01.png"));
-        textureMap.put("Draft_Homebase2", new Texture("resources/BuildingAssets/Draft_Homebase2.png"));
+        textureMap.put("Draft_Homebase2", new Texture("resources/BuildingAssets/Homebase2.png"));
+        textureMap.put("Draft_Homebase3", new Texture("resources/BuildingAssets/FinalDraft_Homebase4.png"));
         textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));

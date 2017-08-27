@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
@@ -17,6 +16,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
@@ -39,15 +39,14 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 * @param posY
 	 * @param posZ
 	 */
-	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 4 , 4, 1, 4, 4, false);
-		this.setTexture("grass");
+	public Base(float posX, float posY, float posZ) {
+		super(posX, posY, posZ, 3f, 3f, 0f, 3f, 3f, false);
+		this.setTexture("Draft_Homebase1");
 		this.setEntityType(EntityType.BUILDING);
-		this.setCost(10000000);
+		this.setCost(10);
 		this.setSpeed(2);
 		this.initActions();
-		this.addNewAction(BuildAction.class);
-		world.deSelectAll();
+		//Find a way to render first, then move only add some of collision blocks (miss first column)
 	}
 
 	public void giveAction(DecoAction action) {
@@ -62,7 +61,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public void onClick(MouseHandler handler) {
 		System.out.println("Base got clicked");
-		this.currentAction = Optional.of(new BuildAction(this));
 		if (!selected) {
 			selected = true;
 		}
@@ -116,6 +114,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 			resourceManager.setRocks(resourceManager.getRocks() - 30);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
+		this.deselect();
 	}
 
 	public Label getHelpText() {

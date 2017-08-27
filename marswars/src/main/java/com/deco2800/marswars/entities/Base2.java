@@ -38,7 +38,7 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	 * @param posY
 	 * @param posZ
 	 */
-	public Base2(AbstractWorld world, float posX, float posY, float posZ) {
+	public Base2(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("base2");
 		this.setCost(10000000);

@@ -12,11 +12,14 @@ import com.deco2800.marswars.util.Box3D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by timhadwen on 2/8/17.
  */
 public class BaseEntity extends AbstractEntity implements Selectable {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseEntity.class);
 	private int cost = 0;
 	private float buildSpeed = 0;
 	private EntityType entityType = EntityType.NOT_SET;
@@ -102,7 +105,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return
 	 */
 	public boolean isCollidable() {
-		return true;
+		return (!super.canWalkOver);
 	}
 
 	/**
@@ -117,7 +120,28 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		super.setPosition(x, y, z);
 		modifyCollisionMap(true);
 	}
-
+	
+	/**
+	 * Workaround for making position line up with rendered object rendered over multiple tiles
+	 * @param xPos
+	 * @param yPos
+	 * @param zPos
+	 */
+	public void fixPosition(int xPos, int yPos, int zPos) {
+		modifyCollisionMap(false);
+		if (GameManager.get().getWorld() instanceof BaseWorld) {
+			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
+			int left = (int) xPos;
+			int right = (int) Math.ceil(xPos + getXLength());
+			int bottom = (int) yPos;
+			int top = (int) Math.ceil(yPos + getYLength());
+			for (int x = left; x < right; x++) {
+				for (int y = bottom; y < top; y++) {
+						baseWorld.getCollisionMap().get(x, y).add(this);
+				}
+			}	
+		}
+	}
 
 	/**
 	 * Sets the Position X
@@ -286,10 +310,13 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 			int top = (int) Math.ceil(getPosY() + getYLength());
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
-					if (add)
+					if (add) {
+						LOGGER.error("x cord: "+ x + " y cord: " + y + this);
 						baseWorld.getCollisionMap().get(x, y).add(this);
-					else
+					}
+					else {
 						baseWorld.getCollisionMap().get(x, y).remove(this);
+					}
 				}
 			}
 		}

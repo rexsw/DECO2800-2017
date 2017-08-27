@@ -123,6 +123,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
 
 		/*
 		 * Setup GUI
@@ -299,6 +300,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				originX = screenX;
 				originY = screenY;
+				
+				GameManager.get().setCamera(camera);
 
 				return true;
 			}
@@ -331,6 +334,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					camera.zoom *= 1.2;
 				}
 				forceMapLimits();
+				GameManager.get().setCamera(camera);
 				return true;
 			}
 		});
@@ -421,7 +425,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-
+		GameManager.get().setCamera(camera);
 		batch.dispose();
 	}
 
@@ -489,6 +493,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -545,6 +550,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y + windowHeight * 4.5 < 0) {
 			camera.position.y = (float) (-windowHeight * 4.5);
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -557,7 +563,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-
+		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		window.setPosition(0, 0);
 		window.setWidth(stage.getWidth());
