@@ -16,7 +16,7 @@ public interface HasAttackRange {
 	
 	/**
 	 * Sets the attack range of an entity.
-	 * @param attakRange
+	 * @param attackRange
 	 */
 	void setAttackRange(int attackRange);
 }

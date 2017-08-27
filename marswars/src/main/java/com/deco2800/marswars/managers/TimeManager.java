@@ -181,6 +181,13 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
+	 * Sets the In-Game Time to be 0 (Resets current clock)
+	 */
+	public void resetInGameTime() {
+		time = 0;
+	}
+
+	/**
 	 * Provides the System Time (AEST) in human-readable string format.
 	 * @return the String representation of the System Time
 	 */
@@ -207,6 +214,8 @@ public class TimeManager extends Manager implements TickableManager {
 	public void onTick(long i) {
 		if (!isPaused) {
 			time += 5;
+			// Some duplicated code here (also in isNight) find way to resolve
+			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
 				setNight();
 			} else {

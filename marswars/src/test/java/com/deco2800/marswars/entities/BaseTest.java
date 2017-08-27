@@ -28,8 +28,8 @@ public class BaseTest {
     @Test
     public void constructorTest(){
         Assert.assertTrue(b != null);
-        Assert.assertEquals("base", b.getTexture());
-        Assert.assertEquals(10000000, b.getCost());
+        Assert.assertEquals("homeBase", b.getTexture());
+        Assert.assertEquals(250, b.getCost());
         Assert.assertFalse(b.isWorking());
 
     }
