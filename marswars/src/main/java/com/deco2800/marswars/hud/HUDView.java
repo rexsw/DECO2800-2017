@@ -93,6 +93,11 @@ public class HUDView extends ApplicationAdapter{
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
 	private boolean menuToggle;
+	//Image buttons to display/ remove lower HUD 
+	private ImageButton dispActions;//Button for displaying actions window 
+	private ImageButton removeActions; //button for removing actions window 
+	private TextureRegionDrawable plusRegionDraw;
+	private TextureRegionDrawable minusRegionDraw;
 	
 	//Time displays 
 	private Label gameTimeDisp;
@@ -151,6 +156,7 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void topRight(){
 		overheadRight = new Table();
+		overheadRight.setDebug(true);
 		overheadRight.setWidth(stage.getWidth());
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
@@ -180,12 +186,20 @@ public class HUDView extends ApplicationAdapter{
 		gameLengthDisp = new Label("00:00:00", skin);
 
 		//add in quit + help + chat buttons and time labels
-		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
-		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
-		overheadRight.add(messageButton).pad(BUTTONPAD);
-		overheadRight.add(helpButton).pad(BUTTONPAD);
-		overheadRight.add(quitButton).pad(BUTTONPAD);
+		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
+		overheadRight.add(gameLengthDisp).padRight(BUTTONPAD);
+		overheadRight.add(messageButton).padRight(BUTTONPAD);
+		overheadRight.add(helpButton).padRight(BUTTONPAD);
+		overheadRight.add(quitButton).padRight(BUTTONPAD);
 		
+		Table welcomeMsg = new Table();
+		welcomeMsg.setWidth(stage.getWidth());
+		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
+		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		Label welcomeText = new Label("Welcome to Spacwars", skin);
+		welcomeMsg.add(welcomeText);
+		
+		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
 		
 		//Creates the help button listener
@@ -372,11 +386,17 @@ public class HUDView extends ApplicationAdapter{
 
 		Button dispMainMenu = new TextButton("Menu", skin);
 			
-		//add dispActions button + image for it 
-		Texture arrowImage = textureManager.getTexture("arrow_button");
-		TextureRegion arrowRegion = new TextureRegion(arrowImage);
-		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
-		ImageButton dispActions = new ImageButton(arrowRegionDraw);
+		//remove dispActions button + image for it 
+		Texture minusImage = textureManager.getTexture("minus_button");
+		TextureRegion minusRegion = new TextureRegion(minusImage);
+		minusRegionDraw = new TextureRegionDrawable(minusRegion);
+		removeActions = new ImageButton(minusRegionDraw);
+
+		//add dispActions image 
+		Texture plusImage = textureManager.getTexture("plus_button");
+		TextureRegion plusRegion = new TextureRegion(plusImage);
+		plusRegionDraw = new TextureRegionDrawable(plusRegion);
+		dispActions = new ImageButton(plusRegionDraw);
 
 		//add tech button (uses arrow icon for now)
 		Texture techImage = textureManager.getTexture("tech_button");
@@ -388,16 +408,12 @@ public class HUDView extends ApplicationAdapter{
 		
 		HUDManip.setSize(50, 80);
 		HUDManip.add(dispMainMenu);
-		HUDManip.row();
-		HUDManip.add(dispActions).pad(BUTTONPAD);
-		HUDManip.row();
-		HUDManip.add(dispTech).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(removeActions);
 
 		stage.addActor(HUDManip);
 		
-		// can we make this a method of it's own?
 		dispActions.addListener(new ChangeListener() {
-
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
@@ -405,14 +421,25 @@ public class HUDView extends ApplicationAdapter{
 					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
+					//show (-) button to make resources invisible
+					dispActions.remove();
+					HUDManip.add(removeActions);
 					inventoryToggle = false;
-				} else {
+				}
+			}	
+		});
+		
+		removeActions.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
 					LOGGER.debug("Disable Hud");
 					actionsWindow.setVisible(false);
 					minimap.setVisible(false);
 					resourceTable.setVisible(false);
+					//show (+) to show resources again
+					removeActions.remove();
+					HUDManip.add(dispActions);
 					inventoryToggle = true;
-				}
 			}	
 		});
 		
