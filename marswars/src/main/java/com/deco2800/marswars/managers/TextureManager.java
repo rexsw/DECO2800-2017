@@ -78,6 +78,9 @@ public class TextureManager extends Manager {
         this.saveTexture("large_mine", "resources/resourceAssets/minel.png");
         this.saveTexture("medium_mine", "resources/resourceAssets/minem.png");
         this.saveTexture("small_mine", "resources/resourceAssets/mines.png");       
+        this.saveTexture("large_flower", "resources/resourceAssets/flowerl.png");
+        this.saveTexture("medium_flower", "resources/resourceAssets/flowerm.png");
+        this.saveTexture("small_flower", "resources/resourceAssets/flowers.png");   
         this.saveTexture("chat_button", "resources/HUDAssets/chatbutton.png");
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
