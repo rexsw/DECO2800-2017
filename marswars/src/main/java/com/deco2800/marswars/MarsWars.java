@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -137,8 +139,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
+		Tank tankA = new Tank(6, 6, 0);
+		Tank tankB = new Tank(4, 5, 0);
+		tankA.setOwner(GameManager.get().getManager(PlayerManager.class));
+		tankB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		GameManager.get().getWorld().addEntity(tankA);
+		GameManager.get().getWorld().addEntity(tankB);		
 		
 		// do something important here, asynchronously to the rendering thread
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
