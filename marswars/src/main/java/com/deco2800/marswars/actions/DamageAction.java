@@ -40,6 +40,7 @@ public class DamageAction implements DecoAction {
 		switch (state) {
 			case MOVE_TOWARDS:
 				moveTowardsAction();
+				return;
 			case ATTACK:
 				attackAction();
 				break;
@@ -88,7 +89,6 @@ public class DamageAction implements DecoAction {
 			return;
 		}
 		action.doAction();
-		return;
 	}
 	
 	private void attackAction() {
