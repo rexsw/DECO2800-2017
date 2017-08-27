@@ -1,16 +1,24 @@
 package com.deco2800.marswars.managers;
 
+
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.HasOwner;
+
 /**
  * Resource Manager
  *
  */
-public class ResourceManager extends Manager {
-
-	private static final String CLOSED = "closed.wav";
+public class ResourceManager extends Manager implements HasOwner{
+private static final String CLOSED = "closed.wav";
 	private int rocks = 0;
 	private int crystal = 0;
 	private int water = 0;
 	private int biomass = 0;
+	
+	// Each ResourceManager belongs to a Owner, i.e. each owner will have their own
+	//  ResourceManager
+	private Manager owner = null;
 
 	/**
 	 * Gets the number of rocks
@@ -91,4 +99,50 @@ public class ResourceManager extends Manager {
 		}
 		this.biomass = biomass;
 	}
+	
+	/**
+	 * Sets the ResourceManager's owner
+	 * @param owner
+	 */
+	public void setOwner(Manager owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Gets the ResourceManager's owner
+	 * @return
+	 */
+	public Manager getOwner() {
+		return this.owner;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public boolean sameOwner(AbstractEntity entity) {
+		if(entity instanceof HasOwner) {
+			return this.owner == ((HasOwner) entity).getOwner();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isWorking() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setAction(DecoAction action) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/* This class does not use the isWorking() or setAction(DecoAction)
+	 * functions from HasOwner
+	 */
+	
 }

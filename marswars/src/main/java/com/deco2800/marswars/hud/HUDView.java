@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,14 +22,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.EnemySpacman;
+import com.deco2800.marswars.entities.EntityStats;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created by Naziah Siddique on 19/08
@@ -36,110 +44,165 @@ import org.slf4j.LoggerFactory;
  */
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+	
+	private static final int BUTTONSIZE = 40; //sets size of image buttons 
+	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
+	private static final int CRITICALHEALTH = 30; //critical health of spacmen 
 
 	private Stage stage;
 	private Skin skin;
-	private Table overheadLeft;
-	private Table overheadRight;
-	private Table resourceTable; 
 	
-	private Button quitButton;
-	private Button helpButton;
-	private Button messageButton;
+	ProgressBar.ProgressBarStyle barStyle;
+	//HUD elements 
+	private Table overheadRight; //contains all basic quit/help/chat buttons
+	private Table resourceTable; //contains table of resource images + count
+    private Table playerdetails; //contains player icon, health and game stats
+    private Table HUDManip;		 //contains buttons for toggling HUD + old menu
+	private ChatBox chatbox;	 //table for the chat
+	private Window messageWindow;//window for the chatbox 
+	private Window mainMenu;     //window for the old menu
+	private Window minimap;		 //window for containing the minimap
+	private Window actionsWindow;    //window for the players actions 
 	
-	private Label rockCount; 
+    //Action buttons 
+	private Button quitButton; 	 // quits game
+	private Button helpButton;   // calls help
+	private Button messageButton;//opens or closes chatbox
+	
+	//Resources count  
+	private Label rockCount;   
 	private Label crystalCount; 
 	private Label biomassCount; 
-	private Label waterCount; 
+	private Label waterCount;
 	
-	private int gameWidth;
-	private int gameHeight; 
+	//Player stats + progress bar 
+	private Image spacman; 		   //image of spacman
+	private Label playerSpacmen;   //counts spacmen on baord
+	private Label playerEnemySpacmen; //counts enemies seen on board
+	private Label healthLabel;     //numeric indicator for health level
+	private Label nameLabel;       //name of player 
+	private ProgressBar healthBar; //progress bar displaying spacmen health
+	private Pixmap pixmap; 		   //used for progress bar 
 	
-	private Window messageWindow; 
+	//Action buttons 
+	private Button attackButton;	//spacman commands
+	private Button gatherButton;	
+	private Button moveButton;
+
+	//Toggles; checks if the feature is visible on-screen or not
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
-	private boolean menuToggle; 
-	private Label timeDisp; 
+	private boolean menuToggle;
+	//Image buttons to display/ remove lower HUD 
+	private ImageButton dispActions;//Button for displaying actions window 
+	private ImageButton removeActions; //button for removing actions window 
+	private TextureRegionDrawable plusRegionDraw;
+	private TextureRegionDrawable minusRegionDraw;
 	
-	private Window mainMenu; 
+	//Time displays 
 	private Label gameTimeDisp;
 	private Label gameLengthDisp;
-	private Window resources; 
-	private Window minimap;
-	private Window inventory;
 	
-	private ProgressBar healthBar;
+	//Managers 
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
-	private ChatBox chatbox;
-	
+	private TextureManager textureManager; //for loading in resource images
+
+	private BaseEntity selectedEntity;	//for differentiating the entity selected
+
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
 	 * of the HUD and is mostly for simply displaying components on screen. 
 	 * @param stage the game stage
 	 * @param skin the look of the HUD, depending on the world/level the game is being played at
 	 * @param gameManager handles selectables
+	 * @param textureManager 
 	 */
-
-	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
+	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
 		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		LOGGER.debug("Creating Hud");
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
-		this.gameWidth = (int) stage.getWidth();
-		this.gameHeight = (int) stage.getHeight();
-		this.chatbox = new ChatBox(skin);
-		messageToggle = true; 
+		this.textureManager = textureManager;
+		this.chatbox = new ChatBox(skin, textureManager);
+		
+		//create the HUD 
 		createLayout();
 	}
 
 	/**
-	 * Adds in all components of the HUD 
+	 * Adds in all components of the HUD. 
 	 */
 	private void createLayout(){
-		topLeft();
-		topRight();
-		addPlayerIcon();
+		topRight();		
+		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
 	}
 	
-	/*To allow for old menu use - will be removed later*/
+	/**
+	 * To allow for old menu use - will be removed later
+	 * */
 	public void setMenu(Window window){
 		mainMenu = window; 
 	}
 	
 	/**
-	 * Contains top right section of the HUD to be display on screen and set to stage. 
+	 * Contains top right section of the HUD to be displayed 
+	 * on screen and set to stage. 
 	 * This includes the message tab, help button and quit button
 	 */
 	private void topRight(){
 		overheadRight = new Table();
+		overheadRight.setDebug(true);
 		overheadRight.setWidth(stage.getWidth());
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
 
 		LOGGER.debug("Add help, quit and message buttons");
-		helpButton = new TextButton("Help (?)", skin);
-		quitButton = new TextButton("Quit (X)", skin);
-		messageButton = new TextButton("Messages", skin);
+
+		//create help button + image for it 
+		Texture helpImage = textureManager.getTexture("help_button");
+		TextureRegion helpRegion = new TextureRegion(helpImage);
+		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
+		helpButton = new ImageButton(helpRegionDraw);
+		
+		//create message button + image for it 
+		Texture messageImage = textureManager.getTexture("chat_button");
+		TextureRegion messageRegion = new TextureRegion(messageImage);
+		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
+		messageButton = new ImageButton(messageRegionDraw);
+	
+		//add quit button + image for it 
+		Texture quitImage = textureManager.getTexture("quit_button");
+		TextureRegion quitRegion = new TextureRegion(quitImage);
+		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
+		quitButton = new ImageButton(quitRegionDraw);
 
 		LOGGER.debug("Creating time labels");
 		gameTimeDisp = new Label("Time: 0:00", skin);
 		gameLengthDisp = new Label("00:00:00", skin);
 
-		overheadRight.add(gameTimeDisp).pad(10);
-		overheadRight.add(gameLengthDisp).pad(10);
-		overheadRight.add(timeDisp).pad(10);
-		overheadRight.add(messageButton).pad(10);
-		overheadRight.add(helpButton).pad(10);
-		overheadRight.add(quitButton).pad(10);
-						
+		//add in quit + help + chat buttons and time labels
+		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
+		overheadRight.add(gameLengthDisp).padRight(BUTTONPAD);
+		overheadRight.add(messageButton).padRight(BUTTONPAD);
+		overheadRight.add(helpButton).padRight(BUTTONPAD);
+		overheadRight.add(quitButton).padRight(BUTTONPAD);
+		
+		Table welcomeMsg = new Table();
+		welcomeMsg.setWidth(stage.getWidth());
+		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
+		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		Label welcomeText = new Label("Welcome to Spacwars", skin);
+		welcomeMsg.add(welcomeText);
+		
+		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
 		
-		//can we make this a method of it's own? 
+		//Creates the help button listener
 		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
@@ -147,10 +210,11 @@ public class HUDView extends ApplicationAdapter{
 				new WorkInProgress("help text", skin).show(stage);
 			}
 		});
+		
+		//Creates the quit button listener
 		LOGGER.debug("Creating quit button listener");
 		quitButton.addListener(new ChangeListener() {
 			@Override
-			
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new Dialog("Confirm exit", skin){
@@ -169,12 +233,11 @@ public class HUDView extends ApplicationAdapter{
 				}.show(stage);	
 		}});
 
-
+		//Creates the message button listener 
 		LOGGER.debug("Creating message button listener");
 		messageButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
-				//System.out.println("Just let me die");
 				if (messageToggle){
 					messageWindow.setVisible(true);
 					messageToggle = false; 
@@ -187,66 +250,94 @@ public class HUDView extends ApplicationAdapter{
 		});
 	}
 	
-	
+		
 	/**
-	 * Adds in the top left section of the HUD. This includes the  
+	 * Adds the player Icon, health for a single spacman, and name to the huD (goes into top left).
+	 * Does this by creating a nested table. The basic parent table layout is shown below: 
+	 * +---------------------------+
+	 * |    :)    |______________  |
+	 * |  Player  |______________| |
+	 * |   img    |           100  |
+	 * |__________|----------------+
+	 * | p. Name  |
+	 * |-----+----|
+	 * |     |    |
+	 * | >:( | 12 |
+	 * |-----|----|
+	 * |  :) | 10 |
+	 * |     |    |
+	 * |     |    |
+	 * +----------+
+	 * 
 	 */
-	private void topLeft(){
-		//Adds in welcome text
-		Label welcomeLabel = new Label("Welcome to SpacWars!", skin);
-		Table welcomeTable = new Table();
-		welcomeTable.align(Align.top | Align.center);
-		welcomeTable.setWidth(gameWidth);
-		welcomeTable.add(welcomeLabel).pad(10);
-		welcomeTable.setPosition(0, gameHeight);
-		stage.addActor(welcomeTable);
-
-		//Adds in the container managing the health status + player deets 
-		overheadLeft = new Table();
-		overheadLeft.setDebug(true);
-		overheadLeft.setWidth(stage.getWidth());
-		overheadLeft.align(Align.left | Align.top);
-		overheadLeft.setPosition(60, stage.getHeight());
+	private void addPlayerDetails(){
+		LOGGER.debug("Adding player icon");
+		playerdetails = new Table();
+		playerdetails.pad(10);
+		playerdetails.setWidth(150);
+		//playerdetails.align(Align.left | Align.top);
+		playerdetails.setPosition(0, stage.getHeight());
+		
+		//Icon for player- 
+		//TODO get main menu working to select an icon and then display 
+		Image playerIcon = new Image(textureManager.getTexture("spacman_blue"));
+		playerdetails.add(playerIcon).height(100).width(100);
+		
+		//create table for health bar display
+		Table healthTable = new Table();
+		//Create the health bar 
 		LOGGER.debug("Creating health bar");
 		addProgressBar();
-		Label healthLabel = new Label("Health: ", skin);
-		healthLabel.setAlignment(Align.left);
+		healthLabel = new Label("Health: ", skin);
+		healthTable.add(healthLabel).align(Align.left);
+		healthTable.row();
+		healthTable.add(healthBar);
 		
-		overheadLeft.add(healthBar);
-		
-		overheadLeft.row();
-		overheadLeft.add(healthLabel);
+		playerdetails.add(healthTable);
 
-		stage.addActor(overheadLeft);
-	}
-	
-	
-	/**
-	 * HELPER METHOD: 
-	 * Adds the player Icon and name to the huD (goes into top left) 
-	 */
-	private void addPlayerIcon(){
-		LOGGER.debug("Adding player icon");
-		Table playerdetails = new Table();
-		playerdetails.setDebug(true);
-		playerdetails.setWidth(100);
-		playerdetails.align(Align.left | Align.top);
-		playerdetails.setPosition(0, stage.getHeight());
-				
+		//add in player name
+		playerdetails.row();
 		Label playerName = new Label("Name", skin);
-		playerdetails.pad(10).add(playerName);
+		playerdetails.add(playerName);
 		
+		this.nameLabel = playerName;
+		
+		//add in player stats to a new table 
+		Table playerStats = new Table();
+		playerSpacmen = new Label("Aliv spacmen: 0", skin);
+		playerEnemySpacmen = new Label("Evil spacman: 0", skin);
+		
+		//image for spacman
+		Texture spacmanTex = textureManager.getTexture("spacman_green");
+		spacman = new Image(spacmanTex);
+		//image for enemy spatman
+		Texture spatmanTex = textureManager.getTexture("spatman_blue");
+		Image spatman = new Image(spatmanTex);
+
+		//add in spacmen and enemy stats to stats 
+		playerStats.padLeft(20).padTop(60);
+		playerStats.align(Align.left);
+		playerStats.add(spacman).height(60).width(60).padBottom(10);
+		playerStats.add(playerSpacmen).center();
+		playerStats.row();
+		playerStats.add(spatman).height(60).width(40);
+		playerStats.add(playerEnemySpacmen).center();
+		
+		//add in stats table 
+		playerdetails.row();
+		playerdetails.add(playerStats);
 		stage.addActor(playerdetails);
 	}
+	
 	
 	/**
 	 * Adds in progress bar to the top left of the screen 
 	 */
 	private void addProgressBar(){
-		Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.DARK_GRAY);
 		pixmap.fill();
-		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
+		barStyle = new ProgressBar.ProgressBarStyle();
 		barStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 		pixmap.dispose();
 
@@ -264,7 +355,6 @@ public class HUDView extends ApplicationAdapter{
 
 		healthBar = new ProgressBar(0,100, 1, false, barStyle);
 		healthBar.setValue(100);
-		
 	}
 
 
@@ -274,16 +364,12 @@ public class HUDView extends ApplicationAdapter{
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
-		Label message = new Label("Implementing the chat lobby here", skin);
-		
-		messageWindow.add(message);
-		messageWindow.setWidth(400);
-		messageWindow.setHeight(400);
-		messageWindow.pack();
 		messageWindow.setMovable(false);
-		messageWindow.setPosition(gameWidth, gameHeight-50, Align.right);
+		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
+				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE)); 
 		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
+		messageWindow.pack();
 		
 		stage.addActor(messageWindow);
 	}
@@ -292,41 +378,69 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the bottom panel of the HUD 
 	 */
 	private void addBottomPanel(){
-		addInventoryMenu();
 		addMiniMapMenu();
+		addInventoryMenu();
+
 
 		LOGGER.debug("Creating HUD manipulation buttons");
-		Button dispMainMenu = new TextButton("Old Menu", skin);
-		Button dispMap = new TextButton("Map", skin);
-		Button dispInventory = new TextButton("Display\nPanel", skin);
-		
-		//Set button positions 
-		dispMainMenu.setPosition(gameWidth-80, 150);
-		dispMap.setPosition(gameWidth-80, 100);
-		dispInventory.setPosition(gameWidth-80, 50);
-		
-		stage.addActor(dispMainMenu);
-		stage.addActor(dispMap);
-		stage.addActor(dispInventory);
-		
-		// can we make this a method of it's own?
-		dispInventory.addListener(new ChangeListener() {
 
+		Button dispMainMenu = new TextButton("Menu", skin);
+			
+		//remove dispActions button + image for it 
+		Texture minusImage = textureManager.getTexture("minus_button");
+		TextureRegion minusRegion = new TextureRegion(minusImage);
+		minusRegionDraw = new TextureRegionDrawable(minusRegion);
+		removeActions = new ImageButton(minusRegionDraw);
+
+		//add dispActions image 
+		Texture plusImage = textureManager.getTexture("plus_button");
+		TextureRegion plusRegion = new TextureRegion(plusImage);
+		plusRegionDraw = new TextureRegionDrawable(plusRegion);
+		dispActions = new ImageButton(plusRegionDraw);
+
+		//add tech button (uses arrow icon for now)
+		Texture techImage = textureManager.getTexture("tech_button");
+		HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(stage.getWidth()-50, 50);
+		TextureRegion techRegion = new TextureRegion(techImage);
+		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
+		ImageButton dispTech = new ImageButton(techRegionDraw);
+		
+		HUDManip.setSize(50, 80);
+		HUDManip.add(dispMainMenu);
+		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(removeActions);
+		HUDManip.add(dispActions).pad(BUTTONPAD);
+
+		stage.addActor(HUDManip);
+		
+		dispActions.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
 					LOGGER.debug("Enable hud");
-					inventory.setVisible(true);
+					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
+					//show (-) button to make resources invisible
+					dispActions.remove();
+					HUDManip.add(removeActions);
 					inventoryToggle = false;
-				} else {
+				}
+			}	
+		});
+		
+		removeActions.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
 					LOGGER.debug("Disable Hud");
-					inventory.setVisible(false);
+					actionsWindow.setVisible(false);
 					minimap.setVisible(false);
 					resourceTable.setVisible(false);
+					//show (+) to show resources again
+					removeActions.remove();
+					HUDManip.add(dispActions);
 					inventoryToggle = true;
-				}
 			}	
 		});
 		
@@ -345,14 +459,14 @@ public class HUDView extends ApplicationAdapter{
 			}
 			
 		});
-		
-		dispMap.addListener(new ChangeListener() {
+
+		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				LOGGER.debug("Opening map");
-				new WorkInProgress("Unimplemented", skin).show(stage);
-			}	
-		});
+				new TechTreeView("TechTree", skin).show(stage);
+			}
+
+		});	
 	}	
 	
 	/**
@@ -360,38 +474,108 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
-		inventory = new Window("Actions", skin);
-		//Label resources  = new Label("All the resouces saved here, will implement a proper popup option", skin);
-		
+		actionsWindow = new Window("Actions", skin);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
-		resourceTable.setHeight(80);
-		resourceTable.setWidth(500);
-		resourceTable.setColor(Color.DARK_GRAY);
-		resourceTable.setPosition(240, 140);
+		resourceTable.setHeight(40);
+		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+		
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
 		biomassCount = new Label("Biomass: 0", skin);
 		waterCount = new Label("Water: 0", skin);
 		
-		resourceTable.add(rockCount).pad(20);
-		resourceTable.add(crystalCount).pad(20);
-		resourceTable.add(biomassCount).pad(20);
-		resourceTable.add(waterCount).pad(20);
+		//add rock image 
+		Texture rockTex = textureManager.getTexture("large_rock");
+		Image rock = new Image(rockTex);
+		//add water image
+		Texture waterTex = textureManager.getTexture("large_water");
+		Image water = new Image(waterTex);
+		//add biomass image
+		Texture biomassTex = textureManager.getTexture("large_biomass");
+		Image biomass = new Image(biomassTex);
+		//add crystal image
+		Texture crystalTex = textureManager.getTexture("large_crystal");
+		Image crystal = new Image(crystalTex);
+
+		resourceTable.add(rock).width(40).height(40).pad(10);
+		resourceTable.add(rockCount).padRight(60);
+		resourceTable.add(crystal).width(40).height(40).pad(10);
+		resourceTable.add(crystalCount).padRight(60);
+		resourceTable.add(biomass).width(40).height(40).pad(10);
+		resourceTable.add(biomassCount).padRight(60);
+		resourceTable.add(water).width(40).height(40).pad(10);
+		resourceTable.add(waterCount).padRight(60);
 		
 		stage.addActor(resourceTable);
 		
+		actionsWindow.setMovable(false);
+		actionsWindow.align(Align.topLeft);
+		actionsWindow.setWidth(stage.getWidth()-700);
+		actionsWindow.setHeight(150);
+		actionsWindow.setPosition(220, 0);
 		
-		inventory.setMovable(false);
-		inventory.align(Align.topLeft);
-		inventory.setWidth(gameWidth-700);
-		inventory.setHeight(150);
-		inventory.setPosition(220, 0);
+		//Add action buttons
+		addMoveButton();
+		addGatherButton();
+		addAttackButton();
+		addCreateUnitButtons();
 		
-		stage.addActor(inventory);
+		stage.addActor(actionsWindow);
 	}
-	
+
+	private void addCreateUnitButtons() {
+	}
+
+	/**
+	 * Adds the attack button
+	 */
+	private void addAttackButton() {
+		attackButton = new TextButton("Attack", skin);
+		attackButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Attack button pressed");
+				selectedEntity.setNextAction(ActionType.DAMAGE);
+			}
+		});
+		actionsWindow.add(attackButton);
+		enableButton(attackButton);
+	}
+
+	/**
+	 * Adds the gather button
+	 */
+	private void addGatherButton() {
+		gatherButton = new TextButton("Gather", skin);
+		gatherButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Gather button pressed");
+				selectedEntity.setNextAction(ActionType.GATHER);
+			}
+		});
+		actionsWindow.add(gatherButton);
+		enableButton(gatherButton);
+	}
+
+	/**
+	 * Adds the move button
+	 */
+	private void addMoveButton() {
+		moveButton = new TextButton("Move", skin);
+		moveButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info("Move button pressed");
+				selectedEntity.setNextAction(ActionType.MOVE);
+			}
+		});
+		actionsWindow.add(moveButton);
+		enableButton(moveButton);
+	}
+
 	/**
 	 * Adds in the minimap window 
 	 */
@@ -399,27 +583,125 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
-		Label label = new Label("Not sure if this will still be \n implemented, but here's a \n placeholder anyway", skin);
-		label.setWrap(true);
-				
-		minimap.add(label);
+		minimap.add(GameManager.get().getMiniMap().getBackground());
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
-		minimap.setWidth(220);
-		minimap.setHeight(220);
+		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
+		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
 		
 		stage.addActor(minimap);
-		
 	}
 	
 	/**
+     * Currently sets the health to 100 once a selectable unit is selected. 
+     * @param target unit clicked on by player
+     */
+    private void setEnitity(BaseEntity target) {
+		disableButton(moveButton);
+		disableButton(attackButton);
+		disableButton(gatherButton);
+		if (selectedEntity == null) {
+            return;
+        }
+        selectedEntity = target;
+		EntityStats stats = target.getStats();
+		updateSelectedStats(stats);
+        enterActions(target.getValidActions());
+    }
+
+    /**
+     * Updates the health bar to the selected entity's health stats
+     * @param stats
+     */
+    private void updateSelectedStats (EntityStats stats) {
+		healthBar.setValue(stats.getHealth());
+		nameLabel.setText(stats.getName());
+		healthLabel.setText("Health: " + stats.getHealth());
+		//Update the health progress bad to red once health is below 20 
+		if (stats.getHealth() <= CRITICALHEALTH) {
+			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+			pixmap.setColor(Color.RED);
+			pixmap.fill();
+			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+			pixmap.dispose();
+		} else if (stats.getHealth() > CRITICALHEALTH){
+			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+			pixmap.setColor(Color.GREEN);
+			pixmap.fill();
+			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+			pixmap.dispose();
+		}
+	}
+    
+    /**
+     * Enables action button based on the actions avaliable to 
+     * the selected entity
+     * @param actions avaliable to the selected entity
+     */
+	private void enterActions(List<ActionType> actions) {
+		if (actions == null) {
+			return;
+		}
+        for (ActionType c : actions) {
+			switch (c) {
+				case MOVE:
+					enableButton(moveButton);
+					break;
+				case DAMAGE:
+					enableButton(attackButton);
+					break;
+				case GATHER:
+					enableButton(gatherButton);
+					break;
+				default:
+					LOGGER.error("Unrecognised action type, please implement in HUDView");
+			}
+        }
+
+    }
+
+	/**
+	 * Disables the given button
+	 * @param b to be disabled
+	 */
+    private void disableButton(Button b) {
+		b.setTouchable(Touchable.disabled);
+		b.setVisible(false);
+		b.align(Align.right | Align.bottom);
+	}
+    
+    /**
+     * Enables the given button
+     * @param b to be enabled
+     */
+    private void enableButton(Button b) {
+		b.setTouchable(Touchable.enabled);
+		b.setVisible(true);
+		b.align(Align.left | Align.top);
+	}
+
+
+    /**
+	 * Returns the chat window 
+	 * @return chat window
+	 */
+	public Window getChatWindow() {
+		return messageWindow; 
+	}
+	
+	/**
+	 * Returns the Actions window to display helper text
+	 */
+	public Window getActionWindow() {
+		return actionsWindow;
+	}
+
+    /**
 	 * Updates any features of the HUD that may change through time/ game actions
 	 */
-    public void render(){
-		/*
-		 * Update time & set color depending if night/day
-		 */
+	public void render(){
+		/* Update time & set color depending if night/day */
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 		
@@ -432,45 +714,107 @@ public class HUDView extends ApplicationAdapter{
 			gameLengthDisp.setColor(Color.BLUE);
 		}
 		
+		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		
-		rockCount.setText("Rocks: " + resourceManager.getRocks());
-		crystalCount.setText(" Crystal: " + resourceManager.getCrystal()); 
-		waterCount.setText(" Water: " + resourceManager.getWater());
-		biomassCount.setText(" Biomass: " + resourceManager.getBiomass());
+		rockCount.setText("" + resourceManager.getRocks());
+		crystalCount.setText("" + resourceManager.getCrystal()); 
+		waterCount.setText("" + resourceManager.getWater());
+		biomassCount.setText("" + resourceManager.getBiomass());
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
+		
+		int spacmenCount = 0; 		//counts the number of spacmen in game
+		int enemySpacmanCount = 0;  //counts the number of spatmen in game
+		//Get the selected entity
+		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
-				setEnitity(e);
+				selectedEntity = e;
+			}
+			if (e instanceof Spacman) {
+				spacmenCount++; 
+			}
+			if (e instanceof EnemySpacman){
+				enemySpacmanCount++; 
 			}
 		}
-    	
-    }
-
-    /**
-     * Currently sets the health to 100 once a selectable unit is selected. 
-     * @param target unit clicked on by player
-     */
-    private void setEnitity(Selectable target) {
-		if (target.getEntityType() == Selectable.EntityType.UNIT) {
-			healthBar.setValue(100);
+		//Get the details from the selected entity
+	    setEnitity(selectedEntity);
+	    
+	    /* Update the spacmen + enemy spatmen counts */
+	    playerSpacmen.setText("" + spacmenCount);
+		playerEnemySpacmen.setText("" + enemySpacmanCount);
+		
+		if (spacmenCount == 0) {
+			/*TODO get spacman icon to be spacman_ded when there
+			are no spacmen left*/
+			spacman = new Image(textureManager.getTexture("spacman_ded"));
 		}
 	}
-
 	
-	public Window getMessage() {
-		return messageWindow; 
+	public void disableHUD() {
+		overheadRight.setVisible(false);
+		resourceTable.setVisible(false);
+	    playerdetails.setVisible(false);
+	    HUDManip.setVisible(false);
+		chatbox.setVisible(false);
+		messageWindow.setVisible(false);
+		mainMenu.setVisible(false);
+		minimap.setVisible(false);
+		actionsWindow.setVisible(false);
 	}
 	
+	public void enableHUD() {
+		overheadRight.setVisible(true);
+		resourceTable.setVisible(true);
+	    playerdetails.setVisible(true);
+	    HUDManip.setVisible(true);
+		chatbox.setVisible(true);
+		messageWindow.setVisible(true);
+		mainMenu.setVisible(true);
+		minimap.setVisible(true);
+		actionsWindow.setVisible(true);
+	}
+
 	/**
-	 * Returns the Actions window to display helper text
-	 */
-	public Window getActionWindow() {
-		return inventory;
-	}
-
+     * This function is used to refit the hud when the window size changes
+     * @param width the stages width
+     * @param height the stages height
+     */
+	public void resize(int width, int height) {
+        //Top Left
+        LOGGER.debug("Window resized, rescaling hud");
+		playerdetails.setWidth(100);
+        playerdetails.align(Align.left | Align.top);
+        playerdetails.setPosition(0, stage.getHeight());
+        //Top Right
+        overheadRight.setWidth(stage.getWidth());
+        overheadRight.align(Align.right | Align.top);
+        overheadRight.setPosition(0, Gdx.graphics.getHeight());
+        messageWindow.align(Align.right | Align.top);
+        messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
+				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
+        //Bottom Panel
+		//Map
+		minimap.align(Align.topLeft);
+		minimap.setPosition(0, 0);
+		minimap.setMovable(false);
+		minimap.setSize(220, 220);
+		//Avaliable actions 
+		actionsWindow.align(Align.topLeft);
+		actionsWindow.setWidth(stage.getWidth()-700);
+		actionsWindow.setHeight(150);
+		actionsWindow.setPosition(220, 0);
+		//Resources
+		resourceTable.align(Align.left | Align.center);
+		resourceTable.setHeight(60);
+		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+		//Menu manipulator
+		HUDManip.setSize(50, 80);
+		HUDManip.setPosition(stage.getWidth()-50, 50);
+		HUDManip.align(Align.right| Align.bottom);
+    }
 }
 
 

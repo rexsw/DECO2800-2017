@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
@@ -52,12 +53,12 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	 * @param posZ its z position on the world.
 	 */
 	public Bunker(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 3f, 3f, 0f, BuildingType.BUNKER);
+		super(posX, posY, posZ, BuildingType.BUNKER);
 		this.setTexture("bunker");
+		this.setEntityType(EntityType.BUILDING);
 		this.setCost(200);
 		this.setSpeed(1.5f);
-		this.initActions();
-		this.addNewAction(BuildAction.class);
+		this.addNewAction(ActionType.GENERATE);
 		world.deSelectAll();
 	}
 

@@ -5,6 +5,6 @@ package com.deco2800.marswars.entities;
  */
 public enum BuildingType {
 
-	BASE, BARRACKS, BUNKER, HOUSE
+	BASE, BARRACKS, BUNKER, TURRET //HOUSE
 
 }

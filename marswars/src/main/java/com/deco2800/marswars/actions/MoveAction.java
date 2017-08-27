@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.PathfindingThread;
 import com.deco2800.marswars.util.Point;
@@ -22,7 +23,7 @@ public class MoveAction implements DecoAction {
 	private AbstractEntity entity;
 
 	/* Speed factor */
-	private float speed = 0.05f;
+	private float speed;
 
 	/* Completed variable */
 	private boolean completed = false;
@@ -44,6 +45,12 @@ public class MoveAction implements DecoAction {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;
+		
+		if (entity instanceof MissileEntity) {
+			speed = 0.4f;
+		} else {
+			speed = 0.05f;
+		}
 
 		if (this.goalX < 0)
 			this.goalX = 0;

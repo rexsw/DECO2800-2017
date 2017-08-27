@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -16,6 +15,7 @@ public class InitialWorld extends BaseWorld {
 
 	/**
 	 * Constructor for InitialWorld
+	 * @param worldFileName File name of the world to be loaded
 	 */
 	public InitialWorld() {
 		super("resources/placeholderassets/placeholder200.tmx");
@@ -54,18 +54,6 @@ public class InitialWorld extends BaseWorld {
 			}
 		}
 
-		this.addEntity(new Spacman(0,0,0));
-		this.addEntity(new Spacman(1, 1, 1)); // this spac man is for resource gather test
-		this.addEntity(new HeroSpacman(this, 4, 4, 0));
-		this.addEntity(new Base(this, 8, 8, 0));
-		this.addEntity(new Base2(this, 14, 18, 0));
-		this.addEntity(new EnemySpacman(24, 24, 0));
-		this.addEntity(new EnemyTank(20, 20, 0));
-		this.addEntity(new Base2(this, 10, 10, 0));
-		this.addEntity(new Bunker(this, 35, 35, 0));
-		this.addEntity(new Turret(this, 30, 30, 0));
-		this.addEntity(new Barracks(this, 40, 40, 0));
-
 	}
 
 
@@ -77,14 +65,7 @@ public class InitialWorld extends BaseWorld {
 			return;
 		}
 		this.addEntity(new EnemySpacman(x, y, 0));
-		this.addEntity(new EnemySpacman(x - 1, y, 0));
-		this.addEntity(new EnemySpacman(x, y - 1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y, 0));
-		this.addEntity(new EnemySpacman(x, y+1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y + 1, 0));
-		this.addEntity(new EnemySpacman(x - 1, y - 1, 0));
-		this.addEntity(new EnemySpacman(x - 1, y + 1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y -1, 0));
+
 	}
 
 	/**
@@ -107,11 +88,6 @@ public class InitialWorld extends BaseWorld {
 				((Selectable) r).deselect();
 			}
 		}
-	
-
-		this.addEntity(new Base2(this, 14, 18, 0));
-		this.addEntity(new EnemySpacman(24, 24, 0));
-		this.addEntity(new EnemyTank(20, 20, 0));
 	}
 
 

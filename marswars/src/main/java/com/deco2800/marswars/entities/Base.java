@@ -11,12 +11,22 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BuildingEntity;
+import com.deco2800.marswars.entities.BuildingType;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.HasProgress;
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -30,15 +40,16 @@ import org.slf4j.LoggerFactory;
  *
  * A home base for the empire
  */
-public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner, HasHealth {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+	private Manager owner = null;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
 	
-	private Manager onwer = null;
-
+	private int health = 500;
+	
 	boolean selected = false;
 
 	/**
@@ -50,13 +61,11 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 
 	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-	super(posX, posY, posZ, 3f, 3f, 0f, BuildingType.BASE);
+	super(posX, posY, posZ, BuildingType.BASE);
 		this.setTexture("homeBase");
 		this.setEntityType(EntityType.BUILDING);
-		this.setCost(10);
+		this.setCost(250);
 		this.setSpeed(2);
-		this.initActions();
-		//Find a way to render first, then move only add some of collision blocks (miss first column)
 	}
 	
 	/**
@@ -92,7 +101,9 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void onRightClick(float x, float y) {
-
+		//base has no action on right click for now
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("endturn.wav");
 	}
 
 	/**
@@ -191,7 +202,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void setOwner(Manager owner) {
-		this.onwer = owner;
+		this.owner = owner;
 	}
 
 	/**
@@ -200,7 +211,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public Manager getOwner() {
-		return this.onwer;
+		return this.owner;
 	}
 
 	/**
@@ -210,23 +221,51 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.onwer == ((HasOwner) entity).getOwner();
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
+	@Override
 	/**
 	 * This method is a duplication of the showProgress method, consider delete one of them
+	 * sadly two different interfaces
 	 * @return boolean
 	 */
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
 	
+	@Override
 	/**
 	 * Set the action of this base
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	@Override
+	/**
+	 * @return current health
+	 */
+	public int getHealth() {
+		return health;
+	}
+
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
+	@Override
+	public void setHealth(int health) {
+		LOGGER.info("Set health to " + health);
+		this.health = health;
+		if (health < 0) {
+			GameManager.get().getWorld().removeEntity(this);
+			if(owner instanceof AiManagerTest) {
+				((AiManagerTest) owner).isKill();
+			}
+			LOGGER.info("I am kill");
+		}
 	}
 	
 }

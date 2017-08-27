@@ -48,7 +48,7 @@ public class Pathfinder {
 			Point truncCurrent = new Point((int)current.getX(), (int)current.getY());
 			if (truncCurrent.equals(truncGoal)) {
 				List<Point> path = reconstructPath(cameFrom, current);
-				if (path.size() > 0) {
+				if (!path.isEmpty()) {
 					//Replace last node with untruncated goal
 					path.remove(path.size() - 1);
 					path.add(goal);
@@ -90,19 +90,19 @@ public class Pathfinder {
 
 	/**
 	 * Gets the minimum point in a set of points
-	 * @param Points a set of points
+	 * @param points a set of points
 	 * @param fScores
 	 * @return
 	 */
-	private static Point getMinPoint(Set<Point> Points, Map<Point, Double> fScores) {
+	private static Point getMinPoint(Set<Point> points, Map<Point, Double> fScores) {
 		double minF = Integer.MAX_VALUE;
 		Point min = null;
 
-		for (Point Point : Points) {
-			double PointFScore =
+		for (Point Point : points) {
+			double pointFScore =
 					fScores.getOrDefault(Point, Double.MAX_VALUE / 2);
-			if (PointFScore < minF) {
-				minF = PointFScore;
+			if (pointFScore < minF) {
+				minF = pointFScore;
 				min = Point;
 			}
 		}

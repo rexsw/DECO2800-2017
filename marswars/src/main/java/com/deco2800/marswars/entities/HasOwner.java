@@ -2,7 +2,10 @@ package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.Manager;
-
+/**
+ * Created by Scott Whittington on 17/08
+ * enables the ai to use other classes by giving them methods for the ai to use
+ */
 public interface HasOwner {
 	
 	/**

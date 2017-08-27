@@ -7,12 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -36,7 +36,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Barracks.class);
 	
 	private Manager onwer = null;
 
@@ -50,18 +50,17 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @param posZ its z position on the world.
 	 */
 	public Barracks(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 3, 3, 1, BuildingType.BARRACKS);
+		super(posX, posY, posZ, BuildingType.BARRACKS);
 		this.setTexture("barracks");
 		this.setEntityType(EntityType.BUILDING);
 		this.setCost(300);
 		this.setSpeed(2);
-		this.initActions();
-		this.addNewAction(BuildAction.class);
+		this.addNewAction(ActionType.GENERATE);
 		world.deSelectAll();
 	}
 
 	/**
-	 * Give action to the base
+	 * Give action to the Barracks
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {

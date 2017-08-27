@@ -1,6 +1,8 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
@@ -27,8 +29,16 @@ public class GameManager implements TickableManager {
 	private BaseWorld gameWorld;
 
 	private static FogWorld fogWorld = new FogWorld();
+
+	private BaseWorld mapWorld;
 	
 	private OrthographicCamera camera;
+	
+	private Vector3 cameraPos;
+
+	private int activeView = 0; // 0 is gameWorld, 1 is mapWorld
+
+	private MiniMap miniMap;
 
 	/**
 	 * Returns an instance of the GM
@@ -98,6 +108,14 @@ public class GameManager implements TickableManager {
 	}
 
 	/**
+	 * Sets the current map world.
+	 * @param world
+	 */
+	public void setMapWorld(BaseWorld world) {
+		this.mapWorld = world;
+	}
+
+	/**
 	 * Gets the current game world
 	 * @return the currently loaded world
 	 */
@@ -108,7 +126,66 @@ public class GameManager implements TickableManager {
 	public FogWorld getFogWorld() {
 		return fogWorld;
 	}
+
+	/**
+	 * Gets the minimap
+	 * @return The minimap
+	 */
+	public MiniMap getMiniMap() {
+		return miniMap;
+	}
+
+	/**
+	 * Sets the minimap to be displayed
+	 * @param map
+	 */
+	public void setMiniMap(MiniMap map) {
+		miniMap = map;
+	}
 	
+
+	/**
+	 * Gets the current map world.
+	 * @return
+	 */
+	public BaseWorld getMapWorld() {
+		return mapWorld;
+	}
+
+	/**
+	 * returns 0 if the game world is being rendered and 1 if the full screen map is.
+	 * @return
+	 */
+	public int getActiveView() {
+		return activeView;
+	}
+
+	/**
+	 * Toggles activeView.
+	 */
+	public void toggleActiveView() {
+		if (activeView == 0) {
+			activeView = 1;
+			toggleMapOn();
+		} else {
+			activeView = 0;
+			toggleMapOff();
+			
+		}
+	}
+
+	private void toggleMapOn() {
+		// move camera to centre and zoom out
+		cameraPos = camera.position.cpy();
+		camera.zoom = Math.max(getWorld().getWidth(),getWorld().getLength())/16;
+		camera.position.set((getWorld().getWidth()*58)/2, (getWorld().getLength()*36)/10, 0); //TODO make this work with different map and window sizes
+	}
+
+	private void toggleMapOff() {
+		camera.position.set(cameraPos);
+		camera.zoom = 1;
+	}
+
 	public void setCamera(OrthographicCamera camera) {
 		this.camera = camera;
 	}
@@ -123,6 +200,8 @@ public class GameManager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
+		//this is need to let managers use other managers ontick
+		//please don't change it
 		List<Manager> deepcopy = new ArrayList<Manager>((List<Manager>) managers);
 		Iterator<Manager> managersIter =  deepcopy.iterator();
 		while(managersIter.hasNext()) {
@@ -132,5 +211,7 @@ public class GameManager implements TickableManager {
 			}
 		}
 	}
+
+
 
 }

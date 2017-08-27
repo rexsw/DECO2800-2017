@@ -1,7 +1,12 @@
 package com.deco2800.marswars.entities;
 
 /**
+ * @author Treenhan
  * Created by Treenhan on 8/24/17.
+ *
+ * This class will holds the line of sight and these objects will be rendered on a separated layer
+ *
+ *
  */
 public class FogOfWarLayer extends AbstractEntity {
 
@@ -10,7 +15,8 @@ public class FogOfWarLayer extends AbstractEntity {
     }
 
     /**
-     * Sets the current position of the Base Entity and also updates its position in the collision map
+     * Sets the current position of the Fog Of War Tile
+     *
      * @param x
      * @param y
      * @param z

@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.actions.GatherAction.State;
-import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.BuildingEntity;
 import com.deco2800.marswars.entities.BuildingType;
@@ -49,8 +48,8 @@ public class BuildAction implements DecoAction{
 	private float proj_y;
 	private int relocateSelect = 10;
 	private CheckSelect temp;
-	private float buildingHeight = 3;
-	private float buildingLength = 3;
+	private float buildingHeight = 1;
+	private float buildingLength = 1;
 	private boolean validBuild;
 	private int buildProgress = 0;
 	private State state = State.SELECT_SPACE;
@@ -58,12 +57,12 @@ public class BuildAction implements DecoAction{
 	private float progress = 0;
 	private float buildingSpeed = 1;
 	private BuildingEntity base;
-	private Spacman spac;
+	private BaseEntity spac;
 	private MoveAction moveAction = null;
 	private BuildingType building;
 	
-	public BuildAction(Spacman spac, BuildingType building) {
-		this.spac = spac;
+	public BuildAction(BaseEntity builder, BuildingType building) {
+		this.spac = builder;
 		this.building = building;
 	}
 
@@ -153,7 +152,7 @@ public class BuildAction implements DecoAction{
 		if (temp != null && validBuild == true) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			base = new BuildingEntity((int)proj_x-((buildingHeight+1)/2), (int)proj_y, 0f, buildingHeight, buildingLength, 1, building);
+			base = new BuildingEntity((int)proj_x-((buildingHeight+1)/2), (int)proj_y, 0f, building);
 			if (resourceManager.getRocks() >= base.getCost()) {
 				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
 				GameManager.get().getWorld().addEntity(base);

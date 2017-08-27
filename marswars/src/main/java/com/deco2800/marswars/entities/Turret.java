@@ -8,12 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * A turret that can be used for base defence
  */
 
-public class Turret extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Turret extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -52,21 +52,15 @@ public class Turret extends BaseEntity implements Clickable, Tickable, HasProgre
 	 * @param posZ its z position on the world.
 	 */
 	public Turret(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 4 , 4, 1, 4, 4, false);
+		super(posX, posY, posZ, BuildingType.TURRET);
 		this.setTexture("turret");
 		this.setEntityType(EntityType.BUILDING);
-		this.setCost(1000);
+		this.setCost(0);
 		this.setSpeed(2);
-		this.initActions();
-		this.addNewAction(BuildAction.class);
+		this.addNewAction(ActionType.GENERATE);
 		world.deSelectAll();
 	}
 
-	public Turret(BaseWorld world, int posX, int posY, int posZ) {
-		super(posX, posY, posZ, 1, 1, 1);
-		this.setTexture("turret");
-		this.setCost(1000);
-	}
 
 	public void giveAction(DecoAction action) {
 		if (!currentAction.isPresent()) {
