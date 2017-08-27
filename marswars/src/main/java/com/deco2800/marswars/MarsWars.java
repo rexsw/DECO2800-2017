@@ -1,12 +1,9 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -14,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
@@ -98,6 +93,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void create () {
+		
+		//MainMenu menu = new MainMenu();
 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
@@ -340,10 +337,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
-		view.toggleHUD();
+		view.disableHUD();
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -544,7 +541,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		batch.dispose();
 		if(!gameStarted) {
-			renderMiniMap();
+			GameManager.get().getMiniMap().render(view);
+			GameManager.get().getMiniMap().updateMap();
+			view.enableHUD();
 			GameManager.get().toggleActiveView();
 			gameStarted = true;
 		}
@@ -673,15 +672,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y < 0-mapLength/2) {
 			camera.position.y = 0-mapLength/2;
 		}
-	}
-	
-	private void renderMiniMap() {
-		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
-		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
-		pixmap.dispose();
-		view.toggleHUD();
 	}
 
 	/**

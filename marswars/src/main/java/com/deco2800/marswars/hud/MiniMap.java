@@ -2,13 +2,14 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
-import java.awt.*;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MiniMap {
 
@@ -24,10 +25,23 @@ public class MiniMap {
         this.width = width;
         this.height = height;
     }
+    
+    public void updateMap() {
+    	TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+    	backgroundImage = new Image(reg.getTexture("minimap"));
+    }
 
     public Image getBackground() {
         return backgroundImage;
     }
+    
+	public void render(HUDView view) {
+		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
+		pixmap.dispose();
+	}
 
     public void addFriendlyEntity() {
 
@@ -73,7 +87,6 @@ public class MiniMap {
         newPosition.rotate(45);
 
         OrthographicCamera camera = GameManager.get().getCamera();
-        Vector3 test = camera.position;
         camera.lookAt(newPosition.x, newPosition.y, 0);
     }
 

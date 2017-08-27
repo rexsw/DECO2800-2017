@@ -226,6 +226,8 @@ public class BaseEntityTest {
 
 	@Test
 	public void setGatherAction() {
+		t.addNewAction(ActionType.GATHER);
+		t3.addNewAction(ActionType.GATHER);
 		// test trying to gather an entity that is not a resource
 		assertEquals(ActionSetter.setAction(t, 7, 8, ActionType.GATHER), false);
 		// test trying to gather nothing
@@ -238,6 +240,7 @@ public class BaseEntityTest {
 
 	@Test
 	public void setMoveAction() {
+		t3.addNewAction(ActionType.MOVE);
 		// moving on top of another entity that cannot be moved on top on
 		assertEquals(ActionSetter.setAction(t3, 7, 8, ActionType.MOVE), true);
 		// moving to somewhere without anything.
