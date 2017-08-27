@@ -1,4 +1,4 @@
-package com.deco2800.marswars;
+package com.deco2800.marswars.entities;
 
 import static org.junit.Assert.*;
 
@@ -9,11 +9,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.LineOfSight;
-import com.deco2800.marswars.entities.Resource;
-import com.deco2800.marswars.entities.ResourceType;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
