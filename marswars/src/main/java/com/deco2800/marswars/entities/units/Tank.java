@@ -25,7 +25,7 @@ public class Tank extends Soldier {
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
-	
+	@Override
 	public void setAllTextture() {
 		this.defaultTextureName = "tank";
 		//this.movementSound = "tankMovementSound";
