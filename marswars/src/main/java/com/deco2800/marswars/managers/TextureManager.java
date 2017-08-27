@@ -1,11 +1,15 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.units.Soldier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -98,17 +102,19 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
+        this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
         //----------Unit Assets:
         //Soldier:
-        this.saveTexture("bullet", "resources/UnitAssets/Neutral/Bullet_1.png");
+        this.saveTexture("bullet", "resources/UnitAssets/Neutral/bullet_1.png");
         this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
         this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
         //Tank:
         
-        this.saveTexture("missile", "resources/UnitAssets/Neutral/Missile_1.png");
+        this.saveTexture("missile", "resources/UnitAssets/Neutral//Missile_3.png");
         this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
         this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
+        
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
@@ -116,6 +122,41 @@ public class TextureManager extends Manager {
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
 
+    }
+    /*
+     *
+     */
+    public String loadUnitSprite(AbstractEntity unit, String textureType){//use soldier as the base class
+        if(textureType == null){
+            textureType = "default";
+        }
+        //currently only implemented for entities that extend Soldier (i.e. all 
+        //player controllable units)
+        if(unit instanceof Soldier){
+            Soldier soldier = (Soldier) unit;
+            String path;
+            //Determine the unit type
+            String unitType = unit.getClass().toString();
+            //filter out class name qualifier, this may be changed later to extend it 
+            // to other entity types
+            Scanner sc = new Scanner (unitType);
+            sc.useDelimiter("units.").next();
+            unitType=sc.next();
+            sc.close();
+            //find the team colour of the owner:
+            String teamColour = ((AbstractPlayerManager) soldier.getOwner()).getColour();
+            path = String.format("resources/UnitAssets/%s/%s/%s.png",
+                    unitType,teamColour,textureType);
+			//try to load the texture into the textureMap
+            LOGGER.info(String.format("Loading texture %s for %s from %s", 
+            		textureType, unitType, path));
+            String retVal = textureType + teamColour + unitType;
+            saveTexture(retVal,path);
+            return retVal;
+        } else {
+        	return null;
+        }
+        
     }
 
     /**
@@ -139,8 +180,14 @@ public class TextureManager extends Manager {
      */
     public void saveTexture(String id, String filename) {
         LOGGER.info("Saving texture" + id + " with Filename " + filename);
-        if (!textureMap.containsKey(id)) {
-            textureMap.put(id, new Texture(filename));
+        try{
+            if (!textureMap.containsKey(id)) {
+                textureMap.put(id, new Texture(filename));
+            }
+        }
+        catch(Exception e){
+            LOGGER.error(String.format("Failed to load texture %s from %s", id,filename));
+            throw e;//we don't want to mask the fact that a texture failed to load
         }
     }
 }

@@ -15,10 +15,13 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -33,12 +36,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
-	protected String selectedTextureName;// = "soldierSelected";
-	protected String defaultTextureName;// = "soldier";
-	protected String movementSound;// = "endturn.wav";
+	protected String selectedTextureName;
+	protected String defaultTextureName;
+	protected String movementSound;
 
-	public Soldier(float posX, float posY, float posZ) {
+	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
+		this.setOwner(owner);
+		
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
@@ -75,6 +80,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onClick(MouseHandler handler) {
+		//check if this belongs to a* player (need to change for multiplayer):
 		if(this.getOwner() instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -159,8 +165,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	}
 	
 	public void setAllTextture() {
-		this.selectedTextureName = "soldierSelected";
-		this.defaultTextureName = "soldier";
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
+		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
 	}
 	
