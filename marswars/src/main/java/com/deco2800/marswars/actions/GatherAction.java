@@ -107,13 +107,7 @@ public class GatherAction implements DecoAction {
 
 				break;
 			case SETUP_RETURN:
-				Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
-
-				if (base.isPresent()) {
-					action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
-				}
-
-				state = State.RETURN_TO_BASE;
+				setupReturn();
 				break;
 			case RETURN_TO_BASE:
 				if (action.completed()) {
@@ -125,7 +119,6 @@ public class GatherAction implements DecoAction {
 											}
 					return;
 				}
-
 				action.doAction();
 				break;
 		}
@@ -139,6 +132,16 @@ public class GatherAction implements DecoAction {
 	@Override
 	public int actionProgress() {
 		return 0;
+	}
+
+	private void setupReturn() {
+		Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
+
+		if (base.isPresent()) {
+			action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
+		}
+
+		state = State.RETURN_TO_BASE;
 	}
 
 	private void depositHarvest(ResourceManager rm) {
