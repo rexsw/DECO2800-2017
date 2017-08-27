@@ -33,13 +33,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
-	protected String selectedTextureName = "soldierSelected";
-	protected String defaultTextureName = "soldier";
-	protected String movementSound = "endturn.wav";
+	protected String selectedTextureName;// = "soldierSelected";
+	protected String defaultTextureName;// = "soldier";
+	protected String movementSound;// = "endturn.wav";
 
 	public Soldier(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		// Everything is just testing
+		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
@@ -157,4 +158,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 		
 	}
+	
+	public void setAllTextture() {
+		this.selectedTextureName = "soldierSelected";
+		this.defaultTextureName = "soldier";
+		this.movementSound = "endturn.wav";
+	}
+	
+
 }
