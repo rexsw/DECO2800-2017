@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 
 /**

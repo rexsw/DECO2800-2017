@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
@@ -15,8 +18,7 @@ import com.deco2800.marswars.util.Box3D;
  * @author Tze Thong Khor on 25/8/17
  *
  */
-public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage, HasArmor,
-	HasAttackRange, HasAttackSpeed, HasOwner{
+public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner{
 	
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
@@ -25,6 +27,9 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	private int armorDamage; // armorDamage of the entity
 	private int attackRange; // attackrange of the entity
 	private int damage; // the damage of the entity
+	private int loyalty; // the loyalty of the entity
+	private int loyaltyDamage; // the loyalty damage of the entity
+	private int maxLoyalty; // the max loyalty of the entity
 	private Manager owner = null; // the owner of the player
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
@@ -125,6 +130,7 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	 * Set the maximum health of the entity
 	 * @param maxHealth the maximum health of the entity
 	 */
+	@Override
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 	}
@@ -133,6 +139,7 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	 * Return the maximum health of the entity
 	 * @return the maximum health of the entity
 	 */
+	@Override
 	public int getMaxHealth() {
 		return maxHealth;
 	}
@@ -252,20 +259,30 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	public int getAttackSpeed() {
 		return attackSpeed;
 	}
-	
-	/**
-	 * Return the missile of the entity.
-	 * @return missile
-	 */
-	public MissileEntity getMissile() {
-		return missile;
+
+	@Override
+	public int getLoyalty() {
+		return loyalty;
 	}
-	
-	/**
-	 * Set the missile of the entity
-	 * @param missile the type of missile
-	 */
-	public void setMissile(MissileEntity missile) {
-		this.missile = missile;
+
+	@Override
+	public void setLoyalty(int loyalty) {
+		this.loyalty = loyalty;
 	}
+
+	@Override
+	public int getLoyaltyDamage() {
+		return loyaltyDamage;
+	}
+
+	@Override
+	public void setLoyaltyDamage(int loyaltyDamage) {
+		this.loyaltyDamage = loyaltyDamage;
+	}
+
+	@Override
+	public void setMaxLoyalty(int maxLoyalty) {
+		this.maxLoyalty = maxLoyalty;
+	}
+
 }

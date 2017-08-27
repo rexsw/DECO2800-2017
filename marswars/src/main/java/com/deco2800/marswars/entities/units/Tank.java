@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
  * intended to be slower, more expensive and and slower to fire

@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +11,9 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -117,8 +120,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			int yPosition = (int) this.getPosY();
 			boolean moveAway = GameManager.get().getWorld().getEntities(xPosition, yPosition).size() > 2;
 			if (moveAway) {
-				List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
-				
+			
 				BaseWorld world = GameManager.get().getWorld();
 
 				/* We are stuck on a tile with another entity
@@ -140,6 +142,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
+				List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}

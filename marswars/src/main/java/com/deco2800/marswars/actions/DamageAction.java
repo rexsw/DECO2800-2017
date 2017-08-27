@@ -3,9 +3,9 @@ package com.deco2800.marswars.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.entities.AttackableEntity;
-import com.deco2800.marswars.entities.Bullet;
-import com.deco2800.marswars.entities.MissileEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Bullet;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
