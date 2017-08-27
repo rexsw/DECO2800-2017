@@ -48,7 +48,7 @@ public class Pathfinder {
 			Point truncCurrent = new Point((int)current.getX(), (int)current.getY());
 			if (truncCurrent.equals(truncGoal)) {
 				List<Point> path = reconstructPath(cameFrom, current);
-				if (path.size() > 0) {
+				if (!path.isEmpty()) {
 					//Replace last node with untruncated goal
 					path.remove(path.size() - 1);
 					path.add(goal);

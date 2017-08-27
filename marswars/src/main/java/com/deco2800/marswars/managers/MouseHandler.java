@@ -1,7 +1,6 @@
 package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.worlds.AbstractWorld;
@@ -22,10 +21,6 @@ public class MouseHandler extends Manager {
 	private List<Clickable> listeners = new ArrayList<>();
 
 	/**
-	 * Constructor for the mouse handler
-	 * @param world
-	 */
-	/**
 	 * Currently only handles objects on height 0
 	 * @param x
 	 * @param y
@@ -34,7 +29,8 @@ public class MouseHandler extends Manager {
 		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
-		float projX, projY;
+		float projX;
+		float projY;
 
 		if (button == 0) {
 			// Left click

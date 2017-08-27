@@ -6,10 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * @author Vinson Yeung on 25/8/17
@@ -135,7 +133,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
      * @return true if there is an ongoing action
      */
     @Override
-    public boolean isWorking() { return (currentAction.isPresent()); }
+    public boolean isWorking() { return currentAction.isPresent(); }
 
     /**
      * Set a new action for an entity

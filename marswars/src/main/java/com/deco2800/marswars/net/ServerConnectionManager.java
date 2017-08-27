@@ -82,9 +82,4 @@ public class ServerConnectionManager extends ConnectionManager {
 			this.broadcastAction(newAction);
 		}
 	}
-
-	@Override
-	public void idle(Connection connection) {
-
-	}
 }

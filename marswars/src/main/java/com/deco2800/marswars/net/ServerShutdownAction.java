@@ -8,6 +8,7 @@ public class ServerShutdownAction implements Action {
 
     public ServerShutdownAction() {}
 
+    @Override
     public String toString() {
         return "Server shutdown";
     }

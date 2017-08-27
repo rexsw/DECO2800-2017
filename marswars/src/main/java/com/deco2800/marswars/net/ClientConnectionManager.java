@@ -29,9 +29,4 @@ public class ClientConnectionManager extends ConnectionManager {
 			this.logAction(action);
 		}
 	}
-
-	@Override
-	public void idle(Connection connection) {
-
-	}
 }

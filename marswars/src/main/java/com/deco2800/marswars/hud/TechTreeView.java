@@ -2,14 +2,11 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.technology.*;
 
-import java.util.Optional;
 
 public class TechTreeView extends Dialog{
 

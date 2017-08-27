@@ -18,6 +18,7 @@ public class LeaveLobbyAction implements Action {
         return this.username;
     }
 
+    @Override
     public String toString() {
         return "*" + this.username + "* left the lobby.";
     }
