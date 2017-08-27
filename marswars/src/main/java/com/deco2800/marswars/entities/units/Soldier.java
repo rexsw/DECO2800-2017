@@ -15,10 +15,13 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -33,18 +36,19 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
-	protected String selectedTextureName;// = "soldierSelected";
-	protected String defaultTextureName;// = "soldier";
-	protected String movementSound;// = "endturn.wav";
+	protected String selectedTextureName;
+	protected String defaultTextureName;
+	protected String movementSound;
 
-	public Soldier(float posX, float posY, float posZ) {
+	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
+		this.setOwner(owner);
+		
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
-		this.initActions();
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
@@ -76,6 +80,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 	@Override
 	public void onClick(MouseHandler handler) {
+		//check if this belongs to a* player (need to change for multiplayer):
 		if(this.getOwner() instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -119,7 +124,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();
-			boolean moveAway = GameManager.get().getWorld().getEntities(xPosition, yPosition).size() > 2;
+			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+			int entitiesSize = entities.size();
+			for (BaseEntity e: entities) {
+				if (e instanceof MissileEntity) {
+					entitiesSize--;
+				}
+			}
+			boolean moveAway = entitiesSize > 2;
 			if (moveAway) {
 			
 				BaseWorld world = GameManager.get().getWorld();
@@ -143,7 +155,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
-				List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
@@ -158,10 +170,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 		
 	}
+	@Override
+	public String toString(){
+		return "Soldier";
+	}
 	
 	public void setAllTextture() {
-		this.selectedTextureName = "soldierSelected";
-		this.defaultTextureName = "soldier";
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
+		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
 	}
 	

@@ -1,4 +1,10 @@
 package com.deco2800.marswars.entities.units;
+
+import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
+import com.deco2800.marswars.managers.TextureManager;
+
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
  * intended to be slower, more expensive and and slower to fire
@@ -6,11 +12,9 @@ package com.deco2800.marswars.entities.units;
  */
 public class Tank extends Soldier {
 	
-	public Tank(float posX, float posY, float posZ) {
-		super(posX, posY, posZ);
-		this.defaultTextureName = "tank";
+	public Tank(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+		super(posX, posY, posZ, owner);
 		//this.movementSound = "tankMovementSound";
-		this.selectedTextureName = "tankSelected";
 		
 		// set all the attack attributes
 		this.setMaxHealth(1000);
@@ -25,10 +29,4 @@ public class Tank extends Soldier {
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
-	@Override
-	public void setAllTextture() {
-		this.defaultTextureName = "tank";
-		//this.movementSound = "tankMovementSound";
-		this.selectedTextureName = "tankSelected";
-	}
 }

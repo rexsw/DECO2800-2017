@@ -9,95 +9,71 @@ import com.deco2800.marswars.managers.TextureManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import java.util.ArrayList;
-import java.util.List;
 
+
+/**
+ * Holds the minimap information, and provides useful methods
+ * for manipulating the map.
+ */
 public class MiniMap {
 
-    private Image backgroundImage;
-    private int width;
-    private int height;
-    private List<MiniMapEntity> entitiesOnMap;
-    private List<Image> actorsOnMap;
+    private Image backgroundImage; //the image of the map
+    private int width; //the width of the minimap in pixels
+    private int height; //the height of the minimap in pixels
 
+    /**
+	 * Creates a new minimap instance 
+	 * @param mapId the name of the image file within the texture manager
+	 * @param width the width of the minimap
+	 * @param height the height of the minimap
+	 */
     public MiniMap(String mapId, int width, int height) {
-        // TODO select appropriate background image based on mapPath
-        // for now:
         TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
         backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
-        entitiesOnMap = new ArrayList<MiniMapEntity>();
-        actorsOnMap = new ArrayList<Image>();
     }
     
-    public void updateMap() {
-    	TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+    /**
+	 * refreshes the minimap.png file in memory
+	 */
+    public void updateMap(TextureManager reg) {
+    	reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
     	backgroundImage = new Image(reg.getTexture("minimap"));
     }
 
+    /**
+     * @return the minimap image
+	 */
     public Image getBackground() {
         return backgroundImage;
     }
-
-    /**
-     * Tells the map there is an actor
-     * @param img
-     */
-    public void addActor(Image img) {
-        actorsOnMap.add(img);
-    }
-
-    /**
-     * removes the actor from both the MiniMap's knowledge and from the stage
-     * @param img
-     */
-    public void removeActor(Image img) {
-        img.remove();
-        actorsOnMap.remove(img);
-    }
-
-    /**
-     * gets the list of actors on the minimap
-     * @return List of Images
-     */
-    public List<Image> getActors() {
-        return actorsOnMap;
-    }
     
-	public void render(HUDView view) {
+    /**
+     * Takes a clear screenshot of the game screen, for use as a minimap
+     */
+	public void render() {
+		//get the current screen state from the frame buffer
 		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
 		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+		//save the buffer into a png
 		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
+		//clear the pixmap from memory
 		pixmap.dispose();
 	}
 
-    /**
-     * Gets the entities on the map.
-     * @return List of MiniMapEntities.
-     */
-	public List<MiniMapEntity> getEntitiesOnMap() {
-        return entitiesOnMap;
-    }
+	/**
+	 * Work in progress method for hotswapping entity textures within the minimap
+	 * @param x
+	 * the entity x location
+	 * @param y
+	 * the entity y location
+	 */
+    public void addFriendlyEntity(int x, int y) {
+        TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+        reg.getTexture("friendly_unit");
 
-    /**
-     * Adds the entity to the MiniMap
-     * @param team 0: friendly, 1: allied, 2: enemy
-     * @param x x coordinate of entity
-     * @param y y coordinate of entity
-     */
-    public void addEntity(int team, float x, float y) {
-        // TODO convert to map coordinates
-        entitiesOnMap.add(new MiniMapEntity(team, x, y));
-    }
-
-    /**
-     * Removes the input from the minimap.
-     * @param toRemove MiniMapEntity to be removed
-     */
-    public void removeEntity(MiniMapEntity toRemove) {
-        entitiesOnMap.remove(toRemove);
     }
 
     /**
@@ -142,4 +118,3 @@ public class MiniMap {
         return height;
     }
 }
-

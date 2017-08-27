@@ -16,11 +16,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -29,7 +24,6 @@ import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,13 +89,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void create () {
-		
-		//MainMenu menu = new MainMenu();
-
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+
+		//initialise the minimap and set the image
+		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
+		GameManager.get().getMiniMap().updateMap(reg);
 
 		/*
 		 *	Set up new stuff for this game
@@ -109,7 +104,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
-		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
 
@@ -127,26 +121,29 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -1, width -1);
-		setAI(1, 1);
-		setAI(1, width -1);
-		setAI(length -1, 1);
+		setAI(length -4, width -4);
+		setAI(4, 4);
+		setAI(4, width -4);
+		setAI(length -4, 4);
 
-		// add soldier for combat testing
-		Soldier soldierA = new Soldier(7, 7, 0);
-		GameManager.get().getMiniMap().addEntity(0, 7, 7);
-		Soldier soldierB = new Soldier(5, 5, 0);
-		GameManager.get().getMiniMap().addEntity(0, 5, 5);
-		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		// add soldier for combat testing (belongs to player)
+		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+		playerManager.setColour("Blue");
+		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(6, 6, 0);
-		Tank tankB = new Tank(4, 5, 0);
-		tankA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		tankB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		Tank tankA = new Tank(6, 6, 0, playerManager);
+		Tank tankB = new Tank(4, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
 		GameManager.get().getWorld().addEntity(tankB);		
+		
+		// Attackable entity (belongs to AI) Does not work. Not sure why.
+		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		aiManagerTest.setColour("Yellow");
+		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
+		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));
+		
 		
 		// do something important here, asynchronously to the rendering thread
 
@@ -183,6 +180,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera = new OrthographicCamera(1920, 1080);
 		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
 
 		/*
 		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
@@ -378,6 +376,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				originX = screenX;
 				originY = screenY;
+				
+				GameManager.get().setCamera(camera);
 
 				return true;
 			}
@@ -394,27 +394,36 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				downKeys.remove(keyCode);
 				return true;
 			}
+			
 			/**
 			 * Enable player to zoom in and zoom out through scroll wheel
 			 */
 			@Override
 			public boolean scrolled(int amount) {
 				if (GameManager.get().getActiveView() == 1) {
+					//if we are currently on the megamap, cancel scroll
 					return false;
 				}
+				
 				int cursorX = Gdx.input.getX();
 				int cursorY = Gdx.input.getY();
+				
 				int windowWidth = Gdx.graphics.getWidth();
 				int windowHeight = Gdx.graphics.getHeight();
+				
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
+					//xMag/yMag is how is the mouse far from centre-screen
+					//			on each axis
 					double xMag = (double)cursorX - (windowWidth/2);
 					double yMag = (double)(windowHeight/2) - cursorY;
+					
 					camera.zoom /= 1.2;
+					//shift by mouse offset
 					camera.translate((float)xMag, (float)yMag);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
-				forceMapLimits();
+				forceMapLimits(); //has the user reached the edge?
 				return true;
 			}
 		});
@@ -521,11 +530,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-		
+		GameManager.get().setCamera(camera);
 		batch.dispose();
 		if(!gameStarted) {
-			GameManager.get().getMiniMap().render(view);
-			GameManager.get().getMiniMap().updateMap();
+			GameManager.get().getMiniMap().render();
+			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
+			view.updateMiniMapMenu();
 			view.enableHUD();
 			GameManager.get().toggleActiveView();
 			gameStarted = true;
@@ -535,17 +545,21 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	/**
 	 * Handles keyboard input.
-	 * There probably should be some way to pass this into another class
 	 */
 	private void handleInput() {
-		forceMapLimits(); //intentionally put at the start to create a nice animation
-		final int speed = 10;
-		final int pxTolerance = 20; // modifies how close to the edge the cursor has to be before the map
-		// starts moving
+		forceMapLimits(); //intentionally put at the start to create a
+						  //nice animation
+		
+		final int speed = 10; //zoom speed
+		final int pxTolerance = 20; // modifies how close to the edge the cursor
+									//has to be before the map starts moving.
+		
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
+		
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		
 		if (downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			downKeys.remove(Input.Keys.M);
@@ -556,6 +570,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// Don't process any inputs if in map view mode
 			return;
 		}
+		
+		//move the map in the chosen direction
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -575,7 +591,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			camera.zoom *= 1.05;
 		}
 
-		// Move the map dependant on the cursor position
+		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
 			// skip checking for movement
@@ -602,6 +618,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -641,20 +658,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * to ensure the camera is never well of the map (in the black).
 	 */
 	private void forceMapLimits() {
+		//length&width of the map multiplied by the number of pixels of each
+		//tile in each direction.
 		int mapWidth = GameManager.get().getWorld().getWidth()*58;
 		int mapLength = GameManager.get().getWorld().getLength()*36;
 		
+		//x axis limits
 		if(camera.position.x > mapWidth) {
 			camera.position.x = mapWidth;
 		}else if(camera.position.x < 0) {
 			camera.position.x = 0;
 		}
 		
+		//y axis limits
 		if(camera.position.y > mapLength/2) {
 			camera.position.y = mapLength/2;
 		}else if(camera.position.y < 0-mapLength/2) {
 			camera.position.y = 0-mapLength/2;
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -668,7 +690,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-
+		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
