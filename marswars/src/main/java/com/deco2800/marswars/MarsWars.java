@@ -533,7 +533,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(camera);
 		batch.dispose();
 		if(!gameStarted) {
-			GameManager.get().getMiniMap().render(view);
+			GameManager.get().getMiniMap().render();
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			view.updateMiniMapMenu();
 			view.enableHUD();

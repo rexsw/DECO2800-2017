@@ -49,8 +49,10 @@ public class MiniMap {
         return backgroundImage;
     }
     
-    
-	public void render(HUDView view) {
+    /**
+     * Takes a clear screenshot of the game screen, for use as a minimap
+     */
+	public void render() {
 		//get the current screen state from the frame buffer
 		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
