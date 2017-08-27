@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
@@ -126,17 +127,19 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setAI(4, width -4);
 		setAI(length -4, 4);
 
-		// add soldier for combat testing (belongs to player)
+		// add combat units for combat testing (belongs to player)
 		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 		playerManager.setColour("Blue");
 		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
 		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(6, 6, 0, playerManager);
-		Tank tankB = new Tank(4, 5, 0, playerManager);
+		Tank tankA = new Tank(2, 2, 0, playerManager);
+		Tank tankB = new Tank(3, 3, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
-		GameManager.get().getWorld().addEntity(tankB);		
+		GameManager.get().getWorld().addEntity(tankB);
+		Astronaut astronautA = new Astronaut(1, 1, 0, playerManager);
+		GameManager.get().getWorld().addEntity(astronautA);
 		
 		// Attackable entity (belongs to AI) Does not work. Not sure why.
 		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);

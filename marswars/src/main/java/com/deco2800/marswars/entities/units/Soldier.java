@@ -61,7 +61,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setAttackSpeed(30);
 	}
 	
-	private void attack(AttackableEntity target){
+	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
 		if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`
@@ -118,6 +118,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		sound.playSound(movementSound);
 	}
 
+	public void setCurrentAction(Optional<DecoAction> currentAction) {
+		this.currentAction = currentAction;
+	}
+	
 	@Override
 	public void onTick(int tick) {
 		if (!currentAction.isPresent()) {
