@@ -27,7 +27,7 @@ public class TechnologyManager extends Manager{
 		return techMap.get(id);
 	}
 
-	public String[] listNames(){
+	public String[] listNames() {
 		String[] names = new String[techMap.size()];
 		int i = 0;
 		for (int key : techMap.keySet()) {
@@ -35,6 +35,7 @@ public class TechnologyManager extends Manager{
 			Technology tech = techMap.get(key);
 			names[i] = tech.getName();
 		}
+		return names;
 	}
 	public Set<Technology> getActive(){ return activeTech; }
 
