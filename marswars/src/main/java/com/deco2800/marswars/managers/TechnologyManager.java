@@ -15,14 +15,14 @@ public class TechnologyManager extends Manager{
 	//private Map<Integer, Integer[], String, List<Integer>> techMap = new HashMap<Integer, Integer[], String, List<Integer>>();
 	private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
 	private Set<Technology> activeTech = new HashSet<Technology>();
-	
+
 	public TechnologyManager() {
 		techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Test Technology", new ArrayList<Technology>(),
 				"A cheap technology"));
 		techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>(),
 				"An expensive technology"));
 	}
-	
+
 	public Technology getTech(int id){
 		return techMap.get(id);
 	}
