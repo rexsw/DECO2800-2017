@@ -11,6 +11,10 @@ public class AbstractPlayerManager extends Manager implements HasTeam{
 		return colour;
 	}
 
+	public void setColour(String colour) {
+		this.colour = colour;
+	}
+	
 	@Override
 	public void setTeam(int teamId) {
 		this.teamId = teamId;

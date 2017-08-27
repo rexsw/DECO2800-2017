@@ -1,6 +1,8 @@
 package com.deco2800.marswars.entities.units;
 
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
+import com.deco2800.marswars.managers.TextureManager;
 
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
@@ -28,10 +30,4 @@ public class Tank extends Soldier {
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
-	@Override
-	public void setAllTextture() {
-		this.defaultTextureName = "tank";
-		//this.movementSound = "tankMovementSound";
-		this.selectedTextureName = "tankSelected";
-	}
 }

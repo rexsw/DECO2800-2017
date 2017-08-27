@@ -126,6 +126,8 @@ public class TextureManager extends Manager {
             String retVal = textureType+unitType;
             saveTexture(retVal,path);
             return retVal;
+        } else {
+        	return null;
         }
         
     }

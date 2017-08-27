@@ -21,11 +21,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -165,12 +160,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(aienemy2);
 
 		// add soldier for combat testing
-		Soldier soldierA = new Soldier(7, 7, 0, GameManager.get().getManager(PlayerManager.class));
-		Soldier soldierB = new Soldier(5, 5, 0, GameManager.get().getManager(PlayerManager.class));
+		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+		playerManager.setColour("Blue");
+		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(6, 6, 0, GameManager.get().getManager(PlayerManager.class));
-		Tank tankB = new Tank(4, 5, 0, GameManager.get().getManager(PlayerManager.class));
+		Tank tankA = new Tank(6, 6, 0, playerManager);
+		Tank tankB = new Tank(4, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
 		GameManager.get().getWorld().addEntity(tankB);		
 		
