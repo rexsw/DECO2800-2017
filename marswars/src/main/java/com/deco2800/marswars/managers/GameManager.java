@@ -158,8 +158,8 @@ public class GameManager implements TickableManager {
 	private void toggleMapOn() {
 		// move camera to centre and zoom out
 		cameraPos = camera.position.cpy();
-		camera.zoom = 10;
-		camera.position.set(5600, -300, 0); //TODO make this work with different map and window sizes
+		camera.zoom = Math.max(getWorld().getWidth(),getWorld().getLength())/16;
+		camera.position.set((getWorld().getWidth()*58)/2, (getWorld().getLength()*36)/10, 0); //TODO make this work with different map and window sizes
 	}
 
 	private void toggleMapOff() {

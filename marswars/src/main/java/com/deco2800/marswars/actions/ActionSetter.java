@@ -35,18 +35,14 @@ public final class ActionSetter {
                 e.deselect();
         }
         //Check entities found
-        if (!entities.isEmpty()) {
-            switch (designatedAction) {
-                case GATHER:
-                    return doGather(performer, entities.get(0));
-                default:
-                    return false;
-            }
+        switch(designatedAction) { //breaks not necessary here because of the returns.
+        	case GATHER:
+        		return entities.isEmpty()? false : doGather(performer, entities.get(0));
+        	case MOVE:
+        		return doMove(performer, x, y);
+        	default: //other actions were not implemented yet.
+        		return false;
         }
-        if (designatedAction == ActionType.MOVE) {
-            return doMove(performer, x, y);
-        }
-        return false;
     }
 
     private static boolean doGather(BaseEntity performer, BaseEntity target) {

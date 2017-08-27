@@ -258,7 +258,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 
 		});
-
+		
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", skin);
 		joinServerButton.addListener(new ChangeListener() {
@@ -338,6 +338,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
+		view.toggleHUD();
 		
 		/* Add the window to the stage */
 		//stage.addActor(window);
@@ -653,20 +654,19 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * to ensure the camera is never well of the map (in the black).
 	 */
 	private void forceMapLimits() {
-		int windowWidth = Gdx.graphics.getWidth();
-		int windowHeight = Gdx.graphics.getHeight();
-		int cameraScaleFactor = 32;
+		int mapWidth = GameManager.get().getWorld().getWidth()*58;
+		int mapLength = GameManager.get().getWorld().getLength()*36;
 		
-		if(camera.position.x - windowWidth > Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
-			camera.position.x = (float) (Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1) + windowWidth);
-		}else if(camera.position.x - windowWidth / 5 < 0) {
-			camera.position.x = windowWidth/5;
+		if(camera.position.x > mapWidth) {
+			camera.position.x = mapWidth;
+		}else if(camera.position.x < 0) {
+			camera.position.x = 0;
 		}
 		
-		if(camera.position.y > GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
-			camera.position.y = GameManager.get().getWorld().getLength() * cameraScaleFactor / 2;
-		}else if(camera.position.y + windowHeight * 4.5 < 0) {
-			camera.position.y = (float) (-windowHeight * 4.5);
+		if(camera.position.y > mapLength/2) {
+			camera.position.y = mapLength/2;
+		}else if(camera.position.y < 0-mapLength/2) {
+			camera.position.y = 0-mapLength/2;
 		}
 	}
 	
@@ -676,6 +676,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
 		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
 		pixmap.dispose();
+		view.toggleHUD();
 	}
 
 	/**
