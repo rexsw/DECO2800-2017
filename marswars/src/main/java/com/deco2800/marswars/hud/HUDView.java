@@ -182,9 +182,9 @@ public class HUDView extends ApplicationAdapter{
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
 		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
-		overheadRight.add(messageButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
-		overheadRight.add(helpButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
-		overheadRight.add(quitButton).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		overheadRight.add(messageButton).pad(BUTTONPAD);
+		overheadRight.add(helpButton).pad(BUTTONPAD);
+		overheadRight.add(quitButton).pad(BUTTONPAD);
 		
 		stage.addActor(overheadRight);
 		
@@ -389,7 +389,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setSize(50, 80);
 		HUDManip.add(dispMainMenu);
 		HUDManip.row();
-		HUDManip.add(dispActions).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispActions).pad(BUTTONPAD);
 		HUDManip.row();
 		HUDManip.add(dispTech).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
 
