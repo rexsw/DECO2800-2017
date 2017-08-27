@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class TextureManager extends Manager {
 
-    private static final java.util.logging.Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * A HashMap of all textures with string keys
