@@ -82,7 +82,7 @@ public class GatherAction implements DecoAction {
 							// if the number of harvester over the capacity, should be handle here
 							LOGGER.error("Resource has reach the maximum capacity of harvester");
 						}
-						
+
 						ticksCollect = 200;
 					}
 				} else {
@@ -127,25 +127,24 @@ public class GatherAction implements DecoAction {
 							ResourceType resourceType = resource.getType();
 							int amount = resource.getAmount();
 							switch (resourceType) {
-							case WATER:
-								resourceManager.setWater(resourceManager.getWater() + amount);
-								break;
-							case ROCK:
-								resourceManager.setRocks(resourceManager.getRocks() + amount);
-								break;
-							case CRYSTAL:
-								resourceManager.setCrystal(resourceManager.getCrystal() + amount);
-								break;
-							case BIOMASS:
-								resourceManager.setBiomass(resourceManager.getBiomass() + amount);
-								break;
-							default :
-							    break;
+								case WATER:
+									resourceManager.setWater(resourceManager.getWater() + amount);
+									break;
+								case ROCK:
+									resourceManager.setRocks(resourceManager.getRocks() + amount);
+									break;
+								case CRYSTAL:
+									resourceManager.setCrystal(resourceManager.getCrystal() + amount);
+									break;
+								case BIOMASS:
+									resourceManager.setBiomass(resourceManager.getBiomass() + amount);
+									break;
+								default :
+									break;
 							}
 						} else {// if there is nothing
 							LOGGER.error("Bring back nothing");
 						}
-						
 					}
 					return;
 				}
@@ -164,4 +163,8 @@ public class GatherAction implements DecoAction {
 	public int actionProgress() {
 		return 0;
 	}
+
+
+
+
 }

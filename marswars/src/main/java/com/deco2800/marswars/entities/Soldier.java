@@ -77,6 +77,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
+			LOGGER.info("Right click occurred outside game world.");
 			this.setTexture(defaultTextureName);
 			return;
 		}

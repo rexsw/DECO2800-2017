@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
@@ -79,6 +83,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
+	
+	private boolean gameStarted = false;
 
 	Skin skin;
 	
@@ -98,9 +104,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
+		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+		
 		/*
 		 *	Set up new stuff for this game
+		 * TODO some way to choose which map is being loaded
 		 */
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
@@ -194,6 +202,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
+		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 
 		/*
@@ -252,7 +261,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 
 		});
-
+		
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", skin);
 		joinServerButton.addListener(new ChangeListener() {
@@ -332,6 +341,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
+		view.toggleHUD();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -353,12 +363,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				originX = screenX;
-				originY = screenY;
 
-				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-				MouseHandler mouseHandler = (MouseHandler)(GameManager.get().getManager(MouseHandler.class));
-				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+				if (GameManager.get().getActiveView() == 1) {
+					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+					camera.zoom = 1;
+					GameManager.get().toggleActiveView();
+				} else {
+
+					originX = screenX;
+					originY = screenY;
+
+					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+				}
 				return true;
 			}
 
@@ -399,6 +417,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			 */
 			@Override
 			public boolean scrolled(int amount) {
+				if (GameManager.get().getActiveView() == 1) {
+					return false;
+				}
 				int cursorX = Gdx.input.getX();
 				int cursorY = Gdx.input.getY();
 				int windowWidth = Gdx.graphics.getWidth();
@@ -417,6 +438,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		GameManager.get().toggleActiveView();
 	}
 
 
@@ -426,7 +448,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void render () {
-
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			view.getActionWindow().removeActor(peonButton);
 			view.getActionWindow().removeActor(helpText);
@@ -518,8 +539,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-
+		
 		batch.dispose();
+		if(!gameStarted) {
+			renderMiniMap();
+			GameManager.get().toggleActiveView();
+			gameStarted = true;
+		}
 	}
 
 
@@ -536,6 +562,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		int cursorY = Gdx.input.getY();
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		if (downKeys.contains(Input.Keys.M)) {
+			// open or close mega map
+			downKeys.remove(Input.Keys.M);
+			LOGGER.info("pos: " + camera.position.toString());
+			GameManager.get().toggleActiveView();
+		}
+		if (GameManager.get().getActiveView() == 1) {
+			// Don't process any inputs if in map view mode
+			return;
+		}
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -621,21 +657,29 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * to ensure the camera is never well of the map (in the black).
 	 */
 	private void forceMapLimits() {
-		int windowWidth = Gdx.graphics.getWidth();
-		int windowHeight = Gdx.graphics.getHeight();
-		int cameraScaleFactor = 32;
+		int mapWidth = GameManager.get().getWorld().getWidth()*58;
+		int mapLength = GameManager.get().getWorld().getLength()*36;
 		
-		if(camera.position.x - windowWidth > Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
-			camera.position.x = (float) (Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1) + windowWidth);
-		}else if(camera.position.x - windowWidth / 5 < 0) {
-			camera.position.x = windowWidth/5;
+		if(camera.position.x > mapWidth) {
+			camera.position.x = mapWidth;
+		}else if(camera.position.x < 0) {
+			camera.position.x = 0;
 		}
 		
-		if(camera.position.y > GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
-			camera.position.y = GameManager.get().getWorld().getLength() * cameraScaleFactor / 2;
-		}else if(camera.position.y + windowHeight * 4.5 < 0) {
-			camera.position.y = (float) (-windowHeight * 4.5);
+		if(camera.position.y > mapLength/2) {
+			camera.position.y = mapLength/2;
+		}else if(camera.position.y < 0-mapLength/2) {
+			camera.position.y = 0-mapLength/2;
 		}
+	}
+	
+	private void renderMiniMap() {
+		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
+		pixmap.dispose();
+		view.toggleHUD();
 	}
 
 	/**
