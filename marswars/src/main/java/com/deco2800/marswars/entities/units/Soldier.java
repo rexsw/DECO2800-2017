@@ -19,6 +19,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -40,6 +41,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public Soldier(float posX, float posY, float posZ, Manager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
+		
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
@@ -161,8 +163,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	}
 	
 	public void setAllTextture() {
-		this.selectedTextureName = "soldierSelected";
-		this.defaultTextureName = "soldier";
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
+		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
 	}
 	

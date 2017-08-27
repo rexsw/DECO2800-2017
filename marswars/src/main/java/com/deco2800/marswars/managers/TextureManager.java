@@ -105,7 +105,7 @@ public class TextureManager extends Manager {
     /*
      *
      */
-    public void loadUnitSprite(AbstractEntity unit, String textureType){//use soldier as the base class
+    public String loadUnitSprite(AbstractEntity unit, String textureType){//use soldier as the base class
         if(textureType == null){
             textureType = "default";
         }
@@ -123,7 +123,9 @@ public class TextureManager extends Manager {
 			//try to load the texture into the textureMap
             LOGGER.info(String.format("Loading texture %s for %s from %s", 
             		textureType, unitType, path));
-            saveTexture(textureType+unitType,path);
+            String retVal = textureType+unitType;
+            saveTexture(retVal,path);
+            return retVal;
         }
         
     }
