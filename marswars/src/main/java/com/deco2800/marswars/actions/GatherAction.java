@@ -110,16 +110,7 @@ public class GatherAction implements DecoAction {
 				setupReturn();
 				break;
 			case RETURN_TO_BASE:
-				if (action.completed()) {
-					state = State.SETUP_MOVE;
-					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-					// check which type of resource and add it to the player's resource
-					if (entity instanceof Spacman) {
-						depositHarvest(resourceManager);
-											}
-					return;
-				}
-				action.doAction();
+				returnToBase();
 				break;
 		}
 	}
@@ -133,6 +124,19 @@ public class GatherAction implements DecoAction {
 	public int actionProgress() {
 		return 0;
 	}
+
+	private void returnToBase() {
+		if (action.completed()) {
+			state = State.SETUP_MOVE;
+			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+			// check which type of resource and add it to the player's resource
+			if (entity instanceof Spacman) {
+				depositHarvest(resourceManager);
+			}
+			return;
+		}
+		action.doAction();
+		}
 
 	private void setupReturn() {
 		Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
