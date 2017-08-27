@@ -54,7 +54,7 @@ public final class ActionSetter {
                 case DAMAGE:
                     return doDamage(performer, entities.get(0));
                 default:
-                    return false;
+                    break;
             }
         }
         //Check actions that don't require a target
