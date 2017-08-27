@@ -16,11 +16,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -132,19 +127,24 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setAI(1, width -1);
 		setAI(length -1, 1);
 
-		// add soldier for combat testing
-		Soldier soldierA = new Soldier(7, 7, 0);
-		Soldier soldierB = new Soldier(5, 5, 0);
-		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		// add soldier for combat testing (belongs to player)
+		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+		playerManager.setColour("Blue");
+		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
+		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(6, 6, 0);
-		Tank tankB = new Tank(4, 5, 0);
-		tankA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		tankB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		Tank tankA = new Tank(6, 6, 0, playerManager);
+		Tank tankB = new Tank(4, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
 		GameManager.get().getWorld().addEntity(tankB);		
+		
+		// Attackable entity (belongs to AI) Does not work. Not sure why.
+		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		aiManagerTest.setColour("Yellow");
+		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
+		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));
+		
 		
 		// do something important here, asynchronously to the rendering thread
 

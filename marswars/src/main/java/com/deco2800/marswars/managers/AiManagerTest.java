@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * warning spicy i hope you like meat balls 
  */
 
-public class AiManagerTest extends Manager implements TickableManager, HasTeam {
+public class AiManagerTest extends AbstractPlayerManager implements TickableManager, HasTeam {
 		private int teamid;
 		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
 		private int cooldownattack = 0;
