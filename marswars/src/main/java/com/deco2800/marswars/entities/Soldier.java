@@ -37,6 +37,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String defaultTextureName = "soldier";
 	protected String movementSound = "endturn.wav";
 
+	private String selectedTextureName = "soldierSelected";
+	private String defaultTextureName = "soldier";
+	
+
 	public Soldier(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		// Everything is just testing
@@ -115,8 +119,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public void onTick(int tick) {
 		if (!currentAction.isPresent()) {
 			// make stances here.
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
-				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY());
+			int xPosition =(int)this.getPosX();
+			int yPosition = (int) this.getPosY();
+			boolean moveAway = GameManager.get().getWorld().getEntities(xPosition, yPosition).size() > 2;
+			if (moveAway) {
+				List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				
 				BaseWorld world = GameManager.get().getWorld();
 
@@ -125,7 +132,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				 * place to move to
 				 */
 				Random r = new Random();
-				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
+				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
 
 				/* Ensure new position is on the map */
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
@@ -153,44 +160,4 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 		
 	}
-	
-
-	/**
-	 * Set the health of the entity
-	 * @param the health of the entity
-	 */
-	@Override
-	public void setHealth(int health) {
-		if (health < 0) {
-			GameManager.get().getWorld().removeEntity(this);
-			LOGGER.info("DEAD");
-		}
-		this.health  = health;
-	}
-	
-	/**
-	 * Set the maximum health of the entity
-	 * @param maxHealth the maximum health of the entity
-	 */
-	public void setMaxHealth(int maxHealth) {
-		this.maxHealth = maxHealth;
-	}
-	
-	/**
-	 * Return the maximum health of the entity
-	 * @return the maximum health of the entity
-	 */
-	public int getMaxHealth() {
-		return maxHealth;
-	}
-	
-	/**
-	 * Return the current health of the entity
-	 * @return current health
-	 */
-	@Override
-	public int getHealth() {
-		return this.health;
-	}
-	
 }
