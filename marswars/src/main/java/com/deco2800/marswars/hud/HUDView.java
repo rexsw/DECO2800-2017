@@ -621,6 +621,22 @@ public class HUDView extends ApplicationAdapter{
 		return inventory;
 	}
 
+	public void toggleHUD() {
+		if (inventoryToggle) {
+			LOGGER.debug("Enable hud");
+			inventory.setVisible(true);
+			minimap.setVisible(true);
+			resourceTable.setVisible(true);
+			inventoryToggle = false;
+		} else {
+			LOGGER.debug("Disable Hud");
+			inventory.setVisible(false);
+			minimap.setVisible(false);
+			resourceTable.setVisible(false);
+			inventoryToggle = true;
+		}
+	}
+	
     /**
      * This function is used to refit the hud when the window size changes
      * @param width the stages width
