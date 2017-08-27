@@ -755,6 +755,9 @@ public class HUDView extends ApplicationAdapter{
 		}
 	}
 	
+	/**
+	 * Disable the HUD by setting all components to invisible
+	 */
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
@@ -767,13 +770,15 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setVisible(false);
 	}
 	
+	/**
+	 * Renable the hud and display all components 
+	 */
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
 	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
-		messageWindow.setVisible(true);
 		mainMenu.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
