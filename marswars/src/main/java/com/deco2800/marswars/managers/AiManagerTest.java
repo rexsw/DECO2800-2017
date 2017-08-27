@@ -91,7 +91,7 @@ private void useSpacman(Spacman x) {
 		
 /**
  * note team methods where a wip system and have been pushed back and as such
- * are used for now		
+ * are not used for now		
  */
 @Override
 public void setTeam(int teamId) {
@@ -114,6 +114,7 @@ public boolean sameTeam(Manager otherMember) {
  * and sets it to "dead" so it won't tick anymore 
  */
 public void isKill() {
+	//in this case "dead" is an Ai with no spacman
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 		if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
 			return;
@@ -128,10 +129,16 @@ public void isKill() {
 	alive = false;
 }
 
+/**
+ * @return true iff Ai is alive else false 
+ */
 public boolean alive() {
 	return alive;
 }
 
+/**
+ * @return Resourcemanager of this Ai
+ */
 public ResourceManager getResources() {
 	return resources;
 }
