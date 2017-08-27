@@ -37,12 +37,12 @@ public class DamageAction implements DecoAction {
 
 	@Override
 	public void doAction() {
+		float distance;
 		switch (state) {
 			case MOVE_TOWARDS:
-				moveTowardsAction();
+				moveTowardsAction(distance);
 			case ATTACK:
-				attackAction();
-				break;
+				attackAction(distance);
 			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
 				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
 				state = State.MOVE_TOWARDS;
@@ -75,8 +75,7 @@ public class DamageAction implements DecoAction {
 		return 0;
 	}
 	
-	private void moveTowardsAction() {
-	    float distance;
+	private void moveTowardsAction(float distance) {
 		// When close to the enemy's attack range, attack.
 		if (action.completed()) {
 			state = State.ATTACK;
@@ -91,8 +90,7 @@ public class DamageAction implements DecoAction {
 		return;
 	}
 	
-	private void attackAction() {
-	    float distance;
+	private void attackAction(float distance) {
 		if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 			attackInterval -= attackSpeed;
 			distance = getDistanceToEnemy();
@@ -110,5 +108,6 @@ public class DamageAction implements DecoAction {
 			completed = true;
 			return;
 		}
+		break;
 	}
 }
