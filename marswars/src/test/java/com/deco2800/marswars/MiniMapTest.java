@@ -1,23 +1,19 @@
 package com.deco2800.marswars;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.graphics.Texture;
 
 
 
 import static org.junit.Assert.assertTrue;
 
 public class MiniMapTest extends BaseTest {
-
+    /*
+    Simple tests for the minimap
+     */
     private MiniMap miniMap;
 
     @Before
@@ -32,6 +28,7 @@ public class MiniMapTest extends BaseTest {
 
     @Test
     public void dimensions() {
+        // Tests that the dimensions given are the dimensions being used
         assertTrue(miniMap.getWidth() == 220);
         assertTrue(miniMap.getHeight() == 220);
     }

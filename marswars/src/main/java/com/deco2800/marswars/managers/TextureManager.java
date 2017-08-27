@@ -79,6 +79,7 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
+        this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
         //----------Unit Assets:
         //Soldier:

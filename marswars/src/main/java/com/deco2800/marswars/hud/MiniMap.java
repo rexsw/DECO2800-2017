@@ -11,11 +11,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MiniMap {
 
     private Image backgroundImage;
     private int width;
     private int height;
+    private List<Entity> entitiesOnMap;
 
     public MiniMap(String mapId, int width, int height) {
         // TODO select appropriate background image based on mapPath
@@ -24,6 +28,7 @@ public class MiniMap {
         backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
+        entitiesOnMap = new ArrayList<Entity>();
     }
     
     public void updateMap() {
@@ -43,7 +48,9 @@ public class MiniMap {
 		pixmap.dispose();
 	}
 
-    public void addFriendlyEntity() {
+    public void addFriendlyEntity(int x, int y) {
+        TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+        reg.getTexture("friendly_unit");
 
     }
 
@@ -71,23 +78,18 @@ public class MiniMap {
      * @param y 0 <= y < this.height
      */
     private void moveMap(int x, int y) {
+        // What portion of the minimap screen was clicked
         float fractionWidthClick = (float) x / width;
         float fractionHeightClick = (float) y / height;
 
-        float worldWidth = GameManager.get().getWorld().getWidth();
-        float worldLength = GameManager.get().getWorld().getLength();
-
-        float fractionWidth = worldWidth * fractionWidthClick;
-        float fractionHeight = worldLength * fractionHeightClick;
-
-        //float fractionWidth = Gdx.graphics.getWidth() * fractionWidthClick;
-        //float fractionHeight = Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() * fractionHeightClick);
-
-        Vector2 newPosition = new Vector2(fractionWidth, fractionHeight);
-        newPosition.rotate(45);
+        // Width and height of the game world
+        int mapWidth = GameManager.get().getWorld().getWidth()*58;
+        int mapLength = GameManager.get().getWorld().getLength()*36;
 
         OrthographicCamera camera = GameManager.get().getCamera();
-        camera.lookAt(newPosition.x, newPosition.y, 0);
+
+        camera.position.x = fractionWidthClick * mapWidth;
+        camera.position.y = (fractionHeightClick * mapLength) - (mapLength / 2);
     }
 
     public int getWidth() {
@@ -97,4 +99,11 @@ public class MiniMap {
     public int getHeight() {
         return height;
     }
+}
+
+class Entity {
+    public int team; // 0, player's team, 1 allied, 2 enemy
+    public int x; // x coordinate of the entity in pixels: 0 <= x < width
+    public int y; // y coordinate of the entity in pixels: window height - height <= y < window height
+
 }
