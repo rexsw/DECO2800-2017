@@ -121,31 +121,8 @@ public class GatherAction implements DecoAction {
 					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 					// check which type of resource and add it to the player's resource
 					if (entity instanceof Spacman) {
-						// check if this unit't actually has something to drop
-						if (((Spacman) entity).checkBackpack()) {
-							GatheredResource resource = ((Spacman) entity).removeGatheredResource();
-							ResourceType resourceType = resource.getType();
-							int amount = resource.getAmount();
-							switch (resourceType) {
-								case WATER:
-									resourceManager.setWater(resourceManager.getWater() + amount);
-									break;
-								case ROCK:
-									resourceManager.setRocks(resourceManager.getRocks() + amount);
-									break;
-								case CRYSTAL:
-									resourceManager.setCrystal(resourceManager.getCrystal() + amount);
-									break;
-								case BIOMASS:
-									resourceManager.setBiomass(resourceManager.getBiomass() + amount);
-									break;
-								default :
-									break;
-							}
-						} else {// if there is nothing
-							LOGGER.error("Bring back nothing");
-						}
-					}
+						depositHarvest(resourceManager);
+											}
 					return;
 				}
 
@@ -164,7 +141,33 @@ public class GatherAction implements DecoAction {
 		return 0;
 	}
 
-
+	private void depositHarvest(ResourceManager rm) {
+		// check if this unit't actually has something to drop
+		if (((Spacman) entity).checkBackpack()) {
+			ResourceManager resourceManager = rm;
+			GatheredResource resource = ((Spacman) entity).removeGatheredResource();
+			ResourceType resourceType = resource.getType();
+			int amount = resource.getAmount();
+			switch (resourceType) {
+				case WATER:
+					resourceManager.setWater(resourceManager.getWater() + amount);
+					break;
+				case ROCK:
+					resourceManager.setRocks(resourceManager.getRocks() + amount);
+					break;
+				case CRYSTAL:
+					resourceManager.setCrystal(resourceManager.getCrystal() + amount);
+					break;
+				case BIOMASS:
+					resourceManager.setBiomass(resourceManager.getBiomass() + amount);
+					break;
+				default :
+					break;
+			}
+		} else {// if there is nothing
+			LOGGER.error("Bring back nothing");
+		}
+	}
 
 
 }
