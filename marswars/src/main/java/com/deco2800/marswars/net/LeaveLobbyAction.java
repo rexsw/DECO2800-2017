@@ -1,16 +1,16 @@
 package com.deco2800.marswars.net;
 
 /**
- * Network action object for when somebody joins the lobby.
+ * Network action object for when somebody leaves the lobby.
  */
-public class JoinLobbyAction implements Action {
+public class LeaveLobbyAction implements Action {
     private String username;
 
-    public JoinLobbyAction() {
+    public LeaveLobbyAction() {
         // Blank constructor needed due to Kryonet
     }
 
-    public JoinLobbyAction(String username) {
+    public LeaveLobbyAction(String username) {
         this.username = username;
     }
 
@@ -20,6 +20,6 @@ public class JoinLobbyAction implements Action {
 
     @Override
     public String toString() {
-        return "*" + this.username + "* joined the lobby.";
+        return "*" + this.username + "* left the lobby.";
     }
 }

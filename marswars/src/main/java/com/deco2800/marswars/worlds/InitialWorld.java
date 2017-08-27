@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -13,6 +12,7 @@ public class InitialWorld extends BaseWorld {
 
 	/**
 	 * Constructor for InitialWorld
+	 * @param worldFileName File name of the world to be loaded
 	 */
 	public InitialWorld() {
 		super("resources/placeholderassets/placeholder200.tmx");

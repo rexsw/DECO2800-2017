@@ -79,7 +79,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			this.setTexture(defaultTextureName);
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 			// we cant assign different owner yet
 			AttackableEntity target = (AttackableEntity) entities.get(0);
 			if (	//!this.sameOwner(target)&&//(belongs to another player, currently always true)`

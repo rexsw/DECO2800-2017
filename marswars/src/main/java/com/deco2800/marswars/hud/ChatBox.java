@@ -38,8 +38,8 @@ import com.deco2800.marswars.managers.TextureManager;
 public class ChatBox extends Table {
     
     // Size variables for the chat Pane to keep it at a fixed size
-    private final static float CHAT_WIDTH = 300;
-    private final static float CHAT_HEIGHT = 150;
+    private static final float CHAT_WIDTH = 300;
+    private static final float CHAT_HEIGHT = 150;
     
     // This is the text input field for entering messages
     private TextField messageTextField;
@@ -128,7 +128,7 @@ public class ChatBox extends Table {
      */
     private void sendMessage() {
         String message = messageTextField.getText();
-        if (!message.equals("")) {
+        if (!"".equals(message)) {
             // Currently not implemented correctly, adds to chat box instead of sending to server.
             addNewMessage(message);
         }
