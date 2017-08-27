@@ -47,64 +47,13 @@ public class GatherAction implements DecoAction {
 	public void doAction() {
 		switch(state) {
 			case SETUP_MOVE:
-				// Always move back to the goal entity position
-				action = new MoveAction(goal.getPosX(), goal.getPosY(), entity);
-
-				state = State.MOVE_TOWARDS;
+				setupMove();
 				break;
 			case MOVE_TOWARDS:
-				if (action.completed()) {
-					state = State.COLLECT;
-					return;
-				}
-				// Do the move action
-				action.doAction();
+				moveTowards();
 				break;
 			case COLLECT:
-				if (GameManager.get().getWorld().getEntities().contains(goal)) {
-					if (ticksCollect == 200) {
-						((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() + 1);
-					}
-					// Our goal object still exists, mine it
-					ticksCollect--;
-					if (ticksCollect == 0) {
-						state = SETUP_RETURN;
-						if (((Resource) goal).getHarvesterNumber() < ((Resource) goal).getHarvesterCapacity()) {
-							ResourceType resourceType = ((Resource) goal).getType();
-							if (goal instanceof HasHealth) {
-								((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
-								if (entity instanceof Spacman) {
-									((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
-								}
-								((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() - 1);
-							}
-						} else {
-							// if the number of harvester over the capacity, should be handle here
-							LOGGER.error("Resource has reach the maximum capacity of harvester");
-						}
-
-						ticksCollect = 200;
-					}
-				} else {
-					// Find a new closest entity
-					BaseWorld world = GameManager.get().getWorld();
-
-					Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
-					if (surround.isPresent()) {
-						Point p = new Point(surround.get().getPosX(), surround.get().getPosY());
-						Point o = new Point(entity.getPosX(), entity.getPosY());
-
-						if (p.distanceTo(o) < 2f) {
-							this.goal = surround.get();
-							this.state = SETUP_MOVE;
-							return;
-						} else {
-							this.completed = true;
-							return;
-						}
-					}
-				}
-
+				collect();
 				break;
 			case SETUP_RETURN:
 				setupReturn();
@@ -125,6 +74,67 @@ public class GatherAction implements DecoAction {
 		return 0;
 	}
 
+
+	private void setupMove() {
+		// Always move back to the goal entity position
+		action = new MoveAction(goal.getPosX(), goal.getPosY(), entity);
+		state = State.MOVE_TOWARDS;
+	}
+
+	private void moveTowards() {
+		if (action.completed()) {
+			state = State.COLLECT;
+			return;
+		}
+		// Do the move action
+		action.doAction();
+	}
+
+	private void collect() {
+		if (GameManager.get().getWorld().getEntities().contains(goal)) {
+			if (ticksCollect == 200) {
+				((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() + 1);
+			}
+			// Our goal object still exists, mine it
+			ticksCollect--;
+			if (ticksCollect == 0) {
+				state = SETUP_RETURN;
+				if (((Resource) goal).getHarvesterNumber() < ((Resource) goal).getHarvesterCapacity()) {
+					ResourceType resourceType = ((Resource) goal).getType();
+					if (goal instanceof HasHealth) {
+						((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
+						if (entity instanceof Spacman) {
+							((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
+						}
+						((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() - 1);
+					}
+				} else {
+					// if the number of harvester over the capacity, should be handle here
+					LOGGER.error("Resource has reach the maximum capacity of harvester");
+				}
+
+				ticksCollect = 200;
+			}
+		} else {
+			// Find a new closest entity
+			BaseWorld world = GameManager.get().getWorld();
+
+			Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
+			if (surround.isPresent()) {
+				Point p = new Point(surround.get().getPosX(), surround.get().getPosY());
+				Point o = new Point(entity.getPosX(), entity.getPosY());
+
+				if (p.distanceTo(o) < 2f) {
+					this.goal = surround.get();
+					this.state = SETUP_MOVE;
+					return;
+				} else {
+					this.completed = true;
+					return;
+				}
+			}
+		}
+	}
 	private void returnToBase() {
 		if (action.completed()) {
 			state = State.SETUP_MOVE;

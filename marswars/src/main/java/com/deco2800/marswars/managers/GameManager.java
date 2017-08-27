@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class GameManager implements TickableManager {
 	private Vector3 cameraPos;
 
 	private int activeView = 0; // 0 is gameWorld, 1 is mapWorld
+
+	private MiniMap miniMap;
 
 	/**
 	 * Returns an instance of the GM
@@ -122,6 +125,22 @@ public class GameManager implements TickableManager {
 
 	public FogWorld getFogWorld() {
 		return fogWorld;
+	}
+
+	/**
+	 * Gets the minimap
+	 * @return The minimap
+	 */
+	public MiniMap getMiniMap() {
+		return miniMap;
+	}
+
+	/**
+	 * Sets the minimap to be displayed
+	 * @param map
+	 */
+	public void setMiniMap(MiniMap map) {
+		miniMap = map;
 	}
 	
 

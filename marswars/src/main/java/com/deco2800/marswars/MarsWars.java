@@ -1,12 +1,9 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -14,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
@@ -30,7 +25,6 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
-import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
@@ -105,6 +99,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+		// TODO get rid of this once the minimap loads based on the randomly loaded map
 		
 		/*
 		 *	Set up new stuff for this game
@@ -114,6 +109,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		GameManager.get().setMiniMap(new MiniMap(map.getMap(), 220, 220));
 
 
 		/*
@@ -341,6 +337,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
+		view.disableHUD();
 		
 		/* Add the window to the stage */
 		stage.addActor(window);
@@ -371,6 +368,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 					originX = screenX;
 					originY = screenY;
+					// if the click is on the minimap
+					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+						return true;
+					}
 
 					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
 					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
@@ -541,7 +542,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		batch.dispose();
 		if(!gameStarted) {
-			renderMiniMap();
+			GameManager.get().getMiniMap().render(view);
+			GameManager.get().getMiniMap().updateMap();
+			view.enableHUD();
 			GameManager.get().toggleActiveView();
 			gameStarted = true;
 		}
@@ -670,14 +673,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y < 0-mapLength/2) {
 			camera.position.y = 0-mapLength/2;
 		}
-	}
-	
-	private void renderMiniMap() {
-		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
-		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
-		pixmap.dispose();
 	}
 
 	/**
