@@ -239,7 +239,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
 
-					System.out.println(ip);
+					LOGGER.info(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
 					LOGGER.error("Unknown Host", ex);
