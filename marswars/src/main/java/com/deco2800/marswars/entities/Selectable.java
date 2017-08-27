@@ -45,6 +45,7 @@ public interface Selectable {
 	 * TODO again this should probably be refactored slightly
 	 * @return
 	 */
+
 	Label getHelpText();
 
 	/**
