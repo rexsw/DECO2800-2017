@@ -26,6 +26,12 @@ public class TechTreeView extends Dialog{
 		}
 	}
 
+	/**
+	 * Checks the result of the Dialogue box and then if a Upgrade was selected
+	 * executes code to the requirements of the specified Technology and then activates it if it can be done, otherwise
+	 * displays a message indicating why not
+	 * @param object
+	 */
 	@Override
 	protected void result(final Object object){
 		int techID = (int) object;

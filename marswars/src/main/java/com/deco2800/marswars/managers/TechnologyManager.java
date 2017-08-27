@@ -79,6 +79,7 @@ public class TechnologyManager extends Manager{
         resourceManager.setCrystal(resourceManager.getCrystal() - tech.getCost()[1]);
         resourceManager.setWater(resourceManager.getWater() - tech.getCost()[2]);
         resourceManager.setBiomass(resourceManager.getBiomass() - tech.getCost()[3]);
+        techMan.addActiveTech(tech);
         return "Technology successfully researched";
     }
 
