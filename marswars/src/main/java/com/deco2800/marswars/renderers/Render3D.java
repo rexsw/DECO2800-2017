@@ -8,10 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.FogOfWarLayer;
-import com.deco2800.marswars.entities.LineOfSight;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -80,12 +78,14 @@ public class Render3D implements Renderer {
     }
 
     /**
-     * Renders entities given by entities onto the batch and camera
+     * It looks similiar to renderEntities but it will be modified later to fulfill the fog's functionality
+     * Renders fog-of-war tiles onto the batch and camera
      * @param entities list of entities to be rendered.
      * @param batch the batch that is going to contain all the sprites
      * @param camera the camera being use to display the game.
 
      */
+
 
     public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera){
         Collections.sort(entities);
@@ -130,6 +130,16 @@ public class Render3D implements Renderer {
             }
         }
     }
+
+
+    /**
+     * Renders entities given by entities onto the batch and camera
+     * @param entities list of entities to be rendered.
+     * @param batch the batch that is going to contain all the sprites
+     * @param camera the camera being use to display the game.
+
+     */
+
     private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
         Collections.sort(entities);
         if (font == null) {

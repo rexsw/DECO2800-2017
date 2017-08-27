@@ -124,7 +124,93 @@ public class ChatTest {
 		assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
-	// TODO: Test JoinLobbyAction sent twice
-	// TODO: Test JoinLobbyAction with same name
-	// TODO: Test MessageAction sent before JoinLobbyAction
+
+	@Test
+	public void ClientLeaveTest() {
+		Connection alice = createConnection(aliceManager);
+		Connection bob = createConnection(bobManager);
+
+		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
+		JoinLobbyAction bobJoin = new JoinLobbyAction("Bob");
+
+		servManager.received(alice, aliceJoin);
+		servManager.received(bob, bobJoin);
+		servManager.disconnected(alice);
+
+		assertEquals(
+				servManager.getLog(),
+				"*Alice* joined the lobby.\n" +
+						"*Bob* joined the lobby.\n" +
+						"*Alice* left the lobby."
+				);
+
+		assertEquals(
+				aliceManager.getLog(),
+				"*Alice* joined the lobby.\n" +
+						"*Bob* joined the lobby."
+		);
+
+		assertEquals(
+				bobManager.getLog(),
+						"*Bob* joined the lobby.\n" +
+						"*Alice* left the lobby."
+		);
+	}
+
+	@Test
+	public void ServerShutdownTest() {
+		Connection alice = createConnection(aliceManager);
+
+		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
+
+		servManager.received(alice, aliceJoin);
+		aliceManager.disconnected(null);
+
+		assertEquals(
+				servManager.getLog(),
+				"*Alice* joined the lobby."
+		);
+
+		assertEquals(
+				aliceManager.getLog(),
+				"*Alice* joined the lobby.\n" +
+						"Server shutdown"
+		);
+	}
+
+	@Test
+	public void JoinLobbyTwiceTest() {
+		Connection alice = createConnection(aliceManager);
+
+		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
+
+		servManager.received(alice, aliceJoin);
+		servManager.received(alice, aliceJoin);
+
+		assertEquals(
+				servManager.getLog(),
+				"*Alice* joined the lobby."
+		);
+
+		assertEquals(
+				aliceManager.getLog(),
+				"*Alice* joined the lobby."
+		);
+	}
+
+	@Test
+	public void MessageBeforeJoinTest() {
+		Connection alice = createConnection(aliceManager);
+
+		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
+		MessageAction aliceMessage = new MessageAction("new phone who dis");
+
+		servManager.received(alice, aliceMessage);
+		servManager.received(alice, aliceJoin);
+
+		String log = "*Alice* joined the lobby.";
+
+		assertEquals(servManager.getLog(), log);
+		assertEquals(aliceManager.getLog(), log);
+	}
 }
