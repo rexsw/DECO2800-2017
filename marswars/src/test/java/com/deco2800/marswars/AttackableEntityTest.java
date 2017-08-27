@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.AttackableEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
@@ -15,7 +15,7 @@ import java.util.List;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.entities.MissileEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -57,7 +57,6 @@ public class AttackableEntityTest {
 		assertEquals(test.getCurrentAction(), Optional.empty());
 		assertEquals(test.isWorking(), false);
 		assertEquals(test.getArmorDamage(), 0);
-		assertEquals(test.getMissile(), null);
 		
 		assertEquals(constructor2Test.getPosX(), 5, 0.1);
 		assertEquals(constructor2Test.getPosY(), 5, 0.1);
@@ -77,7 +76,6 @@ public class AttackableEntityTest {
 		assertEquals(constructor2Test.getCurrentAction(), Optional.empty());
 		assertEquals(constructor2Test.isWorking(), false);
 		assertEquals(constructor2Test.getArmorDamage(), 0);
-		assertEquals(constructor2Test.getMissile(), null);
 		
 		assertEquals(constructor3Test.getPosX(), 15, 0.1);
 		assertEquals(constructor3Test.getPosY(), 15.5, 0.1);
@@ -97,7 +95,6 @@ public class AttackableEntityTest {
 		assertEquals(constructor3Test.getCurrentAction(), Optional.empty());
 		assertEquals(constructor3Test.isWorking(), false);
 		assertEquals(constructor3Test.getArmorDamage(), 0);
-		assertEquals(constructor3Test.getMissile(), null);
 	}
 
 
@@ -186,13 +183,6 @@ public class AttackableEntityTest {
 	public void testSetAttackSpeed() {
 		test.setAttackSpeed(20);
 		assertEquals(test.getAttackSpeed(), 20);
-	}
-
-	@Test
-	public void testSetMissile() {
-		MissileEntity miss = new MissileEntity(1, 1, 1, 1, 1, 1, enemy, 1, 1);
-		test.setMissile(miss);
-		assertEquals(test.getMissile(), miss);
 	}
 
 }
