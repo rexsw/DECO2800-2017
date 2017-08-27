@@ -11,23 +11,77 @@ import java.util.Map;
 import com.deco2800.marswars.technology.*;
 
 public class TechnologyManager extends Manager{
-	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list)
-	//private Map<Integer, Integer[], String, List<Integer>> techMap = new HashMap<Integer, Integer[], String, List<Integer>>();
-	private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
-	private Set<Technology> activeTech = new HashSet<Technology>();
-	
-	public TechnologyManager() {
-		techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Test Technology", new ArrayList<Technology>(),
-				"A cheap technology"));
-		techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>(),
-				"An expensive technology"));
-	}
-	
-	public Technology getTech(int id){
-		return techMap.get(id);
-	}
-	
-	public Set<Technology> getActive(){ return activeTech; }
+    //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
+    //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
+    // .. new HashMap<Integer, Integer[], String, List<Integer>>();
+    public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
+    private Set<Technology> activeTech = new HashSet<Technology>();
 
-	public void addActiveTech(Technology tech) {activeTech.add(tech); }
+    public TechnologyManager() {
+        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Test Technology", new ArrayList<Technology>(),
+                "A cheap technology"));
+        techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>(),
+                "An expensive technology"));
+    }
+
+    public Technology getTech(int id){
+        return techMap.get(id);
+    }
+    /**
+     provides a function to generate a List<String> representation of all the available technologies
+     */
+
+    public ArrayList<Technology> listForm() {
+        ArrayList<Technology> techList = new ArrayList<>();
+        for (int j = 0; j < techMap.size(); j++) {
+            techList.add(getTech(j));
+        }
+        return techList;
+    }
+
+    public Set<Technology> getActive(){ return activeTech; }
+
+    public void addActiveTech(Technology tech) {activeTech.add(tech); }
+
+
+    /**
+     * Provides a method to check that the requirements for researching a Technology exists, if they are
+     * all satisfied then this function will adjust your resources to reflect the research costs
+     * and return a message.
+     * @param techMan
+     * @param tech
+     * @return String with message about whether or not the research was okay and why
+     */
+    public String checkPrereqs(TechnologyManager techMan, Technology tech){
+        ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+
+        if(!(getActive().contains(tech.getParents()))){
+            return "You have not researched the required Technology for this upgrade";
+        }
+        if(!techMan.getActive().contains(tech)) {
+            return "You have already researched this upgrade";
+        }
+        if (!(resourceManager.getRocks() > tech.getCost()[0])) {
+            return "Insufficient Rocks";
+        }
+        if (!(resourceManager.getCrystal() > tech.getCost()[1])) {
+            return "Insufficient Crystals";
+        }
+        if (!(resourceManager.getWater() > tech.getCost()[1])) {
+            return "Insufficient Water levels";
+        }
+        if (!(resourceManager.getBiomass() > tech.getCost()[1])) {
+            return "Insufficient Biomass";
+        }
+        return activateTech(techMan, tech, resourceManager);
+    }
+
+    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager){
+        resourceManager.setRocks(resourceManager.getRocks() - tech.getCost()[0]);
+        resourceManager.setCrystal(resourceManager.getCrystal() - tech.getCost()[1]);
+        resourceManager.setWater(resourceManager.getWater() - tech.getCost()[2]);
+        resourceManager.setBiomass(resourceManager.getBiomass() - tech.getCost()[3]);
+        techMan.addActiveTech(tech);
+        return "Technology successfully researched";
+    }
 }
