@@ -30,16 +30,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
-	private int maxHealth; // maximum health of the entity
-	private int health; // current health of the entity
-	private MissileEntity missile;
 	protected String selectedTextureName = "soldierSelected";
 	protected String defaultTextureName = "soldier";
 	protected String movementSound = "endturn.wav";
-
-	private String selectedTextureName = "soldierSelected";
-	private String defaultTextureName = "soldier";
-	
 
 	public Soldier(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);

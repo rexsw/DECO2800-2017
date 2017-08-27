@@ -86,15 +86,14 @@ public class TextureManager extends Manager {
         
         //----------Unit Assets:
         //Soldier:
-        this.saveTexture("bullet", "resources/UnitAssets/bullet_1.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Soldier_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Soldier_2.png");
+        this.saveTexture("bullet", "resources/UnitAssets/Neutral/Bullet_1.png");
+        this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
+        this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
         //Tank:
         
-        this.saveTexture("missile", "resources/UnitAssets/Missile_3.png");
-        this.saveTexture("tank", "resources/UnitAssets/Tank_1.png");
-        this.saveTexture("tankSelected", "resources/UnitAssets/Tank_2.png");
-        
+        this.saveTexture("missile", "resources/UnitAssets/Neutral/Missile_1.png");
+        this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
+        this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
