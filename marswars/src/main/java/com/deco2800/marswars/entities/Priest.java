@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -9,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
@@ -71,7 +68,7 @@ public class Priest extends AttackableEntity implements Clickable, Tickable {
 			this.setTexture("spatman_yellow");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof AttackableEntity && leftClick == true) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity && leftClick) {
 			// we cant assign different owner yet
 			if (!this.sameOwner(entities.get(0))) {
 				AttackableEntity target = (AttackableEntity) entities.get(0);
@@ -134,7 +131,7 @@ public class Priest extends AttackableEntity implements Clickable, Tickable {
 	
 	/**
 	 * Set the health of the entity
-	 * @param the health of the entity
+	 * @param health the health of the entity
 	 */
 	@Override
 	public void setHealth(int health) {

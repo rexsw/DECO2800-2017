@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.GatherAction.State;
 import com.deco2800.marswars.entities.AttackableEntity;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 
