@@ -1,6 +1,6 @@
 package com.deco2800.marswars.managers;
 
-public class PlayerManager extends Manager implements HasTeam {
+public class PlayerManager extends AbstractPlayerManager {
 	/*
 	 * currently mostly just to hold to the players entities
 	 */
@@ -8,10 +8,6 @@ public class PlayerManager extends Manager implements HasTeam {
 	//the colour of the sprites associated with the team, used by 
 	//TextureManager to load the correct sprite
 	
-	
-	public String getColour(){
-		return colour;
-	}
 	@Override
 	public void setTeam(int teamid) {
 		this.teamid = teamid;

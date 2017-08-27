@@ -85,14 +85,14 @@ public class TextureManager extends Manager {
         
         //----------Unit Assets:
         //Soldier:
-        this.saveTexture("bullet", "resources/UnitAssets/bullet_1.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Soldier_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Soldier_2.png");
+        this.saveTexture("bullet", "resources/UnitAssets/Neutral/bullet_1.png");
+        this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
+        this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
         //Tank:
         
-        this.saveTexture("missile", "resources/UnitAssets/Missile_3.png");
-        this.saveTexture("tank", "resources/UnitAssets/Tank_1.png");
-        this.saveTexture("tankSelected", "resources/UnitAssets/Tank_2.png");
+        this.saveTexture("missile", "resources/UnitAssets/Neutral//Missile_3.png");
+        this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
+        this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
         
         
         //Backgrounds:
@@ -117,7 +117,7 @@ public class TextureManager extends Manager {
             //Determine the unit type
             String unitType = unit.getClass().toString();
             //find the team colour of the owner:
-            String teamColour = soldier.getOwner().getColour();
+            String teamColour = ((PlayerManager) soldier.getOwner()).getColour();
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap

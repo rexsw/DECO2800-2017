@@ -165,16 +165,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(aienemy2);
 
 		// add soldier for combat testing
-		Soldier soldierA = new Soldier(7, 7, 0);
-		Soldier soldierB = new Soldier(5, 5, 0);
-		soldierA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		soldierB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		Soldier soldierA = new Soldier(7, 7, 0, GameManager.get().getManager(PlayerManager.class));
+		Soldier soldierB = new Soldier(5, 5, 0, GameManager.get().getManager(PlayerManager.class));
 		GameManager.get().getWorld().addEntity(soldierA);
 		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(6, 6, 0);
-		Tank tankB = new Tank(4, 5, 0);
-		tankA.setOwner(GameManager.get().getManager(PlayerManager.class));
-		tankB.setOwner(GameManager.get().getManager(PlayerManager.class));
+		Tank tankA = new Tank(6, 6, 0, GameManager.get().getManager(PlayerManager.class));
+		Tank tankB = new Tank(4, 5, 0, GameManager.get().getManager(PlayerManager.class));
 		GameManager.get().getWorld().addEntity(tankA);
 		GameManager.get().getWorld().addEntity(tankB);		
 		
