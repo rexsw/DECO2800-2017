@@ -21,7 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-
+/**
+ * 
+ * @author Toby
+ *
+ */
 public class MainMenu {
 	
 	private Stage stage;
