@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -11,11 +12,9 @@ import com.deco2800.marswars.managers.TextureManager;
  */
 public class Tank extends Soldier {
 	
-	public Tank(float posX, float posY, float posZ, Manager owner) {
+	public Tank(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, owner);
-		this.defaultTextureName = "tank";
 		//this.movementSound = "tankMovementSound";
-		this.selectedTextureName = "tankSelected";
 		
 		// set all the attack attributes
 		this.setMaxHealth(1000);

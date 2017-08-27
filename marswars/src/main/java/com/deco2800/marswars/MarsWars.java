@@ -159,7 +159,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		aienemy2.setOwner(aim2);
 		GameManager.get().getWorld().addEntity(aienemy2);
 
-		// add soldier for combat testing
+		// add soldier for combat testing (belongs to player)
 		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 		playerManager.setColour("Blue");
 		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
@@ -170,6 +170,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Tank tankB = new Tank(4, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
 		GameManager.get().getWorld().addEntity(tankB);		
+		
+		// Attackable entity (belongs to AI) Does not work. Not sure why.
+/*		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		aiManagerTest.setColour("Yellow");
+		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
+		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));*/
+		
 		
 		// do something important here, asynchronously to the rendering thread
 

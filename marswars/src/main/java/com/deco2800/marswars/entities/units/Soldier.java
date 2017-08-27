@@ -15,6 +15,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -35,11 +36,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
-	protected String selectedTextureName;// = "soldierSelected";
-	protected String defaultTextureName;// = "soldier";
-	protected String movementSound;// = "endturn.wav";
+	protected String selectedTextureName;
+	protected String defaultTextureName;
+	protected String movementSound;
 
-	public Soldier(float posX, float posY, float posZ, Manager owner) {
+	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
 		

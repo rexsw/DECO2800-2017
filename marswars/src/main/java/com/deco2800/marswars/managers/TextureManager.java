@@ -120,11 +120,11 @@ public class TextureManager extends Manager {
             //filter out class name qualifier, this may be changed later to extend it 
             // to other entity types
             Scanner sc = new Scanner (unitType);
-            sc.useDelimiter("units.");
+            sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
             //find the team colour of the owner:
-            String teamColour = ((PlayerManager) soldier.getOwner()).getColour();
+            String teamColour = ((AbstractPlayerManager) soldier.getOwner()).getColour();
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap
