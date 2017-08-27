@@ -49,12 +49,6 @@ public class TextureManager extends Manager {
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
-
-        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
-        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
-        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
@@ -85,11 +79,25 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
+        this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
-        //Unit Assets:
-        this.saveTexture("bullet", "resources/UnitAssets/bullet.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Astronaut_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Astronaut_2.png");
+        //----------Unit Assets:
+        //Soldier:
+        this.saveTexture("bullet", "resources/UnitAssets/Neutral/Bullet_1.png");
+        this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
+        this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
+        //Tank:
+        
+        this.saveTexture("missile", "resources/UnitAssets/Neutral/Missile_1.png");
+        this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
+        this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
+        
+        //Backgrounds:
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
+        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
+
     }
 
     /**
