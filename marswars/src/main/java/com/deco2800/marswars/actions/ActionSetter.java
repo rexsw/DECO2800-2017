@@ -2,6 +2,7 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.BuildingType;
 import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -65,6 +66,20 @@ public final class ActionSetter {
                 return false;
         }
     }
+    
+    /**
+     * This method is used to initialise build action
+     * @param performer The entity that will have the action assigned to them to perform
+     * @param building The building type to be made
+     * @return The function will return if it could not give the performer the action, and true otherwise
+     */
+    public static BuildAction setAction(BaseEntity performer, BuildingType building) {
+        //Check that this is a valid action for the performer
+        if (!performer.getValidActions().contains(ActionType.BUILD)) {
+            return null;
+        }
+        return doBuild(performer, building);
+    }
 
     /**
      *Assigns the performer to attempt to attack the target
@@ -104,8 +119,20 @@ public final class ActionSetter {
      * @return true
      */
     private static boolean doMove(BaseEntity performer, float x, float y) {
-        performer.setAction(new MoveAction(x, y, performer));
+        performer.setAction(new MoveAction((int)x, (int)y, performer));
         return true;
+    }
+    
+    /**
+     * Assigns the build action to the entity
+     * @param performer the entity to be assigned the action
+     * @param building The building type to be made
+     * @return true
+     */
+    private static BuildAction doBuild(BaseEntity performer, BuildingType building) {
+        BuildAction processBuild = new BuildAction(performer, building);
+        performer.setAction(processBuild);
+        return processBuild;
     }
 
     /**
@@ -123,6 +150,8 @@ public final class ActionSetter {
                 return "Attack";
             case GENERATE:
                 return "Create";
+            case BUILD:
+                return "Construct";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }

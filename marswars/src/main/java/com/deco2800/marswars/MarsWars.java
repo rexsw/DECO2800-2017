@@ -137,7 +137,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Tank tankA = new Tank(6, 6, 0, playerManager);
 		Tank tankB = new Tank(4, 5, 0, playerManager);
 		GameManager.get().getWorld().addEntity(tankA);
-		GameManager.get().getWorld().addEntity(tankB);		
+		GameManager.get().getWorld().addEntity(tankB);	
+		Spacman spac = new Spacman(9, 9, 0);
+		spac.setOwner(playerManager);
+		GameManager.get().getWorld().addEntity(spac);
 		
 		// Attackable entity (belongs to AI) Does not work. Not sure why.
 		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
