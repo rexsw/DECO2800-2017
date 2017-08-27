@@ -6,6 +6,7 @@ public class MiniMapEntity {
     private int team; // 0, player's team, 1 allied, 2 enemy
     public float x; // x coordinate of the entity in pixels: 0 <= x < width
     public float y; // y coordinate of the entity in pixels: window height - height <= y < window height
+    public int rendered = 0; // set to 1 once it has been rendered
 
     /**
      * Constructor for MiniMapEntity

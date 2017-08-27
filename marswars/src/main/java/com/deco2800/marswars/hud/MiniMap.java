@@ -18,6 +18,7 @@ public class MiniMap {
     private int width;
     private int height;
     private List<MiniMapEntity> entitiesOnMap;
+    private List<Image> actorsOnMap;
 
     public MiniMap(String mapId, int width, int height) {
         // TODO select appropriate background image based on mapPath
@@ -27,6 +28,7 @@ public class MiniMap {
         this.width = width;
         this.height = height;
         entitiesOnMap = new ArrayList<MiniMapEntity>();
+        actorsOnMap = new ArrayList<Image>();
     }
     
     public void updateMap() {
@@ -36,6 +38,31 @@ public class MiniMap {
 
     public Image getBackground() {
         return backgroundImage;
+    }
+
+    /**
+     * Tells the map there is an actor
+     * @param img
+     */
+    public void addActor(Image img) {
+        actorsOnMap.add(img);
+    }
+
+    /**
+     * removes the actor from both the MiniMap's knowledge and from the stage
+     * @param img
+     */
+    public void removeActor(Image img) {
+        img.remove();
+        actorsOnMap.remove(img);
+    }
+
+    /**
+     * gets the list of actors on the minimap
+     * @return List of Images
+     */
+    public List<Image> getActors() {
+        return actorsOnMap;
     }
     
 	public void render(HUDView view) {

@@ -600,7 +600,6 @@ public class HUDView extends ApplicationAdapter{
 			Image unit = new Image(textureManager.getTexture(entities.get(i).getTexture()));
 			unit.setPosition(entities.get(i).x, entities.get(i).y);
 			stage.addActor(unit);
-			entities.remove(entities.get(i));
 		}
 	}
 	
