@@ -107,26 +107,10 @@ public class GatherAction implements DecoAction {
 
 				break;
 			case SETUP_RETURN:
-				Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
-
-				if (base.isPresent()) {
-					action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
-				}
-
-				state = State.RETURN_TO_BASE;
+				setupReturn();
 				break;
 			case RETURN_TO_BASE:
-				if (action.completed()) {
-					state = State.SETUP_MOVE;
-					ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-					// check which type of resource and add it to the player's resource
-					if (entity instanceof Spacman) {
-						depositHarvest(resourceManager);
-											}
-					return;
-				}
-
-				action.doAction();
+				returnToBase();
 				break;
 		}
 	}
@@ -139,6 +123,29 @@ public class GatherAction implements DecoAction {
 	@Override
 	public int actionProgress() {
 		return 0;
+	}
+
+	private void returnToBase() {
+		if (action.completed()) {
+			state = State.SETUP_MOVE;
+			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+			// check which type of resource and add it to the player's resource
+			if (entity instanceof Spacman) {
+				depositHarvest(resourceManager);
+			}
+			return;
+		}
+		action.doAction();
+		}
+
+	private void setupReturn() {
+		Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
+
+		if (base.isPresent()) {
+			action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
+		}
+
+		state = State.RETURN_TO_BASE;
 	}
 
 	private void depositHarvest(ResourceManager rm) {
