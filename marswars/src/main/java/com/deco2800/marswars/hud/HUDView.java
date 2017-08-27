@@ -752,6 +752,30 @@ public class HUDView extends ApplicationAdapter{
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
 		}
 	}
+	
+	public void disableHUD() {
+		overheadRight.setVisible(false);
+		resourceTable.setVisible(false);
+	    playerdetails.setVisible(false);
+	    HUDManip.setVisible(false);
+		chatbox.setVisible(false);
+		messageWindow.setVisible(false);
+		mainMenu.setVisible(false);
+		minimap.setVisible(false);
+		actionsWindow.setVisible(false);
+	}
+	
+	public void enableHUD() {
+		overheadRight.setVisible(true);
+		resourceTable.setVisible(true);
+	    playerdetails.setVisible(true);
+	    HUDManip.setVisible(true);
+		chatbox.setVisible(true);
+		messageWindow.setVisible(true);
+		mainMenu.setVisible(true);
+		minimap.setVisible(true);
+		actionsWindow.setVisible(true);
+	}
 
 	/**
      * This function is used to refit the hud when the window size changes
