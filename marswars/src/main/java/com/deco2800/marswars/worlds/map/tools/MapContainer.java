@@ -5,8 +5,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.buildings.Building;
-import com.deco2800.marswars.entities.buildings.BuildingTypes;
+import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -90,10 +89,10 @@ public class MapContainer {
     public void generateEntities(boolean random){
         if(random) {
             this.generateResourcePattern();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 this.getRandomBuilding();
-                this.getRandomEntity();
-                this.getRandomResource();
+               // this.getRandomEntity();
+               // this.getRandomResource();
             }
         }
     }
@@ -140,7 +139,7 @@ public class MapContainer {
      *
      * @param building the building to be placed.
      */
-    public void setStructure(Building building){
+    public void setStructure(BuildingEntity building){
         //Waiting on building (Not yet implemented)
     }
 
@@ -149,7 +148,7 @@ public class MapContainer {
      *
      * @param buildings the buildings to be placed.
      */
-    public void setStructure(Building[][] buildings){
+    public void setStructure(BuildingEntity[][] buildings){
         //Waiting on building (Not yet implemented)
     }
 
@@ -159,7 +158,7 @@ public class MapContainer {
      * @param building the building to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building building, boolean random){
+    public void setStructure(BuildingEntity building, boolean random){
         //Waiting on building (Not yet implemented)
     }
 
@@ -169,7 +168,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building[][] buildings, boolean random){
+    public void setStructure(BuildingEntity[][] buildings, boolean random){
         //Waiting on building (Not yet implemented)
     }
 
@@ -260,16 +259,22 @@ public class MapContainer {
      *
      */
     protected void getRandomBuilding(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
-        BaseEntity newBuilding;
-        int x = r.nextInt(width-1);
-        int y = r.nextInt(length-1);
+        BuildingEntity newBuilding;
+        int x = r.nextInt(width-3);
+        int y = r.nextInt(length-3);
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == BuildingTypes.BASE){
+        if(random == BuildingType.BASE){
             newBuilding = new Base(world, x,y,0);
+        } else if(random == BuildingType.TURRET){
+            newBuilding = new Turret(world, x,y,0);
+        } else if(random == BuildingType.BUNKER){
+            newBuilding = new Bunker(world, x,y,0);
+        } else if(random == BuildingType.BARRACKS){
+            newBuilding = new Barracks(world, x,y,0);
         }
         else {
             return;
@@ -284,7 +289,7 @@ public class MapContainer {
      * @return the new group of buildings.
      */
     protected void getRandomStructure(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
         return;
     }
@@ -325,10 +330,10 @@ public class MapContainer {
             return;
         }
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(x, y,0);
+            newEntity = new Spacman(x, y, 0);
         }
         else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y,0);
+            newEntity = new EnemySpacman(x, y, 0);
         }
         else {
             return;

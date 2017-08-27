@@ -58,6 +58,7 @@ public class HUDView extends ApplicationAdapter{
 	private Table resourceTable; //contains table of resource images + count
     private Table playerdetails; //contains player icon, health and game stats
     private Table HUDManip;		 //contains buttons for toggling HUD + old menu
+    private Table welcomeMsg; 	 //contains welcome message 
 	private ChatBox chatbox;	 //table for the chat
 	private Window messageWindow;//window for the chatbox 
 	private Window mainMenu;     //window for the old menu
@@ -156,7 +157,6 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void topRight(){
 		overheadRight = new Table();
-		overheadRight.setDebug(true);
 		overheadRight.setWidth(stage.getWidth());
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
@@ -192,11 +192,11 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
 		
-		Table welcomeMsg = new Table();
+		welcomeMsg = new Table();
 		welcomeMsg.setWidth(stage.getWidth());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
-		Label welcomeText = new Label("Welcome to Spacwars", skin);
+		Label welcomeText = new Label("Welcome to Spacwars!", skin);
 		welcomeMsg.add(welcomeText);
 		
 		stage.addActor(welcomeMsg);
@@ -239,10 +239,10 @@ public class HUDView extends ApplicationAdapter{
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
 				if (messageToggle){
-					messageWindow.setVisible(true);
+					messageWindow.setVisible(false);
 					messageToggle = false; 
 				} else {
-					messageWindow.setVisible(false);
+					messageWindow.setVisible(true);
 					messageToggle = true;
 				}
 				
@@ -365,7 +365,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating chat lobby box");
 		messageWindow = new Window("Chat Lobby", skin);
 		messageWindow.setMovable(false);
-		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
+		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD, 
 				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE)); 
 		messageWindow.add(chatbox);
 		messageWindow.setVisible(false);
@@ -407,15 +407,16 @@ public class HUDView extends ApplicationAdapter{
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 		
 		HUDManip.setSize(50, 80);
+		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispMainMenu);
 		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
 		HUDManip.add(removeActions);
-		HUDManip.add(dispActions).pad(BUTTONPAD);
-
+		
 		stage.addActor(HUDManip);
 		
 		dispActions.addListener(new ChangeListener() {
 			@Override
+			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
 					LOGGER.debug("Enable hud");
@@ -432,6 +433,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		removeActions.addListener(new ChangeListener() {
 			@Override
+			/*displays the (+) button for setting the hud to visible*/
 			public void changed(ChangeEvent event, Actor actor) {
 					LOGGER.debug("Disable Hud");
 					actionsWindow.setVisible(false);
@@ -583,6 +585,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
+		//set the properties of the minimap window
 		minimap.add(GameManager.get().getMiniMap().getBackground());
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
@@ -590,7 +593,19 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
 		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
 		
+		//add the map window to the stage
 		stage.addActor(minimap);
+	}
+	
+	/**
+     * Clears the currently displayed minimap
+     * then updates the image from the texture manager.
+     */
+	public void updateMiniMapMenu() {
+		//clear the current image
+		minimap.clearChildren();
+		//get the new image
+		minimap.add(GameManager.get().getMiniMap().getBackground());
 	}
 	
 	/**
@@ -753,6 +768,9 @@ public class HUDView extends ApplicationAdapter{
 		}
 	}
 	
+	/**
+	 * Sets every HUD element invisible
+	 */
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
@@ -765,20 +783,22 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setVisible(false);
 	}
 	
+	/**
+	 * Sets every HUD element visible
+	 */
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
 	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
-		messageWindow.setVisible(true);
 		mainMenu.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
 
 	/**
-     * This function is used to refit the hud when the window size changes
+     * This function is used to refit the hud component when the window size changes
      * @param width the stages width
      * @param height the stages height
      */
@@ -788,13 +808,16 @@ public class HUDView extends ApplicationAdapter{
 		playerdetails.setWidth(100);
         playerdetails.align(Align.left | Align.top);
         playerdetails.setPosition(0, stage.getHeight());
-        //Top Right
+        //Top of panel
         overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);
         overheadRight.setPosition(0, Gdx.graphics.getHeight());
-        messageWindow.align(Align.right | Align.top);
-        messageWindow.setPosition(stage.getWidth()-chatbox.getWidth(), 
-				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
+        welcomeMsg.setWidth(Gdx.graphics.getWidth());
+		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
+		messageWindow.align(Align.right | Align.top);
+        messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD, 
+				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*5-BUTTONSIZE));
         //Bottom Panel
 		//Map
 		minimap.align(Align.topLeft);
