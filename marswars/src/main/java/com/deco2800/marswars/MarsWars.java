@@ -498,8 +498,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.begin();
 		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
 		batch.end();
-
-        /* Render the tiles first */
+		
+        /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
 		tileRenderer.setView(camera);
 		tileRenderer.render();
