@@ -49,7 +49,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setTexture(defaultTextureName); // just for testing
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
-		this.initActions();
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
