@@ -1,4 +1,7 @@
 package com.deco2800.marswars.entities.units;
+
+import com.deco2800.marswars.managers.Manager;
+
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
  * intended to be slower, more expensive and and slower to fire
@@ -6,8 +9,8 @@ package com.deco2800.marswars.entities.units;
  */
 public class Tank extends Soldier {
 	
-	public Tank(float posX, float posY, float posZ) {
-		super(posX, posY, posZ);
+	public Tank(float posX, float posY, float posZ, Manager owner) {
+		super(posX, posY, posZ, owner);
 		this.defaultTextureName = "tank";
 		//this.movementSound = "tankMovementSound";
 		this.selectedTextureName = "tankSelected";
