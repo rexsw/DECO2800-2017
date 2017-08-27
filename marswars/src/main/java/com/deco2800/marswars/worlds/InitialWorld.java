@@ -12,6 +12,7 @@ public class InitialWorld extends BaseWorld {
 
 	/**
 	 * Constructor for InitialWorld
+	 * @param worldFileName File name of the world to be loaded
 	 */
 	public InitialWorld() {
 		super("resources/placeholderassets/placeholder200.tmx");

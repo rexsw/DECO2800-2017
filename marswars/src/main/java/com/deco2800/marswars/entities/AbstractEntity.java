@@ -54,12 +54,14 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.xRenderLength = xRenderLength;
 		this.yRenderLength = yRenderLength;
 		this.centered = centered;
+		float centeredPosX = posX;
+		float centeredPosY = posY;
 
 		if (centered) {
-			posX += (1-xLength/2);
-			posY += (1-yLength/2);
+			centeredPosX = posX + (1-xLength/2);
+			centeredPosY = posY + (1-yLength/2);
 		}
-		this.position = new Box3D(posX, posY, posZ, xLength, yLength, zLength);
+		this.position = new Box3D(centeredPosX, centeredPosY, posZ, xLength, yLength, zLength);
 	}
 
 	/**
@@ -118,12 +120,14 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param z
 	 */
 	public void setPosition(float x, float y, float z) {
+		float centeredX = x;
+		float centeredY = y;
 		if (this.centered) {
-			y += (1 - this.position.getYLength() / 2);
-			x += (1 - this.position.getXLength() / 2);
+			centeredY += (1 - this.position.getYLength() / 2);
+			centeredX += (1 - this.position.getXLength() / 2);
 		}
-		this.position.setX(x);
-		this.position.setY(y);
+		this.position.setX(centeredX);
+		this.position.setY(centeredY);
 		this.position.setZ(z);
 	}
 
@@ -132,10 +136,11 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param x
 	 */
 	public void setPosX(float x) {
+		float centeredX = x;
 		if (this.centered) {
-			x += (1-this.position.getXLength() / 2);
+			centeredX += (1-this.position.getXLength() / 2);
 		}
-		this.position.setX(x);
+		this.position.setX(centeredX);
 	}
 
 	/**
@@ -143,10 +148,11 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param y
 	 */
 	public void setPosY(float y) {
+		float centeredY = y;
 		if (this.centered) {
-			y += (1 - this.position.getYLength() / 2);
+			centeredY += (1 - this.position.getYLength() / 2);
 		}
-		this.position.setY(y);
+		this.position.setY(centeredY);
 	}
 
 	/**

@@ -37,23 +37,15 @@ public class DamageAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		float diffX;
-		float diffY;
 		float distance;
 		switch (state) {
-			case SETUP_MOVE:
-				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
-				state = State.MOVE_TOWARDS;
-				return;
 			case MOVE_TOWARDS:
 				// When close to the enemy's attack range, attack.
 				if (action.completed()) {
 					state = State.ATTACK;
 					return;
 				}
-				diffX = enemy.getPosX() - entity.getPosX();
-				diffY = enemy.getPosY() - entity.getPosY();
-				distance = Math.abs(diffX) + Math.abs(diffY);
+				distance = getDistanceToEnemy();
 				if (distance <= entity.getAttackRange()) {
 					state = State.ATTACK;
 					return;
@@ -63,9 +55,7 @@ public class DamageAction implements DecoAction {
 			case ATTACK:
 				if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 					attackInterval -= attackSpeed;
-					diffX = enemy.getPosX() - entity.getPosX();
-					diffY = enemy.getPosY() - entity.getPosY();
-					distance = Math.abs(diffX) + Math.abs(diffY);
+					distance = getDistanceToEnemy();
 					if (attackInterval <= 0 && distance <= entity.getAttackRange()) {
 						// should spawn missile, missile carry the damage info but now 
 						// test attack without missile
@@ -81,7 +71,21 @@ public class DamageAction implements DecoAction {
 					return;
 				}
 				break;
+			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
+				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
+				state = State.MOVE_TOWARDS;
+				return;
 		}
+	}
+	
+	/**
+	 * Gets the absolute distance from the current entity to the current entity
+	 * @return the absolute distance from the 
+	 */
+	private float getDistanceToEnemy() {
+		float diffX = enemy.getPosX() - entity.getPosX();
+		float diffY = enemy.getPosY() - entity.getPosY();
+		return Math.abs(diffX) + Math.abs(diffY);
 	}
 
 	private void setUpMissile() {
