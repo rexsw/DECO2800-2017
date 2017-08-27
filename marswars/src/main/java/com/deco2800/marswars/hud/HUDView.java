@@ -488,7 +488,7 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setHeight(150);
 		actionsWindow.setPosition(220, 0);
 		
-		//Add move button
+		//Add action buttons
 		addMoveButton();
 		addGatherButton();
 		addAttackButton();
@@ -500,6 +500,9 @@ public class HUDView extends ApplicationAdapter{
 	private void addCreateUnitButtons() {
 	}
 
+	/**
+	 * Adds the attack button
+	 */
 	private void addAttackButton() {
 		attackButton = new TextButton("Attack", skin);
 		attackButton.addListener(new ChangeListener() {
@@ -513,6 +516,9 @@ public class HUDView extends ApplicationAdapter{
 		enableButton(attackButton);
 	}
 
+	/**
+	 * Adds the gather button
+	 */
 	private void addGatherButton() {
 		gatherButton = new TextButton("Gather", skin);
 		gatherButton.addListener(new ChangeListener() {
@@ -526,6 +532,9 @@ public class HUDView extends ApplicationAdapter{
 		enableButton(gatherButton);
 	}
 
+	/**
+	 * Adds the move button
+	 */
 	private void addMoveButton() {
 		moveButton = new TextButton("Move", skin);
 		moveButton.addListener(new ChangeListener() {
@@ -628,7 +637,7 @@ public class HUDView extends ApplicationAdapter{
 
 	/**
 	 * Disables the given button
-	 * @param button to be disabled
+	 * @param b to be disabled
 	 */
     private void disableButton(Button b) {
 		b.setTouchable(Touchable.disabled);
@@ -638,7 +647,7 @@ public class HUDView extends ApplicationAdapter{
     
     /**
      * Enables the given button
-     * @param button to be enabled 
+     * @param b to be enabled
      */
     private void enableButton(Button b) {
 		b.setTouchable(Touchable.enabled);
@@ -691,6 +700,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		int spacmenCount = 0; 		//counts the number of spacmen in game
 		int enemySpacmanCount = 0;  //counts the number of spatmen in game
+		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
@@ -703,6 +713,7 @@ public class HUDView extends ApplicationAdapter{
 				enemySpacmanCount++; 
 			}
 		}
+		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 	    
 	    /* Update the spacmen + enemy spatmen counts */

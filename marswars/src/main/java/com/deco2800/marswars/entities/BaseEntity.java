@@ -160,11 +160,20 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 		this.selected = false;
 	}
 
+	/**
+	 *
+	 * @return the list of actions the entity is allowed to take
+	 */
 	@Override
 	public List<ActionType> getValidActions() {
 		return this.validActions;
 	}
 
+	/**
+	 * Instantiates the list of actions
+	 * @deprecated addNewActions will now automatically instantiate the list if it does not exist
+	 */
+	@Deprecated
 	public void initActions() {
 		this.validActions = new ArrayList<ActionType>();
 	}
@@ -177,6 +186,9 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 
 	@Override
 	public boolean addNewAction(ActionType newAction) {
+		if (this.validActions == null) {
+			this.validActions = new ArrayList<ActionType>();
+		}
 		for (ActionType d: this.validActions) {
 			if (d == newAction) {
 				return false;
@@ -193,6 +205,9 @@ public class BaseEntity extends AbstractEntity implements Selectable{
 	 */
 	@Override
 	public boolean removeActions(ActionType actionToRemove) {
+		if (this.validActions == null){
+			return false;
+		}
 		for (ActionType d: this.validActions) {
 			if (d == actionToRemove) {
 				this.validActions.remove(d);
