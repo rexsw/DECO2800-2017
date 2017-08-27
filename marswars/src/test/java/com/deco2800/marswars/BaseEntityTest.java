@@ -46,9 +46,7 @@ public class BaseEntityTest {
 		t = new BaseEntity(3, 2, 2, 3, 4, 5);
 		t3 = new BaseEntity(7, 8, 2, 1, 1, 1);
 		t1 = new BaseEntity(0, 1, 2, 3, 4, 5, 1, 1, true);
-
-		Box3D position = new Box3D(0f, 1f, 2f, 3f, 4f, 5f);
-		t2 = new BaseEntity(position, 1, 1, false);
+		t2 = new BaseEntity(0f, 1f, 2f, 3f, 4f, 5f, 1, 1, false);
 	}
 
 	@Test
@@ -144,17 +142,12 @@ public class BaseEntityTest {
 	@Test
 	public void actionsTest() {
 		assertEquals(t.getValidActions(), null);
-
-		t.initActions();
-		assertEquals(t.getValidActions(), new ArrayList<ActionType>());
 	}
 
 	@Test
 	public void addActionTest() {
 		ArrayList<ActionType> expected = new ArrayList<>();
 		expected.add(ActionType.GATHER);
-
-		t.initActions();
 		assertTrue(t.addNewAction(ActionType.GATHER));
 		assertEquals(t.getValidActions(), expected);
 
@@ -168,7 +161,6 @@ public class BaseEntityTest {
 
 	@Test
 	public void removeActionTest() {
-		t.initActions();
 		t.addNewAction(ActionType.GATHER);
 		t.addNewAction(ActionType.MOVE);
 		assertTrue(t.removeActions(ActionType.MOVE));
