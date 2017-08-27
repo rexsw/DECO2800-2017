@@ -32,6 +32,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	private int health = 100;
 	
 	private Manager owner = null;
+
+	public static int cost = 10;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
@@ -47,7 +49,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
-		this.setCost(10);
+		this.setCost(cost);
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.GATHER);
