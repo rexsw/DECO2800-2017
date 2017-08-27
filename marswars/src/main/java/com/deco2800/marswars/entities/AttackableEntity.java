@@ -152,8 +152,8 @@ public class AttackableEntity extends BaseEntity implements HasHealth, HasDamage
 	 */
 	@Override
 	public void setHealth(int health) {
-		if (health < 0) {
-			//GameManager.get().getWorld().removeEntity(this);
+		if (health <= 0) {
+			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;
