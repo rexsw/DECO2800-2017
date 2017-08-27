@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -13,6 +12,7 @@ public class InitialWorld extends BaseWorld {
 
 	/**
 	 * Constructor for InitialWorld
+	 * @param worldFileName File name of the world to be loaded
 	 */
 	public InitialWorld() {
 		super("resources/placeholderassets/placeholder200.tmx");
@@ -56,10 +56,14 @@ public class InitialWorld extends BaseWorld {
 		this.addEntity(new HeroSpacman(this, 4, 4, 0));
 		this.addEntity(new Base(this, 8, 8, 0));
 		this.addEntity(new Base2(this, 10, 10, 0));
-
-
-
-
+		this.addEntity(new Soldier(50, 10, 0)); // test for combat
+		this.addEntity(new Soldier(50, 15, 0)); // test for combat
+		//Missile Test
+		Soldier a = new Soldier(30, 30, 0);
+		this.addEntity(a);
+		this.addEntity(new Bullet(50, 50, 0, a, 100, 100));
+		//Priest Test
+		this.addEntity(new Priest(25, 35, 0));
 	}
 
 	/**

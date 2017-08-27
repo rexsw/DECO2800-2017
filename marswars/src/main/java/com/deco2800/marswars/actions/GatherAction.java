@@ -57,7 +57,6 @@ public class GatherAction implements DecoAction {
 					state = State.COLLECT;
 					return;
 				}
-
 				// Do the move action
 				action.doAction();
 				break;

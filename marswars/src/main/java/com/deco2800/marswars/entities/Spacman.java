@@ -1,7 +1,8 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.ActionSetter;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
@@ -14,9 +15,6 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sound.sampled.Line;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -34,9 +32,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	private int health = 100;
 	
 	private Manager owner = null;
+
+	public static int cost = 10;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
+	//Hello wo
+	private ActionType nextAction;
 
 	/**
 	 * Constructor for the Spacman
@@ -47,11 +49,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
-		this.setCost(10);
+		this.setCost(cost);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		this.addNewAction(GatherAction.class);
-		this.addNewAction(MoveAction.class);
+		this.addNewAction(ActionType.MOVE);
+		this.addNewAction(ActionType.GATHER);
+		this.nextAction = null;
 		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
 		FogWorld fogWorld = GameManager.get().getFogWorld();
 		fogWorld.addEntity(lineOfSight);
@@ -70,6 +73,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 
 	}
+
+    /**
+     * function to change the cost of making a Spacman
+     * @param c
+     */
+	public static void changeCost(int c){
+	    cost = c;
+    }
 
 	/**
 	 * Sets the position X
@@ -165,12 +176,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
 			this.makeSelected();
 		} else {
+			this.makeSelected();
+			this.setEntityType(EntityType.AISPACMAN);
 			LOGGER.error("Clicked on ai spacman");
+			
 		}
 	}
 
@@ -181,27 +194,20 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onRightClick(float x, float y) {
-		List<BaseEntity> entities;
-		try {
-			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
-
-		} catch (IndexOutOfBoundsException e) {
-			// if the right click occurs outside of the game world, nothing will happen
-			this.setTexture("spacman_green");
-			return;
-		}
-		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
-			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
-			LOGGER.error("Assigned action gather");
-		} else {
-			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
-
-			LOGGER.error("Assigned action move to" + x + " " + y);
+		LOGGER.info("Spacman given instruction");
+		if (nextAction != null) {
+			LOGGER.info("Spacman given specific instruction");
+			ActionSetter.setAction(this,x,y,nextAction);
+		} else if (ActionSetter.setAction(this,x,y,ActionType.GATHER)) {
+			LOGGER.info("Spacman try to gather");
+		} else if (ActionSetter.setAction(this,x,y,ActionType.MOVE)) {
+			LOGGER.info("Spacman try to move");
 		}
 		this.setTexture("spacman_green");
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound("endturn.wav");
-
+		this.deselect();
+		this.nextAction = null;
 	}
 
 	/**
@@ -304,6 +310,20 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Forces the spacman to only try the chosen action on the next rightclick
+	 * @param nextAction the action to be forced
+	 */
+	@Override
+	public void setNextAction(ActionType nextAction) {
+		this.nextAction = nextAction;
+		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
+	}
+
+	public EntityStats getStats() {
+		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
 	}
 
 }

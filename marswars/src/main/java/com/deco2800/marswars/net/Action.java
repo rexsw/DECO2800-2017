@@ -7,5 +7,6 @@ public interface Action {
     /**
      * Convert action to string
      */
+    @Override
     String toString();
 }

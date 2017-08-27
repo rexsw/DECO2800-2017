@@ -45,12 +45,23 @@ public class ServerConnectionManager extends ConnectionManager {
 
 	@Override
 	public void disconnected(Connection connection) {
-
+		int id = connection.getID();
+		User from = this.idToUser.get(id);
+		this.idToUser.remove(id);
+		LeaveLobbyAction action = new LeaveLobbyAction(from.getUsername());
+		this.logAction(action);
+		this.broadcastAction(action);
 	}
 
 	@Override
 	public void received(Connection connection, Object o) {
 		if (o instanceof JoinLobbyAction) {
+			int conId = connection.getID();
+			if (this.idToUser.containsKey(conId)) {
+				// Already received from them, ignore
+				return;
+			}
+
 			JoinLobbyAction action = (JoinLobbyAction) o;
 			String username = action.getUsername();
 			this.logAction(action);
@@ -61,15 +72,14 @@ public class ServerConnectionManager extends ConnectionManager {
 			MessageAction action = (MessageAction) o;
 			User from = this.idToUser.get(connection.getID());
 
+			if (from == null) {
+				return; // We don't know them
+			}
+
 			MessageAction newAction = new MessageAction(from.getUsername(), action.getMessage());
 			this.logAction(newAction);
 
 			this.broadcastAction(newAction);
 		}
-	}
-
-	@Override
-	public void idle(Connection connection) {
-
 	}
 }
