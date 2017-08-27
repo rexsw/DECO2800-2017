@@ -10,37 +10,31 @@ import com.deco2800.marswars.technology.*;
 
 
 public class TechTreeView extends Dialog{
+	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 
 	public TechTreeView(String title, Skin skin) {
-		super(title, skin);		
+		super(title, skin);
 		{
-			text("This will display the technology tree");
-			button("Upgrade Tech", 1);
+			//text("This will display the technology tree");
+			button("Upgrade Spacman Cost", 1);
+			button("Upgrade Attack", 2);
+			button("Upgrade Defense", 3);
 			button("OK");
-
 		}
 	}
-	
-	@Override 
-	protected void result(final Object object){
 
-		TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-		if (object == (Object) 1) {
-			Technology tech2 = techMan.getTech(2);
-			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			if (!techMan.getActive().contains(tech2)) {
-				if (resourceManager.getRocks() > tech2.getCost()[0]) {
-					resourceManager.setRocks(resourceManager.getRocks() - tech2.getCost()[0]);
-					techMan.addActiveTech(tech2);
-					System.out.println("YOu just upgraded the tech");
-					tech2.costUpgrade();
-				}
-			} else {
-				//You already have tech 2, do something else
-				System.out.println("You already have it");
-			}
-		}
+	/**
+	 * Checks the result of the Dialogue box and then if a Upgrade was selected
+	 * executes code to the requirements of the specified Technology and then activates it if it can be done, otherwise
+	 * displays a message indicating why not
+	 * @param object
+	 */
+	@Override
+	protected void result(final Object object){
+		int techID = (int) object;
+		Technology tech = techMan.getTech(techID);
+		String message = techMan.checkPrereqs(techMan, tech);
+		//Need to find a way to print this to the dialogue box
+		System.out.println(message);
 	}
 }
-
-
