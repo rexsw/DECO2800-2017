@@ -7,6 +7,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -43,8 +44,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
 		this.initActions();
-		//this.addNewAction(MoveAction.class);
-		//this.addNewAction(DamageAction.class);
+		this.addNewAction(ActionType.DAMAGE);
+		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
 		this.setMaxHealth(500);
 		this.setHealth(500);
