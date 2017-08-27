@@ -37,7 +37,7 @@ public class DamageAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		float distance;
+		float distance = 0;
 		switch (state) {
 			case MOVE_TOWARDS:
 				moveTowardsAction(distance);
@@ -108,6 +108,5 @@ public class DamageAction implements DecoAction {
 			completed = true;
 			return;
 		}
-		break;
 	}
 }

@@ -18,9 +18,11 @@ public class TechnologyManager extends Manager{
     private Set<Technology> activeTech = new HashSet<Technology>();
 
     public TechnologyManager() {
-        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Test Technology", new ArrayList<Technology>(),
+        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Upgrade Cost", new ArrayList<Technology>(),
                 "A cheap technology"));
-        techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Expensive Upgrade", new ArrayList<Technology>(),
+        techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Attack", new ArrayList<Technology>(),
+                "An expensive technology"));
+        techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
                 "An expensive technology"));
     }
 
@@ -43,6 +45,17 @@ public class TechnologyManager extends Manager{
 
     public void addActiveTech(Technology tech) {activeTech.add(tech); }
 
+    public void costUpgrade(){
+        //placeholder for cost Upgrade functionality
+    }
+    public void attackUpgrade(){
+        //placeholder for attack Upgrade functionality
+
+    }
+    public void defenseUpgrade(){
+        //placeholder for defense Upgrade functionality
+    }
+
 
     /**
      * Provides a method to check that the requirements for researching a Technology exists, if they are
@@ -52,7 +65,7 @@ public class TechnologyManager extends Manager{
      * @param tech
      * @return String with message about whether or not the research was okay and why
      */
-    public String checkPrereqs(TechnologyManager techMan, Technology tech){
+    public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 
         if(!(getActive().contains(tech.getParents()))){
@@ -73,15 +86,24 @@ public class TechnologyManager extends Manager{
         if (!(resourceManager.getBiomass() > tech.getCost()[1])) {
             return "Insufficient Biomass";
         }
-        return activateTech(techMan, tech, resourceManager);
+        return activateTech(techMan, tech, resourceManager, techID);
     }
 
-    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager){
+    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager,int techID){
         resourceManager.setRocks(resourceManager.getRocks() - tech.getCost()[0]);
         resourceManager.setCrystal(resourceManager.getCrystal() - tech.getCost()[1]);
         resourceManager.setWater(resourceManager.getWater() - tech.getCost()[2]);
         resourceManager.setBiomass(resourceManager.getBiomass() - tech.getCost()[3]);
         techMan.addActiveTech(tech);
+        if(techID == 1){
+            costUpgrade();
+        }
+        if(techID == 2){
+            attackUpgrade();
+        }
+        if(techID == 3){
+            defenseUpgrade();
+        }
         return "Technology successfully researched";
     }
 }

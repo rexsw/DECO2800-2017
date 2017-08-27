@@ -181,6 +181,13 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
+	 * Sets the In-Game Time to be 0 (Resets current clock)
+	 */
+	public void resetInGameTime() {
+		time = 0;
+	}
+
+	/**
 	 * Provides the System Time (AEST) in human-readable string format.
 	 * @return the String representation of the System Time
 	 */
