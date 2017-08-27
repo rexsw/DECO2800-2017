@@ -23,10 +23,10 @@ public class AiManagerTest extends AbstractPlayerManager implements TickableMana
 		private int cooldownmove = 0;
 		private int time = 0;
 		private boolean alive = true;
+		private ResourceManager resources = new ResourceManager();
 
 @Override
 public void onTick(long l) {
-	//alive = false; //TODO: Reenable
 	if(!alive) {
 		return;
 	}
@@ -52,10 +52,9 @@ public void onTick(long l) {
 private void generateSpacman(Base x) {
 	if(!x.isWorking()) {
 	//sets the ai base to make more spacman if possible
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > 30) {
+		if (resources.getRocks() > 30) {
 			LOGGER.error("ai - set base to make spacman");
-			resourceManager.setRocks(resourceManager.getRocks() - 30);
+			resources.setRocks(resources.getRocks() - 30);
 			Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
 			r.setOwner(this);
 			x.setAction(new GenerateAction(r));							
@@ -81,7 +80,7 @@ private void useEnemy(EnemySpacman x) {
 	}
 }
 
-public void useSpacman(Spacman x) {
+private void useSpacman(Spacman x) {
 	if(!x.isWorking()) {
 		//allow spacmans to collect the closest resources
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
@@ -90,7 +89,10 @@ public void useSpacman(Spacman x) {
 	}
 }
 		
-		
+/**
+ * note team methods where a wip system and have been pushed back and as such
+ * are not used for now		
+ */
 @Override
 public void setTeam(int teamId) {
 	this.teamid = teamId;
@@ -112,6 +114,7 @@ public boolean sameTeam(Manager otherMember) {
  * and sets it to "dead" so it won't tick anymore 
  */
 public void isKill() {
+	//in this case "dead" is an Ai with no spacman
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 		if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
 			return;
@@ -126,5 +129,18 @@ public void isKill() {
 	alive = false;
 }
 
+/**
+ * @return true iff Ai is alive else false 
+ */
+public boolean alive() {
+	return alive;
+}
+
+/**
+ * @return Resourcemanager of this Ai
+ */
+public ResourceManager getResources() {
+	return resources;
+}
 
 }

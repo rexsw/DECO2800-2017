@@ -583,14 +583,12 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		minimap = new Window("Map", skin);
 		
-		Label label = new Label("Minimap goes here", skin);
-		label.setWrap(true);
-				
-		minimap.add(label);
+		minimap.add(GameManager.get().getMiniMap().getBackground());
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
-		minimap.setSize(220, 220);
+		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
+		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
 		
 		stage.addActor(minimap);
 	}
@@ -753,6 +751,30 @@ public class HUDView extends ApplicationAdapter{
 			are no spacmen left*/
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
 		}
+	}
+	
+	public void disableHUD() {
+		overheadRight.setVisible(false);
+		resourceTable.setVisible(false);
+	    playerdetails.setVisible(false);
+	    HUDManip.setVisible(false);
+		chatbox.setVisible(false);
+		messageWindow.setVisible(false);
+		mainMenu.setVisible(false);
+		minimap.setVisible(false);
+		actionsWindow.setVisible(false);
+	}
+	
+	public void enableHUD() {
+		overheadRight.setVisible(true);
+		resourceTable.setVisible(true);
+	    playerdetails.setVisible(true);
+	    HUDManip.setVisible(true);
+		chatbox.setVisible(true);
+		messageWindow.setVisible(true);
+		mainMenu.setVisible(true);
+		minimap.setVisible(true);
+		actionsWindow.setVisible(true);
 	}
 
 	/**

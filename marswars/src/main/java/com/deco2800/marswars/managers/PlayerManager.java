@@ -5,9 +5,12 @@ public class PlayerManager extends AbstractPlayerManager {
 	 * currently mostly just to hold to the players entities
 	 */
 	private int teamid = 0;
-	//the colour of the sprites associated with the team, used by 
-	//TextureManager to load the correct sprite
-	
+
+
+	/**
+	 * note team methods where a wip system and have been pushed back and as such
+	 * are not used for now		
+	 */
 	@Override
 	public void setTeam(int teamid) {
 		this.teamid = teamid;

@@ -37,39 +37,12 @@ public class DamageAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		float distance;
 		switch (state) {
 			case MOVE_TOWARDS:
-				// When close to the enemy's attack range, attack.
-				if (action.completed()) {
-					state = State.ATTACK;
-					return;
-				}
-				distance = getDistanceToEnemy();
-				if (distance <= entity.getAttackRange()) {
-					state = State.ATTACK;
-					return;
-				}
-				action.doAction();
+				moveTowardsAction();
 				return;
 			case ATTACK:
-				if (GameManager.get().getWorld().getEntities().contains(enemy)) {
-					attackInterval -= attackSpeed;
-					distance = getDistanceToEnemy();
-					if (attackInterval <= 0 && distance <= entity.getAttackRange()) {
-						// should spawn missile, missile carry the damage info but now 
-						// test attack without missile
-						setUpMissile();
-						LOGGER.info("Enemy health " + enemy.getHealth());
-						attackInterval = 1000;
-					} else if (distance > entity.getAttackRange()) {
-						state = State.SETUP_MOVE;
-					}
-				} else {
-					LOGGER.info("Set action empty");
-					completed = true;
-					return;
-				}
+				attackAction();
 				break;
 			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
 				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
@@ -101,5 +74,41 @@ public class DamageAction implements DecoAction {
 	@Override
 	public int actionProgress() {
 		return 0;
+	}
+	
+	private void moveTowardsAction() {
+	    float distance;
+		// When close to the enemy's attack range, attack.
+		if (action.completed()) {
+			state = State.ATTACK;
+			return;
+		}
+		distance = getDistanceToEnemy();
+		if (distance <= entity.getAttackRange()) {
+			state = State.ATTACK;
+			return;
+		}
+		action.doAction();
+	}
+	
+	private void attackAction() {
+	    float distance;
+		if (GameManager.get().getWorld().getEntities().contains(enemy)) {
+			attackInterval -= attackSpeed;
+			distance = getDistanceToEnemy();
+			if (attackInterval <= 0 && distance <= entity.getAttackRange()) {
+				// should spawn missile, missile carry the damage info but now 
+				// test attack without missile
+				setUpMissile();
+				LOGGER.info("Enemy health " + enemy.getHealth());
+				attackInterval = 1000;
+			} else if (distance > entity.getAttackRange()) {
+				state = State.SETUP_MOVE;
+			}
+		} else {
+			LOGGER.info("Set action empty");
+			completed = true;
+			return;
+		}
 	}
 }
