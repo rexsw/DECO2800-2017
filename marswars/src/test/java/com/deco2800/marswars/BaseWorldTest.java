@@ -19,7 +19,7 @@ import java.util.List;
  * @see com.deco2800.marswars.worlds.AbstractWorld
  * @see BaseWorld
  */
-public class BaseWorldTest {
+public class BaseWorldTest extends BaseTest {
 
     // a base world mock object
     BaseWorld baseWorld;
