@@ -32,6 +32,7 @@ import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,8 +103,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
-		// TODO get rid of this once the minimap loads based on the randomly loaded map
-		
+
 		/*
 		 *	Set up new stuff for this game
 		 * TODO some way to choose which map is being loaded
@@ -112,7 +112,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
-		GameManager.get().setMiniMap(new MiniMap(map.getMap(), 220, 220));
+		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
 
 
 		/*
@@ -362,7 +362,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
 				if (GameManager.get().getActiveView() == 1) {
 					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
 					camera.zoom = 1;

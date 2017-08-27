@@ -16,11 +16,11 @@ public class MiniMap {
     private int width;
     private int height;
 
-    public MiniMap(String mapPath, int width, int height) {
+    public MiniMap(String mapId, int width, int height) {
         // TODO select appropriate background image based on mapPath
         // for now:
         TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-        backgroundImage = new Image(reg.getTexture("minimap"));
+        backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
     }
@@ -53,8 +53,8 @@ public class MiniMap {
 
     /**
      * Moves the map to the location clicked on on the minimap
-     * @param x x < this.width
-     * @param y y < this.height
+     * @param x 0 <= x < this.width
+     * @param y 0 <= y < this.height
      */
     private void moveMap(int x, int y) {
         float fractionWidthClick = (float) x / width;
