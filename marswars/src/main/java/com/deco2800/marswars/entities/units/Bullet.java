@@ -1,13 +1,15 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -29,8 +31,7 @@ public class Bullet extends MissileEntity implements Tickable {
         super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage);
         this.setTexture("bullet");
         this.initActions();
-        //this.addNewAction(MoveAction.class);
-        //this.addNewAction(ImpactAction.class);
+        this.addNewAction(ActionType.IMPACT);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
         this.setSpeed(0.04f); //Unused
