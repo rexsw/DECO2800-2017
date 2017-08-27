@@ -214,6 +214,8 @@ public class TimeManager extends Manager implements TickableManager {
 	public void onTick(long i) {
 		if (!isPaused) {
 			time += 5;
+			// Some duplicated code here (also in isNight) find way to resolve
+			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
 				setNight();
 			} else {
