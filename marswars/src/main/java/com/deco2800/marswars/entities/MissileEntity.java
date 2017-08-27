@@ -95,28 +95,6 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     }
 
     /**
-     * Updates the collision map
-     * @param add
-     */
-    private void modifyCollisionMap(boolean add) {
-        if (GameManager.get().getWorld() instanceof BaseWorld) {
-            BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
-            int left = (int) getPosX();
-            int right = (int) Math.ceil(getPosX() + getXLength());
-            int bottom = (int) getPosY();
-            int top = (int) Math.ceil(getPosY() + getYLength());
-            for (int x = left; x < right; x++) {
-                for (int y = bottom; y < top; y++) {
-                    if (add)
-                        baseWorld.getCollisionMap().get(x, y).add(this);
-                    else
-                        baseWorld.getCollisionMap().get(x, y).remove(this);
-                }
-            }
-        }
-    }
-
-    /**
      * Removes any current action and set action to empty
      */
     public void setEmptyAction() {
