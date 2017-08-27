@@ -391,7 +391,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.row();
 		HUDManip.add(dispActions).pad(BUTTONPAD);
 		HUDManip.row();
-		HUDManip.add(dispTech).pad(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispTech).pad(BUTTONPAD);
 
 		stage.addActor(HUDManip);
 		
