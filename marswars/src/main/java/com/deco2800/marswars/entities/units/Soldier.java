@@ -37,8 +37,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String defaultTextureName;// = "soldier";
 	protected String movementSound;// = "endturn.wav";
 
-	public Soldier(float posX, float posY, float posZ) {
+	public Soldier(float posX, float posY, float posZ, Manager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
+		this.setOwner(owner);
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing

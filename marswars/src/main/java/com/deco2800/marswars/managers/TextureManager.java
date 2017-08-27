@@ -1,6 +1,9 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.units.Soldier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,7 @@ import java.util.Map;
  */
 public class TextureManager extends Manager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
+    private static final java.util.logging.Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * A HashMap of all textures with string keys
@@ -49,10 +52,14 @@ public class TextureManager extends Manager {
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
+<<<<<<< Updated upstream
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
+=======
+
+>>>>>>> Stashed changes
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
@@ -86,14 +93,15 @@ public class TextureManager extends Manager {
         
         //----------Unit Assets:
         //Soldier:
-        this.saveTexture("bullet", "resources/UnitAssets/Neutral/Bullet_1.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
+        this.saveTexture("bullet", "resources/UnitAssets/bullet_1.png");
+        this.saveTexture("soldier", "resources/UnitAssets/Soldier_1.png");
+        this.saveTexture("soldierSelected", "resources/UnitAssets/Soldier_2.png");
         //Tank:
         
-        this.saveTexture("missile", "resources/UnitAssets/Neutral/Missile_1.png");
-        this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
-        this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
+        this.saveTexture("missile", "resources/UnitAssets/Missile_3.png");
+        this.saveTexture("tank", "resources/UnitAssets/Tank_1.png");
+        this.saveTexture("tankSelected", "resources/UnitAssets/Tank_2.png");
+        
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
@@ -101,6 +109,31 @@ public class TextureManager extends Manager {
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
 
+    }
+    /*
+     *
+     */
+    public void loadUnitSprite(AbstractEntity unit, String textureType){//use soldier as the base class
+        if(textureType == null){
+            textureType = "default";
+        }
+        //currently only implemented for entities that extend Soldier (i.e. all 
+        //player controllable units)
+        if(unit instanceof Soldier){
+            Soldier soldier = (Soldier) unit;
+            String path;
+            //Determine the unit type
+            String unitType = unit.getClass().toString();
+            //find the team colour of the owner:
+            String teamColour = soldier.getOwner().getColour();
+            path = String.format("resources/UnitAssets/%s/%s/%s.png",
+                    unitType,teamColour,textureType);
+			//try to load the texture into the textureMap
+            LOGGER.info(String.format("Loading texture %s for %s from %s", 
+            		textureType, unitType, path));
+            saveTexture(textureType+unitType,path);
+        }
+        
     }
 
     /**
@@ -124,8 +157,14 @@ public class TextureManager extends Manager {
      */
     public void saveTexture(String id, String filename) {
         LOGGER.info("Saving texture" + id + " with Filename " + filename);
-        if (!textureMap.containsKey(id)) {
-            textureMap.put(id, new Texture(filename));
+        try{
+            if (!textureMap.containsKey(id)) {
+                textureMap.put(id, new Texture(filename));
+            }
+        }
+        catch(Exception e){
+            LOGGER.error(String.format("Failed to load texture %s from %s", id,filename));
+            throw e;//we don't want to mask the fact that a texture failed to load
         }
     }
 }
