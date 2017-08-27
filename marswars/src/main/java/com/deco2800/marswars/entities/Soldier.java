@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +77,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
+			LOGGER.info("Right click occurred outside game world.");
 			this.setTexture(defaultTextureName);
 			return;
 		}
