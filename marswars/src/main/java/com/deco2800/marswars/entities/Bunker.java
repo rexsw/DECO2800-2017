@@ -41,7 +41,7 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bunker.class);
 	
-	private Manager onwer = null;
+	private Manager owner = null;
 
 	boolean selected = false;
 
@@ -134,18 +134,18 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 
 	@Override
 	public void setOwner(Manager owner) {
-		this.onwer = owner;
+		this.owner = owner;
 	}
 
 	@Override
 	public Manager getOwner() {
-		return this.onwer;
+		return this.owner;
 	}
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.onwer == ((HasOwner) entity).getOwner();
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
 	public boolean isWorking() {

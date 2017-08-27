@@ -89,10 +89,10 @@ public class MapContainer {
     public void generateEntities(boolean random){
         if(random) {
             this.generateResourcePattern();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 this.getRandomBuilding();
-                this.getRandomEntity();
-                this.getRandomResource();
+               // this.getRandomEntity();
+               // this.getRandomResource();
             }
         }
     }
