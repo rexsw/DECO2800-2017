@@ -7,26 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -36,40 +27,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by timhadwen on 19/7/17.
+ * Created by JudahBennett on 25/8/17.
  *
- * A home base for the empire
+ * A barracks to build an army
  */
-public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner, HasHealth {
+public class Barracks extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
-	private Manager owner = null;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Barracks.class);
 	
-	private int health = 500;
-	
+	private Manager onwer = null;
+
 	boolean selected = false;
 
 	/**
-	 * Constructor for the base.
+	 * Constructor for the barracks.
 	 * @param world The world that will hold the base.
 	 * @param posX its x position on the world.
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-
-	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-	super(posX, posY, posZ, BuildingType.BASE);
-		this.setTexture("homeBase");
+	public Barracks(AbstractWorld world, float posX, float posY, float posZ) {
+		super(posX, posY, posZ, BuildingType.BARRACKS);
+		this.setTexture("barracks");
 		this.setEntityType(EntityType.BUILDING);
-		this.setCost(250);
+		this.setCost(300);
 		this.setSpeed(2);
+		this.addNewAction(ActionType.GENERATE);
+		world.deSelectAll();
 	}
-	
+
 	/**
-	 * Give action to the base
+	 * Give action to the Barracks
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
@@ -86,11 +77,11 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 		if(this.getOwner() instanceof PlayerManager) {
 			if (!selected) {
 				selected = true;
-				LOGGER.error("clicked on base");
+				LOGGER.error("clicked on barracks");
 			}
 		} else {
-			LOGGER.error("clicked on ai base");
-
+			LOGGER.error("clicked on ai barracks");
+	
 		}
 	}
 
@@ -101,9 +92,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void onRightClick(float x, float y) {
-		//base has no action on right click for now
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("endturn.wav");
+
 	}
 
 	/**
@@ -123,7 +112,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	}
 
 	/**
-	 * Check is the base has been selected
+	 * Check is the barracks has been selected
 	 * @return true if is selected, false otherwise
 	 */
 	@Override
@@ -132,7 +121,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	}
 	
 	/**
-	 * Deselect the base
+	 * Deselect the barracks
 	 */
 	@Override
 	public void deselect() {
@@ -164,7 +153,6 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 			resourceManager.setRocks(resourceManager.getRocks() - 30);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
-		this.deselect();
 	}
 	
 	/**
@@ -172,7 +160,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 * @return Label
 	 */
 	public Label getHelpText() {
-		return new Label("You have clicked on the base. Click 'Make Spacman' to 'Make Spacman'!", new Skin(Gdx.files.internal("uiskin.json")));
+		return new Label("You have clicked on the Barracks. Click 'Make Atacman' to 'Make Atacman'!", new Skin(Gdx.files.internal("uiskin.json")));
 	}
 
 	/**
@@ -202,7 +190,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void setOwner(Manager owner) {
-		this.owner = owner;
+		this.onwer = owner;
 	}
 
 	/**
@@ -211,7 +199,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public Manager getOwner() {
-		return this.owner;
+		return this.onwer;
 	}
 
 	/**
@@ -221,51 +209,23 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.owner == ((HasOwner) entity).getOwner();
+				this.onwer == ((HasOwner) entity).getOwner();
 	}
 	
-	@Override
 	/**
 	 * This method is a duplication of the showProgress method, consider delete one of them
-	 * sadly two different interfaces
 	 * @return boolean
 	 */
 	public boolean isWorking() {
 		return currentAction.isPresent();
 	}
 	
-	@Override
 	/**
-	 * Set the action of this base
+	 * Set the action of this barracks
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
-	}
-
-	@Override
-	/**
-	 * @return current health
-	 */
-	public int getHealth() {
-		return health;
-	}
-
-	/**
-	 *  Sets the health for this spacman 
-	 * 	@param health 
-	 */
-	@Override
-	public void setHealth(int health) {
-		LOGGER.info("Set health to " + health);
-		this.health = health;
-		if (health < 0) {
-			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
-			LOGGER.info("I am kill");
-		}
 	}
 	
 }

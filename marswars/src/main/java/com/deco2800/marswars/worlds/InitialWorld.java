@@ -5,6 +5,9 @@ import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by timhadwen on 19/7/17.
  */
@@ -51,12 +54,8 @@ public class InitialWorld extends BaseWorld {
 			}
 		}
 
-		this.addEntity(new Spacman(0,0,0));
-		this.addEntity(new Spacman(1, 1, 1)); // this spac man is for resource gather test
-		this.addEntity(new HeroSpacman(this, 4, 4, 0));
-		this.addEntity(new Base(this, 8, 8, 0));
-		this.addEntity(new Base2(this, 10, 10, 0));
 	}
+
 
 	/**
 	 * Adds cluster of enemy spacman, needs to be improved
@@ -66,14 +65,7 @@ public class InitialWorld extends BaseWorld {
 			return;
 		}
 		this.addEntity(new EnemySpacman(x, y, 0));
-		this.addEntity(new EnemySpacman(x - 1, y, 0));
-		this.addEntity(new EnemySpacman(x, y - 1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y, 0));
-		this.addEntity(new EnemySpacman(x, y+1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y + 1, 0));
-		this.addEntity(new EnemySpacman(x - 1, y - 1, 0));
-		this.addEntity(new EnemySpacman(x - 1, y + 1, 0));
-		this.addEntity(new EnemySpacman(x + 1, y -1, 0));
+
 	}
 
 	/**
@@ -97,4 +89,6 @@ public class InitialWorld extends BaseWorld {
 			}
 		}
 	}
+
+
 }

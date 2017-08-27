@@ -37,23 +37,42 @@ public class TextureManager extends Manager {
      * need to.
      */
     public TextureManager() {
-        this.saveTexture("grass", "resources/placeholderassets/grass.png");
-        this.saveTexture("grass2", "resources/placeholderassets/grass2.png");
-        this.saveTexture("tree", "resources/placeholderassets/spacman.png");
-        this.saveTexture("real_tree", "resources/placeholderassets/tree.png");
-        this.saveTexture("ground_1", "resources/placeholderassets/ground-1.png");
-        this.saveTexture("ground_gray", "resources/placeholderassets/line-of-sight.png");
-        this.saveTexture("spacman", "resources/placeholderassets/spacman.png");
-        this.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
-        this.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
-        this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-        this.saveTexture("spacman_ded", "resources/placeholderassets/spacman_ded.png");
+    	//Select Building zone
+    	textureMap.put("greenSelect", new Texture("resources/buildSelect/greenSelect.png"));
+    	textureMap.put("redSelect", new Texture("resources/buildSelect/redSelect.png"));
         this.saveTexture("selected", "resources/placeholderassets/selected.png");
         this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
+        //Buildings
+        textureMap.put("homeBase1", new Texture("resources/BuildingAssets/homeBase1.png"));
+        textureMap.put("homeBase2", new Texture("resources/BuildingAssets/Homebase2.png"));
+    	textureMap.put("homeBase", new Texture("resources/BuildingAssets/FinalDraft_Homebase4.png"));
+        textureMap.put("barracks",new Texture("resources/BuildingAssets/Draft_Barracks1.png"));
+        textureMap.put("turret",new Texture("resources/BuildingAssets/turret.png"));
+        textureMap.put("bunker",new Texture("resources/BuildingAssets/bunker.png"));
+        //Environment
+        textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
+        textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
+        textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));
+        textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
+        textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
+        //Units
+        textureMap.put("ground_gray", new Texture("resources/placeholderassets/line-of-sight.png"));
+        textureMap.put("spacman", new Texture("resources/placeholderassets/spacman.png"));
+        textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
+        textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
+        textureMap.put("spacman_green", new Texture("resources/placeholderassets/spacman_green.png"));
+        textureMap.put("spacman_ded", new Texture("resources/placeholderassets/spacman_ded.png"));
+        textureMap.put("selected", new Texture("resources/placeholderassets/selected.png"));
+        textureMap.put("selected_black", new Texture("resources/placeholderassets/selected_black.png"));
+        textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
+        textureMap.put("base2", new Texture("resources/placeholderassets/base2.png"));
+        textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
+        this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
+        this.saveTexture("tree", "resources/placeholderassets/tree.png");
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("spacman_yellow", "resources/placeholderassets/spacman_yellow.png");
         this.saveTexture("spacman", "resources/placeholderassets/spacman.png");

@@ -122,10 +122,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -1, width -1);
-		setAI(1, 1);
-		setAI(1, width -1);
-		setAI(length -1, 1);
+		setAI(length -4, width -4);
+		setAI(4, 4);
+		setAI(4, width -4);
+		setAI(length -4, 4);
 
 		// add soldier for combat testing (belongs to player)
 		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
@@ -181,6 +181,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera = new OrthographicCamera(1920, 1080);
 		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
 
 		/*
 		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
@@ -376,6 +377,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				originX = screenX;
 				originY = screenY;
+				
+				GameManager.get().setCamera(camera);
 
 				return true;
 			}
@@ -413,6 +416,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					camera.zoom *= 1.2;
 				}
 				forceMapLimits();
+				GameManager.get().setCamera(camera);
 				return true;
 			}
 		});
@@ -519,7 +523,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-		
+		GameManager.get().setCamera(camera);
 		batch.dispose();
 		if(!gameStarted) {
 			GameManager.get().getMiniMap().render(view);
@@ -600,6 +604,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -653,6 +658,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}else if(camera.position.y < 0-mapLength/2) {
 			camera.position.y = 0-mapLength/2;
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -666,7 +672,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-
+		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
