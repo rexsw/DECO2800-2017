@@ -23,13 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public class MainMenu {
 	
-	private Stage stage;
+	private Stage stage; 
 	private Skin skin;
 	
-	TextButton newGameButton;
-	TextButton exitButton;
-	TextButton startServer;
-	TextButton joinServer;
+	TextButton newGameButton; //starts the new game
+	TextButton exitButton;  //exits the game when pressed
+	TextButton startServer; 
+	TextButton joinServer; // will allow the player to join a multiplayer game
 	
 	Label title;
 	
