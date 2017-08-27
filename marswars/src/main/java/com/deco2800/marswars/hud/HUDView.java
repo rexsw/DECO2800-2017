@@ -29,7 +29,6 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -498,7 +497,7 @@ public class HUDView extends ApplicationAdapter{
 		minimap = new Window("Map", skin);
 		
 		Image image = new Image(reg.getTexture("minimap"));
-		image.setSize(220, 220);
+		image.setSize(width, height);
 		
 		minimap.add(image);
 		minimap.align(Align.topLeft);
