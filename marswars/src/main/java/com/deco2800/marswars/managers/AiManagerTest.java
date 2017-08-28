@@ -50,17 +50,6 @@ public void onTick(long l) {
 		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-<<<<<<< HEAD
-	if(!x.isWorking()) {
-	//sets the ai base to make more spacman if possible
-		if (resources.getRocks() > 30) {
-			LOGGER.error("ai - set base to make spacman");
-			resources.setRocks(resources.getRocks() - 30);
-			Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
-			r.setOwner(this);
-			x.setAction(new GenerateAction(r));							
-		}
-=======
 	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	if(!x.isWorking() && resourceManager.getRocks() > 30) {
 		//sets the ai base to make more spacman if possible
@@ -68,8 +57,7 @@ private void generateSpacman(Base x) {
 		resourceManager.setRocks(resourceManager.getRocks() - 30);
 		Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
 		r.setOwner(this);
-		x.setAction(new GenerateAction(r));							
->>>>>>> Ai
+		x.setAction(new GenerateAction(r));
 	}
 }
 		

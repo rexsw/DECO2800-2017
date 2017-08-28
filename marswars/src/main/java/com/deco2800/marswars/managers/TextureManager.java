@@ -67,14 +67,11 @@ public class TextureManager extends Manager {
         textureMap.put("base", new Texture("resources/placeholderassets/base.png"));
         textureMap.put("base2", new Texture("resources/placeholderassets/base2.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
-<<<<<<< HEAD
         this.saveTexture("base", "resources/placeholderassets/base.png");
         this.saveTexture("base2", "resources/placeholderassets/base2.png");
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
-=======
         textureMap.put("tree1", new Texture("resources/placeholderassets/tree1.png"));
         textureMap.put("tree1sele", new Texture("resources/placeholderassets/tree1sele.png"));
->>>>>>> Ai
         this.saveTexture("tree_selected", "resources/placeholderassets/tree_selected.png");
         this.saveTexture("rock", "resources/placeholderassets/ground-1.png");
         this.saveTexture("tree", "resources/placeholderassets/tree.png");
@@ -116,7 +113,6 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
-<<<<<<< HEAD
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
         //----------Unit Assets:
@@ -172,8 +168,6 @@ public class TextureManager extends Manager {
         } else {
         	return null;
         }
-=======
->>>>>>> Ai
         
     }
 
