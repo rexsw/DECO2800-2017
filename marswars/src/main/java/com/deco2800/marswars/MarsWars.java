@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +58,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Camera must be updated every render cycle.
 	 */
 	OrthographicCamera camera;
+	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
+	private int switcher = 0;
+	private int cSwitcher = 0;
+	private int cameraPointer = 0;
 
 	Stage stage;
 	Window window;
@@ -595,6 +600,41 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
+		}
+		if ((downKeys.contains(Input.Keys.C))){
+			if(cSwitcher == 0){
+				ArrayList<Float> XYPosition = new ArrayList<Float>();
+				XYPosition.add(camera.position.x);
+				XYPosition.add(camera.position.y);
+				cameraPosition.add(XYPosition);
+				cSwitcher++;
+			}
+		}else{
+			cSwitcher = 0;
+		}
+		
+		if((downKeys.contains(Input.Keys.N))){
+			if(!cameraPosition.isEmpty()){
+				ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
+				if(switcher == 0){
+					float X= camera.position.x - nextPosition.get(0);
+					float Y = camera.position.y - nextPosition.get(1);
+					X *= -1;
+					Y *= -1;
+					if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
+						camera.translate(X, 0);
+					}
+					if(camera.position.y > nextPosition.get(1) || 
+							(camera.position.y <= nextPosition.get(1))){
+						camera.translate(0, Y);
+					}
+					switcher++;
+					cameraPointer++;
+					cameraPointer = cameraPointer % cameraPosition.size();
+				}	
+			}
+		}else{
+			switcher = 0;
 		}
 
 		// Move the map dependent on the cursor position
