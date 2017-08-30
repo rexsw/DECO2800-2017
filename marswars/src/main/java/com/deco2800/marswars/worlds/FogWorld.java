@@ -17,8 +17,9 @@ public class FogWorld {
         return fogMap;
     }
 
-    public void addEntity(FogOfWarLayer entity) {
+    public void addEntity(FogOfWarLayer entity,int fogScaleSize) {
         //Add to the fog map
+        entity.setFogScaleSize(fogScaleSize);
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
         int bottom = (int)entity.getPosY();

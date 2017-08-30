@@ -9,6 +9,15 @@ package com.deco2800.marswars.entities;
  *
  */
 public class FogOfWarLayer extends AbstractEntity {
+    int fogScaleSize;
+
+    public void setFogScaleSize(int fogScaleSize){
+        this.fogScaleSize = fogScaleSize;
+    }
+
+    public int getFogScaleSize(){
+        return fogScaleSize;
+    }
 
     public FogOfWarLayer(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
         super(posX, posY, posZ, xLength, yLength, zLength);

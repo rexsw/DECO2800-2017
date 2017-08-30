@@ -106,6 +106,8 @@ public class Render3D implements Renderer {
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < entities.size(); index++) {
             Renderable entity = entities.get(index);
+            FogOfWarLayer fogTile = (FogOfWarLayer)entity;
+            int fogScaleSize = fogTile.getFogScaleSize();
 
             String textureString = entity.getTexture();
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
@@ -114,8 +116,8 @@ public class Render3D implements Renderer {
             float cartX = entity.getPosX();
             float cartY = (worldWidth-1) - entity.getPosY();
 
-            float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
-            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+            float isoX = (baseX + ((cartX - cartY) / 2.0f * tileWidth))-(fogScaleSize/2)*tileWidth;
+            float isoY = (baseY + ((cartX + cartY) / 2.0f) * tileHeight)-(fogScaleSize/2)*tileHeight;
 
             // We want to keep the aspect ratio of the image so...
             float aspect = (float)(tex.getWidth())/(float)(tileWidth);
@@ -126,7 +128,8 @@ public class Render3D implements Renderer {
             if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
                     && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
                 batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
-                        (tex.getHeight() / aspect) * entity.getYRenderLength());
+                        (tex.getHeight() / aspect) * entity.getYRenderLength());//x,y,width,length
+
             }
         }
     }
@@ -141,6 +144,7 @@ public class Render3D implements Renderer {
      */
 
     private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
+
         Collections.sort(entities);
         if (font == null) {
             font = new BitmapFont();
@@ -159,6 +163,7 @@ public class Render3D implements Renderer {
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < entities.size(); index++) {
             Renderable entity = entities.get(index);
+
 
             String textureString = entity.getTexture();
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);

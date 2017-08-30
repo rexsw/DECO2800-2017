@@ -74,9 +74,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.BUILD);
 		this.nextAction = null;
-		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
+		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
+		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
 		FogWorld fogWorld = GameManager.get().getFogWorld();
-		fogWorld.addEntity(lineOfSight);
+		fogWorld.addEntity(lineOfSight,fogScaleSize);
 	}
 
 	/**
