@@ -73,6 +73,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
+	NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -216,32 +217,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					String ip = ipAddr.getHostAddress();
 					ipDiag.text("IP Address: " + ip);
-
-					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
-					networkServer = new SpacServer(serverConnectionManager);
-
-
-					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-					networkClient = new SpacClient(clientConnectionManager);
-					//Initiate Server
-					try {
-						networkServer.bind(SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when initiating server", e);
-					}
-
-					//Join it as a Client
-					try {
-						networkClient.connect(5000, ip, SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when joinging as client", e);
-					}
-					JoinLobbyAction action = new JoinLobbyAction("Host");
-					networkClient.sendObject(action);
-
-					LOGGER.info(ip);
+					netManager.startServer(ip);
 				} catch (UnknownHostException ex) {
-					ipDiag.text("Something went wrong");
 					LOGGER.error("Unknown Host", ex);
 				}
 				ipDiag.button("Close", null);
@@ -249,7 +226,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 
 		});
-		
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", skin);
 		joinServerButton.addListener(new ChangeListener() {
@@ -275,17 +251,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 						if(o != null) {
 							String username = usernameInput.getText();
 							String ip = ipInput.getText();
-
-							ClientConnectionManager connectionManager = new ClientConnectionManager();
-							networkClient = new SpacClient(connectionManager);
-
-							try {
-								networkClient.connect(5000, ip, SERVER_PORT);
-							} catch (IOException e) {
-								LOGGER.error("Join server error", e);
-							}
-							JoinLobbyAction action = new JoinLobbyAction(username);
-							networkClient.sendObject(action);
+							netManager.startClient(ip, username);
 						}
 					}
 				};

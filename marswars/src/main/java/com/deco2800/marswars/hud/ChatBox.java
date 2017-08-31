@@ -14,7 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.MessageAction;
 
 
 /**
@@ -36,7 +39,9 @@ import com.deco2800.marswars.managers.TextureManager;
  * @author James McCall
  */
 public class ChatBox extends Table {
-    
+    NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+
+
     // Size variables for the chat Pane to keep it at a fixed size
     private static final float CHAT_WIDTH = 300;
     private static final float CHAT_HEIGHT = 150;
@@ -130,6 +135,8 @@ public class ChatBox extends Table {
         String message = messageTextField.getText();
         if (!"".equals(message)) {
             // Currently not implemented correctly, adds to chat box instead of sending to server.
+            MessageAction action = new MessageAction("wololo", message);
+            netManager.getNetworkClient().sendObject(action);
             addNewMessage(message);
         }
         messageTextField.setText("");
