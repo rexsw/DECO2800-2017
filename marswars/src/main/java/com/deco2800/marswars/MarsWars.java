@@ -472,7 +472,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		Texture background = textureManager.getTexture(backgroundString);
 		batch.begin();
-		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
+		batch.draw(background, camera.position.x - camera.viewportWidth*camera.zoom/2 , camera.position.y -
+				camera.viewportHeight*camera.zoom/2, camera.viewportWidth*camera.zoom,
+				camera.viewportHeight*camera.zoom);
 		batch.end();
 
         /* Render the tiles first */
