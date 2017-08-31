@@ -19,7 +19,7 @@ public class TechTreeView extends Dialog{
 			button("Upgrade Spacman Cost", 1);
 			button("Upgrade Attack", 2);
 			button("Upgrade Defense", 3);
-			button("OK");
+			button("OK", 0);
 		}
 	}
 
@@ -32,6 +32,7 @@ public class TechTreeView extends Dialog{
 	@Override
 	protected void result(final Object object){
 		int techID = (int) object;
+		if (techID == 0) {return;}
 		Technology tech = techMan.getTech(techID);
 		String message = techMan.checkPrereqs(techMan, tech, techID);
 		//Need to find a way to print this to the dialogue box
