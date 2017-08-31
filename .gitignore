@@ -7,6 +7,7 @@
 bin/
 lib/
 
+marswars/resources/HUDAssets/minimap.png
 
 # Gradle
 build
