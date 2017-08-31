@@ -1,6 +1,8 @@
 package com.deco2800.marswars.managers;
-import com.deco2800.marswars.util.Array2D;
+import java.util.List;
 
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.util.Array2D;
 
 /**
  * Fog of War Manager
@@ -14,22 +16,23 @@ public class FogOfWarManager extends Manager {
 	
 	
 	/**
-	 * Constructs the fogOfWar array when the game starts by setting all 
+	 * Initializes the fogOfWar array when the game starts by setting all 
 	 * elements to 0.
 	 * 
 	 * @param width the width of the map
 	 * @param length the length of the map
-	 */
-	public FogOfWarManager(int width, int length) {
+	*/
+	public void initialFog(Array2D<List<BaseEntity>> map) {
+		int width = map.getWidth();
+		int length = map.getLength();
 		this.fogOfWar = new Array2D<Integer>(width, length);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
 				fogOfWar.set(i, j, 0);
 			}
 		}
+		
 	}
-	
-	
 	/**
 	 * Sets coordinate to a certain sight level.
 	 * 
@@ -58,11 +61,48 @@ public class FogOfWarManager extends Manager {
 	}
 	
 	/**
-	 * Updates the FogOfWar after each clock tick
+	 * Updates the FogOfWar after each clock tick based on the position of entities.
+	 * 
+	 * @param map The collision map of entities
 	 */
-	public void updateFog() {
-		
+	public void updateFog(Array2D<List<BaseEntity>> map) {
+		for (int i = 0; i < map.getWidth(); i++) {
+			for (int j = 0; j < map.getLength(); j++) {
+				List<BaseEntity> entity = map.get(i, j);
+				if (!(entity.isEmpty())) {
+					sightRange(i, j, 5);
+				}
+			}
+		}
 	}
 	
+	/**
+	 * Updates the fogOfWar based on the sight range of an entity.
+	 * 
+	 * @param x The x position of the entity
+	 * @param y The y position of the entity
+	 * @param range The sight range of the entity
+	 */
+	public void sightRange(int x, int y, int range) {
+		while (range > 0) {
+			int w = fogOfWar.getWidth();
+			int l = fogOfWar.getLength();	
+			for (int i = 0; i < range; i++) {
+				if (x + i < w && y + range - i < l) {
+					fogOfWar.set(x + i, y + range - i, 2);
+				}
+				if (x + i < w && y - range + i >= 0) {
+					fogOfWar.set(x + i, y - range + i, 2);
+				}
+				if (x - i >= 0 && y + range - i < l) {
+					fogOfWar.set(x - i, y + range - i, 2);
+				}
+				if (x - i >= 0 && y - range + i >= 0) {
+					fogOfWar.set(x - i, y - range + i, 2);
+				}
+			}
+			sightRange(x, y, range - 1);
+		}
+	}
 	
 }
