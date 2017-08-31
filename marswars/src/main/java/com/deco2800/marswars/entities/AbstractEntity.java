@@ -54,12 +54,14 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.xRenderLength = xRenderLength;
 		this.yRenderLength = yRenderLength;
 		this.centered = centered;
+		float centeredPosX = posX;
+		float centeredPosY = posY;
 
 		if (centered) {
-			posX += (1-xLength/2);
-			posY += (1-yLength/2);
+			centeredPosX = posX + (1-xLength/2);
+			centeredPosY = posY + (1-yLength/2);
 		}
-		this.position = new Box3D(posX, posY, posZ, xLength, yLength, zLength);
+		this.position = new Box3D(centeredPosX, centeredPosY, posZ, xLength, yLength, zLength);
 	}
 
 	/**
@@ -118,12 +120,14 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param z
 	 */
 	public void setPosition(float x, float y, float z) {
+		float centeredX = x;
+		float centeredY = y;
 		if (this.centered) {
-			y += (1 - this.position.getYLength() / 2);
-			x += (1 - this.position.getXLength() / 2);
+			centeredY += (1 - this.position.getYLength() / 2);
+			centeredX += (1 - this.position.getXLength() / 2);
 		}
-		this.position.setX(x);
-		this.position.setY(y);
+		this.position.setX(centeredX);
+		this.position.setY(centeredY);
 		this.position.setZ(z);
 	}
 
@@ -132,10 +136,11 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param x
 	 */
 	public void setPosX(float x) {
+		float centeredX = x;
 		if (this.centered) {
-			x += (1-this.position.getXLength() / 2);
+			centeredX += (1-this.position.getXLength() / 2);
 		}
-		this.position.setX(x);
+		this.position.setX(centeredX);
 	}
 
 	/**
@@ -143,10 +148,11 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param y
 	 */
 	public void setPosY(float y) {
+		float centeredY = y;
 		if (this.centered) {
-			y += (1 - this.position.getYLength() / 2);
+			centeredY += (1 - this.position.getYLength() / 2);
 		}
-		this.position.setY(y);
+		this.position.setY(centeredY);
 	}
 
 	/**
@@ -258,21 +264,21 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		float isoX = (cartX - cartY) / 2.0f;
 		float isoY = (cartX + cartY) / 2.0f;
 
-		float cartX_o = o.getPosX();
-		float cartY_o = o.getParent().getLength() - o.getPosY();
+		float oCartX = o.getPosX();
+		float oCartY = o.getParent().getLength() - o.getPosY();
 
-		float isoX_o = (cartX_o - cartY_o) / 2.0f;
-		float isoY_o = (cartX_o + cartY_o) / 2.0f;
+		float oIsoX = (oCartX - oCartY) / 2.0f;
+		float oIsoY = (oCartX + oCartY) / 2.0f;
 
-		if (Math.abs(isoY - isoY_o) < 0.000001f) {
-			if (isoX < isoX_o) {
+		if (Math.abs(isoY - oIsoY) < 0.000001f) {
+			if (isoX < oIsoX) {
 				return 1;
-			} else if (isoX > isoX_o) {
+			} else if (isoX > oIsoX) {
 				return -1;
 			} else {
 				return 0;
 			}
-		} else if (isoY < isoY_o) {
+		} else if (isoY < oIsoY) {
 			return 1;
 		} else {
 			return -1;

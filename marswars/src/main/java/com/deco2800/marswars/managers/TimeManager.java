@@ -97,8 +97,8 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return long integer (0 to 23) representing the current hour
 	 */
 	public long getGlobalHours() {
-		return TimeUnit.HOURS.convert(getGlobalTime(),
-				TimeUnit.MILLISECONDS) % 24;
+		return (TimeUnit.HOURS.convert(getGlobalTime(),
+				TimeUnit.MILLISECONDS) + 10) % 24;
 	}
 
 	/**
@@ -128,8 +128,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return long integer representing the current millisecond
 	 */
 	public long getGameTimer() {
-		long gameTimer = getGlobalTime() - gameStartTime;
-		return gameTimer;
+		return getGlobalTime() - gameStartTime;
 	}
 
 	/**
@@ -182,6 +181,22 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
+	 * Sets the In-Game Time to be 0 (Resets current clock)
+	 */
+	public void resetInGameTime() {
+		time = 0;
+	}
+
+	/**
+	 * Provides the System Time (AEST) in human-readable string format.
+	 * @return the String representation of the System Time
+	 */
+	public String getGlobalTimeString() {
+		return getGlobalHours() + ":" + getGlobalMinutes() + ":" +
+				getGlobalSeconds();
+	}
+
+	/**
 	 * Provides the amount of time that the current game instance has
 	 * been running since the initial loading of the HUD.
 	 * @return the String representation of the real time spent in the
@@ -199,6 +214,8 @@ public class TimeManager extends Manager implements TickableManager {
 	public void onTick(long i) {
 		if (!isPaused) {
 			time += 5;
+			// Some duplicated code here (also in isNight) find way to resolve
+			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
 				setNight();
 			} else {

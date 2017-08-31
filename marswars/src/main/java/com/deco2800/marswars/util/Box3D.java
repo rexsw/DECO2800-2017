@@ -206,7 +206,7 @@ public class Box3D {
 		if (Math.abs(this.x - other.x) > EPSILON && Math.abs(this.y - other.y) > EPSILON && Math.abs(this.z - other.z) > EPSILON) {
 			return false;
 		}
-		return (Math.abs(this.x - other.x) < EPSILON && Math.abs(this.y - other.y) < EPSILON && Math.abs(this.z - other.z) < EPSILON);
+			return Math.abs(this.x - other.x) < EPSILON && Math.abs(this.y - other.y) < EPSILON && Math.abs(this.z - other.z) < EPSILON;
 		}
 
 	/**

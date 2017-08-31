@@ -4,7 +4,6 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.util.WorldUtil;
 import java.util.Optional;
 
@@ -17,30 +16,30 @@ import org.slf4j.LoggerFactory;
  * warning spicy i hope you like meat balls 
  */
 
-public class AiManagerTest extends Manager implements TickableManager, HasTeam {
+public class AiManagerTest extends AbstractPlayerManager implements TickableManager, HasTeam {
 		private int teamid;
 		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
 		private int cooldownattack = 0;
 		private int cooldownmove = 0;
 		private int time = 0;
 		private boolean alive = true;
+		private ResourceManager resources = new ResourceManager();
 
 @Override
 public void onTick(long l) {
-	//alive = false; //TODO: Reenable
 	if(!alive) {
 		return;
 	}
 	time += 5;
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof HasOwner) {
-			if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
+		if(e instanceof HasOwner && ((HasOwner) e).getOwner() == this) {
+			if(e instanceof Spacman) {
 				Spacman x = (Spacman)e;
 				useSpacman(x);
-			} else if(e instanceof Base && ((HasOwner) e).getOwner() == this) {
+			} else if(e instanceof Base) {
 				Base x = (Base)e;
 				generateSpacman(x);
-			} else if(e instanceof EnemySpacman && ((HasOwner) e).getOwner() == this) {
+			} else if(e instanceof EnemySpacman) {
 				EnemySpacman x = (EnemySpacman)e;
 				useEnemy(x);
 			}
@@ -48,19 +47,17 @@ public void onTick(long l) {
 	}
 }
 		/**
-		 * generate new spacman when a base have more than 30 rocks
+		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-	if(!x.isWorking()) {
-	//sets the ai base to make more spacman if possible
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > 30) {
-			LOGGER.error("ai - set base to make spacman");
-			resourceManager.setRocks(resourceManager.getRocks() - 30);
-			Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
-			r.setOwner(this);
-			x.setAction(new GenerateAction(r));							
-		}
+	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	if(!x.isWorking() && resourceManager.getRocks() > 30) {
+		//sets the ai base to make more spacman if possible
+		LOGGER.error("ai - set base to make spacman");
+		resourceManager.setRocks(resourceManager.getRocks() - 30);
+		Spacman r = new Spacman(x.getPosX(), x.getPosY(), 0);
+		r.setOwner(this);
+		x.setAction(new GenerateAction(r));
 	}
 }
 		
@@ -82,7 +79,7 @@ private void useEnemy(EnemySpacman x) {
 	}
 }
 
-public void useSpacman(Spacman x) {
+private void useSpacman(Spacman x) {
 	if(!x.isWorking()) {
 		//allow spacmans to collect the closest resources
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
@@ -91,7 +88,10 @@ public void useSpacman(Spacman x) {
 	}
 }
 		
-		
+/**
+ * note team methods where a wip system and have been pushed back and as such
+ * are not used for now		
+ */
 @Override
 public void setTeam(int teamId) {
 	this.teamid = teamId;
@@ -113,6 +113,7 @@ public boolean sameTeam(Manager otherMember) {
  * and sets it to "dead" so it won't tick anymore 
  */
 public void isKill() {
+	//in this case "dead" is an Ai with no spacman
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 		if(e instanceof Spacman && ((HasOwner) e).getOwner() == this) {
 			return;
@@ -125,6 +126,20 @@ public void isKill() {
 	}
 	LOGGER.error("ai - is kill");
 	alive = false;
+}
+
+/**
+ * @return true iff Ai is alive else false 
+ */
+public boolean alive() {
+	return alive;
+}
+
+/**
+ * @return Resourcemanager of this Ai
+ */
+public ResourceManager getResources() {
+	return resources;
 }
 
 }

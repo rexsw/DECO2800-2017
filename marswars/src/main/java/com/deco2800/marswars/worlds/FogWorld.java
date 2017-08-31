@@ -1,8 +1,6 @@
 package com.deco2800.marswars.worlds;
 
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.FogOfWarLayer;
-import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +13,13 @@ public class FogWorld {
 
     protected static ArrayList<FogOfWarLayer> fogMap = new ArrayList<FogOfWarLayer>();
 
-    public static ArrayList<FogOfWarLayer> getFogMap() {
+    public static List<FogOfWarLayer> getFogMap() {
         return fogMap;
     }
 
-    public void addEntity(FogOfWarLayer entity) {
+    public void addEntity(FogOfWarLayer entity,int fogScaleSize) {
         //Add to the fog map
+        entity.setFogScaleSize(fogScaleSize);
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
         int bottom = (int)entity.getPosY();
