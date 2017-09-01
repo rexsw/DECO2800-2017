@@ -113,7 +113,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
 
-
+		/*
+		 * Initializes fog of war
+		 */
+		FogOfWarManager fogOfWar = (FogOfWarManager)(GameManager.get().getManager(FogOfWarManager.class));
+		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
+		
 		/*
 		 * sets all starting entities to be player owned
 		 */

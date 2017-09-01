@@ -22,9 +22,7 @@ public class FogOfWarManager extends Manager {
 	 * @param width the width of the map
 	 * @param length the length of the map
 	*/
-	public void initialFog(Array2D<List<BaseEntity>> map) {
-		int width = map.getWidth();
-		int length = map.getLength();
+	public void initialFog(int width, int length) {
 		this.fogOfWar = new Array2D<Integer>(width, length);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
