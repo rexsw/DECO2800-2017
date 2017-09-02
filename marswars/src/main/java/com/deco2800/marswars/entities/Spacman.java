@@ -14,13 +14,8 @@ import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -90,6 +85,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y, z);
 		lineOfSight.setPosition(x,y,z);
+//this function is never used
 	}
 
 	/**
@@ -98,8 +94,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosX(float x) {
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(false);
+		}
 		super.setPosX(x);
 		lineOfSight.setPosX(x);
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(true);
+		}
+
 	}
 
 	/**
@@ -108,8 +111,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosY(float y) {
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(false);
+		}
 		super.setPosY(y);
 		lineOfSight.setPosY(y);
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(false);
+		}
+
 	}
 
 	/**

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
@@ -350,6 +351,24 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 					baseWorld.getCollisionMap().get(x, y).add(this);
 				} else {
 					baseWorld.getCollisionMap().get(x, y).remove(this);
+				}
+			}
+		}
+	}
+
+	protected void modifyFogOfWarMap(boolean add) {
+
+		int left = (int) getPosX();
+		int right = (int) Math.ceil(getPosX() + getXLength());
+		int bottom = (int) getPosY();
+		int top = (int) Math.ceil(getPosY() + getYLength());
+
+		for (int x = left; x < right; x++) {
+			for (int y = bottom; y < top; y++) {
+				if (add) {
+					FogOfWarManager.sightRange(x,y,2,add);
+				} else {
+					FogOfWarManager.sightRange(x,y,2,add);
 				}
 			}
 		}
