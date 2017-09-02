@@ -124,7 +124,7 @@ public class FogOfWarManager extends Manager {
 					if( x+j < w && y+i < l && y+i>=0){//to the right
 						fogOfWar.set(x+j,y+i,0);
 					}
-					if( x-j < w && y+i < l && y+i>=0){//to the right
+					if( x-j >= 0  && y+i < l && y+i>=0){//to the right
 						fogOfWar.set(x-j,y+i,0);
 					}
 				}
