@@ -70,6 +70,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.addNewAction(ActionType.BUILD);
 		this.nextAction = null;
 		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
+
 		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
 		FogWorld fogWorld = GameManager.get().getFogWorld();
 		fogWorld.addEntity(lineOfSight,fogScaleSize);
@@ -117,7 +118,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		super.setPosY(y);
 		lineOfSight.setPosY(y);
 		if(owner instanceof PlayerManager) {
-			modifyFogOfWarMap(false);
+			modifyFogOfWarMap(true);
 		}
 
 	}

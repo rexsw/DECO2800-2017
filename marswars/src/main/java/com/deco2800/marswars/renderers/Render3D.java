@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.FogOfWarLayer;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -162,8 +164,12 @@ public class Render3D implements Renderer {
 
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < entities.size(); index++) {
+
             Renderable entity = entities.get(index);
 
+            if(entities.get(index).getEntityType()==BaseEntity.EntityType.UNIT) {
+                if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+            }
 
             String textureString = entity.getTexture();
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);

@@ -98,7 +98,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	/**
 	 * Sets the build speed modifier for this entity
-	 * @param cost
+	 * @param speed
 	 */
 	public void setSpeed(float speed) {
 		this.buildSpeed = speed;
