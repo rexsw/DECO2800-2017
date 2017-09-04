@@ -7,9 +7,22 @@ public class TimeManager extends Manager implements TickableManager {
 	private static final int DAYBREAK = 6; //daybreak at 6am
 	private static final int NIGHT = 18; //night at 6pm
 	private boolean isNight = true;
-	private boolean isPaused = false;
+	private boolean isGamePaused = false;
+	private boolean isProductionPaused = false;
 	private long time = 0;
 	private long gameStartTime = 0;
+
+	/**
+	 * Calculate the number of passed in-game days
+	 * @return the in-game hour of the day
+	 */
+	public long getGameDays() {
+		int days = 0;
+		if (getHours() == 0) {
+			days++;
+		}
+		return days;
+	}
 
 	/**
 	 * Calculate the current in-game hour
@@ -69,19 +82,42 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return true if the timer is paused
 	 */
 	public boolean isPaused() {
-		return isPaused;
+		return isGamePaused;
 	}
+
+	/**
+	 * Check if production is paused
+	 */
+	public boolean isProductionPaused() {
+		return isProductionPaused;
+	}
+
 	/**
 	 * Set the game to be paused
 	 */
 	public void pause() {
-		isPaused = true;
+		isGamePaused = true;
 	}
+
+	/**
+	 * Set building production to be paused
+	 */
+	public void pauseProduction() {
+		isProductionPaused = true;
+	}
+
+	/**
+	 * Set the building production to resume
+	 */
+	public void resumeProduction() {
+		isProductionPaused = false;
+	}
+
 	/**
 	 * Set the game to stop being paused
 	 */
 	public void unPause() {
-		isPaused = false;
+		isGamePaused = false;
 	}
 
 	/**
@@ -212,7 +248,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		if (!isPaused) {
+		if (!isGamePaused) {
 			time += 5;
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers

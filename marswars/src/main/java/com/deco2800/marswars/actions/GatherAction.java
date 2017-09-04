@@ -4,6 +4,7 @@ import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -31,6 +32,9 @@ public class GatherAction implements DecoAction {
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
 	private boolean completed = false;
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
 
 	private int ticksCollect = 200;
 
@@ -46,22 +50,24 @@ public class GatherAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		switch(state) {
-			case SETUP_MOVE:
-				setupMove();
-				break;
-			case MOVE_TOWARDS:
-				moveTowards();
-				break;
-			case COLLECT:
-				collect();
-				break;
-			case SETUP_RETURN:
-				setupReturn();
-				break;
-			case RETURN_TO_BASE:
-				returnToBase();
-				break;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			switch (state) {
+				case SETUP_MOVE:
+					setupMove();
+					break;
+				case MOVE_TOWARDS:
+					moveTowards();
+					break;
+				case COLLECT:
+					collect();
+					break;
+				case SETUP_RETURN:
+					setupReturn();
+					break;
+				case RETURN_TO_BASE:
+					returnToBase();
+					break;
+			}
 		}
 	}
 
@@ -194,5 +200,19 @@ public class GatherAction implements DecoAction {
 		}
 	}
 
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	@Override
+	public void pauseAction() {
+		actionPaused = true;
+	}
 
+	/**
+	 * Resumes the current action
+	 */
+	@Override
+	public void resumeAction() {
+		actionPaused = false;
+	}
 }

@@ -155,5 +155,13 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
+
+	/**
+	 * Returns the current action (used in WeatherManager)
+	 * @return
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
 	
 }

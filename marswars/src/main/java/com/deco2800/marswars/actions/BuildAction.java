@@ -3,6 +3,7 @@ package com.deco2800.marswars.actions;
 import java.util.List;
 import java.util.Optional;
 
+import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,10 @@ public class BuildAction implements DecoAction{
 	private BaseEntity spac;
 	private MoveAction moveAction = null;
 	private BuildingType building;
+
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private boolean actionPaused = false;
 	
 	/**
 	 * Constructor for the BuildAction
@@ -69,73 +74,81 @@ public class BuildAction implements DecoAction{
 	 * When called on, switches state to move builder and begin building
 	 */
 	public void doAction() {
-		if (state == State.SELECT_SPACE) {
-			relocateSelect --;
-			if(relocateSelect == 0) {
-				if (temp != null) {
-					GameManager.get().getWorld().removeEntity(temp);
-					validBuild = true;
-				}
-				camera = GameManager.get().getCamera();
-				Vector3 worldCoords = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-				proj_x = worldCoords.x/tileWidth;
-				proj_y = -(worldCoords.y - tileHeight / 2f) / tileHeight + proj_x;
-				proj_x -= proj_y - proj_x;
-				proj_x = (int) proj_x;
-				proj_y = (int) proj_y;
-				if (!(proj_x < ((buildingHeight+1)/2) || proj_x > (GameManager.get().getWorld().getWidth() - ((buildingHeight+1.5)/2)) 
-						|| proj_y < ((buildingHeight+1)/2) || proj_y > GameManager.get().getWorld().getLength() - buildingLength)) {
-					temp = new CheckSelect(proj_x-((buildingHeight+1)/2), proj_y, 0f, buildingHeight, buildingLength, 0f);
-					int left = (int)temp.getPosX();
-					int right = (int)Math.ceil(temp.getPosX() + temp.getXLength());
-					int bottom = (int)temp.getPosY();
-					int top = (int)Math.ceil(temp.getPosY() + temp.getYLength());
-					for (int x = left+1; x < right+1; x++) {
-						for (int y = bottom-1; y < top-1; y++) {
-							if (GameManager.get().getWorld().hasEntity(x, y)){
-								validBuild = false;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			if (state == State.SELECT_SPACE) {
+				relocateSelect--;
+				if (relocateSelect == 0) {
+					if (temp != null) {
+						GameManager.get().getWorld().removeEntity(temp);
+						validBuild = true;
+					}
+					camera = GameManager.get().getCamera();
+					Vector3 worldCoords = camera.unproject(new
+							Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+					proj_x = worldCoords.x / tileWidth;
+					proj_y = -(worldCoords.y - tileHeight / 2f)
+							/ tileHeight + proj_x;
+					proj_x -= proj_y - proj_x;
+					proj_x = (int) proj_x;
+					proj_y = (int) proj_y;
+					if (!(proj_x < ((buildingHeight + 1) / 2) || proj_x >
+							(GameManager.get().getWorld().getWidth() -
+									((buildingHeight + 1.5) / 2))
+							|| proj_y < ((buildingHeight + 1) / 2) || proj_y >
+							GameManager.get().getWorld().getLength() -
+									buildingLength)) {
+						temp = new CheckSelect(proj_x -
+								((buildingHeight + 1) / 2), proj_y, 0f,
+								buildingHeight, buildingLength, 0f);
+						int left = (int) temp.getPosX();
+						int right = (int) Math.ceil(temp.getPosX() +
+								temp.getXLength());
+						int bottom = (int) temp.getPosY();
+						int top = (int) Math.ceil(temp.getPosY() +
+								temp.getYLength());
+						for (int x = left + 1; x < right + 1; x++) {
+							for (int y = bottom - 1; y < top - 1; y++) {
+								if (GameManager.get().getWorld().hasEntity(x, y)) {
+									validBuild = false;
+								}
 							}
 						}
+						if (validBuild) {
+							temp.setGreen();
+							GameManager.get().getWorld().addEntity(temp);
+
+						} else {
+							temp.setRed();
+							GameManager.get().getWorld().addEntity(temp);
+						}
 					}
-					if (validBuild) {
-						temp.setGreen();
-						GameManager.get().getWorld().addEntity(temp);
-						
+					relocateSelect = 10;
+
+				}
+			} else if (state == State.BUILD_STRUCTURE) {
+				if (base != null) {
+					if (progress >= 100) {
+						base.setTexture("homeBase");
+						this.completed = true;
+					} else if (progress > 50) {
+						base.setTexture("homeBase2");
+						progress = progress + (buildingSpeed * speedMultiplier);
+					} else {
+						base.setTexture("homeBase1");
+						progress = progress + (buildingSpeed * speedMultiplier);
 					}
-					else {
-						temp.setRed();
-						GameManager.get().getWorld().addEntity(temp);
-					}
 				}
-				relocateSelect = 10;
-				
-			}
-		} else if (state == State.BUILD_STRUCTURE) {
-			if (base != null) {
-				if (progress >= 100) {
-					base.setTexture("homeBase");
-					this.completed = true;
-				}
-				else if (progress > 50){
-					base.setTexture("homeBase2");
-					progress = progress + (buildingSpeed * speedMultiplier);
-				}
-				else {
-					base.setTexture("homeBase1");
-					progress = progress + (buildingSpeed * speedMultiplier);
-				}
-			}
-		} else if (state == State.SETUP_MOVE) {
+			} else if (state == State.SETUP_MOVE) {
 				moveAction = new MoveAction(proj_x, proj_y, spac);
 				state = State.MOVE_ACTION;
-		} else if (state == State.MOVE_ACTION) {
+			} else if (state == State.MOVE_ACTION) {
 				if (moveAction.completed()) {
 					state = State.BUILD_STRUCTURE;
 					return;
 				}
-				moveAction.doAction();	
+				moveAction.doAction();
 			}
-		
+		}
 	}
 	
 	/**
@@ -191,5 +204,21 @@ public class BuildAction implements DecoAction{
 				completed = true;
 			}
 		}
+	}
+
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	@Override
+	public void pauseAction() {
+		actionPaused = true;
+	}
+
+	/**
+	 * Resumes the current action
+	 */
+	@Override
+	public void resumeAction() {
+		actionPaused = false;
 	}
 }
