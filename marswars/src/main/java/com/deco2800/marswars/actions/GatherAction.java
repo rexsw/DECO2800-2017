@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -104,8 +105,8 @@ public class GatherAction implements DecoAction {
 					ResourceType resourceType = ((Resource) goal).getType();
 					if (goal instanceof HasHealth) {
 						((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
-						if (entity instanceof Spacman) {
-							((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
+						if (entity instanceof Astronaut) {
+							((Astronaut) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
 						}
 						((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() - 1);
 					}
@@ -139,7 +140,7 @@ public class GatherAction implements DecoAction {
 	private void returnToBase() {
 		if (action.completed()) {
 			state = State.SETUP_MOVE;
-			if (entity instanceof Spacman && ((Spacman) entity).getOwner() instanceof AiManagerTest) {
+			if (entity instanceof HasOwner && ((HasOwner) entity).getOwner() instanceof AiManagerTest) {
 				//if controlled by the ai added the resources to the ai's pile
 				AiManagerTest manager = (AiManagerTest) ((Spacman) entity).getOwner();
 				ResourceManager resourceManager = manager.getResources();
@@ -148,7 +149,7 @@ public class GatherAction implements DecoAction {
 			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			// check which type of resource and add it to the player's resource
-			if (entity instanceof Spacman) {
+			if (entity instanceof Astronaut) {
 				depositHarvest(resourceManager);
 			}
 			return;
@@ -158,7 +159,10 @@ public class GatherAction implements DecoAction {
 
 	private void setupReturn() {
 		Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
-
+		if(entity instanceof HasOwner) {
+			base = WorldUtil.getClosestEntityOfClassAndOwner(Base.class, entity.getPosX(), entity.getPosY(), ((HasOwner) entity).getOwner());
+		} 
+		
 		if (base.isPresent()) {
 			action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
 		}
@@ -168,9 +172,9 @@ public class GatherAction implements DecoAction {
 
 	private void depositHarvest(ResourceManager rm) {
 		// check if this unit't actually has something to drop
-		if (((Spacman) entity).checkBackpack()) {
+		if (((Astronaut) entity).checkBackpack()) {
 			ResourceManager resourceManager = rm;
-			GatheredResource resource = ((Spacman) entity).removeGatheredResource();
+			GatheredResource resource = ((Astronaut) entity).removeGatheredResource();
 			ResourceType resourceType = resource.getType();
 			int amount = resource.getAmount();
 			switch (resourceType) {

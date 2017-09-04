@@ -167,9 +167,9 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-            if(entities.get(index).getEntityType()==BaseEntity.EntityType.UNIT) {
-                if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
-            }
+//            if(entities.get(index).getEntityType()==BaseEntity.EntityType.UNIT) {
+//                if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+//            }
 
             String textureString = entity.getTexture();
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
