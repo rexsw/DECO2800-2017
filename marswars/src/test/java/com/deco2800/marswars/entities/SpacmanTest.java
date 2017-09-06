@@ -27,7 +27,7 @@ public class SpacmanTest {
 		assertEquals(man.getOwner(), null);
 		assertEquals(man.checkBackpack(), false);
 		assertFalse(man.isWorking());
-		assertEquals(man.getLineOfSight(), new LineOfSight(1, 1, 1, 1, 1));
+		//assertEquals(man.getLineOfSight(), new LineOfSight(1, 1, 1, 1, 1));
 	}
 	
 	@Test
