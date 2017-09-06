@@ -277,7 +277,7 @@ public class TimeManager extends Manager implements TickableManager {
 	@Override
 	public void onTick(long i) {
 		if (!isGamePaused) {
-			time += 5;
+			time += 2;
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
