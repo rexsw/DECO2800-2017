@@ -16,6 +16,7 @@ public class FogOfWarManager extends Manager {
 	private static boolean on;
 	private int maxWidth;
 	private int maxLength;
+	private static boolean activatedFog = false;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
@@ -136,16 +137,21 @@ public class FogOfWarManager extends Manager {
 			}
 		}
 	}
-	
-	public void toggleFog() {
-		on = !on;
-		if (!on) {
-			for (int i = 0; i <= maxWidth; i++) {
-				for (int j =0 ; j <= maxLength; j++) {
-					fogOfWar.set(i, j, 2);
-				}
-			}
-		}
+
+	/**
+	 * this function will toggle the fog on or off depends on the parameter given
+	 * @param status
+	 */
+	public static void toggleFog(boolean status) {
+		activatedFog = status;
+	}
+
+	/**
+	 * This function will return the status of the fog (on or off)
+	 * @return
+	 */
+	public static boolean getToggleFog(){
+		return activatedFog;
 	}
 	
 }

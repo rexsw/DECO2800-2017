@@ -167,8 +167,11 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-            if(entities.get(index).getEntityType()==BaseEntity.EntityType.UNIT) {
-                if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+            //fog of war part of the game
+            if(FogOfWarManager.getToggleFog()) {
+                if (entities.get(index).getEntityType() == BaseEntity.EntityType.UNIT) {
+                    if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+                }
             }
 
             String textureString = entity.getTexture();
