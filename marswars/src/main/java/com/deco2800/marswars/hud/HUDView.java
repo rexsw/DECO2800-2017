@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -91,6 +92,7 @@ public class HUDView extends ApplicationAdapter{
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
 	private boolean menuToggle;
+	private boolean fogToggle = true; 
 	//Image buttons to display/ remove lower HUD 
 	private ImageButton dispActions;//Button for displaying actions window 
 	private ImageButton removeActions; //button for removing actions window 
@@ -403,10 +405,15 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 		
+		//add toggle Fog of war FOR (DEBUGGING) 
+		Button dispFog = new TextButton("Fog", skin);
+		
+		
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispMainMenu);
 		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispFog);
 		HUDManip.add(removeActions);
 		
 		stage.addActor(HUDManip);
@@ -465,7 +472,25 @@ public class HUDView extends ApplicationAdapter{
 				new TechTreeView("TechTree", skin).show(stage);
 			}
 
-		});	
+		});
+		
+		
+		dispFog.addListener(new ChangeListener() {
+			@Override
+			/*displays the (-) button for setting the hud to invisible*/
+			public void changed(ChangeEvent event, Actor actor) {
+				//disable fog
+				if (fogToggle) {
+					LOGGER.debug("fog of war is now off");
+					FogOfWarManager.toggleFog(false);
+					fogToggle = false; 
+				}else {
+					LOGGER.debug("fog of war is now on");
+					FogOfWarManager.toggleFog(true);
+					fogToggle = true; 
+				}
+			}	
+		});
 	}	
 	
 	/**
