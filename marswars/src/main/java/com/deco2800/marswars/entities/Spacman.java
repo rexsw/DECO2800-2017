@@ -71,10 +71,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		this.addNewAction(ActionType.BUILD);
 		this.nextAction = null;
 		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
-
-		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
-		FogWorld fogWorld = GameManager.get().getFogWorld();
-		fogWorld.addEntity(lineOfSight,fogScaleSize);
+//
+//		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
+//		FogWorld fogWorld = GameManager.get().getFogWorld();
+//		fogWorld.addEntity(lineOfSight,fogScaleSize);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	@Override
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y, z);
-		lineOfSight.setPosition(x,y,z);
+		//lineOfSight.setPosition(x,y,z);
 //this function is never used
 	}
 
@@ -100,7 +100,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 			modifyFogOfWarMap(false);
 		}
 		super.setPosX(x);
-		lineOfSight.setPosX(x);
+		//lineOfSight.setPosX(x);
 		if(owner instanceof PlayerManager) {
 			modifyFogOfWarMap(true);
 		}
@@ -117,7 +117,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 			modifyFogOfWarMap(false);
 		}
 		super.setPosY(y);
-		lineOfSight.setPosY(y);
+		//lineOfSight.setPosY(y);
 		if(owner instanceof PlayerManager) {
 			modifyFogOfWarMap(true);
 		}
@@ -131,7 +131,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	@Override
 	public void setPosZ(float z) {
 		super.setPosZ(z);
-		lineOfSight.setPosZ(z);
+		//lineOfSight.setPosZ(z);
 	}
 	/**
 	 * On tick method for the spacman

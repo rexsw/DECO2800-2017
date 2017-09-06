@@ -28,7 +28,8 @@ public class GameManager implements TickableManager {
 
 	private BaseWorld gameWorld;
 
-	private static FogWorld fogWorld = new FogWorld();
+
+
 
 	private BaseWorld mapWorld;
 	
@@ -123,9 +124,7 @@ public class GameManager implements TickableManager {
 		return gameWorld;
 	}
 
-	public FogWorld getFogWorld() {
-		return fogWorld;
-	}
+
 
 	/**
 	 * Gets the minimap

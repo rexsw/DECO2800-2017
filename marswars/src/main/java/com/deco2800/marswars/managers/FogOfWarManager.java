@@ -13,12 +13,17 @@ import com.deco2800.marswars.util.Array2D;
  */
 public class FogOfWarManager extends Manager {
 	private static Array2D<Integer> fogOfWar;
-	private static boolean on;
+	private static Array2D<Integer> blackFogOfWar;
 	private int maxWidth;
 	private int maxLength;
+	private static boolean activatedFog = false;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
+	}
+
+	public static Array2D<Integer> getBlackFogOfWar(){
+		return blackFogOfWar;
 	}
 
 	/**
@@ -30,12 +35,14 @@ public class FogOfWarManager extends Manager {
 	 */
 	public void initialFog(int width, int length) {
 		this.fogOfWar = new Array2D<Integer>(width, length);
+		this.blackFogOfWar  = new Array2D<Integer>(width, length);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
 				fogOfWar.set(i, j, 0);
+				blackFogOfWar.set(i,j,0);
 			}
 		}
-		this.on = true;
+
 		this.maxWidth = width;
 		this.maxLength = length;
 	}
@@ -67,21 +74,9 @@ public class FogOfWarManager extends Manager {
 		return fogOfWar.get(x, y);
 	}
 
-	/**
-	 * Updates the FogOfWar after each clock tick based on the position of entities.
-	 *
-	 * @param map The collision map of entities
-	 */
-//	public void updateFog(Array2D<List<BaseEntity>> map) {
-//		for (int i = 0; i < map.getWidth(); i++) {
-//			for (int j = 0; j < map.getLength(); j++) {
-//				List<BaseEntity> entity = map.get(i, j);
-//				if (!(entity.isEmpty())) {
-//					sightRange(i, j, 5,);
-//				}
-//			}
-//		}
-//	}
+	public static int getBlackFog(int x, int y) {
+		return blackFogOfWar.get(x, y);
+	}
 
 	/**
 	 * Updates the fogOfWar based on the sight range of an entity.
@@ -93,40 +88,27 @@ public class FogOfWarManager extends Manager {
 	public static void sightRange(int x, int y, int maxRange, boolean state) {
 		int w = fogOfWar. getWidth();
 		int l = fogOfWar.getLength();
-		if (on) {
 			if (state) {//set the new position on the map
 				for(int i=-maxRange;i<=maxRange;i++){//for each row
 					for(int j=0;j<=maxRange;j++) {//for each column
 						if( x+j < w && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x+j,y+i,2);
+							blackFogOfWar.set(x+j,y+i,1);//reveal a tile
 						}
 						if( x-j >= 0 && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x-j,y+i,2);
+							blackFogOfWar.set(x-j,y+i,1);//reveal a tile
 						}
 					}
 
 				}
-
-//				for (int i = 0; i < range; i++) {
-//					if (x + i < w && y + range - i < l) {
-//						fogOfWar.set(x + i, y + range - i, 2);
-//					}
-//					if (x + i < w && y - range + i >= 0) {
-//						fogOfWar.set(x + i, y - range + i, 2);
-//					}
-//					if (x - i >= 0 && y + range - i < l) {
-//						fogOfWar.set(x - i, y + range - i, 2);
-//					}
-//					if (x - i >= 0 && y - range + i >= 0) {
-//						fogOfWar.set(x - i, y - range + i, 2);
-//					}
-//				}
 
 			} else {//delete the old position on the map
 				for(int i=-maxRange;i<=maxRange;i++){//for each row
 					for(int j=0;j<=maxRange;j++) {//for each column
 						if( x+j < w && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x+j,y+i,0);
+
 						}
 						if( x-j >= 0  && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x-j,y+i,0);
@@ -134,18 +116,23 @@ public class FogOfWarManager extends Manager {
 					}
 				}
 			}
-		}
+
 	}
-	
-	public void toggleFog() {
-		on = !on;
-		if (!on) {
-			for (int i = 0; i <= maxWidth; i++) {
-				for (int j =0 ; j <= maxLength; j++) {
-					fogOfWar.set(i, j, 2);
-				}
-			}
-		}
+
+	/**
+	 * this function will toggle the fog on or off depends on the parameter given
+	 * @param status
+	 */
+	public static void toggleFog(boolean status) {
+		activatedFog = status;
+	}
+
+	/**
+	 * This function will return the status of the fog (on or off)
+	 * @return
+	 */
+	public static boolean getToggleFog(){
+		return activatedFog;
 	}
 	
 }
