@@ -24,7 +24,8 @@ import java.util.Optional;
  *
  * A test base for the tech tree
  */
-public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgress {
+public class Base2 extends BaseEntity implements Clickable, Tickable,
+		HasProgress, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -146,5 +147,14 @@ public class Base2 extends BaseEntity implements Clickable, Tickable, HasProgres
 	@Override
 	public boolean showProgress() {
 		return currentAction.isPresent();
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 }

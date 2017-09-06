@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
  * A bunker that can be used to increase population
  */
 
-public class Bunker extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Bunker extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -157,10 +158,11 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	}
 
 	/**
-	 * Returns the current action (used in WeatherManager)
-	 * @return
+	 * Returns the current action of the entity
+	 * @return current action
 	 */
-	public Optional<DecoAction> getAction() {
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
 	

@@ -2,14 +2,11 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasDamage;
-import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 
@@ -17,7 +14,8 @@ import com.deco2800.marswars.util.Box3D;
  * @author Vinson Yeung on 25/8/17
  *
  */
-public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
+public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
+        HasAction {
 
     private int armorDamage; // armorDamage of the entity
     private int damage; // the damage of the entity
@@ -92,6 +90,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
         return armorDamage;
     }
 
+    @Override
     public Optional<DecoAction> getCurrentAction() {
         return currentAction;
     }
@@ -163,4 +162,5 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     public float getSpeed() { return speed; }
     
     public void setSpeed(float speed) { this.speed = speed; }
+
 }

@@ -11,7 +11,8 @@ import java.util.Optional;
  * A hero for the game
  * Created by timhadwen on 19/7/17.
  */
-public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
+public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
+		HasAction {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -60,5 +61,13 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
 
 	}
 
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
 
 }

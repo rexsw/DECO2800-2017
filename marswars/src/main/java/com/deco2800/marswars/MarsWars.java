@@ -76,6 +76,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
+	long pauseTime = 0;
 
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
@@ -577,7 +578,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-		
+
+		long currentSeconds = timeManager.getGlobalTime();
+
 		if (downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			downKeys.remove(Input.Keys.M);
@@ -588,7 +591,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
+
+		if (downKeys.contains(Input.Keys.ESCAPE)) {
+			if (currentSeconds > pauseTime + 1000) {
+				if (timeManager.isPaused()) {
+					timeManager.unPause();
+					pauseTime = timeManager.getGlobalTime();
+				} else {
+					LOGGER.info("PAUSING #############################");
+					timeManager.pause();
+					pauseTime = timeManager.getGlobalTime();
+				}
+			}
+		}
+
 		//move the map in the chosen direction
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);

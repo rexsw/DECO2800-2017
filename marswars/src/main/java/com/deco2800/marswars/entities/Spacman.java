@@ -30,7 +30,8 @@ import java.util.Random;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+public class Spacman extends BaseEntity implements Tickable, Clickable,
+		HasHealth, HasOwner, HasAction {
 	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
@@ -374,6 +375,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 
 	/**

@@ -31,7 +31,8 @@ import org.slf4j.LoggerFactory;
  *
  * A barracks to build an army
  */
-public class Barracks extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Barracks extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -232,7 +233,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * Returns the current action (used in WeatherManager)
 	 * @return
 	 */
-	public Optional<DecoAction> getAction() {
+	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
 	

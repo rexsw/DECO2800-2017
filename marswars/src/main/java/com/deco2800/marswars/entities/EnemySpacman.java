@@ -9,7 +9,8 @@ import java.util.Optional;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
+public class EnemySpacman extends BaseEntity implements Tickable, HasOwner,
+		HasAction{
 
 	Optional<DecoAction> currentAction = Optional.empty();
 	
@@ -30,6 +31,7 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 	 * Gets the current action
 	 * @return
 	 */
+	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
@@ -78,4 +80,5 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
+
 }

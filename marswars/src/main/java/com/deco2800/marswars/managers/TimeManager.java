@@ -1,6 +1,12 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimeManager extends Manager implements TickableManager {
 	
@@ -11,6 +17,8 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isProductionPaused = false;
 	private long time = 0;
 	private long gameStartTime = 0;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeManager.class);
 
 	/**
 	 * Calculate the number of passed in-game days
@@ -97,6 +105,17 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public void pause() {
 		isGamePaused = true;
+		LOGGER.info("PAUSINGGGGGGGGGGGGG %%%%%%%%%%%%%%%%%%%%");
+		List<BaseEntity> entities =
+				GameManager.get().getWorld().getEntities();
+		LOGGER.info("ENTITIES PRESENT %%%%%%%%%%%%%%%%%%%%");
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().pauseAction();
+				}
+			}
+		}
 	}
 
 	/**
@@ -118,6 +137,15 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public void unPause() {
 		isGamePaused = false;
+		List<BaseEntity> entities =
+				GameManager.get().getWorld().getEntities();
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().resumeAction();
+				}
+			}
+		}
 	}
 
 	/**

@@ -40,7 +40,8 @@ import org.slf4j.LoggerFactory;
  *
  * A home base for the empire
  */
-public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner, HasHealth {
+public class Base extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasHealth, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -275,5 +276,13 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 			LOGGER.info("I am kill");
 		}
 	}
-	
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
 }

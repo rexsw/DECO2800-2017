@@ -30,7 +30,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  * @author Tze Thong Khor
  *
  */
-public class Soldier extends AttackableEntity implements Tickable, Clickable{
+public class Soldier extends AttackableEntity implements Tickable, Clickable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	

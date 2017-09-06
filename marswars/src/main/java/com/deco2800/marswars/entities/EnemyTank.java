@@ -10,7 +10,7 @@ import java.util.Optional;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class EnemyTank extends BaseEntity implements Tickable {
+public class EnemyTank extends BaseEntity implements Tickable, HasAction {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -32,6 +32,7 @@ public class EnemyTank extends BaseEntity implements Tickable {
 	 * Gets the current action
 	 * @return
 	 */
+	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}

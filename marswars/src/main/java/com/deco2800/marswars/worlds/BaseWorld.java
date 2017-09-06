@@ -3,6 +3,8 @@ package com.deco2800.marswars.worlds;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
@@ -119,7 +121,7 @@ public class BaseWorld extends AbstractWorld {
 	}
 
 	/**
-	 * Gets the entity at an x y position.
+	 * Gets the entities currently in the game.
 	 *
 	 * @return a list of all entities currently in the game.
 	 */
