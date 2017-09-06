@@ -1,5 +1,6 @@
 package com.deco2800.marswars.worlds;
 
+import com.deco2800.marswars.entities.BlackTile;
 import com.deco2800.marswars.entities.FogOfWarLayer;
 import com.deco2800.marswars.entities.GrayTile;
 
@@ -13,15 +14,21 @@ public class FogWorld {
 
 
     protected static ArrayList<FogOfWarLayer> fogMap = new ArrayList<FogOfWarLayer>();
+    protected static ArrayList<FogOfWarLayer> blackFogMap = new ArrayList<FogOfWarLayer>();
 
     public static List<FogOfWarLayer> getFogMap() {
         return fogMap;
     }
 
+    public static List<FogOfWarLayer> getBlackFogMap() {
+        return blackFogMap;
+    }
+
     public FogWorld(int width, int length){
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < length; y++) {
-                addEntity(new GrayTile(x,y,1,1f,1f));
+                addEntity(new GrayTile(x,y,1,1f,1f),fogMap);
+                addEntity(new BlackTile(x,y,1,1f,1f),blackFogMap);
             }
         }
     }
@@ -43,7 +50,7 @@ public class FogWorld {
      * add FogOfWarLayer entity to the fog world
      * @param entity
      */
-    public void addEntity(FogOfWarLayer entity) {
+    public void addEntity(FogOfWarLayer entity,ArrayList<FogOfWarLayer> fogMap) {
         //Add to the fog map
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());

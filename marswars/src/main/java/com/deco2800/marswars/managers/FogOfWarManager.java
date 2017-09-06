@@ -13,12 +13,17 @@ import com.deco2800.marswars.util.Array2D;
  */
 public class FogOfWarManager extends Manager {
 	private static Array2D<Integer> fogOfWar;
+	private static Array2D<Integer> blackFogOfWar;
 	private int maxWidth;
 	private int maxLength;
-	private static boolean activatedFog = true;
+	private static boolean activatedFog = false;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
+	}
+
+	public static Array2D<Integer> getBlackFogOfWar(){
+		return blackFogOfWar;
 	}
 
 	/**
@@ -30,9 +35,11 @@ public class FogOfWarManager extends Manager {
 	 */
 	public void initialFog(int width, int length) {
 		this.fogOfWar = new Array2D<Integer>(width, length);
+		this.blackFogOfWar  = new Array2D<Integer>(width, length);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
 				fogOfWar.set(i, j, 0);
+				blackFogOfWar.set(i,j,0);
 			}
 		}
 
@@ -67,6 +74,10 @@ public class FogOfWarManager extends Manager {
 		return fogOfWar.get(x, y);
 	}
 
+	public static int getBlackFog(int x, int y) {
+		return blackFogOfWar.get(x, y);
+	}
+
 	/**
 	 * Updates the fogOfWar based on the sight range of an entity.
 	 *
@@ -82,9 +93,11 @@ public class FogOfWarManager extends Manager {
 					for(int j=0;j<=maxRange;j++) {//for each column
 						if( x+j < w && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x+j,y+i,2);
+							blackFogOfWar.set(x+j,y+i,1);//reveal a tile
 						}
 						if( x-j >= 0 && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x-j,y+i,2);
+							blackFogOfWar.set(x-j,y+i,1);//reveal a tile
 						}
 					}
 
@@ -95,6 +108,7 @@ public class FogOfWarManager extends Manager {
 					for(int j=0;j<=maxRange;j++) {//for each column
 						if( x+j < w && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x+j,y+i,0);
+
 						}
 						if( x-j >= 0  && y+i < l && y+i>=0){//to the right
 							fogOfWar.set(x-j,y+i,0);

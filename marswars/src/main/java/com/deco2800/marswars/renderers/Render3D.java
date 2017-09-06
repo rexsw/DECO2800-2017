@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.FogOfWarLayer;
-import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -50,6 +48,7 @@ public class Render3D implements Renderer {
         List<BaseEntity> walkables = new ArrayList<>();
 
         List<FogOfWarLayer> fogs = FogWorld.getFogMap();
+        List<FogOfWarLayer> blackFogs = FogWorld.getBlackFogMap();
 
         /* Sort entities into walkables and entities */
         for (BaseEntity r : renderables) {
@@ -62,9 +61,13 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
-        renderEntities(walkables, batch, camera);
-        renderEntities(entities, batch, camera);
+        renderEntities(walkables, batch, camera,0);
+        renderEntities(entities, batch, camera,0);
+
         renderFog(fogs,batch,camera);
+        renderFog(blackFogs,batch,camera);
+        renderEntities(walkables, batch, camera,1);
+
         batch.end();
 
     }
@@ -91,6 +94,7 @@ public class Render3D implements Renderer {
 
     public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera) {
         if (FogOfWarManager.getToggleFog()) {
+
             Collections.sort(entities);
             if (font == null) {
                 font = new BitmapFont();
@@ -111,8 +115,12 @@ public class Render3D implements Renderer {
 
                 Renderable entity = entities.get(index);
 
+                //this function is for the blackFog to omit the tiles that are revealed
+                if(entity instanceof BlackTile)
+                    if (FogOfWarManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1) continue;
                 //omit the tiles that are in sight
                 //TODO: leave the green selection to be rendered
+                if(entity instanceof GrayTile)
                     if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
 
 
@@ -151,7 +159,7 @@ public class Render3D implements Renderer {
 
      */
 
-    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
+    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera,int iteration) {
 
         Collections.sort(entities);
         if (font == null) {
@@ -172,6 +180,7 @@ public class Render3D implements Renderer {
         for (int index = 0; index < entities.size(); index++) {
 
             Renderable entity = entities.get(index);
+            if(iteration==1 && !(entity instanceof CheckSelect)) continue;
 
             //fog of war part of the game
             if(FogOfWarManager.getToggleFog()) {
