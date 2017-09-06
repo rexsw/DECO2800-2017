@@ -111,4 +111,16 @@ public class DamageAction implements DecoAction {
 			return;
 		}
 	}
+
+	@Override
+	public void pauseAction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resumeAction() {
+		// TODO Auto-generated method stub
+		
+	}
 }

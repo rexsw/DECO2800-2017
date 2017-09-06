@@ -10,6 +10,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
@@ -162,6 +163,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public void setHealth(int health) {
 		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);
+			if(owner instanceof AiManagerTest) {
+				((AiManagerTest) owner).isKill();
+			}
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;

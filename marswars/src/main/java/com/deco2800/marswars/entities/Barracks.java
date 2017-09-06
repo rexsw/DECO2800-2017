@@ -227,5 +227,13 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
+
+	/**
+	 * Returns the current action (used in WeatherManager)
+	 * @return
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
 	
 }

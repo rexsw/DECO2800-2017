@@ -29,5 +29,10 @@ public class PlayerManager extends AbstractPlayerManager {
 			return false;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "Player team - " + this.getColour();
+	}
 
 }

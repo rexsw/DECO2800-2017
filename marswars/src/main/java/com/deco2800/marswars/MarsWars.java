@@ -24,6 +24,7 @@ import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,15 +119,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		FogOfWarManager fogOfWar = (FogOfWarManager)(GameManager.get().getManager(FogOfWarManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		
-		/*
-		 * sets all starting entities to be player owned
-		 */
-		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
-			}
-		}
+		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
@@ -137,7 +131,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setAI(4, width -4, "Purple");
 		setAI(length -4, 4, "Yellow");
 		setPlayer(length/2, width/2, "Blue");
-		
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
 		
 		
 		// do something important here, asynchronously to the rendering thread
@@ -749,8 +744,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
 		Soldier Soldier = new Soldier(x, y,0,aim1);
+		Soldier.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(Soldier);
 		Tank tank = new Tank(x,y,0,aim1);
+		tank.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(tank);
 		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);

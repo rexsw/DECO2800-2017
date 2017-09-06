@@ -36,7 +36,6 @@ public void onTick(long l) {
 			if(e instanceof Astronaut) {
 				Astronaut x = (Astronaut)e;
 				useSpacman(x);
-				break;
 			} else if(e instanceof Base) {
 				Base x = (Base)e;
 				generateSpacman(x);
@@ -51,11 +50,10 @@ public void onTick(long l) {
 		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-	if(!x.isWorking() && resourceManager.getRocks() > 30) {
+	if(!x.isWorking() && resources.getRocks() > 30) {
 		//sets the ai base to make more spacman if possible
 		LOGGER.error("ai - set base to make spacman");
-		resourceManager.setRocks(resourceManager.getRocks() - 30);
+		resources.setRocks(resources.getRocks() - 30);
 		Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, this);
 		x.setAction(new GenerateAction(r));
 	}
@@ -63,15 +61,15 @@ private void generateSpacman(Base x) {
 		
 private void useEnemy(Soldier x) {
 	//lets the ai target player spacman with it's enemyspacmen
-//	if(x.isWorking()) {
-//		return;
-//	}
+	if(x.isWorking()) {
+		return;
+	}
 	for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-		if(r instanceof AttackableEntity && ((AttackableEntity) r).getOwner() != this) {
+		if(r instanceof AttackableEntity && !x.sameOwner(r)) {
 			LOGGER.error("ai - setting unit to attack " + r.toString());
 			AttackableEntity y = (AttackableEntity) r;
 			x.attack(y);
-			break;
+			return;
 		}
 	}
 }

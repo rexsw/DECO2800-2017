@@ -28,7 +28,8 @@ public class GameManager implements TickableManager {
 
 	private BaseWorld gameWorld;
 
-	private static FogWorld fogWorld = new FogWorld();
+
+
 
 	private BaseWorld mapWorld;
 	
@@ -98,6 +99,10 @@ public class GameManager implements TickableManager {
 		LOGGER.warn("GameManager.get returned null! It shouldn't have!");
 		return null;
 	}
+	
+	public List<Manager> getManagerList(){
+		return managers;
+	}
 
 	/**
 	 * Sets the current game world
@@ -123,9 +128,7 @@ public class GameManager implements TickableManager {
 		return gameWorld;
 	}
 
-	public FogWorld getFogWorld() {
-		return fogWorld;
-	}
+
 
 	/**
 	 * Gets the minimap

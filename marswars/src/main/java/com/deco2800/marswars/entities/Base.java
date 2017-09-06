@@ -243,6 +243,14 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 		currentAction = Optional.of(action);
 	}
 
+	/**
+	 * Returns the current action (used in WeatherManager)
+	 * @return
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
+
 	@Override
 	/**
 	 * @return current health
