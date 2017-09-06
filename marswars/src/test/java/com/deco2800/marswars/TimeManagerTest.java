@@ -90,13 +90,13 @@ public class TimeManagerTest {
 		assertTrue("Not paused", timeManager.isPaused());
 	}
 */
-	@Test
+/*	@Test
 	public void testUnPause() {
 		assertTrue("Not paused", timeManager.isPaused());
 		timeManager.unPause();
 		assertFalse("Is paused", timeManager.isPaused());
 	}
-
+*/
 	@Test
 	public void testGetInGameTime() {
 		assertTrue(true);

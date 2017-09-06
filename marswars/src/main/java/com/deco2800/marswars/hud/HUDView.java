@@ -216,6 +216,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
+				timeManager.pause();
 				new Dialog("Confirm exit", skin){
 					{
 						text("Are you sure you want to quit? ");
@@ -227,6 +228,8 @@ public class HUDView extends ApplicationAdapter{
 					protected void result(final Object object){
 						if(object == (Object) 1){
 							System.exit(0);
+						} else {
+							timeManager.unPause();
 						}
 					}	
 				}.show(stage);	
