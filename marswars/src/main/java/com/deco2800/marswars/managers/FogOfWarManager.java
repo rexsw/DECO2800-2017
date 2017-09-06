@@ -69,22 +69,6 @@ public class FogOfWarManager extends Manager {
 	}
 
 	/**
-	 * Updates the FogOfWar after each clock tick based on the position of entities.
-	 *
-	 * @param map The collision map of entities
-	 */
-//	public void updateFog(Array2D<List<BaseEntity>> map) {
-//		for (int i = 0; i < map.getWidth(); i++) {
-//			for (int j = 0; j < map.getLength(); j++) {
-//				List<BaseEntity> entity = map.get(i, j);
-//				if (!(entity.isEmpty())) {
-//					sightRange(i, j, 5,);
-//				}
-//			}
-//		}
-//	}
-
-	/**
 	 * Updates the fogOfWar based on the sight range of an entity.
 	 *
 	 * @param x     The x position of the entity
@@ -107,21 +91,6 @@ public class FogOfWarManager extends Manager {
 					}
 
 				}
-
-//				for (int i = 0; i < range; i++) {
-//					if (x + i < w && y + range - i < l) {
-//						fogOfWar.set(x + i, y + range - i, 2);
-//					}
-//					if (x + i < w && y - range + i >= 0) {
-//						fogOfWar.set(x + i, y - range + i, 2);
-//					}
-//					if (x - i >= 0 && y + range - i < l) {
-//						fogOfWar.set(x - i, y + range - i, 2);
-//					}
-//					if (x - i >= 0 && y - range + i >= 0) {
-//						fogOfWar.set(x - i, y - range + i, 2);
-//					}
-//				}
 
 			} else {//delete the old position on the map
 				for(int i=-maxRange;i<=maxRange;i++){//for each row
