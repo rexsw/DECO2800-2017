@@ -89,49 +89,55 @@ public class Render3D implements Renderer {
      */
 
 
-    public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera){
-        Collections.sort(entities);
-        if (font == null) {
-            font = new BitmapFont();
-            font.getData().setScale(0.25f);
-        }
-        int worldLength = GameManager.get().getWorld().getLength();
-        int worldWidth = GameManager.get().getWorld().getWidth();
+    public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera) {
+        if (FogOfWarManager.getToggleFog()) {
+            Collections.sort(entities);
+            if (font == null) {
+                font = new BitmapFont();
+                font.getData().setScale(0.25f);
+            }
+            int worldLength = GameManager.get().getWorld().getLength();
+            int worldWidth = GameManager.get().getWorld().getWidth();
 
-        int tileWidth = (int)GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
-        int tileHeight = (int)GameManager.get().getWorld().getMap().getProperties().get("tileheight");
+            int tileWidth = (int) GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
+            int tileHeight = (int) GameManager.get().getWorld().getMap().getProperties().get("tileheight");
 
-        float baseX = tileWidth*(worldWidth/2.0f - 0.5f);
+            float baseX = tileWidth * (worldWidth / 2.0f - 0.5f);
 
-        float baseY = -tileHeight/2*worldLength + tileHeight/2f;
+            float baseY = -tileHeight / 2 * worldLength + tileHeight / 2f;
 
         /* Render each entity (backwards) in order to retain objects at the front */
-        for (int index = 0; index < entities.size(); index++) {
-            Renderable entity = entities.get(index);
-            FogOfWarLayer fogTile = (FogOfWarLayer)entity;
-            int fogScaleSize = fogTile.getFogScaleSize();
+            for (int index = 0; index < entities.size(); index++) {
 
-            String textureString = entity.getTexture();
-            TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
-            Texture tex = reg.getTexture(textureString);
+                Renderable entity = entities.get(index);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+                //omit the tiles that are in sight
+                //TODO: leave the green selection to be rendered
+                    if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
 
-            float isoX = (baseX + ((cartX - cartY) / 2.0f * tileWidth))-(fogScaleSize/2)*tileWidth;
-            float isoY = (baseY + ((cartX + cartY) / 2.0f) * tileHeight)-(fogScaleSize/2)*tileHeight;
 
-            // We want to keep the aspect ratio of the image so...
-            float aspect = (float)(tex.getWidth())/(float)(tileWidth);
 
-            Vector3 pos = camera.position;
-            OrthographicCamera cam = (OrthographicCamera) camera;
+                String textureString = entity.getTexture();
+                TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
+                Texture tex = reg.getTexture(textureString);
 
-            if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
-                    && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
-                batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
-                        (tex.getHeight() / aspect) * entity.getYRenderLength());//x,y,width,length
+                float cartX = entity.getPosX();
+                float cartY = (worldWidth - 1) - entity.getPosY();
 
+                float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
+                float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+
+                // We want to keep the aspect ratio of the image so...
+                float aspect = (float) (tex.getWidth()) / (float) (tileWidth);
+
+                Vector3 pos = camera.position;
+                OrthographicCamera cam = (OrthographicCamera) camera;
+
+                if (isoX < pos.x + camera.viewportWidth * cam.zoom * autoRenderValue && isoX > pos.x - camera.viewportWidth * cam.zoom * autoRenderValue
+                        && isoY < pos.y + camera.viewportHeight * cam.zoom * autoRenderValue && isoY > pos.y - camera.viewportHeight * cam.zoom * autoRenderValue) {
+                    batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
+                            (tex.getHeight() / aspect) * entity.getYRenderLength());
+                }
             }
         }
     }

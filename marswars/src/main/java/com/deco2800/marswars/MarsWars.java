@@ -24,6 +24,7 @@ import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		FogOfWarManager fogOfWar = (FogOfWarManager)(GameManager.get().getManager(FogOfWarManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
+		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+
 		
 		/*
 		 * sets all starting entities to be player owned

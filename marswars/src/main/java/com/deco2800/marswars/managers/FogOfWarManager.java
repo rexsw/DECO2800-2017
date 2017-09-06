@@ -13,10 +13,9 @@ import com.deco2800.marswars.util.Array2D;
  */
 public class FogOfWarManager extends Manager {
 	private static Array2D<Integer> fogOfWar;
-	private static boolean on;
 	private int maxWidth;
 	private int maxLength;
-	private static boolean activatedFog = false;
+	private static boolean activatedFog = true;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
@@ -36,7 +35,7 @@ public class FogOfWarManager extends Manager {
 				fogOfWar.set(i, j, 0);
 			}
 		}
-		this.on = true;
+
 		this.maxWidth = width;
 		this.maxLength = length;
 	}
@@ -78,7 +77,6 @@ public class FogOfWarManager extends Manager {
 	public static void sightRange(int x, int y, int maxRange, boolean state) {
 		int w = fogOfWar. getWidth();
 		int l = fogOfWar.getLength();
-		if (on) {
 			if (state) {//set the new position on the map
 				for(int i=-maxRange;i<=maxRange;i++){//for each row
 					for(int j=0;j<=maxRange;j++) {//for each column
@@ -104,7 +102,7 @@ public class FogOfWarManager extends Manager {
 					}
 				}
 			}
-		}
+
 	}
 
 	/**
