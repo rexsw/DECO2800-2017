@@ -12,7 +12,6 @@ public class NetManager extends Manager {
     static final int SERVER_PORT = 8080;
     private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
-
     private ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
     private ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
 

@@ -136,8 +136,8 @@ public class ChatBox extends Table {
         if (!"".equals(message)) {
             // Currently not implemented correctly, adds to chat box instead of sending to server.
             MessageAction action = new MessageAction("wololo", message);
+            addNewMessage(action.toString());
             netManager.getNetworkClient().sendObject(action);
-            addNewMessage(message);
         }
         messageTextField.setText("");
     }
