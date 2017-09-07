@@ -16,7 +16,7 @@ public class FogOfWarManager extends Manager {
 	private static Array2D<Integer> blackFogOfWar;
 	private int maxWidth;
 	private int maxLength;
-	private static boolean activatedFog = false;
+	private static boolean activatedFog = true;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
