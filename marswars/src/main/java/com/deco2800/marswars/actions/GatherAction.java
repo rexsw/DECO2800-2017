@@ -125,8 +125,6 @@ public class GatherAction implements DecoAction {
 			}
 		} else {
 			// Find a new closest entity
-			BaseWorld world = GameManager.get().getWorld();
-
 			Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
 			if (surround.isPresent()) {
 				Point p = new Point(surround.get().getPosX(), surround.get().getPosY());

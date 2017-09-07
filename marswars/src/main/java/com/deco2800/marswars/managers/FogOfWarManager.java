@@ -1,7 +1,5 @@
 package com.deco2800.marswars.managers;
-import java.util.List;
 
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.util.Array2D;
 
 /**
@@ -14,9 +12,7 @@ import com.deco2800.marswars.util.Array2D;
 public class FogOfWarManager extends Manager {
 	private static Array2D<Integer> fogOfWar;
 	private static Array2D<Integer> blackFogOfWar;
-	private int maxWidth;
-	private int maxLength;
-	private static boolean activatedFog = false;
+	private static boolean activatedFog = true;
 
 	public static Array2D<Integer> getFogOfWar(){
 		return fogOfWar;
@@ -42,9 +38,6 @@ public class FogOfWarManager extends Manager {
 				blackFogOfWar.set(i,j,0);
 			}
 		}
-
-		this.maxWidth = width;
-		this.maxLength = length;
 	}
 
 	/**

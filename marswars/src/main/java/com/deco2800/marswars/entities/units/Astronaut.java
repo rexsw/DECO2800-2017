@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -15,7 +14,6 @@ import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -67,7 +65,7 @@ public class Astronaut extends Soldier {
 			LOGGER.info("Gather resources");
 			this.setCurrentAction(Optional.of(new GatherAction(this, entities.get(0))));
 		} else {
-			this.setCurrentAction((Optional.of(new MoveAction((int) x, (int) y, this))));
+			this.setCurrentAction(Optional.of(new MoveAction((int) x, (int) y, this)));
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture(defaultTextureName);

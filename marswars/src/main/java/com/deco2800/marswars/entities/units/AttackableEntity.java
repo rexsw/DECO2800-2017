@@ -33,6 +33,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
 	private int owner; // the owner of the player
+	private float speed; // the movement speed of the entity
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private MissileEntity missile; // the type of missile
@@ -287,9 +288,18 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.maxLoyalty = maxLoyalty;
 	}
 	
+
 	@Override
 	public boolean isAi() {
 		return owner >= 0;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public float getSpeed() {
+		return speed;
 	}
 
 }

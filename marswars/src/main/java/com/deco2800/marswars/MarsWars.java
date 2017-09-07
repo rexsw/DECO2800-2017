@@ -99,10 +99,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
 
+		MiniMap m = new MiniMap("minimap", 220, 220);
+		m.render();
 		//initialise the minimap and set the image
-		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
+		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(reg);
 
 		/*
@@ -738,6 +739,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	public void setAI(int x, int y, String colour, int teamid) {
 		//aim1.setColour(colour);
+		AiManagerTest aim = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		aim.addTeam(teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);

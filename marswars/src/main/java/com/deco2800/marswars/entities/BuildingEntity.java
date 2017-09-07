@@ -1,9 +1,6 @@
 package com.deco2800.marswars.entities;
 
-import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
 
 /**
  * Created by grumpygandalf on 27/8/17.

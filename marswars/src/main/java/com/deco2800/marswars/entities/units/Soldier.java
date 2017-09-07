@@ -59,6 +59,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setArmorDamage(50);
 		this.setAttackRange(8);
 		this.setAttackSpeed(30);
+		this.setSpeed(0.05f);
 	}
 	
 	public void attack(AttackableEntity target){
@@ -69,12 +70,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				) {
 			
 			currentAction = Optional.of(new DamageAction(this, target));
-			LOGGER.error("Assigned action attack target at " + x + " " + y);
+			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else 
 		{
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.error("Same owner");
+			LOGGER.info("Same owner");
 		}
 	}
 
@@ -85,10 +86,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
-			LOGGER.error("Clicked on soldier");
+			LOGGER.info("Clicked on soldier");
 			this.makeSelected();
 		} else {
-			LOGGER.error("Clicked on ai soldier");
+			LOGGER.info("Clicked on ai soldier");
 		}
 	}
 
