@@ -8,9 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BuildingEntity;
 import com.deco2800.marswars.entities.BuildingType;
@@ -28,7 +26,6 @@ import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.Optional;
 
