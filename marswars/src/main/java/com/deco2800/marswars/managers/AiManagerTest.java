@@ -66,7 +66,7 @@ private void useEnemy(Soldier x) {
 	}
 	for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
 		if(r instanceof AttackableEntity && !x.sameOwner(r)) {
-			LOGGER.error("ai - setting unit to attack " + r.toString());
+			//LOGGER.error("ai - setting unit to attack " + r.toString());
 			AttackableEntity y = (AttackableEntity) r;
 			x.attack(y);
 			return;
