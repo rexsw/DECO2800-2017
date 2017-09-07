@@ -1,9 +1,7 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
