@@ -122,47 +122,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 
-		
-		/*
-		 * sets all starting entities to be player owned
-		 */
-		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(PlayerManager.class));
-			}
-		}
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -4, width -4);
-		setAI(4, 4);
-		setAI(4, width -4);
-		setAI(length -4, 4);
-
-		// add combat units for combat testing (belongs to player)
-		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
-		playerManager.setColour("Blue");
-		Soldier soldierA = new Soldier(7, 7, 0, playerManager);
-		GameManager.get().getMiniMap().addEntity(0, 7, 7);
-		Soldier soldierB = new Soldier(5, 5, 0, playerManager);
-		GameManager.get().getMiniMap().addEntity(0, 5, 5);
-		GameManager.get().getWorld().addEntity(soldierA);
-		GameManager.get().getWorld().addEntity(soldierB);
-		Tank tankA = new Tank(2, 2, 0, playerManager);
-		Tank tankB = new Tank(3, 3, 0, playerManager);
-		GameManager.get().getWorld().addEntity(tankA);
-		GameManager.get().getWorld().addEntity(tankB);	
-		Spacman spac = new Spacman(9, 9, 0);
-		spac.setOwner(playerManager);
-		GameManager.get().getWorld().addEntity(spac);
-		
-		// Attackable entity (belongs to AI) Does not work. Not sure why.
-		AiManagerTest aiManagerTest = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
-		aiManagerTest.setColour("Yellow");
-		GameManager.get().getWorld().addEntity(new Soldier(6, 6, 0, aiManagerTest));
-		GameManager.get().getWorld().addEntity(new Soldier(8, 8, 0, aiManagerTest));
+		setAI(length -4, width -4, "Green");
+		setAI(4, 4, "Pink");
+		setAI(4, width -4, "Purple");
+		setAI(length -4, 4, "Yellow");
+		setPlayer(length/2, width/2, "Blue");
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
 		
 		
 		// do something important here, asynchronously to the rendering thread
@@ -781,21 +752,42 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y) {
+	public void setAI(int x, int y, String colour) {
 		AiManagerTest aim1 = new AiManagerTest();
+		aim1.setColour(colour);
 		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(x, y, 0);
-		Spacman ai1 = new Spacman(x, y, 0);
+		Astronaut ai = new Astronaut(x, y, 0, aim1);
+		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
-		EnemySpacman aienemy = new EnemySpacman(x, y, 0);
+		Soldier Soldier = new Soldier(x, y,0,aim1);
+		Soldier.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(Soldier);
+		Tank tank = new Tank(x,y,0,aim1);
+		tank.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(tank);
 		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai1);
 		aibase.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
 	}
-
+	
+	public void setPlayer(int x, int y, String colour) {
+	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+	playerManager.setColour(colour);
+	Spacman p = new Spacman(x, y, 0);
+	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
+	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
+	Soldier Soldier = new Soldier(x, y,0,playerManager);
+	GameManager.get().getWorld().addEntity(Soldier);
+	Tank tank = new Tank(x,y,0,playerManager);
+	GameManager.get().getWorld().addEntity(tank);
+	p.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p);
+	p1.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p1);
+	p2.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p2);
+	}
 }

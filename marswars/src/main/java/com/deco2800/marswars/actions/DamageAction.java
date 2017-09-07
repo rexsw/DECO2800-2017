@@ -1,6 +1,5 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +20,6 @@ public class DamageAction implements DecoAction {
 	boolean completed = false;
 	private int attackInterval = 1000;
 	private int attackSpeed;
-	private boolean actionPaused;
-	private TimeManager timeManager = (TimeManager)
-			GameManager.get().getManager(TimeManager.class);
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DamageAction.class);
 	
@@ -41,19 +37,17 @@ public class DamageAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused) {
-			switch (state) {
-				case MOVE_TOWARDS:
-					moveTowardsAction();
-					return;
-				case ATTACK:
-					attackAction();
-					break;
-				default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here.
-					action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
-					state = State.MOVE_TOWARDS;
-					return;
-			}
+		switch (state) {
+			case MOVE_TOWARDS:
+				moveTowardsAction();
+				return;
+			case ATTACK:
+				attackAction();
+				break;
+			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
+				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
+				state = State.MOVE_TOWARDS;
+				return;
 		}
 	}
 	
@@ -118,19 +112,15 @@ public class DamageAction implements DecoAction {
 		}
 	}
 
-	/**
-	 * Prevents the current action from progressing.
-	 */
 	@Override
 	public void pauseAction() {
-		actionPaused = true;
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Resumes the current action
-	 */
 	@Override
 	public void resumeAction() {
-		actionPaused = false;
+		// TODO Auto-generated method stub
+		
 	}
 }

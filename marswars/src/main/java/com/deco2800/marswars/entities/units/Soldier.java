@@ -185,6 +185,5 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable {
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
 	}
-	
 
 }

@@ -99,6 +99,10 @@ public class GameManager implements TickableManager {
 		LOGGER.warn("GameManager.get returned null! It shouldn't have!");
 		return null;
 	}
+	
+	public List<Manager> getManagerList(){
+		return managers;
+	}
 
 	/**
 	 * Sets the current game world
