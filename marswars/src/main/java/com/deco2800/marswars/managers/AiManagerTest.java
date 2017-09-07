@@ -1,9 +1,7 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -66,7 +64,7 @@ private void useEnemy(Soldier x) {
 	}
 	for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
 		if(r instanceof AttackableEntity && !x.sameOwner(r)) {
-			LOGGER.error("ai - setting unit to attack " + r.toString());
+			//LOGGER.error("ai - setting unit to attack " + r.toString());
 			AttackableEntity y = (AttackableEntity) r;
 			x.attack(y);
 			return;

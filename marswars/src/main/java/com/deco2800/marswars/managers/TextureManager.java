@@ -133,9 +133,8 @@ public class TextureManager extends Manager {
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-        this.saveTexture("star_1", "resources/Backgrounds/star1.png");
-        this.saveTexture("star_2", "resources/Backgrounds/star2.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
     }
     /*
      *

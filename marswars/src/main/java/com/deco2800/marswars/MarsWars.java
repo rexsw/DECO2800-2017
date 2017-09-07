@@ -99,10 +99,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
 
+		MiniMap m = new MiniMap("minimap", 220, 220);
+		m.render();
 		//initialise the minimap and set the image
-		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
+		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(reg);
 
 		/*

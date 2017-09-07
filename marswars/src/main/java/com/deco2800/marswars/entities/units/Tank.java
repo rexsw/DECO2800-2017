@@ -1,9 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.TextureManager;
 
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 

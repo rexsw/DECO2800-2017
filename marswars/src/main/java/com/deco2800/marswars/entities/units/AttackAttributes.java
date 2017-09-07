@@ -129,4 +129,9 @@ public interface AttackAttributes {
 	 * @param loyalty damage of an entity
 	 */
 	public void setLoyaltyDamage(int loyaltyDamage);
+	
+	public void setSpeed(float speed);
+	
+	public float getSpeed();
+	
 }
