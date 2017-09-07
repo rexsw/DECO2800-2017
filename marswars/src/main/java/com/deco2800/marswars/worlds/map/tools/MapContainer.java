@@ -5,8 +5,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.buildings.Building;
-import com.deco2800.marswars.entities.buildings.BuildingTypes;
+import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -25,16 +24,21 @@ public class MapContainer {
 
     // logger of the class
     private static final Logger LOGGER = LoggerFactory.getLogger(MapContainer.class);
+   
     // path of the .tmx map file
     private String mapPath = "";
+    
     // width of the map loaded
     private int width;
+    
     // height of the map loaded
     private int length;
+    
     // randomizer
     private Random r = new Random();
+    
     // the world that will hold the content of the container
-    private CustomizedWorld world;
+    protected CustomizedWorld world;
     /**
      * Creates a new Map container from a given map with random elements.
      *
@@ -42,9 +46,7 @@ public class MapContainer {
      * @param length the length of the map.
      */
     public MapContainer(String mapPath, int width, int length){
-        this.width = width;
-        this.length = length;
-        this.mapPath = mapPath;
+        //Not yet implemented
     }
 
 
@@ -75,7 +77,7 @@ public class MapContainer {
      * @return true if empty
      */
     public boolean checkForEntity(int x, int y){
-        if( world.getCollisionMap().get(x, y).isEmpty()){
+        if(world.getCollisionMap().get(x, y).isEmpty()){
             return true;
         }
         return false;
@@ -87,10 +89,10 @@ public class MapContainer {
     public void generateEntities(boolean random){
         if(random) {
             this.generateResourcePattern();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 this.getRandomBuilding();
-                this.getRandomEntity();
-                this.getRandomResource();
+               // this.getRandomEntity();
+               // this.getRandomResource();
             }
         }
     }
@@ -119,7 +121,7 @@ public class MapContainer {
      * @param terrainElement the terrain element to be placed.
      */
     public void setTerrainElement(TerrainElement terrainElement){
-        //Waiting on terrain
+        //Waiting on terrain (Not yet implemented)
     }
 
     /**
@@ -129,7 +131,7 @@ public class MapContainer {
      * @param random whether the position of the terrain element should be random.
      */
     public void setTerrainElement(TerrainElement terrainElement, boolean random){
-        //Waiting on terrain
+        //Waiting on terrain (Not yet implemented)
     }
 
     /**
@@ -137,8 +139,8 @@ public class MapContainer {
      *
      * @param building the building to be placed.
      */
-    public void setStructure(Building building){
-        //Waiting on building
+    public void setStructure(BuildingEntity building){
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -146,8 +148,8 @@ public class MapContainer {
      *
      * @param buildings the buildings to be placed.
      */
-    public void setStructure(Building[][] buildings){
-        //Waiting on building
+    public void setStructure(BuildingEntity[][] buildings){
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -156,8 +158,8 @@ public class MapContainer {
      * @param building the building to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building building, boolean random){
-        //Waiting on building
+    public void setStructure(BuildingEntity building, boolean random){
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -166,8 +168,8 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building[][] buildings, boolean random){
-        //Waiting on building
+    public void setStructure(BuildingEntity[][] buildings, boolean random){
+        //Waiting on building (Not yet implemented)
     }
 
     /**
@@ -176,7 +178,7 @@ public class MapContainer {
      * @param civilizationContainer the container with all the civilization elements.
      */
     public void setCivilization(CivilizationContainer civilizationContainer){
-        //Waiting on civilization
+        //Waiting on civilization (Not yet implemented)
     }
 
     /**
@@ -228,7 +230,7 @@ public class MapContainer {
      */
     public CivilizationContainer createCivilization(CivilizationTypes civilizationTypes){
         return new CivilizationContainer(this, civilizationTypes);
-        // this method has not been implemented yet!!!!!!!!!!!
+        // this method has not been implemented yet
     }
 
     /**
@@ -238,7 +240,7 @@ public class MapContainer {
      */
     public CivilizationContainer createRandomCivilization(){
         return new CivilizationContainer(this);
-        // this method has not been implemented yet!!!!!!!!!!!
+        // this method has not been implemented yet
     }
 
     /**
@@ -246,26 +248,33 @@ public class MapContainer {
      *
      * @return the new TerrainElement.
      */
-    private TerrainElement getRandomTerrainElement(){
+    protected TerrainElement getRandomTerrainElement(){
         TerrainElementTypes random = TerrainElementTypes.values()[r.nextInt(TerrainElementTypes.values().length)];
-        return null;
+        LOGGER.info("chosen terrain type: " + random);
+        return new TerrainElement();
     }
 
     /**
      * Creates a random building object.
      *
      */
-    private void getRandomBuilding(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+    protected void getRandomBuilding(){
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
-        BaseEntity newBuilding;
-        int x = r.nextInt(width-1);
-        int y = r.nextInt(length-1);
+        BuildingEntity newBuilding;
+        int x = r.nextInt(width-3);
+        int y = r.nextInt(length-3);
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == BuildingTypes.BASE){
+        if(random == BuildingType.BASE){
             newBuilding = new Base(world, x,y,0);
+        } else if(random == BuildingType.TURRET){
+            newBuilding = new Turret(world, x,y,0);
+        } else if(random == BuildingType.BUNKER){
+            newBuilding = new Bunker(world, x,y,0);
+        } else if(random == BuildingType.BARRACKS){
+            newBuilding = new Barracks(world, x,y,0);
         }
         else {
             return;
@@ -279,26 +288,30 @@ public class MapContainer {
      *
      * @return the new group of buildings.
      */
-    public Building[][] getRandomStructure(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+    protected void getRandomStructure(){
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
-        return null;
+        return;
     }
 
     /**
      * Creates random pattern of resources
      */
-    private void generateResourcePattern(){
+    protected void generateResourcePattern(){
         int xLength = this.length;
         int yWidth = this.width;
-        NoiseMap noise = new NoiseMap(xLength, yWidth, 14);
+        int featureSize = 5;
+        int scale = 2;
+        if (xLength * yWidth > 110){
+            featureSize = 14;
+            scale = 5;
+        }
+        NoiseMap noise = new NoiseMap(xLength, yWidth, featureSize);
         for (int ix=0; ix<this.length; ix++){
             for (int iy=0; iy<this.width; iy++){
                 double n = noise.getNoiseAt(ix,iy);
-                if (n>0.4){
-                    if(r.nextInt(10) > 5 && checkForEntity(ix, iy)){
+                if (n>0.4 && r.nextInt(10) > scale && checkForEntity(ix, iy)){
                         this.getRandomResource(ix, iy);
-                    }
                 }
             }
         }
@@ -307,7 +320,7 @@ public class MapContainer {
     /**
      * Creates a random entity.
      */
-    private void getRandomEntity(){
+    protected void getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
@@ -317,10 +330,10 @@ public class MapContainer {
             return;
         }
         if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(x, y,0);
+            newEntity = new Spacman(x, y, 0);
         }
         else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y,0);
+            newEntity = new EnemySpacman(x, y, 0);
         }
         else {
             return;
@@ -335,43 +348,36 @@ public class MapContainer {
      * @param x the x coordinate.
      * @param y the y coordinate.
      */
-    private void getRandomResource(int x, int y){
+    protected void getRandomResource(int x, int y){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
-        BaseEntity newEntity;
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == ResourceType.BIOMASS){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
-        }
-        else if(random == ResourceType.CRYSTAL) {
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL);
-        }
-        else if(random == ResourceType.ROCK){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
-        }
-        else if(random == ResourceType.WATER){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
-        }
-        else{
-            return;
-        }
-        world.addEntity(newEntity);
+        setRandomResource(random, x, y);
     }
 
     /**
      * Creates a random resource in a random position
      */
-    private void getRandomResource(){
+    protected void getRandomResource(){
         ResourceType random = ResourceType.values()[r.nextInt(ResourceType.values().length)];
         LOGGER.info("chosen resource type: " + random);
-        BaseEntity newEntity;
         int x = r.nextInt(width-1);
         int y = r.nextInt(length-1);
         if(!checkForEntity(x, y)){
             return;
         }
+        setRandomResource(random, x, y);
+    }
+
+    /**
+     * Sets a random resource in specific x y
+     * @param x x coordinate
+     * @param y y coordinate
+     */
+    public void setRandomResource(ResourceType random, int x, int y){
+        BaseEntity newEntity;
         if(random == ResourceType.BIOMASS){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.BIOMASS);
         }
@@ -395,64 +401,42 @@ public class MapContainer {
      *
      * @return the new map file path.
      */
-    private String getRandomMap(){
+    protected String getRandomMap(){
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
-        String newPath = "";
-        String mapDoesntExit = "The given Map type doesn't exits";
-        if(randomSize == MapSizeTypes.TINY){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/tinyMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/tinyMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/tinySun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.SMALL){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/smallMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/smallMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/smallSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.MEDIUM){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/mediumMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/mediumMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/mediumSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.LARGE){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/largeMars.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/largeMoon.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/largeSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        }else if(randomSize == MapSizeTypes.VERY_LARGE){
-            if(randomType == MapTypes.MARS){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
-            } else if (randomType == MapTypes.MOON){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
-            } else if (randomType == MapTypes.SUN){
-                newPath = "resources/mapAssets/veryLargeSun.tmx";
-            } else {
-                LOGGER.error(mapDoesntExit);
-            }
-        } else {
-            LOGGER.error(mapDoesntExit);
+        String newPath = "resources/mapAssets/";
+        switch (randomSize){
+            case TINY:
+                newPath+="tiny";
+                break;
+            case SMALL:
+                newPath+="small";
+                break;
+            case MEDIUM:
+                newPath+="medium";
+                break;
+            case LARGE:
+                newPath+="large";
+                break;
+            case VERY_LARGE:
+                newPath+="veryLarge";
+                break;
+            default:
+                LOGGER.error("Unknown Map Size type");
+        }
+        switch (randomType){
+            case MARS:
+                newPath+="Mars.tmx";
+                break;
+            case MOON:
+                newPath+="Moon.tmx";
+                break;
+            case SUN:
+                newPath+="Sun.tmx";
+                break;
+            default:
+                LOGGER.error("Unknown Map type");
         }
         return newPath;
     }

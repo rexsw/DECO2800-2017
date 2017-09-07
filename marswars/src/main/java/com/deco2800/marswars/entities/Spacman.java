@@ -1,20 +1,22 @@
 package com.deco2800.marswars.entities;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
+import com.deco2800.marswars.actions.ActionSetter;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +31,24 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
+	/* Note from Building Team, I see we have a new way of processing actions, 
+	 * however they cannot take the building type as a parameter.
+	 * I will continue to use the simple implementation, but should merge 
+	 * functionality later. Don't want to modify the actiontype class too much.
+	 */
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
 	
 	private Manager owner = null;
+
+	private int spacManCost = 10;
+	
+	private BuildAction build = null;
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
+	private ActionType nextAction;
 
 	/**
 	 * Constructor for the Spacman
@@ -45,16 +57,19 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @param posZ
 	 */
 	public Spacman(float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 1, 1, 1);
+		super(posX, posY, posZ, 1, 1, 2);
 		this.setTexture("spacman_green");
-		this.setCost(10);
+		this.setCost(spacManCost);
 		this.setEntityType(EntityType.UNIT);
-		this.initActions();
-		this.addNewAction(GatherAction.class);
-		this.addNewAction(MoveAction.class);
-		lineOfSight = new LineOfSight(posX,posY,posZ,1,1);
-		FogWorld fogWorld = GameManager.get().getFogWorld();
-		fogWorld.addEntity(lineOfSight);
+		this.addNewAction(ActionType.GATHER);
+		this.addNewAction(ActionType.MOVE);
+		this.addNewAction(ActionType.BUILD);
+		this.nextAction = null;
+		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
+//
+//		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
+//		FogWorld fogWorld = GameManager.get().getFogWorld();
+//		fogWorld.addEntity(lineOfSight,fogScaleSize);
 	}
 
 	/**
@@ -66,9 +81,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y, z);
-		lineOfSight.setPosition(x,y,z);
-
-
+		//lineOfSight.setPosition(x,y,z);
+//this function is never used
 	}
 
 	/**
@@ -77,8 +91,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosX(float x) {
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(false);
+		}
 		super.setPosX(x);
-		lineOfSight.setPosX(x);
+		//lineOfSight.setPosX(x);
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(true);
+		}
+
 	}
 
 	/**
@@ -87,8 +108,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosY(float y) {
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(false);
+		}
 		super.setPosY(y);
-		lineOfSight.setPosY(y);
+		//lineOfSight.setPosY(y);
+		if(owner instanceof PlayerManager) {
+			modifyFogOfWarMap(true);
+		}
+
 	}
 
 	/**
@@ -98,7 +126,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setPosZ(float z) {
 		super.setPosZ(z);
-		lineOfSight.setPosZ(z);
+		//lineOfSight.setPosZ(z);
 	}
 	/**
 	 * On tick method for the spacman
@@ -110,16 +138,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			do really basic formation stuff instead
 		 */
 		if (!currentAction.isPresent()) {
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 2) {
+			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
 				BaseWorld world = GameManager.get().getWorld();
-
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
 				 * place to move to
 				 */
 				Random r = new Random();
 				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
-
 				/* Ensure new position is on the map */
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
 					return;
@@ -164,12 +190,20 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void onClick(MouseHandler handler) {
 		if(owner instanceof PlayerManager) {
+			// If Spacman is building, cannot interrupt with left click
+			if (currentAction.isPresent()) {
+				if(currentAction.get() instanceof BuildAction) {
+					return;
+				}
+			}
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
+			build = ActionSetter.setAction(this, BuildingType.BASE);
 			this.makeSelected();
 		} else {
+			this.makeSelected();
+			this.setEntityType(EntityType.AISPACMAN);
 			LOGGER.error("Clicked on ai spacman");
 		}
 	}
@@ -190,18 +224,28 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			this.setTexture("spacman_green");
 			return;
 		}
-		if (entities.size() > 0 && entities.get(0) instanceof Resource) {
-			currentAction = Optional.of(new GatherAction(this, entities.get(0)));
-			LOGGER.error("Assigned action gather");
-		} else {
-			currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
-
-			LOGGER.error("Assigned action move to" + x + " " + y);
+		if (currentAction.isPresent()) {
+			if(currentAction.get() instanceof BuildAction) {
+				build.finaliseBuild();
+				this.setTexture("spacman_green");
+				this.deselect();
+				return;
+			}
+		}
+		LOGGER.info("Spacman given instruction");
+		if (nextAction != null) {
+			LOGGER.info("Spacman given specific instruction");
+			ActionSetter.setAction(this,x,y,nextAction);
+		} else if (ActionSetter.setAction(this,x,y,ActionType.GATHER)) {
+			LOGGER.info("Spacman try to gather");
+		} else if (ActionSetter.setAction(this,x,y,ActionType.MOVE)) {
+			LOGGER.info("Spacman try to move");
 		}
 		this.setTexture("spacman_green");
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound("endturn.wav");
-
+		this.deselect();
+		this.nextAction = null;
 	}
 
 	/**
@@ -237,7 +281,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	public void addGatheredResource(GatheredResource resource) {
 		this.gatheredResource = resource;
-		LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
+		//LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
 	}
 	
 	/**
@@ -254,11 +298,33 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	public GatheredResource removeGatheredResource() {
 		GatheredResource resource = new GatheredResource (gatheredResource.getType(), gatheredResource.getAmount());
-		LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
+		//LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
 		gatheredResource = null;
 		return resource;
 	}
+	
+	/**
+	 * Interactive button for building structures
+	 */
+	public Button getButton() {
+		Button button = new TextButton("Please integrate listener so build fnc can be run", new Skin((Gdx.files.internal("uiskin.json"))));
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				buttonWasPressed();
+			}
+		});
+		return button;
+	}
 
+	/**
+	 * Allows build functionality on press
+	 */
+	public void buttonWasPressed() {
+		build = ActionSetter.setAction(this, BuildingType.BASE);
+		LOGGER.info("Begin Building!");
+	}
+	
 	/**
 	 * Set the owner of this spacman
 	 * @param owner
@@ -298,12 +364,26 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 	
 	/**
-	 * Set an current action for this spac man
+	 * Set an current action for this spacman
 	 * @param action
 	 */
 	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Forces the spacman to only try the chosen action on the next rightclick
+	 * @param nextAction the action to be forced
+	 */
+	@Override
+	public void setNextAction(ActionType nextAction) {
+		this.nextAction = nextAction;
+		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
+	}
+
+	public EntityStats getStats() {
+		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
 	}
 
 }

@@ -18,7 +18,6 @@ public final class CustomizedWorld extends BaseWorld {
     public CustomizedWorld(MapContainer mapContainer) {
         super(mapContainer.getMap());
         mapContainer.passWorld(this);
-        loadMapContainer(mapContainer);
     }
 
     /**
@@ -26,7 +25,7 @@ public final class CustomizedWorld extends BaseWorld {
      *
      * @param mapContainer the container to be read.
      */
-    private void loadMapContainer(MapContainer mapContainer){
+    public void loadMapContainer(MapContainer mapContainer){
         mapContainer.generateEntities(true);
     }
 

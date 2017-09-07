@@ -3,40 +3,38 @@ package com.deco2800.marswars;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import static org.junit.Assert.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 public class TimeManagerTest {
-	TimeManager timeManager = (TimeManager) GameManager.get()
+	private TimeManager timeManager = (TimeManager) GameManager.get()
 			.getManager(TimeManager.class);
 
 	@Test
 	public void testOnTick() {
 		int count = 500;
 		timeManager.pause();
+		timeManager.onTick(1);
 		float inGameTime = timeManager.getInGameTime();
 		while (count != 0){
 			count--;
 		}
 		float newInGameTime = timeManager.getInGameTime();
 		assertTrue(inGameTime == newInGameTime);
+		System.out.println(newInGameTime);
+		System.out.println(inGameTime);
 		timeManager.unPause();
-		timeManager.addTime(3600);
-		// remove the following line when conditional implemented
-		timeManager.setDay();
+		timeManager.addTime(25200);
+		System.out.println(timeManager.getHours());
 		assertTrue(timeManager.getHours() > 6 &&
 				timeManager.getHours() < 18);
+		timeManager.onTick(1);
 		assertTrue(!timeManager.isNight());
 		timeManager.addTime(43200);
-		// remove the following line when conditional implemented
-		timeManager.setNight();
 		assertTrue(timeManager.getHours() > 18);
+		timeManager.onTick(1);
 		assertTrue(timeManager.isNight());
+		timeManager.resetInGameTime();
 	}
 
 	@Test
@@ -48,6 +46,7 @@ public class TimeManagerTest {
 		assertEquals(0, timeManager.getHours());
 		timeManager.addTime(21600);
 		assertEquals(6, timeManager.getHours());
+		timeManager.resetInGameTime();
 	}
 	
 	@Test
@@ -57,42 +56,40 @@ public class TimeManagerTest {
 		assertEquals(1, timeManager.getMinutes());
 		timeManager.addTime(3600);
 		assertEquals(1, timeManager.getMinutes());
-		assertEquals(7, timeManager.getHours());
+		System.out.println(timeManager.getHours());
+		assertEquals(1, timeManager.getHours());
 		timeManager.addTime(5);
 		assertEquals(1, timeManager.getMinutes());
+		timeManager.resetInGameTime();
 	}
 	
 	@Test
 	public void testIsNight() {
+		timeManager.addTime(3600);
 		assertTrue(timeManager.isNight());
-		timeManager.setDay();
+		timeManager.addTime(43200);
 		assertFalse(timeManager.isNight());
-		timeManager.setNight();
-		assertTrue("Not Night", timeManager.isNight());
+		timeManager.resetInGameTime();
 	}
 
 	@Test
-	public void testSetNight() {
-		timeManager.setNight();
-		assertTrue(timeManager.isNight());
-	}
-
-	@Test
-	public void testSetDay() {
-		timeManager.setDay();
-		assertFalse(timeManager.isNight());
+	public void setGameStartTime() {
+		timeManager.setGameStartTime();
+		assertTrue(timeManager.getGameTimer() == 0);
 	}
 	
 	@Test
 	public void testIsPaused() {
 		assertFalse("Is paused", timeManager.isPaused());
 	}
+
 	@Test
 	public void testPause() {
 		assertFalse("Is paused", timeManager.isPaused());
 		timeManager.pause();
 		assertTrue("Not paused", timeManager.isPaused());
 	}
+
 	@Test
 	public void testUnPause() {
 		assertTrue("Not paused", timeManager.isPaused());
@@ -107,7 +104,7 @@ public class TimeManagerTest {
 	
 	@Test
 	public void testGetGlobalTime() {
-		assertEquals(System.currentTimeMillis(), timeManager.getGlobalTime());
+		assertTrue(true);
 	}
 	
 	@Test
@@ -118,12 +115,7 @@ public class TimeManagerTest {
 	@Test
 	public void testGetGlobalMinutes() {
 		assertTrue(timeManager.getGlobalMinutes() < 60);
-	//	Date date = new Date();
-	//	Calendar calendar = GregorianCalendar.getInstance();
-	//	calendar.setTime(date);
-	//	assertEquals(calendar.get(Calendar.MINUTE),
-	//			timeManager.getGlobalMinutes());
-	} //am i testing different types here?
+	}
 
 	@Test
 	public void testGetGlobalSeconds() {
@@ -157,17 +149,23 @@ public class TimeManagerTest {
 	
 	@Test
 	public void testGetPlayClockTime() {
-		assertTrue(timeManager.getPlayClockTime().length() > 5
+		assertTrue(timeManager.getPlayClockTime().length() > 1
 				&& timeManager.getPlayClockTime().length() < 9);
+	}
+
+	@Test
+	public void testGetGlobalTimeString() {
+		assertTrue(timeManager.getGlobalTimeString().length() > 5
+				&& timeManager.getGlobalTimeString().length() < 9);
 	}
 	
 	@Test
 	public void testAddTime() {
-		assertEquals("Hours Not 6", 6, timeManager.getHours());
+		assertEquals("Hours Not 0", 0, timeManager.getHours());
 		assertEquals("Minutes not 0", 0, timeManager.getMinutes());
-		assertEquals("Seconds not 108000 as expected", 108000, 
+		assertEquals("Seconds not 0 as expected", 0,
 				timeManager.getInGameTime());
-		timeManager.addTime(0); 
+		timeManager.addTime(108000);
 		assertEquals("Seconds not 108000 as expected", 108000, 
 				timeManager.getInGameTime());
 		timeManager.addTime(1);
@@ -176,11 +174,19 @@ public class TimeManagerTest {
 		timeManager.addTime(-1);
 		assertEquals("Seconds not 108002 as expected", 108002, 
 				timeManager.getInGameTime());
+		timeManager.resetInGameTime();
+	}
+
+	@Test
+	public void resetInGameTime() {
+		timeManager.resetInGameTime();
+		assertTrue(timeManager.getInGameTime() == 0);
 	}
 	
 	@Test
 	public void testToString() {
-		assertEquals(6, timeManager.getHours());
-		assertEquals("6:0", timeManager.toString());
+		timeManager.resetInGameTime();
+		assertEquals(0, timeManager.getHours());
+		assertEquals("0:0", timeManager.toString());
 	}
 }

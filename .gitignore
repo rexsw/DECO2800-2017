@@ -7,6 +7,7 @@
 bin/
 lib/
 
+marswars/resources/HUDAssets/minimap.png
 
 # Gradle
 build
@@ -42,3 +43,5 @@ sonar-project.properties
 /nbproject/private/
 /MarsWars/.nb-gradle/
 /MarsWars2/.nb-gradle/
+deco2800-2017-spacwars.ipr
+deco2800-2017-spacwars.iws
