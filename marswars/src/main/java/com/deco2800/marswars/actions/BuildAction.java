@@ -35,8 +35,8 @@ public class BuildAction implements DecoAction{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildAction.class);
 	private boolean completed = false;
-	private float tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-	private float tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+	private int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+	private int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera;
 	private float proj_x;
 	private float proj_y;
