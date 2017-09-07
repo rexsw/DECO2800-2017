@@ -1,8 +1,5 @@
 package com.deco2800.marswars.actions;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.BuildingEntity;
 import com.deco2800.marswars.entities.BuildingType;
@@ -38,8 +34,8 @@ public class BuildAction implements DecoAction{
 	private int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 	private int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera;
-	private float proj_x;
-	private float proj_y;
+	private float projX;
+	private float projY;
 	private int relocateSelect = 10;
 	private CheckSelect temp;
 	private float buildingHeight = 3;
@@ -85,20 +81,20 @@ public class BuildAction implements DecoAction{
 					camera = GameManager.get().getCamera();
 					Vector3 worldCoords = camera.unproject(new
 							Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-					proj_x = worldCoords.x / tileWidth;
-					proj_y = -(worldCoords.y - tileHeight / 2f)
-							/ tileHeight + proj_x;
-					proj_x -= proj_y - proj_x;
-					proj_x = (int) proj_x;
-					proj_y = (int) proj_y;
-					if (!(proj_x < ((buildingHeight + 1) / 2) || proj_x >
+					projX = worldCoords.x / tileWidth;
+					projY = -(worldCoords.y - tileHeight / 2f)
+							/ tileHeight + projX;
+					projX -= projY - projX;
+					projX = (int) projX;
+					projY = (int) projY;
+					if (!(projX < ((buildingHeight + 1) / 2) || projX >
 							(GameManager.get().getWorld().getWidth() -
 									((buildingHeight + 1.5) / 2))
-							|| proj_y < ((buildingHeight + 1) / 2) || proj_y >
+							|| projY < ((buildingHeight + 1) / 2) || projY >
 							GameManager.get().getWorld().getLength() -
 									buildingLength)) {
-						temp = new CheckSelect(proj_x -
-								((buildingHeight + 1) / 2), proj_y, 0f,
+						temp = new CheckSelect(projX -
+								((buildingHeight + 1) / 2), projY, 0f,
 								buildingHeight, buildingLength, 0f);
 						int left = (int) temp.getPosX();
 						int right = (int) Math.ceil(temp.getPosX() +
@@ -139,7 +135,7 @@ public class BuildAction implements DecoAction{
 					}
 				}
 			} else if (state == State.SETUP_MOVE) {
-				moveAction = new MoveAction(proj_x, proj_y, spac);
+				moveAction = new MoveAction(projX, projY, spac);
 				state = State.MOVE_ACTION;
 			} else if (state == State.MOVE_ACTION) {
 				if (moveAction.completed()) {
@@ -176,10 +172,10 @@ public class BuildAction implements DecoAction{
 	 */
 	
 	public void finaliseBuild() {
-		if (temp != null && validBuild == true) {
+		if (temp != null && validBuild) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			base = new BuildingEntity((int)proj_x-((buildingHeight+1)/2), (int)proj_y, 0f, building);
+			base = new BuildingEntity((int)projX-((buildingHeight+1)/2), (int)projY, 0f, building);
 			if (resourceManager.getRocks() >= base.getCost()) {
 				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
 				if (building == BuildingType.BASE) {
