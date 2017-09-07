@@ -41,7 +41,7 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bunker.class);
 	
-	private Manager owner = null;
+	private int owner;
 
 	boolean selected = false;
 
@@ -73,7 +73,7 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(!this.isAi()) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on bunker");
@@ -133,12 +133,12 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	}
 
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -162,6 +162,11 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	 */
 	public Optional<DecoAction> getAction() {
 		return currentAction;
+	}
+	
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 	
 }

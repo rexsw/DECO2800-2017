@@ -146,10 +146,9 @@ public class GatherAction implements DecoAction {
 	private void returnToBase() {
 		if (action.completed()) {
 			state = State.SETUP_MOVE;
-			if (entity instanceof HasOwner && ((HasOwner) entity).getOwner() instanceof AiManagerTest) {
+			if (entity instanceof HasOwner && ((HasOwner) entity).isAi()) {
 				//if controlled by the ai added the resources to the ai's pile
-				AiManagerTest manager = (AiManagerTest) ((Spacman) entity).getOwner();
-				ResourceManager resourceManager = manager.getResources();
+				ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);;
 				depositHarvest(resourceManager);
 				return;
 			}

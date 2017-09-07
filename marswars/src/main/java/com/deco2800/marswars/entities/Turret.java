@@ -40,7 +40,7 @@ public class Turret extends BuildingEntity implements Clickable, Tickable, HasPr
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Turret.class);
 	
-	private Manager onwer = null;
+	private int owner;
 
 	boolean selected = false;
 
@@ -73,7 +73,7 @@ public class Turret extends BuildingEntity implements Clickable, Tickable, HasPr
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(!this.isAi()) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on Turret");
@@ -132,19 +132,19 @@ public class Turret extends BuildingEntity implements Clickable, Tickable, HasPr
 	}
 
 	@Override
-	public void setOwner(Manager owner) {
-		this.onwer = owner;
+	public void setOwner(int owner) {
+		this.owner = owner;
 	}
 
 	@Override
-	public Manager getOwner() {
-		return this.onwer;
+	public int getOwner() {
+		return this.owner;
 	}
 
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.onwer == ((HasOwner) entity).getOwner();
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
 	public boolean isWorking() {
@@ -153,6 +153,11 @@ public class Turret extends BuildingEntity implements Clickable, Tickable, HasPr
 	
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+	
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 	
 }

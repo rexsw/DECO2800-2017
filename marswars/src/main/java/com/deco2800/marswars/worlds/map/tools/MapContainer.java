@@ -332,9 +332,6 @@ public class MapContainer {
         if(random == EntityTypes.SPACMAN){
             newEntity = new Spacman(x, y, 0);
         }
-        else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y, 0);
-        }
         else {
             return;
         }

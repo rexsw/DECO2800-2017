@@ -38,7 +38,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Barracks.class);
 	
-	private Manager onwer = null;
+	private int onwer;
 
 	boolean selected = false;
 
@@ -74,7 +74,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(this.getOwner() > 0) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on barracks");
@@ -189,7 +189,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.onwer = owner;
 	}
 
@@ -198,7 +198,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.onwer;
 	}
 
@@ -234,6 +234,11 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public Optional<DecoAction> getAction() {
 		return currentAction;
+	}
+
+	@Override
+	public boolean isAi() {
+		return onwer >= 0;
 	}
 	
 }

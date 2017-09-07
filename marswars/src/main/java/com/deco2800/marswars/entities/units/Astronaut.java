@@ -29,7 +29,7 @@ public class Astronaut extends Soldier {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Astronaut.class);
 	private GatheredResource gatheredResource = null;
 
-	public Astronaut(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		// set all the attack attributes
 		this.addNewAction(ActionType.GATHER);

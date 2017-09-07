@@ -126,11 +126,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -4, width -4, "Green");
-		setAI(4, 4, "Pink");
-		setAI(4, width -4, "Purple");
-		setAI(length -4, 4, "Yellow");
-		setPlayer(length/2, width/2, "Blue");
+		setAI(length -4, width -4, "Green", 1);
+		setAI(4, 4, "Pink", 2);
+		setAI(4, width -4, "Purple", 3);
+		setAI(length -4, 4, "Yellow", 4);
+		setPlayer(length/2, width/2, "Blue", -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		
@@ -736,42 +736,38 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y, String colour) {
-		AiManagerTest aim1 = new AiManagerTest();
-		aim1.setColour(colour);
-		GameManager.get().addManager(aim1);
-		Astronaut ai = new Astronaut(x, y, 0, aim1);
-		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
+	public void setAI(int x, int y, String colour, int teamid) {
+		//aim1.setColour(colour);
+		Astronaut ai = new Astronaut(x, y, 0, teamid);
+		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
-		Soldier Soldier = new Soldier(x, y,0,aim1);
-		Soldier.setOwner(aim1);
+		Soldier Soldier = new Soldier(x, y,0,teamid);
 		GameManager.get().getWorld().addEntity(Soldier);
-		Tank tank = new Tank(x,y,0,aim1);
-		tank.setOwner(aim1);
+		Tank tank = new Tank(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(tank);
-		ai.setOwner(aim1);
+		ai.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
+		ai1.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
+		aibase.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(aibase);
 	}
 	
-	public void setPlayer(int x, int y, String colour) {
+	public void setPlayer(int x, int y, String colour, int teamid) {
 	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 	playerManager.setColour(colour);
 	Spacman p = new Spacman(x, y, 0);
-	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
+	Astronaut p1 = new Astronaut(x, y, 0, teamid);
 	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
-	Soldier Soldier = new Soldier(x, y,0,playerManager);
+	Soldier Soldier = new Soldier(x, y,0,teamid);
 	GameManager.get().getWorld().addEntity(Soldier);
-	Tank tank = new Tank(x,y,0,playerManager);
+	Tank tank = new Tank(x,y,0,teamid);
 	GameManager.get().getWorld().addEntity(tank);
-	p.setOwner(playerManager);
+	p.setOwner(teamid);
 	GameManager.get().getWorld().addEntity(p);
-	p1.setOwner(playerManager);
+	p1.setOwner(teamid);
 	GameManager.get().getWorld().addEntity(p1);
-	p2.setOwner(playerManager);
+	p2.setOwner(teamid);
 	GameManager.get().getWorld().addEntity(p2);
 	}
 }

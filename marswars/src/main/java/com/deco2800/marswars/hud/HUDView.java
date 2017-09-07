@@ -787,9 +787,6 @@ public class HUDView extends ApplicationAdapter{
 			if (e instanceof Spacman) {
 				spacmenCount++; 
 			}
-			if (e instanceof EnemySpacman){
-				enemySpacmanCount++; 
-			}
 		}
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);

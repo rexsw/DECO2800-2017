@@ -57,16 +57,6 @@ public class InitialWorld extends BaseWorld {
 	}
 
 
-	/**
-	 * Adds cluster of enemy spacman, needs to be improved
-	 */
-	private void addEnemyGroup(int x, int y){
-		if(x-1 < 0 || y-1 < 0 || y +1 >= this.getLength() || x + 1 >= this.getWidth()){
-			return;
-		}
-		this.addEntity(new EnemySpacman(x, y, 0));
-
-	}
 
 	/**
 	 * Adds randomly placed spacman onto grid

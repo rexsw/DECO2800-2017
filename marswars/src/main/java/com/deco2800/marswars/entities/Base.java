@@ -44,7 +44,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
-	private Manager owner = null;
+	private int owner;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
 	
@@ -83,7 +83,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(this.getOwner() < 0) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on base");
@@ -201,7 +201,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
@@ -210,7 +210,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -269,11 +269,13 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 		this.health = health;
 		if (health < 0) {
 			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
 			LOGGER.info("I am kill");
 		}
+	}
+
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 	
 }
