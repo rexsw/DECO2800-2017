@@ -41,17 +41,17 @@ public class Technology {
 		this.name = name;
 		this.parents = parents;
 		this.description = description;
-		
+
 	}
-	
+
 	public int[] getCost(){
 		return cost;
 	}
-	
+
 	public String getName(){
 		return name;
 	}
-	
+
 	public List<Technology> getParents(){
 		return parents;
 	}
@@ -75,9 +75,9 @@ public class Technology {
 	 */
 	@Override
 	public String toString() {
-		String str =  "Technology: " + name + '\n' + "Cost: " + cost[0]
+		String str = "Technology: " + name + '\n' + "Cost: " + cost[0]
 				+ ", " + cost[1] + ", " + cost[2] + ", " + cost[3] + '\n' + "Parent techs: ";
-		for (Technology tech: parents) {
+		for (Technology tech : parents) {
 			// add in each parent
 			str += tech.getName() + ", ";
 		}
@@ -97,9 +97,6 @@ public class Technology {
 
 		Technology that = (Technology) o;
 
-		if (id != that.id) {
-			return false;
-		}
 		if (!Arrays.equals(cost, that.cost)) {
 			return false;
 		}
