@@ -5,7 +5,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -205,19 +210,44 @@ public class MapContainer {
      * Places an entity on the map in a random location.
      *
      * @param entity the entity to be placed.
-     * @param random whether its position should be random or not.
      */
-    public void setEntity(BaseEntity entity, boolean random){
+    public void setRandomEntity(BaseEntity entity){
         //Can't implement as entity requires x/y before being passed if random
+    }
+
+    /**
+     * Place an entity on the map in a fixed location.
+     *
+     * @param entityType the type of the new entity to be placed
+     * @param x its x coordinate
+     * @param y its y coordinate
+     * @param z its z coordinate
+     * @param player the owner
+     */
+    public void setEntity(EntityTypes entityType, float x, float y, float z, AbstractPlayerManager player){
+        BaseEntity entity = null;
+        switch (entityType){
+            case ASTRONAUT:
+                entity = new Astronaut(x,y,z, player);
+                break;
+            case TANK:
+                entity = new Tank(x,y,z, player);
+                break;
+            case SOLDIER:
+                entity = new Soldier(x,y,z, player);
+                break;
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
+        }
+        this.world.addEntity(entity);
     }
 
     /**
      * Places a set of entities on the map in a random position.
      *
      * @param entities the set of entities to be placed.
-     * @param random whether their position should be random or not.
      */
-    public void setEntities(BaseEntity[] entities, boolean random){
+    public void setRandomEntities(BaseEntity[] entities){
         //Can't implement as entity requires x/y before being passed if random
     }
 
@@ -323,23 +353,31 @@ public class MapContainer {
     protected void getRandomEntity(){
         EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
-        BaseEntity newEntity;
+        BaseEntity entity = null;
         int x = r.nextInt(width-1);
         int y = r.nextInt(length-1);
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(x, y, 0);
-        }
-        else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y, 0);
-        }
-        else {
-            return;
+        PlayerManager playerManager = new PlayerManager();
+        playerManager.setColour("blue");
+        GameManager.get().addManager(playerManager);
+        switch (random){
+            case ASTRONAUT:
+                entity = new Astronaut(x,y,0, playerManager);
+                break;
+            case TANK:
+                entity = new Tank(x,y,0, playerManager);
+                break;
+            case SOLDIER:
+                entity = new Soldier(x,y,0, playerManager);
+                break;
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
         }
 
-        world.addEntity(newEntity);
+        world.addEntity(entity);
+        System.out.println(random + " " + entity.toString());
     }
 
     /**
