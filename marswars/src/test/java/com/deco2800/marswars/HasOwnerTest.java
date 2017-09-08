@@ -72,9 +72,8 @@ public class HasOwnerTest {
 	@Test
 	public void TestEntityTest() {
 		TestOnwerEntity a = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
-		TestOnwerEntity b = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
-		b.setOwner(-1);
-		assertEquals(a.getOwner(), null);
+		a.setOwner(-1);
+		assertEquals(a.getOwner(), -1);
 		assertEquals(a.isWorking(), false);
 	}
 

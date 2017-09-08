@@ -25,7 +25,6 @@ public class SpacmanTest {
 	public void constructorTest() {
 		Spacman man = new Spacman(1,1,1);
 		assertEquals(man.getHealth(), 100);
-		assertEquals(man.getOwner(), null);
 		assertEquals(man.checkBackpack(), false);
 		assertFalse(man.isWorking());
 		//assertEquals(man.getLineOfSight(), new LineOfSight(1, 1, 1, 1, 1));
