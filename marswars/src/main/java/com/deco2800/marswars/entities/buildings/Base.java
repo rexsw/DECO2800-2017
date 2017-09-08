@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.buildings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,15 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
 import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -157,8 +156,8 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > 30) {
-			resourceManager.setRocks(resourceManager.getRocks() - 30);
+		if (resourceManager.getRocks(this.owner) > 30) {
+			resourceManager.setRocks(resourceManager.getRocks(this.owner) - 30, this.owner);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
 		this.deselect();

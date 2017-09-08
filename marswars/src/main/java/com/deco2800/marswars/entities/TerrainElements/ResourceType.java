@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.TerrainElements;
 
 /**
  * @author Mason

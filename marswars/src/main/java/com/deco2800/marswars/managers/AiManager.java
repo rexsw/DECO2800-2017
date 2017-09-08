@@ -3,6 +3,8 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -23,11 +25,10 @@ import org.slf4j.LoggerFactory;
  * warning spicy i hope you like meat balls 
  */
 
-public class AiManagerTest extends AbstractPlayerManager implements TickableManager {
+public class AiManager extends AbstractPlayerManager implements TickableManager {
 		private List<Integer> teamid = new LinkedList<Integer>();
-		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
 		private Map<Integer, Integer> alive = new HashMap<Integer, Integer>();
-		private ResourceManager resources = new ResourceManager();
 
 @Override
 public void onTick(long l) {
@@ -50,10 +51,11 @@ public void onTick(long l) {
 		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-	if(!x.isWorking() && resources.getRocks() > 30) {
+	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	if(!x.isWorking() && rm.getRocks(x.getOwner()) > 30) {
 		//sets the ai base to make more spacman if possible
 		LOGGER.error("ai - set base to make spacman");
-		resources.setRocks(resources.getRocks() - 30);
+		rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 		Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
 		x.setAction(new GenerateAction(r));
 	}
@@ -116,9 +118,5 @@ public List<Integer> getAiTeam(){
 	return teamid;
 }
 
-@Override
-public String toString() {
-	return "Ai team - " + this.getColour();
-}
 
 }

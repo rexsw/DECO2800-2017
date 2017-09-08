@@ -1,14 +1,15 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -182,16 +183,16 @@ public class GatherAction implements DecoAction {
 			int amount = resource.getAmount();
 			switch (resourceType) {
 				case WATER:
-					resourceManager.setWater(resourceManager.getWater() + amount);
+					resourceManager.setWater(resourceManager.getWater(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case ROCK:
-					resourceManager.setRocks(resourceManager.getRocks() + amount);
+					resourceManager.setRocks(resourceManager.getRocks(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case CRYSTAL:
-					resourceManager.setCrystal(resourceManager.getCrystal() + amount);
+					resourceManager.setCrystal(resourceManager.getCrystal(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case BIOMASS:
-					resourceManager.setBiomass(resourceManager.getBiomass() + amount);
+					resourceManager.setBiomass(resourceManager.getBiomass(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				default :
 					break;

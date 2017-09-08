@@ -63,9 +63,10 @@ public class TechnologyManager extends Manager{
      * and return a message.
      * @param techMan
      * @param tech
+     * @param teamid - the team researching this tech
      * @return String with message about whether or not the research was okay and why
      */
-    public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID){
+    public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 
         if(!(getActive().contains(tech.getParents()))){
@@ -74,26 +75,26 @@ public class TechnologyManager extends Manager{
         if(!techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-        if (!(resourceManager.getRocks() > tech.getCost()[0])) {
+        if (!(resourceManager.getRocks(teamid) > tech.getCost()[0])) {
             return "Insufficient Rocks";
         }
-        if (!(resourceManager.getCrystal() > tech.getCost()[1])) {
+        if (!(resourceManager.getCrystal(teamid) > tech.getCost()[1])) {
             return "Insufficient Crystals";
         }
-        if (!(resourceManager.getWater() > tech.getCost()[1])) {
+        if (!(resourceManager.getWater(teamid) > tech.getCost()[1])) {
             return "Insufficient Water levels";
         }
-        if (!(resourceManager.getBiomass() > tech.getCost()[1])) {
+        if (!(resourceManager.getBiomass(teamid) > tech.getCost()[1])) {
             return "Insufficient Biomass";
         }
-        return activateTech(techMan, tech, resourceManager, techID);
+        return activateTech(techMan, tech, resourceManager, techID, teamid);
     }
 
-    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager,int techID){
-        resourceManager.setRocks(resourceManager.getRocks() - tech.getCost()[0]);
-        resourceManager.setCrystal(resourceManager.getCrystal() - tech.getCost()[1]);
-        resourceManager.setWater(resourceManager.getWater() - tech.getCost()[2]);
-        resourceManager.setBiomass(resourceManager.getBiomass() - tech.getCost()[3]);
+    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager,int techID, int teamid){
+        resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
+        resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
+        resourceManager.setWater(resourceManager.getWater(teamid) - tech.getCost()[2], teamid);
+        resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
         if(techID == 1){
             costUpgrade();

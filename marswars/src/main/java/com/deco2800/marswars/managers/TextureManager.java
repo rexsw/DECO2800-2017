@@ -157,7 +157,7 @@ public class TextureManager extends Manager {
             unitType=sc.next();
             sc.close();
             //find the team colour of the owner:
-            String teamColour = ((AbstractPlayerManager) soldier.getOwner()).getColour();
+            String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap

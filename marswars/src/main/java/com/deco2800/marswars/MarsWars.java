@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
@@ -498,7 +499,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
+		rocksLabel.setText("Rocks: " + resourceManager.getRocks(-1) + " Crystal: " + resourceManager.getCrystal(-1) + " Water: " + resourceManager.getWater(-1) + " Biomass: " + resourceManager.getBiomass(-1));
 		
 
 		/*
@@ -738,8 +739,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * @ensure the x,y pair are within the game map
 	 */
 	public void setAI(int x, int y, String colour, int teamid) {
-		//aim1.setColour(colour);
-		AiManagerTest aim = (AiManagerTest) GameManager.get().getManager(AiManagerTest.class);
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rm.setBiomass(0, teamid);
+		rm.setRocks(0, teamid);
+		rm.setCrystal(0, teamid);
+		rm.setWater(0, teamid);
+		cm.setColour(teamid, colour);
+		AiManager aim = (AiManager) GameManager.get().getManager(AiManager.class);
 		aim.addTeam(teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
@@ -757,8 +764,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 	
 	public void setPlayer(int x, int y, String colour, int teamid) {
-	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
-	playerManager.setColour(colour);
+	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+	cm.setColour(teamid, colour);
+	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	rm.setBiomass(0, teamid);
+	rm.setRocks(0, teamid);
+	rm.setCrystal(0, teamid);
+	rm.setWater(0, teamid);
 	Spacman p = new Spacman(x, y, 0);
 	Astronaut p1 = new Astronaut(x, y, 0, teamid);
 	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);

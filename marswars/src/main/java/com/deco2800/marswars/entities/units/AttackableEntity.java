@@ -10,7 +10,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;

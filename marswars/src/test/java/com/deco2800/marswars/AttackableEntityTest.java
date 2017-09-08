@@ -162,10 +162,9 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetOwner() {
-		Manager owns = GameManager.get().getManager(PlayerManager.class);
-		test.setOwner(owns);
-		assertEquals(test.getOwner(), owns);
-		enemy.setOwner(owns);
+		test.setOwner(-1);
+		assertEquals(test.getOwner(), -1);
+		enemy.setOwner(-1);
 		assertEquals(test.sameOwner(enemy), true);
 		assertEquals(test.sameOwner(constructor2Test), false);
 	}

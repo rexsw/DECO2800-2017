@@ -28,16 +28,16 @@ class TestOnwerEntity extends AbstractEntity implements HasOwner {
 		super(posX, posY, posZ, xLength, yLength, zLength);
 	}
 	
-	private Manager owner = null;
+	private int owner;
 	public Optional<DecoAction> currentAction = Optional.empty();
 
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -61,6 +61,11 @@ class TestOnwerEntity extends AbstractEntity implements HasOwner {
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
+
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
 }
 
 public class HasOwnerTest {
@@ -68,7 +73,7 @@ public class HasOwnerTest {
 	public void TestEntityTest() {
 		TestOnwerEntity a = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
 		TestOnwerEntity b = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
-		b.setOwner(new PlayerManager());
+		b.setOwner(-1);
 		assertEquals(a.getOwner(), null);
 		assertEquals(a.isWorking(), false);
 	}
@@ -77,10 +82,9 @@ public class HasOwnerTest {
 	public void SameOnwerTest() {
 		TestOnwerEntity a = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
 		TestOnwerEntity b = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
-		PlayerManager c = new PlayerManager();
-		b.setOwner(c);
+		b.setOwner(-1);
 		assertEquals(a.sameOwner(b), false);
-		a.setOwner(c);
+		a.setOwner(-1);
 		assertEquals(a.sameOwner(b), true);
 	}
 	
@@ -91,6 +95,13 @@ public class HasOwnerTest {
 		assertEquals(a.isWorking(), false);
 		a.setAction(b);
 		assertEquals(a.isWorking(), true);
+	}
+	
+	@Test
+	public void isAiTest() {
+		TestOnwerEntity a = new TestOnwerEntity(0, 0, 0, 0, 0, 0);
+		a.setOwner(1);
+		assertEquals(a.isAi(), true);
 	}
 
 	

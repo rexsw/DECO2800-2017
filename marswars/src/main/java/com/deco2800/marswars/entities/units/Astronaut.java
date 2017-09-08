@@ -11,7 +11,7 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;

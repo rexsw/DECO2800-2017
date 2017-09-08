@@ -13,8 +13,7 @@ public class LoadAction implements DecoAction {
 	LOAD_STATE
     }
 
-    private static final Logger LOGGER = LoggerFactory
-	    .getLogger(LoadAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadAction.class);
     private boolean completed = false;
     private MoveAction action = null;
     private State state = State.MOVE_STATE;
@@ -41,6 +40,7 @@ public class LoadAction implements DecoAction {
     }
 
     private void loadAction() {
+    LOGGER.info("loaded units");
 	ticksLoad--;
 	if(ticksLoad == 0) {
 	    if (((Carrier) carrier).loadPassengers(target)) {

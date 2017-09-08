@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -67,24 +68,6 @@ public class SpacmanTest {
 	}
 	
 	@Test
-	public void ownerTest() {
-		Spacman man = new Spacman(1,1,1);
-		Spacman man2 = new Spacman(1,1,1);
-		Spacman man3 = new Spacman(1,1,1);
-		Resource mockResource = Mockito.mock(Resource.class);
-		Manager mockManager = Mockito.mock(Manager.class);
-		Manager mockManager2 = Mockito.mock(Manager.class);
-		man.setOwner(mockManager);
-		man2.setOwner(mockManager2);
-		man3.setOwner(mockManager);
-		
-		assertEquals(man.getOwner(), mockManager);
-		assertFalse(man.sameOwner(man2));
-		assertTrue(man.sameOwner(man3));
-		assertFalse(man.sameOwner(mockResource));
-	}
-	
-	@Test
 	public void actionTest() {
 		Spacman man = new Spacman(1,1,1);
 		DecoAction action = Mockito.mock(DecoAction.class);
@@ -96,8 +79,7 @@ public class SpacmanTest {
 	@Test
 	public void onClickTest() {
 		Spacman man = new Spacman(1,1,1);
-		PlayerManager mockManager = Mockito.mock(PlayerManager.class);
-		man.setOwner(mockManager);
+		man.setOwner(1);
 		MouseHandler mockHandler = Mockito.mock(MouseHandler.class);
 		//man.onClick(mockHandler); Can't run this line mockito doesn't like Gamemanager trying to get tile dimensions
 		assertEquals(man.getTexture(), "spacman_green");

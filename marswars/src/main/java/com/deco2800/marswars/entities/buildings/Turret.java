@@ -1,10 +1,16 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.buildings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.HasProgress;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.PlayerManager;

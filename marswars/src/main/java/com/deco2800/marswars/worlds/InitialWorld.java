@@ -1,6 +1,8 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
