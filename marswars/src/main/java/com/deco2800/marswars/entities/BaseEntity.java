@@ -353,7 +353,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		}
 	}
 
-	protected void modifyFogOfWarMap(boolean add) {
+	protected void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
@@ -363,9 +363,9 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogOfWarManager.sightRange(x,y,scale,add);
 				} else {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogOfWarManager.sightRange(x,y,scale,add);
 				}
 			}
 		}

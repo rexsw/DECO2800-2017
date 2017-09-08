@@ -27,7 +27,6 @@ import java.util.Random;
  * Created by timhadwen on 19/7/17.
  */
 public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
-	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -65,25 +64,9 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.BUILD);
 		this.nextAction = null;
-		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
-//
-//		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
-//		FogWorld fogWorld = GameManager.get().getFogWorld();
-//		fogWorld.addEntity(lineOfSight,fogScaleSize);
+
 	}
 
-	/**
-	 * Sets the position of this spacman
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
-	@Override
-	public void setPosition(float x, float y, float z) {
-		super.setPosition(x, y, z);
-		//lineOfSight.setPosition(x,y,z);
-//this function is never used
-	}
 
 	/**
 	 * Sets the position X
@@ -92,12 +75,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setPosX(float x) {
 		if(owner instanceof PlayerManager) {
-			modifyFogOfWarMap(false);
+			modifyFogOfWarMap(false,5);
 		}
 		super.setPosX(x);
-		//lineOfSight.setPosX(x);
+
 		if(owner instanceof PlayerManager) {
-			modifyFogOfWarMap(true);
+			modifyFogOfWarMap(true,5);
 		}
 
 	}
@@ -109,25 +92,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setPosY(float y) {
 		if(owner instanceof PlayerManager) {
-			modifyFogOfWarMap(false);
+			modifyFogOfWarMap(false,5);
 		}
 		super.setPosY(y);
-		//lineOfSight.setPosY(y);
 		if(owner instanceof PlayerManager) {
-			modifyFogOfWarMap(true);
+			modifyFogOfWarMap(true,5);
 		}
 
 	}
 
-	/**
-	 * Sets the position Z
-	 * @param z
-	 */
-	@Override
-	public void setPosZ(float z) {
-		super.setPosZ(z);
-		//lineOfSight.setPosZ(z);
-	}
 	/**
 	 * On tick method for the spacman
 	 * @param i
@@ -174,13 +147,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		}
 	}
 
-	/**
-	 * Get the line of sight of this spacman
-	 * @return LineOfSight
-	 */
-	public LineOfSight getLineOfSight(){
-		return lineOfSight;
-	}
 
 	/**
 	 * On click method for the spacman

@@ -41,22 +41,6 @@ public class FogOfWarManager extends Manager {
 	}
 
 	/**
-	 * Sets coordinate to a certain sight level.
-	 *
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 * @param s 0, 1 or 2
-	 * @return true if set correctly and false otherwise
-	 */
-	public boolean setFog(int x, int y, int s) {
-		if (s != 0 || s != 1 || s != 2) {
-			return false;
-		}
-		fogOfWar.set(x, y, s);
-		return true;
-	}
-
-	/**
 	 * Gets the fog value of a coordinate
 	 *
 	 * @param x the x coordinate

@@ -58,7 +58,7 @@ public class TextureManager extends Manager {
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
         textureMap.put("black_tile",new Texture("resources/placeholderassets/black_tile.png"));
         //Units
-        textureMap.put("ground_gray", new Texture("resources/placeholderassets/line-of-sight.png"));
+
         textureMap.put("spacman", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
         textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
