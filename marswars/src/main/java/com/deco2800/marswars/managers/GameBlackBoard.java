@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GameBlackBoard extends Manager implements TickableManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
 	private List<Manager> teams;
 	private Map<Manager,List<Integer>> values;
 	
@@ -37,24 +37,6 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	public void set() {
 		teams = new ArrayList<Manager>(GameManager.get().getManagerList());
 		values = new HashMap<Manager,List<Integer>>();
-		for(Manager m: teams) {
-			if(m instanceof PlayerManager) {
-				List<Integer> managerresources = new ArrayList<Integer>();
-				ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-				managerresources.add(0,rm.getBiomass());
-				managerresources.add(1,rm.getCrystal());
-				managerresources.add(2,rm.getRocks());
-				managerresources.add(3,rm.getWater());
-				values.put(m, managerresources);
-			} else if (m instanceof AiManagerTest) {
-				List<Integer> managerresources = new ArrayList<Integer>();
-				managerresources.add(0,((AiManagerTest) m).getResources().getBiomass());
-				managerresources.add(1,((AiManagerTest) m).getResources().getCrystal());
-				managerresources.add(2,((AiManagerTest) m).getResources().getRocks());
-				managerresources.add(3,((AiManagerTest) m).getResources().getWater());
-				values.put(m, managerresources);
-			}
-		}
 	}
 
 }

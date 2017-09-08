@@ -9,7 +9,7 @@ import com.deco2800.marswars.managers.AbstractPlayerManager;
  */
 public class Tank extends Soldier {
 	
-	public Tank(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Tank(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		//this.movementSound = "tankMovementSound";
 		

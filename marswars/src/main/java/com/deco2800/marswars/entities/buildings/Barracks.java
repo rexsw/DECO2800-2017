@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.buildings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,6 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.HasProgress;
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -34,7 +41,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Barracks.class);
 	
-	private Manager onwer = null;
+	private int onwer;
 
 	boolean selected = false;
 
@@ -70,7 +77,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(this.getOwner() > 0) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on barracks");
@@ -145,8 +152,8 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > 30) {
-			resourceManager.setRocks(resourceManager.getRocks() - 30);
+		if (resourceManager.getRocks(this.onwer) > 30) {
+			resourceManager.setRocks(resourceManager.getRocks(this.onwer) - 30, this.onwer);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
 	}
@@ -185,7 +192,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.onwer = owner;
 	}
 
@@ -194,7 +201,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.onwer;
 	}
 
@@ -230,6 +237,11 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public Optional<DecoAction> getAction() {
 		return currentAction;
+	}
+
+	@Override
+	public boolean isAi() {
+		return onwer >= 0;
 	}
 	
 }

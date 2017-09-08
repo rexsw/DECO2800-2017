@@ -11,6 +11,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.buildings.BuildingType;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -39,7 +40,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	private int health = 100;
 	
-	private Manager owner = null;
+	private int owner;
 
 	private int spacManCost = 10;
 	
@@ -74,13 +75,14 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosX(float x) {
-		if(owner instanceof PlayerManager) {
+		if(!this.isAi()) {
 			modifyFogOfWarMap(false,5);
 		}
 		super.setPosX(x);
-
-		if(owner instanceof PlayerManager) {
+		//lineOfSight.setPosX(x);
+		if(!this.isAi()) {
 			modifyFogOfWarMap(true,5);
+
 		}
 
 	}
@@ -91,12 +93,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void setPosY(float y) {
-		if(owner instanceof PlayerManager) {
+
+		if(!this.isAi()) {
 			modifyFogOfWarMap(false,5);
 		}
 		super.setPosY(y);
-		if(owner instanceof PlayerManager) {
+		//lineOfSight.setPosY(y);
+		if(!this.isAi()) {
 			modifyFogOfWarMap(true,5);
+
 		}
 
 	}
@@ -155,7 +160,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(owner instanceof PlayerManager) {
+		if(!this.isAi()) {
 			// If Spacman is building, cannot interrupt with left click
 			if (currentAction.isPresent()) {
 				if(currentAction.get() instanceof BuildAction) {
@@ -234,9 +239,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 		if (health < 0) {
 			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
 			LOGGER.info("I am kill");
 		}
 	}
@@ -296,7 +298,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
@@ -305,7 +307,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -350,6 +352,11 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	public EntityStats getStats() {
 		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
+	}
+	
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 
 }

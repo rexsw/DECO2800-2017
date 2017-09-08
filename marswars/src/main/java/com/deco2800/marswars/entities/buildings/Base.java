@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.buildings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,15 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
 import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -41,7 +40,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
-	private Manager owner = null;
+	private int owner;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
 	
@@ -80,7 +79,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
-		if(this.getOwner() instanceof PlayerManager) {
+		if(this.getOwner() < 0) {
 			if (!selected) {
 				selected = true;
 				LOGGER.error("clicked on base");
@@ -157,8 +156,8 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 */
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks() > 30) {
-			resourceManager.setRocks(resourceManager.getRocks() - 30);
+		if (resourceManager.getRocks(this.owner) > 30) {
+			resourceManager.setRocks(resourceManager.getRocks(this.owner) - 30, this.owner);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
 		this.deselect();
@@ -198,7 +197,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
@@ -207,7 +206,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -266,11 +265,13 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 		this.health = health;
 		if (health < 0) {
 			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
 			LOGGER.info("I am kill");
 		}
+	}
+
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 	
 }

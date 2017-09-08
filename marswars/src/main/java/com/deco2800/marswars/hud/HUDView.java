@@ -768,10 +768,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rockCount.setText("" + resourceManager.getRocks());
-		crystalCount.setText("" + resourceManager.getCrystal()); 
-		waterCount.setText("" + resourceManager.getWater());
-		biomassCount.setText("" + resourceManager.getBiomass());
+		rockCount.setText("" + resourceManager.getRocks(-1));
+		crystalCount.setText("" + resourceManager.getCrystal(-1)); 
+		waterCount.setText("" + resourceManager.getWater(-1));
+		biomassCount.setText("" + resourceManager.getBiomass(-1));
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
@@ -786,9 +786,6 @@ public class HUDView extends ApplicationAdapter{
 			}
 			if (e instanceof Spacman) {
 				spacmenCount++; 
-			}
-			if (e instanceof EnemySpacman){
-				enemySpacmanCount++; 
 			}
 		}
 		//Get the details from the selected entity

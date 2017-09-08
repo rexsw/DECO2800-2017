@@ -40,7 +40,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String defaultTextureName;
 	protected String movementSound;
 
-	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Soldier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
 		
@@ -82,7 +82,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(this.getOwner() instanceof PlayerManager) {
+		if(!this.isAi()) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);

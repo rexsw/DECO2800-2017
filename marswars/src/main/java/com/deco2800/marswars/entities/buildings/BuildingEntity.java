@@ -1,5 +1,7 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.buildings;
 
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.managers.GameManager;
 
 /**

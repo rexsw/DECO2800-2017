@@ -3,9 +3,16 @@ package com.deco2800.marswars.worlds.map.tools;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.Base;
+import com.deco2800.marswars.entities.buildings.Barracks;
+import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.buildings.BuildingType;
+import com.deco2800.marswars.entities.buildings.Bunker;
+import com.deco2800.marswars.entities.buildings.Turret;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -331,9 +338,6 @@ public class MapContainer {
         }
         if(random == EntityTypes.SPACMAN){
             newEntity = new Spacman(x, y, 0);
-        }
-        else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y, 0);
         }
         else {
             return;

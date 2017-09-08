@@ -32,7 +32,7 @@ public class TechTreeView extends Dialog{
 		int techID = (int) object;
 		if (techID == 0) {return;}
 		Technology tech = techMan.getTech(techID);
-		String message = techMan.checkPrereqs(techMan, tech, techID);
+		String message = techMan.checkPrereqs(techMan, tech, techID, -1);
 		//Need to find a way to print this to the dialogue box
 		//System.out.println(message);
 	}
