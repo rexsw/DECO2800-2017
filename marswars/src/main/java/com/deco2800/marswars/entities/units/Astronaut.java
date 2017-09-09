@@ -100,4 +100,9 @@ public class Astronaut extends Soldier {
 		gatheredResource = null;
 		return resource;
 	}
+	
+	@Override
+	public String toString(){
+		return "Astronaut";
+	}
 }

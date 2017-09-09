@@ -34,15 +34,16 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 public void onTick(long l) {
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 		if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
-			if(e instanceof Astronaut) {
-				Astronaut x = (Astronaut)e;
-				useSpacman(x);
+			if(e instanceof Soldier && !(e instanceof Astronaut)) {
+				Soldier x = (Soldier)e;
+				//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
+				useEnemy(x);
 			} else if(e instanceof Base) {
 				Base x = (Base)e;
 				generateSpacman(x);
-			} else if(e instanceof Soldier) {
-				Soldier x = (Soldier)e;
-				useEnemy(x);
+			} else if(e instanceof Astronaut) {
+				Astronaut x = (Astronaut)e;
+				useSpacman(x);
 			}
 		}
 	}
@@ -79,8 +80,10 @@ private void useEnemy(Soldier x) {
 private void useSpacman(Astronaut x) {
 	if(!(x.isWorking())) {
 		//allow spacmans to collect the closest resources
+		//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 		x.setAction(new GatherAction(x, (Resource) resource.get()));
+		//LOGGER.info(resource.get().getTexture() + "");
 		LOGGER.error("ai - set spacman to grather");
 	}
 }
@@ -92,14 +95,14 @@ private void useSpacman(Astronaut x) {
  */
 public boolean isKill(int key) {
 	//in this case "dead" is an Ai with no spacman
-	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof AttackableEntity && ((AttackableEntity) e).getOwner() == key) {
-			return false;
-		}
-	}
+	if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).unitcount(key) == 0) {
 	LOGGER.error("ai - is kill");
 	alive.put(key, 0);
 	return true;
+	}
+	else {
+		return false;
+	}
 }
 
 /**

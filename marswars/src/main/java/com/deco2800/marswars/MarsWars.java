@@ -128,11 +128,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -4, width -4, "Green", 1);
-		setAI(4, 4, "Pink", 2);
-		setAI(4, width -4, "Purple", 3);
-		setAI(length -4, 4, "Yellow", 4);
-		setPlayer(length/2, width/2, "Blue", -1);
+		setAI(length -4, width -4, Colours.GREEN, 1);
+		setAI(4, 4, Colours.PINK, 2);
+		setAI(4, width -4, Colours.PINK, 3);
+		setAI(length -4, 4, Colours.YELLOW, 4);
+		setPlayer(length/2, width/2, Colours.PURPLE, -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		
@@ -738,7 +738,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y, String colour, int teamid) {
+	public void setAI(int x, int y, Colours colour, int teamid) {
 		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rm.setBiomass(0, teamid);
@@ -755,15 +755,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(Soldier);
 		Tank tank = new Tank(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(tank);
-		ai.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(ai1);
 		aibase.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(aibase);
 	}
 	
-	public void setPlayer(int x, int y, String colour, int teamid) {
+	public void setPlayer(int x, int y, Colours colour, int teamid) {
 	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 	cm.setColour(teamid, colour);
 	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
