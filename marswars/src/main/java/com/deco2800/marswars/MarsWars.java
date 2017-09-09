@@ -188,14 +188,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
-
 							}
 						}
-
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
 					}
-
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -479,38 +476,36 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
-		if ((downKeys.contains(Input.Keys.C))){
+		if (downKeys.contains(Input.Keys.C)){
 			if(cSwitcher == 0){
-				ArrayList<Float> XYPosition = new ArrayList<Float>();
-				XYPosition.add(camera.position.x);
-				XYPosition.add(camera.position.y);
-				cameraPosition.add(XYPosition);
+				ArrayList<Float> xyPosition = new ArrayList<Float>();
+				xyPosition.add(camera.position.x);
+				xyPosition.add(camera.position.y);
+				cameraPosition.add(xyPosition);
 				cSwitcher++;
 			}
 		}else{
 			cSwitcher = 0;
 		}
 		
-		if((downKeys.contains(Input.Keys.N))){
-			if(!cameraPosition.isEmpty()){
-				ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
-				if(switcher == 0){
-					float X= camera.position.x - nextPosition.get(0);
-					float Y = camera.position.y - nextPosition.get(1);
-					X *= -1;
-					Y *= -1;
-					if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
-						camera.translate(X, 0);
-					}
-					if(camera.position.y > nextPosition.get(1) || 
-							(camera.position.y <= nextPosition.get(1))){
-						camera.translate(0, Y);
-					}
-					switcher++;
-					cameraPointer++;
-					cameraPointer = cameraPointer % cameraPosition.size();
-				}	
-			}
+		if(downKeys.contains(Input.Keys.N) && !cameraPosition.isEmpty()){
+			ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
+			if(switcher == 0){
+				float x= camera.position.x - nextPosition.get(0);
+				float y = camera.position.y - nextPosition.get(1);
+				x *= -1;
+				y *= -1;
+				if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
+					camera.translate(x, 0);
+				}
+				if(camera.position.y > nextPosition.get(1) || 
+						(camera.position.y <= nextPosition.get(1))){
+					camera.translate(0, y);
+				}
+				switcher++;
+				cameraPointer++;
+				cameraPointer = cameraPointer % cameraPosition.size();
+			}	
 		}else{
 			switcher = 0;
 		}
@@ -644,8 +639,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
-		Soldier Soldier = new Soldier(x, y,0,teamid);
-		GameManager.get().getWorld().addEntity(Soldier);
+		Soldier soldier = new Soldier(x, y,0,teamid);
+		GameManager.get().getWorld().addEntity(soldier);
 		Tank tank = new Tank(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(tank);
 		ai.setOwner(teamid);
