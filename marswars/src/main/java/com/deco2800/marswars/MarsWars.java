@@ -89,6 +89,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
+	TextureManager reg;
+	
 	
 	/**
 	 * Creates the required objects for the game to start.
@@ -99,40 +101,70 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
+		/*All managers */
+		reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+
+		// zero game length clock (i.e. Tell TimeManager new game has been launched)
+		timeManager.setGameStartTime();
+		
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
 		menu = new MainMenu(skin, stage, new Window("its a start", skin), this);
 		stage.addActor(menu.buildMenu());
 		
-		// zero game length clock (i.e. Tell TimeManager new game has been launched)
-		timeManager.setGameStartTime();
-		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
+		playGame();
+	}
+	
+	/**
+	 * Constructs the rest of the game. 
+	 * Note: the follow methods will be removed from marswars soon to be abstracted 
+	 * into their relevant classes
+	 */
+	public void playGame(){
+		createMiniMap();
+		createMap();
+		setGame();
+		fogOfWar();
+		addAIEntities();
+		setThread();
+		setGUI();
+		setInputProcessor();
+	}
+	
+	/**
+	 * Creates the game minimap 
+	 */
+	public void createMiniMap() {
 		MiniMap m = new MiniMap("minimap", 220, 220);
 		m.render();
 		//initialise the minimap and set the image
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(reg);
-
-		/*
-		 *	Set up new stuff for this game
-		 * TODO some way to choose which map is being loaded
-		 */
+	}
+	
+	/**
+	 * Creates game map
+	 */
+	private void createMap() {
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
-
-		/*
-		 * Initializes fog of war
-		 */
+	}
+	
+	/*
+	 * Initializes fog of war
+	 */
+	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-
-		/*
-		 * adds entities for the ai and set then to be ai owned
-		 */
+	}
+	
+	/*
+	 * adds entities for the ai and set then to be ai owned
+	 */
+	private void addAIEntities() {
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
 		setAI(length -4, width -4, "Green", 1);
@@ -142,8 +174,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setPlayer(length/2, width/2, "Blue", -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
-		
-		
+	}
+	
+	private void setThread() {
 		// do something important here, asynchronously to the rendering thread
 
 		new Thread(new Runnable() {
@@ -171,19 +204,23 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}).start();
-
-		/*
-		 * Setup the game itself
-		 */
+	}
+	
+	/*
+	 * Setup the game itself
+	 */
+	private void setGame() {
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
 		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(camera);
-
-		/*
-		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
-		 */
+	}
+	
+	/*
+	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
+	 */
+	private void setGUI() {
 		/* Add another button to the menu */
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
@@ -192,7 +229,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
 		view.disableHUD();
-		
+	}
+	
+	private void setInputProcessor() {
 		/*
 		 * Setup inputs for the buttons and the game itself
 		 */
@@ -301,7 +340,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		GameManager.get().toggleActiveView();
 	}
-
 
 	/**
 	 * Renderer thread
