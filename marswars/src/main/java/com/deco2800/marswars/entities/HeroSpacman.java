@@ -1,31 +1,55 @@
 package com.deco2800.marswars.entities;
 
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.entities.items.Effect;
+import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.Armour;
+import com.deco2800.marswars.entities.items.Weapon;
+import com.deco2800.marswars.entities.items.ActiveItem;
+import com.deco2800.marswars.entities.items.PassiveItem;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
  * A hero for the game
  * Created by timhadwen on 19/7/17.
+ * Edited by Zeid Ismail on 8/09
  */
-public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
+public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
+		HasAttackRange, HasAttackSpeed, HasHealth {
+	int xp;
+	int armour;
+	int health;
+	int attackRange;
+	int attackSpeed;
+	ArrayList<Item> inventory;
+
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
 	/**
 	 * Constructor for a hero
+	 *
 	 * @param world
 	 * @param posX
 	 * @param posY
 	 * @param posZ
 	 */
-	public HeroSpacman(AbstractWorld world, float posX, float posY, float posZ) {
+
+	public HeroSpacman(AbstractWorld world, float posX, float posY,
+					   float posZ) {
 		super(posX, posY, posZ, 1, 1f, 1f);
 		this.setTexture("spacman_red");
 		this.setEntityType(EntityType.HERO);
+		this.health = 100;
+		this.armour = 100;
+		this.attackRange = 5;
+		this.attackSpeed = 10;
+		this.xp = 0;
+		this.inventory = new ArrayList<Item>();
 	}
 
 	@Override
@@ -47,7 +71,7 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
 
 	@Override
 	public void onRightClick(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int)x, (int)y, this));
+		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 	}
 
 	@Override
@@ -57,8 +81,67 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable {
 
 	@Override
 	public void deselect() {
-
 	}
 
+	public int getHealth() {
+		return this.health;
+	}
 
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public int getArmor() {
+		return this.armour;
+	}
+
+	public void setArmor(int armour) {
+		this.armour = armour;
+	}
+
+	public int getAttackRange() {
+		return attackRange;
+	}
+
+	public void setAttackRange(int attackRange) {
+		this.attackRange = attackRange;
+	}
+
+	public int getAttackSpeed() {
+		return attackSpeed;
+	}
+
+	public void setAttackSpeed(int attackSpeed) {
+		this.attackSpeed = attackSpeed;
+	}
+
+	public boolean addItem(Item item) {
+		return this.inventory.add(item);
+	}
+
+	public boolean removeItem(Item item) {
+		return this.inventory.remove(item);
+	}
+
+	public ArrayList<Item> getInventory() {
+		ArrayList<Item> inventory;
+		inventory = this.inventory;
+		return inventory;
+	}
+
+	public Effect getEffect(Item item) {
+		return item.getEffect();
+	}
+
+	public boolean getActivation (ActiveItem activeItem) {
+		return activeItem.getActivation();
+	}
+
+	public void activateItem(ActiveItem activeItem) {
+		activeItem.activateItem();
+	}
+
+	public void deactivateItem(ActiveItem activeItem) {
+		activeItem.deactivateItem();
+	}
 }
