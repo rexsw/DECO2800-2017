@@ -4,22 +4,13 @@ package com.deco2800.marswars.entities;
  * @author Treenhan
  * Created by Treenhan on 8/24/17.
  *
- * This class will holds the line of sight and these objects will be rendered on a separated layer
+ * This class will holds the Fog Tiles and these objects will be rendered on a separated layer
  *
  *
  */
-public class FogOfWarLayer extends AbstractEntity {
-    int fogScaleSize;
+public class FogEntity extends AbstractEntity {
 
-    public void setFogScaleSize(int fogScaleSize){
-        this.fogScaleSize = fogScaleSize;
-    }
-
-    public int getFogScaleSize(){
-        return fogScaleSize;
-    }
-
-    public FogOfWarLayer(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
+    public FogEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
         super(posX, posY, posZ, xLength, yLength, zLength);
     }
 
@@ -34,8 +25,6 @@ public class FogOfWarLayer extends AbstractEntity {
     public void setPosition(float x, float y, float z) {
         super.setPosition(x, y, z);
     }
-
-
 
     /**
      * Sets the Position X

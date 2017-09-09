@@ -9,18 +9,20 @@ import com.deco2800.marswars.util.Array2D;
  * 1 = seen, but not currently in sight (grayed out)
  * 2 = In sight (normal vision)
  */
-public class FogOfWarManager extends Manager {
+public class FogManager extends Manager {
+	/**
+	 * this array contains grayed-out fog of war
+	 */
 	private static Array2D<Integer> fogOfWar;
+
+	/**
+	 * this array contains black-out fog of war
+	 */
 	private static Array2D<Integer> blackFogOfWar;
+
+	//this is fog of war activation status
 	private static boolean activatedFog = true;
 
-	public static Array2D<Integer> getFogOfWar(){
-		return fogOfWar;
-	}
-
-	public static Array2D<Integer> getBlackFogOfWar(){
-		return blackFogOfWar;
-	}
 
 	/**
 	 * Initializes the fogOfWar array when the game starts by setting all
@@ -41,31 +43,23 @@ public class FogOfWarManager extends Manager {
 	}
 
 	/**
-	 * Sets coordinate to a certain sight level.
+	 * Gets the fog value of a coordinate of the gray fog of war
 	 *
 	 * @param x the x coordinate
 	 * @param y the y coordinate
-	 * @param s 0, 1 or 2
-	 * @return true if set correctly and false otherwise
-	 */
-	public boolean setFog(int x, int y, int s) {
-		if (s != 0 || s != 1 || s != 2) {
-			return false;
-		}
-		fogOfWar.set(x, y, s);
-		return true;
-	}
-
-	/**
-	 * Gets the fog value of a coordinate
-	 *
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 * @return the fog value: 0, 1 or 2
+	 * @return the fog value: 0 or 2
 	 */
 	public static int getFog(int x, int y) {
 		return fogOfWar.get(x, y);
 	}
+
+	/**
+	 * Gets the fog value of a coordinate of the black fog of war
+	 *
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the fog value: 0 or 1
+	 */
 
 	public static int getBlackFog(int x, int y) {
 		return blackFogOfWar.get(x, y);
@@ -77,6 +71,7 @@ public class FogOfWarManager extends Manager {
 	 * @param x     The x position of the entity
 	 * @param y     The y position of the entity
 	 * @param maxRange The sight range of the entity
+	 * @param state deleting or creating new state for the fog of war map
 	 */
 	public static void sightRange(int x, int y, int maxRange, boolean state) {
 		int w = fogOfWar. getWidth();

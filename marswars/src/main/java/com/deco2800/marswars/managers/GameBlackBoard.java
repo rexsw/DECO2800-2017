@@ -15,8 +15,8 @@ import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 
 public class GameBlackBoard extends Manager implements TickableManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
-	private List<Integer> teams;
-	private Map<Integer,Map<String, Integer>> values;
+	private List<Integer> teams = new ArrayList<Integer>();
+	private Map<Integer,Map<String, Integer>> values = new HashMap<Integer,Map<String, Integer>>();
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	
 	/**

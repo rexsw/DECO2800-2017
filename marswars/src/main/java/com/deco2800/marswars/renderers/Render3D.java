@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.FogOfWarManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -55,16 +55,16 @@ public class Render3D implements Renderer {
         List<AbstractEntity> walkables = new ArrayList<>();
 
         // Tutor approved workaround to avoid changing whole structure of game
-        List<FogOfWarLayer> fogs_temp = FogWorld.getFogMap();
+        List<FogEntity> fogs_temp = FogWorld.getFogMap();
         List<AbstractEntity> fogs = new ArrayList<>();
-        for (FogOfWarLayer e : fogs_temp) {
+        for (FogEntity e : fogs_temp) {
             fogs.add(e);
         }
 
         // Tutor approved workaround to avoid changing whole structure of game
-        List<FogOfWarLayer> blackFogs_temp = FogWorld.getBlackFogMap();
+        List<FogEntity> blackFogs_temp = FogWorld.getBlackFogMap();
         List<AbstractEntity> blackFogs = new ArrayList<>();
-        for (FogOfWarLayer e : blackFogs_temp) {
+        for (FogEntity e : blackFogs_temp) {
             blackFogs.add(e);
         }
 
@@ -79,11 +79,17 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
+        //render the entities
         renderEntities(walkables, batch, camera,0);
         renderEntities(entities, batch, camera,0);
 
+        //render the gray fog of war first
         renderEntities(fogs,batch,camera,0);
+
+        //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
+
+        //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 
         batch.end();
@@ -116,6 +122,7 @@ public class Render3D implements Renderer {
      * @param entities list of entities to be rendered.
      * @param batch the batch that is going to contain all the sprites
      * @param camera the camera being use to display the game.
+     * @param iteration identifies the order of rendering
 
      */
 
@@ -145,23 +152,23 @@ public class Render3D implements Renderer {
             if(iteration==1 && !(entity instanceof CheckSelect)) continue;
 
             //fog of war: if it is turned off, don't render any fog of war tiles
-            if(entity instanceof FogOfWarLayer && !FogOfWarManager.getToggleFog()) continue;
+            if(entity instanceof FogEntity && !FogManager.getToggleFog()) continue;
 
 
             //this function is for the blackFog to omit the tiles that are revealed
             if (entity instanceof BlackTile)
-                if (FogOfWarManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
+                if (FogManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
                     continue;
             //omit the tiles that are in sight
             if (entity instanceof GrayTile)
-                if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
+                if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
 
 
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
-            if (entity instanceof BaseEntity && FogOfWarManager.getToggleFog()) {
+            if (entity instanceof BaseEntity && FogManager.getToggleFog()) {
                 BaseEntity baseEntity = (BaseEntity) entity;
                 if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT) {
-                    if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
                 }
             }
 

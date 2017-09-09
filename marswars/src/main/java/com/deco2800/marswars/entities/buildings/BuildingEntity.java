@@ -47,7 +47,7 @@ public class BuildingEntity extends BaseEntity implements HasHealth {
 	@Override
 	public void setHealth(int health) {
 		this.health = health;
-		if (health < 0) {
+		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);
 		}
 	}
