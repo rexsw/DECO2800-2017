@@ -1,6 +1,6 @@
 package com.deco2800.marswars.entities.items;
 
-public enum ArmourTypes {
+public enum ArmourType {
     ARMOUR1LEVEL1 (10, 100, 1),
     ARMOUR1LEVEL2 (20, 200, 2),
     ARMOUR1LEVEL3 (30, 300, 3),
@@ -13,7 +13,7 @@ public enum ArmourTypes {
     private final int armourCost;
     private int armourLevel;
 
-    ArmourTypes(int armourValue, int armourCost, int armourLevel) {
+    ArmourType(int armourValue, int armourCost, int armourLevel) {
         this.armourValue = armourValue;
         this.armourCost = armourCost;
         this.armourLevel = armourLevel;

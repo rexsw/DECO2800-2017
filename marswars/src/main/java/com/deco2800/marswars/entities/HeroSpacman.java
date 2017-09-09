@@ -25,7 +25,7 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 	int health;
 	int attackRange;
 	int attackSpeed;
-	ArrayList<Item> inventory;
+	Inventory inventory;
 
 
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -49,7 +49,7 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		this.attackRange = 5;
 		this.attackSpeed = 10;
 		this.xp = 0;
-		this.inventory = new ArrayList<Item>();
+		this.inventory = new Inventory();
 	}
 
 	@Override
@@ -115,17 +115,19 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		this.attackSpeed = attackSpeed;
 	}
 
-	public boolean addItem(Item item) {
-		return this.inventory.add(item);
+	public void addItemToInventory(Item item) {
+		inventory.addToInventory(item);
 	}
 
-	public boolean removeItem(Item item) {
-		return this.inventory.remove(item);
+	public boolean removeItemFromInventory(Item item) {
+		return inventory.removeFromInventory(item);
 	}
 
-	public ArrayList<Item> getInventory() {
-		ArrayList<Item> inventory;
-		inventory = this.inventory;
+	/** not a to string, returns the inventory object itself
+	 *
+	 * @return inventory
+	 */
+	public Inventory getInventory() {
 		return inventory;
 	}
 

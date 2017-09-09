@@ -4,6 +4,7 @@ public class Item {
 
     private String name;
     private Effect effect;
+    private String itemType;
 
     public Item(String name) {
         this.name = name;
@@ -25,4 +26,8 @@ public class Item {
     public void addEffect(Effect effect) {
         this.effect = effect;
     }
+
+    public void setItemType(String type) { this.itemType = type; }
+
+    public String getItemType() { return itemType; }
 }

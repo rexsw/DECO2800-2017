@@ -1,6 +1,6 @@
 package com.deco2800.marswars.entities.items;
 
-public enum WeaponTypes {
+public enum WeaponType {
     WEAPON1LEVEL1 (10, 100, 1),
     WEAPON1LEVEL2 (20, 200, 2),
     WEAPON1LEVEL3 (30, 300, 3),
@@ -12,7 +12,7 @@ public enum WeaponTypes {
     private final int weaponCost;
     private int weaponLevel;
 
-    WeaponTypes(int weaponDamage, int weaponCost, int weaponLevel) {
+    WeaponType(int weaponDamage, int weaponCost, int weaponLevel) {
         this.weaponDamage = weaponDamage;
         this.weaponCost = weaponCost;
         this.weaponLevel = weaponLevel;
