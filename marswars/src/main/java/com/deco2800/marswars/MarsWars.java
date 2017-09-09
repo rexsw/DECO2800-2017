@@ -24,15 +24,13 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,6 +82,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	SpacServer networkServer;
 	
 	private boolean gameStarted = false;
+	MainMenu menu;
 
 	Skin skin;
 	
@@ -97,6 +96,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void create () {
+		stage = new Stage(new ScreenViewport());
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
+		//not sure why i have to create a window here and pass it into the menu
+		//but creating a window in menu crashes the game
+		menu = new MainMenu(skin, stage, new Window("its a start", skin), this);
+		stage.addActor(menu.buildMenu());
+		
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
@@ -174,144 +181,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
 		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
 		 */
-		stage = new Stage(new ScreenViewport());
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		window = new Window("Menu", skin);
-
-		/* Add a quit button to the menu */
-		Button button = new TextButton("Quit", skin);
-
 		/* Add another button to the menu */
 		peonButton = new TextButton("Select a Unit", skin);
-
-		/* Start server button */
-		Button startServerButton = new TextButton("Start Server", skin);
-		startServerButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				Dialog ipDiag = new Dialog("Local IP", skin, "dialog") {};
-				try {
-					InetAddress ipAddr = InetAddress.getLocalHost();
-					String ip = ipAddr.getHostAddress();
-					ipDiag.text("IP Address: " + ip);
-
-					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
-					networkServer = new SpacServer(serverConnectionManager);
-
-
-					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-					networkClient = new SpacClient(clientConnectionManager);
-					//Initiate Server
-					try {
-						networkServer.bind(SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when initiating server", e);
-					}
-
-					//Join it as a Client
-					try {
-						networkClient.connect(5000, ip, SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when joinging as client", e);
-					}
-					JoinLobbyAction action = new JoinLobbyAction("Host");
-					networkClient.sendObject(action);
-
-					LOGGER.info(ip);
-				} catch (UnknownHostException ex) {
-					ipDiag.text("Something went wrong");
-					LOGGER.error("Unknown Host", ex);
-				}
-				ipDiag.button("Close", null);
-				ipDiag.show(stage);
-			}
-
-		});
-		
-		/* Join server button */
-		Button joinServerButton = new TextButton("Join Server", skin);
-		joinServerButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// Construct inside of dialog
-				Table inner = new Table(skin);
-				Label ipLabel = new Label("IP", skin);
-				TextField ipInput = new TextField("localhost", skin);
-				Label usernameLabel = new Label("Username", skin);
-				TextField usernameInput = new TextField("wololo", skin);
-
-				inner.add(ipLabel);
-				inner.add(ipInput);
-				inner.row();
-				inner.add(usernameLabel);
-				inner.add(usernameInput);
-				inner.row();
-
-				Dialog ipDiag = new Dialog("IP", skin, "dialog") {
-					@Override
-					protected void result(Object o) {
-						if(o != null) {
-							String username = usernameInput.getText();
-							String ip = ipInput.getText();
-
-							ClientConnectionManager connectionManager = new ClientConnectionManager();
-							networkClient = new SpacClient(connectionManager);
-
-							try {
-								networkClient.connect(5000, ip, SERVER_PORT);
-							} catch (IOException e) {
-								LOGGER.error("Join server error", e);
-							}
-							JoinLobbyAction action = new JoinLobbyAction(username);
-							networkClient.sendObject(action);
-						}
-					}
-				};
-
-				ipDiag.getContentTable().add(inner);
-				ipDiag.button("Join", true);
-				ipDiag.button("Cancel", null);
-
-				ipDiag.show(stage);
-			}
-		});
-
-		/* Add a programatic listener to the quit button */
-		button.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				System.exit(0);
-			}
-		});
-
 		helpText = new Label("Welcome to SpacWars!", skin);
-		rocksLabel = new Label("Rocks: 0", skin);
-		gameTimeDisp = new Label(" Time: 00:00", skin);
-		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
-
-		/* Add all buttons to the menu */
-		window.add(button);
-		//window.add(helpText);
-		//window.add(peonButton);
-		window.add(rocksLabel);
-		window.add(gameTimeDisp);
-		window.add(gameLengthDisp);
-		window.add(startServerButton);
-		window.add(joinServerButton);
-		window.pack();
-		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(400, 0); // Place at the bottom
-		window.setWidth((stage.getWidth())-300);
 
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
-		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
 		view.disableHUD();
 		
-		/* Add the window to the stage */
-		stage.addActor(window);
-
 		/*
 		 * Setup inputs for the buttons and the game itself
 		 */
@@ -492,33 +370,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
          * Use the selected renderer to render objects onto the map
          */
-		renderer.render(batch, camera);
-
-		
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rocksLabel.setText("Rocks: " + resourceManager.getRocks(-1) + " Crystal: " + resourceManager.getCrystal(-1) + " Water: " + resourceManager.getWater(-1) + " Biomass: " + resourceManager.getBiomass(-1));
-		
-
-		/*
-		 * Update time & set color depending if night/day
-		 */
-
-		gameTimeDisp.setText(" Time: " + timeManager.toString());
-		gameLengthDisp.setText(timeManager.getPlayClockTime());
-//		if (timeManager.isNight()){
-//			gameTimeDisp.setColor(Color.FIREBRICK);
-//			gameLengthDisp.setColor(Color.FIREBRICK);
-//		}
-//		else{
-//			gameTimeDisp.setColor(Color.BLUE);
-//			gameLengthDisp.setColor(Color.BLUE);
-//		}
+		renderer.render(batch, camera);		
 
 		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
-
 		stage.act();
 		stage.draw();
 		GameManager.get().setCamera(camera);
@@ -716,8 +573,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
-		window.setPosition(300, 0);
-		window.setWidth(stage.getWidth());
 		view.resize(width, height);
 	}
 

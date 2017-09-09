@@ -812,7 +812,6 @@ public class HUDView extends ApplicationAdapter{
 	    HUDManip.setVisible(false);
 		chatbox.setVisible(false);
 		messageWindow.setVisible(false);
-		mainMenu.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
 	}
@@ -826,7 +825,6 @@ public class HUDView extends ApplicationAdapter{
 	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
-		mainMenu.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
