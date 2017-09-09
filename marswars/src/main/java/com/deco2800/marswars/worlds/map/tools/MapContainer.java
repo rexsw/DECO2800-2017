@@ -8,6 +8,7 @@ import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.UnitTypes;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.PlayerManager;
@@ -224,7 +225,7 @@ public class MapContainer {
      * @param z its z coordinate
      * @param player the owner
      */
-    public void setEntity(EntityTypes entityType, float x, float y, float z, AbstractPlayerManager player){
+    public void setEntity(UnitTypes entityType, float x, float y, float z, AbstractPlayerManager player){
         BaseEntity entity = null;
         switch (entityType){
             case ASTRONAUT:
@@ -233,6 +234,8 @@ public class MapContainer {
             case TANK:
                 entity = new Tank(x,y,z, player);
                 break;
+            case SPACMAN:
+                return;
             case SOLDIER:
                 entity = new Soldier(x,y,z, player);
                 break;
@@ -351,7 +354,7 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
+        UnitTypes random = UnitTypes.values()[r.nextInt(UnitTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity entity = null;
         int x = r.nextInt(width-1);
@@ -369,6 +372,8 @@ public class MapContainer {
             case TANK:
                 entity = new Tank(x,y,0, playerManager);
                 break;
+            case SPACMAN:
+                return;
             case SOLDIER:
                 entity = new Soldier(x,y,0, playerManager);
                 break;

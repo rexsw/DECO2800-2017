@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 
 /**
@@ -6,9 +6,8 @@ package com.deco2800.marswars.entities;
  *
  * NOTE: This list shouldn't include entities such as buildings or resources.
  */
-/*A more suitable name will be appreciated8*/
-public enum EntityTypes {
-    ASTRONAUT, TANK, SOLDIER
+public enum UnitTypes {
+    ASTRONAUT, TANK, SPACMAN, SOLDIER
 }
 
 // Add me new types
