@@ -216,20 +216,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new Dialog("Confirm exit", skin){
-					{
-						text("Are you sure you want to quit? ");
-						button("Yes", 1);
-						button("No, keep playing", 2);
-					}
-					
-					@Override
-					protected void result(final Object object){
-						if(object == (Object) 1){
-							System.exit(0);
-						}
-					}	
-				}.show(stage);	
+				new ExitGame("Quit Game", skin).show(stage);	
 		}});
 
 		//Creates the message button listener 
