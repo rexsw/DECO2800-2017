@@ -237,7 +237,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		LOGGER.info("Set health to " + health);
 		this.health = health;
 
-		if (health < 0) {
+		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("I am kill");
 		}
