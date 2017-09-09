@@ -76,12 +76,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	@Override
 	public void setPosX(float x) {
 		if(!this.isAi()) {
-			modifyFogOfWarMap(false,5);
+			//modifyFogOfWarMap(false,5);
 		}
 		super.setPosX(x);
 		//lineOfSight.setPosX(x);
 		if(!this.isAi()) {
-			modifyFogOfWarMap(true,5);
+			//modifyFogOfWarMap(true,5);
 
 		}
 
@@ -95,12 +95,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	public void setPosY(float y) {
 
 		if(!this.isAi()) {
-			modifyFogOfWarMap(false,5);
+			//modifyFogOfWarMap(false,5);
 		}
 		super.setPosY(y);
 		//lineOfSight.setPosY(y);
 		if(!this.isAi()) {
-			modifyFogOfWarMap(true,5);
+			//modifyFogOfWarMap(true,5);
 
 		}
 
