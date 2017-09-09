@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.FogOfWarManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -482,11 +482,11 @@ public class HUDView extends ApplicationAdapter{
 				//disable fog
 				if (fogToggle) {
 					LOGGER.debug("fog of war is now off");
-					FogOfWarManager.toggleFog(false);
+					FogManager.toggleFog(false);
 					fogToggle = false; 
 				}else {
 					LOGGER.debug("fog of war is now on");
-					FogOfWarManager.toggleFog(true);
+					FogManager.toggleFog(true);
 					fogToggle = true; 
 				}
 			}	

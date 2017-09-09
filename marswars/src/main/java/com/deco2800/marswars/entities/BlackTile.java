@@ -2,8 +2,9 @@ package com.deco2800.marswars.entities;
 
 /**
  * Created by Treenhan on 9/6/17.
+ * This is an entity of FogOfWar indicating the black out area
  */
-public class BlackTile extends FogOfWarLayer {
+public class BlackTile extends FogEntity {
     /**
      *
      * This is the constructor for a black tile
