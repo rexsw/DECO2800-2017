@@ -170,6 +170,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		setPlayer(length/2, width/2, Colours.PURPLE, -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
+		GameManager.get().getManager(WinManager.class);
 	}
 	
 	private void setThread() {
@@ -646,8 +647,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
 			Soldier soldier = new Soldier(x, y,0,teamid);
 			GameManager.get().getWorld().addEntity(soldier);
-			Tank tank = new Tank(x,y,0,teamid);
-			GameManager.get().getWorld().addEntity(tank);
+			//Tank tank = new Tank(x,y,0,teamid);
+			//GameManager.get().getWorld().addEntity(tank);
 			GameManager.get().getWorld().addEntity(ai);
 			GameManager.get().getWorld().addEntity(ai1);
 			aibase.setOwner(teamid);

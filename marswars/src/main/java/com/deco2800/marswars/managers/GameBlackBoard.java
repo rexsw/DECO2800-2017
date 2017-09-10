@@ -14,10 +14,11 @@ import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 
 public class GameBlackBoard extends Manager implements TickableManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GameBlackBoard.class);
 	private List<Integer> teams = new ArrayList<Integer>();
 	private Map<Integer,Map<String, Integer>> values = new HashMap<Integer,Map<String, Integer>>();
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	private int alive;
 	
 	/**
 	 * testing use please keep for now 
@@ -102,6 +103,21 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			case BIOMASS:
 				values.get(teamid).put("Biomass", rm.getBiomass(teamid));
 		}
+	}
+	
+	public int teamsAlive() {
+		int count = 0;
+		for(int t: values.keySet()) {
+			if(values.get(t).get("Units") != 0) {
+				alive = t;
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getAlive() {
+		return alive;
 	}
 	
 
