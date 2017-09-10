@@ -13,6 +13,7 @@ import com.deco2800.marswars.worlds.MapSizeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
 import java.util.Random;
 
 
@@ -64,8 +65,22 @@ public class MapContainer {
      * Creates a Map container from a random map with random elements.
      */
     public MapContainer(){
-        mapPath = getRandomMap();
-        TiledMap mockMap = new TmxMapLoader().load(mapPath);
+        mapPath = RandomMapWriter.FILENAME;//getRandomMap();
+
+        //add the tiles we want the map to contain - IN ORDER
+        List tilesToAdd= new ArrayList<Integer>();
+        tilesToAdd.add(new Integer(11));
+        tilesToAdd.add(new Integer(16));
+        tilesToAdd.add(new Integer(12));
+        tilesToAdd.add(new Integer(18));
+        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100));
+        try{
+            randomTiles.writeMap();
+        }catch(Exception e){
+            //oh shit what the fuck do we do? (file IO error)
+            //we should probably throw some error and crash the game?
+        }
+        TiledMap mockMap = new TmxMapLoader().load(randomTiles.FILENAME);
         width = mockMap.getProperties().get("width", Integer.class);
         length = mockMap.getProperties().get("height", Integer.class);
         LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
