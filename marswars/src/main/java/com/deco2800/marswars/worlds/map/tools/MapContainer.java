@@ -79,6 +79,7 @@ public class MapContainer {
         tilesToAdd.add(new Integer(12));
         tilesToAdd.add(new Integer(18));
         RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100));
+        randomTiles.addTile(1,1,10);
         try{
             randomTiles.writeMap();
         }catch(Exception e){
