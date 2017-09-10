@@ -8,10 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.FogOfWarLayer;
-import com.deco2800.marswars.entities.LineOfSight;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -50,6 +48,7 @@ public class Render3D implements Renderer {
         List<BaseEntity> walkables = new ArrayList<>();
 
         List<FogOfWarLayer> fogs = FogWorld.getFogMap();
+        List<FogOfWarLayer> blackFogs = FogWorld.getBlackFogMap();
 
         /* Sort entities into walkables and entities */
         for (BaseEntity r : renderables) {
@@ -62,9 +61,13 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
-        renderEntities(walkables, batch, camera);
-        renderEntities(entities, batch, camera);
+        renderEntities(walkables, batch, camera,0);
+        renderEntities(entities, batch, camera,0);
+
         renderFog(fogs,batch,camera);
+        renderFog(blackFogs,batch,camera);
+        renderEntities(walkables, batch, camera,1);
+
         batch.end();
 
     }
@@ -89,46 +92,60 @@ public class Render3D implements Renderer {
      */
 
 
-    public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera){
-        Collections.sort(entities);
-        if (font == null) {
-            font = new BitmapFont();
-            font.getData().setScale(0.25f);
-        }
-        int worldLength = GameManager.get().getWorld().getLength();
-        int worldWidth = GameManager.get().getWorld().getWidth();
+    public void renderFog(List<FogOfWarLayer>entities, SpriteBatch batch, Camera camera) {
+        if (FogOfWarManager.getToggleFog()) {
 
-        int tileWidth = (int)GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
-        int tileHeight = (int)GameManager.get().getWorld().getMap().getProperties().get("tileheight");
+            Collections.sort(entities);
+            if (font == null) {
+                font = new BitmapFont();
+                font.getData().setScale(0.25f);
+            }
+            int worldLength = GameManager.get().getWorld().getLength();
+            int worldWidth = GameManager.get().getWorld().getWidth();
 
-        float baseX = tileWidth*(worldWidth/2.0f - 0.5f);
+            int tileWidth = (int) GameManager.get().getWorld().getMap().getProperties().get("tilewidth");
+            int tileHeight = (int) GameManager.get().getWorld().getMap().getProperties().get("tileheight");
 
-        float baseY = -tileHeight/2*worldLength + tileHeight/2f;
+            float baseX = tileWidth * (worldWidth / 2.0f - 0.5f);
+
+            float baseY = -tileHeight / 2 * worldLength + tileHeight / 2f;
 
         /* Render each entity (backwards) in order to retain objects at the front */
-        for (int index = 0; index < entities.size(); index++) {
-            Renderable entity = entities.get(index);
+            for (int index = 0; index < entities.size(); index++) {
 
-            String textureString = entity.getTexture();
-            TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
-            Texture tex = reg.getTexture(textureString);
+                Renderable entity = entities.get(index);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+                //this function is for the blackFog to omit the tiles that are revealed
+                if(entity instanceof BlackTile)
+                    if (FogOfWarManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1) continue;
+                //omit the tiles that are in sight
+                //TODO: leave the green selection to be rendered
+                if(entity instanceof GrayTile)
+                    if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
 
-            float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
-            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
 
-            // We want to keep the aspect ratio of the image so...
-            float aspect = (float)(tex.getWidth())/(float)(tileWidth);
 
-            Vector3 pos = camera.position;
-            OrthographicCamera cam = (OrthographicCamera) camera;
+                String textureString = entity.getTexture();
+                TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
+                Texture tex = reg.getTexture(textureString);
 
-            if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
-                    && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
-                batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
-                        (tex.getHeight() / aspect) * entity.getYRenderLength());
+                float cartX = entity.getPosX();
+                float cartY = (worldWidth - 1) - entity.getPosY();
+
+                float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
+                float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+
+                // We want to keep the aspect ratio of the image so...
+                float aspect = (float) (tex.getWidth()) / (float) (tileWidth);
+
+                Vector3 pos = camera.position;
+                OrthographicCamera cam = (OrthographicCamera) camera;
+
+                if (isoX < pos.x + camera.viewportWidth * cam.zoom * autoRenderValue && isoX > pos.x - camera.viewportWidth * cam.zoom * autoRenderValue
+                        && isoY < pos.y + camera.viewportHeight * cam.zoom * autoRenderValue && isoY > pos.y - camera.viewportHeight * cam.zoom * autoRenderValue) {
+                    batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
+                            (tex.getHeight() / aspect) * entity.getYRenderLength());
+                }
             }
         }
     }
@@ -142,7 +159,8 @@ public class Render3D implements Renderer {
 
      */
 
-    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera) {
+    private void renderEntities(List<BaseEntity> entities, SpriteBatch batch, Camera camera,int iteration) {
+
         Collections.sort(entities);
         if (font == null) {
             font = new BitmapFont();
@@ -160,7 +178,16 @@ public class Render3D implements Renderer {
 
         /* Render each entity (backwards) in order to retain objects at the front */
         for (int index = 0; index < entities.size(); index++) {
+
             Renderable entity = entities.get(index);
+            if(iteration==1 && !(entity instanceof CheckSelect)) continue;
+
+            //fog of war part of the game
+            if(FogOfWarManager.getToggleFog()) {
+                if (entities.get(index).getEntityType() == BaseEntity.EntityType.UNIT) {
+                    if (FogOfWarManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+                }
+            }
 
             String textureString = entity.getTexture();
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);

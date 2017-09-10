@@ -5,8 +5,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.buildings.Building;
-import com.deco2800.marswars.entities.buildings.BuildingTypes;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.UnitTypes;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -107,8 +112,8 @@ public class MapContainer {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
                 this.getRandomBuilding();
-                this.getRandomEntity();
-                this.getRandomResource();
+               // this.getRandomEntity();
+               // this.getRandomResource();
             }
         }
     }
@@ -155,7 +160,7 @@ public class MapContainer {
      *
      * @param building the building to be placed.
      */
-    public void setStructure(Building building){
+    public void setStructure(BuildingEntity building){
         //Waiting on building (Not yet implemented)
     }
 
@@ -164,7 +169,7 @@ public class MapContainer {
      *
      * @param buildings the buildings to be placed.
      */
-    public void setStructure(Building[][] buildings){
+    public void setStructure(BuildingEntity[][] buildings){
         //Waiting on building (Not yet implemented)
     }
 
@@ -174,7 +179,7 @@ public class MapContainer {
      * @param building the building to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building building, boolean random){
+    public void setStructure(BuildingEntity building, boolean random){
         //Waiting on building (Not yet implemented)
     }
 
@@ -184,7 +189,7 @@ public class MapContainer {
      * @param buildings the buildings to be placed.
      * @param random whether the position should be random.
      */
-    public void setStructure(Building[][] buildings, boolean random){
+    public void setStructure(BuildingEntity[][] buildings, boolean random){
         //Waiting on building (Not yet implemented)
     }
 
@@ -221,19 +226,46 @@ public class MapContainer {
      * Places an entity on the map in a random location.
      *
      * @param entity the entity to be placed.
-     * @param random whether its position should be random or not.
      */
-    public void setEntity(BaseEntity entity, boolean random){
+    public void setRandomEntity(BaseEntity entity){
         //Can't implement as entity requires x/y before being passed if random
+    }
+
+    /**
+     * Place an entity on the map in a fixed location.
+     *
+     * @param entityType the type of the new entity to be placed
+     * @param x its x coordinate
+     * @param y its y coordinate
+     * @param z its z coordinate
+     * @param player the owner
+     */
+    public void setEntity(UnitTypes entityType, float x, float y, float z, AbstractPlayerManager player){
+        BaseEntity entity = null;
+        switch (entityType){
+            case ASTRONAUT:
+                entity = new Astronaut(x,y,z, player);
+                break;
+            case TANK:
+                entity = new Tank(x,y,z, player);
+                break;
+            case SPACMAN:
+                return;
+            case SOLDIER:
+                entity = new Soldier(x,y,z, player);
+                break;
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
+        }
+        this.world.addEntity(entity);
     }
 
     /**
      * Places a set of entities on the map in a random position.
      *
      * @param entities the set of entities to be placed.
-     * @param random whether their position should be random or not.
      */
-    public void setEntities(BaseEntity[] entities, boolean random){
+    public void setRandomEntities(BaseEntity[] entities){
         //Can't implement as entity requires x/y before being passed if random
     }
 
@@ -275,16 +307,22 @@ public class MapContainer {
      *
      */
     protected void getRandomBuilding(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
-        BaseEntity newBuilding;
-        int x = r.nextInt(width-1);
-        int y = r.nextInt(length-1);
+        BuildingEntity newBuilding;
+        int x = r.nextInt(width-3);
+        int y = r.nextInt(length-3);
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == BuildingTypes.BASE){
+        if(random == BuildingType.BASE){
             newBuilding = new Base(world, x,y,0);
+        } else if(random == BuildingType.TURRET){
+            newBuilding = new Turret(world, x,y,0);
+        } else if(random == BuildingType.BUNKER){
+            newBuilding = new Bunker(world, x,y,0);
+        } else if(random == BuildingType.BARRACKS){
+            newBuilding = new Barracks(world, x,y,0);
         }
         else {
             return;
@@ -299,7 +337,7 @@ public class MapContainer {
      * @return the new group of buildings.
      */
     protected void getRandomStructure(){
-        BuildingTypes random = BuildingTypes.values()[r.nextInt(BuildingTypes.values().length)];
+        BuildingType random = BuildingType.values()[r.nextInt(BuildingType.values().length)];
         LOGGER.info("chosen building type: " + random);
         return;
     }
@@ -331,25 +369,35 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
+        UnitTypes random = UnitTypes.values()[r.nextInt(UnitTypes.values().length)];
         LOGGER.info("chosen entity type: " + random);
-        BaseEntity newEntity;
+        BaseEntity entity = null;
         int x = r.nextInt(width-1);
         int y = r.nextInt(length-1);
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == EntityTypes.SPACMAN){
-            newEntity = new Spacman(x, y,0);
-        }
-        else if(random == EntityTypes.ENEMYSPACMAN){
-            newEntity = new EnemySpacman(x, y,0);
-        }
-        else {
-            return;
+        PlayerManager playerManager = new PlayerManager();
+        playerManager.setColour("blue");
+        GameManager.get().addManager(playerManager);
+        switch (random){
+            case ASTRONAUT:
+                entity = new Astronaut(x,y,0, playerManager);
+                break;
+            case TANK:
+                entity = new Tank(x,y,0, playerManager);
+                break;
+            case SPACMAN:
+                return;
+            case SOLDIER:
+                entity = new Soldier(x,y,0, playerManager);
+                break;
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
         }
 
-        world.addEntity(newEntity);
+        world.addEntity(entity);
+        System.out.println(random + " " + entity.toString());
     }
 
     /**

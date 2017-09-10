@@ -4,7 +4,8 @@ package com.deco2800.marswars.util;
  * Created by Declan on 30/07/2017.
  */
 public class Point {
-	private float x, y;
+	private float x;
+	private float y;
 
 	/**
 	 * Constructor for the point class.
@@ -43,12 +44,18 @@ public class Point {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Point point = (Point) o;
 
-		if (Float.compare(point.x, x) != 0) return false;
+		if (Float.compare(point.x, x) != 0) {
+			return false;
+		}
 		return Float.compare(point.y, y) == 0;
 	}
 
@@ -59,7 +66,7 @@ public class Point {
 	 */
 	@Override
 	public int hashCode() {
-		int result = (Float.compare(x, +0.0f) != 0 ? Float.floatToIntBits(x) : 0);
+		int result = Float.compare(x, +0.0f) != 0 ? Float.floatToIntBits(x) : 0;
 		result = 31 * result + (Float.compare(y, +0.0f) != 0 ? Float.floatToIntBits(y) : 0);
 		return result;
 	}

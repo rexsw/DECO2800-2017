@@ -8,7 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
+import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BuildingEntity;
+import com.deco2800.marswars.entities.BuildingType;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.HasProgress;
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -28,15 +40,16 @@ import org.slf4j.LoggerFactory;
  *
  * A home base for the empire
  */
-public class Base extends BaseEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner, HasHealth {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
+	private Manager owner = null;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Base.class);
 	
-	private Manager onwer = null;
-
+	private int health = 500;
+	
 	boolean selected = false;
 
 	/**
@@ -46,24 +59,13 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Base(AbstractWorld world, float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 1, 1, 1);
-		this.setTexture("base");
-		this.setCost(10000000);
-		this.initActions();
-	}
 
-	/**
-	 * Constructor for the base.
-	 * @param world The BaseWorld that will hold the base.
-	 * @param posX its x position on the world.
-	 * @param posY its y position on the world.
-	 * @param posZ its z position on the world.
-	 */
-	public Base(BaseWorld world, int posX, int posY, int posZ) {
-		super(posX, posY, posZ, 1, 1, 1);
-		this.setTexture("base");
-		this.setCost(10000000);
+	public Base(AbstractWorld world, float posX, float posY, float posZ) {
+	super(posX, posY, posZ, BuildingType.BASE);
+		this.setTexture("homeBase");
+		this.setEntityType(EntityType.BUILDING);
+		this.setCost(250);
+		this.setSpeed(2);
 	}
 	
 	/**
@@ -88,6 +90,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 			}
 		} else {
 			LOGGER.error("clicked on ai base");
+
 		}
 	}
 
@@ -109,12 +112,6 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void onTick(int i) {
-
-		if (selected) {
-			this.setTexture("base");
-		} else {
-			this.setTexture("base");
-		}
 
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();
@@ -165,8 +162,9 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if (resourceManager.getRocks() > 30) {
 			resourceManager.setRocks(resourceManager.getRocks() - 30);
-			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() + 1, this.getPosY() + 1, 0)));
+			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
+		this.deselect();
 	}
 	
 	/**
@@ -204,7 +202,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public void setOwner(Manager owner) {
-		this.onwer = owner;
+		this.owner = owner;
 	}
 
 	/**
@@ -213,7 +211,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	@Override
 	public Manager getOwner() {
-		return this.onwer;
+		return this.owner;
 	}
 
 	/**
@@ -223,7 +221,7 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.onwer == ((HasOwner) entity).getOwner();
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
 	@Override
@@ -243,6 +241,39 @@ public class Base extends BaseEntity implements Clickable, Tickable, HasProgress
 	 */
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Returns the current action (used in WeatherManager)
+	 * @return
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
+
+	@Override
+	/**
+	 * @return current health
+	 */
+	public int getHealth() {
+		return health;
+	}
+
+	/**
+	 *  Sets the health for this spacman 
+	 * 	@param health 
+	 */
+	@Override
+	public void setHealth(int health) {
+		LOGGER.info("Set health to " + health);
+		this.health = health;
+		if (health < 0) {
+			GameManager.get().getWorld().removeEntity(this);
+			if(owner instanceof AiManagerTest) {
+				((AiManagerTest) owner).isKill();
+			}
+			LOGGER.info("I am kill");
+		}
 	}
 	
 }

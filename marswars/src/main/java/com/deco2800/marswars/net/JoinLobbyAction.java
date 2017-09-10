@@ -18,6 +18,7 @@ public class JoinLobbyAction implements Action {
         return this.username;
     }
 
+    @Override
     public String toString() {
         return "*" + this.username + "* joined the lobby.";
     }

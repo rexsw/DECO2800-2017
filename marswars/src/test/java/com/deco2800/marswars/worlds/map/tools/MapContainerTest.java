@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 public class MapContainerTest extends BaseTest{
     MapContainer map;
     CustomizedWorld world;

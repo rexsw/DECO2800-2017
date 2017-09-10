@@ -7,6 +7,7 @@
 bin/
 lib/
 
+marswars/resources/HUDAssets/minimap.png
 
 # Gradle
 build
@@ -42,4 +43,3 @@ sonar-project.properties
 /nbproject/private/
 /MarsWars/.nb-gradle/
 /MarsWars2/.nb-gradle/
-marswars/src/test/java/com/deco2800/marswars/TimeManagerTest.java.rej

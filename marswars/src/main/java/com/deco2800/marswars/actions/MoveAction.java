@@ -1,7 +1,9 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.PathfindingThread;
 import com.deco2800.marswars.util.Point;
 
@@ -22,10 +24,13 @@ public class MoveAction implements DecoAction {
 	private AbstractEntity entity;
 
 	/* Speed factor */
-	private float speed = 0.05f;
+	private float speed;
 
 	/* Completed variable */
 	private boolean completed = false;
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
 
 	/* A* Path we have found - Be careful, it might be null */
 	private List<Point> path;
@@ -44,6 +49,12 @@ public class MoveAction implements DecoAction {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;
+		
+		if (entity instanceof MissileEntity) {
+			speed = 0.4f;
+		} else {
+			speed = 0.05f;
+		}
 
 		if (this.goalX < 0)
 			this.goalX = 0;
@@ -62,46 +73,47 @@ public class MoveAction implements DecoAction {
 	 */
 	@Override
 	public void doAction() {
-
+		if (! timeManager.isPaused() && ! actionPaused) {
 		/* Ensure the thread has died and therefore the path has been found, otherwise return */
-		if (thread.isAlive()) {
-			return;
-		} else {
-			path = pathfinder.getPath();
-		}
+			if (thread.isAlive()) {
+				return;
+			} else {
+				path = pathfinder.getPath();
+			}
 
 		/* If the path is null its probably completed */
-		if (path == null || path.isEmpty()) {
-			completed = true;
-			return;
-		}
+			if (path == null || path.isEmpty()) {
+				completed = true;
+				return;
+			}
 
 		/* grab the next point on the path and attempt to move towards it */
-		float tmpgoalX = path.get(0).getX();
-		float tmpgoalY = path.get(0).getY();
+			float tmpgoalX = path.get(0).getX();
+			float tmpgoalY = path.get(0).getY();
 
 		/* If we have arrived (or close enough to) then remove this point from the path and continue */
-		if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {
-			entity.setPosX(tmpgoalX);
-			entity.setPosY(tmpgoalY);
-			path.remove(0);
-			return;
-		}
+			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {
+				entity.setPosX(tmpgoalX);
+				entity.setPosY(tmpgoalY);
+				path.remove(0);
+				return;
+			}
 
 		/* Calculate a deltaX and Y to move based on polar coordinates and speed to ensure
 				speed is constant regardless of direction
 		 */
-		float deltaX = entity.getPosX() - tmpgoalX;
-		float deltaY = entity.getPosY() - tmpgoalY;
-		float angle = (float)(Math.atan2(deltaY, deltaX)) + (float)(Math.PI);
-		float changeX = (float)(speed * Math.cos(angle));
-		float changeY = (float)(speed * Math.sin(angle));
-		float newX = entity.getPosX() + changeX;
-		float newY = entity.getPosY() + changeY;
+			float deltaX = entity.getPosX() - tmpgoalX;
+			float deltaY = entity.getPosY() - tmpgoalY;
+			float angle = (float) (Math.atan2(deltaY, deltaX)) + (float) (Math.PI);
+			float changeX = (float) (speed * Math.cos(angle));
+			float changeY = (float) (speed * Math.sin(angle));
+			float newX = entity.getPosX() + changeX;
+			float newY = entity.getPosY() + changeY;
 
 		/* Apply these values to the entity */
-		entity.setPosX(newX);
-		entity.setPosY(newY);
+			entity.setPosX(newX);
+			entity.setPosY(newY);
+		}
 	}
 
 	/**
@@ -120,5 +132,21 @@ public class MoveAction implements DecoAction {
 	@Override
 	public int actionProgress() {
 		return 0;
+	}
+
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	@Override
+	public void pauseAction() {
+		actionPaused = true;
+	}
+
+	/**
+	 * Resumes the current action
+	 */
+	@Override
+	public void resumeAction() {
+		actionPaused = false;
 	}
 }

@@ -59,18 +59,14 @@ public class Technology {
 	public String getDescription() {
 		return description;
 	}
-    /**
-     *com.deco2800.marswars.technology upgrade which does Spacman.changeCost(5)
-     *
-     */
+	/**
+	 *com.deco2800.marswars.technology upgrade which does Spacman.changeCost(5)
+	 *
+	 */
 
-    public void costUpgrade(){
-        System.out.println("oewnfoiwenfoienfoiemfoiewfoierfj HELLO");
-        Spacman.changeCost(5);
-    }
 
-    /* Generic Java Object methods, feel free to change toString() and stuff
-    if you like */
+	/* Generic Java Object methods, feel free to change toString() and stuff
+	if you like */
 
 	/** Returns a string representation of a technlogy
 	 *
@@ -79,27 +75,37 @@ public class Technology {
 	 */
 	@Override
 	public String toString() {
-    	String description =  "Technology: " + name + '\n' + "Cost: " + cost[0]
+		String str =  "Technology: " + name + '\n' + "Cost: " + cost[0]
 				+ ", " + cost[1] + ", " + cost[2] + ", " + cost[3] + '\n' + "Parent techs: ";
-    	for (Technology tech: parents) {
-    		// add in each parent
-    		description += tech.getName() + ", ";
+		for (Technology tech: parents) {
+			// add in each parent
+			str += tech.getName() + ", ";
 		}
-		description += '\n' + "Description: " + this.description;
-		return description;
+		str += '\n' + "Description: " + this.description;
+		return str;
 	}
 
 	/** IntelliJ auto-generated */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Technology that = (Technology) o;
 
-		if (id != that.id) return false;
-		if (!Arrays.equals(cost, that.cost)) return false;
-		if (!name.equals(that.name)) return false;
+		if (id != that.id) {
+			return false;
+		}
+		if (!Arrays.equals(cost, that.cost)) {
+			return false;
+		}
+		if (!name.equals(that.name)) {
+			return false;
+		}
 		return parents.equals(that.parents);
 	}
 

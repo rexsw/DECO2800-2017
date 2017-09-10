@@ -1,7 +1,6 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,18 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.entities.Base;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EnemySpacman;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.AiManagerTest;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -33,6 +24,7 @@ import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,6 +59,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Camera must be updated every render cycle.
 	 */
 	OrthographicCamera camera;
+	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
+	private int switcher = 0;
+	private int cSwitcher = 0;
+	private int cameraPointer = 0;
 
 	Stage stage;
 	Window window;
@@ -84,6 +81,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
+	
+	private boolean gameStarted = false;
 
 	Skin skin;
 	
@@ -97,65 +96,46 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void create () {
-
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
+
+		//initialise the minimap and set the image
+		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
+		GameManager.get().getMiniMap().updateMap(reg);
 
 		/*
 		 *	Set up new stuff for this game
+		 * TODO some way to choose which map is being loaded
 		 */
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
 
-
 		/*
-		 * sets all starting entities to be player owned
+		 * Initializes fog of war
 		 */
-		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-			if(e instanceof HasOwner) {
-				((HasOwner) e).setOwner(GameManager.get().getManager(AiManagerTest.class));
-			}
-		}
+		FogOfWarManager fogOfWar = (FogOfWarManager)(GameManager.get().getManager(FogOfWarManager.class));
+		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
+		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+
 		/*
 		 * adds entities for the ai and set then to be ai owned
 		 */
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -1, width -1);
-		setAI(1, 1);
-
-		AiManagerTest aim1 = new AiManagerTest();
-		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(0, 1, 0);
-		Spacman ai1 = new Spacman(1, 0, 0);
-		Base aibase = new Base(GameManager.get().getWorld(), 3, 3, 0);
-		EnemySpacman aienemy = new EnemySpacman(length-1, width-1, 0);
-		ai.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
+		setAI(length -4, width -4, "Green");
+		setAI(4, 4, "Pink");
+		setAI(4, width -4, "Purple");
+		setAI(length -4, 4, "Yellow");
+		setPlayer(length/2, width/2, "Blue");
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
 		
-		AiManagerTest aim2 = new AiManagerTest();
-		GameManager.get().addManager(aim2);
-		Spacman ai2 = new Spacman(1, 2, 0);
-		Spacman ai21 = new Spacman(0, 1, 0);
-		Base aibase2 = new Base(GameManager.get().getWorld(), 9, 9, 0);
-		EnemySpacman aienemy2 = new EnemySpacman(length-2, length-2, 0);
-		ai2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai2);
-		ai21.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(ai21);
-		aibase2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aibase2);
-		aienemy2.setOwner(aim2);
-		GameManager.get().getWorld().addEntity(aienemy2);
+		
+		// do something important here, asynchronously to the rendering thread
 
 		new Thread(new Runnable() {
 			@Override
@@ -188,7 +168,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
+		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
 
 		/*
 		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
@@ -236,7 +218,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					JoinLobbyAction action = new JoinLobbyAction("Host");
 					networkClient.sendObject(action);
 
-					System.out.println(ip);
+					LOGGER.info(ip);
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong");
 					LOGGER.error("Unknown Host", ex);
@@ -246,7 +228,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 
 		});
-
+		
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", skin);
 		joinServerButton.addListener(new ChangeListener() {
@@ -326,9 +308,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
+		view.disableHUD();
 		
 		/* Add the window to the stage */
-		//stage.addActor(window);
+		stage.addActor(window);
 
 		/*
 		 * Setup inputs for the buttons and the game itself
@@ -336,7 +319,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Setup an Input Multiplexer so that input can be handled by both the UI and the game */
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(stage); // Add the UI as a processor
-
+		
         /*
          * Set up some input managers for panning with dragging.
          */
@@ -347,12 +330,23 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				originX = screenX;
-				originY = screenY;
+				if (GameManager.get().getActiveView() == 1) {
+					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+					camera.zoom = 1;
+					GameManager.get().toggleActiveView();
+				} else {
 
-				Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-				MouseHandler mouseHandler = (MouseHandler)(GameManager.get().getManager(MouseHandler.class));
-				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+					originX = screenX;
+					originY = screenY;
+					// if the click is on the minimap
+					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+						return true;
+					}
+
+					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+				}
 				return true;
 			}
 
@@ -372,6 +366,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 				originX = screenX;
 				originY = screenY;
+				
+				GameManager.get().setCamera(camera);
 
 				return true;
 			}
@@ -388,29 +384,42 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				downKeys.remove(keyCode);
 				return true;
 			}
+			
 			/**
 			 * Enable player to zoom in and zoom out through scroll wheel
 			 */
 			@Override
 			public boolean scrolled(int amount) {
+				if (GameManager.get().getActiveView() == 1) {
+					//if we are currently on the megamap, cancel scroll
+					return false;
+				}
+				
 				int cursorX = Gdx.input.getX();
 				int cursorY = Gdx.input.getY();
+				
 				int windowWidth = Gdx.graphics.getWidth();
 				int windowHeight = Gdx.graphics.getHeight();
+				
 				if (camera.zoom > 0.5 && amount == -1) { // zoom in
+					//xMag/yMag is how is the mouse far from centre-screen
+					//			on each axis
 					double xMag = (double)cursorX - (windowWidth/2);
 					double yMag = (double)(windowHeight/2) - cursorY;
+					
 					camera.zoom /= 1.2;
+					//shift by mouse offset
 					camera.translate((float)xMag, (float)yMag);
 				} else if (camera.zoom < 10 && amount == 1) { // zoom out
 					camera.zoom *= 1.2;
 				}
-				forceMapLimits();
+				forceMapLimits(); //has the user reached the edge?
 				return true;
 			}
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		GameManager.get().toggleActiveView();
 	}
 
 
@@ -420,7 +429,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void render () {
-
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			view.getActionWindow().removeActor(peonButton);
 			view.getActionWindow().removeActor(helpText);
@@ -472,10 +480,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		Texture background = textureManager.getTexture(backgroundString);
 		batch.begin();
-		batch.draw(background, window.getOriginX(), window.getOriginY(), 1920, 1080);
+		batch.draw(background, camera.position.x - camera.viewportWidth*camera.zoom/2 , camera.position.y -
+				camera.viewportHeight*camera.zoom/2, camera.viewportWidth*camera.zoom,
+				camera.viewportHeight*camera.zoom);
 		batch.end();
-
-        /* Render the tiles first */
+		
+        /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = renderer.getTileRenderer(batch);
 		tileRenderer.setView(camera);
 		tileRenderer.render();
@@ -512,24 +522,48 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		stage.act();
 		stage.draw();
-
+		GameManager.get().setCamera(camera);
 		batch.dispose();
+		if(!gameStarted) {
+			GameManager.get().getMiniMap().render();
+			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
+			view.updateMiniMapMenu();
+			view.enableHUD();
+			GameManager.get().toggleActiveView();
+			gameStarted = true;
+		}
 	}
 
 
 	/**
 	 * Handles keyboard input.
-	 * There probably should be some way to pass this into another class
 	 */
 	private void handleInput() {
-		forceMapLimits(); //intentionally put at the start to create a nice animation
-		final int speed = 10;
-		final int pxTolerance = 20; // modifies how close to the edge the cursor has to be before the map
-		// starts moving
+		forceMapLimits(); //intentionally put at the start to create a
+						  //nice animation
+		
+		final int speed = 10; //zoom speed
+		final int pxTolerance = 20; // modifies how close to the edge the cursor
+									//has to be before the map starts moving.
+		
 		int cursorX = Gdx.input.getX();
 		int cursorY = Gdx.input.getY();
+		
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
+		
+		if (downKeys.contains(Input.Keys.M)) {
+			// open or close mega map
+			downKeys.remove(Input.Keys.M);
+			LOGGER.info("pos: " + camera.position.toString());
+			GameManager.get().toggleActiveView();
+		}
+		if (GameManager.get().getActiveView() == 1) {
+			// Don't process any inputs if in map view mode
+			return;
+		}
+		
+		//move the map in the chosen direction
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -548,8 +582,43 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
+		if ((downKeys.contains(Input.Keys.C))){
+			if(cSwitcher == 0){
+				ArrayList<Float> XYPosition = new ArrayList<Float>();
+				XYPosition.add(camera.position.x);
+				XYPosition.add(camera.position.y);
+				cameraPosition.add(XYPosition);
+				cSwitcher++;
+			}
+		}else{
+			cSwitcher = 0;
+		}
+		
+		if((downKeys.contains(Input.Keys.N))){
+			if(!cameraPosition.isEmpty()){
+				ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
+				if(switcher == 0){
+					float X= camera.position.x - nextPosition.get(0);
+					float Y = camera.position.y - nextPosition.get(1);
+					X *= -1;
+					Y *= -1;
+					if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
+						camera.translate(X, 0);
+					}
+					if(camera.position.y > nextPosition.get(1) || 
+							(camera.position.y <= nextPosition.get(1))){
+						camera.translate(0, Y);
+					}
+					switcher++;
+					cameraPointer++;
+					cameraPointer = cameraPointer % cameraPosition.size();
+				}	
+			}
+		}else{
+			switcher = 0;
+		}
 
-		// Move the map dependant on the cursor position
+		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
 			// skip checking for movement
@@ -576,6 +645,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// move up
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -615,21 +685,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * to ensure the camera is never well of the map (in the black).
 	 */
 	private void forceMapLimits() {
-		int windowWidth = Gdx.graphics.getWidth();
-		int windowHeight = Gdx.graphics.getHeight();
-		int cameraScaleFactor = 32;
+		//length&width of the map multiplied by the number of pixels of each
+		//tile in each direction.
+		int mapWidth = GameManager.get().getWorld().getWidth()*58;
+		int mapLength = GameManager.get().getWorld().getLength()*36;
 		
-		if(camera.position.x - windowWidth > Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1)) {
-			camera.position.x = (float) (Math.sqrt(2) * GameManager.get().getWorld().getWidth() * (cameraScaleFactor + 1) + windowWidth);
-		}else if(camera.position.x - windowWidth / 5 < 0) {
-			camera.position.x = windowWidth/5;
+		//x axis limits
+		if(camera.position.x > mapWidth) {
+			camera.position.x = mapWidth;
+		}else if(camera.position.x < 0) {
+			camera.position.x = 0;
 		}
 		
-		if(camera.position.y > GameManager.get().getWorld().getLength() * cameraScaleFactor / 2) {
-			camera.position.y = GameManager.get().getWorld().getLength() * cameraScaleFactor / 2;
-		}else if(camera.position.y + windowHeight * 4.5 < 0) {
-			camera.position.y = (float) (-windowHeight * 4.5);
+		//y axis limits
+		if(camera.position.y > mapLength/2) {
+			camera.position.y = mapLength/2;
+		}else if(camera.position.y < 0-mapLength/2) {
+			camera.position.y = 0-mapLength/2;
 		}
+		GameManager.get().setCamera(camera);
 	}
 
 	/**
@@ -643,7 +717,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-
+		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		window.setPosition(300, 0);
 		window.setWidth(stage.getWidth());
@@ -662,21 +736,42 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y) {
+	public void setAI(int x, int y, String colour) {
 		AiManagerTest aim1 = new AiManagerTest();
+		aim1.setColour(colour);
 		GameManager.get().addManager(aim1);
-		Spacman ai = new Spacman(x, y, 0);
-		Spacman ai1 = new Spacman(x, y, 0);
+		Astronaut ai = new Astronaut(x, y, 0, aim1);
+		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
-		EnemySpacman aienemy = new EnemySpacman(x, y, 0);
+		Soldier Soldier = new Soldier(x, y,0,aim1);
+		Soldier.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(Soldier);
+		Tank tank = new Tank(x,y,0,aim1);
+		tank.setOwner(aim1);
+		GameManager.get().getWorld().addEntity(tank);
 		ai.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai1);
 		aibase.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(aibase);
-		aienemy.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aienemy);
 	}
-
+	
+	public void setPlayer(int x, int y, String colour) {
+	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+	playerManager.setColour(colour);
+	Spacman p = new Spacman(x, y, 0);
+	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
+	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
+	Soldier Soldier = new Soldier(x, y,0,playerManager);
+	GameManager.get().getWorld().addEntity(Soldier);
+	Tank tank = new Tank(x,y,0,playerManager);
+	GameManager.get().getWorld().addEntity(tank);
+	p.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p);
+	p1.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p1);
+	p2.setOwner(playerManager);
+	GameManager.get().getWorld().addEntity(p2);
+	}
 }

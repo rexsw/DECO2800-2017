@@ -119,6 +119,15 @@ public class BaseWorld extends AbstractWorld {
 	}
 
 	/**
+	 * Gets the entity at an x y position.
+	 *
+	 * @return a list of all entities currently in the game.
+	 */
+	public List<BaseEntity> getEntities() {
+		return super.getEntities();
+	}
+
+	/**
 	 * Deselects all entities
 	 */
 	public void deSelectAll() {

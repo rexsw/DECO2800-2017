@@ -2,6 +2,7 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
@@ -19,6 +20,10 @@ public class GenerateAction implements DecoAction {
 	/* The world to spawn the entity into */
 	private BaseWorld world;
 
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private boolean actionPaused = false;
+
 	/**
 	 * Constructor for the Generator action
 	 * @param actionResult the new action result
@@ -33,11 +38,13 @@ public class GenerateAction implements DecoAction {
 	 */
 	@Override
 	public void doAction() {
-		if (progress > 0) {
-			progress--;
-		} else {
-			this.world.addEntity(actionResult);
-			actionResult = null;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			if (progress > 0) {
+				progress--;
+			} else {
+				this.world.addEntity(actionResult);
+				actionResult = null;
+			}
 		}
 	}
 
@@ -57,5 +64,21 @@ public class GenerateAction implements DecoAction {
 	@Override
 	public int actionProgress() {
 		return 100-progress;
+	}
+
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	@Override
+	public void pauseAction() {
+		actionPaused = true;
+	}
+
+	/**
+	 * Resumes the current action
+	 */
+	@Override
+	public void resumeAction() {
+		actionPaused = false;
 	}
 }
