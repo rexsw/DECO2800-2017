@@ -53,11 +53,11 @@ public class MapContainerTest extends BaseTest{
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
-    @Test
+    /*@Test
     public void getRandomEntity() throws Exception {
         map.getRandomEntity();
         Assert.assertFalse(world.getEntities().isEmpty());
-    }
+    }*/
 
     @Test
     public void getRandomBuilding() throws Exception {
