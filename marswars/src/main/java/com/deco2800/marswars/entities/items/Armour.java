@@ -10,13 +10,36 @@ public class Armour extends PassiveItem {
         super.setItemType("Armour");
         this.armourType = type;
         this.itemXp = 0;
+        switch(type) {
+            case ARMOUR1LEVEL1:
+                // decrement resources
+                break;
+            case ARMOUR1LEVEL2:
+                // decrement resources
+                break;
+            case ARMOUR1LEVEL3:
+                // decrement resources
+                break;
+            case ARMOUR2LEVEL1:
+                // decrement resources
+                break;
+            case ARMOUR2LEVEL2:
+                // decrement resources
+                break;
+            case ARMOUR2LEVEL3:
+                // decrement resources
+                break;
+            default:
+                // anything here???
+                break;
+        }
     }
 
     public int getArmourValue() {
         return armourType.getArmourValue();
     }
 
-    public int getArmourCost() {
+    public int[] getArmourCost() {
         return armourType.getArmourCost();
     }
 
