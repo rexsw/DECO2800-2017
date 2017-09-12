@@ -29,5 +29,16 @@ public class HealthEffect implements Effect{
 	public void removeEffect(AttackableEntity entity) {
 		return; //there should be no remove action for any health effect
 	}
+	
+	@Override
+	public String generateDescription() {
+		StringBuilder string = new StringBuilder("");
+		if (isDamage) {
+			string.append("Heal: " + health + "\n");
+		} else {
+			string.append("Damage dealt: " + health + "\n");
+		}
+		return string.toString();
+	}
 
 }

@@ -87,17 +87,17 @@ public class HeroSpacman extends Soldier {
 		return inventory;
 	}
 
-	public boolean getActivation (ActiveItem activeItem) {
-		return activeItem.getActivation();
-	}
-
-	public void activateItem(ActiveItem activeItem) {
-		activeItem.activateItem();
-	}
-
-	public void deactivateItem(ActiveItem activeItem) {
-		activeItem.deactivateItem();
-	}
+//	public boolean getActivation (Item activeItem) {
+//		return activeItem.getActivation();
+//	}
+//
+//	public void activateItem(Item activeItem) {
+//		activeItem.activateItem();
+//	}
+//
+//	public void deactivateItem(ActiveItem activeItem) {
+//		activeItem.deactivateItem();
+//	}
 
 //	// used when button in inventory clicked to wear armour
 //	public void applyArmour(Armour armour) {

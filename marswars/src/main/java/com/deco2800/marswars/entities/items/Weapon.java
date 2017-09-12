@@ -35,6 +35,7 @@ public class Weapon extends Item {
     	return this.lvl;
     }
     
+    @Override
     public List<Effect> getEffect() {
     	return new ArrayList<Effect>(effects);
     }

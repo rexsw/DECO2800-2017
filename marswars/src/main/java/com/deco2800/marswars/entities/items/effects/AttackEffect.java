@@ -16,6 +16,7 @@ public class AttackEffect implements Effect{
 		this.armourDamage = (int) (damage * 0.25);
 	}
 	
+	@Override
 	public void applyEffect(AttackableEntity entity) {
 		if (entity instanceof HeroSpacman) {
 			HeroSpacman hero = (HeroSpacman) entity;
@@ -27,6 +28,7 @@ public class AttackEffect implements Effect{
 		}
 	}
 	
+	@Override
 	public void removeEffect(AttackableEntity entity) {
 		if (entity instanceof HeroSpacman) {
 			HeroSpacman hero = (HeroSpacman) entity;
@@ -36,5 +38,21 @@ public class AttackEffect implements Effect{
 			hero.setAttackRange(hero.getAttackRange() - this.attackRange);
 			hero.setArmorDamage(hero.getArmorDamage() - this.armourDamage);
 		}
+	}
+
+	@Override
+	public String generateDescription() {
+		StringBuilder string = new StringBuilder("");
+		if (attackDamage != 0) {
+			string.append("AttackDamage: " + attackDamage + "\n");
+			string.append("ArmourDamage: " + armourDamage + "\n");
+		}
+		if (attackSpeed != 0) {
+			string.append("AttackSpeed: " + attackSpeed + "\n");
+		}
+		if (attackRange != 0) {
+			string.append("AttackRange: " + attackRange + "\n");
+		}
+		return string.toString();
 	}
 }

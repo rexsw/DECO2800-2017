@@ -1,67 +1,58 @@
 package com.deco2800.marswars.entities.items;
 
-public class Armour extends PassiveItem {
+import java.util.ArrayList;
+import java.util.List;
 
-    private ArmourType armourType;
-    private int itemXp;
+import com.deco2800.marswars.entities.items.effects.DefenceEffect;
+import com.deco2800.marswars.entities.items.effects.Effect;
 
-    public Armour(String name, ArmourType type) {
-        super(name);
-        super.setItemType("Armour");
-        this.armourType = type;
-        this.itemXp = 0;
-        switch(type) {
-            case ARMOUR1LEVEL1:
-                // decrement resources
-                break;
-            case ARMOUR1LEVEL2:
-                // decrement resources
-                break;
-            case ARMOUR1LEVEL3:
-                // decrement resources
-                break;
-            case ARMOUR2LEVEL1:
-                // decrement resources
-                break;
-            case ARMOUR2LEVEL2:
-                // decrement resources
-                break;
-            case ARMOUR2LEVEL3:
-                // decrement resources
-                break;
-            default:
-                // anything here???
-                break;
-        }
+public class Armour extends Item {
+
+    private ArmourType type;
+    private int lvl;
+    private List<Effect> effects;
+    //private AttackEffect effect;
+
+    public Armour(ArmourType type, int lvl) {
+    	this.effects = new ArrayList<>();
+        this.type = type;
+        this.lvl = lvl;
+        this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
     }
 
     public int getArmourValue() {
-        return armourType.getArmourValue();
+        return type.getArmourValue(lvl);
+    }
+    
+    public int getArmourHealth() {
+    	return type.getArmourHealth(lvl);
+    }
+    
+    public int getMoveSpeed() {
+    	return type.getMoveSpeed(lvl);
     }
 
-    public int[] getArmourCost() {
-        return armourType.getArmourCost();
+    public int getLevel() {
+    	return this.lvl;
+    }
+    
+    public List<Effect> getEffect() {
+    	return new ArrayList<Effect>(effects);
+    }
+    
+    @Override
+    public Type getItemType() {
+        return Type.ARMOUR;
     }
 
-    public int getArmourLevel() {
-        return armourType.getArmourLevel();
+    @Override
+    public String getName() {
+        return type.getName();
     }
-
-    public int getItemXp() {
-        return this.itemXp;
-    }
-
-    public void addItemXp(int xp) {
-        this.itemXp += xp;
-    }
-
-    /**
-     * for use when a building/tech unlock allows a direct upgrade, ie
-     * without needing item xp
-     *
-     * @param type
-     */
-    public void changeArmourType(ArmourType type) {
-        this.armourType = type;
+    
+    @Override
+    public String getDescription() {
+		return this.getName() + "\nArmour: " + this.getArmourValue() + "\nHealth: " + this.getArmourHealth() + "\nMovementSpeed: " + this.getMoveSpeed();
+    	
     }
 }

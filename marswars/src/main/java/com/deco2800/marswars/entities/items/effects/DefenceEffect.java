@@ -13,6 +13,7 @@ public class DefenceEffect implements Effect{
 		this.health = health;
 		this.moveSpeed = moveSpeed;
 	}
+	
 	@Override
 	public void applyEffect(AttackableEntity entity) {
 		if (entity instanceof HeroSpacman) {
@@ -38,6 +39,21 @@ public class DefenceEffect implements Effect{
 			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
 			hero.setSpeed(hero.getSpeed() - this.moveSpeed);
 		}
+	}
+	
+	@Override
+	public String generateDescription() {
+		StringBuilder string = new StringBuilder("");
+		if (armour != 0) {
+			string.append("Armour: " + armour + "\n");
+		}
+		if (health != 0) {
+			string.append("Max Health: " + health + "\n");
+		}
+		if (moveSpeed != 0) {
+			string.append("Movement Speed: " + moveSpeed + "\n");
+		}
+		return string.toString();
 	}
 
 }

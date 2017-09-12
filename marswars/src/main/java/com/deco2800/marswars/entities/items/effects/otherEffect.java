@@ -20,5 +20,10 @@ public class otherEffect implements Effect{
 	public void removeEffect(AttackableEntity entity) {
 		return;
 	}
+	
+	@Override
+	public String generateDescription() {
+		return null;
+	}
 
 }

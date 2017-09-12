@@ -6,5 +6,5 @@ public interface Effect {
 	
 	void applyEffect(AttackableEntity entity);
 	void removeEffect(AttackableEntity entity);
-	
+	String generateDescription();
 }

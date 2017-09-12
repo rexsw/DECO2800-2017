@@ -52,7 +52,11 @@ public enum WeaponType {
 	}
 
 	int[] getWeaponCost(int lvl) {
-		return this.baseCost;
+		int[] cost = new int[baseCost.length];
+		for (int i = 0; i < baseCost.length; i++) {
+			cost[i] = baseCost[i] * upgrateRatio(lvl);
+		}
+		return cost;
 	}
 
 }
