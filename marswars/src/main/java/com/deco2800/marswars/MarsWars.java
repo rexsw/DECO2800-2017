@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
@@ -23,18 +22,17 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -83,12 +81,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	SpacServer networkServer;
 	
 	private boolean gameStarted = false;
+	MainMenu menu;
 
 	Skin skin;
 	
 	HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
+	TextureManager reg;
+	
 	
 	/**
 	 * Creates the required objects for the game to start.
@@ -96,45 +97,82 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void create () {
+		stage = new Stage(new ScreenViewport());
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
+		/*All managers */
+		reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
-		TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
-
+		
+		//not sure why i have to create a window here and pass it into the menu
+		//but creating a window in menu crashes the game
+		menu = new MainMenu(skin, stage, new Window("its a start", skin), this);
+		stage.addActor(menu.buildMenu());
+		
+		playGame();
+	}
+	
+	/**
+	 * Constructs the rest of the game. 
+	 * Note: the follow methods will be removed from marswars soon to be abstracted 
+	 * into their relevant classes
+	 */
+	public void playGame(){
+		createMiniMap();
+		createMap();
+		setGame();
+		fogOfWar();
+		addAIEntities();
+		setThread();
+		setGUI();
+		setInputProcessor();
+	}
+	
+	/**
+	 * Creates the game minimap 
+	 */
+	public void createMiniMap() {
+		MiniMap m = new MiniMap("minimap", 220, 220);
+		m.render();
 		//initialise the minimap and set the image
-		GameManager.get().setMiniMap(new MiniMap("minimap", 220, 220));
+		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(reg);
-
-		/*
-		 *	Set up new stuff for this game
-		 * TODO some way to choose which map is being loaded
-		 */
+	}
+	
+	/**
+	 * Creates game map
+	 */
+	private void createMap() {
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
-
-		/*
-		 * Initializes fog of war
-		 */
-		FogOfWarManager fogOfWar = (FogOfWarManager)(GameManager.get().getManager(FogOfWarManager.class));
+	}
+	
+	/*
+	 * Initializes fog of war
+	 */
+	private void fogOfWar() {
+		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-
-		/*
-		 * adds entities for the ai and set then to be ai owned
-		 */
+	}
+	
+	/*
+	 * adds entities for the ai and set then to be ai owned
+	 */
+	private void addAIEntities() {
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -4, width -4, "Green");
-		setAI(4, 4, "Pink");
-		setAI(4, width -4, "Purple");
-		setAI(length -4, 4, "Yellow");
-		setPlayer(length/2, width/2, "Blue");
+		setAI(length, width, 1);
+		setPlayer(length/2, width/2, Colours.PURPLE, -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
-		
-		
+	}
+	
+	private void setThread() {
 		// do something important here, asynchronously to the rendering thread
 
 		new Thread(new Runnable() {
@@ -146,14 +184,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
 								((Tickable) e).onTick(0);
-
 							}
 						}
-
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
 					}
-
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -162,157 +197,34 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}).start();
-
-		/*
-		 * Setup the game itself
-		 */
+	}
+	
+	/*
+	 * Setup the game itself
+	 */
+	private void setGame() {
 		/* Setup the camera and move it to the center of the world */
 		camera = new OrthographicCamera(1920, 1080);
 		GameManager.get().setCamera(camera);
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(camera);
-
-		/*
-		 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
-		 */
-		stage = new Stage(new ScreenViewport());
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		window = new Window("Menu", skin);
-
-		/* Add a quit button to the menu */
-		Button button = new TextButton("Quit", skin);
-
+	}
+	
+	/*
+	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
+	 */
+	private void setGUI() {
 		/* Add another button to the menu */
 		peonButton = new TextButton("Select a Unit", skin);
-
-		/* Start server button */
-		Button startServerButton = new TextButton("Start Server", skin);
-		startServerButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				Dialog ipDiag = new Dialog("Local IP", skin, "dialog") {};
-				try {
-					InetAddress ipAddr = InetAddress.getLocalHost();
-					String ip = ipAddr.getHostAddress();
-					ipDiag.text("IP Address: " + ip);
-
-					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
-					networkServer = new SpacServer(serverConnectionManager);
-
-
-					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-					networkClient = new SpacClient(clientConnectionManager);
-					//Initiate Server
-					try {
-						networkServer.bind(SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when initiating server", e);
-					}
-
-					//Join it as a Client
-					try {
-						networkClient.connect(5000, ip, SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when joinging as client", e);
-					}
-					JoinLobbyAction action = new JoinLobbyAction("Host");
-					networkClient.sendObject(action);
-
-					LOGGER.info(ip);
-				} catch (UnknownHostException ex) {
-					ipDiag.text("Something went wrong");
-					LOGGER.error("Unknown Host", ex);
-				}
-				ipDiag.button("Close", null);
-				ipDiag.show(stage);
-			}
-
-		});
-		
-		/* Join server button */
-		Button joinServerButton = new TextButton("Join Server", skin);
-		joinServerButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// Construct inside of dialog
-				Table inner = new Table(skin);
-				Label ipLabel = new Label("IP", skin);
-				TextField ipInput = new TextField("localhost", skin);
-				Label usernameLabel = new Label("Username", skin);
-				TextField usernameInput = new TextField("wololo", skin);
-
-				inner.add(ipLabel);
-				inner.add(ipInput);
-				inner.row();
-				inner.add(usernameLabel);
-				inner.add(usernameInput);
-				inner.row();
-
-				Dialog ipDiag = new Dialog("IP", skin, "dialog") {
-					@Override
-					protected void result(Object o) {
-						if(o != null) {
-							String username = usernameInput.getText();
-							String ip = ipInput.getText();
-
-							ClientConnectionManager connectionManager = new ClientConnectionManager();
-							networkClient = new SpacClient(connectionManager);
-
-							try {
-								networkClient.connect(5000, ip, SERVER_PORT);
-							} catch (IOException e) {
-								LOGGER.error("Join server error", e);
-							}
-							JoinLobbyAction action = new JoinLobbyAction(username);
-							networkClient.sendObject(action);
-						}
-					}
-				};
-
-				ipDiag.getContentTable().add(inner);
-				ipDiag.button("Join", true);
-				ipDiag.button("Cancel", null);
-
-				ipDiag.show(stage);
-			}
-		});
-
-		/* Add a programatic listener to the quit button */
-		button.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				System.exit(0);
-			}
-		});
-
 		helpText = new Label("Welcome to SpacWars!", skin);
-		rocksLabel = new Label("Rocks: 0", skin);
-		gameTimeDisp = new Label(" Time: 00:00", skin);
-		gameLengthDisp = new Label(" Game Length: 00:00:00", skin);
-
-		/* Add all buttons to the menu */
-		window.add(button);
-		//window.add(helpText);
-		//window.add(peonButton);
-		window.add(rocksLabel);
-		window.add(gameTimeDisp);
-		window.add(gameLengthDisp);
-		window.add(startServerButton);
-		window.add(joinServerButton);
-		window.pack();
-		window.setMovable(false); // So it doesn't fly around the screen
-		window.setPosition(400, 0); // Place at the bottom
-		window.setWidth((stage.getWidth())-300);
 
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
-		view.setMenu(window);
 		view.getActionWindow().add(peonButton);
 		view.getActionWindow().add(helpText);
 		view.disableHUD();
-		
-		/* Add the window to the stage */
-		stage.addActor(window);
-
+	}
+	
+	private void setInputProcessor() {
 		/*
 		 * Setup inputs for the buttons and the game itself
 		 */
@@ -422,7 +334,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().toggleActiveView();
 	}
 
-
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -493,33 +404,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
          * Use the selected renderer to render objects onto the map
          */
-		renderer.render(batch, camera);
-
-		
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rocksLabel.setText("Rocks: " + resourceManager.getRocks() + " Crystal: " + resourceManager.getCrystal() + " Water: " + resourceManager.getWater() + " Biomass: " + resourceManager.getBiomass());
-		
-
-		/*
-		 * Update time & set color depending if night/day
-		 */
-
-		gameTimeDisp.setText(" Time: " + timeManager.toString());
-		gameLengthDisp.setText(timeManager.getPlayClockTime());
-//		if (timeManager.isNight()){
-//			gameTimeDisp.setColor(Color.FIREBRICK);
-//			gameLengthDisp.setColor(Color.FIREBRICK);
-//		}
-//		else{
-//			gameTimeDisp.setColor(Color.BLUE);
-//			gameLengthDisp.setColor(Color.BLUE);
-//		}
+		renderer.render(batch, camera);		
 
 		view.render();
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
-
 		stage.act();
 		stage.draw();
 		GameManager.get().setCamera(camera);
@@ -582,38 +472,36 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
-		if ((downKeys.contains(Input.Keys.C))){
+		if (downKeys.contains(Input.Keys.C)){
 			if(cSwitcher == 0){
-				ArrayList<Float> XYPosition = new ArrayList<Float>();
-				XYPosition.add(camera.position.x);
-				XYPosition.add(camera.position.y);
-				cameraPosition.add(XYPosition);
+				ArrayList<Float> xyPosition = new ArrayList<Float>();
+				xyPosition.add(camera.position.x);
+				xyPosition.add(camera.position.y);
+				cameraPosition.add(xyPosition);
 				cSwitcher++;
 			}
 		}else{
 			cSwitcher = 0;
 		}
 		
-		if((downKeys.contains(Input.Keys.N))){
-			if(!cameraPosition.isEmpty()){
-				ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
-				if(switcher == 0){
-					float X= camera.position.x - nextPosition.get(0);
-					float Y = camera.position.y - nextPosition.get(1);
-					X *= -1;
-					Y *= -1;
-					if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
-						camera.translate(X, 0);
-					}
-					if(camera.position.y > nextPosition.get(1) || 
-							(camera.position.y <= nextPosition.get(1))){
-						camera.translate(0, Y);
-					}
-					switcher++;
-					cameraPointer++;
-					cameraPointer = cameraPointer % cameraPosition.size();
-				}	
-			}
+		if(downKeys.contains(Input.Keys.N) && !cameraPosition.isEmpty()){
+			ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
+			if(switcher == 0){
+				float x= camera.position.x - nextPosition.get(0);
+				float y = camera.position.y - nextPosition.get(1);
+				x *= -1;
+				y *= -1;
+				if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
+					camera.translate(x, 0);
+				}
+				if(camera.position.y > nextPosition.get(1) || 
+						(camera.position.y <= nextPosition.get(1))){
+					camera.translate(0, y);
+				}
+				switcher++;
+				cameraPointer++;
+				cameraPointer = cameraPointer % cameraPosition.size();
+			}	
 		}else{
 			switcher = 0;
 		}
@@ -719,8 +607,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		camera.update();
 		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
-		window.setPosition(300, 0);
-		window.setWidth(stage.getWidth());
 		view.resize(width, height);
 	}
 
@@ -736,42 +622,59 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y, String colour) {
-		AiManagerTest aim1 = new AiManagerTest();
-		aim1.setColour(colour);
-		GameManager.get().addManager(aim1);
-		Astronaut ai = new Astronaut(x, y, 0, aim1);
-		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
-		Soldier Soldier = new Soldier(x, y,0,aim1);
-		Soldier.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(Soldier);
-		Tank tank = new Tank(x,y,0,aim1);
-		tank.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(tank);
-		ai.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
-		GameManager.get().getWorld().addEntity(aibase);
+	public void setAI(int lenght, int width, int teams) {
+		ArrayList<Colours> colour = new ArrayList<Colours>();
+		int x,y;
+		colour.add(Colours.BLUE);
+		colour.add(Colours.YELLOW);
+		colour.add(Colours.PINK);
+		colour.add(Colours.GREEN);
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		for(int teamid = 1; teamid < teams+1;teamid++) {
+			x = ThreadLocalRandom.current().nextInt(1, lenght);
+			y = ThreadLocalRandom.current().nextInt(1, width);
+			rm.setBiomass(0, teamid);
+			rm.setRocks(0, teamid);
+			rm.setCrystal(0, teamid);
+			rm.setWater(0, teamid);
+			cm.setColour(teamid, colour.get(teamid-1));
+			AiManager aim = (AiManager) GameManager.get().getManager(AiManager.class);
+			aim.addTeam(teamid);
+			Astronaut ai = new Astronaut(x, y, 0, teamid);
+			Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+			Soldier soldier = new Soldier(x, y,0,teamid);
+			GameManager.get().getWorld().addEntity(soldier);
+			Tank tank = new Tank(x,y,0,teamid);
+			GameManager.get().getWorld().addEntity(tank);
+			GameManager.get().getWorld().addEntity(ai);
+			GameManager.get().getWorld().addEntity(ai1);
+			aibase.setOwner(teamid);
+			GameManager.get().getWorld().addEntity(aibase);
+		}
 	}
-	
-	public void setPlayer(int x, int y, String colour) {
-	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
-	playerManager.setColour(colour);
-	Spacman p = new Spacman(x, y, 0);
-	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
-	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
-	Soldier Soldier = new Soldier(x, y,0,playerManager);
-	GameManager.get().getWorld().addEntity(Soldier);
-	Tank tank = new Tank(x,y,0,playerManager);
-	GameManager.get().getWorld().addEntity(tank);
-	p.setOwner(playerManager);
-	GameManager.get().getWorld().addEntity(p);
-	p1.setOwner(playerManager);
-	GameManager.get().getWorld().addEntity(p1);
-	p2.setOwner(playerManager);
-	GameManager.get().getWorld().addEntity(p2);
+
+	public void setPlayer(int x, int y, Colours colour, int teamid) {
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		cm.setColour(teamid, colour);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rm.setBiomass(0, teamid);
+		rm.setRocks(0, teamid);
+		rm.setCrystal(0, teamid);
+		rm.setWater(0, teamid);
+		Spacman p = new Spacman(x, y, 0);
+		Astronaut p1 = new Astronaut(x, y, 0, teamid);
+		Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
+		Soldier soldier = new Soldier(x, y,0,teamid);
+		GameManager.get().getWorld().addEntity(soldier);
+		Tank tank = new Tank(x,y,0,teamid);
+		GameManager.get().getWorld().addEntity(tank);
+		p.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p);
+		p1.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p1);
+		p2.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p2);
 	}
 }

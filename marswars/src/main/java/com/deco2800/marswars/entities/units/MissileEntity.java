@@ -22,7 +22,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     private int armorDamage; // armorDamage of the entity
     private int damage; // the damage of the entity
     private float speed;
-    private Manager owner = null; // the owner of the player
+    private int owner; // the owner of the player
     private Optional<DecoAction> currentAction = Optional.empty();
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
 
@@ -108,7 +108,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
      * @param the owner of the entity
      */
     @Override
-    public void setOwner(Manager owner) {
+    public void setOwner(int owner) {
         this.owner = owner;
     }
 
@@ -117,7 +117,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
      * @return the owner of the entity
      */
     @Override
-    public Manager getOwner() {
+    public int getOwner() {
         return this.owner;
     }
 
@@ -163,4 +163,9 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner {
     public float getSpeed() { return speed; }
     
     public void setSpeed(float speed) { this.speed = speed; }
+    
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
 }

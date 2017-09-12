@@ -34,7 +34,44 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String defaultTextureName;
 	protected String movementSound;
 
-	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	/**
+	 * Sets the position X
+	 * @param x
+	 */
+	@Override
+	public void setPosX(float x) {
+//		if(!this.isAi()) {
+			modifyFogOfWarMap(false,3);
+//		}
+		super.setPosX(x);
+		//lineOfSight.setPosX(x);
+//		if(!this.isAi()) {
+			modifyFogOfWarMap(true,3);
+
+//		}
+
+	}
+
+	/**
+	 * Sets the position Y
+	 * @param y
+	 */
+	@Override
+	public void setPosY(float y) {
+
+//		if(!this.isAi()) {
+			modifyFogOfWarMap(false,3);
+//		}
+		super.setPosY(y);
+		//lineOfSight.setPosY(y);
+//		if(!this.isAi()) {
+			modifyFogOfWarMap(true,3);
+
+//		}
+
+	}
+
+	public Soldier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
 
@@ -50,6 +87,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
+
 		this.setMaxHealth(t.unitAttributes.get("Soldier")[1]);
 		this.setHealth(t.unitAttributes.get("Soldier")[1]);
 		this.setDamage(t.unitAttributes.get("Soldier")[2]);
@@ -57,6 +95,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setArmorDamage(t.unitAttributes.get("Soldier")[4]);
 		this.setAttackRange(t.unitAttributes.get("Soldier")[5]);
 		this.setAttackSpeed(t.unitAttributes.get("Soldier")[6]);
+
+//		this.setMaxHealth(500);
+//		this.setHealth(500);
+//		this.setDamage(50);
+//		this.setArmor(250);
+//		this.setArmorDamage(50);
+//		this.setAttackRange(8);
+//		this.setAttackSpeed(30);
+//		this.setSpeed(0.05f);
 	}
 	
 	public void attack(AttackableEntity target){
@@ -67,26 +114,26 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				) {
 			
 			currentAction = Optional.of(new DamageAction(this, target));
-			LOGGER.error("Assigned action attack target at " + x + " " + y);
+			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else 
 		{
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.error("Same owner");
+			LOGGER.info("Same owner");
 		}
 	}
 
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(this.getOwner() instanceof PlayerManager) {
+		if(!this.isAi()) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
-			LOGGER.error("Clicked on soldier");
+			LOGGER.info("Clicked on soldier");
 			this.makeSelected();
 		} else {
-			LOGGER.error("Clicked on ai soldier");
+			LOGGER.info("Clicked on ai soldier");
 		}
 	}
 
@@ -122,7 +169,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	@Override
 	public void onTick(int tick) {
+
 		if (!currentAction.isPresent()) {
+			modifyFogOfWarMap(true,3);
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -170,6 +219,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 		}
+
 		
 	}
 	@Override

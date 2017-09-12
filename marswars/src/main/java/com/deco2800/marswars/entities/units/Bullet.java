@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ImpactAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 

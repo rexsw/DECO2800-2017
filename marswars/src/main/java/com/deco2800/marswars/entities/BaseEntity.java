@@ -5,19 +5,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.managers.FogOfWarManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 2/8/17.
@@ -110,7 +107,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return
 	 */
 	public boolean isCollidable() {
-		return (!super.canWalkOver);
+		return !super.canWalkOver;
 	}
 
 	/**
@@ -136,9 +133,9 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		modifyCollisionMap(false);
 		if (GameManager.get().getWorld() instanceof BaseWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
-			int left = (int) xPos;
+			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
-			int bottom = (int) yPos;
+			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
@@ -357,7 +354,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		}
 	}
 
-	protected void modifyFogOfWarMap(boolean add) {
+	protected void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
@@ -367,9 +364,9 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogManager.sightRange(x,y,scale,add);
 				} else {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogManager.sightRange(x,y,scale,add);
 				}
 			}
 		}

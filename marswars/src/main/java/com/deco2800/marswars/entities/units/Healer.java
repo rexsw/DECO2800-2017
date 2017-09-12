@@ -11,7 +11,7 @@ import com.deco2800.marswars.managers.TechnologyManager;
  */
 public class Healer extends Soldier {
 
-	public Healer(float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Healer(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 
 		//invoking the techManager
