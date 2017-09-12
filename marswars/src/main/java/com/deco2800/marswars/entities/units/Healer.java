@@ -13,30 +13,10 @@ public class Healer extends Soldier {
 
 	public Healer(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-
-		//invoking the techManager
-		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-
+		this.name = "Healer";
 		this.movementSound = "tankMovementSound";
-		
-		// set all the attack attributes
-//		this.setMaxHealth(500);
-//		this.setHealth(500);
-//		this.setDamage(-25);
-//		this.setArmor(200);
-//
-//		//this.setArmorDamage(150);
-//		this.setAttackRange(10);
-//		this.setAttackSpeed(20);
 
-		//Calling attributes from the  techmanager unit attributes map
-		this.setMaxHealth(t.unitAttributes.get("Healer")[1]);
-		this.setHealth(t.unitAttributes.get("Healer")[1]);
-		this.setDamage(t.unitAttributes.get("Healer")[2]);
-		this.setArmor(t.unitAttributes.get("Healer")[3]);
-		this.setArmorDamage(t.unitAttributes.get("Healer")[4]);
-		this.setAttackRange(t.unitAttributes.get("Healer")[5]);
-		this.setAttackSpeed(t.unitAttributes.get("Healer")[6]);
+		setAttributes();
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the

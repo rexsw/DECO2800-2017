@@ -33,6 +33,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String selectedTextureName;
 	protected String defaultTextureName;
 	protected String movementSound;
+	protected String name;
 
 	/**
 	 * Sets the position X
@@ -74,9 +75,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public Soldier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
+		this.name = "Soldier";
 
 		//Accessing the technology manager which contains unit Attributes
-		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 
 
 		// Everything is just testing
@@ -86,26 +87,22 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
-		// set all the attack attributes
+		setAttributes();
 
-		this.setMaxHealth(t.unitAttributes.get("Soldier")[1]);
-		this.setHealth(t.unitAttributes.get("Soldier")[1]);
-		this.setDamage(t.unitAttributes.get("Soldier")[2]);
-		this.setArmor(t.unitAttributes.get("Soldier")[3]);
-		this.setArmorDamage(t.unitAttributes.get("Soldier")[4]);
-		this.setAttackRange(t.unitAttributes.get("Soldier")[5]);
-		this.setAttackSpeed(t.unitAttributes.get("Soldier")[6]);
-
-//		this.setMaxHealth(500);
-//		this.setHealth(500);
-//		this.setDamage(50);
-//		this.setArmor(250);
-//		this.setArmorDamage(50);
-//		this.setAttackRange(8);
-//		this.setAttackSpeed(30);
-//		this.setSpeed(0.05f);
 	}
-	
+
+	//sets all attack attributes
+	public void setAttributes(){
+		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		this.setMaxHealth(t.getUnitAttribute(this.name, 1));
+		this.setHealth(t.getUnitAttribute(this.name, 1));
+		this.setDamage(t.getUnitAttribute(this.name, 2));
+		this.setArmor(t.getUnitAttribute(this.name, 3));
+		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
+		this.setAttackRange(t.getUnitAttribute(this.name, 5));
+		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
+		this.setSpeed(0.05f);
+	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();

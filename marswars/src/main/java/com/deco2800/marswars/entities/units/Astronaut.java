@@ -31,18 +31,8 @@ public class Astronaut extends Soldier {
 
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-
-		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-
-		// set all the attack attributes
-		this.addNewAction(ActionType.GATHER);
-		this.setMaxHealth(t.unitAttributes.get("Astronaut")[1]);
-		this.setHealth(t.unitAttributes.get("Astronaut")[1]);
-		this.setDamage(t.unitAttributes.get("Astronaut")[2]);
-		this.setArmor(t.unitAttributes.get("Astronaut")[3]);
-		this.setArmorDamage(t.unitAttributes.get("Astronaut")[4]);
-		this.setAttackRange(t.unitAttributes.get("Astronaut")[5]);
-		this.setAttackSpeed(t.unitAttributes.get("Astronaut")[6]);
+		this.name = "Astronaut";
+		setAttributes();
 	}
 	
 	@Override

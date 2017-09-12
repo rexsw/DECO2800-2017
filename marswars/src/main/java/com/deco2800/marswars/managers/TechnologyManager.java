@@ -12,13 +12,13 @@ public class TechnologyManager extends Manager{
     //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
     //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
     // .. new HashMap<Integer, Integer[], String, List<Integer>>();
-    // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
 
 
 
     float spacAttack = 1.0f;
     float spacMove = 5.0f;
 
+    // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
     public HashMap<String, int[]> unitAttributes = new HashMap<>();
 
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
@@ -68,6 +68,9 @@ public class TechnologyManager extends Manager{
     /**
      provides a function to generate a List<String> representation of all the available technologies
      */
+    public int getUnitAttribute(String name, int attribute){
+        return 	unitAttributes.get(name)[attribute];
+    }
 
     public ArrayList<Technology> getAllTechs() {
         ArrayList<Technology> techList = new ArrayList<>();
