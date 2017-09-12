@@ -1,7 +1,9 @@
 package com.deco2800.marswars.util;
 
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
@@ -96,21 +98,49 @@ public class WorldUtil {
 			return Optional.of(closest);
 		}
 	}
-
+	
 	/**
-	 * Gets an entity at position X
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @return
+	 * Gets the closest entity of a class with an given owner 
+	 * @param c the class of entity searching for
+	 * @param x the x co-ords to search from
+	 * @param y the x co-ords to search from
+	 * @param m the owner of the entity 
+	 * @return an entity of type c if one is found 
 	 */
-	@Deprecated
-	public static Optional<BaseEntity> getEntityAtPosition(BaseWorld world, float x, float y) {
-		for (Renderable e : world.getEntities()) {
-			if (Math.abs(e.getPosX() - x) < 1f && Math.abs(e.getPosY() - y) < 1f) {
-				return Optional.of((BaseEntity)e);
+	public static Optional<BaseEntity> getClosestEntityOfClassAndOwner(Class<?> c, float x, float y, int m) {
+		List<BaseEntity> entities = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), c);
+
+		BaseEntity closest = null;
+		float dist = Float.MAX_VALUE;
+		for (BaseEntity e : entities) {
+			float tmp_distance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
+			if ((closest == null || dist > tmp_distance) && e instanceof HasOwner && ((HasOwner) e).getOwner() == m) {
+				dist = tmp_distance;
+				closest = e;
 			}
 		}
-		return Optional.empty();
+
+		if (closest == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(closest);
+		}
 	}
+
+	/**
+	 * Gets the closest entity of a class with an given owner 
+	 * @param c the class of entity searching for
+	 * @param m the owner of the entities 
+	 * @return a list of entities of type c if one is found 
+	 */
+	public static List<BaseEntity> getEntitiesOfClassAndOnwer(List<BaseEntity> entities, Class<?> c,  int m) {
+		List<BaseEntity> classEntities = new ArrayList<>();
+		for (BaseEntity w : entities) {
+			if (w.getClass() == c && w instanceof HasOwner && ((HasOwner) w).getOwner() == m) {
+				classEntities.add(w);
+			}
+		}
+		return classEntities;
+	}
+
 }

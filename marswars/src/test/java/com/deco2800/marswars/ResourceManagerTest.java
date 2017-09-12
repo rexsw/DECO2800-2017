@@ -30,34 +30,34 @@ public class ResourceManagerTest {
 
 	@Test
 	public void rocksTest() {		
-		rm.setRocks(100);
-		assertEquals(rm.getRocks(), 100);
-		rm.setRocks(80);
-		assertEquals(rm.getRocks(), 80);
+		rm.setRocks(100, 1);
+		assertEquals(rm.getRocks(1), 100);
+		rm.setRocks(80, 1);
+		assertEquals(rm.getRocks(1), 80);
 	}
 	
 	@Test
 	public void biomassTest() {
-		rm.setBiomass(100);
-		assertEquals(rm.getBiomass(), 100);
-		rm.setBiomass(80);
-		assertEquals(rm.getBiomass(), 80);
+		rm.setBiomass(100, 1);
+		assertEquals(rm.getBiomass(1), 100);
+		rm.setBiomass(80, 1);
+		assertEquals(rm.getBiomass(1), 80);
 	}
 	
 	@Test
 	public void waterTest() {
-		rm.setWater(100);
-		assertEquals(rm.getWater(), 100);
-		rm.setWater(80);
-		assertEquals(rm.getWater(), 80);
+		rm.setWater(100, 1);
+		assertEquals(rm.getWater(1), 100);
+		rm.setWater(80, 1);
+		assertEquals(rm.getWater(1), 80);
 	}
 	
 	@Test
 	public void crystalTest() {	
-		rm.setCrystal(100);
-		assertEquals(rm.getCrystal(), 100);
-		rm.setCrystal(80);
-		assertEquals(rm.getCrystal(), 80);
+		rm.setCrystal(100, 1);
+		assertEquals(rm.getCrystal(1), 100);
+		rm.setCrystal(80, 1);
+		assertEquals(rm.getCrystal(1), 80);
 	}
 
 	@AfterClass

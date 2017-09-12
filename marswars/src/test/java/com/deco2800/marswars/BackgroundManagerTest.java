@@ -16,7 +16,8 @@ public class BackgroundManagerTest {
     @Test
     public void correctBackgrounds() {
         timeManager.resetInGameTime();
-        assertTrue(bgManager.getBackground() == "night_Bg");
+        assertTrue(bgManager.getBackground() == "night_Bg1" || 
+        		bgManager.getBackground() == "night_Bg2");
         timeManager.addTime(21600);
         assertTrue(bgManager.getBackground() == "dawn_Bg");
         timeManager.addTime(21600);

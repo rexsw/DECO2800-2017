@@ -19,4 +19,14 @@ public interface DecoAction {
 	 * @return Returns the action progress if available
 	 */
 	int actionProgress();
+
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	void pauseAction();
+
+	/**
+	 * Resumes the current action
+	 */
+	void resumeAction();
 }

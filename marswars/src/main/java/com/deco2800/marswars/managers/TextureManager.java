@@ -55,8 +55,10 @@ public class TextureManager extends Manager {
         textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
+        textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
+        textureMap.put("black_tile",new Texture("resources/placeholderassets/black_tile.png"));
         //Units
-        textureMap.put("ground_gray", new Texture("resources/placeholderassets/line-of-sight.png"));
+
         textureMap.put("spacman", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
         textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
@@ -131,9 +133,8 @@ public class TextureManager extends Manager {
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-        this.saveTexture("star_1", "resources/Backgrounds/star1.png");
-        this.saveTexture("star_2", "resources/Backgrounds/star2.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
     }
     /*
      *
@@ -156,7 +157,7 @@ public class TextureManager extends Manager {
             unitType=sc.next();
             sc.close();
             //find the team colour of the owner:
-            String teamColour = ((AbstractPlayerManager) soldier.getOwner()).getColour();
+            String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap

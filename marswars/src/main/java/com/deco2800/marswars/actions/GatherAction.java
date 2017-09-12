@@ -1,12 +1,15 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +34,9 @@ public class GatherAction implements DecoAction {
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
 	private boolean completed = false;
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
 
 	private int ticksCollect = 200;
 
@@ -46,22 +52,24 @@ public class GatherAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		switch(state) {
-			case SETUP_MOVE:
-				setupMove();
-				break;
-			case MOVE_TOWARDS:
-				moveTowards();
-				break;
-			case COLLECT:
-				collect();
-				break;
-			case SETUP_RETURN:
-				setupReturn();
-				break;
-			case RETURN_TO_BASE:
-				returnToBase();
-				break;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			switch (state) {
+				case SETUP_MOVE:
+					setupMove();
+					break;
+				case MOVE_TOWARDS:
+					moveTowards();
+					break;
+				case COLLECT:
+					collect();
+					break;
+				case SETUP_RETURN:
+					setupReturn();
+					break;
+				case RETURN_TO_BASE:
+					returnToBase();
+					break;
+			}
 		}
 	}
 
@@ -104,8 +112,8 @@ public class GatherAction implements DecoAction {
 					ResourceType resourceType = ((Resource) goal).getType();
 					if (goal instanceof HasHealth) {
 						((HasHealth) goal).setHealth(((HasHealth) goal).getHealth() - harvestAmount);
-						if (entity instanceof Spacman) {
-							((Spacman) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
+						if (entity instanceof Astronaut) {
+							((Astronaut) entity).addGatheredResource(new GatheredResource(resourceType, harvestAmount));
 						}
 						((Resource) goal).setHarvestNumber(((Resource) goal).getHarvesterNumber() - 1);
 					}
@@ -118,8 +126,6 @@ public class GatherAction implements DecoAction {
 			}
 		} else {
 			// Find a new closest entity
-			BaseWorld world = GameManager.get().getWorld();
-
 			Optional<BaseEntity> surround = WorldUtil.getClosestEntityOfClass(goal.getClass(), goal.getPosX(), goal.getPosY());
 			if (surround.isPresent()) {
 				Point p = new Point(surround.get().getPosX(), surround.get().getPosY());
@@ -139,16 +145,15 @@ public class GatherAction implements DecoAction {
 	private void returnToBase() {
 		if (action.completed()) {
 			state = State.SETUP_MOVE;
-			if (entity instanceof Spacman && ((Spacman) entity).getOwner() instanceof AiManagerTest) {
+			if (entity instanceof HasOwner && ((HasOwner) entity).isAi()) {
 				//if controlled by the ai added the resources to the ai's pile
-				AiManagerTest manager = (AiManagerTest) ((Spacman) entity).getOwner();
-				ResourceManager resourceManager = manager.getResources();
+				ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);;
 				depositHarvest(resourceManager);
 				return;
 			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			// check which type of resource and add it to the player's resource
-			if (entity instanceof Spacman) {
+			if (entity instanceof Astronaut) {
 				depositHarvest(resourceManager);
 			}
 			return;
@@ -158,7 +163,10 @@ public class GatherAction implements DecoAction {
 
 	private void setupReturn() {
 		Optional<BaseEntity> base = WorldUtil.getClosestEntityOfClass(Base.class, entity.getPosX(), entity.getPosY());
-
+		if(entity instanceof HasOwner) {
+			base = WorldUtil.getClosestEntityOfClassAndOwner(Base.class, entity.getPosX(), entity.getPosY(), ((HasOwner) entity).getOwner());
+		} 
+		
 		if (base.isPresent()) {
 			action = new MoveAction(base.get().getPosX(), base.get().getPosY(), entity);
 		}
@@ -168,23 +176,23 @@ public class GatherAction implements DecoAction {
 
 	private void depositHarvest(ResourceManager rm) {
 		// check if this unit't actually has something to drop
-		if (((Spacman) entity).checkBackpack()) {
+		if (((Astronaut) entity).checkBackpack()) {
 			ResourceManager resourceManager = rm;
-			GatheredResource resource = ((Spacman) entity).removeGatheredResource();
+			GatheredResource resource = ((Astronaut) entity).removeGatheredResource();
 			ResourceType resourceType = resource.getType();
 			int amount = resource.getAmount();
 			switch (resourceType) {
 				case WATER:
-					resourceManager.setWater(resourceManager.getWater() + amount);
+					resourceManager.setWater(resourceManager.getWater(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case ROCK:
-					resourceManager.setRocks(resourceManager.getRocks() + amount);
+					resourceManager.setRocks(resourceManager.getRocks(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case CRYSTAL:
-					resourceManager.setCrystal(resourceManager.getCrystal() + amount);
+					resourceManager.setCrystal(resourceManager.getCrystal(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				case BIOMASS:
-					resourceManager.setBiomass(resourceManager.getBiomass() + amount);
+					resourceManager.setBiomass(resourceManager.getBiomass(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;
 				default :
 					break;
@@ -194,5 +202,19 @@ public class GatherAction implements DecoAction {
 		}
 	}
 
+	/**
+	 * Prevents the current action from progressing.
+	 */
+	@Override
+	public void pauseAction() {
+		actionPaused = true;
+	}
 
+	/**
+	 * Resumes the current action
+	 */
+	@Override
+	public void resumeAction() {
+		actionPaused = false;
+	}
 }

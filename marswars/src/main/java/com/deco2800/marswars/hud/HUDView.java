@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -91,6 +92,7 @@ public class HUDView extends ApplicationAdapter{
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
 	private boolean menuToggle;
+	private boolean fogToggle = true; 
 	//Image buttons to display/ remove lower HUD 
 	private ImageButton dispActions;//Button for displaying actions window 
 	private ImageButton removeActions; //button for removing actions window 
@@ -403,10 +405,15 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 		
+		//add toggle Fog of war FOR (DEBUGGING) 
+		Button dispFog = new TextButton("Fog", skin);
+		
+		
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispMainMenu);
 		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispFog);
 		HUDManip.add(removeActions);
 		
 		stage.addActor(HUDManip);
@@ -465,7 +472,25 @@ public class HUDView extends ApplicationAdapter{
 				new TechTreeView("TechTree", skin).show(stage);
 			}
 
-		});	
+		});
+		
+		
+		dispFog.addListener(new ChangeListener() {
+			@Override
+			/*displays the (-) button for setting the hud to invisible*/
+			public void changed(ChangeEvent event, Actor actor) {
+				//disable fog
+				if (fogToggle) {
+					LOGGER.debug("fog of war is now off");
+					FogManager.toggleFog(false);
+					fogToggle = false; 
+				}else {
+					LOGGER.debug("fog of war is now on");
+					FogManager.toggleFog(true);
+					fogToggle = true; 
+				}
+			}	
+		});
 	}	
 	
 	/**
@@ -743,10 +768,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rockCount.setText("" + resourceManager.getRocks());
-		crystalCount.setText("" + resourceManager.getCrystal()); 
-		waterCount.setText("" + resourceManager.getWater());
-		biomassCount.setText("" + resourceManager.getBiomass());
+		rockCount.setText("" + resourceManager.getRocks(-1));
+		crystalCount.setText("" + resourceManager.getCrystal(-1)); 
+		waterCount.setText("" + resourceManager.getWater(-1));
+		biomassCount.setText("" + resourceManager.getBiomass(-1));
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
@@ -761,9 +786,6 @@ public class HUDView extends ApplicationAdapter{
 			}
 			if (e instanceof Spacman) {
 				spacmenCount++; 
-			}
-			if (e instanceof EnemySpacman){
-				enemySpacmanCount++; 
 			}
 		}
 		//Get the details from the selected entity
@@ -790,7 +812,6 @@ public class HUDView extends ApplicationAdapter{
 	    HUDManip.setVisible(false);
 		chatbox.setVisible(false);
 		messageWindow.setVisible(false);
-		mainMenu.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
 	}
@@ -804,7 +825,6 @@ public class HUDView extends ApplicationAdapter{
 	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
-		mainMenu.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
