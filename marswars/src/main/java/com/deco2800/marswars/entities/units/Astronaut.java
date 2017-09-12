@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +14,6 @@ import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.Resource;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
@@ -31,15 +28,18 @@ public class Astronaut extends Soldier {
 
 	public Astronaut(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, owner);
+
+		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+
 		// set all the attack attributes
 		this.addNewAction(ActionType.GATHER);
-		this.setMaxHealth(100);
-		this.setHealth(100);
-		this.setDamage(50);
-		this.setArmor(70);
-		this.setArmorDamage(10);
-		this.setAttackRange(1);
-		this.setAttackSpeed(10);
+		this.setMaxHealth(t.unitAttributes.get("Astronaut")[1]);
+		this.setHealth(t.unitAttributes.get("Astronaut")[1]);
+		this.setDamage(t.unitAttributes.get("Astronaut")[2]);
+		this.setArmor(t.unitAttributes.get("Astronaut")[3]);
+		this.setArmorDamage(t.unitAttributes.get("Astronaut")[4]);
+		this.setAttackRange(t.unitAttributes.get("Astronaut")[5]);
+		this.setAttackSpeed(t.unitAttributes.get("Astronaut")[6]);
 	}
 	
 	@Override

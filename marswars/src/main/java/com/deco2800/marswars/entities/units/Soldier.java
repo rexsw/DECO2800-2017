@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +16,6 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.SoundManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -43,7 +37,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public Soldier(float posX, float posY, float posZ, AbstractPlayerManager owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
-		
+
+		//Accessing the technology manager which contains unit Attributes
+		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+
+
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
@@ -52,13 +50,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		// set all the attack attributes
-		this.setMaxHealth(500);
-		this.setHealth(500);
-		this.setDamage(50);
-		this.setArmor(250);
-		this.setArmorDamage(50);
-		this.setAttackRange(8);
-		this.setAttackSpeed(30);
+		this.setMaxHealth(t.unitAttributes.get("Soldier")[1]);
+		this.setHealth(t.unitAttributes.get("Soldier")[1]);
+		this.setDamage(t.unitAttributes.get("Soldier")[2]);
+		this.setArmor(t.unitAttributes.get("Soldier")[3]);
+		this.setArmorDamage(t.unitAttributes.get("Soldier")[4]);
+		this.setAttackRange(t.unitAttributes.get("Soldier")[5]);
+		this.setAttackSpeed(t.unitAttributes.get("Soldier")[6]);
 	}
 	
 	public void attack(AttackableEntity target){

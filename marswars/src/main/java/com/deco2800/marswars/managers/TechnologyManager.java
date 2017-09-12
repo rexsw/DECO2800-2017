@@ -1,19 +1,26 @@
 package com.deco2800.marswars.managers;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.technology.*;
 
 public class TechnologyManager extends Manager{
     //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
     //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
     // .. new HashMap<Integer, Integer[], String, List<Integer>>();
+    // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
+
+
+
+    float spacAttack = 1.0f;
+    float spacMove = 5.0f;
+
+    public HashMap<String, int[]> unitAttributes = new HashMap<>();
+
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
 
@@ -24,6 +31,18 @@ public class TechnologyManager extends Manager{
                 "An expensive technology"));
         techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
                 "An expensive technology"));
+
+
+        unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
+        unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
+        unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
+
+        //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
+//        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});
+//        unitAttributes.put("MissleEntity", new int[]{10, 500, 50, 250, 50, 8, 30});
+//        unitAttributes.put("Tank", new int[]{10, 500, 50, 250, 50, 8, 30});
+
+
     }
 
     public Technology getTech(int id){
@@ -46,14 +65,24 @@ public class TechnologyManager extends Manager{
     public void addActiveTech(Technology tech) {activeTech.add(tech); }
 
     public void costUpgrade(){
-        //placeholder for cost Upgrade functionality
+        for (int i = 0; i<unitAttributes.size();i++){
+            //iterate through map and reduce all unit costs
+        }
     }
-    public void attackUpgrade(){
-        //placeholder for attack Upgrade functionality
-
+    public void attackSoldierUpgrade(){
+            unitAttributes.get("Soldier")[2] *= 1.5;
+            //also need to set all existing solider to have this much
     }
     public void defenseUpgrade(){
         //placeholder for defense Upgrade functionality
+    }
+
+    public void buildingArmorUpgrade(){
+
+    }
+
+    public void buildingConstructionTimeUpgrade(){
+
     }
 
 
@@ -99,11 +128,26 @@ public class TechnologyManager extends Manager{
             costUpgrade();
         }
         if(techID == 2){
-            attackUpgrade();
+            attackSoldierUpgrade();
         }
         if(techID == 3){
             defenseUpgrade();
         }
         return "Technology successfully researched";
+    }
+    public float getSpacAttack() {
+        return spacAttack;
+    }
+
+    public void setSpacAttack(float spacAttack) {
+        this.spacAttack = spacAttack;
+    }
+
+    public float getSpacMove() {
+        return spacMove;
+    }
+
+    public void setSpacMove(float spacMove) {
+        this.spacMove = spacMove;
     }
 }

@@ -28,6 +28,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	private EntityType entityType = EntityType.NOT_SET;
 	private  List<ActionType> validActions;
 	private boolean selected = false;
+	protected float speed = 0.05f;
 
 	/**
 	 * Constructor for the base entity
@@ -395,5 +396,13 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	public void setAction(DecoAction action) {
 		return;
+	}
+
+	public float getMoveSpeed() {
+		return speed;
+	}
+
+	public void setMoveSpeed(float speed) {
+		this.speed = speed;
 	}
 }
