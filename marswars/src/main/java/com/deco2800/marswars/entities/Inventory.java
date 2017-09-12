@@ -20,15 +20,17 @@ public class Inventory {
 
     public void addToInventory(Item item) {
         switch (item.getItemType()) {
-            case "Weapon":
+            case WEAPON:
                 if (weapon == null) {
                     this.weapon = (Weapon) item;
                 }
-            case "Armour":
+                break;
+            case ARMOUR:
                 if (armour == null) {
                     this.armour = (Armour) item;
                 }
-            case "Special":
+                break; 
+            case SPECIAL:
                 this.specials.add(item);
             default:
         }
@@ -36,17 +38,17 @@ public class Inventory {
 
     public boolean removeFromInventory(Item item) {
         switch (item.getItemType()) {
-            case "Weapon":
+            case WEAPON:
                 if (weapon != null) {
                     this.weapon = null;
                     return true;
                 }
-            case "Armour":
+            case ARMOUR:
                 if (armour != null) {
                     this.armour = null;
                     return true;
                 }
-            case "Special":
+            case SPECIAL:
                 this.specials.remove(item);
             default: return false;
         }

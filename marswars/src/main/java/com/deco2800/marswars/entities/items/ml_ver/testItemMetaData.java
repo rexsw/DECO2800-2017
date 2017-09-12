@@ -1,6 +1,6 @@
 package com.deco2800.marswars.entities.items.ml_ver;
-import com.deco2800.marswars.entities.items.ml_ver.EffectStats;
 import com.deco2800.marswars.entities.items.ml_ver.ItemMetaData;
+import com.deco2800.marswars.entities.items.effects.EffectStats;
 import com.deco2800.marswars.entities.items.ml_ver.Item;
 
 public class testItemMetaData {

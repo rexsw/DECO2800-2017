@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.items.*;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
@@ -12,41 +13,30 @@ import java.util.Optional;
  * Created by timhadwen on 19/7/17.
  * Edited by Zeid Ismail on 8/09
  */
-public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
-		HasAttackRange, HasAttackSpeed, HasHealth {
-	int xp;
-	int armour;
-	int health;
-	// additive, ie weapon damage adds on to base value
-	int weaponDamage;
-	int attackRange;
-	int attackSpeed;
+public class HeroSpacman extends Soldier {
+
 	Inventory inventory;
 
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
-	/**
-	 * Constructor for a hero
-	 *
-	 * @param world
-	 * @param posX
-	 * @param posY
-	 * @param posZ
-	 */
-
-	public HeroSpacman(AbstractWorld world, float posX, float posY,
-					   float posZ) {
-		super(posX, posY, posZ, 1, 1f, 1f);
+	public HeroSpacman(float posX, float posY, float posZ, int owner) {
+		super(posX, posY, posZ, owner);
 		this.setTexture("spacman_red");
 		this.setEntityType(EntityType.HERO);
+		
+		this.addNewAction(ActionType.DAMAGE);
+		this.addNewAction(ActionType.MOVE);
 		//default values
-		this.health = 100;
-		this.armour = 100;
-		this.weaponDamage = 100;
-		this.attackRange = 2;
-		this.attackSpeed = 100;
-		this.xp = 0;
+		this.setMaxHealth(1000);
+		this.setHealth(1000);
+		this.setDamage(100);
+		this.setArmor(500);
+		this.setArmorDamage(100);
+		this.setAttackRange(10);
+		this.setAttackSpeed(30);
+		this.setSpeed(0.05f);
+		
 		this.inventory = new Inventory();
 	}
 
@@ -81,38 +71,6 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 	public void deselect() {
 	}
 
-	public int getHealth() {
-		return this.health;
-	}
-
-	public void setHealth(int health) {
-		this.health = health;
-	}
-
-	public int getArmor() {
-		return this.armour;
-	}
-
-	public void setArmor(int armour) {
-		this.armour = armour;
-	}
-
-	public int getAttackRange() {
-		return attackRange;
-	}
-
-	public void setAttackRange(int attackRange) {
-		this.attackRange = attackRange;
-	}
-
-	public int getAttackSpeed() {
-		return attackSpeed;
-	}
-
-	public void setAttackSpeed(int attackSpeed) {
-		this.attackSpeed = attackSpeed;
-	}
-
 	public void addItemToInventory(Item item) {
 		inventory.addToInventory(item);
 	}
@@ -141,17 +99,17 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		activeItem.deactivateItem();
 	}
 
-	// used when button in inventory clicked to wear armour
-	public void applyArmour(Armour armour) {
-		this.armour += armour.getArmourValue();
-	}
-
-	// used when button in inventory clicked to wear weapon
-	public void applyWeapon(Weapon weapon) {
-		this.weaponDamage += weapon.getWeaponDamage();
-		this.attackSpeed += weapon.getWeaponSpeed();
-		this.attackRange += weapon.getWeaponRange();
-	}
+//	// used when button in inventory clicked to wear armour
+//	public void applyArmour(Armour armour) {
+//		this.armour += armour.getArmourValue();
+//	}
+//
+//	// used when button in inventory clicked to wear weapon
+//	public void applyWeapon(Weapon weapon) {
+//		this.weaponDamage += weapon.getWeaponDamage();
+//		this.attackSpeed += weapon.getWeaponSpeed();
+//		this.attackRange += weapon.getWeaponRange();
+//	}
 
 	// used when button in inventory clicked to assign special item to the hero
 //    public void applySpecial(Special special) {

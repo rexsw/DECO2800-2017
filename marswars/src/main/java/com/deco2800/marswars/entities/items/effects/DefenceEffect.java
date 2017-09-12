@@ -1,0 +1,43 @@
+package com.deco2800.marswars.entities.items.effects;
+
+import com.deco2800.marswars.entities.HeroSpacman;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+
+public class DefenceEffect implements Effect{
+	private int armour;
+	private int health;
+	private float moveSpeed;
+	
+	public DefenceEffect(int armour, int health, float moveSpeed) {
+		this.armour = armour;
+		this.health = health;
+		this.moveSpeed = moveSpeed;
+	}
+	@Override
+	public void applyEffect(AttackableEntity entity) {
+		if (entity instanceof HeroSpacman) {
+			HeroSpacman hero = (HeroSpacman) entity;
+			
+			hero.setMaxArmor(hero.getMaxArmor() + this.armour);
+			hero.setArmor(hero.getArmor() + this.armour);
+			hero.setMaxHealth(hero.getMaxHealth() + this.health);
+			hero.setHealth(hero.getHealth() + this.health);
+			hero.setSpeed(hero.getSpeed() + this.moveSpeed);
+		}
+		
+	}
+
+	@Override
+	public void removeEffect(AttackableEntity entity) {
+		if (entity instanceof HeroSpacman) {
+			HeroSpacman hero = (HeroSpacman) entity;
+			
+			hero.setMaxArmor(hero.getMaxArmor() - this.armour);
+			hero.setArmor(hero.getArmor() > this.armour ? hero.getArmor() - this.armour : 1);
+			hero.setMaxHealth(hero.getMaxHealth() - this.health);
+			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
+			hero.setSpeed(hero.getSpeed() - this.moveSpeed);
+		}
+	}
+
+}

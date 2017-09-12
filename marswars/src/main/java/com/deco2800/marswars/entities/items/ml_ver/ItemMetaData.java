@@ -1,7 +1,9 @@
 package com.deco2800.marswars.entities.items.ml_ver;
-import com.deco2800.marswars.entities.items.ml_ver.EffectStats;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.deco2800.marswars.entities.items.effects.EffectStats;
+
 import java.util.AbstractMap;
 
 

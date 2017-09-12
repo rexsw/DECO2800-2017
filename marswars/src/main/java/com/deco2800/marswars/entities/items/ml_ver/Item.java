@@ -1,7 +1,7 @@
 package com.deco2800.marswars.entities.items.ml_ver;
 import java.util.HashMap;
 
-import com.deco2800.marswars.entities.items.ml_ver.EffectStats;
+import com.deco2800.marswars.entities.items.effects.EffectStats;
 import com.deco2800.marswars.entities.items.ml_ver.ItemMetaData;
 
 public class Item {
