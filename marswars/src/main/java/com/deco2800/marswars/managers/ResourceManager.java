@@ -21,7 +21,10 @@ private static final String CLOSED = "closed.wav";
 	 * @return
 	 */
 	public int getRocks(int team) {
+		if(this.rocks.containsKey(team)) {
 		return rocks.get(team);
+		}
+		return -1;
 	}
 
 	/**
@@ -46,7 +49,10 @@ private static final String CLOSED = "closed.wav";
 	 * @return
 	 */
 	public int getCrystal(int team) {
+		if(this.crystal.containsKey(team)) {
 		return crystal.get(team);
+		}
+		return -1;
 	}
 
 	/**
@@ -72,7 +78,10 @@ private static final String CLOSED = "closed.wav";
 	 * @return
 	 */
 	public int getWater(int team) {
+		if(this.water.containsKey(team)) {
 		return water.get(team);
+		}
+		return -1;
 	}
 
 	/**
@@ -97,7 +106,10 @@ private static final String CLOSED = "closed.wav";
 	 * @return
 	 */
 	public int getBiomass(int team) {
+		if(this.biomass.containsKey(team)) {
 		return biomass.get(team);
+		}
+		return -1;
 	}
 
 	/**

@@ -14,9 +14,16 @@ public class TechTreeView extends Dialog{
 		super(title, skin);
 		{
 			//text("This will display the technology tree");
-			button("Upgrade Spacman Cost", 1);
-			button("Upgrade Attack", 2);
-			button("Upgrade Defense", 3);
+			// note that object numbers must correspond with tech tree tech ids
+			button("Unlock Hero Factory", 1);
+			button("Unlock Armour Level 1", 2);
+			button("Unlock Armour Level 2", 3);
+			button("Unlock Armour Level 3", 4);
+			button("Unlock Weapons Level 1", 5);
+			button("Unlock Weapons Level 2", 6);
+			button("Unlock Weapons Level 3", 7);
+			button("Unlock Special Items", 8);
+
 			button("OK", 0);
 		}
 	}

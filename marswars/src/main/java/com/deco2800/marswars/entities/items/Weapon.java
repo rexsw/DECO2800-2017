@@ -8,13 +8,41 @@ public class Weapon extends PassiveItem {
     public Weapon(String name, WeaponType type) {
         super(name);
         super.setItemType("Weapon");
-        this.weaponType = type;
         this.itemXp = 0;
+        this.weaponType = type;
+        switch (type) {
+            case WEAPON1LEVEL1:
+                // decrement resources
+                break;
+            case WEAPON1LEVEL2:
+                // decrement resources
+                break;
+            case WEAPON1LEVEL3:
+                // decrement resources
+                break;
+            case WEAPON2LEVEL1:
+                // decrement resources
+                break;
+            case WEAPON2LEVEL2:
+                // decrement resources
+                break;
+            case WEAPON2LEVEL3:
+                // decrement resources
+                break;
+            default:
+                // anything here???
+                break;
+        }
+
     }
 
     public int getWeaponDamage() { return weaponType.getWeaponDamage(); }
 
-    public int getWeaponCost() {return weaponType.getWeaponCost(); }
+    public int getWeaponSpeed() { return weaponType.getWeaponSpeed(); }
+
+    public int getWeaponRange() { return weaponType.getWeaponSpeed(); }
+
+    public int[] getWeaponCost() {return weaponType.getWeaponCost(); }
 
     public int getWeaponLevel() { return weaponType.getWeaponLevel(); }
 

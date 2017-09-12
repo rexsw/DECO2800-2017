@@ -13,6 +13,9 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.buildings.BuildingType;
 import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.technology.Technology;
+import com.deco2800.marswars.util.Array2D;
+
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.FogWorld;
@@ -22,6 +25,7 @@ import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import com.deco2800.marswars.managers.TechnologyManager;
 
 /**
  * A generic player instance for the game
@@ -65,8 +69,15 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.BUILD);
 		this.nextAction = null;
-
+		//TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		this.setMoveSpeed(0.025f);
+		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
+//
+//		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
+//		FogWorld fogWorld = GameManager.get().getFogWorld();
+//		fogWorld.addEntity(lineOfSight,fogScaleSize);
 	}
+
 
 
 	/**

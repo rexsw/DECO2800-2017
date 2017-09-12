@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.GatheredResource;
+//import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -29,15 +31,8 @@ public class Astronaut extends Soldier {
 
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		// set all the attack attributes
-		this.addNewAction(ActionType.GATHER);
-		this.setMaxHealth(100);
-		this.setHealth(100);
-		this.setDamage(50);
-		this.setArmor(70);
-		this.setArmorDamage(10);
-		this.setAttackRange(1);
-		this.setAttackSpeed(10);
+		this.name = "Astronaut";
+		setAttributes();
 	}
 	
 	@Override
@@ -99,5 +94,10 @@ public class Astronaut extends Soldier {
 		//LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
 		gatheredResource = null;
 		return resource;
+	}
+	
+	@Override
+	public String toString(){
+		return "Astronaut";
 	}
 }

@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
@@ -34,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -174,11 +173,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void addAIEntities() {
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length -4, width -4, "Green", 1);
-		setAI(4, 4, "Pink", 2);
-		setAI(4, width -4, "Purple", 3);
-		setAI(length -4, 4, "Yellow", 4);
-		setPlayer(length/2, width/2, "Blue", -1);
+		setAI(length, width, 1);
+		setPlayer(length/2, width/2, Colours.PURPLE, -1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 	}
@@ -624,51 +620,59 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int x, int y, String colour, int teamid) {
+	public void setAI(int lenght, int width, int teams) {
+		ArrayList<Colours> colour = new ArrayList<Colours>();
+		int x,y;
+		colour.add(Colours.BLUE);
+		colour.add(Colours.YELLOW);
+		colour.add(Colours.PINK);
+		colour.add(Colours.GREEN);
 		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		for(int teamid = 1; teamid < teams+1;teamid++) {
+			x = ThreadLocalRandom.current().nextInt(1, lenght);
+			y = ThreadLocalRandom.current().nextInt(1, width);
+			rm.setBiomass(0, teamid);
+			rm.setRocks(0, teamid);
+			rm.setCrystal(0, teamid);
+			rm.setWater(0, teamid);
+			cm.setColour(teamid, colour.get(teamid-1));
+			AiManager aim = (AiManager) GameManager.get().getManager(AiManager.class);
+			aim.addTeam(teamid);
+			Astronaut ai = new Astronaut(x, y, 0, teamid);
+			Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+			Soldier soldier = new Soldier(x, y,0,teamid);
+			GameManager.get().getWorld().addEntity(soldier);
+			Tank tank = new Tank(x,y,0,teamid);
+			GameManager.get().getWorld().addEntity(tank);
+			GameManager.get().getWorld().addEntity(ai);
+			GameManager.get().getWorld().addEntity(ai1);
+			aibase.setOwner(teamid);
+			GameManager.get().getWorld().addEntity(aibase);
+		}
+	}
+
+	public void setPlayer(int x, int y, Colours colour, int teamid) {
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		cm.setColour(teamid, colour);
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
-		cm.setColour(teamid, colour);
-		AiManager aim = (AiManager) GameManager.get().getManager(AiManager.class);
-		aim.addTeam(teamid);
-		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+		Spacman p = new Spacman(x, y, 0);
+		Astronaut p1 = new Astronaut(x, y, 0, teamid);
+		Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
 		Soldier soldier = new Soldier(x, y,0,teamid);
 		GameManager.get().getWorld().addEntity(soldier);
 		Tank tank = new Tank(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(tank);
-		ai.setOwner(teamid);
-		GameManager.get().getWorld().addEntity(ai);
-		ai1.setOwner(teamid);
-		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(teamid);
-		GameManager.get().getWorld().addEntity(aibase);
-	}
-	
-	public void setPlayer(int x, int y, String colour, int teamid) {
-	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
-	cm.setColour(teamid, colour);
-	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-	rm.setBiomass(0, teamid);
-	rm.setRocks(0, teamid);
-	rm.setCrystal(0, teamid);
-	rm.setWater(0, teamid);
-	Spacman p = new Spacman(x, y, 0);
-	Astronaut p1 = new Astronaut(x, y, 0, teamid);
-	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
-	Soldier Soldier = new Soldier(x, y,0,teamid);
-	GameManager.get().getWorld().addEntity(Soldier);
-	Tank tank = new Tank(x,y,0,teamid);
-	GameManager.get().getWorld().addEntity(tank);
-	p.setOwner(teamid);
-	GameManager.get().getWorld().addEntity(p);
-	p1.setOwner(teamid);
-	GameManager.get().getWorld().addEntity(p1);
-	p2.setOwner(teamid);
-	GameManager.get().getWorld().addEntity(p2);
+		p.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p);
+		p1.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p1);
+		p2.setOwner(teamid);
+		GameManager.get().getWorld().addEntity(p2);
 	}
 }

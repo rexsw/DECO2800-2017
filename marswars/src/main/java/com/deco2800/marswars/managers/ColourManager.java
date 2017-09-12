@@ -6,16 +6,19 @@ import java.util.Map;
 public class ColourManager extends Manager {
 	private Map<Integer, String> colours = new HashMap<Integer, String>();
 	
-	enum Colours {
-		BLUE,
-		YELLOW,
-		PINK,
-		PURPLE,
-		GREEN,
-	}
-	
-	public void setColour(int teamid, String Colour) {
-		colours.put(teamid, Colour);
+	public void setColour(int teamid, Colours Colour) {
+		switch(Colour){
+			case BLUE:
+				colours.put(teamid, "Blue");
+			case YELLOW:
+				colours.put(teamid, "Yellow");
+			case PINK:
+				colours.put(teamid, "Pink");
+			case PURPLE:
+				colours.put(teamid, "Purple");
+			case GREEN:
+				colours.put(teamid, "Green");
+		}
 	}
 	
 	public String getColour(int teamid) {

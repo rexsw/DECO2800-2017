@@ -41,7 +41,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Barracks.class);
 	
-	private int onwer;
+	private int owner;
 
 	boolean selected = false;
 
@@ -152,8 +152,9 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public void buttonWasPressed() {
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (resourceManager.getRocks(this.onwer) > 30) {
-			resourceManager.setRocks(resourceManager.getRocks(this.onwer) - 30, this.onwer);
+		if (resourceManager.getRocks(this.owner) > 30) {
+			resourceManager.setRocks(resourceManager.getRocks(this.owner) - 30,
+					this.owner);
 			currentAction = Optional.of(new GenerateAction(new Spacman(this.getPosX() - 1, this.getPosY() - 1, 0)));
 		}
 	}
@@ -193,7 +194,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	@Override
 	public void setOwner(int owner) {
-		this.onwer = owner;
+		this.owner = owner;
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	@Override
 	public int getOwner() {
-		return this.onwer;
+		return this.owner;
 	}
 
 	/**
@@ -212,7 +213,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	@Override
 	public boolean sameOwner(AbstractEntity entity) {
 		return entity instanceof  HasOwner &&
-				this.onwer == ((HasOwner) entity).getOwner();
+				this.owner == ((HasOwner) entity).getOwner();
 	}
 	
 	/**
@@ -241,7 +242,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 
 	@Override
 	public boolean isAi() {
-		return onwer >= 0;
+		return owner >= 0;
 	}
 	
 }
