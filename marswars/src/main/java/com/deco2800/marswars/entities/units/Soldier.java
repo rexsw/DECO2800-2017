@@ -47,11 +47,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	@Override
 	public void setPosX(float x) {
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
 		super.setPosX(x);
 		//lineOfSight.setPosX(x);
-//		if(!this.isAi()) {
+//		if(!this.isAi()) {1
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
 //		}
@@ -66,11 +68,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public void setPosY(float y) {
 
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
 		super.setPosY(y);
 		//lineOfSight.setPosY(y);
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
 //		}
