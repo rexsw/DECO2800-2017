@@ -1,6 +1,5 @@
 package com.deco2800.marswars.mainMenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,15 +8,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.net.LobbyButton;
 
 
 /**
- * Creates the Main Menu stage 
- * @author Toby
+ * Creates a main menu window, which adds in a table depending on the 
+ * state of the main menu progression.
+ * 
+ * E.g choosing between player and multiplayer will load up a table, 
+ * then progressing to multiplayer and picking between starting a 
+ * server and joining a server is another new table.
+ * 
+ * FLOW DIAGRAM: 
+ * TODO add in flow diagram of the main menu
+ *  
+ * @author Toby 
  *
  */
 public class MainMenu {
@@ -26,13 +33,6 @@ public class MainMenu {
 	private Skin skin;
 	private MarsWars marswars;
 	private Stage stage; 
-	private LobbyButton lobby; 
-	
-	TextButton newGameButton; //starts the new game
-	TextButton exitButton;  //exits the game when pressed
-	TextButton startServer; 
-	TextButton joinServer; // will allow the player to join a multiplayer game
-	TextButton playButton; 
 	
 	Window mainmenu; 
 	Label title;
@@ -51,55 +51,16 @@ public class MainMenu {
 		this.marswars = marswars;
 		this.stage = stage; 
 		mainmenu = window; 
-        lobby = new LobbyButton(skin, stage);
 		createMenu();
     }
 
 	/**
+	 * Set the main menu size and adds in the table
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
+		MenuScreen screen = new MenuScreen(skin, mainmenu, stage);
 		mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
-		menuTable = new Table(); 
-		
-		title = new Label("SpacWars", skin);	    
-	    playButton = new TextButton("Play!", skin);
-	    exitButton = new TextButton("Exit", skin);
-	    	    
-	    menuTable.add(title);
-	    menuTable.row(); 
-	    menuTable.add(playButton);
-	    menuTable.add(exitButton);
-	    menuTable.add(lobby.addStartServerButton());
-	    menuTable.add(lobby.addJoinServerButton());
-	    menuTable.pack(); 
-	    
-	    mainmenu.add(menuTable);
-	    
-	    playButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				status = true;
-				mainmenu.setVisible(false);
-			}
-		});
-	    
-	    exitButton.addListener(new ChangeListener() {
-	    	@Override
-	    	public void changed(ChangeEvent event, Actor actor) {
-	    		status = false;
-	    		new ExitGame("Quit Game", skin).show(stage);
-	    	}
-	    });   
-	}
-	
-	/**
-	 * Adds in the chat server buttons to the main menu
-	 */
-	public void addLobbyButton(){
-	    mainmenu.add(lobby.addStartServerButton());
-	    mainmenu.add(lobby.addJoinServerButton());
-	    mainmenu.pack();
 	}
 	
 	public Window buildMenu(){
