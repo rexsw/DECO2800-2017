@@ -36,6 +36,8 @@ public class LoadAction implements DecoAction {
 	case LOAD_STATE:
 	    loadAction();
 	    break;
+	default:
+		break;
 	}
     }
 

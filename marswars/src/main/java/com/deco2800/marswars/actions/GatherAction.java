@@ -69,6 +69,8 @@ public class GatherAction implements DecoAction {
 				case RETURN_TO_BASE:
 					returnToBase();
 					break;
+				default:
+					break;
 			}
 		}
 	}
