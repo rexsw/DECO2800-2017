@@ -29,7 +29,7 @@ import com.deco2800.marswars.net.LobbyButton;
  */
 public class MainMenu {
 	private static final int MENUHEIGHT = 300; 
-	private static final int MENUWIDTH = 300;
+	private static final int MENUWIDTH = 400;
 	private Skin skin;
 	private MarsWars marswars;
 	private Stage stage; 

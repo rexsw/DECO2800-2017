@@ -55,10 +55,15 @@ public class MenuScreen{
 		Button singlePlayerButton = new TextButton("Single Player", skin);
 		Button multiplayerButton = new TextButton("Multiplayer Player", skin);
 		
+		Label menuInfo = new Label("click play! to remove this window", skin);
+		Button playGame = new TextButton("play!", skin);
+		
 		playerMode.add(modeInfo);
 		playerMode.row();
 		playerMode.add(singlePlayerButton);
-		playerMode.add(multiplayerButton);
+		playerMode.add(multiplayerButton).row();
+		playerMode.add(menuInfo).row();
+		playerMode.add(playGame);
 		
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
@@ -71,6 +76,13 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				selectServerMode(mainmenu, stage);
+			}
+		});
+		
+		playGame.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mainmenu.setVisible(false);
 			}
 		});
 
