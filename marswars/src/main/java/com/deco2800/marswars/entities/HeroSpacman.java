@@ -4,7 +4,6 @@ import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class HeroSpacman extends Soldier {
 		this.setAttackSpeed(30);
 		this.setSpeed(0.05f);
 		
-		this.inventory = new Inventory();
+		this.inventory = new Inventory(this);
 	}
 
 	@Override
@@ -71,8 +70,8 @@ public class HeroSpacman extends Soldier {
 	public void deselect() {
 	}
 
-	public void addItemToInventory(Item item) {
-		inventory.addToInventory(item);
+	public boolean addItemToInventory(Item item) {
+		return inventory.addToInventory(item);
 	}
 
 	public boolean removeItemFromInventory(Item item) {
