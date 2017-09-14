@@ -16,6 +16,7 @@ import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.functionKey.ShortCut;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -57,10 +58,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Camera must be updated every render cycle.
 	 */
 	OrthographicCamera camera;
-	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
-	private int switcher = 0;
-	private int cSwitcher = 0;
-	private int cameraPointer = 0;
+
 
 	Stage stage;
 	Window window;
@@ -90,7 +88,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
 	
-	
+	ShortCut shortCut = new ShortCut(camera, downKeys);
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -287,6 +285,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			@Override
 			public boolean keyDown(int keyCode) {
 				downKeys.add(keyCode);
+				shortCut.addKey(keyCode);
 				keyPressed(keyCode);
 				return true;
 			}
@@ -294,6 +293,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			@Override
 			public boolean keyUp(int keyCode) {
 				downKeys.remove(keyCode);
+				shortCut.removeKey(keyCode);
 				return true;
 			}
 			
@@ -472,40 +472,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
-		if (downKeys.contains(Input.Keys.C)){
-			if(cSwitcher == 0){
-				ArrayList<Float> xyPosition = new ArrayList<Float>();
-				xyPosition.add(camera.position.x);
-				xyPosition.add(camera.position.y);
-				cameraPosition.add(xyPosition);
-				cSwitcher++;
-			}
-		}else{
-			cSwitcher = 0;
-		}
-		
-		if(downKeys.contains(Input.Keys.N) && !cameraPosition.isEmpty()){
-			ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
-			if(switcher == 0){
-				float x= camera.position.x - nextPosition.get(0);
-				float y = camera.position.y - nextPosition.get(1);
-				x *= -1;
-				y *= -1;
-				if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
-					camera.translate(x, 0);
-				}
-				if(camera.position.y > nextPosition.get(1) || 
-						(camera.position.y <= nextPosition.get(1))){
-					camera.translate(0, y);
-				}
-				switcher++;
-				cameraPointer++;
-				cameraPointer = cameraPointer % cameraPosition.size();
-			}	
-		}else{
-			switcher = 0;
-		}
 
+		shortCut.storeCameraPosition(camera);
+		shortCut.nextCameraPosition(camera);
+		shortCut.backCameraPosition(camera);
 		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
