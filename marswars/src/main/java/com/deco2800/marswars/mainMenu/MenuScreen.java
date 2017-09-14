@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
-import com.deco2800.marswars.net.LobbyButton;
 
 /**
  * @author Naziah Siddique
@@ -27,12 +27,7 @@ import com.deco2800.marswars.net.LobbyButton;
  */
 public class MenuScreen{
 	
-	enum Back{
-		SINGLEPLAYER,   // single player 
-		MULTIPLAYER,    // mutiplayer
-		JOINEDSERVER,   // multiplayer, joined server
-		STARTEDSERVER,  // multiplayer, started their own server
-		 
+	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
 		COMBATMODE,     // chose combat, go back to select character 
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
@@ -43,31 +38,35 @@ public class MenuScreen{
 	private LobbyButton lobby; 
 	
 	private Button backButton; 
-
+	private Button nextButton; 
+	private int playerType; 
+	private int joinedServer; 
+	
 	public MenuScreen(Skin skin, Window window, Stage stage) {
 		this.skin = skin;
 		playerModeSelect(window, stage);
 	}
 	
 	public void playerModeSelect(Window mainmenu, Stage stage) {
-		Table playerMode = new Table(); 
-		Label modeInfo = new Label("Select a mode", skin);
+		Table playerMode = new Table();
+		playerMode.setDebug(true);
+		Label modeInfo = new Label("SELECT A MODE", skin);
 		Button singlePlayerButton = new TextButton("Single Player", skin);
-		Button multiplayerButton = new TextButton("Multiplayer Player", skin);
+		Button multiplayerButton = new TextButton("Multiplayer", skin);
 		
 		Label menuInfo = new Label("click play! to remove this window", skin);
 		Button playGame = new TextButton("play!", skin);
 		
-		playerMode.add(modeInfo);
-		playerMode.row();
-		playerMode.add(singlePlayerButton);
+		playerMode.add(modeInfo).align(Align.center).row();
+		playerMode.add(singlePlayerButton).pad(10).row();
 		playerMode.add(multiplayerButton).row();
-		playerMode.add(menuInfo).row();
-		playerMode.add(playGame);
+		playerMode.add(menuInfo).align(Align.bottom).row();
+		playerMode.add(playGame).align(Align.bottom);
 		
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				playerType = 0; 
 				selectWorldMode(mainmenu, stage);
 			}
 		});
@@ -75,6 +74,7 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				playerType = 1; 
 				selectServerMode(mainmenu, stage);
 			}
 		});
@@ -94,12 +94,13 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("Select a world to play in", skin);
+		Label playerInfo = new Label("Pick your character!", skin);
 		
-		playerTable.add(playerInfo);
-		playerTable.add(addBackButton(Back.MULTIPLAYER, Back.CHARACTERMODE, mainmenu, stage));
+		playerTable.add(playerInfo).row();
+		
 		
 		mainmenu.add(playerTable);
+		addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
 		
 	}
 	
@@ -111,7 +112,8 @@ public class MenuScreen{
 		Label worldInfo = new Label("Select a world to play in", skin);
 		
 		worldTable.add(worldInfo);
-		worldTable.add(addBackButton(Back.MULTIPLAYER, Back.WORLDMODE, mainmenu, stage));
+		
+		addNavigationButton(ScreenMode.WORLDMODE, mainmenu, stage);
 		
 		mainmenu.add(worldTable);
 	}
@@ -124,35 +126,40 @@ public class MenuScreen{
 		Label combatInfo = new Label("Select a combat mode", skin);
 		
 		gameTable.add(combatInfo).row();
-		gameTable.add(addBackButton(Back.SINGLEPLAYER, Back.COMBATMODE, mainmenu, stage));
+		addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
 		mainmenu.add(gameTable);
 	}
 	
 	public void selectServerMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
-        lobby = new LobbyButton(skin, stage);
+        lobby = new LobbyButton(skin, mainmenu, stage);
 		
 		Table serverTable = new Table(); 
 		
 		Label serverInfo = new Label("Join a server or start your own!", skin);
 				
 		serverTable.add(serverInfo).row();
-		serverTable.add(lobby.addStartServerButton()).row();
-		serverTable.add(lobby.addJoinServerButton());
-		serverTable.add(addBackButton(Back.MULTIPLAYER, Back.SERVERMODE, mainmenu, stage));
+		serverTable.add(lobby.addStartServerButton(this)).row();
+		serverTable.add(lobby.addJoinServerButton(this));
+		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
 		mainmenu.add(serverTable);
 	}
 	
-	public Button addBackButton(Back playerMode, Back status, Window mainmenu, Stage stage) {
+	/**
+	 * Creates a button to navigate one step back in the main menu
+	 * @param status
+	 * @param mainmenu
+	 * @param stage
+	 */
+	public void addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
 		backButton = new TextButton("< Go Back", skin);
+		nextButton = new TextButton("> Next", skin);
 		
 		backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
-				/*Single Player: 
-					      select world > select character > select combat
-				*/
-				if (playerMode == Back.SINGLEPLAYER) {
+				/*If single player mode*/
+				if (playerType == 0) {
 					switch(status) {
 					//go back to previous state
 					case WORLDMODE:
@@ -168,10 +175,12 @@ public class MenuScreen{
 					}
 				}
 				
-				else if(playerMode == Back.MULTIPLAYER) {
+				/* If multiplayer mode */
+				else if(playerType == 1) {
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
+						//go back to choose player
 						mainmenu.clear();
 						playerModeSelect(mainmenu, stage);
 						break; 
@@ -184,16 +193,80 @@ public class MenuScreen{
 						selectServerMode(mainmenu, stage); 
 						break;
 					case CHARACTERMODE:
-						selectWorldMode(mainmenu, stage);
+						if (joinedServer == 1){
+							selectServerMode(mainmenu, stage);
+						}
+						else{
+							selectWorldMode(mainmenu, stage);
+						}
 						break; 
 					}
 					
 				}
 			}
 		});
-		
-		return backButton;
+				
+		nextButton.addListener(new ChangeListener() {
+			@Override 
+			public void changed(ChangeEvent event, Actor actor){
+				/*If single player mode*/
+				/* Single Player: select world > select character > select combat*/
+				if (playerType == 0) {
+					switch(status) {
+					//go back to next state
+					case WORLDMODE:
+						mainmenu.clear(); 
+						selectCharacter(mainmenu, stage);
+						break; 
+					case CHARACTERMODE:
+						selectCombat(mainmenu, stage);
+						break;
+					}
+				}
+				
+				/* If multiplayer mode */
+				
+				/* Multiplayer: 
+					 * 		join server > select character 
+					 * 
+					 * Multiplayer: 
+					 * 		start server > select world > select character > select combat 
+				*/
+				
+				else if(playerType == 1) {
+					switch(status) {
+					//go to next page 
+					case WORLDMODE:
+						mainmenu.clear(); 
+						selectCombat(mainmenu, stage); 
+						break;
+					case CHARACTERMODE:
+						if (joinedServer == 1){
+							;
+						}
+						else{
+							selectCombat(mainmenu, stage);
+						}
+						break; 
+					}
+					
+				}
+			}
+		});
+
+		mainmenu.row();
+		mainmenu.add(backButton);
+		mainmenu.add(nextButton);
 	}
 	
+	/**
+	 * Creates a button to navigate to the next stage of the menu/game setup
+	 */
+	public void addNextButton(){
+		
+	}
 	
+	public void setJoinedServer(){
+		joinedServer = 1; 
+	}
 }

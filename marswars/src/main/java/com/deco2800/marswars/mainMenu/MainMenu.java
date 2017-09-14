@@ -1,17 +1,11 @@
 package com.deco2800.marswars.mainMenu;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.MarsWars;
-import com.deco2800.marswars.hud.ExitGame;
-import com.deco2800.marswars.net.LobbyButton;
-
 
 /**
  * Creates a main menu window, which adds in a table depending on the 
@@ -37,7 +31,6 @@ public class MainMenu {
 	Window mainmenu; 
 	Label title;
 	boolean status = true;
-	private Table menuTable; 
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -51,6 +44,7 @@ public class MainMenu {
 		this.marswars = marswars;
 		this.stage = stage; 
 		mainmenu = window; 
+		mainmenu.setDebug(true);
 		createMenu();
     }
 
