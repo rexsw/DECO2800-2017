@@ -50,7 +50,7 @@ public enum ArmourType {
 		return this.baseSpeed* upgrateRatio(lvl);
 	}
 
-	int[] getWeaponCost(int lvl) {
+	int[] getArmourCost(int lvl) {
 		int[] cost = new int[baseCost.length];
 		for (int i = 0; i < baseCost.length; i++) {
 			cost[i] = baseCost[i] * upgrateRatio(lvl);
