@@ -37,7 +37,9 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  * 1 Hero Spacman can have at most 1 Attack item and 1 Armour item. But Hero Spacmen can have as many Special items as 
  * the total capacity of the Hero Spacman's inventory.
  * 
- * 
+ * Items will also have levels i.e. they are upgradable at the cost of resources. High levels will proportionally 
+ * increase the stat changes of the items. Costs of upgrades will also proportoinally increase. The max level an item 
+ * can have is 3. Item levels start at 1.
  * 
  * @author Mason
  *

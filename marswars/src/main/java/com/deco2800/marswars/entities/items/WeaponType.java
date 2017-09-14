@@ -31,30 +31,44 @@ public enum WeaponType {
 		this.ratio = ratio;
 	}
 	
-	private int upgrateRatio(int lvl) {
-		return 1+Math.round((lvl-1)*ratio);
+	/**
+	 * Helper method to calculate the rounded integer stat changes or upgrade costs based on the item's current level 
+	 * and the item's ratio field. Result is calculated by multiplying the stat change or cost by the ratio 
+	 * level - 1 times. 
+	 * 
+	 * @param change The stat change or the cost to be 
+	 * @param lvl the current level of the item.
+	 * @return rounded integer of the stat change or cost after applying the multiplier
+	 */
+	private int applyUpgrateRatio(int change, int lvl) {
+		return (int) Math.round(change * Math.pow(ratio, (lvl - 1)));
 	}
 
+	/**
+	 * Gets the item name
+	 * 
+	 * @return string that is the item name
+	 */
 	String getName() {
 		return this.name;
 	}
 
 	int getWeaponDamage(int lvl) {
-		return this.baseDamage * upgrateRatio(lvl);
+		return applyUpgrateRatio(this.baseDamage, lvl);
 	}
 
 	int getWeaponRange(int lvl) {
-		return this.baseRange* upgrateRatio(lvl);
+		return applyUpgrateRatio(this.baseRange, lvl);
 	}
 
 	int getWeaponSpeed(int lvl) {
-		return this.baseSpeed* upgrateRatio(lvl);
+		return applyUpgrateRatio(this.baseSpeed, lvl);
 	}
 
 	int[] getWeaponCost(int lvl) {
 		int[] cost = new int[baseCost.length];
 		for (int i = 0; i < baseCost.length; i++) {
-			cost[i] = baseCost[i] * upgrateRatio(lvl);
+			cost[i] = applyUpgrateRatio(baseCost[i], lvl);
 		}
 		return cost;
 	}
