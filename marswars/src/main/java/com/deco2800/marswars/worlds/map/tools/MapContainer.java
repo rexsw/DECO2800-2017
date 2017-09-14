@@ -66,9 +66,12 @@ public class MapContainer {
         List tilesToAdd= new ArrayList<Integer>();
         tilesToAdd.add(new Integer(11));
         tilesToAdd.add(new Integer(16));
+        tilesToAdd.add(new Integer(16));
+        tilesToAdd.add(new Integer(16));
+        tilesToAdd.add(new Integer(12));
         tilesToAdd.add(new Integer(12));
         tilesToAdd.add(new Integer(18));
-        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100));
+        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100,4));
         randomTiles.addTile(1,1,10);
         try{
             randomTiles.writeMap();
