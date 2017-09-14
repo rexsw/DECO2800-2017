@@ -21,12 +21,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
@@ -76,6 +78,9 @@ public class HUDView extends ApplicationAdapter{
 	private Button helpButton;   // calls help
 	private Button messageButton;//opens or closes chatbox
 >>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f**/
+	
+	private Button peonButton;
+	private Label helpText;
 	
 	//Resources count  
 	private Label rockCount;   
@@ -553,6 +558,11 @@ public class HUDView extends ApplicationAdapter{
 		
 		stage.addActor(resourceTable);
 		
+		peonButton = new TextButton("Select a Unit", skin);
+		helpText = new Label("Welcome to SpacWars!", skin);
+
+		actionsWindow.add(peonButton);
+		actionsWindow.add(helpText);
 		actionsWindow.setMovable(false);
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-700);
@@ -768,8 +778,9 @@ public class HUDView extends ApplicationAdapter{
 
     /**
 	 * Updates any features of the HUD that may change through time/ game actions
+     * @param lastMenuTick 
 	 */
-	public void render(){
+	public void render(long lastMenuTick){
 		/* Update time & set color depending if night/day */
 		gameTimeDisp.setText(" Time: " + timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
@@ -818,6 +829,29 @@ public class HUDView extends ApplicationAdapter{
 			/*TODO get spacman icon to be spacman_ded when there
 			are no spacmen left*/
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
+		}
+		
+		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
+			getActionWindow().removeActor(peonButton);
+			getActionWindow().removeActor(helpText);
+			
+			boolean somethingSelected = false;
+			for (Renderable e : GameManager.get().getWorld().getEntities()) {
+				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
+					peonButton = ((Selectable) e).getButton();
+					helpText = ((Selectable) e).getHelpText();
+					somethingSelected = true;
+				}
+
+			}
+			if (!somethingSelected) {
+				peonButton = new TextButton("Select a Unit", skin);
+				helpText.setText("Welcome to SpacWars");
+			}
+			getActionWindow().add(peonButton);
+			getActionWindow().add(helpText);
+
+			lastMenuTick = TimeUtils.nanoTime();
 		}
 	}
 	
@@ -888,6 +922,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setSize(50, 80);
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		HUDManip.align(Align.right| Align.bottom);
+		
     }
 }
 
