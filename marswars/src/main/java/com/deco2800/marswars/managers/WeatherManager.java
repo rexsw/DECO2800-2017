@@ -123,7 +123,7 @@ public class WeatherManager extends Manager {
                 // Iterate through entity list at current coord
                 for (int k = 0; k < tileMap.get(i, j).size(); k++) {
                     // NEED TO DEFINE NEW ENTITY TYPE FOR WATER (and others if implementing other effects)
-                    if (tileMap.get(i, j).get(k).getEntityType().equals(5)) {
+                    if (tileMap.get(i, j).get(k).getTexture() == "waterTile") {
                         int [] coords = {i, j};
                         affectedTiles.add(coords);
                     }
@@ -132,4 +132,5 @@ public class WeatherManager extends Manager {
         }
         return affectedTiles;
     }
+
 }

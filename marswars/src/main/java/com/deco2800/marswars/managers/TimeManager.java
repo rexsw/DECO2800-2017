@@ -101,7 +101,8 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
-	 * Set the game to be paused
+	 * Pauses the game by stopping all actions currently being undertaken
+	 * by entities and ceasing the incrementation of the in-game timer.
 	 */
 	public void pause() {
 		isGamePaused = true;
@@ -133,7 +134,7 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
-	 * Set the game to stop being paused
+	 * Resumes all paused entity actions and the in-game timer.
 	 */
 	public void unPause() {
 		isGamePaused = false;

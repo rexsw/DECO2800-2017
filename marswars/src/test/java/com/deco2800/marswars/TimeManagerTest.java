@@ -82,7 +82,9 @@ public class TimeManagerTest {
 	public void testIsPaused() {
 		assertFalse("Is paused", timeManager.isPaused());
 	}
-/*
+
+	//HOW TO TEST WHEN NO ENTITIES IN GAME WHEN RUNNING TESTS?
+	/*
 	@Test
 	public void testPause() {
 		assertFalse("Is paused", timeManager.isPaused());

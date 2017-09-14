@@ -143,17 +143,19 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
-						for (Renderable e : GameManager.get().getWorld().getEntities()) {
-							if (e instanceof Tickable) {
-								((Tickable) e).onTick(0);
+					if (!timeManager.isPaused()) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+							for (Renderable e : GameManager.get().getWorld().getEntities()) {
+								if (e instanceof Tickable) {
+									((Tickable) e).onTick(0);
 
+								}
 							}
 						}
-
 						GameManager.get().onTick(0);
-						lastGameTick = TimeUtils.nanoTime();
 					}
+						lastGameTick = TimeUtils.nanoTime();
+
 
 					try {
 						Thread.sleep(1);
