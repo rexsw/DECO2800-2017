@@ -10,12 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
@@ -34,7 +29,8 @@ import org.slf4j.LoggerFactory;
  *
  * A barracks to build an army
  */
-public class Barracks extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Barracks extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -236,7 +232,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * Returns the current action (used in WeatherManager)
 	 * @return
 	 */
-	public Optional<DecoAction> getAction() {
+	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
 
