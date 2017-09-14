@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 
@@ -253,17 +254,20 @@ public class MenuScreen{
 				}
 			}
 		});
+		
+		Button quitButton = new TextButton("Exit", skin);
+		quitButton.addListener(new ChangeListener() {
+			@Override
+			//could abstract this into another class
+			public void changed(ChangeEvent event, Actor actor) {
+				new ExitGame("Quit Game", skin).show(stage);	
+		}});
+
 
 		mainmenu.row();
 		mainmenu.add(backButton);
 		mainmenu.add(nextButton);
-	}
-	
-	/**
-	 * Creates a button to navigate to the next stage of the menu/game setup
-	 */
-	public void addNextButton(){
-		
+		mainmenu.add(quitButton);
 	}
 	
 	public void setJoinedServer(){
