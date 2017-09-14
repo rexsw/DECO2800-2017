@@ -13,7 +13,7 @@ import java.util.Optional;
  * Edited by Zeid Ismail on 8/09
  */
 public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
-		HasAttackRange, HasAttackSpeed, HasHealth {
+		HasAction, HasAttackRange, HasAttackSpeed, HasHealth {
 	int xp;
 	int armour;
 	int health;
@@ -22,7 +22,6 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 	int attackRange;
 	int attackSpeed;
 	Inventory inventory;
-
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -146,6 +145,15 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		this.armour += armour.getArmourValue();
 	}
 
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
+
 	// used when button in inventory clicked to wear weapon
 	public void applyWeapon(Weapon weapon) {
 		this.weaponDamage += weapon.getWeaponDamage();
@@ -172,7 +180,5 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 //				break;
 //		}
 //	}
-
-
 
 }

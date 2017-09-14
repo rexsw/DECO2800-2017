@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  * @author Tze Thong Khor
  *
  */
-public class Soldier extends AttackableEntity implements Tickable, Clickable{
+public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	
@@ -241,6 +242,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 
 }

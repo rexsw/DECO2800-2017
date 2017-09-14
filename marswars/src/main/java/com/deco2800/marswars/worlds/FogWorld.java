@@ -24,7 +24,7 @@ public class FogWorld {
         return blackFogMap;
     }
 
-    public FogWorld(int width, int length){
+    public static void initializeFogWorld(int width, int length){
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < length; y++) {
                 addEntity(new GrayTile(x,y,1,1f,1f),fogMap);
@@ -33,24 +33,12 @@ public class FogWorld {
         }
     }
 
-//    /**
-//     * fill the fogWorld with gray tiles
-//     * @param width
-//     * @param length
-//     */
-//    public void initializeFogWorld(int width, int length){
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < length; y++) {
-//                addEntity(new GrayTile(x,y,1,1f,1f));
-//            }
-//        }
-//    }
 
     /**
      * add FogEntity entity to the fog world
      * @param entity
      */
-    public void addEntity(FogEntity entity, ArrayList<FogEntity> fogMap) {
+    public static void addEntity(FogEntity entity, ArrayList<FogEntity> fogMap) {
         //Add to the fog map
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());

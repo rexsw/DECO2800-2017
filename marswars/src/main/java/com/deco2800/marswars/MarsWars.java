@@ -71,6 +71,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
+	long pauseTime = 0;
 
 	
 	private boolean gameStarted = false;
@@ -124,7 +125,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		addAIEntities();
 		setThread();
 		setGUI();
-		inputP.setInputProcessor();
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 	
 	/*
@@ -182,15 +182,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
-						for (Renderable e : GameManager.get().getWorld().getEntities()) {
-							if (e instanceof Tickable) {
-								((Tickable) e).onTick(0);
+					if (!timeManager.isPaused()) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+							for (Renderable e : GameManager.get().getWorld().getEntities()) {
+								if (e instanceof Tickable) {
+									((Tickable) e).onTick(0);
+
+								}
 							}
 						}
 						GameManager.get().onTick(0);
-						lastGameTick = TimeUtils.nanoTime();
 					}
+						lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -226,7 +229,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/*
          * Update the input managers
          */
-		inputP.handleInput();
+		inputP.handleInput(pauseTime);
         /*
          * Update the camera
          */
@@ -276,7 +279,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			gameStarted = true;
 		}
 	}
-
 	
 	/**
 	 * Resizes the viewport.
