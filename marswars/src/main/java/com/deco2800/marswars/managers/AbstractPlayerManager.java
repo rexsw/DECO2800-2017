@@ -1,18 +1,21 @@
 package com.deco2800.marswars.managers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AbstractPlayerManager extends Manager implements HasTeam{
 
 	private int teamId;
 	// I expect we will need some stuff in here at some point.
 	
-	private String colour;
+	private List<String> colour = new ArrayList<String>();
 	
-	public String getColour(){
-		return colour;
+	public String getColour(int teamid){
+		return colour.get(teamid);
 	}
 
-	public void setColour(String colour) {
-		this.colour = colour;
+	public void setColour(String colour, int teamid) {
+		this.colour.set(teamid, colour);
 	}
 	
 	@Override

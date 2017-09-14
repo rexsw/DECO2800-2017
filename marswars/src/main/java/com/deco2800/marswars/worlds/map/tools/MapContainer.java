@@ -3,15 +3,20 @@ package com.deco2800.marswars.worlds.map.tools;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.entities.units.UnitTypes;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.PlayerManager;
+import com.deco2800.marswars.entities.buildings.Barracks;
+import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.buildings.BuildingType;
+import com.deco2800.marswars.entities.buildings.Bunker;
+import com.deco2800.marswars.entities.buildings.Turret;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -227,21 +232,20 @@ public class MapContainer {
      * @param x its x coordinate
      * @param y its y coordinate
      * @param z its z coordinate
-     * @param player the owner
      */
-    public void setEntity(UnitTypes entityType, float x, float y, float z, AbstractPlayerManager player){
+    public void setEntity(UnitTypes entityType, float x, float y, float z){
         BaseEntity entity = null;
         switch (entityType){
             case ASTRONAUT:
-                entity = new Astronaut(x,y,z, player);
+                entity = new Astronaut(x,y,z, 0);
                 break;
             case TANK:
-                entity = new Tank(x,y,z, player);
+                entity = new Tank(x,y,z, 0);
                 break;
             case SPACMAN:
                 return;
             case SOLDIER:
-                entity = new Soldier(x,y,z, player);
+                entity = new Soldier(x,y,z, 0);
                 break;
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");
@@ -366,20 +370,17 @@ public class MapContainer {
         if(!checkForEntity(x, y)){
             return;
         }
-        PlayerManager playerManager = new PlayerManager();
-        playerManager.setColour("blue");
-        GameManager.get().addManager(playerManager);
         switch (random){
             case ASTRONAUT:
-                entity = new Astronaut(x,y,0, playerManager);
+                entity = new Astronaut(x,y,0, 0);
                 break;
             case TANK:
-                entity = new Tank(x,y,0, playerManager);
+                entity = new Tank(x,y,0, 0);
                 break;
             case SPACMAN:
-                return;
+                entity = new Spacman(x, y, 0);
             case SOLDIER:
-                entity = new Soldier(x,y,0, playerManager);
+                entity = new Soldier(x,y,0, 0);
                 break;
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");

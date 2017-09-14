@@ -1,14 +1,5 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.entities.FogOfWarLayer;
-import com.deco2800.marswars.worlds.FogWorld;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * test for the fog world
  *

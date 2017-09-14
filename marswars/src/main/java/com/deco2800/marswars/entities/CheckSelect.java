@@ -1,6 +1,4 @@
 package com.deco2800.marswars.entities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by grumpygandalf on 26/8/17.
@@ -8,7 +6,6 @@ import org.slf4j.LoggerFactory;
  * A select area which will turn red when build area is impossible and green when valid
  */
 public class CheckSelect extends BaseEntity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(CheckSelect.class);
 	/**
 	 * Constructor for the GreenSelect
 	 * @param posX

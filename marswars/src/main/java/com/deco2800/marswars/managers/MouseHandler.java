@@ -1,8 +1,10 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +57,10 @@ public class MouseHandler extends Manager {
 
 			if (entities.isEmpty()) {
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
+				for (Clickable c : listeners) {
+					if (c instanceof Soldier) ((Soldier)c).resetTexture();
+				}
+				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
@@ -70,14 +76,29 @@ public class MouseHandler extends Manager {
 			
 			List<BaseEntity> staticEntities = new ArrayList<BaseEntity>(entities);
 			boolean isClickable=false;
+			BaseEntity chosen = null;
 			for (BaseEntity e: staticEntities) {
 				if (e instanceof Clickable) {
-					LOGGER.info(String.format("Clicked on %s", e).toString());
-					((Clickable) e).onClick(this);
-					isClickable =true;
-					break;
+					if (e instanceof HasOwner) {
+						//giving preference to Player's own entities.
+						if (! ((HasOwner) e).isAi() ) {
+							chosen = e;
+							isClickable = true;
+							break;
+						}
+					}
+					if (chosen == null) {
+						//taking the first clickable entity found that is not the Player's. May not have an owner.
+						chosen = e;
+						isClickable = true;
+					}
 				}
 			}
+			if (chosen != null) {
+				LOGGER.info(String.format("Clicked on %s", chosen).toString());
+				((Clickable) chosen).onClick(this);
+			}
+			
 			if(isClickable){
 				((CustomizedWorld)world).deSelectAll();
 			}
