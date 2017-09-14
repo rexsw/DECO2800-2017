@@ -5,11 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -27,7 +23,8 @@ import org.slf4j.LoggerFactory;
  * A turret that can be used for base defence
  */
 
-public class Turret extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Turret extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -147,6 +144,15 @@ public class Turret extends BuildingEntity implements Clickable, Tickable, HasPr
 	
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 	
 	@Override

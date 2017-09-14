@@ -31,9 +31,12 @@ public class FogManager extends Manager {
 	 * @param width  the width of the map
 	 * @param length the length of the map
 	 */
-	public void initialFog(int width, int length) {
-		this.fogOfWar = new Array2D<Integer>(width, length);
-		this.blackFogOfWar  = new Array2D<Integer>(width, length);
+	public static void initialFog(int width, int length) {
+		if (width < 1 || length < 1) {
+			throw new IllegalArgumentException();
+		}
+		fogOfWar = new Array2D<Integer>(width, length);
+		blackFogOfWar  = new Array2D<Integer>(width, length);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
 				fogOfWar.set(i, j, 0);

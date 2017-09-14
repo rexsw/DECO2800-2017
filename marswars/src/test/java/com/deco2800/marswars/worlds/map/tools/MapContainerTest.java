@@ -62,8 +62,7 @@ public class MapContainerTest extends BaseTest{
         Assert.assertFalse(world.getEntities().isEmpty());
     }
 
-    @Test
-
+    @Test @Ignore
     public void getRandomBuilding() throws Exception {
         map.getRandomBuilding();
         Assert.assertFalse(world.getEntities().isEmpty());
