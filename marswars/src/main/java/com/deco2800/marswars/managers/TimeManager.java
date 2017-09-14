@@ -9,7 +9,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isNight = true;
 	private boolean isGamePaused = false;
 	private boolean isProductionPaused = false;
-	private long time = 0;
+	private static long time = 0;
 	private long gameStartTime = 0;
 
 	/**
@@ -46,7 +46,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return the time in the game in seconds. Counting starts at 0 when the
 	 * game is initialised
 	 */
-	public long getInGameTime() {
+	public static long getInGameTime() {
 		return time;
 	}
 	
