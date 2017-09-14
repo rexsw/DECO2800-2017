@@ -1,6 +1,8 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -50,8 +52,10 @@ public class MoveAction implements DecoAction {
 		this.goalY = goalY;
 		this.entity = entity;
 		
-		if (entity instanceof MissileEntity) {
-			speed = 0.4f;
+		if (entity instanceof AttackableEntity) {
+			speed = ((AttackableEntity) entity).getSpeed();
+		} else if (entity instanceof MissileEntity) {
+			speed = ((MissileEntity) entity).getSpeed();
 		} else {
 			speed = 0.05f;
 		}
@@ -65,6 +69,11 @@ public class MoveAction implements DecoAction {
 		pathfinder = new PathfindingThread(GameManager.get().getWorld(), new Point(entity.getPosX(), entity.getPosY()), new Point(goalX, goalY));
 		thread = new Thread(pathfinder);
 		thread.start();
+	}
+
+	public MoveAction(float goalX, float goalY, AbstractEntity entity, float speed) {
+		this(goalX, goalY, entity);
+		this.speed = speed;
 	}
 
 	/**

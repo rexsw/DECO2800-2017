@@ -20,7 +20,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
     private int armorDamage; // armorDamage of the entity
     private int damage; // the damage of the entity
     private float speed;
-    private Manager owner = null; // the owner of the player
+    private int owner; // the owner of the player
     private Optional<DecoAction> currentAction = Optional.empty();
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
 
@@ -65,7 +65,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
 
     /**
      * Set the damage of the entity
-     * @param the damage of the entity
+     * @param damage of the entity
      */
     @Override
     public void setDamage(int damage) {
@@ -74,7 +74,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
 
     /**
      * Set the armor damage of the entity
-     * @param the new armor damage of the entity
+     * @param armorDamage of the entity
      */
     @Override
     public void setArmorDamage(int armorDamage) {
@@ -104,10 +104,10 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
 
     /**
      * Set the owner of the entity
-     * @param the owner of the entity
+     * @param owner of the entity
      */
     @Override
-    public void setOwner(Manager owner) {
+    public void setOwner(int owner) {
         this.owner = owner;
     }
 
@@ -116,13 +116,13 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
      * @return the owner of the entity
      */
     @Override
-    public Manager getOwner() {
+    public int getOwner() {
         return this.owner;
     }
 
     /**
      * Check if an entity shares the same owner
-     * @param an entity
+     * @param entity
      * @return true if the parameter shares the same owner, false otherwise
      */
     @Override
@@ -140,7 +140,7 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
 
     /**
      * Set a new action for an entity
-     * @param an action for the entity to take
+     * @param action for the entity to take
      */
     @Override
     public void setAction(DecoAction action) {
@@ -155,12 +155,16 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
 
     /**
      * Set a new target for the missile to attack
-     * @param an new target for the missile
+     * @param target for the missile
      */
     public void setTarget(AttackableEntity target) { this.target = target; }
     
     public float getSpeed() { return speed; }
     
     public void setSpeed(float speed) { this.speed = speed; }
-
+    
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
 }

@@ -11,7 +11,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
@@ -34,7 +34,8 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	private int loyalty; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
-	private Manager owner = null; // the owner of the player
+	private int owner; // the owner of the player
+	private float speed; // the movement speed of the entity
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private MissileEntity missile; // the type of missile
@@ -165,9 +166,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	public void setHealth(int health) {
 		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;
@@ -190,7 +188,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	 * @param the owner of the entity
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
@@ -199,7 +197,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	 * @return the owner of the entity
 	 */
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 
@@ -291,6 +289,20 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	@Override
 	public void setMaxLoyalty(int maxLoyalty) {
 		this.maxLoyalty = maxLoyalty;
+	}
+	
+
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public float getSpeed() {
+		return speed;
 	}
 
 }

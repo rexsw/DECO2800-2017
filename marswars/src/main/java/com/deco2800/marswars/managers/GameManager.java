@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

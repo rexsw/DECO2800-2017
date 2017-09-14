@@ -26,7 +26,11 @@ public class BackgroundManager extends Manager {
                 timeManager.getHours() < 20) {
             background = "dusk_Bg";
         } else {
-            background = "night_Bg";
+            if (timeManager.getPlaySeconds() % 2 == 0){
+            	background = "night_Bg1";
+            } else {
+            	background = "night_Bg2";
+            }
         }
         return background;
     }

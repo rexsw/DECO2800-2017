@@ -31,10 +31,14 @@ public class AttackableEntityTest {
 	public void initialise() {
 		GameManager.get().setWorld(new BaseWorld(50, 50));
 		test = new AttackableEntity(1, 1, 1, 1, 1, 1);
+		test.setOwner(-1);
 		enemy = new AttackableEntity(10, 10, 10, 1, 1, 1);
+		enemy.setOwner(1);
 		constructor2Test = new AttackableEntity(5, 5, 5, 2, 2, 2, 2, 2, true);
+		constructor2Test.setOwner(0);
 		position = new Box3D(15, 15, 15, 2, 3, 1);
 		constructor3Test = new AttackableEntity(position, 2, 3, true);
+		constructor3Test.setOwner(1);
 	}
 	
 	@Test
@@ -50,7 +54,7 @@ public class AttackableEntityTest {
 		assertEquals(test.getMaxArmor(), 0);
 		assertEquals(test.getAttackSpeed(), 0);
 		assertEquals(test.isWorking(), false);
-		assertEquals(test.getOwner(), null);
+		assertEquals(test.getOwner(), -1);
 		assertEquals(test.getDamageDeal(), 0);
 		assertEquals(test.getMaxHealth(), 0);
 		assertEquals(test.getHealth(), 0);
@@ -69,7 +73,7 @@ public class AttackableEntityTest {
 		assertEquals(constructor2Test.getMaxArmor(), 0);
 		assertEquals(constructor2Test.getAttackSpeed(), 0);
 		assertEquals(constructor2Test.isWorking(), false);
-		assertEquals(constructor2Test.getOwner(), null);
+		assertEquals(constructor2Test.getOwner(), 0);
 		assertEquals(constructor2Test.getDamageDeal(), 0);
 		assertEquals(constructor2Test.getMaxHealth(), 0);
 		assertEquals(constructor2Test.getHealth(), 0);
@@ -88,7 +92,7 @@ public class AttackableEntityTest {
 		assertEquals(constructor3Test.getMaxArmor(), 0);
 		assertEquals(constructor3Test.getAttackSpeed(), 0);
 		assertEquals(constructor3Test.isWorking(), false);
-		assertEquals(constructor3Test.getOwner(), null);
+		assertEquals(constructor3Test.getOwner(), 1);
 		assertEquals(constructor3Test.getDamageDeal(), 0);
 		assertEquals(constructor3Test.getMaxHealth(), 0);
 		assertEquals(constructor3Test.getHealth(), 0);
@@ -162,10 +166,9 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetOwner() {
-		Manager owns = GameManager.get().getManager(PlayerManager.class);
-		test.setOwner(owns);
-		assertEquals(test.getOwner(), owns);
-		enemy.setOwner(owns);
+		test.setOwner(-1);
+		assertEquals(test.getOwner(), -1);
+		enemy.setOwner(-1);
 		assertEquals(test.sameOwner(enemy), true);
 		assertEquals(test.sameOwner(constructor2Test), false);
 	}
