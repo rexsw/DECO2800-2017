@@ -1,11 +1,9 @@
 package com.deco2800.marswars.net;
 
-import com.deco2800.marswars.net.Action;
-
 /**
  * Network action object for when somebody sends a message.
  */
-public class MessageAction implements Action {
+public class MessageAction extends ChatAction {
     private String username;
     private String message;
 

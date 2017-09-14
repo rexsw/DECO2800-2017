@@ -13,11 +13,15 @@ public class NetManager extends Manager {
     private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 
-    private ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
+//    private ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
     private ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
 
-    private SpacServer networkServer = new SpacServer(serverConnectionManager);
-    private SpacClient networkClient = new SpacClient(clientConnectionManager);
+    private SpacServer networkServer = new SpacServer();
+    private SpacClient networkClient = new SpacClient();
+
+    public NetManager() {
+        networkServer.addConnectionManager(serverConnectionManager);
+    }
 
     public SpacServer getNetworkServer(){
         return networkServer;
@@ -26,14 +30,14 @@ public class NetManager extends Manager {
     public SpacClient getNetworkClient(){
         return networkClient;
     }
-
-    public ServerConnectionManager getServerConnectionManager(){
-        return serverConnectionManager;
-    }
-
-    public ClientConnectionManager getClientConnectionManager(){
-        return clientConnectionManager;
-    }
+//
+//    public ServerConnectionManager getServerConnectionManager(){
+//        return serverConnectionManager;
+//    }
+//
+//    public ClientConnectionManager getClientConnectionManager(){
+//        return clientConnectionManager;
+//    }
 
     public void startServer(String ip) {
 

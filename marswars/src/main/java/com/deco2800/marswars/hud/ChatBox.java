@@ -17,7 +17,10 @@ import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.ChatAction;
+import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.MessageAction;
+import com.esotericsoftware.kryonet.Connection;
 
 
 /**
@@ -79,6 +82,20 @@ public class ChatBox extends Table {
 
         chatMessages = new Table(this.skin);
         chatPane = new ScrollPane(chatMessages, this.skin);
+
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ChatAction) {
+                            ChatAction action = (ChatAction) o;
+                            // TODO - reimplement logging? maybe logging manager?
+//                            this.logAction(action);
+                            addNewMessage(action.toString());
+                        }
+                    }
+                }
+        );
         
         // Set up properties of the elements then set layout
         setUpInputElements();
@@ -137,7 +154,7 @@ public class ChatBox extends Table {
             // Currently not implemented correctly, adds to chat box instead of sending to server.
             MessageAction action = new MessageAction("wololo", message);
             netManager.getNetworkClient().sendObject(action);
-            addNewMessage(message);
+            // addNewMessage(message);
         }
         messageTextField.setText("");
     }
