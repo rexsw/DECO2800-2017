@@ -10,14 +10,21 @@ public class ColourManager extends Manager {
 		switch(Colour){
 			case BLUE:
 				colours.put(teamid, "Blue");
+				break;
 			case YELLOW:
 				colours.put(teamid, "Yellow");
+				break;
 			case PINK:
 				colours.put(teamid, "Pink");
+				break;
 			case PURPLE:
 				colours.put(teamid, "Purple");
+				break;
 			case GREEN:
 				colours.put(teamid, "Green");
+				break;
+			default:
+				break;
 		}
 	}
 	
