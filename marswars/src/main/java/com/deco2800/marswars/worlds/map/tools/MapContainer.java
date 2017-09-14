@@ -46,16 +46,6 @@ public class MapContainer {
     
     // the world that will hold the content of the container
     protected CustomizedWorld world;
-    /**
-     * Creates a new Map container from a given map with random elements.
-     *
-     * @param width the width of the map.
-     * @param length the length of the map.
-     */
-    public MapContainer(String mapPath, int width, int length){
-        //Not yet implemented
-    }
-
 
     /**
      * Creates a new Map container from a given map.
@@ -113,8 +103,6 @@ public class MapContainer {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
                 this.getRandomBuilding();
-               // this.getRandomEntity();
-               // this.getRandomResource();
             }
         }
     }
