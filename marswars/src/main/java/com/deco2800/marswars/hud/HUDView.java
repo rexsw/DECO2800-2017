@@ -42,13 +42,22 @@ import java.util.List;
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	
+//<<<<<<< HEAD
+	//private static final int BUTTONPAD = 10; 
+//=======
 	private static final int BUTTONSIZE = 40; //sets size of image buttons 
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 	private static final int CRITICALHEALTH = 30; //critical health of spacmen 
+//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
 
 	private Stage stage;
 	private Skin skin;
 	
+//<<<<<<< HEAD
+	private ImageButton quitButton;
+	private ImageButton helpButton;
+	private ImageButton messageButton;
+//=======
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
 	private Table overheadRight; //contains all basic quit/help/chat buttons
@@ -62,10 +71,11 @@ public class HUDView extends ApplicationAdapter{
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
 	
-    //Action buttons 
+    /**Action buttons 
 	private Button quitButton; 	 // quits game
 	private Button helpButton;   // calls help
 	private Button messageButton;//opens or closes chatbox
+>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f**/
 	
 	//Resources count  
 	private Label rockCount;   
@@ -183,6 +193,16 @@ public class HUDView extends ApplicationAdapter{
 		gameTimeDisp = new Label("Time: 0:00", skin);
 		gameLengthDisp = new Label("00:00:00", skin);
 
+/**<<<<<<< HEAD
+		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
+		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
+		overheadRight.add(timeDisp).pad(BUTTONPAD);
+		overheadRight.add(messageButton).pad(BUTTONPAD);
+		overheadRight.add(helpButton).pad(BUTTONPAD);
+		overheadRight.add(quitButton).pad(BUTTONPAD);
+						
+		
+=======**/
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
 		overheadRight.add(gameLengthDisp).padRight(BUTTONPAD);
@@ -198,6 +218,7 @@ public class HUDView extends ApplicationAdapter{
 		welcomeMsg.add(welcomeText);
 		
 		stage.addActor(welcomeMsg);
+//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
 		stage.addActor(overheadRight);
 		
 		//Creates the help button listener
@@ -370,7 +391,13 @@ public class HUDView extends ApplicationAdapter{
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
-		Button dispMainMenu = new TextButton("Menu", skin);
+		//add dispMainMenu image
+		Texture menuImage = textureManager.getTexture("menu_button");
+		HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(stage.getWidth()-50, 50);
+		TextureRegion menuRegion = new TextureRegion(menuImage);
+		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
+		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
 			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button");
@@ -384,7 +411,7 @@ public class HUDView extends ApplicationAdapter{
 		plusRegionDraw = new TextureRegionDrawable(plusRegion);
 		dispActions = new ImageButton(plusRegionDraw);
 
-		//add tech button (uses arrow icon for now)
+		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button");
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
@@ -399,9 +426,14 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispMainMenu);
-		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+//<<<<<<< HEAD
+		HUDManip.row();
+		HUDManip.add(dispActions).pad(BUTTONPAD);
+//=======
+		HUDManip.add(dispTech).pad(BUTTONPAD*2);
 		HUDManip.add(dispFog);
 		HUDManip.add(removeActions);
+//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
 		
 		stage.addActor(HUDManip);
 		
@@ -498,16 +530,16 @@ public class HUDView extends ApplicationAdapter{
 		waterCount = new Label("Water: 0", skin);
 		
 		//add rock image 
-		Texture rockTex = textureManager.getTexture("large_rock");
+		Texture rockTex = textureManager.getTexture("rock_HUD");
 		Image rock = new Image(rockTex);
 		//add water image
-		Texture waterTex = textureManager.getTexture("large_water");
+		Texture waterTex = textureManager.getTexture("water_HUD");
 		Image water = new Image(waterTex);
 		//add biomass image
-		Texture biomassTex = textureManager.getTexture("large_biomass");
+		Texture biomassTex = textureManager.getTexture("biomass_HUD");
 		Image biomass = new Image(biomassTex);
 		//add crystal image
-		Texture crystalTex = textureManager.getTexture("large_crystal");
+		Texture crystalTex = textureManager.getTexture("crystal_HUD");
 		Image crystal = new Image(crystalTex);
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
