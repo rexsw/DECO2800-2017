@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -384,6 +386,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating HUD manipulation buttons");
 
 		Button dispMainMenu = new TextButton("Menu", skin);
+		ShopDialog shopDialog = new ShopDialog("Shop", skin, textureManager);
 			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button");
@@ -397,13 +400,19 @@ public class HUDView extends ApplicationAdapter{
 		plusRegionDraw = new TextureRegionDrawable(plusRegion);
 		dispActions = new ImageButton(plusRegionDraw);
 
-		//add tech button (uses arrow icon for now)
+		//add tech button
 		Texture techImage = textureManager.getTexture("tech_button");
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion techRegion = new TextureRegion(techImage);
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
+		
+		//add shop button (uses arrow icon for now)
+		Texture shopImage = textureManager.getTexture("shop_button");
+		TextureRegion shopRegion = new TextureRegion(shopImage);
+		TextureRegionDrawable shopRegionDraw = new TextureRegionDrawable(shopRegion);
+		ImageButton dispShop = new ImageButton(shopRegionDraw);
 		
 		//add toggle Fog of war FOR (DEBUGGING) 
 		Button dispFog = new TextButton("Fog", skin);
@@ -413,6 +422,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispMainMenu);
 		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
+		HUDManip.add(dispShop).padRight(BUTTONPAD);
 		HUDManip.add(dispFog);
 		HUDManip.add(removeActions);
 		
@@ -473,6 +483,23 @@ public class HUDView extends ApplicationAdapter{
 			}
 
 		});
+		
+		dispShop.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+					shopDialog.show(stage);
+			}
+		});
+		
+		shopDialog.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
+                	shopDialog.hide();
+                    return true;
+                }
+                return false;
+            }
+       });
 		
 		
 		dispFog.addListener(new ChangeListener() {
