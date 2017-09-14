@@ -1,7 +1,7 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.buildings.BuildingType;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.junit.Assert;

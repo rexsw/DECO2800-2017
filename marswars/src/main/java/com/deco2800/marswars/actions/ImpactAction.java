@@ -4,7 +4,6 @@ import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.GatherAction.State;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
@@ -47,19 +46,14 @@ public class ImpactAction implements DecoAction {
 					state = State.MOVE_TOWARDS;
 					break;
 				case MOVE_TOWARDS:
-					if (GameManager.get().getWorld().getEntities().contains(target)) {
-						if (action.completed()) {
-							if (target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY()) {
-								state = State.IMPACT;
-								break;
-							} else {
-								state = State.SETUP_MOVE;
-								break;
-							}
-						}
+					boolean find = GameManager.get().getWorld().getEntities().contains(target);
+					if (find && action.completed()) {
+						state = target.getPosX() == missile.getPosX() && target.getPosY() == missile.getPosY() ?
+									State.IMPACT : State.SETUP_MOVE;
+						break;
+					} else if (find) { 
 						action.doAction();
 						return;
-						//LOGGER.info("MOVING TO TARGET");
 					} else {
 						completed = true;
 						GameManager.get().getWorld().removeEntity(missile);
@@ -77,6 +71,8 @@ public class ImpactAction implements DecoAction {
 					LOGGER.info("target health " + target.getHealth());
 					completed = true;
 					return;
+				default: //should not reach here.
+					break;
 			}
 		}
 	}

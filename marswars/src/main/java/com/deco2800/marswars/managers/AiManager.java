@@ -3,10 +3,17 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.WorldUtil;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -18,28 +25,25 @@ import org.slf4j.LoggerFactory;
  * warning spicy i hope you like meat balls 
  */
 
-public class AiManagerTest extends AbstractPlayerManager implements TickableManager, HasTeam {
-		private int teamid;
-		private static final Logger LOGGER = LoggerFactory.getLogger(AiManagerTest.class);
-		private boolean alive = true;
-		private ResourceManager resources = new ResourceManager();
+public class AiManager extends AbstractPlayerManager implements TickableManager {
+		private List<Integer> teamid = new LinkedList<Integer>();
+		private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
+		private Map<Integer, Integer> alive = new HashMap<Integer, Integer>();
 
 @Override
 public void onTick(long l) {
-	if(!alive) {
-		return;
-	}
 	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof HasOwner && ((HasOwner) e).getOwner() == this) {
-			if(e instanceof Astronaut) {
-				Astronaut x = (Astronaut)e;
-				useSpacman(x);
+		if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
+			if(e instanceof Soldier && !(e instanceof Astronaut)) {
+				Soldier x = (Soldier)e;
+				//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
+				useEnemy(x);
 			} else if(e instanceof Base) {
 				Base x = (Base)e;
 				generateSpacman(x);
-			} else if(e instanceof Soldier) {
-				Soldier x = (Soldier)e;
-				useEnemy(x);
+			} else if(e instanceof Astronaut) {
+				Astronaut x = (Astronaut)e;
+				useSpacman(x);
 			}
 		}
 	}
@@ -48,11 +52,12 @@ public void onTick(long l) {
 		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-	if(!x.isWorking() && resources.getRocks() > 30) {
+	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	if(!x.isWorking() && rm.getRocks(x.getOwner()) > 30) {
 		//sets the ai base to make more spacman if possible
 		LOGGER.error("ai - set base to make spacman");
-		resources.setRocks(resources.getRocks() - 30);
-		Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, this);
+		rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
+		Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
 		x.setAction(new GenerateAction(r));
 	}
 }
@@ -75,69 +80,46 @@ private void useEnemy(Soldier x) {
 private void useSpacman(Astronaut x) {
 	if(!(x.isWorking())) {
 		//allow spacmans to collect the closest resources
+		//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 		x.setAction(new GatherAction(x, (Resource) resource.get()));
+		//LOGGER.info(resource.get().getTexture() + "");
 		LOGGER.error("ai - set spacman to grather");
 	}
 }
 		
-/**
- * note team methods where a wip system and have been pushed back and as such
- * are not used for now		
- */
-@Override
-public void setTeam(int teamId) {
-	this.teamid = teamId;
-}
-
-@Override
-public int getTeam() {
-	return teamid;
-}
-
-@Override
-public boolean sameTeam(Manager otherMember) {
-	boolean isInstance = otherMember instanceof HasTeam;
-	return isInstance && this.teamid == ((HasTeam) otherMember).getTeam();
-}
 		
 /**
  * if the ai has no more spacman under it's control, removes it's units
  * and sets it to "dead" so it won't tick anymore 
  */
-public void isKill() {
+public boolean isKill(int key) {
 	//in this case "dead" is an Ai with no spacman
-	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof AttackableEntity && ((AttackableEntity) e).getOwner() == this) {
-			return;
-		}
-	}
-	for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		if(e instanceof HasOwner && ((HasOwner) e).getOwner() == this) {
-			GameManager.get().getWorld().removeEntity(e);
-		}
-	}
+	if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).unitcount(key) == 0) {
 	LOGGER.error("ai - is kill");
-	alive = false;
+	alive.put(key, 0);
+	return true;
+	}
+	else {
+		return false;
+	}
 }
 
 /**
  * @return true iff Ai is alive else false 
  */
-public boolean alive() {
-	return alive;
+public boolean alive(int key) {
+	return alive.get(key)==1;
 }
 
-/**
- * @return Resourcemanager of this Ai
- */
-public ResourceManager getResources() {
-	return resources;
+public void addTeam(int id) {
+	teamid.add(id);
+	alive.put(id, 1);
 }
 
-@Override
-public String toString() {
-	return "Ai team - " + this.getColour();
+public List<Integer> getAiTeam(){
+	return teamid;
 }
+
 
 }

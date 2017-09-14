@@ -24,7 +24,7 @@ public class Carrier extends Soldier {
     private AttackableEntity[] loadedUnits;
 
     public Carrier(float posX, float posY, float posZ,
-	    AbstractPlayerManager owner) {
+	    int owner) {
 	super(posX, posY, posZ, owner);
 
 	// set all the attack attributes

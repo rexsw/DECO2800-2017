@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -24,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.managers.FogOfWarManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -237,20 +236,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new Dialog("Confirm exit", skin){
-					{
-						text("Are you sure you want to quit? ");
-						button("Yes", 1);
-						button("No, keep playing", 2);
-					}
-					
-					@Override
-					protected void result(final Object object){
-						if(object == (Object) 1){
-							System.exit(0);
-						}
-					}	
-				}.show(stage);	
+				new ExitGame("Quit Game", skin).show(stage);	
 		}});
 
 		//Creates the message button listener 
@@ -514,11 +500,11 @@ public class HUDView extends ApplicationAdapter{
 				//disable fog
 				if (fogToggle) {
 					LOGGER.debug("fog of war is now off");
-					FogOfWarManager.toggleFog(false);
+					FogManager.toggleFog(false);
 					fogToggle = false; 
 				}else {
 					LOGGER.debug("fog of war is now on");
-					FogOfWarManager.toggleFog(true);
+					FogManager.toggleFog(true);
 					fogToggle = true; 
 				}
 			}	
@@ -800,10 +786,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rockCount.setText("" + resourceManager.getRocks());
-		crystalCount.setText("" + resourceManager.getCrystal()); 
-		waterCount.setText("" + resourceManager.getWater());
-		biomassCount.setText("" + resourceManager.getBiomass());
+		rockCount.setText("" + resourceManager.getRocks(-1));
+		crystalCount.setText("" + resourceManager.getCrystal(-1)); 
+		waterCount.setText("" + resourceManager.getWater(-1));
+		biomassCount.setText("" + resourceManager.getBiomass(-1));
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
@@ -818,9 +804,6 @@ public class HUDView extends ApplicationAdapter{
 			}
 			if (e instanceof Spacman) {
 				spacmenCount++; 
-			}
-			if (e instanceof EnemySpacman){
-				enemySpacmanCount++; 
 			}
 		}
 		//Get the details from the selected entity
@@ -847,7 +830,6 @@ public class HUDView extends ApplicationAdapter{
 	    HUDManip.setVisible(false);
 		chatbox.setVisible(false);
 		messageWindow.setVisible(false);
-		mainMenu.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
 	}
@@ -861,7 +843,6 @@ public class HUDView extends ApplicationAdapter{
 	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
-		mainMenu.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}

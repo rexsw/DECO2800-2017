@@ -8,9 +8,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
 import com.deco2800.marswars.entities.CheckSelect;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 
@@ -176,8 +177,8 @@ public class BuildAction implements DecoAction{
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			base = new BuildingEntity((int)projX-((buildingHeight+1)/2), (int)projY, 0f, building);
-			if (resourceManager.getRocks() >= base.getCost()) {
-				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
+			if (resourceManager.getRocks(((HasOwner) spac).getOwner()) >= base.getCost()) {
+				resourceManager.setRocks(resourceManager.getRocks(((HasOwner) spac).getOwner()) - base.getCost(), ((HasOwner) spac).getOwner());
 				if (building == BuildingType.BASE) {
 					base.setTexture("homeBase1");
 					GameManager.get().getWorld().addEntity(base);
