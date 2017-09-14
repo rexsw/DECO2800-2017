@@ -11,7 +11,7 @@ public class TimeManagerTest {
 	private TimeManager timeManager = (TimeManager) GameManager.get()
 			.getManager(TimeManager.class);
 
-	@Test @Ignore
+	@Test @Ignore 
 	public void testOnTick() {
 		int count = 500;
 		timeManager.pause();
