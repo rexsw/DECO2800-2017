@@ -106,6 +106,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
 		this.setSpeed(0.05f);
+		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();

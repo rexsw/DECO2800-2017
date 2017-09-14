@@ -128,6 +128,9 @@ public class TextureManager extends Manager {
         this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
         this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
         
+        //Carrier:
+        this.saveTexture("carrier", "resources/UnitAssets/Neutral/Carrier_1.png");
+        this.saveTexture("carrierSelected", "resources/UnitAssets/Neutral/Carrier_2.png");
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
