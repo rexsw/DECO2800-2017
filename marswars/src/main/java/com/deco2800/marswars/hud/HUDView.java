@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.FogManager;
@@ -34,6 +35,7 @@ import com.deco2800.marswars.managers.TextureManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,23 +45,18 @@ import java.util.List;
  */
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
-	
-//<<<<<<< HEAD
-	//private static final int BUTTONPAD = 10; 
-//=======
 	private static final int BUTTONSIZE = 40; //sets size of image buttons 
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
-	private static final int CRITICALHEALTH = 30; //critical health of spacmen 
-//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
+	private static final int CRITICALHEALTH = 30; //critical health of spacmen
+	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
+
+	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
 	private Stage stage;
 	private Skin skin;
-	
-//<<<<<<< HEAD
 	private ImageButton quitButton;
 	private ImageButton helpButton;
 	private ImageButton messageButton;
-//=======
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
 	private Table overheadRight; //contains all basic quit/help/chat buttons
@@ -101,6 +98,9 @@ public class HUDView extends ApplicationAdapter{
 	private Button attackButton;	//spacman commands
 	private Button gatherButton;	
 	private Button moveButton;
+	private List<TextButton> buttonList;
+	private List<ActionType> currentActions;
+	private List<EntityID> currentBuildActions;
 
 	//Toggles; checks if the feature is visible on-screen or not
 	private boolean messageToggle; 
@@ -570,15 +570,41 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setPosition(220, 0);
 		
 		//Add action buttons
-		addMoveButton();
+		/*addMoveButton();
 		addGatherButton();
-		addAttackButton();
-		addCreateUnitButtons();
+		addAttackButton();*/
+		addButtonArray();
 		
 		stage.addActor(actionsWindow);
 	}
 
-	private void addCreateUnitButtons() {
+	private void addButtonArray() {
+		buttonList = new ArrayList<TextButton>();
+		for (int i = 0; i != NUMBER_ACTION_BUTTONS; i++) {
+			TextButton newButton = new TextButton(" ", skin);
+			addButtonListener(newButton);
+			buttonList.add(newButton);
+			actionsWindow.add(newButton);
+			enableButton(newButton);
+		}
+	}
+
+	private void addButtonListener(Button button) {
+
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LOGGER.info(selectedEntity.getClass().toString());
+				int index = buttonList.indexOf(actor); //Get the index of this button
+				if (index > currentActions.size() - 1) {//Check if it should be a build action
+					index = index - currentActions.size();
+					if (index > currentBuildActions.size() - 1) return;//Check if this is out of bounds
+						ActionSetter.setBuild(selectedEntity, currentBuildActions.get(index));
+				} else {//It is a unit action
+					selectedEntity.setNextAction(currentActions.get(index));
+				}
+			}
+		});
 	}
 
 	/**
@@ -591,6 +617,7 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor) {
 				LOGGER.info("Attack button pressed");
 				selectedEntity.setNextAction(ActionType.DAMAGE);
+
 			}
 		});
 		actionsWindow.add(attackButton);
@@ -660,7 +687,7 @@ public class HUDView extends ApplicationAdapter{
 			stage.addActor(unit);
 		}
 	}
-	
+
 	/**
      * Clears the currently displayed minimap
      * then updates the image from the texture manager.
@@ -671,19 +698,21 @@ public class HUDView extends ApplicationAdapter{
 		//get the new image
 		minimap.add(GameManager.get().getMiniMap().getBackground());
 	}
-	
+
 	/**
-     * Currently sets the health to 100 once a selectable unit is selected. 
+     * Currently sets the health to 100 once a selectable unit is selected.
      * @param target unit clicked on by player
      */
     private void setEnitity(BaseEntity target) {
-		disableButton(moveButton);
-		disableButton(attackButton);
-		disableButton(gatherButton);
+		for (int i = 0; i < NUMBER_ACTION_BUTTONS; i++) {
+			disableButton(buttonList.get(i));
+		}
 		if (selectedEntity == null) {
             return;
         }
         selectedEntity = target;
+		currentActions = target.getValidActions();
+		currentBuildActions = target.getValidBuild();
 		EntityStats stats = target.getStats();
 		updateSelectedStats(stats);
         enterActions(target.getValidActions());
@@ -719,23 +748,23 @@ public class HUDView extends ApplicationAdapter{
      * @param actions avaliable to the selected entity
      */
 	private void enterActions(List<ActionType> actions) {
-		if (actions == null) {
+		if (currentActions == null && currentBuildActions == null) {
 			return;
 		}
-        for (ActionType c : actions) {
-			switch (c) {
-				case MOVE:
-					enableButton(moveButton);
-					break;
-				case DAMAGE:
-					enableButton(attackButton);
-					break;
-				case GATHER:
-					enableButton(gatherButton);
-					break;
-				default:
-					LOGGER.error("Unrecognised action type, please implement in HUDView");
-			}
+		if (currentActions == null) {
+			currentActions = new ArrayList<ActionType>();
+		}
+		if (currentBuildActions == null) {
+			currentBuildActions = new ArrayList<EntityID>();
+		}
+        for (int i = 0; i < currentActions.size() + currentBuildActions.size(); i++) {
+				enableButton(buttonList.get(i));
+				if (i < currentActions.size()) {
+					buttonList.get(i).setText(ActionSetter.getActionName(currentActions.get(i)));
+				} else {
+					int j = i - currentActions.size();
+					buttonList.get(i).setText("Build " + currentBuildActions.get(j));
+				}
         }
 
     }
@@ -838,18 +867,18 @@ public class HUDView extends ApplicationAdapter{
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
-					peonButton = ((Selectable) e).getButton();
-					helpText = ((Selectable) e).getHelpText();
+					//peonButton = ((Selectable) e).getButton();
+					//helpText = ((Selectable) e).getHelpText();
 					somethingSelected = true;
 				}
 
 			}
 			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", skin);
-				helpText.setText("Welcome to SpacWars");
+				//peonButton = new TextButton("Select a Unit", skin);
+				//helpText.setText("Welcome to SpacWars");
 			}
-			getActionWindow().add(peonButton);
-			getActionWindow().add(helpText);
+			//etActionWindow().add(peonButton);
+			//etActionWindow().add(helpText);
 
 			lastMenuTick = TimeUtils.nanoTime();
 		}
