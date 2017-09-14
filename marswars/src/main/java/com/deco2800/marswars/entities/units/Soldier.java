@@ -124,6 +124,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 	}
 
+
+	/**
+	 * this is used to reset the texture to deselect entities
+	 */
+	public void resetTexture(){
+		this.setTexture(defaultTextureName);
+	}
+
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):

@@ -1,5 +1,6 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
@@ -56,6 +57,10 @@ public class MouseHandler extends Manager {
 
 			if (entities.isEmpty()) {
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
+				for (Clickable c : listeners) {
+					if (c instanceof Soldier) ((Soldier)c).resetTexture();
+				}
+				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
