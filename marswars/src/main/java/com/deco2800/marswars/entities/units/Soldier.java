@@ -181,7 +181,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void onTick(int tick) {
 
 		if (!currentAction.isPresent()) {
-			modifyFogOfWarMap(true,3);
+			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();

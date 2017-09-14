@@ -126,6 +126,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		createMiniMap();
 		createMap();
+
 		fogOfWar();
 		addAIEntities();
 		setThread();
