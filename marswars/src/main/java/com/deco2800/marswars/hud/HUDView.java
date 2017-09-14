@@ -2,6 +2,7 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -787,6 +788,24 @@ public class HUDView extends ApplicationAdapter{
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
 		}
 		
+<<<<<<< HEAD
+		//keyboard listeners for hotkeys
+		
+		//help listener
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			new ExitGame("Quit Game", skin).show(stage);
+		}
+		
+		//chat listener
+		if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+			if (messageToggle){
+				messageWindow.setVisible(false);
+				messageToggle = false; 
+			} else {
+				messageWindow.setVisible(true);
+				messageToggle = true;
+			}
+=======
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
 			getActionWindow().removeActor(helpText);
@@ -808,6 +827,7 @@ public class HUDView extends ApplicationAdapter{
 			getActionWindow().add(helpText);
 
 			lastMenuTick = TimeUtils.nanoTime();
+>>>>>>> 094d3d438f66020a65aef91a54186c2f9497f276
 		}
 	}
 	
