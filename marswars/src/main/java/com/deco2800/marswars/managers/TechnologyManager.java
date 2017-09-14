@@ -1,16 +1,26 @@
 package com.deco2800.marswars.managers;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.technology.*;
 
 public class TechnologyManager extends Manager{
+    //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
+    //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
+    // .. new HashMap<Integer, Integer[], String, List<Integer>>();
+
+
+
+    float spacAttack = 1.0f;
+    float spacMove = 5.0f;
+
+    // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
+    public HashMap<String, int[]> unitAttributes = new HashMap<>();
+
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
     private Technology heroFactory;
@@ -30,7 +40,25 @@ public class TechnologyManager extends Manager{
     private Technology special;
 
     public TechnologyManager() {
-        setUpHeroTechs();
+        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Upgrade Cost", new ArrayList<Technology>(),
+                "A cheap technology"));
+        techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Attack", new ArrayList<Technology>(),
+                "An expensive technology"));
+        techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
+                "An expensive technology"));
+
+
+        unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
+        unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
+        unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
+
+        //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
+//        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});
+//        unitAttributes.put("MissleEntity", new int[]{10, 500, 50, 250, 50, 8, 30});
+//        unitAttributes.put("Tank", new int[]{10, 500, 50, 250, 50, 8, 30});
+
+
+       // setUpHeroTechs();
         setUpTechMap();
     }
 
@@ -40,6 +68,9 @@ public class TechnologyManager extends Manager{
     /**
      provides a function to generate a List<String> representation of all the available technologies
      */
+    public int getUnitAttribute(String name, int attribute){
+        return 	unitAttributes.get(name)[attribute];
+    }
 
     public ArrayList<Technology> getAllTechs() {
         ArrayList<Technology> techList = new ArrayList<>();
@@ -53,6 +84,15 @@ public class TechnologyManager extends Manager{
 
     public void addActiveTech(Technology tech) {activeTech.add(tech); }
 
+    public void costUpgrade(){
+        for (int i = 0; i<unitAttributes.size();i++){
+            //iterate through map and reduce all unit costs
+        }
+    }
+    public void attackSoldierUpgrade(){
+            unitAttributes.get("Soldier")[2] *= 1.5;
+            //also need to set all existing solider to have this much
+        }
     public void unlockHeroFactory() {
 
     }
@@ -77,6 +117,16 @@ public class TechnologyManager extends Manager{
     public void unlockSpecial() {
 
     }
+
+    public void buildingArmorUpgrade(){
+
+    }
+
+    public void buildingConstructionTimeUpgrade(){
+
+    }
+
+
 
     /**
      * Provides a method to check that the requirements for researching a Technology exists, if they are
@@ -121,6 +171,7 @@ public class TechnologyManager extends Manager{
             unlockHeroFactory();
         }
         if(techID == 2){
+            attackSoldierUpgrade();
             unlockArmourLevelOne();
         }
         if(techID == 3){
@@ -143,7 +194,6 @@ public class TechnologyManager extends Manager{
         }
         return "Technology successfully researched";
     }
-
     private void setUpHeroTechs() {
         heroFactory = new Technology(new int[]{0, 0, 20, 20}, "Hero " +
                 "Factory", new ArrayList<Technology>(), "Unlocks the ability" +
