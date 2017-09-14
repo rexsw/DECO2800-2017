@@ -2,6 +2,7 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -785,6 +786,24 @@ public class HUDView extends ApplicationAdapter{
 			/*TODO get spacman icon to be spacman_ded when there
 			are no spacmen left*/
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
+		}
+		
+		//keyboard listeners for hotkeys
+		
+		//help listener
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			new ExitGame("Quit Game", skin).show(stage);
+		}
+		
+		//chat listener
+		if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+			if (messageToggle){
+				messageWindow.setVisible(false);
+				messageToggle = false; 
+			} else {
+				messageWindow.setVisible(true);
+				messageToggle = true;
+			}
 		}
 	}
 	
