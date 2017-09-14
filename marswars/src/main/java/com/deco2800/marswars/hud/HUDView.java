@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -217,22 +216,7 @@ public class HUDView extends ApplicationAdapter{
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				timeManager.pause();
-				new Dialog("Confirm exit", skin){
-					{
-						text("Are you sure you want to quit? ");
-						button("Yes", 1);
-						button("No, keep playing", 2);
-					}
-					
-					@Override
-					protected void result(final Object object){
-						if(object == (Object) 1){
-							System.exit(0);
-						} else {
-							timeManager.unPause();
-						}
-					}	
-				}.show(stage);	
+				new ExitGame("Quit Game", skin).show(stage);
 		}});
 
 		//Creates the message button listener 
