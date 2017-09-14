@@ -125,6 +125,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		addAIEntities();
 		setThread();
 		setGUI();
+		inputP.setInputProcessor();
 	}
 	
 	/**
@@ -203,6 +204,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}).start();
 	}
+	
 	
 	
 	/*
