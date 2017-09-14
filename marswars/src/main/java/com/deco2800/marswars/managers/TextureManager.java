@@ -114,6 +114,7 @@ public class TextureManager extends Manager {
         this.saveTexture("minus_button", "resources/HUDAssets/minusbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
+        this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
@@ -135,6 +136,9 @@ public class TextureManager extends Manager {
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
         this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
+        
+        // Item icon in shop dialog
+        this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
     }
     /*
      *
