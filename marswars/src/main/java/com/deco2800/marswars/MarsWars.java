@@ -1,6 +1,7 @@
 package com.deco2800.marswars;
 
 import com.badlogic.gdx.*;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,7 +17,7 @@ import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.functionKey.ShortCut;
+import com.deco2800.marswars.functionKeys.ShortCut;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -88,8 +89,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
 	
-	ShortCut shortCut = new ShortCut(camera, downKeys);
-	/**
+	ShortCut shortCut = new ShortCut();
+	/** 
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
 	 */
@@ -472,10 +473,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
-
-		shortCut.storeCameraPosition(camera);
-		shortCut.nextCameraPosition(camera);
-		shortCut.backCameraPosition(camera);
+		shortCut.process(camera);
 		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
