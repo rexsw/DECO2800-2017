@@ -34,7 +34,7 @@ public class RandomMapWriter {
     private NoiseMap noiseMap;
     //output file
     public final static String FILENAME = "resources/mapAssets/tmap.tmx";
-    //some hard coded constants, are these stored somewhere else in code?
+    //some hard coded constants
     private final int tileHeight = 32;
     private final int tileWidth = 55;
     //add tiles
@@ -48,15 +48,6 @@ public class RandomMapWriter {
      * @param noiseMap the noiseMap to use
      */
     public RandomMapWriter(int width, int height, List<Integer> orderTiles, NoiseMap noiseMap) {
-        if(noiseMap==null) {
-            throw new NullPointerException("noiseMap cannot be null");
-        }
-        if(orderTiles==null){
-            throw new NullPointerException("orderTiles cannot be null");
-        }
-        if(orderTiles.size()==0){
-            throw new IllegalArgumentException("orderTiles.size must be > 0");
-        }
         this.width = width;
         this.height = height;
         this.orderTiles = orderTiles;
