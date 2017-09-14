@@ -157,7 +157,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 	
 	/*
