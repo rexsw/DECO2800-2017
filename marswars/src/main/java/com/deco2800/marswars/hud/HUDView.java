@@ -2,6 +2,7 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,6 +58,7 @@ public class HUDView extends ApplicationAdapter{
 	private ImageButton quitButton;
 	private ImageButton helpButton;
 	private ImageButton messageButton;
+
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
 	private Table overheadRight; //contains all basic quit/help/chat buttons
@@ -69,13 +71,7 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
-	
-    /**Action buttons 
-	private Button quitButton; 	 // quits game
-	private Button helpButton;   // calls help
-	private Button messageButton;//opens or closes chatbox
->>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f**/
-	
+		
 	private Button peonButton;
 	private Label helpText;
 	
@@ -175,6 +171,15 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
 
 		LOGGER.debug("Add help, quit and message buttons");
+		
+		//add dispMainMenu image
+		Texture menuImage = textureManager.getTexture("menu_button");
+		HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(stage.getWidth()-50, 50);
+		TextureRegion menuRegion = new TextureRegion(menuImage);
+		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
+		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
+
 
 		//create help button + image for it 
 		Texture helpImage = textureManager.getTexture("help_button");
@@ -198,21 +203,12 @@ public class HUDView extends ApplicationAdapter{
 		gameTimeDisp = new Label("Time: 0:00", skin);
 		gameLengthDisp = new Label("00:00:00", skin);
 
-/**<<<<<<< HEAD
-		overheadRight.add(gameTimeDisp).pad(BUTTONPAD);
-		overheadRight.add(gameLengthDisp).pad(BUTTONPAD);
-		overheadRight.add(timeDisp).pad(BUTTONPAD);
-		overheadRight.add(messageButton).pad(BUTTONPAD);
-		overheadRight.add(helpButton).pad(BUTTONPAD);
-		overheadRight.add(quitButton).pad(BUTTONPAD);
-						
-		
-=======**/
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
 		overheadRight.add(gameLengthDisp).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
+		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
 		
 		welcomeMsg = new Table();
@@ -223,7 +219,6 @@ public class HUDView extends ApplicationAdapter{
 		welcomeMsg.add(welcomeText);
 		
 		stage.addActor(welcomeMsg);
-//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
 		stage.addActor(overheadRight);
 		
 		//Creates the help button listener
@@ -231,7 +226,6 @@ public class HUDView extends ApplicationAdapter{
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("help text", skin).show(stage);
 			}
 		});
 		
@@ -395,14 +389,6 @@ public class HUDView extends ApplicationAdapter{
 
 
 		LOGGER.debug("Creating HUD manipulation buttons");
-
-		//add dispMainMenu image
-		Texture menuImage = textureManager.getTexture("menu_button");
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
-		TextureRegion menuRegion = new TextureRegion(menuImage);
-		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
-		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
 			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button");
@@ -427,18 +413,11 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle Fog of war FOR (DEBUGGING) 
 		Button dispFog = new TextButton("Fog", skin);
 		
-		
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispMainMenu);
-//<<<<<<< HEAD
-		HUDManip.row();
-		HUDManip.add(dispActions).pad(BUTTONPAD);
-//=======
 		HUDManip.add(dispTech).pad(BUTTONPAD*2);
 		HUDManip.add(dispFog);
-		HUDManip.add(removeActions);
-//>>>>>>> aaefcbb353f7133f05304361c07b4953170a1a8f
+		HUDManip.add(removeActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
 		
@@ -474,22 +453,6 @@ public class HUDView extends ApplicationAdapter{
 			}	
 		});
 		
-		dispMainMenu.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				if(menuToggle){
-					LOGGER.debug("Enable old hud");
-					mainMenu.setVisible(true);
-					menuToggle = false;
-				} else {
-					LOGGER.debug("Disable old Hud");
-					mainMenu.setVisible(false);
-					menuToggle = true;
-				}
-			}
-			
-		});
-
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
@@ -860,6 +823,23 @@ public class HUDView extends ApplicationAdapter{
 			spacman = new Image(textureManager.getTexture("spacman_ded"));
 		}
 		
+		//keyboard listeners for hotkeys
+		
+		//help listener
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			new ExitGame("Quit Game", skin).show(stage);
+		}
+		
+		//chat listener
+		if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+			if (messageToggle){
+				messageWindow.setVisible(false);
+				messageToggle = false; 
+			} else {
+				messageWindow.setVisible(true);
+				messageToggle = true;
+			}
+
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
 			getActionWindow().removeActor(helpText);
@@ -881,6 +861,7 @@ public class HUDView extends ApplicationAdapter{
 			//etActionWindow().add(helpText);
 
 			lastMenuTick = TimeUtils.nanoTime();
+		}
 		}
 	}
 	
