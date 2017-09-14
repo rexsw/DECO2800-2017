@@ -1,4 +1,4 @@
-package com.deco2800.marswars.net;
+package com.deco2800.marswars.mainMenu;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,8 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.net.ClientConnectionManager;
+import com.deco2800.marswars.net.JoinLobbyAction;
+import com.deco2800.marswars.net.ServerConnectionManager;
+import com.deco2800.marswars.net.SpacClient;
+import com.deco2800.marswars.net.SpacServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +28,7 @@ import org.slf4j.LoggerFactory;
 public class LobbyButton{
 	private Skin skin; 
 	private Stage stage; 
+	private Window mainmenu; 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	Dialog ipDiag;
 	
@@ -29,24 +36,29 @@ public class LobbyButton{
 	SpacClient networkClient;
 	SpacServer networkServer;
 	
-	public LobbyButton(Skin skin, Stage stage){
+	public LobbyButton(Skin skin, Window mainmenu, Stage stage){
 		this.skin = skin;
 		this.stage = stage;
+		this.mainmenu = mainmenu;
 		System.out.println("Lobby instantiated");
 	}
 	
 	/**
 	 * Creates a 'Join Server' button and event listener for multiplayer features.
 	 * It is intended for the button to be added into the main menu. 
+	 * @param menuScreen 
 	 * @return Join Server button
 	 */
-	public Button addJoinServerButton(){
+	public Button addJoinServerButton(MenuScreen menuScreen){
 		LOGGER.debug("attempt to add join lobby button");
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", skin);
 		joinServerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				menuScreen.setJoinedServer(); //set the game status to joined server
+				menuScreen.selectCharacter(mainmenu, stage);
+				
 				// Construct inside of dialog
 				Table inner = new Table(skin);
 				Label ipLabel = new Label("IP", skin);
@@ -61,8 +73,6 @@ public class LobbyButton{
 				inner.add(usernameInput);
 				inner.row();
 				
-				System.out.println("Just let me die xD");
-
 				ipDiag = new Dialog("IP", skin, "dialog") {
 					@Override
 					protected void result(Object o) {
@@ -88,6 +98,7 @@ public class LobbyButton{
 				ipDiag.button("Join", true);
 				ipDiag.button("Cancel" , null);
 				ipDiag.show(stage);
+				
 			}
 		});
 		
@@ -97,15 +108,20 @@ public class LobbyButton{
 	/**
 	 * Creates a 'Start Server' button and event listener for multiplayer features.
 	 * It is intended for the button to be added into the main menu. 
+	 * @param menuScreen 
 	 * @return Start Server button
 	 */
-	public Button addStartServerButton(){
+	public Button addStartServerButton(MenuScreen menuScreen){
 		/* Start server button */
 		Button startServerButton = new TextButton("Start Server", skin);
 		startServerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				
+				menuScreen.selectWorldMode(mainmenu, stage);
+				
 				Dialog ipDiag = new Dialog("Local IP", skin, "dialog") {};
+				
 				try {
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					String ip = ipAddr.getHostAddress();
@@ -140,8 +156,8 @@ public class LobbyButton{
 				ipDiag.button("Close", null);
 				ipDiag.show(stage);
 			}
+
 		});
-		
 		return startServerButton; 
 	}		
 	

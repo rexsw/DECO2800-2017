@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Technology {
 	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list) and a description
-	private int id;
+	private int id = 0;
 	private int[] cost;
 	private String name;
 	private List<Technology> parents;

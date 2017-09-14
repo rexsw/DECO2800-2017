@@ -75,6 +75,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
+	long pauseTime = 0;
 
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
@@ -120,9 +121,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * into their relevant classes
 	 */
 	public void playGame(){
+		camera = new OrthographicCamera(1920, 1080);
+		GameManager.get().setCamera(camera);
+
 		createMiniMap();
 		createMap();
-		setGame();
 		fogOfWar();
 		addAIEntities();
 		setThread();
@@ -149,6 +152,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		
+		/* Move camera to the center of the world */
+		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
+
 	}
 	
 	/*
@@ -180,15 +188,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
-						for (Renderable e : GameManager.get().getWorld().getEntities()) {
-							if (e instanceof Tickable) {
-								((Tickable) e).onTick(0);
+					if (!timeManager.isPaused()) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+							for (Renderable e : GameManager.get().getWorld().getEntities()) {
+								if (e instanceof Tickable) {
+									((Tickable) e).onTick(0);
+
+								}
 							}
 						}
 						GameManager.get().onTick(0);
-						lastGameTick = TimeUtils.nanoTime();
 					}
+						lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -199,16 +210,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}).start();
 	}
 	
-	/*
-	 * Setup the game itself
-	 */
-	private void setGame() {
-		/* Setup the camera and move it to the center of the world */
-		camera = new OrthographicCamera(1920, 1080);
-		GameManager.get().setCamera(camera);
-		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
-		GameManager.get().setCamera(camera);
-	}
 	
 	/*
 	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
@@ -441,7 +442,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-		
+
+		long currentSeconds = timeManager.getGlobalTime();
+
 		if (downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			downKeys.remove(Input.Keys.M);
@@ -452,7 +455,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
+
+		if (downKeys.contains(Input.Keys.ESCAPE)) {
+			if (currentSeconds > pauseTime + 1000) {
+				if (timeManager.isPaused()) {
+					timeManager.unPause();
+					pauseTime = timeManager.getGlobalTime();
+				} else {
+					LOGGER.info("PAUSING #############################");
+					timeManager.pause();
+					pauseTime = timeManager.getGlobalTime();
+				}
+			}
+		}
+
 		//move the map in the chosen direction
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
@@ -608,6 +624,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		view.resize(width, height);
+		menu.resize(width, height);
 	}
 
 	/**
