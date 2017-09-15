@@ -28,15 +28,6 @@ import org.slf4j.LoggerFactory;
 
 public class Bunker extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
 
-	/* A single action for this building */
-	Optional<DecoAction> currentAction = Optional.empty();
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Bunker.class);
-	
-	private Manager owner = null;
-
-	boolean selected = false;
-
 	/**
 	 * Constructor for the bunker.
 	 * @param world The world that will hold the bunker.

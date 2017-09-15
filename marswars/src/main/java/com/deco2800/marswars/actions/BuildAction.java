@@ -98,17 +98,7 @@ public class BuildAction implements DecoAction{
 							GameManager.get().getWorld().getLength() - buildingDims - fixPos)) {
 						temp = new CheckSelect(proj_x+fixPos-((int)((buildingDims+1)/2)), proj_y+fixPos, 0f,
 								buildingDims, buildingDims, 0f);
-						int left = (int) (temp.getPosX() + fixPos);
-						int right = (int) ((temp.getPosX() + fixPos) + (buildingDims));
-						int bottom = (int) (temp.getPosY() + fixPos);
-						int top = (int) ((temp.getPosY() + fixPos) + (buildingDims));
-						for (int x = left+1; x < right+1; x++) {
-							for (int y = bottom-1; y < top-1; y++) {
-								if (GameManager.get().getWorld().hasEntity(x, y)) {
-									validBuild = false;
-								}
-							}
-						}
+						validBuild = GameManager.get().getWorld().checkValidPlace(temp.getPosX(), temp.getPosY(), buildingDims, fixPos);
 						if (validBuild) {
 							temp.setGreen();
 							GameManager.get().getWorld().addEntity(temp);

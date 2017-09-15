@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -112,8 +114,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		 */
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
-		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		world.loadMapContainer(map);
+		
 
 		/*
 		 * Initializes fog of war
@@ -743,7 +746,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().addManager(aim1);
 		Astronaut ai = new Astronaut(x, y, 0, aim1);
 		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, aim1);
+		BuildingEntity aibase = new BuildingEntity(x, y, 0, BuildingType.BASE, aim1);
 		Soldier Soldier = new Soldier(x, y,0,aim1);
 		Soldier.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(Soldier);
@@ -762,7 +765,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	playerManager.setColour(colour);
 	Spacman p = new Spacman(x, y, 1);
 	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
-	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0, playerManager);
+	BuildingEntity p2 = new BuildingEntity(x, y, 0, BuildingType.BASE, playerManager);
 	Soldier Soldier = new Soldier(x, y,0,playerManager);
 	GameManager.get().getWorld().addEntity(Soldier);
 	Tank tank = new Tank(x,y,0,playerManager);

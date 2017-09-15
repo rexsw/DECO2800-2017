@@ -28,15 +28,6 @@ import org.slf4j.LoggerFactory;
 
 public class Turret extends BuildingEntity{
 
-	/* A single action for this building */
-	Optional<DecoAction> currentAction = Optional.empty();
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Turret.class);
-	
-	private Manager onwer = null;
-
-	boolean selected = false;
-
 	/**
 	 * Constructor for the turret.
 	 * @param world The world that will hold the turret.

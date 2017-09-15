@@ -8,6 +8,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
@@ -30,6 +31,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private  List<ActionType> validActions;
 	private boolean selected = false;
 	private Manager owner = null;
+	private boolean fixPos = false;
 
 	/**
 	 * Constructor for the base entity
@@ -135,13 +137,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void fixPosition(int xPos, int yPos, int zPos) {
 		modifyCollisionMap(false);
-		if (GameManager.get().getWorld() instanceof BaseWorld) {
+		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = (int) xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
 			int bottom = (int) yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
-			//super.setPosition(x, y, z);
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
@@ -427,6 +428,22 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public boolean sameOwner(AbstractEntity entity) {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+	
+	/**
+	 * Sets boolean fixPosition
+	 * @param fix
+	 */
+	public void setFix(boolean fix) {
+		fixPos = fix;
+	}
+	
+	/**
+	 * returns boolean fixPosition
+	 * @return true if entity must be fixed
+	 */
+	public boolean getFix() {
+		return fixPos;
 	}
 
 }

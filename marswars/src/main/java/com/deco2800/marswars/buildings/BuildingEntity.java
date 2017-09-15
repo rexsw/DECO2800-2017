@@ -26,9 +26,11 @@ import com.deco2800.marswars.managers.SoundManager;
 public class BuildingEntity extends AttackableEntity implements Clickable, Tickable, HasProgress {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
-	
+	// list of available graphic for this building
 	private List<String> graphics;
-	
+	// Size of this building (must be isometric, 2x2, 3x3 etc)
+	private float buildSize;
+	// Current action of this building
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
 	/**
@@ -46,7 +48,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
 		this.addNewAction(ActionType.GENERATE);
-		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 		switch(building) {
 		case TURRET:
 			this.setCost(200);
@@ -59,8 +60,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setCost(350);
 			graphics = Arrays.asList("base1", "base2", "base3");
 			this.setTexture(graphics.get(graphics.size()-1));
-			this.setSpeed(2.5f);
+			this.setSpeed(.5f);
 			this.setHealth(2500);
+			this.setFix(true);
 			break;
 		case BARRACKS:
 			this.setCost(300);
@@ -68,6 +70,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setTexture(graphics.get(graphics.size()-1));
 			this.setSpeed(1.5f);
 			this.setHealth(2000);
+			this.setFix(true);
 			break;
 		case BUNKER:
 			this.setCost(100);
@@ -79,10 +82,18 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		default:
 			break;
 		}
-		this.setCost(0);
+		buildSize = building.getBuildSize();
+		this.setCost(0); //free cost for testing
 	}
 	
 
+	/**
+	 * Return build size of this entity
+	 */
+	public float getBuildSize() {
+		return this.buildSize;
+	}
+	
 	/**
 	 * Load first building stage
 	 */
@@ -158,7 +169,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 * * @param handler
 	 */
 	public void onClick(MouseHandler handler) {
-		getButton();
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound("endturn.wav");
 		if(this.getOwner() instanceof PlayerManager) {

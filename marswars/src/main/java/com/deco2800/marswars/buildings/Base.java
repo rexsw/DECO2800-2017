@@ -24,12 +24,6 @@ import com.deco2800.marswars.worlds.AbstractWorld;
  */
 public class Base extends BuildingEntity {
 
-	/* A single action for this building */
-	Optional<DecoAction> currentAction = Optional.empty();
-
-	
-	boolean selected = false;
-
 	/**
 	 * Constructor for the base.
 	 * @param world The world that will hold the base.

@@ -38,7 +38,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int attackSpeed; // attack speed of the entity
 	private MissileEntity missile; // the type of missile
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
 	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);

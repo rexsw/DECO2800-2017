@@ -3,10 +3,8 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
@@ -32,7 +30,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class); 
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
@@ -69,12 +67,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 				) {
 			
 			currentAction = Optional.of(new DamageAction(this, target));
-			LOGGER.error("Assigned action attack target at " + x + " " + y);
+			//LOGGER.error("Assigned action attack target at " + x + " " + y);
 		} 
 		else 
 		{
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.error("Same owner");
+			//LOGGER.error("Same owner");
 		}
 	}
 
@@ -85,10 +83,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
-			LOGGER.error("Clicked on soldier");
+			//LOGGER.error("Clicked on soldier");
 			this.makeSelected();
 		} else {
-			LOGGER.error("Clicked on ai soldier");
+			//LOGGER.error("Clicked on ai soldier");
 		}
 	}
 
@@ -100,7 +98,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
-			LOGGER.info("Right click occurred outside game world.");
+			//LOGGER.info("Right click occurred outside game world.");
 			this.setTexture(defaultTextureName);
 			return;
 		}
@@ -111,7 +109,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.error("Assigned action move to" + x + " " + y);
+			//LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -157,7 +155,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 					return;
 				}
 
-				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+				//LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
@@ -169,7 +167,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
 		} else {
-			LOGGER.info("Action is completed. Deleting");
+			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 		}
 		

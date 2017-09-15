@@ -11,6 +11,7 @@ import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -95,9 +96,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-                this.getRandomBuilding();
-               // this.getRandomEntity();
-               // this.getRandomResource();
+               this.getRandomBuilding();
+               this.getRandomEntity();
+               this.getRandomResource();
             }
         }
     }
@@ -269,16 +270,13 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(!checkForEntity(x, y)){
-            return;
-        }
-        if(random == BuildingType.BASE){
+        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, null);
-        } else if(random == BuildingType.TURRET){
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, null);
-        } else if(random == BuildingType.BUNKER){
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, null);
-        } else if(random == BuildingType.BARRACKS){
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, null);
         }
         else {
