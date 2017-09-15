@@ -1,5 +1,9 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.buildings.Barracks;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Bunker;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 

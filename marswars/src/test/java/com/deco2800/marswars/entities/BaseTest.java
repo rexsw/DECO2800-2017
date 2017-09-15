@@ -1,6 +1,7 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
@@ -22,15 +23,15 @@ public class BaseTest {
     @Before
     public void setup(){
         world = new BaseWorld(10, 15);
-        b = new Base(world, 0, 0, 0);
+        b = new Base(world, 0, 0, 0, null);
     }
 
     @Test
     public void constructorTest(){
         Assert.assertTrue(b != null);
-        Assert.assertEquals("homeBase", b.getTexture());
-        Assert.assertEquals(250, b.getCost());
-        Assert.assertFalse(b.isWorking());
+        Assert.assertEquals("base3", b.getTexture());
+        //Assert.assertEquals(350, b.getCost());
+        Assert.assertFalse(b.showProgress());
 
     }
 
@@ -39,14 +40,14 @@ public class BaseTest {
     public void testActions(){
         DecoAction action = Mockito.mock(DecoAction.class);
         b.setAction(action);
-        Assert.assertTrue(b.isWorking());
+        Assert.assertTrue(b.showProgress());
     }
 
     @Test
     public void checkOwner() {
-        Base b = new Base(world, 1,1,1);
-        Base b2 = new Base(world, 1,1,1);
-        Base b3 = new Base(world, 1,1,1);
+        Base b = new Base(world, 1,1,1, null);
+        Base b2 = new Base(world, 1,1,1, null);
+        Base b3 = new Base(world, 1,1,1, null);
         Resource mockResource = Mockito.mock(Resource.class);
         Manager mockManager = Mockito.mock(Manager.class);
         Manager mockManager2 = Mockito.mock(Manager.class);

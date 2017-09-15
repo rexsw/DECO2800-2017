@@ -10,6 +10,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
@@ -20,7 +21,7 @@ import com.deco2800.marswars.util.Box3D;
  * @author Tze Thong Khor on 25/8/17
  *
  */
-public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner{
+public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress{
 	
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
@@ -212,15 +213,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	}
 
 	/**
-	 * Check if the entity currently has an action
-	 * @return true if there is an ongoing action
-	 */
-	@Override
-	public boolean isWorking() {
-		return currentAction.isPresent();
-	}
-
-	/**
 	 * Set a new action for an entity
 	 * @param an action for the entity to take
 	 */
@@ -288,6 +280,27 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	@Override
 	public void setMaxLoyalty(int maxLoyalty) {
 		this.maxLoyalty = maxLoyalty;
+	}
+
+	@Override
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
+	}
+
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
 	}
 
 }

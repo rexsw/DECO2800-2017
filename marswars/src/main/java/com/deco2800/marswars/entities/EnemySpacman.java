@@ -9,7 +9,7 @@ import java.util.Optional;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
+public class EnemySpacman extends BaseEntity implements Tickable, HasOwner, HasProgress{
 
 	Optional<DecoAction> currentAction = Optional.empty();
 	
@@ -70,12 +70,28 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner{
 	}
 	
 	@Override
-	public boolean isWorking() {
-		return currentAction.isPresent();
-	}
-	
-	@Override
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
+	}
+
+	@Override
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
+	}
+
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
 	}
 }

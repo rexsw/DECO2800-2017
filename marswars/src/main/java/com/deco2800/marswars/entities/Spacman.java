@@ -14,6 +14,7 @@ import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.util.Point;
@@ -30,16 +31,11 @@ import java.util.Random;
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner, HasProgress {
 	LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
-	/* Note from Building Team, I see we have a new way of processing actions, 
-	 * however they cannot take the building type as a parameter.
-	 * I will continue to use the simple implementation, but should merge 
-	 * functionality later. Don't want to modify the actiontype class too much.
-	 */
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
@@ -61,7 +57,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 * @param posZ
 	 */
 	public Spacman(float posX, float posY, float posZ) {
-		super(posX, posY, posZ, 1, 1, 2);
+		super(posX, posY, posZ, 1, 1, 1);
 		this.setTexture("spacman_green");
 		this.setCost(spacManCost);
 		this.setEntityType(EntityType.UNIT);
@@ -359,15 +355,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 	
 	/**
-	 * Check if this spacman currently has an action
-	 * @return true if an action is present
-	 */
-	@Override
-	public boolean isWorking() {
-		return currentAction.isPresent();
-	}
-	
-	/**
 	 * Set an current action for this spacman
 	 * @param action
 	 */
@@ -388,6 +375,27 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 
 	public EntityStats getStats() {
 		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
+	}
+	
+	@Override
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
+	}
+
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
 	}
 
 }

@@ -1,0 +1,200 @@
+package com.deco2800.marswars.buildings;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.HasProgress;
+import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.Manager;
+import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.PlayerManager;
+import com.deco2800.marswars.managers.SoundManager;
+
+/**
+ * Created by grumpygandalf on 27/8/17.
+ *
+ * 
+ */
+public class BuildingEntity extends AttackableEntity implements Clickable, Tickable, HasProgress {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
+	
+	private List<String> graphics;
+	
+	private Optional<DecoAction> currentAction = Optional.empty();
+	
+	/**
+	 * Constructor for the BuildingEntity
+	 * @param posX
+	 * @param posY
+	 * @param posZ
+	 * @param xLength
+	 * @param yLength
+	 * @param zLength
+	 */
+	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, Manager owner) {
+		super(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
+				0f, building.getBuildSize(), building.getBuildSize(), false);
+		this.setOwner(owner);
+		this.setEntityType(EntityType.BUILDING);
+		this.addNewAction(ActionType.GENERATE);
+		PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
+		switch(building) {
+		case TURRET:
+			this.setCost(200);
+			graphics = Arrays.asList("turret1", "turret2", "turret3");
+			this.setTexture(graphics.get(graphics.size()-1));
+			this.setSpeed(1f);
+			this.setHealth(1850);
+			break;
+		case BASE:
+			this.setCost(350);
+			graphics = Arrays.asList("base1", "base2", "base3");
+			this.setTexture(graphics.get(graphics.size()-1));
+			this.setSpeed(2.5f);
+			this.setHealth(2500);
+			break;
+		case BARRACKS:
+			this.setCost(300);
+			graphics = Arrays.asList("barracks1", "barracks2", "barracks3");
+			this.setTexture(graphics.get(graphics.size()-1));
+			this.setSpeed(1.5f);
+			this.setHealth(2000);
+			break;
+		case BUNKER:
+			this.setCost(100);
+			graphics = Arrays.asList("bunker1", "bunker2", "bunker3");
+			this.setTexture(graphics.get(graphics.size()-1));
+			this.setSpeed(.5f);
+			this.setHealth(800);
+			break;
+		default:
+			break;
+		}
+		this.setCost(0);
+	}
+	
+
+	/**
+	 * Load first building stage
+	 */
+	public void animate1() {
+		this.setTexture(graphics.get(0));
+	}
+	
+	/**
+	 * Load second building stage
+	 */
+	public void animate2() {
+		this.setTexture(graphics.get(1));
+	}
+	
+	/**
+	 * Load final building stage
+	 */
+	public void animate3() {
+		this.setTexture(graphics.get(2));
+	}
+	
+	@Override
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
+	}
+
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
+	}
+	
+	@Override
+	/**
+	 * Set the action of this building
+	 * @param action
+	 */
+	public void setAction(DecoAction action) {
+		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * Returns the current action (used in WeatherManager)
+	 * @return
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
+	
+	/**
+	 * Give action to the building
+	 * @param action
+	 */
+	public void giveAction(DecoAction action) {
+		if (!currentAction.isPresent()) {
+			currentAction = Optional.of(action);
+		}
+	}
+	
+	/**
+	 * On click handler
+	 * 
+	 * * @param handler
+	 */
+	public void onClick(MouseHandler handler) {
+		getButton();
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("endturn.wav");
+		if(this.getOwner() instanceof PlayerManager) {
+			if (!this.isSelected()) {
+				this.makeSelected();
+				handler.registerForRightClickNotification(this);
+				LOGGER.info("clicked on base");
+			}
+		} else {
+			LOGGER.info("clicked on ai base");
+		}
+	}
+
+	/**
+	 * Perform some action when right clicked at x, y
+	 * @param x
+	 * @param y
+	 */
+	public void onRightClick(float x, float y) {
+		//base has no action on right click for now
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound("closed.wav");
+		this.deselect();
+	}
+
+	/**
+	 * On Tick handler for all buildings
+	 * @param i time since last tick
+	 */
+	public void onTick(int i) {
+		if (currentAction.isPresent()) {
+			currentAction.get().doAction();
+
+			if (currentAction.get().completed()) {
+				currentAction = Optional.empty();
+			}
+		}
+	}
+}

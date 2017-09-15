@@ -26,7 +26,7 @@ public class SpacmanTest {
 		assertEquals(man.getHealth(), 100);
 		assertEquals(man.getOwner(), null);
 		assertEquals(man.checkBackpack(), false);
-		assertFalse(man.isWorking());
+		assertFalse(man.showProgress());
 		//assertEquals(man.getLineOfSight(), new LineOfSight(1, 1, 1, 1, 1));
 	}
 	
@@ -90,7 +90,7 @@ public class SpacmanTest {
 		DecoAction action = Mockito.mock(DecoAction.class);
 		man.setAction(action);
 		
-		assertTrue(man.isWorking());
+		assertTrue(man.showProgress());
 	}
 	
 	@Test

@@ -2,10 +2,15 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.buildings.Barracks;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.buildings.Bunker;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.Base;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -268,13 +273,13 @@ public class MapContainer {
             return;
         }
         if(random == BuildingType.BASE){
-            newBuilding = new Base(world, x,y,0);
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, null);
         } else if(random == BuildingType.TURRET){
-            newBuilding = new Turret(world, x,y,0);
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, null);
         } else if(random == BuildingType.BUNKER){
-            newBuilding = new Bunker(world, x,y,0);
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, null);
         } else if(random == BuildingType.BARRACKS){
-            newBuilding = new Barracks(world, x,y,0);
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, null);
         }
         else {
             return;

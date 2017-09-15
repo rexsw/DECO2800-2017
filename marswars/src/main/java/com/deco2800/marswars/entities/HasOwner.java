@@ -39,13 +39,6 @@ public interface HasOwner {
 	 * @return boolean or null true iff entities has a current action, 
 	 * null if the entity has no decoaction field
 	 */	
-	public boolean isWorking();
-	
-	/**
-	 * sets the current decoaction of an entity, if applicable  
-	 * 
-	 * @param DecoAction the action to give the entity
-	 */	
 	public void setAction(DecoAction action);
 
 }

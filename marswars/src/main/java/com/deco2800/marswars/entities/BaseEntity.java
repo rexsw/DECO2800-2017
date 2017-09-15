@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.FogOfWarManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.actions.DecoAction;
@@ -22,12 +23,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class BaseEntity extends AbstractEntity implements Selectable {
+public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private int cost = 0;
 	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
 	private  List<ActionType> validActions;
 	private boolean selected = false;
+	private Manager owner = null;
 
 	/**
 	 * Constructor for the base entity
@@ -139,6 +141,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 			int right = (int) Math.ceil(xPos + getXLength());
 			int bottom = (int) yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
+			//super.setPosition(x, y, z);
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
@@ -396,4 +399,34 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	public void setAction(DecoAction action) {
 		return;
 	}
+
+	/**
+	 * Set the owner of this Entity
+	 * @param owner
+	 */
+	@Override
+	public void setOwner(Manager owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Get the owner of this Entity
+	 * @return owner
+	 */
+	@Override
+	public Manager getOwner() {
+		return (AbstractPlayerManager) this.owner;
+	}
+
+	/**
+	 * Check if this Entity has the same owner as the other Abstract Entity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+
 }

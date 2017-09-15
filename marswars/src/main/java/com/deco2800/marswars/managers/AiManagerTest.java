@@ -4,6 +4,7 @@ import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -50,7 +51,7 @@ public void onTick(long l) {
 		 * generate new spacman when a base has more than 30 rocks
 		 */
 private void generateSpacman(Base x) {
-	if(!x.isWorking() && resources.getRocks() > 30) {
+	if(!x.showProgress() && resources.getRocks() > 30) {
 		//sets the ai base to make more spacman if possible
 		LOGGER.error("ai - set base to make spacman");
 		resources.setRocks(resources.getRocks() - 30);
@@ -61,7 +62,7 @@ private void generateSpacman(Base x) {
 		
 private void useEnemy(Soldier x) {
 	//lets the ai target player spacman with it's enemyspacmen
-	if(x.isWorking()) {
+	if(x.showProgress()) {
 		return;
 	}
 	for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
@@ -75,7 +76,7 @@ private void useEnemy(Soldier x) {
 }
 
 private void useSpacman(Astronaut x) {
-	if(!(x.isWorking())) {
+	if(!(x.showProgress())) {
 		//allow spacmans to collect the closest resources
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 		x.setAction(new GatherAction(x, (Resource) resource.get()));

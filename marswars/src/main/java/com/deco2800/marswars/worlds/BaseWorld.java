@@ -81,6 +81,27 @@ public class BaseWorld extends AbstractWorld {
 			}
 		}
 	}
+	
+	/**
+	 * Removes an entity from the world.
+	 *
+	 * @param entity the entity to be removed
+	 */
+	public void removeEntity(BaseEntity entity) {
+		super.removeEntity(entity);
+		if (!entity.isCollidable())
+			return;
+		//Remove from the collision map
+		int left = (int)entity.getPosX();
+		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		int bottom = (int)entity.getPosY();
+		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+		for (int x = left; x < right; x++) {
+			for (int y = bottom; y < top; y++) {
+				collisionMap.get(x, y).remove(entity);
+			}
+		}
+	}
 
 	/**
 	 * Gets the collision map of the world.

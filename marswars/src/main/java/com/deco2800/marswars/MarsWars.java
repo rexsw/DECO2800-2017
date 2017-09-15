@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -742,7 +743,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().addManager(aim1);
 		Astronaut ai = new Astronaut(x, y, 0, aim1);
 		Astronaut ai1 = new Astronaut(x, y, 0, aim1);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, aim1);
 		Soldier Soldier = new Soldier(x, y,0,aim1);
 		Soldier.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(Soldier);
@@ -753,16 +754,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(ai);
 		ai1.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(aim1);
 		GameManager.get().getWorld().addEntity(aibase);
 	}
 	
 	public void setPlayer(int x, int y, String colour) {
 	PlayerManager playerManager = (PlayerManager) GameManager.get().getManager(PlayerManager.class);
 	playerManager.setColour(colour);
-	Spacman p = new Spacman(x, y, 0);
+	Spacman p = new Spacman(x, y, 1);
 	Astronaut p1 = new Astronaut(x, y, 0, playerManager);
-	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
+	Base p2 = new Base(GameManager.get().getWorld(), x, y, 0, playerManager);
 	Soldier Soldier = new Soldier(x, y,0,playerManager);
 	GameManager.get().getWorld().addEntity(Soldier);
 	Tank tank = new Tank(x,y,0,playerManager);
@@ -771,7 +771,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	GameManager.get().getWorld().addEntity(p);
 	p1.setOwner(playerManager);
 	GameManager.get().getWorld().addEntity(p1);
-	p2.setOwner(playerManager);
 	GameManager.get().getWorld().addEntity(p2);
 	}
 }

@@ -23,7 +23,7 @@ public class EnemySpacmanTest {
     public void constructorTest() {
         Assert.assertTrue(man != null);
         assertEquals(man.getOwner(), null);
-        assertFalse(man.isWorking());
+        assertFalse(man.showProgress());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class EnemySpacmanTest {
         DecoAction action = Mockito.mock(DecoAction.class);
         man.setAction(action);
 
-        assertTrue(man.isWorking());
+        assertTrue(man.showProgress());
         assertEquals(action.hashCode(), man.getCurrentAction().hashCode());
     }
 }

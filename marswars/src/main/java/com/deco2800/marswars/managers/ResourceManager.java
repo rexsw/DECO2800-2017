@@ -130,18 +130,13 @@ private static final String CLOSED = "closed.wav";
 	}
 
 	@Override
-	public boolean isWorking() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void setAction(DecoAction action) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	
-	/* This class does not use the isWorking() or setAction(DecoAction)
+	/* This class does not use the setAction(DecoAction)
 	 * functions from HasOwner
 	 */
 	
