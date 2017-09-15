@@ -72,7 +72,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.GATHER);
 		this.addNewAction(ActionType.MOVE);
-		this.addNewAction(ActionType.BUILD);
+		this.addNewAction(EntityID.SPACMAN);
 		//TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		this.setMoveSpeed(0.025f);
 		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge

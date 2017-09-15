@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
@@ -95,8 +96,8 @@ public class HUDView extends ApplicationAdapter{
 	private Button gatherButton;	
 	private Button moveButton;
 	private List<TextButton> buttonList;
-	private List<ActionType> currentActions;
-	private List<EntityID> currentBuildActions;
+	private ActionList currentActions;
+
 
 	//Toggles; checks if the feature is visible on-screen or not
 	private boolean messageToggle; 
@@ -560,12 +561,13 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor) {
 				LOGGER.info(selectedEntity.getClass().toString());
 				int index = buttonList.indexOf(actor); //Get the index of this button
-				if (index > currentActions.size() - 1) {//Check if it should be a build action
-					index = index - currentActions.size();
-					if (index > currentBuildActions.size() - 1) return;//Check if this is out of bounds
-						ActionSetter.setBuild(selectedEntity, currentBuildActions.get(index));
-				} else {//It is a unit action
-					selectedEntity.setNextAction(currentActions.get(index));
+				if (index < currentActions.size()) {
+					Object current = currentActions.get(index);
+					if (current instanceof ActionType) {
+						selectedEntity.setNextAction((ActionType)current);
+					} else {
+						ActionSetter.setBuild(selectedEntity, (EntityID)current);
+					}
 				}
 			}
 		});
@@ -676,10 +678,9 @@ public class HUDView extends ApplicationAdapter{
         }
         selectedEntity = target;
 		currentActions = target.getValidActions();
-		currentBuildActions = target.getValidBuild();
 		EntityStats stats = target.getStats();
 		updateSelectedStats(stats);
-        enterActions(target.getValidActions());
+        enterActions();
     }
 
     /**
@@ -709,25 +710,17 @@ public class HUDView extends ApplicationAdapter{
     /**
      * Enables action button based on the actions avaliable to 
      * the selected entity
-     * @param actions avaliable to the selected entity
      */
-	private void enterActions(List<ActionType> actions) {
-		if (currentActions == null && currentBuildActions == null) {
+	private void enterActions() {
+		if (currentActions == null) {
 			return;
 		}
-		if (currentActions == null) {
-			currentActions = new ArrayList<ActionType>();
-		}
-		if (currentBuildActions == null) {
-			currentBuildActions = new ArrayList<EntityID>();
-		}
-        for (int i = 0; i < currentActions.size() + currentBuildActions.size(); i++) {
+        for (int i = 0; i < currentActions.size(); i++) {
 				enableButton(buttonList.get(i));
-				if (i < currentActions.size()) {
-					buttonList.get(i).setText(ActionSetter.getActionName(currentActions.get(i)));
-				} else {
-					int j = i - currentActions.size();
-					buttonList.get(i).setText("Build " + currentBuildActions.get(j));
+				if (currentActions.get(i) instanceof ActionType) { //If it is an action
+					buttonList.get(i).setText(ActionSetter.getActionName((ActionType)currentActions.get(i)));
+				} else { //If it isnt an action it is something to build
+					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i));
 				}
         }
 

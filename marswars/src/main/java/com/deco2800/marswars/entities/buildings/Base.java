@@ -57,6 +57,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable,
 	super(posX, posY, posZ, BuildingType.BASE);
 		this.setTexture("homeBase");
 		this.setEntityType(EntityType.BUILDING);
+		this.addNewAction(EntityID.SPACMAN);
 		this.setCost(250);
 		this.setSpeed(2);
 	}
@@ -280,10 +281,4 @@ public class Base extends BuildingEntity implements Clickable, Tickable,
 		return owner >= 0;
 	}
 
-	@Override
-	public List<EntityID> getValidBuild() {
-		List<EntityID> l = new ArrayList<>();
-		l.add(EntityID.SPACMAN);
-		return l;
-	}
 }
