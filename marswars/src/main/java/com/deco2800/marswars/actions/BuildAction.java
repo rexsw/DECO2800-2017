@@ -173,6 +173,7 @@ public class BuildAction implements DecoAction{
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			base = new BuildingEntity((int)proj_x+fixPos-((int)((buildingDims+1)/2)), (int)proj_y+fixPos, 0f, building, actor.getOwner());
+			base.animate1();
 			if (resourceManager.getRocks() >= base.getCost()) {
 				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
 				GameManager.get().getWorld().addEntity(base);
