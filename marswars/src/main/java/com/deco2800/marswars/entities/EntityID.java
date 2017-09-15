@@ -8,16 +8,16 @@ package com.deco2800.marswars.entities;
  */
 /*A more suitable name will be appreciated8*/
 public enum EntityID {
-    BARRACKS,
-    BASE,
-    BUNKER,
-    HEROFACTORY,
-    TURRET,
-    ASTRONAUT,
-    CARRIER,
-    HEALER,
-    SOLDIER,
-    TANK,
+    //BARRACKS,
+    //BASE,
+    //BUNKER,
+    //HEROFACTORY,
+    //TURRET,
+    //ASTRONAUT,
+    //CARRIER,
+    //HEALER,
+    //SOLDIER,
+    //TANK,
     SPACMAN
 
 }
