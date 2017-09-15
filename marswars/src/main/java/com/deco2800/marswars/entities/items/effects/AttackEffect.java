@@ -1,7 +1,7 @@
 package com.deco2800.marswars.entities.items.effects;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.HeroSpacman;;
+import com.deco2800.marswars.entities.Commander;;
 
 public class AttackEffect implements Effect{
 	private int attackDamage;
@@ -18,8 +18,8 @@ public class AttackEffect implements Effect{
 	
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		if (entity instanceof HeroSpacman) {
-			HeroSpacman hero = (HeroSpacman) entity;
+		if (entity instanceof Commander) {
+			Commander hero = (Commander) entity;
 			
 			hero.setDamage(hero.getDamageDeal() + this.attackDamage);
 			hero.setAttackSpeed(hero.getAttackSpeed() + this.attackSpeed);
@@ -30,8 +30,8 @@ public class AttackEffect implements Effect{
 	
 	@Override
 	public void removeEffect(AttackableEntity entity) {
-		if (entity instanceof HeroSpacman) {
-			HeroSpacman hero = (HeroSpacman) entity;
+		if (entity instanceof Commander) {
+			Commander hero = (Commander) entity;
 			
 			hero.setDamage(hero.getDamageDeal() - this.attackDamage);
 			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed);

@@ -10,12 +10,12 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 
 public class Inventory {
 	
-	private HeroSpacman owner;
+	private Commander owner;
     private Armour armour;
     private Weapon weapon;
     private ArrayList<Item> specials;
 
-    public Inventory(HeroSpacman owner) {
+    public Inventory(Commander owner) {
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;

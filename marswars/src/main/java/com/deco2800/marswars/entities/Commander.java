@@ -12,14 +12,14 @@ import java.util.Optional;
  * Created by timhadwen on 19/7/17.
  * Edited by Zeid Ismail on 8/09
  */
-public class HeroSpacman extends Soldier {
+public class Commander extends Soldier {
 
 	Inventory inventory;
 
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
-	public HeroSpacman(float posX, float posY, float posZ, int owner) {
+	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.setTexture("spacman_red");
 		this.setEntityType(EntityType.HERO);

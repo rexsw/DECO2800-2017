@@ -64,6 +64,7 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
+	private ShopDialog shopDialog; // Dialog for shop page
 	
     //Action buttons 
 	private Button quitButton; 	 // quits game
@@ -386,8 +387,8 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating HUD manipulation buttons");
 
 		Button dispMainMenu = new TextButton("Menu", skin);
-		ShopDialog shopDialog = new ShopDialog("Shop", skin, textureManager);
-			
+		shopDialog = new ShopDialog("Shop", skin, textureManager);
+
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button");
 		TextureRegion minusRegion = new TextureRegion(minusImage);
@@ -813,6 +814,9 @@ public class HUDView extends ApplicationAdapter{
 			}
 			if (e instanceof Spacman) {
 				spacmenCount++; 
+			}
+			if (e instanceof Commander) {
+				shopDialog.addHeroIcon((Commander) e);
 			}
 		}
 		//Get the details from the selected entity

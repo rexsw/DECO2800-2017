@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.entities.Commander;
 import com.deco2800.marswars.entities.items.ArmourType;
 import com.deco2800.marswars.entities.items.ItemType;
 import com.deco2800.marswars.entities.items.SpecialType;
@@ -28,18 +28,14 @@ public class ShopDialog extends Dialog{
     private TextureManager textureManager;
     private int iconSize = Gdx.graphics.getWidth() / 12;
     private List<ItemType> itemList;
-    
-    
-    private static final String reallyLongString = "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n"
-            + "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n"
-            + "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n";
-
+    private List<Commander> heroList;
     
 	public ShopDialog(String title, Skin skin, TextureManager manager) {
 		super(title, skin);
 		this.getTitleLabel().setAlignment(Align.center);
 		this.textureManager = manager;	
 		this.itemList = new ArrayList<>();
+		this.heroList = new ArrayList<>();
 		this.getContentTable().setDebug(true);
 		this.getContentTable().left();
 		
@@ -65,6 +61,7 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
+	                scrollTable.add(new Label(item.getDescription(), skin)).width(iconSize).top();
 	                }
 	        });
 			
@@ -73,26 +70,7 @@ public class ShopDialog extends Dialog{
 	        scrollTable.add(new Label(item.getCostString(), skin)).width(iconSize).top();
 	        scrollTable.row();
 		}
-//		Texture gloveImage = textureManager.getTexture("power_gloves");
-//		Texture needleImage = textureManager.getTexture("heal_needle");
-//		Texture helmetImage = textureManager.getTexture("defence_helmet");
 		
-//		ImageButton gloveButton = generateItemButton(gloveImage);
-//		ImageButton needleButton = generateItemButton(needleImage);
-//		ImageButton helmetButton = generateItemButton(helmetImage);
-//		ImageButton button6 = generateItemButton(gloveImage);
-//		
-//		
-//		final Label text3 = new Label(reallyLongString, skin);
-//        text3.setAlignment(Align.center);
-//        text3.setWrap(true);
-        
-//        scrollTable.row();
-//        scrollTable.add(needleButton).width(iconSize).height(iconSize);
-//        scrollTable.row();
-//        scrollTable.add(button6).width(iconSize).height(iconSize);
-//        scrollTable.row();
-//        scrollTable.add(helmetButton).width(iconSize).height(iconSize);
         final ScrollPane scroller = new ScrollPane(scrollTable);
         
         Texture heroImage = textureManager.getTexture("hero_button");
@@ -104,18 +82,13 @@ public class ShopDialog extends Dialog{
         table.add(new Label("Commander", skin)).width(iconSize);
         table.row();
         table.add(heroButton).width(iconSize).height(iconSize).top();
+        
         this.getContentTable().add(scroller).fill().expand().top();
         this.getContentTable().add(table).width(iconSize).top();
         
         
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
-        
-//        helmetButton.addListener(new ClickListener() {  
-//            public void clicked(InputEvent event, float x, float y){
-//                status.setText("new!");
-//                }
-//        });
         
         heroButton.addListener(new ClickListener(){
         	public void clicked(InputEvent event, float x, float y){
@@ -131,13 +104,13 @@ public class ShopDialog extends Dialog{
         
 	}
 	
-	public ImageButton generateItemButton(Texture image) {
+	private ImageButton generateItemButton(Texture image) {
 		TextureRegion imgRegion = new TextureRegion(image);
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
 		return new ImageButton(imgDraw);
 	}
 	
-	public ImageButton generateHeroButton(Texture image, Texture offImage) {
+	private ImageButton generateHeroButton(Texture image, Texture offImage) {
 		TextureRegion imgRegion = new TextureRegion(image);
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
 		TextureRegion offImgRegion = new TextureRegion(offImage);
@@ -147,6 +120,10 @@ public class ShopDialog extends Dialog{
 		button.getStyle().imageChecked = imgDraw;
         
 		return button;
+	}
+	
+	public void addHeroIcon(Commander hero) {
+		heroList.add(hero);
 	}
 	
 	@Override

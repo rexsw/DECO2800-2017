@@ -1,7 +1,7 @@
 package com.deco2800.marswars;
 
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HeroSpacman;
+import com.deco2800.marswars.entities.Commander;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
@@ -29,7 +29,7 @@ public class BaseWorldTest extends BaseTest {
     @Before
     public void setup(){
         baseWorld = new BaseWorld(10 ,15);
-        entity = new HeroSpacman(baseWorld,0f,0f,0f);
+        entity = new Commander(baseWorld,0f,0f,0f);
     }
 
 

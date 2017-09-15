@@ -1,6 +1,6 @@
 package com.deco2800.marswars.entities.items.effects;
 
-import com.deco2800.marswars.entities.HeroSpacman;
+import com.deco2800.marswars.entities.Commander;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 
 public class HealthEffect implements Effect{
@@ -13,8 +13,8 @@ public class HealthEffect implements Effect{
 	}
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		if (entity instanceof HeroSpacman) {
-			HeroSpacman hero = (HeroSpacman) entity;
+		if (entity instanceof Commander) {
+			Commander hero = (Commander) entity;
 			
 			if (isDamage) {
 				hero.setHealth(hero.getHealth() - this.health);

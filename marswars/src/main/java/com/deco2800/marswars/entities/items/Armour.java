@@ -45,7 +45,7 @@ public class Armour extends Item {
 	 * @return the amount of Armour the item will add on. Negative numbers will mean the Armour stats will be reduced.
 	 */
 	public int getArmourValue() {
-		return type.getArmourValue(lvl);
+		return type.getArmourValue();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Armour extends Item {
 	 * @return the amount of Health the item will add on. Negative numbers will mean the Health stats will be reduced.
 	 */
 	public int getArmourHealth() {
-		return type.getArmourHealth(lvl);
+		return type.getArmourHealth();
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class Armour extends Item {
 	 * decrease when applied.
 	 */
 	public int getMoveSpeed() {
-		return type.getMoveSpeed(lvl);
+		return type.getMoveSpeed();
 	}
 
 	/**
