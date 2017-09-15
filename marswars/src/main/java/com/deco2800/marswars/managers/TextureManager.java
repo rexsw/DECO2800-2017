@@ -138,7 +138,11 @@ public class TextureManager extends Manager {
         this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
         
         // Item icon in shop dialog
+        this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
+        this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
         this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
+        this.saveTexture("heal_needle", "resources/shopAssets/items/heal_needle.png");
+        this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
     }
     /*
      *
