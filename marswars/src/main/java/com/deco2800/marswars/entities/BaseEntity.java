@@ -205,8 +205,18 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	@Override
 	public List<ActionType> getValidActions() {
+		this.addNewAction(ActionType.GATHER);
+		this.addNewAction(ActionType.MOVE);
 		return this.validActions;
 	}
+
+
+	public List<EntityID> getValidBuild() {
+		List<EntityID> l = new ArrayList<>();
+		l.add(EntityID.SPACMAN);
+		return null;
+	}
+
 
 	/**
 	 * Instantiates the list of actions
@@ -384,6 +394,15 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @param nextAction the action to be forced
 	 */
 	public void setNextAction(ActionType nextAction) {
+		return;
+	}
+
+	/**
+	 * Forces the unit to only try the chosen action on the next rightclick
+	 * this variant is for building
+	 * @param toBuild the unit to be built
+	 */
+	public void setNextAction(BaseEntity toBuild, ActionType action) {
 		return;
 	}
 

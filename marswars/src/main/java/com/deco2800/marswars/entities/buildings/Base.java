@@ -20,6 +20,8 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -276,5 +278,12 @@ public class Base extends BuildingEntity implements Clickable, Tickable,
 	@Override
 	public boolean isAi() {
 		return owner >= 0;
+	}
+
+	@Override
+	public List<EntityID> getValidBuild() {
+		List<EntityID> l = new ArrayList<>();
+		l.add(EntityID.SPACMAN);
+		return l;
 	}
 }
