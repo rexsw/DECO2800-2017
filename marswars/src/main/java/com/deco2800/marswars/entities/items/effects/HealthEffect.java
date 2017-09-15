@@ -36,7 +36,7 @@ public class HealthEffect implements Effect{
 		if (isDamage) {
 			string.append("Heal: " + health + "\n");
 		} else {
-			string.append("Damage dealt: " + health + "\n");
+			string.append("Damage: " + health + "\n");
 		}
 		return string.toString();
 	}

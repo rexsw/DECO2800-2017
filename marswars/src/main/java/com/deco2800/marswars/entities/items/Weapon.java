@@ -20,7 +20,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  */
 public class Weapon extends Item {
     private WeaponType type;
-    private int lvl;
+//    private int lvl;
     private List<Effect> effects;
     //private AttackEffect effect;
 
@@ -30,10 +30,10 @@ public class Weapon extends Item {
 	 * @param type The ArmouType enumerate that has the stored meta data for the specific item to be created.
 	 * @param lvl the level of the item to be created.
 	 */
-    public Weapon(WeaponType type, int lvl) {
+    public Weapon(WeaponType type) {
     	this.effects = new ArrayList<>();
         this.type = type;
-        this.lvl = lvl;
+//        this.lvl = lvl;
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
     }
 
@@ -43,7 +43,7 @@ public class Weapon extends Item {
 	 * @return the current amount of damage (normal and armour damage) that the item will add on.
 	 */
     public int getWeaponDamage() {
-        return type.getWeaponDamage(lvl);
+        return type.getWeaponDamage();
     }
     
     /**
@@ -52,7 +52,7 @@ public class Weapon extends Item {
 	 * @return the current range of the damage change that the item will add on.
 	 */
     public int getWeaponRange() {
-    	return type.getWeaponRange(lvl);
+    	return type.getWeaponRange();
     }
     
     /**
@@ -61,17 +61,17 @@ public class Weapon extends Item {
 	 * @return the current amount attack speed that the item will add on.
 	 */
     public int getWeaponSpeed() {
-    	return type.getWeaponSpeed(lvl);
+    	return type.getWeaponSpeed();
     }
 
-    /**
-	 * Gets the current level of the Weapon item.
-	 * 
-	 * @return the current level of the Weapon item.
-	 */
-    public int getLevel() {
-    	return this.lvl;
-    }
+//    /**
+//	 * Gets the current level of the Weapon item.
+//	 * 
+//	 * @return the current level of the Weapon item.
+//	 */
+//    public int getLevel() {
+//    	return this.lvl;
+//    }
     
     /**
 	 * Gets a list of all the effects the Weapon item has.

@@ -44,7 +44,7 @@ public class AttackEffect implements Effect{
 	public String generateDescription() {
 		StringBuilder string = new StringBuilder("");
 		if (attackDamage != 0) {
-			string.append("AttackDamage: " + attackDamage + "\n");
+			string.append("WeaponDamage: " + attackDamage + "\n");
 			string.append("ArmourDamage: " + armourDamage + "\n");
 		}
 		if (attackSpeed != 0) {
