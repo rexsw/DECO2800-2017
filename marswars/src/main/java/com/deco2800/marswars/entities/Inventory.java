@@ -7,6 +7,7 @@ import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Commander;
 
 public class Inventory {
 	

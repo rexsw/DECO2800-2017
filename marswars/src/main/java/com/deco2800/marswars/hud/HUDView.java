@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -35,6 +36,8 @@ import com.deco2800.marswars.managers.TextureManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -112,6 +115,8 @@ public class HUDView extends ApplicationAdapter{
 	private TextureManager textureManager; //for loading in resource images
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
+	
+	private HashSet<Commander> heroMap = new HashSet<>();
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -806,6 +811,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		int spacmenCount = 0; 		//counts the number of spacmen in game
 		int enemySpacmanCount = 0;  //counts the number of spatmen in game
+		
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
@@ -816,7 +822,10 @@ public class HUDView extends ApplicationAdapter{
 				spacmenCount++; 
 			}
 			if (e instanceof Commander) {
-				shopDialog.addHeroIcon((Commander) e);
+				if (!heroMap.contains((Commander)e)) {
+					heroMap.add((Commander) e);
+					shopDialog.addHeroIcon((Commander) e);
+				}
 			}
 		}
 		//Get the details from the selected entity

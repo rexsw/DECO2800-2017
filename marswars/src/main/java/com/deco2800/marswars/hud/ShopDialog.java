@@ -16,11 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.entities.Commander;
 import com.deco2800.marswars.entities.items.ArmourType;
 import com.deco2800.marswars.entities.items.ItemType;
 import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.entities.items.WeaponType;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.TextureManager;
 
 public class ShopDialog extends Dialog{
@@ -95,6 +95,7 @@ public class ShopDialog extends Dialog{
                 if(heroButton.isChecked()) {
                 	heroButton.setChecked(true);
                 	status.setText("set true");
+                	System.out.println(heroList.size());
                 } else {
                 	heroButton.setChecked(false);
                 	status.setText("set false");

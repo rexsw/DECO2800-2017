@@ -1,8 +1,8 @@
-package com.deco2800.marswars.entities;
+package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.*;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.MouseHandler;
 
 import java.util.Optional;
@@ -21,21 +21,18 @@ public class Commander extends Soldier {
 
 	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		this.setTexture("spacman_red");
-		this.setEntityType(EntityType.HERO);
+		//this.name = "Commander";
+		//this.setAllTextture();
+		//this.setTexture("spacman_red");
+		//this.setEntityType(EntityType.HERO);
 		
-		this.addNewAction(ActionType.DAMAGE);
-		this.addNewAction(ActionType.MOVE);
+//		this.addNewAction(ActionType.DAMAGE);
+//		this.addNewAction(ActionType.MOVE);
 		//default values
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(100);
-		this.setArmor(500);
-		this.setArmorDamage(100);
-		this.setAttackRange(10);
-		this.setAttackSpeed(30);
-		this.setSpeed(0.05f);
+//		setAttributes();
 		
+		this.name = "Commander";
+		setAttributes();
 		this.inventory = new Inventory(this);
 	}
 
@@ -86,6 +83,27 @@ public class Commander extends Soldier {
 		return inventory;
 	}
 
+	@Override
+	public boolean equals(Object other) { // need more compare later
+		if (other instanceof Commander) {
+			return this.toString().equals(((Commander)other).toString());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() { // need more hash later
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + getOwner();
+	    return result;
+	}
+	
+	@Override
+	public String toString(){
+		return this.name;
+	}
+	
 //	public boolean getActivation (Item activeItem) {
 //		return activeItem.getActivation();
 //	}

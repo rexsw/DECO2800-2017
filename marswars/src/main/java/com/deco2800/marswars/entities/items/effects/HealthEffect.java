@@ -1,7 +1,7 @@
 package com.deco2800.marswars.entities.items.effects;
 
-import com.deco2800.marswars.entities.Commander;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Commander;
 
 public class HealthEffect implements Effect{
 	private int health;

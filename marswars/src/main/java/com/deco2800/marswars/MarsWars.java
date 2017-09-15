@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
@@ -676,5 +677,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(p1);
 		p2.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(p2);
+		
+		// test hero
+		Commander hero = new Commander(x,y,0,teamid);
+		GameManager.get().getWorld().addEntity(hero);
 	}
 }

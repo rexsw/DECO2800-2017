@@ -1,7 +1,7 @@
 package com.deco2800.marswars;
 
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Commander;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
