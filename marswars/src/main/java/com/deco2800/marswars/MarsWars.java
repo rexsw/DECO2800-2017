@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
@@ -26,6 +27,8 @@ import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.InitiateGame.InputProcessor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,15 +60,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Camera must be updated every render cycle.
 	 */
 	OrthographicCamera camera;
-	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
-	private int switcher = 0;
-	private int cSwitcher = 0;
-	private int cameraPointer = 0;
 
 	Stage stage;
 	Window window;
-	Button peonButton;
-	Label helpText;
 	Label rocksLabel;
 	Label gameTimeDisp;
 	Label gameLengthDisp;
@@ -75,10 +72,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
+	long pauseTime = 0;
 
-	static final int SERVER_PORT = 8080;
-	SpacClient networkClient;
-	SpacServer networkServer;
 	
 	private boolean gameStarted = false;
 	MainMenu menu;
@@ -90,6 +85,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
 	
+	private InputProcessor inputP;
 	
 	/**
 	 * Creates the required objects for the game to start.
@@ -109,8 +105,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
 		menu = new MainMenu(skin, stage, new Window("its a start", skin), this);
-		stage.addActor(menu.buildMenu());
-		
+		stage.addActor(menu.buildMenu());		
 		playGame();
 	}
 	
@@ -120,14 +115,19 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * into their relevant classes
 	 */
 	public void playGame(){
+		camera = new OrthographicCamera(1920, 1080);
+		inputP = new InputProcessor(camera, stage, skin);
+
+		GameManager.get().setCamera(camera);
+
 		createMiniMap();
 		createMap();
-		setGame();
+
 		fogOfWar();
 		addAIEntities();
 		setThread();
 		setGUI();
-		setInputProcessor();
+		inputP.setInputProcessor();
 	}
 	
 	/**
@@ -149,6 +149,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		
+		/* Move camera to the center of the world */
+		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(camera);
+
 	}
 	
 	/*
@@ -157,7 +162,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		new FogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 	
 	/*
@@ -180,15 +185,18 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
-						for (Renderable e : GameManager.get().getWorld().getEntities()) {
-							if (e instanceof Tickable) {
-								((Tickable) e).onTick(0);
+					if (!timeManager.isPaused()) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+							for (Renderable e : GameManager.get().getWorld().getEntities()) {
+								if (e instanceof Tickable) {
+									((Tickable) e).onTick(0);
+
+								}
 							}
 						}
 						GameManager.get().onTick(0);
-						lastGameTick = TimeUtils.nanoTime();
 					}
+						lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -199,139 +207,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}).start();
 	}
 	
-	/*
-	 * Setup the game itself
-	 */
-	private void setGame() {
-		/* Setup the camera and move it to the center of the world */
-		camera = new OrthographicCamera(1920, 1080);
-		GameManager.get().setCamera(camera);
-		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
-		GameManager.get().setCamera(camera);
-	}
+	
 	
 	/*
 	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
 	 */
 	private void setGUI() {
 		/* Add another button to the menu */
-		peonButton = new TextButton("Select a Unit", skin);
-		helpText = new Label("Welcome to SpacWars!", skin);
-
 		view = new com.deco2800.marswars.hud.HUDView(stage, skin, GameManager.get(), reg);
-		view.getActionWindow().add(peonButton);
-		view.getActionWindow().add(helpText);
 		view.disableHUD();
-	}
-	
-	private void setInputProcessor() {
-		/*
-		 * Setup inputs for the buttons and the game itself
-		 */
-		/* Setup an Input Multiplexer so that input can be handled by both the UI and the game */
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(stage); // Add the UI as a processor
-		
-        /*
-         * Set up some input managers for panning with dragging.
-         */
-		inputMultiplexer.addProcessor(new InputAdapter() {
-
-			int originX;
-			int originY;
-
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				if (GameManager.get().getActiveView() == 1) {
-					camera.position.set(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-					camera.zoom = 1;
-					GameManager.get().toggleActiveView();
-				} else {
-
-					originX = screenX;
-					originY = screenY;
-					// if the click is on the minimap
-					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
-						return true;
-					}
-
-					Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
-					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
-				}
-				return true;
-			}
-
-			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
-
-				originX -= screenX;
-				originY -= screenY;
-
-				// invert the y axis
-				originY = -originY;
-
-				originX += camera.position.x;
-				originY += camera.position.y;
-
-				camera.translate(originX - camera.position.x, originY - camera.position.y);
-
-				originX = screenX;
-				originY = screenY;
-				
-				GameManager.get().setCamera(camera);
-
-				return true;
-			}
-
-			@Override
-			public boolean keyDown(int keyCode) {
-				downKeys.add(keyCode);
-				keyPressed(keyCode);
-				return true;
-			}
-
-			@Override
-			public boolean keyUp(int keyCode) {
-				downKeys.remove(keyCode);
-				return true;
-			}
-			
-			/**
-			 * Enable player to zoom in and zoom out through scroll wheel
-			 */
-			@Override
-			public boolean scrolled(int amount) {
-				if (GameManager.get().getActiveView() == 1) {
-					//if we are currently on the megamap, cancel scroll
-					return false;
-				}
-				
-				int cursorX = Gdx.input.getX();
-				int cursorY = Gdx.input.getY();
-				
-				int windowWidth = Gdx.graphics.getWidth();
-				int windowHeight = Gdx.graphics.getHeight();
-				
-				if (camera.zoom > 0.5 && amount == -1) { // zoom in
-					//xMag/yMag is how is the mouse far from centre-screen
-					//			on each axis
-					double xMag = (double)cursorX - (windowWidth/2);
-					double yMag = (double)(windowHeight/2) - cursorY;
-					
-					camera.zoom /= 1.2;
-					//shift by mouse offset
-					camera.translate((float)xMag, (float)yMag);
-				} else if (camera.zoom < 10 && amount == 1) { // zoom out
-					camera.zoom *= 1.2;
-				}
-				forceMapLimits(); //has the user reached the edge?
-				return true;
-			}
-		});
-
-		Gdx.input.setInputProcessor(inputMultiplexer);
-		GameManager.get().toggleActiveView();
 	}
 
 	/**
@@ -340,40 +224,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	@Override
 	public void render () {
-		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
-			view.getActionWindow().removeActor(peonButton);
-			view.getActionWindow().removeActor(helpText);
-			
-			boolean somethingSelected = false;
-			for (Renderable e : GameManager.get().getWorld().getEntities()) {
-				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
-					peonButton = ((Selectable) e).getButton();
-					helpText = ((Selectable) e).getHelpText();
-					somethingSelected = true;
-				}
-
-			}
-			if (!somethingSelected) {
-				peonButton = new TextButton("Select a Unit", skin);
-				helpText.setText("Welcome to SpacWars");
-			}
-			view.getActionWindow().add(peonButton);
-			view.getActionWindow().add(helpText);
-
-			lastMenuTick = TimeUtils.nanoTime();
-		}
-
         /*
          * Create a new render batch.
          * At this stage we only want one but perhaps we need more for HUDs etc
          */
 		SpriteBatch batch = new SpriteBatch();
 
-        /*
+		/*
          * Update the input managers
          */
-		handleInput();
-
+		inputP.handleInput(pauseTime);
         /*
          * Update the camera
          */
@@ -406,7 +266,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		renderer.render(batch, camera);		
 
-		view.render();
+		view.render(lastMenuTick);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -423,177 +283,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			gameStarted = true;
 		}
 	}
-
-
-	/**
-	 * Handles keyboard input.
-	 */
-	private void handleInput() {
-		forceMapLimits(); //intentionally put at the start to create a
-						  //nice animation
-		
-		final int speed = 10; //zoom speed
-		final int pxTolerance = 20; // modifies how close to the edge the cursor
-									//has to be before the map starts moving.
-		
-		int cursorX = Gdx.input.getX();
-		int cursorY = Gdx.input.getY();
-		
-		int windowWidth = Gdx.graphics.getWidth();
-		int windowHeight = Gdx.graphics.getHeight();
-		
-		if (downKeys.contains(Input.Keys.M)) {
-			// open or close mega map
-			downKeys.remove(Input.Keys.M);
-			LOGGER.info("pos: " + camera.position.toString());
-			GameManager.get().toggleActiveView();
-		}
-		if (GameManager.get().getActiveView() == 1) {
-			// Don't process any inputs if in map view mode
-			return;
-		}
-		
-		//move the map in the chosen direction
-		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
-			camera.translate(0, 1 * speed * camera.zoom, 0);
-		}
-		if (downKeys.contains(Input.Keys.DOWN) || downKeys.contains(Input.Keys.S)) {
-			camera.translate(0, -1 * speed * camera.zoom, 0);
-		}
-		if (downKeys.contains(Input.Keys.LEFT) || downKeys.contains(Input.Keys.A)) {
-			camera.translate(-1 * speed * camera.zoom, 0, 0);
-		}
-		if (downKeys.contains(Input.Keys.RIGHT) || downKeys.contains(Input.Keys.D)) {
-			camera.translate(1 * speed * camera.zoom, 0, 0);
-		}
-		if ((downKeys.contains(Input.Keys.EQUALS)) && (camera.zoom > 0.5)) {
-			camera.zoom /= 1.05;
-		}
-		if ((downKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
-			camera.zoom *= 1.05;
-		}
-		if (downKeys.contains(Input.Keys.C)){
-			if(cSwitcher == 0){
-				ArrayList<Float> xyPosition = new ArrayList<Float>();
-				xyPosition.add(camera.position.x);
-				xyPosition.add(camera.position.y);
-				cameraPosition.add(xyPosition);
-				cSwitcher++;
-			}
-		}else{
-			cSwitcher = 0;
-		}
-		
-		if(downKeys.contains(Input.Keys.N) && !cameraPosition.isEmpty()){
-			ArrayList<Float> nextPosition = cameraPosition.get(cameraPointer);
-			if(switcher == 0){
-				float x= camera.position.x - nextPosition.get(0);
-				float y = camera.position.y - nextPosition.get(1);
-				x *= -1;
-				y *= -1;
-				if(camera.position.x > nextPosition.get(0) || (camera.position.x <= nextPosition.get(0)&& camera.position.x >0)){
-					camera.translate(x, 0);
-				}
-				if(camera.position.y > nextPosition.get(1) || 
-						(camera.position.y <= nextPosition.get(1))){
-					camera.translate(0, y);
-				}
-				switcher++;
-				cameraPointer++;
-				cameraPointer = cameraPointer % cameraPosition.size();
-			}	
-		}else{
-			switcher = 0;
-		}
-
-		// Move the map dependent on the cursor position
-		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
-				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
-			// skip checking for movement
-			return;
-		}
-		// Got rid of moving the map down because it makes it difficult
-		if (cursorX > windowWidth - pxTolerance) { // moving right
-			if (cursorY < pxTolerance) {
-				// move up and right
-				camera.translate((float) 0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else {
-				// move right
-				camera.translate(1 * speed * camera.zoom, 0, 0);
-			}
-		} else if (cursorX < pxTolerance) { // moving left
-			if (cursorY < pxTolerance) {
-				// move up and left
-				camera.translate((float) -0.7071 * speed * camera.zoom, (float) 0.7071 * speed * camera.zoom, 0);
-			} else {
-				// move left
-				camera.translate(-1 * speed * camera.zoom, 0, 0);
-			}
-		} else if (cursorY < pxTolerance) {
-			// move up
-			camera.translate(0, 1 * speed * camera.zoom, 0);
-		}
-		GameManager.get().setCamera(camera);
-	}
-
-	/**
-	 * Called when a key has been pressed
-	 * @param keycode key that was pressed
-	 */
-	private void keyPressed(int keycode) {
-		if ((keycode == Input.Keys.ENTER) && (this.networkClient != null)) {			
-			Table inner = new Table(skin);
-			TextField msgInput = new TextField("", skin);
-
-			inner.add(msgInput);
-
-			Dialog ipDiag = new Dialog("Message", skin, "dialog") {
-				@Override
-				protected void result(Object o) {
-					if(o != null) {
-						String msg = msgInput.getText();
-
-						MessageAction action = new MessageAction(msg);
-						networkClient.sendObject(action);
-					}
-				}
-			};
-
-			ipDiag.getContentTable().add(inner);
-			ipDiag.button("Send", true);
-			ipDiag.button("Cancel", null);
-			ipDiag.key(Input.Keys.ENTER, true);
-
-			ipDiag.show(stage);
-		}
-	}
 	
-	/**
-	 * Helper method called whenever the camera position is moved
-	 * to ensure the camera is never well of the map (in the black).
-	 */
-	private void forceMapLimits() {
-		//length&width of the map multiplied by the number of pixels of each
-		//tile in each direction.
-		int mapWidth = GameManager.get().getWorld().getWidth()*58;
-		int mapLength = GameManager.get().getWorld().getLength()*36;
-		
-		//x axis limits
-		if(camera.position.x > mapWidth) {
-			camera.position.x = mapWidth;
-		}else if(camera.position.x < 0) {
-			camera.position.x = 0;
-		}
-		
-		//y axis limits
-		if(camera.position.y > mapLength/2) {
-			camera.position.y = mapLength/2;
-		}else if(camera.position.y < 0-mapLength/2) {
-			camera.position.y = 0-mapLength/2;
-		}
-		GameManager.get().setCamera(camera);
-	}
-
 	/**
 	 * Resizes the viewport.
 	 *
@@ -608,6 +298,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(camera);
 		stage.getViewport().update(width, height, true);
 		view.resize(width, height);
+		menu.resize(width, height);
 	}
 
 	/**
@@ -622,7 +313,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * generates a new AI team with basic unit at a give x-y co-ord
 	 * @ensure the x,y pair are within the game map
 	 */
-	public void setAI(int lenght, int width, int teams) {
+	public void setAI(int length, int width, int teams) {
 		ArrayList<Colours> colour = new ArrayList<Colours>();
 		int x,y;
 		colour.add(Colours.BLUE);
@@ -632,7 +323,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		for(int teamid = 1; teamid < teams+1;teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, lenght);
+			x = ThreadLocalRandom.current().nextInt(1, length);
 			y = ThreadLocalRandom.current().nextInt(1, width);
 			rm.setBiomass(0, teamid);
 			rm.setRocks(0, teamid);
@@ -670,6 +361,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(soldier);
 		Tank tank = new Tank(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(tank);
+		Carrier carrier = new Carrier(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(carrier);
 		p.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(p);
 		p1.setOwner(teamid);

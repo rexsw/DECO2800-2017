@@ -5,11 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -27,7 +23,8 @@ import org.slf4j.LoggerFactory;
  * A bunker that can be used to increase population
  */
 
-public class Bunker extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Bunker extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -150,10 +147,11 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	}
 
 	/**
-	 * Returns the current action (used in WeatherManager)
-	 * @return
+	 * Returns the current action of the entity
+	 * @return current action
 	 */
-	public Optional<DecoAction> getAction() {
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
 	

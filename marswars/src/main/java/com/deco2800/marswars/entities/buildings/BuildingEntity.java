@@ -22,9 +22,6 @@ public class BuildingEntity extends BaseEntity implements HasHealth {
 	 * @param posX
 	 * @param posY
 	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
 	 */
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building) {
 		super(posX, posY, posZ, 3f, 3f, 0f, 3f, 3f, false);
