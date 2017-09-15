@@ -206,8 +206,6 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	@Override
 	public ActionList getValidActions() {
-		this.addNewAction(ActionType.GATHER);
-		this.addNewAction(ActionType.MOVE);
 		return this.validActions;
 	}
 
