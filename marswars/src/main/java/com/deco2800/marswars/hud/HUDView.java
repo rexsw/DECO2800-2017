@@ -226,6 +226,7 @@ public class HUDView extends ApplicationAdapter{
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				new WorkInProgress("Help  Menu", skin).show(stage);
 			}
 		});
 		
@@ -826,12 +827,12 @@ public class HUDView extends ApplicationAdapter{
 		//keyboard listeners for hotkeys
 		
 		//help listener
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			new ExitGame("Quit Game", skin).show(stage);
 		}
 		
 		//chat listener
-		if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 				messageToggle = false; 
@@ -839,6 +840,40 @@ public class HUDView extends ApplicationAdapter{
 				messageWindow.setVisible(true);
 				messageToggle = true;
 			}
+		}
+		
+		//tech tree listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+			new TechTreeView("TechTree", skin).show(stage);
+		}
+		
+		//HUD toggle listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+			if (inventoryToggle) {
+				LOGGER.debug("Enable hud");
+				actionsWindow.setVisible(true);
+				minimap.setVisible(true);
+				resourceTable.setVisible(true);
+				//show (-) button to make resources invisible
+				dispActions.remove();
+				HUDManip.add(removeActions);
+				inventoryToggle = false;
+			} else {
+				LOGGER.debug("Disable Hud");
+				actionsWindow.setVisible(false);
+				minimap.setVisible(false);
+				resourceTable.setVisible(false);
+				//show (+) to show resources again
+				removeActions.remove();
+				HUDManip.add(dispActions);
+				inventoryToggle = true;
+			}
+		}
+		
+		//help button listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+			new WorkInProgress("Help  Menu", skin).show(stage);
+		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
@@ -864,7 +899,6 @@ public class HUDView extends ApplicationAdapter{
 
 			}
 		}
-	}
 	
 	/**
 	 * Sets every HUD element invisible
