@@ -3,23 +3,25 @@ package com.deco2800.marswars.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.DamageAction.State;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
 
 public class LoadAction implements DecoAction {
 
     enum State {
-	MOVE_STATE, 
-	LOAD_STATE
+	START_STATE, MOVE_STATE, LOAD_STATE
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoadAction.class);
+    private static final Logger LOGGER = LoggerFactory
+	    .getLogger(LoadAction.class);
     private boolean completed = false;
     private MoveAction action = null;
-    private State state = State.MOVE_STATE;
+    private State state = State.START_STATE;
     private AttackableEntity carrier;
     private AttackableEntity target;
-    private int ticksLoad = 200;
+    private int ticksLoad = 50;
+    private boolean actionPaused = false;
 
     public LoadAction(AttackableEntity carrier, AttackableEntity target) {
 	super();
@@ -37,32 +39,46 @@ public class LoadAction implements DecoAction {
 	    loadAction();
 	    break;
 	default:
-		break;
+	    action = new MoveAction(target.getPosX(), target.getPosY(),
+		    carrier);
+	    state = State.MOVE_STATE;
+	    return;
 	}
     }
 
     private void loadAction() {
-    LOGGER.info("loaded units");
+	LOGGER.info("loaded units");
 	ticksLoad--;
-	if(ticksLoad == 0) {
+	if (ticksLoad == 0) {
 	    if (((Carrier) carrier).loadPassengers(target)) {
 		completed = true;
 	    } else {
 		return;
 	    }
-	    ticksLoad = 200;
+	    ticksLoad = 50;
 	}
 
     }
+	private float getDistanceToTarget() {
+		float diffX = target.getPosX() - carrier.getPosX();
+		float diffY = target.getPosY() - carrier.getPosY();
+		return Math.abs(diffX) + Math.abs(diffY);
+	}
 
     private void moveTowardsAction() {
-	if (action.completed()) {
-	    state = State.LOAD_STATE;
-	    return;
+	    float distance;
+		// When close to the enemy's attack range, attack.
+		if (action.completed()) {
+			state = State.LOAD_STATE;
+			return;
+		}
+		distance = getDistanceToTarget();
+		if (distance <= 1) {
+			state = State.LOAD_STATE;
+			return;
+		}
+		action.doAction();
 	}
-	action.doAction();
-    }
-
     @Override
     public boolean completed() {
 	return completed;
@@ -73,16 +89,20 @@ public class LoadAction implements DecoAction {
 	return 0;
     }
 
+    /**
+     * Prevents the current action from progressing.
+     */
     @Override
     public void pauseAction() {
-	// TODO Auto-generated method stub
-
+	actionPaused = true;
     }
 
+    /**
+     * Resumes the current action
+     */
     @Override
     public void resumeAction() {
-	// TODO Auto-generated method stub
-
+	actionPaused = false;
     }
 
 }

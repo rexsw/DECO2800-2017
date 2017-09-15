@@ -20,7 +20,9 @@ public class FogManager extends Manager {
 	 */
 	private static Array2D<Integer> blackFogOfWar;
 
-	//this is fog of war activation status
+	/**
+	 * this flag called activatedFog helps to turn on or off the fog of war
+	 */
 	private static boolean activatedFog = true;
 
 
@@ -63,7 +65,6 @@ public class FogManager extends Manager {
 	 * @param y the y coordinate
 	 * @return the fog value: 0 or 1
 	 */
-
 	public static int getBlackFog(int x, int y) {
 		return blackFogOfWar.get(x, y);
 	}

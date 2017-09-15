@@ -1,6 +1,7 @@
 package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
@@ -84,7 +85,9 @@ public class MouseHandler extends Manager {
 						if (! ((HasOwner) e).isAi() ) {
 							chosen = e;
 							isClickable = true;
-							break;
+							if (!(e instanceof BuildingEntity)) { //preference for player's non-building entities.
+								break;
+							}
 						}
 					}
 					if (chosen == null) {

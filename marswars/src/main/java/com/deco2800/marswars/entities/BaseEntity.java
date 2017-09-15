@@ -355,6 +355,11 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		}
 	}
 
+	/**
+	 * this function modify the fog of war map
+	 * @param add
+	 * @param scale
+	 */
 	protected void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();

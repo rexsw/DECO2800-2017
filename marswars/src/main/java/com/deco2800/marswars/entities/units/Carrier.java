@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +14,20 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 public class Carrier extends Soldier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
+    private static final int capacity = 3;
+
     private Optional<DecoAction> currentAction = Optional.empty();
 
-    private AttackableEntity[] loadedUnits;
+    private AttackableEntity[] loadedUnits = new AttackableEntity[capacity];
 
-    public Carrier(float posX, float posY, float posZ,
-	    int owner) {
+    public Carrier(float posX, float posY, float posZ, int owner) {
 	super(posX, posY, posZ, owner);
 
 	// set all the attack attributes
@@ -35,7 +38,7 @@ public class Carrier extends Soldier {
 	this.setArmorDamage(0);
 	this.setAttackRange(0);
 	this.setAttackSpeed(0);
-	loadedUnits = (AttackableEntity[]) new Object[10];
+	this.isCarrier();
     }
 
     @Override
@@ -59,11 +62,12 @@ public class Carrier extends Soldier {
 
 	} else {
 	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	    for (int i = 10; i == 0; i--) {
-		    if(!(loadedUnits[i] == null)) {
-			loadedUnits[i].setPosX(x);
-			loadedUnits[i].setPosY(y);
-		    }
+	    for (int i = 0; i < capacity; i++) {
+		if (!(loadedUnits[i] == null)) {
+		    LOGGER.error("moving unit " + i);
+		    loadedUnits[i].setPosX(x);
+		    loadedUnits[i].setPosY(y);
+		}
 	    }
 	    LOGGER.error("Assigned action move to" + x + " " + y);
 	}
@@ -73,44 +77,108 @@ public class Carrier extends Soldier {
 	sound.playSound(movementSound);
     }
 
+    @Override
+    public void onTick(int tick) {
+
+	if (!currentAction.isPresent()) {
+	    modifyFogOfWarMap(true, 3);
+	    // make stances here.
+	    int xPosition = (int) this.getPosX();
+	    int yPosition = (int) this.getPosY();
+	    List<BaseEntity> entities = GameManager.get().getWorld()
+		    .getEntities(xPosition, yPosition);
+	    int entitiesSize = entities.size();
+	    for (BaseEntity e : entities) {
+		if (e instanceof MissileEntity) {
+		    entitiesSize--;
+		}
+	    }
+	    boolean moveAway = entitiesSize > 2;
+	    if (moveAway) {
+
+		BaseWorld world = GameManager.get().getWorld();
+
+		/*
+		 * We are stuck on a tile with another entity therefore
+		 * randomize a close by position and see if its a good place to
+		 * move to
+		 */
+		Random r = new Random();
+		Point p = new Point(xPosition + r.nextInt(2) - 1,
+			yPosition + r.nextInt(2) - 1);
+
+		/* Ensure new position is on the map */
+		if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth()
+			|| p.getY() > world.getLength()) {
+		    return;
+		}
+		/* Check that the new position is free */
+		if (world.getEntities((int) p.getX(), (int) p.getY())
+			.size() > 1) {
+		    return;
+		}
+
+		LOGGER.info(
+			"Spacman is on a tile with another entity, move out of the way");
+
+		/* Finally move to that position using a move action */
+		currentAction = Optional.of(
+			new MoveAction((int) p.getX(), (int) p.getY(), this));
+	    }
+	    return;
+	}
+
+	if (!currentAction.get().completed()) {
+	    currentAction.get().doAction();
+	} else {
+	    LOGGER.info("Action is completed. Deleting");
+	    currentAction = Optional.empty();
+	}
+
+    }
+
     public void load(AttackableEntity target) {
 	int x = (int) target.getPosX();
 	int y = (int) target.getPosY();
-	if (this.sameOwner(target) && this != target) { // prevent carrier
-							// loading itself
+	if (this.sameOwner(target) && this != target
+		&& target.getLoadStatus() == 0) {
+	    // prevent carrier from loading itself or other carriers
 	    currentAction = Optional.of(new LoadAction(this, target));
-	    LOGGER.error("Assigned action attack target at " + x + " " + y);
+	    LOGGER.error("Assigned action load target at " + x + " " + y);
 	} else {
 	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	    LOGGER.error("Same owner");
+	    LOGGER.error("Unloadable target");
 	}
     }
-    
+
     public boolean loadPassengers(AttackableEntity target) {
-	//Make passengers unrendered
-	for (int i = 0; i< 10; i++) {
-	    if(loadedUnits[i] == null) {
+	for (int i = 0; i < capacity; i++) {
+	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
+		LOGGER.error("target loaded");
+		target.setLoaded();
 		return true;
 	    }
 	}
 	return false;
     }
-    
+
+    public AttackableEntity[] getPassengers() {
+	return loadedUnits;
+    }
+
     /**
      * 
      * 
-     * @return passenger thats loaded last
+     * @return unloads all Passengers
      */
-    public AttackableEntity unloadPassenger() {
-	AttackableEntity output;
-	for (int i = 10; i == 0; i--) {
-	    if(!(loadedUnits[i] == null)) {
-		output = loadedUnits[i];
+    public void unloadPassenger() {
+	for (int i = 0; i < capacity; i++) {
+	    if (!(loadedUnits[i] == null)) {
+		loadedUnits[i].setUnloaded();
+		LOGGER.error("Unit unloaded.");
 		loadedUnits[i] = null;
-		return output;
 	    }
 	}
-	return null;
     }
 }

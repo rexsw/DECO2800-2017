@@ -107,6 +107,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
 		this.setSpeed(0.05f);
+		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
@@ -181,7 +182,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void onTick(int tick) {
 
 		if (!currentAction.isPresent()) {
-			modifyFogOfWarMap(true,3);
+			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();

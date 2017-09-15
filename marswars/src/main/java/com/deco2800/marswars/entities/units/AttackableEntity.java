@@ -39,6 +39,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private MissileEntity missile; // the type of missile
+	private int loadStatus; //whether the target is loaded
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -303,6 +304,22 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes,
 	
 	public float getSpeed() {
 		return speed;
+	}
+	
+	public int getLoadStatus() {
+	    	return loadStatus;
+	}
+	
+	public void setLoaded() {
+	    loadStatus = 1;
+	}
+	
+	public void setUnloaded() {
+	    loadStatus = 0;
+	}
+	
+	public void isCarrier() {
+	    loadStatus = 2;
 	}
 
 }
