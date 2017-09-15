@@ -91,10 +91,7 @@ public class HUDView extends ApplicationAdapter{
 	private ProgressBar healthBar; //progress bar displaying spacmen health
 	private Pixmap pixmap; 		   //used for progress bar 
 	
-	//Action buttons 
-	private Button attackButton;	//spacman commands
-	private Button gatherButton;	
-	private Button moveButton;
+	//Action buttons
 	private List<TextButton> buttonList;
 	private ActionList currentActions;
 
@@ -535,16 +532,13 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setPosition(220, 0);
 		
 		//Add action buttons
-		/*addMoveButton();
-		addGatherButton();
-		addAttackButton();*/
 		addButtonArray();
 		
 		stage.addActor(actionsWindow);
 	}
 
 	private void addButtonArray() {
-		buttonList = new ArrayList<TextButton>();
+		buttonList = new ArrayList<>();
 		for (int i = 0; i != NUMBER_ACTION_BUTTONS; i++) {
 			TextButton newButton = new TextButton(" ", skin);
 			addButtonListener(newButton);
@@ -571,55 +565,6 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 		});
-	}
-
-	/**
-	 * Adds the attack button
-	 */
-	private void addAttackButton() {
-		attackButton = new TextButton("Attack", skin);
-		attackButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.info("Attack button pressed");
-				selectedEntity.setNextAction(ActionType.DAMAGE);
-
-			}
-		});
-		actionsWindow.add(attackButton);
-		enableButton(attackButton);
-	}
-
-	/**
-	 * Adds the gather button
-	 */
-	private void addGatherButton() {
-		gatherButton = new TextButton("Gather", skin);
-		gatherButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.info("Gather button pressed");
-				selectedEntity.setNextAction(ActionType.GATHER);
-			}
-		});
-		actionsWindow.add(gatherButton);
-		enableButton(gatherButton);
-	}
-
-	/**
-	 * Adds the move button
-	 */
-	private void addMoveButton() {
-		moveButton = new TextButton("Move", skin);
-		moveButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.info("Move button pressed");
-				selectedEntity.setNextAction(ActionType.MOVE);
-			}
-		});
-		actionsWindow.add(moveButton);
-		enableButton(moveButton);
 	}
 
 	/**
