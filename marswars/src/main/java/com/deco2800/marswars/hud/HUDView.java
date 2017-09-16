@@ -117,6 +117,7 @@ public class HUDView extends ApplicationAdapter{
 	private TextureManager textureManager; //for loading in resource images
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
+	private GameStats stats;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -127,13 +128,16 @@ public class HUDView extends ApplicationAdapter{
 	 * @param textureManager 
 	 */
 	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
-		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		LOGGER.debug("Creating Hud");
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
 		this.textureManager = textureManager;
+		
+		//Generate the game stats
+		this.stats = new GameStats(stage, skin, this);
+		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
 		//create the HUD 
@@ -409,13 +413,17 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 		
-		//add toggle Fog of war FOR (DEBUGGING) 
+		//add toggle Fog of war (FOR DEBUGGING) 
 		Button dispFog = new TextButton("Fog", skin);
 		
+		//add button for game stats (might just move this over to the game menu?)
+		Button dispStats = new TextButton("Stat2800", skin);
+				
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispTech).pad(BUTTONPAD*2);
-		HUDManip.add(dispFog);
+		HUDManip.add(dispTech).pad(BUTTONPAD);
+		HUDManip.add(dispFog).pad(BUTTONPAD);
+		HUDManip.add(dispStats).pad(BUTTONPAD);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
@@ -458,6 +466,14 @@ public class HUDView extends ApplicationAdapter{
 				new TechTreeView("TechTree", skin).show(stage);
 			}
 
+		});
+		
+		/*Display the player's stats*/
+		dispStats.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				stats.showStats(); 
+			}
 		});
 		
 		
@@ -905,6 +921,9 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setSize(50, 80);
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		HUDManip.align(Align.right| Align.bottom);
+		
+		//resize stats
+		stats.resizeStats(width, height);
 		
     }
 }
