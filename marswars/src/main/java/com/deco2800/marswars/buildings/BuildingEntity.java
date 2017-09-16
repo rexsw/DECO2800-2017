@@ -188,6 +188,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 				LOGGER.info("clicked on base");
 			}
 		} else {
+			this.makeSelected();
 			LOGGER.info("clicked on ai base");
 		}
 	}
