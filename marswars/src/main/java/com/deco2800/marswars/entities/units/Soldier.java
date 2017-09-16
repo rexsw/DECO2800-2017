@@ -140,12 +140,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(!this.isAi()) {
+		if(!this.isAi() & this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
 			LOGGER.info("Clicked on soldier");
-			this.makeSelected();
+			   this.makeSelected();
 		} else {
 			LOGGER.info("Clicked on ai soldier");
 		}
