@@ -104,10 +104,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
 				LOGGER.info("ai - setting unit to move to base" + base.toString());
-				AttackableEntity y = (AttackableEntity) base;
+				Base y = (Base) base;
 				// Move soldier to base (Not currently working, so will just not set any actions)
-				//soldier.setCurrentAction(MoveAction.MoveAction(base.getPosX(), base.getPosY(),
-				//		(AbstractEntity)soldier));
+				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
+						(AbstractEntity)soldier));
 				return;
 			}
 		}
@@ -131,7 +131,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	public boolean isKill(int key) {
 		//in this case "dead" is an Ai with no spacman
-		if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).unitcount(key) == 0) {
+		if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).count(key, "Units") == 0) {
 		LOGGER.info("ai - is kill");
 		alive.put(key, 0);
 		return true;

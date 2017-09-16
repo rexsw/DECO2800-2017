@@ -105,7 +105,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
 		GameManager.get().setCamera(this.camera);
-
+		
 		playGame();
 	}
 	
