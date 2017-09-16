@@ -20,7 +20,7 @@ public class PauseMenu extends Dialog{
 			text("Game Paused");  //$NON-NLS-1$
 			
 			button("Resume", 0); //$NON-NLS-1$
-			button("Game Statistics", 1);
+			button("Game Statistics", 1); //$NON-NLS-1$
 			button("Settings", 2); //$NON-NLS-1$
 			button("Quit to Main Menu", 3); //$NON-NLS-1$
 			button("Exit Game", 4); //$NON-NLS-1$

@@ -829,6 +829,11 @@ public class HUDView extends ApplicationAdapter{
 		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 			new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
 		}
+		
+		//pause menu listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			new PauseMenu("Pause Menu", skin).show(stage);
+		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
