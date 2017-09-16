@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.entities.items.ArmourType;
 import com.deco2800.marswars.entities.items.ItemType;
 import com.deco2800.marswars.entities.items.SpecialType;
+import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.WeaponType;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.TextureManager;
@@ -28,18 +29,19 @@ public class ShopDialog extends Dialog{
     private TextureManager textureManager;
     private int iconSize = Gdx.graphics.getWidth() / 12;
     private List<ItemType> itemList;
-    private List<Commander> heroList;
+    private Table heroTable;
+    private Label status;
+    private Commander selectedHero;
     
 	public ShopDialog(String title, Skin skin, TextureManager manager) {
 		super(title, skin);
 		this.getTitleLabel().setAlignment(Align.center);
 		this.textureManager = manager;	
 		this.itemList = new ArrayList<>();
-		this.heroList = new ArrayList<>();
 		this.getContentTable().setDebug(true);
 		this.getContentTable().left();
 		
-		Label status = new Label("update me", skin);
+		status = new Label("update me", skin);
 		
 		itemList.add(WeaponType.WEAPON1);
 		itemList.add(WeaponType.WEAPON2);
@@ -49,9 +51,9 @@ public class ShopDialog extends Dialog{
 		final Table scrollTable = new Table();
 		scrollTable.top();
 		scrollTable.debugAll();
-		scrollTable.add(new Label("Item", skin)).width(iconSize);
-		scrollTable.add(new Label("Description", skin)).width(iconSize);
-		scrollTable.add(new Label("Cost", skin)).width(iconSize);
+		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
+		scrollTable.add(new Label("Description", skin)).width(iconSize).expandX().top().left();
+		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
 		scrollTable.row();
 		
 		for (ItemType item:itemList) {
@@ -61,47 +63,46 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
-	                scrollTable.add(new Label(item.getDescription(), skin)).width(iconSize).top();
+	                if (selectedHero != null) {
+	                	if (item instanceof WeaponType) {
+	                		Weapon weapon = new Weapon((WeaponType) item);
+		                	selectedHero.addItemToInventory(weapon);
+		                	status.setText("Bought " + weapon.getName() + " for " + selectedHero.toString());
+	                	} else {
+	                		status.setText("not a weapon");
+	                	}
+	                } else {
+	                	status.setText("unsuccessful shopping!!!!!");
+	                }
 	                }
 	        });
 			
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
-	        scrollTable.add(new Label(item.getDescription(), skin)).width(iconSize).top();
-	        scrollTable.add(new Label(item.getCostString(), skin)).width(iconSize).top();
+	        scrollTable.add(new Label(item.getDescription(), skin)).width(iconSize).top().left();
+	        scrollTable.add(new Label(item.getCostString(), skin)).width(iconSize).top().left();
 	        scrollTable.row();
 		}
 		
         final ScrollPane scroller = new ScrollPane(scrollTable);
         
-        Texture heroImage = textureManager.getTexture("hero_button");
-		Texture heroOffImage = textureManager.getTexture("hero_button_off");
-        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
+//        Texture heroImage = textureManager.getTexture("hero_button");
+//		Texture heroOffImage = textureManager.getTexture("hero_button_off");
+//        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
 
-        Table table = new Table();
-        table.top();
-        table.add(new Label("Commander", skin)).width(iconSize);
-        table.row();
-        table.add(heroButton).width(iconSize).height(iconSize).top();
+        heroTable = new Table();
+        heroTable.top();
+        heroTable.add(new Label("Commander", skin)).width(iconSize);
+        heroTable.row();
+//        table.add(heroButton).width(iconSize).height(iconSize).top();
         
         this.getContentTable().add(scroller).fill().expand().top();
-        this.getContentTable().add(table).width(iconSize).top();
+        this.getContentTable().add(heroTable).width(iconSize).top();
         
         
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
         
-        heroButton.addListener(new ClickListener(){
-        	public void clicked(InputEvent event, float x, float y){
-                if(heroButton.isChecked()) {
-                	heroButton.setChecked(true);
-                	status.setText("set true");
-                	System.out.println(heroList.size());
-                } else {
-                	heroButton.setChecked(false);
-                	status.setText("set false");
-                }
-                }
-        	});
+        
         
 	}
 	
@@ -124,17 +125,35 @@ public class ShopDialog extends Dialog{
 	}
 	
 	public void addHeroIcon(Commander hero) {
-		heroList.add(hero);
+		Texture heroImage = textureManager.getTexture("hero_button");
+		Texture heroOffImage = textureManager.getTexture("hero_button_off");
+        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
+        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
+        
+        heroButton.addListener(new ClickListener(){
+        	public void clicked(InputEvent event, float x, float y){
+                if(heroButton.isChecked()) {
+                	heroButton.setChecked(true);
+                	status.setText("set true");
+                	System.out.println(hero.getArmorDamage());
+                	selectedHero = hero;
+                } else {
+                	heroButton.setChecked(false);
+                	status.setText("set false");
+                	selectedHero = null;
+                }
+                }
+        	});
 	}
 	
 	@Override
     public float getPrefWidth() {
-        return Gdx.graphics.getWidth() /3;
+        return Gdx.graphics.getWidth() /2.5f;
     }
 
     @Override
     public float getPrefHeight() {
-        return Gdx.graphics.getHeight() /2;
+        return Gdx.graphics.getHeight() /1.8f;
     }
 	
 	@Override
