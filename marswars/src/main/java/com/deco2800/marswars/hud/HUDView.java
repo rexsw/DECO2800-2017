@@ -239,9 +239,8 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				timeManager.pause();
-				new ExitGame("Quit Game", skin).show(stage); //$NON-NLS-1$
-		}});
+				new ExitGame("Quit Game", skin).show(stage);
+			}});
 
 		//Creates the message button listener 
 		LOGGER.debug("Creating message button listener"); //$NON-NLS-1$
@@ -826,6 +825,11 @@ public class HUDView extends ApplicationAdapter{
 		//help button listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 			new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
+		}
+		
+		//pause menu listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			new PauseMenu("Pause Menu", skin).show(stage);
 		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {

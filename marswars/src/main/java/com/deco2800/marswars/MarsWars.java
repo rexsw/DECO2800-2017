@@ -191,9 +191,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 								}
 							}
-							
+							GameManager.get().onTick(0);
+							lastGameTick = TimeUtils.nanoTime();
 						}
-						GameManager.get().onTick(0);
 					}
 						MarsWars.this.lastGameTick = TimeUtils.nanoTime();
 					try {
