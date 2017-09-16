@@ -1,5 +1,7 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -155,5 +157,15 @@ public final class ActionSetter {
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }
+    }
+
+    public static void setBuild(BaseEntity target, EntityID c) {
+        switch (c) {
+            default:
+                target.setAction(new GenerateAction(new Spacman(target.getPosX() - 10, target.getPosY() - 10, 0)));
+                break;
+
+        }
+        return;
     }
 }

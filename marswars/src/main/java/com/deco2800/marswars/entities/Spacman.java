@@ -55,7 +55,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-	private ActionType nextAction;
+	private ActionType nextAction = null;
+	private BaseEntity nextBuild = null;
 
 	/**
 	 * Constructor for the Spacman
@@ -65,13 +66,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 */
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 2);
+		LOGGER.info("I LIVE");
 		this.setTexture("spacman_green");
 		this.setCost(spacManCost);
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.GATHER);
 		this.addNewAction(ActionType.MOVE);
-		this.addNewAction(ActionType.BUILD);
-		this.nextAction = null;
+		this.addNewAction(EntityID.SPACMAN);
 		//TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		this.setMoveSpeed(0.025f);
 		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
@@ -363,6 +364,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		return currentAction;
 	}
 
+
 	/**
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param nextAction the action to be forced
@@ -371,6 +373,17 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	public void setNextAction(ActionType nextAction) {
 		this.nextAction = nextAction;
 		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
+	}
+
+	/**
+	 * Forces the spacman to only try the chosen action on the next rightclick
+	 * @param toBuild unit to build
+	 */
+	@Override
+	public void setNextAction(BaseEntity toBuild, ActionType nextAction) {
+		this.nextAction = nextAction;
+		this.nextBuild = toBuild;
+		LOGGER.info("Next action set as  building unit " + toBuild.getStats().getName());
 	}
 
 	public EntityStats getStats() {
