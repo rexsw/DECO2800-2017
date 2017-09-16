@@ -34,7 +34,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.addNewAction(ActionType.IMPACT);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
-        this.setSpeed(0.04f); //Unused
+        this.setSpeed(0.1f); //Unused
         currentAction = Optional.of(new ImpactAction(this, target));
     }
 

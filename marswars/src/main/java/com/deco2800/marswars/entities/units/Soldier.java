@@ -33,6 +33,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
+	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
 
@@ -110,7 +111,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.1f); 
+		this.setSpeed(0.01f); 
 		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
