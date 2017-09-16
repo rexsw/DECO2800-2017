@@ -128,4 +128,14 @@ private static final String CLOSED = "closed.wav";
 		}
 	}
 	
+	public int CappedTeam() {
+		for(int teamid:rocks.keySet()) {
+			if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
+					crystal.get(teamid) > 400 && water.get(teamid) > 400) {
+				return teamid;
+			}
+		}
+		return 0;
+	}
+	
 }
