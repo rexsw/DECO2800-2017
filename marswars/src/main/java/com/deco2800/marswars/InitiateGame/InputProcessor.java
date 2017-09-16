@@ -80,7 +80,9 @@ public class InputProcessor{
 			// Don't process any inputs if in map view mode
 			return;
 		}
-
+		
+		//TODO remove this 
+		/*
 		if (this.downKeys.contains(Input.Keys.ESCAPE) && currentSeconds > pauseTime + 1000) {
 			if (currentSeconds > pauseTime + 1000) {
 				if (this.timeManager.isPaused()) {
@@ -92,7 +94,7 @@ public class InputProcessor{
 					pauseTime = this.timeManager.getGlobalTime();
 				}
 			}
-		}
+		}*/
 
 		//move the map in the chosen direction
 		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
