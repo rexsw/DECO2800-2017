@@ -3,6 +3,10 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+/*The Pause menu that will be run by the hud every time that the game is paused.
+ * Includes buttons for resuming the game, for viewing the game statistics, for changing certain game settings
+ * quitting to the main menu and exiting the game
+ */
 public class PauseMenu extends Dialog{
 	public PauseMenu(String title, Skin skin) {
 		super(title, skin);
