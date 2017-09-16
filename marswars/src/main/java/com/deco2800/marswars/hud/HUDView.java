@@ -243,9 +243,8 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				timeManager.pause();
 				new ExitGame("Quit Game", skin).show(stage);
-		}});
+			}});
 
 		//Creates the message button listener 
 		LOGGER.debug("Creating message button listener");

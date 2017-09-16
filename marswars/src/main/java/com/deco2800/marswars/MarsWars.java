@@ -185,18 +185,17 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 1000000) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
 
 								}
 							}
-							
+							GameManager.get().onTick(0);
+							lastGameTick = TimeUtils.nanoTime();
 						}
-						GameManager.get().onTick(0);
 					}
-						lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
