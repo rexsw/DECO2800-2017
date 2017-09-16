@@ -4,22 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.FogOfWarManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 2/8/17.
@@ -28,10 +22,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private int cost = 0;
 	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
-	private  List<ActionType> validActions;
+	private ActionList validActions;
 	private boolean selected = false;
-	private Manager owner = null;
+	private int owner = 0;
 	private boolean fixPos = false;
+	protected float speed = 0.05f;
 
 	/**
 	 * Constructor for the base entity
@@ -113,7 +108,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return
 	 */
 	public boolean isCollidable() {
-		return (!super.canWalkOver);
+		return !super.canWalkOver;
 	}
 
 	/**
@@ -139,9 +134,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		modifyCollisionMap(false);
 		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
-			int left = (int) xPos;
+			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
-			int bottom = (int) yPos;
+			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
@@ -210,7 +205,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return the list of actions the entity is allowed to take
 	 */
 	@Override
-	public List<ActionType> getValidActions() {
+	public ActionList getValidActions() {
 		return this.validActions;
 	}
 
@@ -220,7 +215,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Deprecated
 	public void initActions() {
-		this.validActions = new ArrayList<ActionType>();
+		this.validActions = new ActionList();
 	}
 
 	/**
@@ -230,11 +225,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 
 	@Override
-	public boolean addNewAction(ActionType newAction) {
+	public boolean addNewAction(Object newAction) {
 		if (this.validActions == null) {
-			this.validActions = new ArrayList<ActionType>();
+			this.validActions = new ActionList();
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == newAction) {
 				return false;
 			}
@@ -249,11 +244,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
 	@Override
-	public boolean removeActions(ActionType actionToRemove) {
+	public boolean removeActions(Object actionToRemove) {
 		if (this.validActions == null){
 			return false;
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == actionToRemove) {
 				this.validActions.remove(d);
 				return true;
@@ -360,7 +355,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		}
 	}
 
-	protected void modifyFogOfWarMap(boolean add) {
+	/**
+	 * this function modify the fog of war map
+	 * @param add
+	 * @param scale
+	 */
+	protected void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
@@ -370,9 +370,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogManager.sightRange(x,y,scale,add);
 				} else {
-					FogOfWarManager.sightRange(x,y,2,add);
+					FogManager.sightRange(x,y,scale,add);
 				}
 			}
 		}
@@ -394,6 +394,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	}
 
 	/**
+	 * Forces the unit to only try the chosen action on the next rightclick
+	 * this variant is for building
+	 * @param toBuild the unit to be built
+	 */
+	public void setNextAction(BaseEntity toBuild, ActionType action) {
+		return;
+	}
+
+	/**
 	 * Causes the entity to perform the action
 	 * @param action the action to perform
 	 */
@@ -406,7 +415,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param owner
 	 */
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
@@ -415,8 +424,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return owner
 	 */
 	@Override
-	public Manager getOwner() {
-		return (AbstractPlayerManager) this.owner;
+	public int getOwner() {
+		return this.owner;
 	}
 
 	/**
@@ -446,4 +455,20 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return fixPos;
 	}
 
+	public float getMoveSpeed() {
+		return speed;
+	}
+
+	public void setMoveSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	/**
+	 * checks if this entity is AI
+	 * @return true if entity is owned by AI
+	 */
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
 }

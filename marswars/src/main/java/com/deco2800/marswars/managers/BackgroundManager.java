@@ -18,7 +18,6 @@ public class BackgroundManager extends Manager {
      */
     public String getBackground() {
         String background;
-        
         if (timeManager.getHours() >= 6 && timeManager.getHours() < 9) {
             background = "dawn_Bg";
         } else if (timeManager.getHours() >= 9 && timeManager.getHours() < 17) {
@@ -27,7 +26,11 @@ public class BackgroundManager extends Manager {
                 timeManager.getHours() < 20) {
             background = "dusk_Bg";
         } else {
-            background = "night_Bg";
+            if (timeManager.getPlaySeconds() % 2 == 0){
+            	background = "night_Bg1";
+            } else {
+            	background = "night_Bg2";
+            }
         }
         return background;
     }

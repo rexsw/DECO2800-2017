@@ -5,6 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
@@ -60,7 +61,22 @@ public class BaseWorld extends AbstractWorld {
 		}
 	}
 
-
+	/**
+	 * Makes an int array of coordinates (left, right, bottom top) which would be used for updating the collision map 
+	 * from a provided entity.
+	 * 
+	 * @param entity  the entity to get the collision coordinates for
+	 * @return int array of the coordinates. would be in order of left, right, bottom top.
+	 */
+	public int[] makeCollisionCoords(BaseEntity entity) {
+		int[] result = new int[4];
+		result[0] = (int)entity.getPosX();
+		result[1] = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		result[2] = (int)entity.getPosY();
+		result[3] = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+		return result;
+	}
+	
 	/**
 	 * Adds an entity to this world.
 	 *
@@ -73,12 +89,9 @@ public class BaseWorld extends AbstractWorld {
 			return;
 
 		//Add to the collision map
-		int left = (int)entity.getPosX();
-		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
-		int bottom = (int)entity.getPosY();
-		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
-		for (int x = left; x < right; x++) {
-			for (int y = bottom; y < top; y++) {
+		int[] collisionCoords = makeCollisionCoords(entity);
+		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
+			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
 				collisionMap.get(x, y).add(entity);
 			}
 		}
@@ -91,24 +104,22 @@ public class BaseWorld extends AbstractWorld {
 	}
 	
 	/**
-	 * Removes an entity from the world.
-	 *
-	 * @param entity the entity to be removed
+	 * removes an entity from the BaseWorld. Removes in terms of removing from the list of entities that are in the 
+	 * world and removes it from the collision map.
+	 * 
+	 * @param entity  The BaseEntity that is to be removed from the BaseWorld.  
 	 */
+	@Override
 	public void removeEntity(BaseEntity entity) {
 		super.removeEntity(entity);
 		if (!entity.isCollidable())
 			return;
-		//Remove from the collision map
-		int left = (int)entity.getPosX();
-		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
-		int bottom = (int)entity.getPosY();
-		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
-		for (int x = left; x < right; x++) {
-			for (int y = bottom; y < top; y++) {
+		int[] collisionCoords = makeCollisionCoords(entity);
+		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
+			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
 				collisionMap.get(x, y).remove(entity);
 			}
-		}
+		}	
 	}
 
 	/**
@@ -148,7 +159,7 @@ public class BaseWorld extends AbstractWorld {
 	}
 
 	/**
-	 * Gets the entity at an x y position.
+	 * Gets the entities currently in the game.
 	 *
 	 * @return a list of all entities currently in the game.
 	 */

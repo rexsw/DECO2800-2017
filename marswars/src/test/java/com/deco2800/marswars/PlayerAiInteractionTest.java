@@ -4,14 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.deco2800.marswars.managers.AiManagerTest;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.PlayerManager;
 
 public class PlayerAiInteractionTest {
 	
 	@Test
 	public void AiPlayerTeams() {
-		AiManagerTest test = new AiManagerTest();
+		AiManager test = new AiManager();
 		PlayerManager player = new PlayerManager();
 		assertEquals(player.getTeam(), 0);
 		test.setTeam(1);
@@ -20,7 +20,7 @@ public class PlayerAiInteractionTest {
 	
 	@Test
 	public void AiPlayerDifferentTeams() {
-		AiManagerTest test = new AiManagerTest();
+		AiManager test = new AiManager();
 		PlayerManager player = new PlayerManager();
 		test.setTeam(1);
 		assertEquals(test.sameTeam(player), false);
@@ -29,7 +29,7 @@ public class PlayerAiInteractionTest {
 	
 	@Test
 	public void AiPlayerSameTeam() {
-		AiManagerTest test = new AiManagerTest();
+		AiManager test = new AiManager();
 		PlayerManager player = new PlayerManager();
 		test.setTeam(1);		
 		assertEquals(test.sameTeam(player), false);

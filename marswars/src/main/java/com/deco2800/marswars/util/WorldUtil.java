@@ -62,7 +62,7 @@ public class WorldUtil {
 	 * @param c
 	 * @return
 	 */
-	public static List getEntitiesOfClass(List<BaseEntity> entities, Class<?> c) {
+	public static List<BaseEntity> getEntitiesOfClass(List<BaseEntity> entities, Class<?> c) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
 			if (w.getClass() == c) {
@@ -107,7 +107,7 @@ public class WorldUtil {
 	 * @param m the owner of the entity 
 	 * @return an entity of type c if one is found 
 	 */
-	public static Optional<BaseEntity> getClosestEntityOfClassAndOwner(Class<?> c, float x, float y, Manager m) {
+	public static Optional<BaseEntity> getClosestEntityOfClassAndOwner(Class<?> c, float x, float y, int m) {
 		List<BaseEntity> entities = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), c);
 
 		BaseEntity closest = null;
@@ -133,7 +133,7 @@ public class WorldUtil {
 	 * @param m the owner of the entities 
 	 * @return a list of entities of type c if one is found 
 	 */
-	public static List<BaseEntity> getEntitiesOfClassAndOnwer(List<BaseEntity> entities, Class<?> c,  Manager m) {
+	public static List<BaseEntity> getEntitiesOfClassAndOnwer(List<BaseEntity> entities, Class<?> c,  int m) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
 			if (w.getClass() == c && w instanceof HasOwner && ((HasOwner) w).getOwner() == m) {

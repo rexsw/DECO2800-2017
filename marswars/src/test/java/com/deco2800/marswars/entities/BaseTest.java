@@ -2,7 +2,6 @@ package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +22,7 @@ public class BaseTest {
     @Before
     public void setup(){
         world = new BaseWorld(10, 15);
-        b = new Base(world, 0, 0, 0, null);
+        b = new Base(world, 0, 0, 0, -1);
     }
 
     @Test
@@ -45,20 +44,12 @@ public class BaseTest {
 
     @Test
     public void checkOwner() {
-        Base b = new Base(world, 1,1,1, null);
-        Base b2 = new Base(world, 1,1,1, null);
-        Base b3 = new Base(world, 1,1,1, null);
-        Resource mockResource = Mockito.mock(Resource.class);
-        Manager mockManager = Mockito.mock(Manager.class);
-        Manager mockManager2 = Mockito.mock(Manager.class);
-        b.setOwner(mockManager);
-        b2.setOwner(mockManager2);
-        b3.setOwner(mockManager);
-
-        assertEquals(b.getOwner(), mockManager);
+        Base b = new Base(world, 1,1,1, 0);
+        Base b2 = new Base(world, 1,1,1, 1);
+        Base b3 = new Base(world, 1,1,1, 1);
+        assertEquals(b.getOwner(), 0);
         assertFalse(b.sameOwner(b2));
-        assertTrue(b.sameOwner(b3));
-        assertFalse(b.sameOwner(mockResource));
+        assertTrue(b2.sameOwner(b3));
     }
 
     @Test

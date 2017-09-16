@@ -13,7 +13,7 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner, HasP
 
 	Optional<DecoAction> currentAction = Optional.empty();
 	
-	private Manager owner = null;
+	private int owner = -1;
 
 	/**
 	 * Constructor for the Spacman
@@ -54,12 +54,12 @@ public class EnemySpacman extends BaseEntity implements Tickable, HasOwner, HasP
 	}
 	
 	@Override
-	public void setOwner(Manager owner) {
+	public void setOwner(int owner) {
 		this.owner = owner;
 	}
 
 	@Override
-	public Manager getOwner() {
+	public int getOwner() {
 		return this.owner;
 	}
 

@@ -42,7 +42,7 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Barracks(AbstractWorld world, float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Barracks(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BARRACKS, owner);
 	}
 }

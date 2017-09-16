@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.Manager;
 /**
  * Created by Scott Whittington on 17/08
  * enables the ai to use other classes by giving them methods for the ai to use
@@ -12,17 +11,17 @@ public interface HasOwner {
 	 * Sets the Owner of an entity, flagging which manager should control this 
 	 * entity
 	 * 
-	 * @param Manager The manager to be set for the entity
+	 * @param int The manager id to be set for the entity
 	 */
-	void setOwner(Manager owner);
+	void setOwner(int owner);
 	
 	/**
 	 * returns the entities current manager or null if the entity doesn't have 
 	 * one
 	 * 
-	 * @return Manager the manager set for the entity
+	 * @return int the manager id set for the entity
 	 */	
-	Manager getOwner();
+	int getOwner();
 	
 	/**
 	 * tests if two entities have the same manager return true if they do else 
@@ -40,5 +39,7 @@ public interface HasOwner {
 	 * null if the entity has no decoaction field
 	 */	
 	public void setAction(DecoAction action);
+	
+	public boolean isAi();
 
 }

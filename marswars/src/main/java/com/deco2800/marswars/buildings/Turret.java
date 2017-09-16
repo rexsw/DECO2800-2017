@@ -35,7 +35,7 @@ public class Turret extends BuildingEntity{
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Turret(AbstractWorld world, float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Turret(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.TURRET, owner);
 	}
 }

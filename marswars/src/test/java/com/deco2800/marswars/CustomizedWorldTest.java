@@ -23,7 +23,7 @@ public class CustomizedWorldTest extends BaseTest{
 		CustomizedWorld world = new CustomizedWorld(mapContainer);
 		Assert.assertTrue("Map shouldn't contain entities at this point",
 				world.getEntities().size() == 0);
-		mapContainer.setStructure(new BuildingEntity(0f,0f,0f,BuildingType.BASE, null));
+		mapContainer.setStructure(new BuildingEntity(0f,0f,0f,BuildingType.BASE, -1));
 		Assert.assertTrue("Map shouldn't contain entities at this point",
 				world.getEntities().size() == 0);
 	}

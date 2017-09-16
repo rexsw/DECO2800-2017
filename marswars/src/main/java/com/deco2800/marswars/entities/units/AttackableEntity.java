@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,9 +12,7 @@ import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.managers.AiManagerTest;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 
 /**
@@ -21,8 +20,8 @@ import com.deco2800.marswars.util.Box3D;
  * @author Tze Thong Khor on 25/8/17
  *
  */
-public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress{
-	
+
+public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress, HasAction{
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private int maxArmor; // maximum armor of the entity
@@ -33,10 +32,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyalty; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
-	private Manager owner = null; // the owner of the player
+	private float speed; // the movement speed of the entity
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
-	private MissileEntity missile; // the type of missile
+	private int loadStatus; //whether the target is loaded
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -164,14 +163,12 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public void setHealth(int health) {
 		if (health <= 0) {
 			GameManager.get().getWorld().removeEntity(this);
-			if(owner instanceof AiManagerTest) {
-				((AiManagerTest) owner).isKill();
-			}
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;
 	}
-	
+
+	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
@@ -181,35 +178,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	public void setEmptyAction() {
 		currentAction = Optional.empty();
-	}
-
-	/**
-	 * Set the owner of the entity
-	 * @param the owner of the entity
-	 */
-	@Override
-	public void setOwner(Manager owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * Return the owner of the entity
-	 * @return the owner of the entity
-	 */
-	@Override
-	public Manager getOwner() {
-		return this.owner;
-	}
-
-	/**
-	 * Check if an entity shares the same owner
-	 * @param an entity
-	 * @return true if the parameter shares the same owner, false otherwise
-	 */
-	@Override
-	public boolean sameOwner(AbstractEntity entity) {
-		boolean isInstance = entity instanceof HasOwner;
-		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
 
 	/**
@@ -280,6 +248,30 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	@Override
 	public void setMaxLoyalty(int maxLoyalty) {
 		this.maxLoyalty = maxLoyalty;
+	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public float getSpeed() {
+		return speed;
+	}
+	
+	public int getLoadStatus() {
+	    	return loadStatus;
+	}
+	
+	public void setLoaded() {
+	    loadStatus = 1;
+	}
+	
+	public void setUnloaded() {
+	    loadStatus = 0;
+	}
+	
+	public void isCarrier() {
+	    loadStatus = 2;
 	}
 
 	@Override

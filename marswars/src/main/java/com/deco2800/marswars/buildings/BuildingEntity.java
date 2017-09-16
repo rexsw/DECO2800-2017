@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.EntityStats;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -30,9 +32,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	private List<String> graphics;
 	// Size of this building (must be isometric, 2x2, 3x3 etc)
 	private float buildSize;
+	private String building;
 	// Current action of this building
 	private Optional<DecoAction> currentAction = Optional.empty();
-	
+	//owner of this building
+	private MouseHandler currentHandler;
+	//Current mousehandler manager
 	/**
 	 * Constructor for the BuildingEntity
 	 * @param posX
@@ -42,7 +47,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 * @param yLength
 	 * @param zLength
 	 */
-	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, Manager owner) {
+	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
 		super(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
 				0f, building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
@@ -55,6 +60,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setTexture(graphics.get(graphics.size()-1));
 			this.setSpeed(1f);
 			this.setHealth(1850);
+			this.building = "Turret";
 			break;
 		case BASE:
 			this.setCost(350);
@@ -63,6 +69,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setSpeed(.5f);
 			this.setHealth(2500);
 			this.setFix(true);
+			this.building = "Base";
 			break;
 		case BARRACKS:
 			this.setCost(300);
@@ -71,6 +78,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setSpeed(1.5f);
 			this.setHealth(2000);
 			this.setFix(true);
+			this.building = "Barracks";
 			break;
 		case BUNKER:
 			this.setCost(100);
@@ -78,6 +86,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			this.setTexture(graphics.get(graphics.size()-1));
 			this.setSpeed(.5f);
 			this.setHealth(800);
+			this.building = "Bunker";
 			break;
 		default:
 			break;
@@ -170,8 +179,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 */
 	public void onClick(MouseHandler handler) {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		currentHandler = handler;
 		sound.playSound("endturn.wav");
-		if(this.getOwner() instanceof PlayerManager) {
+		if(!this.isAi()) {
 			if (!this.isSelected()) {
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
@@ -206,5 +216,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 				currentAction = Optional.empty();
 			}
 		}
+	}
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats(building, this.getHealth(), null, currentAction, this);
 	}
 }

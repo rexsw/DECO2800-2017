@@ -32,7 +32,7 @@ public class Base extends BuildingEntity {
 	 * @param posZ its z position on the world.
 	 */
 
-	public Base(AbstractWorld world, float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Base(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BASE, owner);
 	}
 }

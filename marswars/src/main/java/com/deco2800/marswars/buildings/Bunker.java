@@ -35,7 +35,7 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	 * @param posY its y position on the world.
 	 * @param posZ its z position on the world.
 	 */
-	public Bunker(AbstractWorld world, float posX, float posY, float posZ, AbstractPlayerManager owner) {
+	public Bunker(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BUNKER, owner);
 	}
 }

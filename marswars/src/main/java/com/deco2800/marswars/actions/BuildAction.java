@@ -10,9 +10,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.CheckSelect;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.ResourceManager;
 
 
@@ -32,11 +30,11 @@ public class BuildAction implements DecoAction{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildAction.class);
 	private boolean completed = false;
-	private float tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-	private float tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+	private int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+	private int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera;
-	private float proj_x;
-	private float proj_y;
+	private float projX;
+	private float projY;
 	private int relocateSelect = 10;
 	private CheckSelect temp;
 	private float buildingDims;
@@ -51,7 +49,6 @@ public class BuildAction implements DecoAction{
 	private MoveAction moveAction = null;
 	private BuildingType building;
 	private float fixPos = 0f;
-
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	private boolean actionPaused = false;
@@ -83,20 +80,20 @@ public class BuildAction implements DecoAction{
 					camera = GameManager.get().getCamera();
 					Vector3 worldCoords = camera.unproject(new
 							Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-					proj_x = worldCoords.x / tileWidth;
-					proj_y = -(worldCoords.y - tileHeight / 2f)
-							/ tileHeight + proj_x;
-					proj_x -= proj_y - proj_x;
-					proj_x = (int) proj_x;
-					proj_y = (int) proj_y;
+					projX = worldCoords.x / tileWidth;
+					projY = -(worldCoords.y - tileHeight / 2f)
+							/ tileHeight + projX;
+					projX -= projY - projX;
+					projX = (int) projX;
+					projY = (int) projY;
 					if (buildingDims % 2 == 0) {
 						fixPos = .5f;
 					}
-					if (!(proj_x < (((buildingDims + 1) / 2) - fixPos) || proj_x >
+					if (!(projX < (((buildingDims + 1) / 2) - fixPos) || projX >
 							(GameManager.get().getWorld().getWidth() - buildingDims - fixPos)
-							|| proj_y < (((buildingDims + 1) / 2) - fixPos) || proj_y >
+							|| projY < (((buildingDims + 1) / 2) - fixPos) || projY >
 							GameManager.get().getWorld().getLength() - buildingDims - fixPos)) {
-						temp = new CheckSelect(proj_x+fixPos-((int)((buildingDims+1)/2)), proj_y+fixPos, 0f,
+						temp = new CheckSelect(projX+fixPos-((int)((buildingDims+1)/2)), projY+fixPos, 0f,
 								buildingDims, buildingDims, 0f);
 						validBuild = GameManager.get().getWorld().checkValidPlace(temp.getPosX(), temp.getPosY(), buildingDims, fixPos);
 						if (validBuild) {
@@ -125,7 +122,7 @@ public class BuildAction implements DecoAction{
 					}
 				}
 			} else if (state == State.SETUP_MOVE) {
-				moveAction = new MoveAction(proj_x, proj_y, actor);
+				moveAction = new MoveAction(projX, projY, actor);
 				state = State.MOVE_ACTION;
 			} else if (state == State.MOVE_ACTION) {
 				if (moveAction.completed()) {
@@ -159,21 +156,21 @@ public class BuildAction implements DecoAction{
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
-		if (temp != null && validBuild == true) {
+		if (temp != null && validBuild) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			base = new BuildingEntity((int)proj_x+fixPos-((int)((buildingDims+1)/2)), (int)proj_y+fixPos, 0f, building, actor.getOwner());
+			base = new BuildingEntity((int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, building, actor.getOwner());
 			base.animate1();
-			if (resourceManager.getRocks() >= base.getCost()) {
-				resourceManager.setRocks(resourceManager.getRocks() - base.getCost());
+			if (resourceManager.getRocks(actor.getOwner()) >= base.getCost()) {
+				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
 				GameManager.get().getWorld().addEntity(base);
-				base.fixPosition((int)(proj_x-((buildingDims-1)/2)), (int)(proj_y -((buildingDims-1)/2)), 0);
+				base.fixPosition((int)(projX-((buildingDims-1)/2)), (int)(projY -((buildingDims-1)/2)), 0);
 				this.buildingSpeed = base.getSpeed();
 				state = State.SETUP_MOVE;
 				LOGGER.info("BUILDING NEW STRUCTURE");
 			}
 			else {
-				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE");
+				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE" + resourceManager.getRocks(actor.getOwner()));
 				completed = true;
 			}
 

@@ -129,4 +129,24 @@ public interface AttackAttributes {
 	 * @param loyalty damage of an entity
 	 */
 	public void setLoyaltyDamage(int loyaltyDamage);
+	
+	public void setSpeed(float speed);
+	
+	public float getSpeed();
+	
+	/**
+	 * Returns whether the entity is loaded onto a vehicle or not
+	 * @return 1 if loaded, 0 otherwise
+	 */
+	public int getLoadStatus();
+	
+	/**
+	 * Sets the entity to be loaded into a vehicle
+	 */
+	public void setLoaded();
+	
+	/**
+	 * Sets the entity to be unloaded from a vehicle
+	 */
+	public void setUnloaded();
 }

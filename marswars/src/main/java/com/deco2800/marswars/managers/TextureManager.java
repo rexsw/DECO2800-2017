@@ -68,7 +68,7 @@ public class TextureManager extends Manager {
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
         textureMap.put("black_tile",new Texture("resources/placeholderassets/black_tile.png"));
         //Units
-        textureMap.put("ground_gray", new Texture("resources/placeholderassets/line-of-sight.png"));
+
         textureMap.put("spacman", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
         textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
@@ -93,15 +93,19 @@ public class TextureManager extends Manager {
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
         this.saveTexture("medium_water", "resources/resourceAssets/water_M.png");
         this.saveTexture("large_water", "resources/resourceAssets/water_L.png");
+        this.saveTexture("water_HUD", "resources/resourceAssets/water_HUD.png");
         this.saveTexture("small_rock", "resources/resourceAssets/rock_S.png");
         this.saveTexture("medium_rock", "resources/resourceAssets/rock_M.png");
         this.saveTexture("large_rock", "resources/resourceAssets/rock_L.png");
+        this.saveTexture("rock_HUD", "resources/resourceAssets/rock_HUD.png");
         this.saveTexture("small_crystal", "resources/resourceAssets/crystal_S.png");
         this.saveTexture("medium_crystal", "resources/resourceAssets/crystal_M.png");
         this.saveTexture("large_crystal", "resources/resourceAssets/crystal_L.png");
+        this.saveTexture("crystal_HUD", "resources/resourceAssets/crystal_HUD.png");
         this.saveTexture("small_biomass", "resources/resourceAssets/biomass_S.png");
         this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_M.png");
         this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
+        this.saveTexture("biomass_HUD", "resources/resourceAssets/biomass_HUD.png");
         this.saveTexture("large_tree", "resources/resourceAssets/tree1sele.png");
         this.saveTexture("medium_tree", "resources/resourceAssets/treem.png");
         this.saveTexture("small_tree", "resources/resourceAssets/treesl.png");
@@ -118,6 +122,7 @@ public class TextureManager extends Manager {
         this.saveTexture("minus_button", "resources/HUDAssets/minusbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
+        this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
@@ -132,14 +137,16 @@ public class TextureManager extends Manager {
         this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
         this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
         
+        //Carrier:
+        this.saveTexture("carrier", "resources/UnitAssets/Neutral/Carrier_1.png");
+        this.saveTexture("carrierSelected", "resources/UnitAssets/Neutral/Carrier_2.png");
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg", "resources/Backgrounds/night_Bg.png");
-        this.saveTexture("star_1", "resources/Backgrounds/star1.png");
-        this.saveTexture("star_2", "resources/Backgrounds/star2.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
     }
     /*
      *
@@ -162,7 +169,7 @@ public class TextureManager extends Manager {
             unitType=sc.next();
             sc.close();
             //find the team colour of the owner:
-            String teamColour = ((AbstractPlayerManager) soldier.getOwner()).getColour();
+            String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap
