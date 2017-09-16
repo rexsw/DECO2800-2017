@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -60,9 +58,13 @@ public class HUDView extends ApplicationAdapter{
 
 	private Stage stage;
 	private Skin skin;
+	private ImageButton quitButton;
+	private ImageButton helpButton;
+	private ImageButton messageButton;
 
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
+	private Image selectedImage; //The current image to be displayed in top left
 	private Table overheadRight; //contains all basic quit/help/chat buttons
 	private Table resourceTable; //contains table of resource images + count
     private Table playerdetails; //contains player icon, health and game stats
@@ -126,6 +128,7 @@ public class HUDView extends ApplicationAdapter{
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	
 	private HashSet<Commander> heroMap = new HashSet<>();
+	private GameStats stats;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -136,13 +139,17 @@ public class HUDView extends ApplicationAdapter{
 	 * @param textureManager 
 	 */
 	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
-		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		LOGGER.debug("Creating Hud");
+		// zero game length clock (i.e. tell TimeManager new game has been launched)
 		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
 		this.textureManager = textureManager;
+		
+		//Generate the game stats
+		this.stats = new GameStats(stage, skin, this);
+		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
 		//create the HUD 
@@ -177,10 +184,10 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
 
-		LOGGER.debug("Add help, quit and message buttons");
+		LOGGER.debug("Add help, quit and message buttons"); //$NON-NLS-1$
 		
 		//add dispMainMenu image
-		Texture menuImage = textureManager.getTexture("menu_button");
+		Texture menuImage = textureManager.getTexture("menu_button"); //$NON-NLS-1$
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion menuRegion = new TextureRegion(menuImage);
@@ -189,26 +196,26 @@ public class HUDView extends ApplicationAdapter{
 
 
 		//create help button + image for it 
-		Texture helpImage = textureManager.getTexture("help_button");
+		Texture helpImage = textureManager.getTexture("help_button"); //$NON-NLS-1$
 		TextureRegion helpRegion = new TextureRegion(helpImage);
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
 		
 		//create message button + image for it 
-		Texture messageImage = textureManager.getTexture("chat_button");
+		Texture messageImage = textureManager.getTexture("chat_button"); //$NON-NLS-1$
 		TextureRegion messageRegion = new TextureRegion(messageImage);
 		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		messageButton = new ImageButton(messageRegionDraw);
 	
 		//add quit button + image for it 
-		Texture quitImage = textureManager.getTexture("quit_button");
+		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
 		TextureRegion quitRegion = new TextureRegion(quitImage);
 		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
 		quitButton = new ImageButton(quitRegionDraw);
 
-		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("Time: 0:00", skin);
-		gameLengthDisp = new Label("00:00:00", skin);
+		LOGGER.debug("Creating time labels"); //$NON-NLS-1$
+		gameTimeDisp = new Label("Time: 0:00", skin); //$NON-NLS-1$
+		gameLengthDisp = new Label("00:00:00", skin); //$NON-NLS-1$
 
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
@@ -222,23 +229,23 @@ public class HUDView extends ApplicationAdapter{
 		welcomeMsg.setWidth(stage.getWidth());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
-		Label welcomeText = new Label("Welcome to Spacwars!", skin);
+		Label welcomeText = new Label("Welcome to Spacwars!", skin); //$NON-NLS-1$
 		welcomeMsg.add(welcomeText);
 		
 		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
 		
 		//Creates the help button listener
-		LOGGER.debug("Creating help button listener");
+		LOGGER.debug("Creating help button listener"); //$NON-NLS-1$
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin).show(stage);
+				new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
 			}
 		});
 		
 		//Creates the quit button listener
-		LOGGER.debug("Creating quit button listener");
+		LOGGER.debug("Creating quit button listener"); //$NON-NLS-1$
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			//could abstract this into another class
@@ -247,7 +254,7 @@ public class HUDView extends ApplicationAdapter{
 			}});
 
 		//Creates the message button listener 
-		LOGGER.debug("Creating message button listener");
+		LOGGER.debug("Creating message button listener"); //$NON-NLS-1$
 		messageButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
@@ -284,7 +291,7 @@ public class HUDView extends ApplicationAdapter{
 	 * 
 	 */
 	private void addPlayerDetails(){
-		LOGGER.debug("Adding player icon");
+		LOGGER.debug("Adding player icon"); //$NON-NLS-1$
 		playerdetails = new Table();
 		playerdetails.pad(10);
 		playerdetails.setWidth(150);
@@ -293,15 +300,14 @@ public class HUDView extends ApplicationAdapter{
 		
 		//Icon for player- 
 		//TODO get main menu working to select an icon and then display 
-		Image playerIcon = new Image(textureManager.getTexture("spacman_blue"));
-		playerdetails.add(playerIcon).height(100).width(100);
-		
+		selectedImage = new Image(textureManager.getTexture("spacman_blue"));
+		playerdetails.add(selectedImage).height(100).width(100);
 		//create table for health bar display
 		Table healthTable = new Table();
 		//Create the health bar 
-		LOGGER.debug("Creating health bar");
+		LOGGER.debug("Creating health bar"); //$NON-NLS-1$
 		addProgressBar();
-		healthLabel = new Label("Health: ", skin);
+		healthLabel = new Label("Health: ", skin); //$NON-NLS-1$
 		healthTable.add(healthLabel).align(Align.left);
 		healthTable.row();
 		healthTable.add(healthBar);
@@ -310,21 +316,21 @@ public class HUDView extends ApplicationAdapter{
 
 		//add in player name
 		playerdetails.row();
-		Label playerName = new Label("Name", skin);
+		Label playerName = new Label("Name", skin); //$NON-NLS-1$
 		playerdetails.add(playerName);
 		
 		this.nameLabel = playerName;
 		
 		//add in player stats to a new table 
 		Table playerStats = new Table();
-		playerSpacmen = new Label("Aliv spacmen: 0", skin);
-		playerEnemySpacmen = new Label("Evil spacman: 0", skin);
+		playerSpacmen = new Label("Alive spacmen: 0", skin); //$NON-NLS-1$
+		playerEnemySpacmen = new Label("Evil spacman: 0", skin); //$NON-NLS-1$
 		
 		//image for spacman
-		Texture spacmanTex = textureManager.getTexture("spacman_green");
+		Texture spacmanTex = textureManager.getTexture("spacman_green"); //$NON-NLS-1$
 		spacman = new Image(spacmanTex);
 		//image for enemy spatman
-		Texture spatmanTex = textureManager.getTexture("spatman_blue");
+		Texture spatmanTex = textureManager.getTexture("spatman_blue"); //$NON-NLS-1$
 		Image spatman = new Image(spatmanTex);
 
 		//add in spacmen and enemy stats to stats 
@@ -375,8 +381,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Implements a collapsible tab for the chat lobby 
 	 */
 	private void addMessages(){
-		LOGGER.debug("Creating chat lobby box");
-		messageWindow = new Window("Chat Lobby", skin);
+		LOGGER.debug("Creating chat lobby box"); //$NON-NLS-1$
+		messageWindow = new Window("Chat Lobby", skin); //$NON-NLS-1$
 		messageWindow.setMovable(false);
 		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD, 
 				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE)); 
@@ -395,27 +401,22 @@ public class HUDView extends ApplicationAdapter{
 		addInventoryMenu();
 
 
-		LOGGER.debug("Creating HUD manipulation buttons");
-
-		Button dispMainMenu = new TextButton("Menu", skin);
-		shopDialog = new ShopDialog("Shop", skin, textureManager);
-
-
+		LOGGER.debug("Creating HUD manipulation buttons"); //$NON-NLS-1$
+			
 		//remove dispActions button + image for it 
-		Texture minusImage = textureManager.getTexture("minus_button");
+		Texture minusImage = textureManager.getTexture("minus_button"); //$NON-NLS-1$
 		TextureRegion minusRegion = new TextureRegion(minusImage);
 		minusRegionDraw = new TextureRegionDrawable(minusRegion);
 		removeActions = new ImageButton(minusRegionDraw);
 
 		//add dispActions image 
-		Texture plusImage = textureManager.getTexture("plus_button");
+		Texture plusImage = textureManager.getTexture("plus_button"); //$NON-NLS-1$
 		TextureRegion plusRegion = new TextureRegion(plusImage);
 		plusRegionDraw = new TextureRegionDrawable(plusRegion);
 		dispActions = new ImageButton(plusRegionDraw);
 
-		//add tech button
 		//add dispTech image
-		Texture techImage = textureManager.getTexture("tech_button");
+		Texture techImage = textureManager.getTexture("tech_button"); //$NON-NLS-1$
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion techRegion = new TextureRegion(techImage);
@@ -428,16 +429,17 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable shopRegionDraw = new TextureRegionDrawable(shopRegion);
 		ImageButton dispShop = new ImageButton(shopRegionDraw);
 		
-		//add toggle Fog of war FOR (DEBUGGING) 
+		//add toggle Fog of war (FOR DEBUGGING) 
 		Button dispFog = new TextButton("Fog", skin);
 		
+		//add button for game stats (might just move this over to the game menu?)
+		Button dispStats = new TextButton("Stat2800", skin);
+				
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispMainMenu);
-		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
-		HUDManip.add(dispShop).padRight(BUTTONPAD);
-		HUDManip.add(dispTech).pad(BUTTONPAD*2);
-		HUDManip.add(dispFog);
+		HUDManip.add(dispTech).pad(BUTTONPAD);
+		HUDManip.add(dispFog).pad(BUTTONPAD);
+		HUDManip.add(dispStats).pad(BUTTONPAD);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
@@ -447,7 +449,7 @@ public class HUDView extends ApplicationAdapter{
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
 				if (inventoryToggle) {
-					LOGGER.debug("Enable hud");
+					LOGGER.debug("Enable hud"); //$NON-NLS-1$
 					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
@@ -463,7 +465,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			/*displays the (+) button for setting the hud to visible*/
 			public void changed(ChangeEvent event, Actor actor) {
-					LOGGER.debug("Disable Hud");
+					LOGGER.debug("Disable Hud"); //$NON-NLS-1$
 					actionsWindow.setVisible(false);
 					minimap.setVisible(false);
 					resourceTable.setVisible(false);
@@ -477,15 +479,18 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin).show(stage);
+				new TechTreeView("TechTree", skin).show(stage); //$NON-NLS-1$
 			}
 
 		});
 		
 		dispShop.addListener(new ChangeListener() {
+		/*Display the player's stats*/
+		dispStats.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 					shopDialog.show(stage);
+				stats.showStats(); 
 			}
 		});
 		
@@ -499,18 +504,17 @@ public class HUDView extends ApplicationAdapter{
             }
        });
 		
-		
 		dispFog.addListener(new ChangeListener() {
 			@Override
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
 				//disable fog
 				if (fogToggle) {
-					LOGGER.debug("fog of war is now off");
+					LOGGER.debug("fog of war is now off"); //$NON-NLS-1$
 					FogManager.toggleFog(false);
 					fogToggle = false; 
 				}else {
-					LOGGER.debug("fog of war is now on");
+					LOGGER.debug("fog of war is now on"); //$NON-NLS-1$
 					FogManager.toggleFog(true);
 					fogToggle = true; 
 				}
@@ -522,30 +526,30 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the selectable menu for the inventory for resources 
 	 */
 	private void addInventoryMenu(){
-		LOGGER.debug("Create inventory");
-		actionsWindow = new Window("Actions", skin);
+		LOGGER.debug("Create inventory"); //$NON-NLS-1$
+		actionsWindow = new Window("Actions", skin); //$NON-NLS-1$
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 		
-		LOGGER.debug("Creating resource labels");
-		rockCount = new Label("Rock: 0", skin);
-		crystalCount = new Label("Crystal: 0", skin);
-		biomassCount = new Label("Biomass: 0", skin);
-		waterCount = new Label("Water: 0", skin);
+		LOGGER.debug("Creating resource labels"); //$NON-NLS-1$
+		rockCount = new Label("Rock: 0", skin); //$NON-NLS-1$
+		crystalCount = new Label("Crystal: 0", skin); //$NON-NLS-1$
+		biomassCount = new Label("Biomass: 0", skin); //$NON-NLS-1$
+		waterCount = new Label("Water: 0", skin); //$NON-NLS-1$
 		
 		//add rock image 
-		Texture rockTex = textureManager.getTexture("rock_HUD");
+		Texture rockTex = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
 		Image rock = new Image(rockTex);
 		//add water image
-		Texture waterTex = textureManager.getTexture("water_HUD");
+		Texture waterTex = textureManager.getTexture("water_HUD"); //$NON-NLS-1$
 		Image water = new Image(waterTex);
 		//add biomass image
-		Texture biomassTex = textureManager.getTexture("biomass_HUD");
+		Texture biomassTex = textureManager.getTexture("biomass_HUD"); //$NON-NLS-1$
 		Image biomass = new Image(biomassTex);
 		//add crystal image
-		Texture crystalTex = textureManager.getTexture("crystal_HUD");
+		Texture crystalTex = textureManager.getTexture("crystal_HUD"); //$NON-NLS-1$
 		Image crystal = new Image(crystalTex);
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
@@ -559,8 +563,8 @@ public class HUDView extends ApplicationAdapter{
 		
 		stage.addActor(resourceTable);
 		
-		peonButton = new TextButton("Select a Unit", skin);
-		helpText = new Label("Welcome to SpacWars!", skin);
+		peonButton = new TextButton("Select a Unit", skin); //$NON-NLS-1$
+		helpText = new Label("Welcome to SpacWars!", skin); //$NON-NLS-1$
 
 		actionsWindow.add(peonButton);
 		actionsWindow.add(helpText);
@@ -579,7 +583,7 @@ public class HUDView extends ApplicationAdapter{
 	private void addButtonArray() {
 		buttonList = new ArrayList<>();
 		for (int i = 0; i != NUMBER_ACTION_BUTTONS; i++) {
-			TextButton newButton = new TextButton(" ", skin);
+			TextButton newButton = new TextButton(" ", skin); //$NON-NLS-1$
 			addButtonListener(newButton);
 			buttonList.add(newButton);
 			actionsWindow.add(newButton);
@@ -610,8 +614,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the minimap window 
 	 */
 	private void addMiniMapMenu(){
-		LOGGER.debug("Creating minimap menu");
-		minimap = new Window("Map", skin);
+		LOGGER.debug("Creating minimap menu"); //$NON-NLS-1$
+		minimap = new Window("Map", skin); //$NON-NLS-1$
 		
 		//set the properties of the minimap window
 		minimap.add(GameManager.get().getMiniMap().getBackground());
@@ -660,6 +664,10 @@ public class HUDView extends ApplicationAdapter{
 		if (selectedEntity == null) {
             return;
         }
+		Texture entity = textureManager.getTexture(target.getTexture());
+		TextureRegion entityRegion = new TextureRegion(entity);
+		TextureRegionDrawable redraw = new TextureRegionDrawable(entityRegion);
+		selectedImage.setDrawable(redraw);
         selectedEntity = target;
 		currentActions = target.getValidActions();
 		EntityStats stats = target.getStats();
@@ -674,7 +682,7 @@ public class HUDView extends ApplicationAdapter{
     private void updateSelectedStats (EntityStats stats) {
 		healthBar.setValue(stats.getHealth());
 		nameLabel.setText(stats.getName());
-		healthLabel.setText("Health: " + stats.getHealth());
+		healthLabel.setText("Health: " + stats.getHealth()); //$NON-NLS-1$
 		//Update the health progress bad to red once health is below 20 
 		if (stats.getHealth() <= CRITICALHEALTH) {
 			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
@@ -704,7 +712,7 @@ public class HUDView extends ApplicationAdapter{
 				if (currentActions.get(i) instanceof ActionType) { //If it is an action
 					buttonList.get(i).setText(ActionSetter.getActionName((ActionType)currentActions.get(i)));
 				} else { //If it isnt an action it is something to build
-					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i));
+					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
 				}
         }
 
@@ -752,7 +760,7 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void render(long lastMenuTick){
 		/* Update time & set color depending if night/day */
-		gameTimeDisp.setText(" Time: " + timeManager.toString());
+		gameTimeDisp.setText(" Time: " + timeManager.toString()); //$NON-NLS-1$
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		addEntitiesToMiniMap();
@@ -768,17 +776,16 @@ public class HUDView extends ApplicationAdapter{
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rockCount.setText("" + resourceManager.getRocks(-1));
-		crystalCount.setText("" + resourceManager.getCrystal(-1)); 
-		waterCount.setText("" + resourceManager.getWater(-1));
-		biomassCount.setText("" + resourceManager.getBiomass(-1));
+		rockCount.setText("" + resourceManager.getRocks(-1)); //$NON-NLS-1$
+		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
+		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
+		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
 		
 		/*Set value for health bar*/
 		healthBar.setValue(0);
 		
 		int spacmenCount = 0; 		//counts the number of spacmen in game
 		int enemySpacmanCount = 0;  //counts the number of spatmen in game
-		
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
@@ -799,20 +806,20 @@ public class HUDView extends ApplicationAdapter{
 	    setEnitity(selectedEntity);
 
 	    /* Update the spacmen + enemy spatmen counts */
-	    playerSpacmen.setText("" + spacmenCount);
-		playerEnemySpacmen.setText("" + enemySpacmanCount);
+	    playerSpacmen.setText("" + spacmenCount); //$NON-NLS-1$
+		playerEnemySpacmen.setText("" + enemySpacmanCount); //$NON-NLS-1$
 		
 		if (spacmenCount == 0) {
 			/*TODO get spacman icon to be spacman_ded when there
 			are no spacmen left*/
-			spacman = new Image(textureManager.getTexture("spacman_ded"));
+			spacman = new Image(textureManager.getTexture("spacman_ded")); //$NON-NLS-1$
 		}
 		
 		//keyboard listeners for hotkeys
 		
 		//help listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-			new ExitGame("Quit Game", skin).show(stage);
+			new ExitGame("Quit Game", skin).show(stage); //$NON-NLS-1$
 		}
 		
 		//chat listener
@@ -828,13 +835,13 @@ public class HUDView extends ApplicationAdapter{
 		
 		//tech tree listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-			new TechTreeView("TechTree", skin).show(stage);
+			new TechTreeView("TechTree", skin).show(stage); //$NON-NLS-1$
 		}
 		
 		//HUD toggle listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 			if (inventoryToggle) {
-				LOGGER.debug("Enable hud");
+				LOGGER.debug("Enable hud"); //$NON-NLS-1$
 				actionsWindow.setVisible(true);
 				minimap.setVisible(true);
 				resourceTable.setVisible(true);
@@ -843,7 +850,7 @@ public class HUDView extends ApplicationAdapter{
 				HUDManip.add(removeActions);
 				inventoryToggle = false;
 			} else {
-				LOGGER.debug("Disable Hud");
+				LOGGER.debug("Disable Hud"); //$NON-NLS-1$
 				actionsWindow.setVisible(false);
 				minimap.setVisible(false);
 				resourceTable.setVisible(false);
@@ -856,7 +863,12 @@ public class HUDView extends ApplicationAdapter{
 		
 		//help button listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-			new WorkInProgress("Help  Menu", skin).show(stage);
+			new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
+		}
+		
+		//pause menu listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			new PauseMenu("Pause Menu", skin).show(stage);
 		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
@@ -918,7 +930,7 @@ public class HUDView extends ApplicationAdapter{
      */
 	public void resize(int width, int height) {
         //Top Left
-        LOGGER.debug("Window resized, rescaling hud");
+        LOGGER.debug("Window resized, rescaling hud"); //$NON-NLS-1$
 		playerdetails.setWidth(100);
         playerdetails.align(Align.left | Align.top);
         playerdetails.setPosition(0, stage.getHeight());
@@ -952,8 +964,8 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		HUDManip.align(Align.right| Align.bottom);
 		
+		//resize stats
+		stats.resizeStats(width, height);
+		
     }
 }
-
-
-
