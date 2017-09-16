@@ -1,6 +1,7 @@
 package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.managers.GameManager;
@@ -94,6 +95,12 @@ public class BaseWorld extends AbstractWorld {
 				collisionMap.get(x, y).add(entity);
 			}
 		}
+		//Fixes the collision models to better match rendered image
+		if (entity.getFix()) {
+			BuildingEntity ent = (BuildingEntity) entity;
+			ent.fixPosition((int)(entity.getPosX() + ((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ());
+		}
+
 	}
 	
 	/**
@@ -105,6 +112,8 @@ public class BaseWorld extends AbstractWorld {
 	@Override
 	public void removeEntity(BaseEntity entity) {
 		super.removeEntity(entity);
+		if (!entity.isCollidable())
+			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
 		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
 			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
@@ -167,5 +176,35 @@ public class BaseWorld extends AbstractWorld {
 				((Selectable) r).deselect();
 			}
 		}
+	}
+	
+	/**
+	 * Checks if location is valid to build at on map
+	 * 
+	 * @param xPos a tile x coordinate
+	 * @param yPos a tile y coordinate
+	 * @param objectSize Size of the building
+	 * @param fixPos float which fixes the position of building to line up with tile
+	 * @return true if valid location
+	 */
+	public boolean checkValidPlace(float xPos, float yPos, float objectSize, float fixPos) {
+		int left = (int) (xPos + fixPos);
+		int right = (int) ((xPos + fixPos) + (objectSize));
+		int bottom = (int) (yPos + fixPos);
+		int top = (int) ((yPos + fixPos) + (objectSize));
+		for (int x = left+1; x < right+1; x++) {
+			for (int y = bottom-1; y < top-1; y++) {
+				if (x >= 0 && y >= 0  && x <= this.getWidth() && y <= this.getLength()){
+					if (hasEntity(x, y)) {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+				
+			}
+		}
+		return true;
 	}
 }

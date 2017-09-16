@@ -4,7 +4,7 @@ import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -53,7 +53,7 @@ public void onTick(long l) {
 		 */
 private void generateSpacman(Base x) {
 	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-	if(!x.isWorking() && rm.getRocks(x.getOwner()) > 30) {
+	if(!x.showProgress() && rm.getRocks(x.getOwner()) > 30) {
 		//sets the ai base to make more spacman if possible
 		LOGGER.error("ai - set base to make spacman");
 		rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
@@ -64,7 +64,7 @@ private void generateSpacman(Base x) {
 		
 private void useEnemy(Soldier x) {
 	//lets the ai target player spacman with it's enemyspacmen
-	if(x.isWorking()) {
+	if(x.showProgress()) {
 		return;
 	}
 	for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
@@ -78,7 +78,7 @@ private void useEnemy(Soldier x) {
 }
 
 private void useSpacman(Astronaut x) {
-	if(!(x.isWorking())) {
+	if(!(x.showProgress())) {
 		//allow spacmans to collect the closest resources
 		//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
 		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());

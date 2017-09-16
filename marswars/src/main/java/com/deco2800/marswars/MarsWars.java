@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -143,8 +143,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void createMap() {
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
-		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		world.loadMapContainer(map);
+		
 		
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
@@ -320,8 +321,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		for(int teamid = 1; teamid < teams+1;teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length);
-			y = ThreadLocalRandom.current().nextInt(1, width);
+			x = ThreadLocalRandom.current().nextInt(3, length -3);
+			y = ThreadLocalRandom.current().nextInt(3, width -3);
 			rm.setBiomass(0, teamid);
 			rm.setRocks(0, teamid);
 			rm.setCrystal(0, teamid);
@@ -331,14 +332,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			aim.addTeam(teamid);
 			Astronaut ai = new Astronaut(x, y, 0, teamid);
 			Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 			Soldier soldier = new Soldier(x, y,0,teamid);
 			GameManager.get().getWorld().addEntity(soldier);
 			Tank tank = new Tank(x,y,0,teamid);
 			GameManager.get().getWorld().addEntity(tank);
 			GameManager.get().getWorld().addEntity(ai);
 			GameManager.get().getWorld().addEntity(ai1);
-			aibase.setOwner(teamid);
 			GameManager.get().getWorld().addEntity(aibase);
 		}
 	}
@@ -351,20 +351,19 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
-		Spacman p = new Spacman(x, y, 0);
-		Astronaut p1 = new Astronaut(x, y, 0, teamid);
-		Base p2 = new Base(GameManager.get().getWorld(), x, y, 0);
-		Soldier soldier = new Soldier(x, y,0,teamid);
-		GameManager.get().getWorld().addEntity(soldier);
-		Tank tank = new Tank(x,y,0,teamid);
-		GameManager.get().getWorld().addEntity(tank);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(carrier);
+		Base p2 = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		Spacman p = new Spacman(x + 1, y + 2, 0);
 		p.setOwner(teamid);
-		GameManager.get().getWorld().addEntity(p);
+		Astronaut p1 = new Astronaut(x - 1, y - 1, 0, teamid);
 		p1.setOwner(teamid);
+		Soldier soldier = new Soldier(x - 1, y + 1, 0, teamid);
+		Tank tank = new Tank(x - 2,y - 2, 0, teamid);
+		Carrier carrier = new Carrier(x + 4, y + 4, 0, teamid);
+		GameManager.get().getWorld().addEntity(p);
+		GameManager.get().getWorld().addEntity(tank);
+		GameManager.get().getWorld().addEntity(carrier);
+		GameManager.get().getWorld().addEntity(soldier);
 		GameManager.get().getWorld().addEntity(p1);
-		p2.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(p2);
 	}
 }

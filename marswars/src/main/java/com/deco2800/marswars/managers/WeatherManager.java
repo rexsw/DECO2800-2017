@@ -1,10 +1,10 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.buildings.Barracks;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Bunker;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.buildings.Barracks;
-import com.deco2800.marswars.entities.buildings.Base;
-import com.deco2800.marswars.entities.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.buildings.Bunker;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Array2D;

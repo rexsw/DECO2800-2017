@@ -62,6 +62,7 @@ public class HUDView extends ApplicationAdapter{
 
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
+	private Image selectedImage; //The current image to be displayed in top left
 	private Table overheadRight; //contains all basic quit/help/chat buttons
 	private Table resourceTable; //contains table of resource images + count
     private Table playerdetails; //contains player icon, health and game stats
@@ -289,9 +290,8 @@ public class HUDView extends ApplicationAdapter{
 		
 		//Icon for player- 
 		//TODO get main menu working to select an icon and then display 
-		Image playerIcon = new Image(textureManager.getTexture("spacman_blue")); //$NON-NLS-1$
-		playerdetails.add(playerIcon).height(100).width(100);
-		
+		selectedImage = new Image(textureManager.getTexture("spacman_blue"));
+		playerdetails.add(selectedImage).height(100).width(100);
 		//create table for health bar display
 		Table healthTable = new Table();
 		//Create the health bar 
@@ -313,7 +313,7 @@ public class HUDView extends ApplicationAdapter{
 		
 		//add in player stats to a new table 
 		Table playerStats = new Table();
-		playerSpacmen = new Label("Aliv spacmen: 0", skin); //$NON-NLS-1$
+		playerSpacmen = new Label("Alive spacmen: 0", skin); //$NON-NLS-1$
 		playerEnemySpacmen = new Label("Evil spacman: 0", skin); //$NON-NLS-1$
 		
 		//image for spacman
@@ -635,6 +635,10 @@ public class HUDView extends ApplicationAdapter{
 		if (selectedEntity == null) {
             return;
         }
+		Texture entity = textureManager.getTexture(target.getTexture());
+		TextureRegion entityRegion = new TextureRegion(entity);
+		TextureRegionDrawable redraw = new TextureRegionDrawable(entityRegion);
+		selectedImage.setDrawable(redraw);
         selectedEntity = target;
 		currentActions = target.getValidActions();
 		EntityStats stats = target.getStats();

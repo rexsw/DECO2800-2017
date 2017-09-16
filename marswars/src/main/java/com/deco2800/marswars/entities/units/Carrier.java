@@ -11,6 +11,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
@@ -25,7 +26,7 @@ public class Carrier extends Soldier {
 
     private Optional<DecoAction> currentAction = Optional.empty();
 
-    private AttackableEntity[] loadedUnits = new AttackableEntity[capacity];
+    private Soldier[] loadedUnits = new Soldier[capacity];
 
     public Carrier(float posX, float posY, float posZ, int owner) {
 	super(posX, posY, posZ, owner);
@@ -56,19 +57,28 @@ public class Carrier extends Soldier {
 	    return;
 	}
 	if (!entities.isEmpty()
-		&& entities.get(0) instanceof AttackableEntity) {
-	    AttackableEntity target = (AttackableEntity) entities.get(0);
+		&& entities.get(0) instanceof Soldier) {
+	    Soldier target = (Soldier) entities.get(0);
 	    load(target);
 
 	} else {
-	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	    BaseWorld world = GameManager.get().getWorld();
+	    float newPosX = x + 3;
+	    float newPosY = y + 3;
+	    if(newPosX > world.getWidth()) {
+		newPosX = x - 3;
+	    }
+	    if(newPosY > world.getLength()) {
+		newPosY = y - 3;
+	    }
 	    for (int i = 0; i < capacity; i++) {
 		if (!(loadedUnits[i] == null)) {
 		    LOGGER.error("moving unit " + i);
-		    loadedUnits[i].setPosX(x);
-		    loadedUnits[i].setPosY(y);
+		
+		    loadedUnits[i].setCurrentAction(Optional.of(new MoveAction((int) newPosX, (int) newPosY, loadedUnits[i])));
 		}
 	    }
+	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 	    LOGGER.error("Assigned action move to" + x + " " + y);
 	}
 	this.setTexture(defaultTextureName);
@@ -78,66 +88,61 @@ public class Carrier extends Soldier {
     }
 
     @Override
-    public void onTick(int tick) {
+	public void onTick(int tick) {
+		if (!currentAction.isPresent()) {
+			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
+			// make stances here.
+			int xPosition =(int)this.getPosX();
+			int yPosition = (int) this.getPosY();
+			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+			int entitiesSize = entities.size();
+			for (BaseEntity e: entities) {
+				if (e instanceof MissileEntity) {
+					entitiesSize--;
+				}
+			}
+			boolean moveAway = entitiesSize > 2;
+			if (moveAway) {
+			
+				BaseWorld world = GameManager.get().getWorld();
 
-	if (!currentAction.isPresent()) {
-	    modifyFogOfWarMap(true, 3);
-	    // make stances here.
-	    int xPosition = (int) this.getPosX();
-	    int yPosition = (int) this.getPosY();
-	    List<BaseEntity> entities = GameManager.get().getWorld()
-		    .getEntities(xPosition, yPosition);
-	    int entitiesSize = entities.size();
-	    for (BaseEntity e : entities) {
-		if (e instanceof MissileEntity) {
-		    entitiesSize--;
+				/* We are stuck on a tile with another entity
+				 * therefore randomize a close by position and see if its a good
+				 * place to move to
+				 */
+				Random r = new Random();
+				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
+
+				/* Ensure new position is on the map */
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
+					return;
+				}
+				/* Check that the new position is free */
+				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+					// No good
+					return;
+				}
+
+				//LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+
+			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+				/* Finally move to that position using a move action */
+				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+			}
+			return;
 		}
-	    }
-	    boolean moveAway = entitiesSize > 2;
-	    if (moveAway) {
-
-		BaseWorld world = GameManager.get().getWorld();
-
-		/*
-		 * We are stuck on a tile with another entity therefore
-		 * randomize a close by position and see if its a good place to
-		 * move to
-		 */
-		Random r = new Random();
-		Point p = new Point(xPosition + r.nextInt(2) - 1,
-			yPosition + r.nextInt(2) - 1);
-
-		/* Ensure new position is on the map */
-		if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth()
-			|| p.getY() > world.getLength()) {
-		    return;
-		}
-		/* Check that the new position is free */
-		if (world.getEntities((int) p.getX(), (int) p.getY())
-			.size() > 1) {
-		    return;
+		
+		if (!currentAction.get().completed()) {
+			currentAction.get().doAction(); 
+		} else {
+			//LOGGER.info("Action is completed. Deleting");
+			currentAction = Optional.empty();
 		}
 
-		LOGGER.info(
-			"Spacman is on a tile with another entity, move out of the way");
-
-		/* Finally move to that position using a move action */
-		currentAction = Optional.of(
-			new MoveAction((int) p.getX(), (int) p.getY(), this));
-	    }
-	    return;
+		
 	}
 
-	if (!currentAction.get().completed()) {
-	    currentAction.get().doAction();
-	} else {
-	    LOGGER.info("Action is completed. Deleting");
-	    currentAction = Optional.empty();
-	}
-
-    }
-
-    public void load(AttackableEntity target) {
+    public void load(Soldier target) {
 	int x = (int) target.getPosX();
 	int y = (int) target.getPosY();
 	if (this.sameOwner(target) && this != target
@@ -151,19 +156,21 @@ public class Carrier extends Soldier {
 	}
     }
 
-    public boolean loadPassengers(AttackableEntity target) {
+    public boolean loadPassengers(Soldier target) {
 	for (int i = 0; i < capacity; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
 		LOGGER.error("target loaded");
-		target.setLoaded();
+		if(target.getLoadStatus() != 2) {
+		    target.setLoaded();
+		}
 		return true;
 	    }
 	}
 	return false;
     }
 
-    public AttackableEntity[] getPassengers() {
+    public Soldier[] getPassengers() {
 	return loadedUnits;
     }
 
@@ -181,4 +188,11 @@ public class Carrier extends Soldier {
 	    }
 	}
     }
+    
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Carrier", this.getHealth(), null, this.getCurrentAction(), this);
+	}
 }
