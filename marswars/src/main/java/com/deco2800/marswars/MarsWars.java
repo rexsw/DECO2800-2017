@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -18,7 +17,6 @@ import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
-import com.deco2800.marswars.net.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -63,9 +61,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	Stage stage;
 	Window window;
-	Label rocksLabel;
-	Label gameTimeDisp;
-	Label gameLengthDisp;
 
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
@@ -105,29 +100,30 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
 		menu = new MainMenu(skin, stage, new Window("its a start", skin), this);
-		stage.addActor(menu.buildMenu());		
-		playGame();
-	}
-	
-	/**
-	 * Constructs the rest of the game. 
-	 * Note: the follow methods will be removed from marswars soon to be abstracted 
-	 * into their relevant classes
-	 */
-	public void playGame(){
+		stage.addActor(menu.buildMenu());
 		camera = new OrthographicCamera(1920, 1080);
 		inputP = new InputProcessor(camera, stage, skin);
 
 		GameManager.get().setCamera(camera);
 
+		playGame();
+	}
+	
+	/**
+	 * Constructs the rest of the game. 
+	 * Note: the following methods will be removed from marswars soon to be abstracted 
+	 * into their relevant classes
+	 */
+	public void playGame(){
 		createMiniMap();
+		//inputP.setInputProcessor();
 		createMap();
+		inputP.setInputProcessor();
 
 		fogOfWar();
 		addAIEntities();
 		setThread();
 		setGUI();
-		inputP.setInputProcessor();
 	}
 	
 	/**
@@ -153,7 +149,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Move camera to the center of the world */
 		camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(camera);
-
 	}
 	
 	/*
@@ -186,13 +181,17 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
 					if (!timeManager.isPaused()) {
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						/*
+						 * threshold here need to be tweaked to make things move better for different CPUs 
+						 */
+						if(TimeUtils.nanoTime() - lastGameTick > 1000000) {
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
 
 								}
 							}
+							
 						}
 						GameManager.get().onTick(0);
 					}
@@ -206,8 +205,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}).start();
 	}
-	
-	
 	
 	/*
 	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 

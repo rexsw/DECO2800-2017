@@ -20,6 +20,8 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -55,6 +57,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable,
 	super(posX, posY, posZ, BuildingType.BASE);
 		this.setTexture("homeBase");
 		this.setEntityType(EntityType.BUILDING);
+		this.addNewAction(EntityID.SPACMAN);
 		this.setCost(250);
 		this.setSpeed(2);
 	}
@@ -277,4 +280,5 @@ public class Base extends BuildingEntity implements Clickable, Tickable,
 	public boolean isAi() {
 		return owner >= 0;
 	}
+
 }
