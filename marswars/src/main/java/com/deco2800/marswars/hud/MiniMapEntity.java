@@ -25,7 +25,7 @@ public class MiniMapEntity {
      * @return  0: friendly, 1: allied, 2: enmy
      */
     public int getTeam() {
-        return team;
+        return this.team;
     }
 
     /**
@@ -34,13 +34,13 @@ public class MiniMapEntity {
      * @return The texture to be rendered onto the screen
      */
     public String getTexture() {
-        if (team == 0) {
-            return "friendly_unit";
-        } else if (team == 1) {
+        if (this.team == 0) {
+            return "friendly_unit"; //$NON-NLS-1$
+        } else if (this.team == 1) {
 
-        } else if (team == 2) {
+        } else if (this.team == 2) {
 
         }
-        return "this shouldnt happen ever";
+        return "this shouldnt happen ever"; //$NON-NLS-1$
     }
 }
