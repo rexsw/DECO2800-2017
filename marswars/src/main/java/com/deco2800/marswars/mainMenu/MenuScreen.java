@@ -85,10 +85,12 @@ public class MenuScreen{
 				mainmenu.setVisible(false);
 			}
 		});
+		
+		mainmenu.align(Align.bottomLeft);
 
 		mainmenu.add(playerMode);
 		//why you no work properly :( 
-		//playerMode.setFillParent(true);
+		playerMode.setFillParent(true);
 		//playerMode.setPosition(0, 0);
 	}
 	
