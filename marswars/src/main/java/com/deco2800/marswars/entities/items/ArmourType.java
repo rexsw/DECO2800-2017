@@ -3,13 +3,14 @@ package com.deco2800.marswars.entities.items;
 /**
  * Enumerate to store the meta data for all the specific Armour type items.
  * 
- * Meta Data details: name = the item's name baseArmour = amount of armour (max
- * and current) it changes without any multipliers being applied baseHealth =
- * amount of health (max and current) it changes without any multipliers being
- * applied baseSpeed = amount of movement speed it changes without any
- * multipliers being applied baseCost = the resource costs for the item without
- * any multipliers being applied where order of the resources in the array is
- * [rocks, crystals, water, biomass].
+ * Meta Data details: 
+ * name = the item's name 
+ * baseArmour = amount of armour (max and current) it changes without any multipliers being applied 
+ * baseHealth = amount of health (max and current) it changes without any multipliers being applied 
+ * baseSpeed = amount of movement speed it changes without any multipliers being applied 
+ * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the
+ * array is [rocks, crystals, water, biomass].
+ * texture = string of the image texture file
  * 
  * @author Mason
  *

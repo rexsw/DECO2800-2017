@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,8 @@ import com.deco2800.marswars.util.Box3D;
  * @author Tze Thong Khor on 25/8/17
  *
  */
-public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner{
+public class AttackableEntity extends BaseEntity implements AttackAttributes,
+		HasOwner, HasAction{
 	
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
@@ -37,6 +39,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private MissileEntity missile; // the type of missile
+	private int loadStatus; //whether the target is loaded
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -168,7 +171,8 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		}
 		this.health  = health;
 	}
-	
+
+	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
@@ -300,6 +304,22 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	public float getSpeed() {
 		return speed;
+	}
+	
+	public int getLoadStatus() {
+	    	return loadStatus;
+	}
+	
+	public void setLoaded() {
+	    loadStatus = 1;
+	}
+	
+	public void setUnloaded() {
+	    loadStatus = 0;
+	}
+	
+	public void isCarrier() {
+	    loadStatus = 2;
 	}
 
 }

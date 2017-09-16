@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
-        HasProgress, HasOwner {
+        HasProgress, HasOwner, HasAction {
 
     /* A single action for this building */
     Optional<DecoAction> currentAction = Optional.empty();
@@ -242,6 +242,15 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
             // increment golbal hero counter here
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
+    }
+
+    /**
+     * Returns the current action of the entity
+     * @return current action
+     */
+    @Override
+    public Optional<DecoAction> getCurrentAction() {
+        return currentAction;
     }
 
 }

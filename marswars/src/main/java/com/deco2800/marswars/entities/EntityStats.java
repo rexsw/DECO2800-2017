@@ -9,7 +9,7 @@ import java.util.Optional;
  * Created by Hayden Bird on 23/08/2017.
  */
 
-public class EntityStats {
+public class EntityStats implements HasAction {
 
 
 
@@ -23,7 +23,8 @@ public class EntityStats {
     private Selectable.EntityType type;
 
 
-    public EntityStats(String name, int health, GatheredResource resourceCarried, Optional<DecoAction> currentAction, BaseEntity entity) {
+    public EntityStats(String name, int health, GatheredResource resourceCarried,
+                       Optional<DecoAction> currentAction, BaseEntity entity) {
         this.name = name;
         this.health = health;
         this.posX = entity.getPosX();
@@ -61,10 +62,14 @@ public class EntityStats {
         return resourceCarried;
     }
 
+    /**
+     * Returns the current action of the entity
+     * @return current action
+     */
+    @Override
     public Optional<DecoAction> getCurrentAction() {
         return currentAction;
     }
-
 
     public Selectable.EntityType getType() {
         return type;

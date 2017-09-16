@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  * @author Tze Thong Khor
  *
  */
-public class Soldier extends AttackableEntity implements Tickable, Clickable{
+public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	
@@ -105,7 +106,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
-		this.setSpeed(0.05f);
+		/*
+		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
+		 * with the nano second threshold in setThread method in MarsWars.java
+		 */
+		this.setSpeed(0.1f); 
+		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
@@ -122,6 +128,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
+	}
+
+
+	/**
+	 * this is used to reset the texture to deselect entities
+	 */
+	public void resetTexture(){
+		this.setTexture(defaultTextureName);
 	}
 
 	@Override
@@ -170,9 +184,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	
 	@Override
 	public void onTick(int tick) {
-
 		if (!currentAction.isPresent()) {
-			modifyFogOfWarMap(true,3);
+			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -215,7 +228,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		}
 		
 		if (!currentAction.get().completed()) {
-			currentAction.get().doAction();
+			currentAction.get().doAction(); 
 		} else {
 			LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
@@ -233,6 +246,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 
 }

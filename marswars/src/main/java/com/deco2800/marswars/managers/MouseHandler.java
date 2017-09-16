@@ -1,5 +1,7 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.buildings.BuildingEntity;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
@@ -56,6 +58,10 @@ public class MouseHandler extends Manager {
 
 			if (entities.isEmpty()) {
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
+				for (Clickable c : listeners) {
+					if (c instanceof Soldier) ((Soldier)c).resetTexture();
+				}
+				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
@@ -79,7 +85,9 @@ public class MouseHandler extends Manager {
 						if (! ((HasOwner) e).isAi() ) {
 							chosen = e;
 							isClickable = true;
-							break;
+							if (e instanceof Soldier) { //preference for player's non-building entities.
+								break;
+							}
 						}
 					}
 					if (chosen == null) {
@@ -94,9 +102,9 @@ public class MouseHandler extends Manager {
 				((Clickable) chosen).onClick(this);
 			}
 			
-			if(isClickable){
-				((CustomizedWorld)world).deSelectAll();
-			}
+			//if(isClickable){
+			//	((CustomizedWorld)world).deSelectAll();
+			//}
 			
 			/*if (entities.get(entities.size() - 1) instanceof Clickable) {
 				LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
@@ -115,6 +123,8 @@ public class MouseHandler extends Manager {
 				c.onRightClick(projX, projY);
 			}
 			listeners.clear();
+			AbstractWorld world = GameManager.get().getWorld();
+			((CustomizedWorld)world).deSelectAll();
 		}
 	}
 

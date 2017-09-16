@@ -89,15 +89,19 @@ public class TextureManager extends Manager {
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
         this.saveTexture("medium_water", "resources/resourceAssets/water_M.png");
         this.saveTexture("large_water", "resources/resourceAssets/water_L.png");
+        this.saveTexture("water_HUD", "resources/resourceAssets/water_HUD.png");
         this.saveTexture("small_rock", "resources/resourceAssets/rock_S.png");
         this.saveTexture("medium_rock", "resources/resourceAssets/rock_M.png");
         this.saveTexture("large_rock", "resources/resourceAssets/rock_L.png");
+        this.saveTexture("rock_HUD", "resources/resourceAssets/rock_HUD.png");
         this.saveTexture("small_crystal", "resources/resourceAssets/crystal_S.png");
         this.saveTexture("medium_crystal", "resources/resourceAssets/crystal_M.png");
         this.saveTexture("large_crystal", "resources/resourceAssets/crystal_L.png");
+        this.saveTexture("crystal_HUD", "resources/resourceAssets/crystal_HUD.png");
         this.saveTexture("small_biomass", "resources/resourceAssets/biomass_S.png");
         this.saveTexture("medium_biomass", "resources/resourceAssets/biomass_M.png");
         this.saveTexture("large_biomass", "resources/resourceAssets/biomass_L.png");
+        this.saveTexture("biomass_HUD", "resources/resourceAssets/biomass_HUD.png");
         this.saveTexture("large_tree", "resources/resourceAssets/tree1sele.png");
         this.saveTexture("medium_tree", "resources/resourceAssets/treem.png");
         this.saveTexture("small_tree", "resources/resourceAssets/treesl.png");
@@ -114,7 +118,11 @@ public class TextureManager extends Manager {
         this.saveTexture("minus_button", "resources/HUDAssets/minusbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
+<<<<<<< HEAD
         this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
+=======
+        this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
+>>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         
@@ -129,6 +137,9 @@ public class TextureManager extends Manager {
         this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
         this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
         
+        //Carrier:
+        this.saveTexture("carrier", "resources/UnitAssets/Neutral/Carrier_1.png");
+        this.saveTexture("carrierSelected", "resources/UnitAssets/Neutral/Carrier_2.png");
         
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");

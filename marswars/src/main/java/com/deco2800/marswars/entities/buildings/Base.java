@@ -9,13 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasHealth;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -26,6 +20,8 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -36,7 +32,8 @@ import org.slf4j.LoggerFactory;
  *
  * A home base for the empire
  */
-public class Base extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner, HasHealth {
+public class Base extends BuildingEntity implements Clickable, Tickable,
+		HasProgress, HasOwner, HasHealth, HasAction {
 
 	/* A single action for this building */
 	Optional<DecoAction> currentAction = Optional.empty();
@@ -60,6 +57,7 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 	super(posX, posY, posZ, BuildingType.BASE);
 		this.setTexture("homeBase");
 		this.setEntityType(EntityType.BUILDING);
+		this.addNewAction(EntityID.SPACMAN);
 		this.setCost(250);
 		this.setSpeed(2);
 	}
@@ -269,9 +267,18 @@ public class Base extends BuildingEntity implements Clickable, Tickable, HasProg
 		}
 	}
 
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
+
 	@Override
 	public boolean isAi() {
 		return owner >= 0;
 	}
-	
+
 }
