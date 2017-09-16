@@ -29,7 +29,7 @@ public class BaseWorldTest extends BaseTest {
     @Before
     public void setup(){
         baseWorld = new BaseWorld(10 ,15);
-        entity = new Commander(baseWorld,0f,0f,0f);
+        entity = new Commander(0, 0, 0, 1);
     }
 
 

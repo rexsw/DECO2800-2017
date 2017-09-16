@@ -39,13 +39,9 @@ import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.HashSet;
-=======
 import java.util.ArrayList;
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
 import java.util.List;
 
 /**
@@ -64,9 +60,6 @@ public class HUDView extends ApplicationAdapter{
 
 	private Stage stage;
 	private Skin skin;
-	private ImageButton quitButton;
-	private ImageButton helpButton;
-	private ImageButton messageButton;
 
 	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
@@ -80,18 +73,15 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
-<<<<<<< HEAD
 	private ShopDialog shopDialog; // Dialog for shop page
 	
     //Action buttons 
 	private Button quitButton; 	 // quits game
 	private Button helpButton;   // calls help
 	private Button messageButton;//opens or closes chatbox
-=======
 		
 	private Button peonButton;
 	private Label helpText;
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
 	
 	//Resources count  
 	private Label rockCount;   
@@ -407,14 +397,11 @@ public class HUDView extends ApplicationAdapter{
 
 
 		LOGGER.debug("Creating HUD manipulation buttons");
-<<<<<<< HEAD
 
 		Button dispMainMenu = new TextButton("Menu", skin);
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
 
-=======
-			
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
+
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button");
 		TextureRegion minusRegion = new TextureRegion(minusImage);
@@ -427,11 +414,8 @@ public class HUDView extends ApplicationAdapter{
 		plusRegionDraw = new TextureRegionDrawable(plusRegion);
 		dispActions = new ImageButton(plusRegionDraw);
 
-<<<<<<< HEAD
 		//add tech button
-=======
 		//add dispTech image
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
 		Texture techImage = textureManager.getTexture("tech_button");
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
@@ -450,13 +434,10 @@ public class HUDView extends ApplicationAdapter{
 		
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
-<<<<<<< HEAD
 		HUDManip.add(dispMainMenu);
 		HUDManip.add(dispTech).pad(BUTTONPAD*2).height(BUTTONSIZE).width(BUTTONSIZE);
 		HUDManip.add(dispShop).padRight(BUTTONPAD);
-=======
 		HUDManip.add(dispTech).pad(BUTTONPAD*2);
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
 		HUDManip.add(dispFog);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
 		

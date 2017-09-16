@@ -13,11 +13,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
-<<<<<<< HEAD
 import com.deco2800.marswars.entities.units.Commander;
-=======
 import com.deco2800.marswars.entities.units.Carrier;
->>>>>>> 40974ea4c56c3e04e6494a5b234ed51da722d6c3
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
