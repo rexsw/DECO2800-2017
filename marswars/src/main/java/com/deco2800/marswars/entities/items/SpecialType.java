@@ -5,30 +5,28 @@ import java.util.List;
 
 import com.deco2800.marswars.entities.items.effects.*;
 
+/**
+ * Enumerate class to store the meta data for all the Special items. Since Special items can have any sort of effect, 
+ * the meta data stored will have stats that are likely common to be used such as area of effect (aoe) radius or 
+ * duration for effects that are temporary.
+ * 
+ * name = the name of the item
+ * texture = the string of the saved texture for the image file that would be used for the item's icon
+ * duration = the amount of ticks the effect will last if it is temporary (note 0 will mean it is an instant effect 
+ * rather than something that lasts over a duration).
+ * radius = aoe range radius in terms of tiles
+ * useLimit = the starting amount of uses the item has
+ * cost = array of amount of resources it takes to buy the item.
+ * effects = list of Effect objects the item will have (will implement and define the item's effect and mechanics).
+ * 
+ * @author Mason
+ *
+ */
 public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), affect range (0 means self use), use
 	// limit, cost, effects)
 	AOEHEAL("Heal 1", "heal_needle", 0, 2, 1, new int[] { 0, 10, 30, 30 },
 			new HealthEffect(100, false));
-	// AOEDMG("Damage 1", 0, 2, 1, new int[] { 0, 10, 30, 30 },
-	// new HealthEffect(100, true)),
-	// SELFHEAL("Heal 2", 0, 0, 2, new int[] { 0, 10, 30, 30 },
-	// new HealthEffect(1000, false)),
-	//
-	// BATTLEBUFF("War Cry", 10, 5, 1, new int[] { 100, 100, 50, 50 }, new
-	// AttackEffect(100, 0, 0), new DefenceEffect(100, 500, 10));
-
-	// radius, magnitude, duration (0 is instant), cost(rcwb), level, type
-	// AOEHEAL1 (3, 25, 0, new int[]{0, 10, 30, 30}, 1, "Heal"),
-	// AOEHEAL2 (4, 50, 0, new int[]{10, 20, 50, 50}, 2, "Heal"),
-	// AOEHEAL3 (5, 75, 0, new int[]{20, 30, 100, 100}, 3, "Heal"),
-	// AOEDAMAGE1 (3, -25, 0, new int[]{0, 10, 30, 30}, 1, "Damage"),
-	// AOEDAMAGE2 (4, -50, 0, new int[]{10, 20, 50, 50}, 2, "Damage"),
-	// AOEDAMAGE3 (5, -75, 0, new int[]{20, 30, 100, 100}, 3, "Damage"),
-	// AOESPEED1 (3, 25, 0, new int[]{20, 20, 0, 0}, 1, "Speed"),
-	// AOESPEED2 (4, 50, 0, new int[]{40, 40, 10, 10}, 2, "Speed"),
-	// AOESPEED3 (5, 75, 0, new int[]{60, 60, 30, 30}, 3, "Speed");
-
 	private String name;
 	private String texture;
 	private int duration;

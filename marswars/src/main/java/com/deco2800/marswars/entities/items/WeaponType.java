@@ -15,9 +15,6 @@ package com.deco2800.marswars.entities.items;
  *
  */
 public enum WeaponType implements ItemType {
-	// damage, range, speed(100 is standard speed, less is faster, more is
-	// slower), cost(rcwb), level
-
 	// assault blasters
 	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }),
 

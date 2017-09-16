@@ -25,8 +25,8 @@ public class Special extends Item {
 	private int useLimit;
 
 	/**
-	 * Constructor 
-	 * @param type
+	 * Constructor for Special items taking in enumerate that contains the meta data for specific items.
+	 * @param type  The SpecialType enumerate value containing the meta data for the specific Special item.
 	 */
 	public Special(SpecialType type) {
 		this.type = type;
@@ -34,10 +34,19 @@ public class Special extends Item {
 		this.useLimit = type.getUseLimit();
 	}
 	
+	/**
+	 * Gets the duration of the item's effect. If the duration is 0, then it is instantly cast effect rather than one
+	 * that has a duration.
+	 * @return the number of ticks the item effects last for.
+	 */
 	public int getDuration() {
 		return type.getDuration();
 	}
 	
+	/**
+	 * Gets the aoe radius of the item's effect
+	 * @return aoe radius in terms of tiles
+	 */
 	public int getRadius() {
 		return type.getRadius();
 	}
@@ -52,16 +61,29 @@ public class Special extends Item {
 		}
 		return false;
 	}
+	
+	/**
+	 * Gets the type of the item which should be SPECIAL.
+	 * @reutrn SPECIAL of the Item.Type enumerate values.
+	 */
 	@Override
 	public Type getItemType() {
 		return Type.SPECIAL;
 	}
 
+	/**
+	 * Gets the name of the specific item.
+	 * @return string that is the name of the specific item defined in the meta data enumerate tuple.
+	 */
 	@Override
 	public String getName() {
 		return type.getName();
 	}
 
+	/**
+	 * Gets the description of the item based on its name and its effects.
+	 * @return string generated from the item name and the descriptions of the effects.
+	 */
 	@Override
 	public String getDescription() {
 		StringBuilder string = new StringBuilder(this.getName()+"\n");
@@ -71,61 +93,12 @@ public class Special extends Item {
 		return string.toString();
 	}
 
+	/**
+	 * Gets the list of Effect objects.
+	 * @return a copy of the list of Effect objects for the item.
+	 */
 	@Override
 	public List<Effect> getEffect() {
-		return new ArrayList<>(effects);
+		return new ArrayList<Effect>(effects);
 	}
-	
-//  private SpecialType specialType;
-//
-//  public Special(String name, SpecialType type) {
-//      super(name);
-//      super.setItemType("Special");
-//      this.specialType = type;
-//      switch(type) {
-//          case AOEHEAL1:
-//              // decrement resources
-//              break;
-//          case AOEHEAL2:
-//              // decrement resources
-//              break;
-//          case AOEHEAL3:
-//              // decrement resources
-//              break;
-//          case AOEDAMAGE1:
-//              // decrement resources
-//              break;
-//          case AOEDAMAGE2:
-//              // decrement resources
-//              break;
-//          case AOEDAMAGE3:
-//              // decrement resources
-//              break;
-//          case AOESPEED1:
-//              // decrement resources
-//              break;
-//          case AOESPEED2:
-//              // decrement resources
-//              break;
-//          case AOESPEED3:
-//              // decrement resources
-//              break;
-//          default:
-//              // anything here??
-//              break;
-//      }
-//
-//  }
-//
-//  public int getAOERadius() { return specialType.getRadius(); }
-//
-//  public int getAOEMagnitude() {return specialType.getMagnitude(); }
-//
-//  public int getAOEDuration () { return specialType.getRadius(); }
-//
-//  public int getAOELevel() { return specialType.getLevel(); }
-//
-//  public int[] getAOECost() { return specialType.getCost(); }
-//
-//  public String getSpecialType() { return specialType.getType(); }
 }
