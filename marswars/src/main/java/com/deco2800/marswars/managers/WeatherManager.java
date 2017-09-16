@@ -6,6 +6,7 @@ import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.entities.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.buildings.Bunker;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
