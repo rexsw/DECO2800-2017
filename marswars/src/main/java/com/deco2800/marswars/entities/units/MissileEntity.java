@@ -132,13 +132,6 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
     }
 
     /**
-     * Check if the entity currently has an action
-     * @return true if there is an ongoing action
-     */
-    @Override
-    public boolean isWorking() { return currentAction.isPresent(); }
-
-    /**
      * Set a new action for an entity
      * @param action for the entity to take
      */
@@ -163,8 +156,4 @@ public class MissileEntity extends BaseEntity implements HasDamage, HasOwner,
     
     public void setSpeed(float speed) { this.speed = speed; }
     
-	@Override
-	public boolean isAi() {
-		return owner >= 0;
-	}
 }

@@ -3,20 +3,18 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DamageAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -27,7 +25,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class); 
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
@@ -79,7 +77,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 	public Soldier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, 1, 1, 1);
-		this.setOwner(owner);
+		super.setOwner(owner);
 		this.name = "Soldier";
 
 		//Accessing the technology manager which contains unit Attributes
@@ -121,6 +119,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				) {
 			
 			currentAction = Optional.of(new DamageAction(this, target));
+
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else 
@@ -141,12 +140,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(!this.isAi()) {
+		if(!this.isAi() & this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
 			LOGGER.info("Clicked on soldier");
-			this.makeSelected();
+			   this.makeSelected();
 		} else {
 			LOGGER.info("Clicked on ai soldier");
 		}
@@ -160,7 +159,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
-			LOGGER.info("Right click occurred outside game world.");
+			//LOGGER.info("Right click occurred outside game world.");
 			this.setTexture(defaultTextureName);
 			return;
 		}
@@ -171,7 +170,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.error("Assigned action move to" + x + " " + y);
+			//LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -218,7 +217,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					return;
 				}
 
-				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+				//LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
@@ -230,15 +229,24 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction(); 
 		} else {
-			LOGGER.info("Action is completed. Deleting");
+			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 		}
 
 		
 	}
+	
 	@Override
 	public String toString(){
 		return "Soldier";
+	}
+	
+	/**
+	 * Gets default texture
+	 * @return returns string representing default texture
+	 */
+	public String getDefaultTexture(){
+		return defaultTextureName;
 	}
 	
 	public void setAllTextture() {
@@ -256,5 +264,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
-
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
+	}
 }

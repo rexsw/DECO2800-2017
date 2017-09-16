@@ -3,9 +3,9 @@ package com.deco2800.marswars.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.DamageAction.State;
-import com.deco2800.marswars.entities.units.AttackableEntity;
+
 import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
 
 public class LoadAction implements DecoAction {
 
@@ -18,12 +18,12 @@ public class LoadAction implements DecoAction {
     private boolean completed = false;
     private MoveAction action = null;
     private State state = State.START_STATE;
-    private AttackableEntity carrier;
-    private AttackableEntity target;
+    private Soldier carrier;
+    private Soldier target;
     private int ticksLoad = 50;
     private boolean actionPaused = false;
 
-    public LoadAction(AttackableEntity carrier, AttackableEntity target) {
+    public LoadAction(Soldier carrier, Soldier target) {
 	super();
 	this.carrier = carrier;
 	this.target = target;
