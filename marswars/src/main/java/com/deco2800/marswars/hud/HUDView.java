@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -34,6 +36,7 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.managers.TextureManager;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,11 +79,6 @@ public class HUDView extends ApplicationAdapter{
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
-	
-    //Action buttons 
-	private Button quitButton; 	 // quits game
-	private Button helpButton;   // calls help
-	private Button messageButton;//opens or closes chatbox
 		
 	private Button peonButton;
 	private Label helpText;
@@ -441,6 +439,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.add(dispFog).pad(BUTTONPAD);
 		HUDManip.add(dispStats).pad(BUTTONPAD);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
+		HUDManip.add(dispShop).padRight(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
 		
@@ -484,7 +483,6 @@ public class HUDView extends ApplicationAdapter{
 
 		});
 		
-		dispShop.addListener(new ChangeListener() {
 		/*Display the player's stats*/
 		dispStats.addListener(new ChangeListener(){
 			@Override

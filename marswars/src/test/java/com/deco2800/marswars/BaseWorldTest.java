@@ -2,6 +2,9 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.ColourManager;
+import com.deco2800.marswars.managers.Colours;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
@@ -25,9 +28,12 @@ public class BaseWorldTest extends BaseTest {
     BaseWorld baseWorld;
     // an entity mock object
     BaseEntity entity;
+    // stuff with cm is a bandaid fix to null pointer exceptions in getting texture string for Commander
+    ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 
     @Before
     public void setup(){
+		cm.setColour(1, Colours.BLUE);
         baseWorld = new BaseWorld(10 ,15);
         entity = new Commander(0, 0, 0, 1);
     }
