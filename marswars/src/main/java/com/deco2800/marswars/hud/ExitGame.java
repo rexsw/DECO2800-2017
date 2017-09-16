@@ -8,9 +8,9 @@ public class ExitGame extends Dialog{
 		super(title, skin);
 		
 			{
-				text("Are you sure you want to quit? "); //$NON-NLS-1$
-				button("Yes", 1); //$NON-NLS-1$
-				button("No, keep playing", 2); //$NON-NLS-1$
+				text("Are you sure you want to quit? ");
+				button("Yes", 1); 
+				button("No, keep playing", 2); 
 			}
 	}
 			@Override

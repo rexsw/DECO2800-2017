@@ -87,6 +87,9 @@ public class MenuScreen{
 		});
 
 		mainmenu.add(playerMode);
+		//why you no work properly :( 
+		//playerMode.setFillParent(true);
+		//playerMode.setPosition(0, 0);
 	}
 	
 	public void selectCharacter(Window mainmenu, Stage stage) {

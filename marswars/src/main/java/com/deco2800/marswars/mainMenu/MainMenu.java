@@ -17,7 +17,7 @@ import com.deco2800.marswars.MarsWars;
  * FLOW DIAGRAM: 
  * TODO add in flow diagram of the main menu
  *  
- * @author Toby 
+ * @author Toby Guinea
  *
  */
 public class MainMenu {
@@ -26,8 +26,8 @@ public class MainMenu {
 	private Skin skin;
 	private Stage stage; 
 	
-	Window mainmenu; 
-	Label title;
+	private Window mainmenu; 
+	private Label title;
 	boolean status = true;
 
 	/**
@@ -50,6 +50,8 @@ public class MainMenu {
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
+		/*Creates the screens for the menu that walk the player 
+		 * through setting up their customized game */
 		new MenuScreen(this.skin, this.mainmenu, this.stage);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
