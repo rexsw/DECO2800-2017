@@ -180,16 +180,17 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	public void onClick(MouseHandler handler) {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		currentHandler = handler;
-		sound.playSound("endturn.wav");
 		if(!this.isAi()) {
 			if (!this.isSelected()) {
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
 				LOGGER.info("clicked on base");
+				sound.playSound("closed.wav");
 			}
 		} else {
 			this.makeSelected();
 			LOGGER.info("clicked on ai base");
+			sound.playSound("endturn.wav");
 		}
 	}
 
@@ -201,7 +202,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	public void onRightClick(float x, float y) {
 		//base has no action on right click for now
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("closed.wav");
 		this.deselect();
 	}
 

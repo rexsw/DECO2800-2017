@@ -68,7 +68,13 @@ public class MouseHandler extends Manager {
 			if (entities.isEmpty()) {
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
+					if (c instanceof BaseEntity) {
+						((BaseEntity) c).deselect();
+					}
 					if (c instanceof Soldier) ((Soldier)c).resetTexture();
+					if (c instanceof Spacman) {
+						((Spacman) c).setTexture("spacman_green");
+					}	
 				}
 				listeners.clear();//Deselect all the entities selected before
 				return;
