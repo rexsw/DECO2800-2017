@@ -1,10 +1,12 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.MarsWars;
+import com.deco2800.marswars.InitiateGame.Game;
 
 /**
  * Creates a main menu window, which adds in a table depending on the 
@@ -28,7 +30,9 @@ public class MainMenu {
 	
 	private Window mainmenu; 
 	private Label title;
-	boolean status = true;
+	boolean gameStarted = false;
+	private OrthographicCamera camera; 
+	private Game game; 
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -36,8 +40,9 @@ public class MainMenu {
 	 * @param stage
 	 * @param window
 	 * @param marswars
+	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars) {
+	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars, OrthographicCamera camera) {
 		this.skin = skin;
 		this.stage = stage; 
 		this.mainmenu = window; 
@@ -52,7 +57,7 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		new MenuScreen(this.skin, this.mainmenu, this.stage);
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
 	
@@ -60,7 +65,27 @@ public class MainMenu {
 		return this.mainmenu;
 	}
 	
+	public void startGame(boolean start){
+		gameStarted = start;
+		game = new Game(skin, stage, camera);
+
+	}
+	
+	public boolean gameStarted(){
+		boolean started = gameStarted;
+		return started; 
+	}
+	
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		if(gameStarted){
+			game.resize(width, height);
+		}
+	}
+	
+	public void renderGame(){
+		if(gameStarted){
+			game.render();
+		}
 	}
 }

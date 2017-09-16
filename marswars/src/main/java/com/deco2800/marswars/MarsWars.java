@@ -99,7 +99,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
+		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this, camera); //$NON-NLS-1$
 		this.stage.addActor(this.menu.buildMenu());
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);

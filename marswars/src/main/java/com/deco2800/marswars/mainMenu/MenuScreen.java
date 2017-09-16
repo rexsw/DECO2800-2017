@@ -1,5 +1,6 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -41,9 +42,11 @@ public class MenuScreen{
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
+	private MainMenu menu; 
 	
-	public MenuScreen(Skin skin, Window window, Stage stage) {
+	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu menu) {
 		this.skin = skin;
+		this.menu = menu; 
 		playerModeSelect(window, stage);
 	}
 	
@@ -82,6 +85,7 @@ public class MenuScreen{
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				menu.startGame(true);
 				mainmenu.setVisible(false);
 			}
 		});
