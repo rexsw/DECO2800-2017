@@ -5,12 +5,29 @@ import java.util.List;
 
 import com.deco2800.marswars.entities.items.effects.Effect;
 
+/**
+ * Class for Special items. These items would be activated by the player at any time and are limited in use (i.e. how 
+ * many times they can be activated). These items' effects can be ANYTHING e.g. ranging from permanent or temporary 
+ * buffs to blowing up the world. A Commander can carry as many different kinds of these special items as their 
+ * inventory allows (at most 4) but can carry multiple of the same item in 1 "stack".
+ * 
+ * type = the SpecialType enumerate value which stores the basic meta data for the Special item.
+ * effects = List of Effect objects that contains the item's effect(s) (i.e. their functionality).
+ * useLimit = Amount of uses the item has left.
+ * 
+ * @author Mason
+ *
+ */
 public class Special extends Item {
 
 	private SpecialType type;
 	private List<Effect> effects;
 	private int useLimit;
 
+	/**
+	 * Constructor 
+	 * @param type
+	 */
 	public Special(SpecialType type) {
 		this.type = type;
 		this.effects = type.getEffect();

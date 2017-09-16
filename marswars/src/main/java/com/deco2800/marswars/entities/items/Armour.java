@@ -13,7 +13,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  * 
  * type = the ArmourType enumerate value which stores the basic meta data needed for the armour item.
  * lvl = the item's level which would determine the costs and stat increases for it's current and further upgrades.
- * effects = the list of Effect classes which contain the item's effect(s).
+ * effects = the list of Effect classes which contain the item's effect(s) (i.e. their functionality).
  * 
  * @author Mason
  *
@@ -115,6 +115,5 @@ public class Armour extends Item {
 	public String getDescription() {
 		return this.getName() + "\nArmour: " + this.getArmourValue() + "\nHealth: " + this.getArmourHealth()
 				+ "\nMovementSpeed: " + this.getMoveSpeed();
-
 	}
 }

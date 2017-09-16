@@ -13,7 +13,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  * 
  * type = the Weapon Type enumerate value which stores the basic meta data needed for the weapon item.
  * lvl = the item's level which would determine the costs and stat increases for it's current and further upgrades.
- * effects = the list of Effect classes which contain the item's effect(s).
+ * effects = the list of Effect classes which contain the item's effect(s) (i.e. their functionality).
  * 
  * @author Mason
  *

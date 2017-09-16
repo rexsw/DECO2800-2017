@@ -10,7 +10,7 @@ package com.deco2800.marswars.entities.items;
  * baseSpeed = amount of movement speed it changes without any multipliers being applied 
  * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the
  * array is [rocks, crystals, water, biomass].
- * texture = string of the image texture file
+ * texture = string of the saved texture for the image file that would be used for the item's icon
  * 
  * @author Mason
  *
@@ -147,7 +147,6 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the string presentation of item cost
 	 */
-	@Override
 	public String getCostString() {
 		String result = "";
 		if (this.baseCost[0] > 0) {
