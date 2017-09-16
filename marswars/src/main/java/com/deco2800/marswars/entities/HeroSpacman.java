@@ -1,16 +1,10 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.worlds.AbstractWorld;
-import com.deco2800.marswars.entities.items.Effect;
-import com.deco2800.marswars.entities.items.Item;
-import com.deco2800.marswars.entities.items.Armour;
-import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.items.ActiveItem;
-import com.deco2800.marswars.entities.items.PassiveItem;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -19,14 +13,15 @@ import java.util.Optional;
  * Edited by Zeid Ismail on 8/09
  */
 public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
-		HasAttackRange, HasAttackSpeed, HasHealth {
+		HasAction, HasAttackRange, HasAttackSpeed, HasHealth {
 	int xp;
 	int armour;
 	int health;
+	// additive, ie weapon damage adds on to base value
+	int weaponDamage;
 	int attackRange;
 	int attackSpeed;
 	Inventory inventory;
-
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -44,10 +39,12 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		super(posX, posY, posZ, 1, 1f, 1f);
 		this.setTexture("spacman_red");
 		this.setEntityType(EntityType.HERO);
+		//default values
 		this.health = 100;
 		this.armour = 100;
-		this.attackRange = 5;
-		this.attackSpeed = 10;
+		this.weaponDamage = 100;
+		this.attackRange = 2;
+		this.attackSpeed = 100;
 		this.xp = 0;
 		this.inventory = new Inventory();
 	}
@@ -131,10 +128,6 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 		return inventory;
 	}
 
-	public Effect getEffect(Item item) {
-		return item.getEffect();
-	}
-
 	public boolean getActivation (ActiveItem activeItem) {
 		return activeItem.getActivation();
 	}
@@ -146,4 +139,46 @@ public class HeroSpacman extends BaseEntity implements Tickable, Clickable,
 	public void deactivateItem(ActiveItem activeItem) {
 		activeItem.deactivateItem();
 	}
+
+	// used when button in inventory clicked to wear armour
+	public void applyArmour(Armour armour) {
+		this.armour += armour.getArmourValue();
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
+
+	// used when button in inventory clicked to wear weapon
+	public void applyWeapon(Weapon weapon) {
+		this.weaponDamage += weapon.getWeaponDamage();
+		this.attackSpeed += weapon.getWeaponSpeed();
+		this.attackRange += weapon.getWeaponRange();
+	}
+
+	// used when button in inventory clicked to assign special item to the hero
+//    public void applySpecial(Special special) {
+//		// need to finish this
+//		String type = special.getSpecialType();
+//		switch(type) {
+//			case "Heal":
+//				// do stuff
+//				break;
+//			case "Damage":
+//				// do stuff
+//				break;
+//			case "Speed":
+//				// do stuff
+//				break;
+//			default:
+//				// anything here??
+//				break;
+//		}
+//	}
+
 }

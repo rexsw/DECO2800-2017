@@ -112,7 +112,8 @@ private static final String CLOSED = "closed.wav";
 
 	/**
 	 * Sets the current biomass
-	 * @param water
+	 * @param biomass
+	 * @param team
 	 */
 	public void setBiomass(int biomass, int team) {
 		if(this.biomass.containsKey(team)) {

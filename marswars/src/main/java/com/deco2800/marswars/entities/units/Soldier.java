@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.deco2800.marswars.entities.HasAction;
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +17,6 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.SoundManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -30,7 +25,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  * @author Tze Thong Khor
  *
  */
-public class Soldier extends AttackableEntity implements Tickable, Clickable{
+public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class);
 	
@@ -39,6 +34,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	protected String selectedTextureName;
 	protected String defaultTextureName;
 	protected String movementSound;
+	protected String name;
 
 	/**
 	 * Sets the position X
@@ -47,11 +43,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	@Override
 	public void setPosX(float x) {
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
 		super.setPosX(x);
 		//lineOfSight.setPosX(x);
-//		if(!this.isAi()) {
+//		if(!this.isAi()) {1
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
 //		}
@@ -66,11 +64,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public void setPosY(float y) {
 
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
 		super.setPosY(y);
 		//lineOfSight.setPosY(y);
 //		if(!this.isAi()) {
+		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
 //		}
@@ -80,7 +80,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public Soldier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, 1, 1, 1);
 		this.setOwner(owner);
-		
+		this.name = "Soldier";
+
+		//Accessing the technology manager which contains unit Attributes
+
+
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
@@ -88,17 +92,23 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
-		// set all the attack attributes
-		this.setMaxHealth(500);
-		this.setHealth(500);
-		this.setDamage(50);
-		this.setArmor(250);
-		this.setArmorDamage(50);
-		this.setAttackRange(8);
-		this.setAttackSpeed(30);
-		this.setSpeed(0.05f);
+		setAttributes();
+
 	}
-	
+
+	//sets all attack attributes
+	public void setAttributes(){
+		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		this.setMaxHealth(t.getUnitAttribute(this.name, 1));
+		this.setHealth(t.getUnitAttribute(this.name, 1));
+		this.setDamage(t.getUnitAttribute(this.name, 2));
+		this.setArmor(t.getUnitAttribute(this.name, 3));
+		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
+		this.setAttackRange(t.getUnitAttribute(this.name, 5));
+		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
+		this.setSpeed(0.05f);
+		this.setUnloaded(); //default load status = 0
+	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
@@ -114,6 +124,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
+	}
+
+
+	/**
+	 * this is used to reset the texture to deselect entities
+	 */
+	public void resetTexture(){
+		this.setTexture(defaultTextureName);
 	}
 
 	@Override
@@ -164,7 +182,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 	public void onTick(int tick) {
 
 		if (!currentAction.isPresent()) {
-			modifyFogOfWarMap(true,3);
+			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
 			// make stances here.
 			int xPosition =(int)this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -225,6 +243,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable{
 		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
 		this.movementSound = "endturn.wav";
+	}
+
+	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
 	}
 
 }

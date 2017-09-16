@@ -14,9 +14,12 @@ public class TechTreeView extends Dialog{
 		super(title, skin);
 		{
 			//text("This will display the technology tree");
-			button("Upgrade Spacman Cost", 1);
-			button("Upgrade Attack", 2);
-			button("Upgrade Defense", 3);
+			// note that object numbers must correspond with tech tree tech ids
+			button("Unlock Hero Factory", 1);
+			button("Unlock Armour Level 1", 2);
+			button("Unlock Armour Level 2", 3);
+			button("Unlock Armour Level 3", 4);
+
 			button("OK", 0);
 		}
 	}
@@ -34,6 +37,6 @@ public class TechTreeView extends Dialog{
 		Technology tech = techMan.getTech(techID);
 		String message = techMan.checkPrereqs(techMan, tech, techID, -1);
 		//Need to find a way to print this to the dialogue box
-		//System.out.println(message);
+		System.out.println(message);
 	}
 }
