@@ -85,7 +85,7 @@ public class MouseHandler extends Manager {
 						if (! ((HasOwner) e).isAi() ) {
 							chosen = e;
 							isClickable = true;
-							if (!(e instanceof BuildingEntity)) { //preference for player's non-building entities.
+							if (e instanceof Soldier) { //preference for player's non-building entities.
 								break;
 							}
 						}
