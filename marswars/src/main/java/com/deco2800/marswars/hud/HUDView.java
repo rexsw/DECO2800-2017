@@ -137,7 +137,7 @@ public class HUDView extends ApplicationAdapter{
 		this.textureManager = textureManager;
 		
 		//Generate the game stats
-		this.stats = new GameStats(stage, skin, this);
+		this.stats = new GameStats(stage, skin, this, textureManager);
 		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
@@ -392,7 +392,7 @@ public class HUDView extends ApplicationAdapter{
 		addInventoryMenu();
 
 
-		LOGGER.debug("Creating HUD manipulation buttons"); //$NON-NLS-1$
+		LOGGER.debug("Creating HUD manipulation buttons");
 			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button"); //$NON-NLS-1$
@@ -408,8 +408,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button"); //$NON-NLS-1$
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion techRegion = new TextureRegion(techImage);
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
