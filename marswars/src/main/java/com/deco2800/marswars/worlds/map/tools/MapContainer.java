@@ -328,7 +328,7 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        EntityTypes random = EntityTypes.values()[r.nextInt(EntityTypes.values().length)];
+        EntityID random = EntityID.values()[r.nextInt(EntityID.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
         int x = r.nextInt(width-1);
@@ -336,7 +336,7 @@ public class MapContainer {
         if(!checkForEntity(x, y)){
             return;
         }
-        if(random == EntityTypes.SPACMAN){
+        if(random == EntityID.SPACMAN){
             newEntity = new Spacman(x, y, 0);
         }
         else {

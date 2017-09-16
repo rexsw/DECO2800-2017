@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -23,7 +24,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	private int cost = 0;
 	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
-	private  List<ActionType> validActions;
+	private ActionList validActions;
 	private boolean selected = false;
 	protected float speed = 0.05f;
 
@@ -204,7 +205,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return the list of actions the entity is allowed to take
 	 */
 	@Override
-	public List<ActionType> getValidActions() {
+	public ActionList getValidActions() {
 		return this.validActions;
 	}
 
@@ -214,7 +215,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	@Deprecated
 	public void initActions() {
-		this.validActions = new ArrayList<ActionType>();
+		this.validActions = new ActionList();
 	}
 
 	/**
@@ -224,11 +225,11 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 
 	@Override
-	public boolean addNewAction(ActionType newAction) {
+	public boolean addNewAction(Object newAction) {
 		if (this.validActions == null) {
-			this.validActions = new ArrayList<ActionType>();
+			this.validActions = new ActionList();
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == newAction) {
 				return false;
 			}
@@ -243,11 +244,11 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
 	@Override
-	public boolean removeActions(ActionType actionToRemove) {
+	public boolean removeActions(Object actionToRemove) {
 		if (this.validActions == null){
 			return false;
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == actionToRemove) {
 				this.validActions.remove(d);
 				return true;
@@ -389,6 +390,15 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @param nextAction the action to be forced
 	 */
 	public void setNextAction(ActionType nextAction) {
+		return;
+	}
+
+	/**
+	 * Forces the unit to only try the chosen action on the next rightclick
+	 * this variant is for building
+	 * @param toBuild the unit to be built
+	 */
+	public void setNextAction(BaseEntity toBuild, ActionType action) {
 		return;
 	}
 

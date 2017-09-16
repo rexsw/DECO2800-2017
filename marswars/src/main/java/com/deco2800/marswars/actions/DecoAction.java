@@ -29,4 +29,5 @@ public interface DecoAction {
 	 * Resumes the current action
 	 */
 	void resumeAction();
+
 }
