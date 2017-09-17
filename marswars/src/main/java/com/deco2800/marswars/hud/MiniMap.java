@@ -47,6 +47,15 @@ public class MiniMap {
     }
 
     /**
+     * Constructor for testing only
+     */
+    public MiniMap() {
+        entitiesOnMap = new ArrayList<MiniMapEntity>();
+        miniMapDisplay = new int[220][220];
+        entitiesOnMiniMap = new Image[220][220];
+    }
+
+    /**
      * gets the MiniMapEntity at the minimap coordinates (x,y)
      * @param x
      * @param y
