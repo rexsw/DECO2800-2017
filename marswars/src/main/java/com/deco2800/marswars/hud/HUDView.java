@@ -72,7 +72,8 @@ public class HUDView extends ApplicationAdapter{
 	private Window messageWindow;//window for the chatbox 
 	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
-	private Window actionsWindow;    //window for the players actions 
+	private Window actionsWindow;    //window for the players actions
+	private static Window entitiesPicker; //window that selects available entities
 		
 	private Button peonButton;
 	private Label helpText;
@@ -390,7 +391,6 @@ public class HUDView extends ApplicationAdapter{
 		addMiniMapMenu();
 		addInventoryMenu();
 
-
 		LOGGER.debug("Creating HUD manipulation buttons");
 			
 		//remove dispActions button + image for it 
@@ -491,6 +491,8 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}	
 		});
+
+		addEntitiesPickerMenu();
 	}	
 	
 	/**
@@ -602,6 +604,28 @@ public class HUDView extends ApplicationAdapter{
         //add the map window to the stage
         stage.addActor(minimap);
     }
+
+	/**
+	 * Add the customise window / entities picker.
+	 * This method shall only be called when the "Customize" button from the start menu is clicked.
+	 * If this method is call, it will cause that the actions window be set to not visible.
+	 */
+	private void addEntitiesPickerMenu(){
+		entitiesPicker = new Window("Customize World", skin);
+		entitiesPicker.align(Align.topLeft);
+		entitiesPicker.setPosition(220,0);
+		entitiesPicker.setMovable(false);
+		entitiesPicker.setVisible(false);
+		entitiesPicker.setWidth(stage.getWidth()-220);
+		entitiesPicker.setHeight(220);
+
+		stage.addActor(entitiesPicker);
+
+	}
+
+	public static void showEntitiesPicker( boolean isVisible){
+		entitiesPicker.setVisible(isVisible);
+	}
 
 	/**
 	 *

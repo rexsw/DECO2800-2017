@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
+import com.deco2800.marswars.hud.HUDView;
 
 /**
  * @author Naziah Siddique
@@ -78,6 +79,15 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				MenuScreen.this.playerType = 1; 
 				selectServerMode(mainmenu, stage);
+			}
+		});
+
+		customizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				HUDView.showEntitiesPicker(true);
+				mainmenu.setVisible(false);
+
 			}
 		});
 		
