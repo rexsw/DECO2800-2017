@@ -228,8 +228,12 @@ public class Carrier extends Soldier {
 
 	@Override
 	public void setNextAction(ActionType a) {
+	    if(a == ActionType.UNLOAD) {
+		unloadPassenger();
+	    } else {
 		LOGGER.info("Assigned action " + ActionSetter.getActionName(a));
 		this.nextAction = a;
+	    }
 	}
 
 }
