@@ -296,14 +296,6 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 		this.movementSound = "endturn.wav";
 	}
-	//set textture only for soldiers
-	public void setSoldierTextture() {
-		//TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		//this.upleftTextureName =tm.loadUnitSprite("Soldier"+this.getColor+"upleft") ;
-	    //this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-	    //this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-	    //this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
-	}
 
 	/**
 	 * Returns the current action of the entity
