@@ -51,6 +51,7 @@ public class TechnologyManager extends Manager{
         unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
         unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
         unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
+        unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 20, 10});
 
         //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
 //        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});
