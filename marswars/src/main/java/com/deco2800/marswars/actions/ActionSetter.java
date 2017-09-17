@@ -3,6 +3,7 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -96,9 +97,10 @@ public final class ActionSetter {
      * @return True if both entities are instances of Soldier, false otherwise
      */
     private static boolean doLoad(BaseEntity performer, BaseEntity target) {
-        if (target instanceof Soldier && performer instanceof Soldier) {
+        if (target instanceof Soldier && performer instanceof Carrier) {
             LOGGER.info("Try to load");
-            performer.setAction(new LoadAction((Soldier) performer, (Soldier) target));
+            Carrier carrier =  (Carrier)performer;
+            carrier.load((Soldier) target);
             return true;
         } else {
             return false;
