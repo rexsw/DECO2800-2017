@@ -21,6 +21,7 @@ public class WinManager extends Manager implements TickableManager {
 	public void onTick(long i) {
 		teams = black.teamsAlive();
 		if (teams == 1) {
+			LOGGER.info("tick winner " + teams);
 			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
 			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
 		}

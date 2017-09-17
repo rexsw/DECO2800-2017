@@ -2,7 +2,6 @@ package com.deco2800.marswars.managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 
@@ -28,7 +26,8 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	@Override
 	public void onTick(long i) {
 		timer++;
-		if(timer % 10 == 0) {
+		if(timer % 50 == 0) {
+			LOGGER.info("tick");
 			for(int teamid: teams) {
 				values.get(teamid).get("Biomass").add(rm.getBiomass(teamid));
 				values.get(teamid).get("Crystal").add(rm.getCrystal(teamid));
@@ -40,7 +39,6 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get("Buildings").add(this.count(teamid, "Buildings"));
 			}
 			index++;
-			
 		}
 	}
 	
@@ -54,9 +52,11 @@ public class GameBlackBoard extends Manager implements TickableManager {
 					updateunit(teamid, e);
 				}
 				else {
-					HashMap<String, List<Integer>> teammap = new HashMap<String, List<Integer>>();
-					Set(teammap, teamid);
-					updateunit(teamid, e);
+					if(teamid != 0) {
+						HashMap<String, List<Integer>> teammap = new HashMap<String, List<Integer>>();
+						Set(teammap, teamid);
+						updateunit(teamid, e);
+					}
 				}
 			}
 		}
@@ -65,20 +65,24 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	private void Set(HashMap<String, List<Integer>> setmap, int teamid) {
 		ArrayList<Integer> base = new ArrayList<Integer>();
 		base.add(0);
-		setmap.put("Biomass", base);
-		setmap.put("Crystal", base);
-		setmap.put("Rocks", base);
-		setmap.put("Water", base);
-		setmap.put("Units", base);
-		setmap.put("Units Lost", base);
-		setmap.put("Combat Units", base);
-		setmap.put("Buildings", base);
+		setmap.put("Biomass", new ArrayList<Integer>(base));
+		setmap.put("Crystal",  new ArrayList<Integer>(base));
+		setmap.put("Rocks",  new ArrayList<Integer>(base));
+		setmap.put("Water",  new ArrayList<Integer>(base));
+		setmap.put("Units",  new ArrayList<Integer>(base));
+		setmap.put("Units Lost",  new ArrayList<Integer>(base));
+		setmap.put("Combat Units",  new ArrayList<Integer>(base));
+		setmap.put("Buildings",  new ArrayList<Integer>(base));
 		values.put(teamid, setmap);
 		teams.add(teamid);
 	}
 	
 	public void updateunit(int teamid, BaseEntity enity) {
+		if(!values.containsKey(teamid)) {
+			return;
+		}
 		int count = values.get(teamid).get("Units").get(index);
+		LOGGER.info("unit count " + count + " teamid " + teamid);
 		count++;
 		values.get(teamid).get("Units").set(index, count);
 		if(enity instanceof AttackableEntity) {
@@ -119,6 +123,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			if(values.get(t).get("Units").get(index) != 0) {
 				alive = t;
 				count++;
+				
 			}
 		}
 		return count;
