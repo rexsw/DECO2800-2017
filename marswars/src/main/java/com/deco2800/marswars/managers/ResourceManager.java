@@ -127,6 +127,12 @@ private static final String CLOSED = "closed.wav";
 			this.biomass.put(team, biomass);
 		}
 	}
+
+
+	
+	/* This class does not use the setAction(DecoAction)
+	 * functions from HasOwner
+	 */
 	
 	public int CappedTeam() {
 		for(int teamid:rocks.keySet()) {

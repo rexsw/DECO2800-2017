@@ -5,7 +5,7 @@ import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -32,6 +32,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private Map<Integer, Integer> alive = new HashMap<Integer, Integer>();
 	private State state = State.DEFAULT;
 	private long timeAtStateChange;
+	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	
 	public static enum State {
 		DEFAULT, AGGRESSIVE, DEFENSIVE
@@ -68,7 +69,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	private void generateSpacman(Base x) {
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if(!x.isWorking() && rm.getRocks(x.getOwner()) > 30) {
+		if(!x.showProgress() && rm.getRocks(x.getOwner()) > 30) {
 			//sets the ai base to make more spacman if possible
 			LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
@@ -79,7 +80,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			
 	private void useEnemy(Soldier x) {
 		//lets the ai target player spacman with it's enemyspacmen
-		if(x.isWorking()) {
+		if(x.showProgress()) {
 			return;
 		}
 		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
@@ -90,7 +91,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 				return;
 			}
 		}
-	}
+}
 		
 	/**
 	 * Tasks all soldiers to move back to base
@@ -98,7 +99,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	private void soldierDefend(Soldier soldier) {
 		//lets the ai target player spacman with it's enemyspacmen
-		if(soldier.isWorking()) {
+		if(soldier.showProgress()) {
 			return;
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
@@ -113,16 +114,16 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 	}
 
-	private void useSpacman(Astronaut x) {
-		if(!(x.isWorking())) {
-			//allow spacmans to collect the closest resources
-			//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
-			Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
-			x.setAction(new GatherAction(x, (Resource) resource.get()));
-			//LOGGER.info(resource.get().getTexture() + "");
-			LOGGER.info("ai - set spacman to grather");
-		}
+private void useSpacman(Astronaut x) {
+	if(!(x.showProgress())) {
+		//allow spacmans to collect the closest resources
+		//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
+		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
+		x.setAction(new GatherAction(x, (Resource) resource.get()));
+		//LOGGER.info(resource.get().getTexture() + "");
+		LOGGER.error("ai - set spacman to grather");
 	}
+}
 			
 			
 	/**
@@ -163,7 +164,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	public void setState(State newState) {
 		state = newState;
-		timeAtStateChange = TimeManager.getInGameTime();
+		timeAtStateChange = tm.getGameSeconds();
 	}
 	
 	/**
@@ -187,6 +188,6 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * @return
 	 */
 	public long getTimeSinceStateChange() {
-		return TimeManager.getInGameTime() - timeAtStateChange;
+		return tm.getGameSeconds() - timeAtStateChange;
 	}
 }

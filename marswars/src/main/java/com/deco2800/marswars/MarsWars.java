@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -130,8 +130,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Creates the game minimap 
 	 */
 	public void createMiniMap() {
-		MiniMap m = new MiniMap("minimap", 220, 220); //$NON-NLS-1$
-		m.render();
+		MiniMap m = new MiniMap("minimap", 220, 220);
 		//initialise the minimap and set the image
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(this.reg);
@@ -143,8 +142,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void createMap() {
 		MapContainer map = new MapContainer();
 		CustomizedWorld world = new CustomizedWorld(map);
-		world.loadMapContainer(map);
 		GameManager.get().setWorld(world);
+		world.loadMapContainer(map);
+		
 		
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
@@ -272,7 +272,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 		if(!this.gameStarted) {
-			GameManager.get().getMiniMap().render();
+			//GameManager.get().getMiniMap().render();
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
 			this.view.enableHUD();
@@ -342,7 +342,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			y = ThreadLocalRandom.current().nextInt(1, width - 1);
 			cm.setColour(playerid);
 			Setunit(playerid, x, y, rm);
-
 		}
 	}
 
@@ -365,14 +364,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		rm.setWater(0, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0);
+		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		Soldier soldier = new Soldier(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(soldier);
 		Tank tank = new Tank(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
-		aibase.setOwner(teamid);
 		GameManager.get().getWorld().addEntity(aibase);
 	}
 }

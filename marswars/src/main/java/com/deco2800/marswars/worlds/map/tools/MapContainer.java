@@ -2,17 +2,13 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.buildings.Barracks;
-import com.deco2800.marswars.entities.buildings.Base;
-import com.deco2800.marswars.entities.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.buildings.BuildingType;
-import com.deco2800.marswars.entities.buildings.Bunker;
-import com.deco2800.marswars.entities.buildings.Turret;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -97,9 +93,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-                this.getRandomBuilding();
-               // this.getRandomEntity();
-               // this.getRandomResource();
+               this.getRandomBuilding();
+               this.getRandomEntity();
+               this.getRandomResource();
             }
         }
     }
@@ -271,17 +267,14 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(!checkForEntity(x, y)){
-            return;
-        }
-        if(random == BuildingType.BASE){
-            newBuilding = new Base(world, x,y,0);
-        } else if(random == BuildingType.TURRET){
-            newBuilding = new Turret(world, x,y,0);
-        } else if(random == BuildingType.BUNKER){
-            newBuilding = new Bunker(world, x,y,0);
-        } else if(random == BuildingType.BARRACKS){
-            newBuilding = new Barracks(world, x,y,0);
+        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, 0);
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, 0);
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, 0);
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, 0);
         }
         else {
             return;
@@ -338,6 +331,7 @@ public class MapContainer {
         }
         if(random == EntityID.SPACMAN){
             newEntity = new Spacman(x, y, 0);
+            newEntity.setOwner(0);
         }
         else {
             return;
