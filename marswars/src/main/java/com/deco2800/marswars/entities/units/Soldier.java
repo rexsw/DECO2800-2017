@@ -3,6 +3,8 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
@@ -40,6 +42,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String name;
 	protected float tempx;
 	protected float tempy;
+	private ActionType nextAction;
 
 	/**
 	 * Sets the position X
@@ -97,7 +100,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
-
 	}
 
 	//sets all attack attributes
@@ -115,26 +117,23 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
 		this.setSpeed(0.01f); 
+		this.setAreaDamage(0);
 		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (	!this.sameOwner(target)&&//(belongs to another player, currently always true)`
+		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
 				 this!= target //prevent soldier suicide when owner is not set
 				) {
-			
-			currentAction = Optional.of(new AttackAction(this, target));
-
+						currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
-		else 
-		{
+		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
 	}
-
 
 	/**
 	 * this is used to reset the texture to deselect entities
@@ -205,18 +204,23 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(defaultTextureName);
 			return;
 		}
-		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-			// we cant assign different owner yet
-			AttackableEntity target = (AttackableEntity) entities.get(0);
-			attack(target);
-			
-		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+
+		if (nextAction != null) {
+			ActionSetter.setAction(this, x, y, nextAction);
+			nextAction = null;
+		}else {
+			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+				// we cant assign different owner yet
+				AttackableEntity target = (AttackableEntity) entities.get(0);
+				attack(target);
+
+			} else {
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			}
+			this.setTexture(defaultTextureName);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound(movementSound);
 		}
-		
-		
-		
-		
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
@@ -228,9 +232,11 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	@Override
 	public void onTick(int tick) {
 		if (!currentAction.isPresent()) {
-			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
+			if (this.getOwner() == -1)  {
+				modifyFogOfWarMap(true,3);
+			}
 			// make stances here.
-			int xPosition =(int)this.getPosX();
+			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
@@ -241,16 +247,13 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			}
 			boolean moveAway = entitiesSize > 2;
 			if (moveAway) {
-			
-				BaseWorld world = GameManager.get().getWorld();
-
+					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
 				 * place to move to
 				 */
 				Random r = new Random();
 				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
-
 				/* Ensure new position is on the map */
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
 					return;
@@ -260,17 +263,15 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 					// No good
 					return;
 				}
-
-				//LOGGER.info("Spacman is on a tile with another entity, move out of the way");
-
+				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			return;
 		}
-		
 		if (!currentAction.get().completed()) {
+			//LOGGER.info("DO action");
 			currentAction.get().doAction(); 
 		} else {
 			//LOGGER.info("Action is completed. Deleting");
@@ -303,14 +304,6 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 		this.movementSound = "endturn.wav";
 	}
-	//set textture only for soldiers
-	public void setSoldierTextture() {
-		//TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		//this.upleftTextureName =tm.loadUnitSprite("Soldier"+this.getColor+"upleft") ;
-	    //this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-	    //this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-	    //this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
-	}
 
 	/**
 	 * Returns the current action of the entity
@@ -327,7 +320,12 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	public EntityStats getStats() {
 		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
-	
+
+	@Override
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
+	}
+
 	public String getMissileTexture() {
 		return defaultMissileName;
 	}

@@ -3,54 +3,46 @@ package com.deco2800.marswars.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import com.deco2800.marswars.actions.LoadAction.State;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 
-public class LoadAction implements DecoAction {
+public class UnloadAction implements DecoAction {
 
     enum State {
-	START_STATE, MOVE_STATE, LOAD_STATE
+	START_STATE, UNLOAD_STATE
     }
 
     private static final Logger LOGGER = LoggerFactory
 	    .getLogger(LoadAction.class);
     private boolean completed = false;
-    private MoveAction action = null;
     private State state = State.START_STATE;
     private Soldier carrier;
-    private Soldier target;
     private int ticksLoad = 50;
     private boolean actionPaused = false;
 
-    public LoadAction(Soldier carrier, Soldier target) {
+    public UnloadAction(Soldier carrier) {
 	super();
 	this.carrier = carrier;
-	this.target = target;
     }
 
     @Override
     public void doAction() {
 	switch (state) {
-	case MOVE_STATE:
-	    moveTowardsAction();
-	    return;
-	case LOAD_STATE:
-	    loadAction();
+	case UNLOAD_STATE:
+	    unloadAction();
 	    break;
 	default:
-	    action = new MoveAction(target.getPosX(), target.getPosY(),
-		    carrier);
-	    state = State.MOVE_STATE;
+	    state = State.UNLOAD_STATE;
 	    return;
 	}
     }
 
-    private void loadAction() {
-	LOGGER.info("loaded units");
+    private void unloadAction() {
+	LOGGER.info("unloaded units");
 	ticksLoad--;
 	if (ticksLoad == 0) {
-	    if (((Carrier) carrier).loadPassengers(target)) {
+	    if (((Carrier) carrier).unloadPassenger()) {
 		completed = true;
 	    } else {
 		return;
@@ -59,26 +51,7 @@ public class LoadAction implements DecoAction {
 	}
 
     }
-	private float getDistanceToTarget() {
-		float diffX = target.getPosX() - carrier.getPosX();
-		float diffY = target.getPosY() - carrier.getPosY();
-		return Math.abs(diffX) + Math.abs(diffY);
-	}
 
-    private void moveTowardsAction() {
-	    float distance;
-		// When close to the target, load.
-		if (action.completed()) {
-			state = State.LOAD_STATE;
-			return;
-		}
-		distance = getDistanceToTarget();
-		if (distance <= 1) {
-			state = State.LOAD_STATE;
-			return;
-		}
-		action.doAction();
-	}
     @Override
     public boolean completed() {
 	return completed;

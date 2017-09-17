@@ -14,21 +14,20 @@ import com.deco2800.marswars.util.Box3D;
  * @author Vinson Yeung on 25/8/17
  *
  */
-public class MissileEntity extends BaseEntity implements HasAction {
+public class MissileEntity extends BaseEntity implements HasAction{
 
     private int armorDamage; // armorDamage of the entity
     private int damage; // the damage of the entity
     private float speed;
-    private int owner; // the owner of the player
     private Optional<DecoAction> currentAction = Optional.empty();
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
     private String missileTexture;
-    private int area;
+    private int areaDamage;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(MissileEntity.class);
 
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
-                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int area) {
+                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner) {
         super(posX, posY, posZ, xLength, yLength, zLength);
         this.modifyCollisionMap(true);
     }
@@ -83,12 +82,12 @@ public class MissileEntity extends BaseEntity implements HasAction {
     	this.missileTexture = missileTexture;
     }
     
-    public int getArea() {
-    	return area;
+    public int getareaDamage() {
+    	return areaDamage;
     }
     
-    public void setArea(int area) {
-    	this.area = area;
+    public void setareaDamage(int area) {
+    	this.areaDamage = area;
     }
 
     /**
@@ -124,4 +123,5 @@ public class MissileEntity extends BaseEntity implements HasAction {
     	this.speed = speed; 
     }
     
+
 }
