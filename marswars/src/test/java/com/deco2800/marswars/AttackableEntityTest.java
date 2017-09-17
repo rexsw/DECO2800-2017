@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -145,6 +146,7 @@ public class AttackableEntityTest {
 		test.setHealth(100);
 		assertEquals(test.getHealth(), 100);
 		GameManager.get().getWorld().addEntity(test);
+		GameManager.get().setMiniMap(new MiniMap());
 		List<BaseEntity> alive = GameManager.get().getWorld().getEntities();
 		assertEquals(true, alive.contains(test));
 		test.setHealth(0);
