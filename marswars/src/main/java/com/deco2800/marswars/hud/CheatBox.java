@@ -41,7 +41,7 @@ public class CheatBox extends Table {
     private Table chatMessages;
     // The skin used to style the table
     private Skin skin;
-
+    private CodeInterpreter code;
     private TextureManager textureManager;
 
     /**
@@ -52,7 +52,7 @@ public class CheatBox extends Table {
     public CheatBox(Skin skin, TextureManager textureManager) {
         this.skin = skin;
         // Create the elements of chat box
-
+        this.code = new CodeInterpreter();
         this.setTextureManager(textureManager);
         this.messageTextField = new TextField("", this.skin) ; //$NON-NLS-1$
 
@@ -117,38 +117,12 @@ public class CheatBox extends Table {
      */
     private void readCheatCode() {
         String message = this.messageTextField.getText();
-        if (!"".equals(message)) { //$NON-NLS-1$
-            executeCode(message);
+        if (!"".equals(message)) {
+
+            code.executeCode(message);
         }
-        this.messageTextField.setText(""); //$NON-NLS-1$
+        this.messageTextField.setText("");
     }
-
-
-    private void executeCode(String a){
-
-        if (a.equals("killOne"))
-        {
-            List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
-            for(BaseEntity e:entitylist)
-            {
-                if(e.getOwner() != 0)
-                {
-                    GameManager.get().getWorld().removeEntity(e);
-                    System.out.println( GameManager.get().getWorld().getEntities().size());
-                    return;
-                }
-            }
-
-        }
-
-
-
-
-    }
-
-
-
-
 
 
     /**
