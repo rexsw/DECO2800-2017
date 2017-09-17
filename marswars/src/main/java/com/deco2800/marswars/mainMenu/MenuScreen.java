@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 
@@ -51,23 +50,25 @@ public class MenuScreen{
 	public void playerModeSelect(Window mainmenu, Stage stage) {
 		Table playerMode = new Table();
 		playerMode.setDebug(true);
-		Label modeInfo = new Label("SELECT A MODE", skin);
-		Button singlePlayerButton = new TextButton("Single Player", skin);
-		Button multiplayerButton = new TextButton("Multiplayer", skin);
-		
-		Label menuInfo = new Label("click play! to remove this window", skin);
-		Button playGame = new TextButton("play!", skin);
+		Label modeInfo = new Label("SELECT A MODE", this.skin); //$NON-NLS-1$
+		Button singlePlayerButton = new TextButton("Single Player", this.skin); //$NON-NLS-1$
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin); //$NON-NLS-1$
+		Button customizeButton = new TextButton("Customize", this.skin);
+
+		Label menuInfo = new Label("click play! to remove this window", this.skin); //$NON-NLS-1$
+		Button playGame = new TextButton("play!", this.skin); //$NON-NLS-1$
 		
 		playerMode.add(modeInfo).align(Align.center).row();
 		playerMode.add(singlePlayerButton).pad(10).row();
 		playerMode.add(multiplayerButton).row();
+		playerMode.add(customizeButton).row();
 		playerMode.add(menuInfo).align(Align.bottom).row();
 		playerMode.add(playGame).align(Align.bottom);
 		
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				playerType = 0; 
+				MenuScreen.this.playerType = 0; 
 				selectWorldMode(mainmenu, stage);
 			}
 		});
@@ -75,7 +76,7 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				playerType = 1; 
+				MenuScreen.this.playerType = 1; 
 				selectServerMode(mainmenu, stage);
 			}
 		});
@@ -86,8 +87,13 @@ public class MenuScreen{
 				mainmenu.setVisible(false);
 			}
 		});
+		
+		mainmenu.align(Align.bottomLeft);
 
 		mainmenu.add(playerMode);
+		//why you no work properly :( 
+		playerMode.setFillParent(true);
+		//playerMode.setPosition(0, 0);
 	}
 	
 	public void selectCharacter(Window mainmenu, Stage stage) {
@@ -95,7 +101,7 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("Pick your character!", skin);
+		Label playerInfo = new Label("Pick your character!", this.skin); //$NON-NLS-1$
 		
 		playerTable.add(playerInfo).row();
 		
@@ -110,7 +116,7 @@ public class MenuScreen{
 		
 		Table worldTable = new Table(); 
 		
-		Label worldInfo = new Label("Select a world to play in", skin);
+		Label worldInfo = new Label("Select a world to play in", this.skin); //$NON-NLS-1$
 		
 		worldTable.add(worldInfo);
 		
@@ -124,7 +130,7 @@ public class MenuScreen{
 
 		Table gameTable = new Table();
 		
-		Label combatInfo = new Label("Select a combat mode", skin);
+		Label combatInfo = new Label("Select a combat mode", this.skin); //$NON-NLS-1$
 		
 		gameTable.add(combatInfo).row();
 		addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
@@ -133,15 +139,15 @@ public class MenuScreen{
 	
 	public void selectServerMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
-        lobby = new LobbyButton(skin, mainmenu, stage);
+        this.lobby = new LobbyButton(this.skin, mainmenu, stage);
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", skin);
+		Label serverInfo = new Label("Join a server or start your own!", this.skin); //$NON-NLS-1$
 				
 		serverTable.add(serverInfo).row();
-		serverTable.add(lobby.addStartServerButton(this)).row();
-		serverTable.add(lobby.addJoinServerButton(this));
+		serverTable.add(this.lobby.addStartServerButton(this)).row();
+		serverTable.add(this.lobby.addJoinServerButton(this));
 		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
 		mainmenu.add(serverTable);
 	}
@@ -153,14 +159,14 @@ public class MenuScreen{
 	 * @param stage
 	 */
 	public void addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
-		backButton = new TextButton("< Go Back", skin);
-		nextButton = new TextButton("> Next", skin);
+		this.backButton = new TextButton("< Go Back", this.skin); //$NON-NLS-1$
+		this.nextButton = new TextButton("> Next", this.skin); //$NON-NLS-1$
 		
-		backButton.addListener(new ChangeListener() {
+		this.backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
 				/*If single player mode*/
-				if (playerType == 0) {
+				if (MenuScreen.this.playerType == 0) {
 					switch(status) {
 					//go back to previous state
 					case WORLDMODE:
@@ -173,11 +179,13 @@ public class MenuScreen{
 					case COMBATMODE:
 						selectCharacter(mainmenu, stage);
 						break;
+					default:
+						break;
 					}
 				}
 				
 				/* If multiplayer mode */
-				else if(playerType == 1) {
+				else if(MenuScreen.this.playerType == 1) {
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -194,7 +202,7 @@ public class MenuScreen{
 						selectServerMode(mainmenu, stage); 
 						break;
 					case CHARACTERMODE:
-						if (joinedServer == 1){
+						if (MenuScreen.this.joinedServer == 1){
 							selectServerMode(mainmenu, stage);
 						}
 						else{
@@ -207,12 +215,12 @@ public class MenuScreen{
 			}
 		});
 				
-		nextButton.addListener(new ChangeListener() {
+		this.nextButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
 				/*If single player mode*/
 				/* Single Player: select world > select character > select combat*/
-				if (playerType == 0) {
+				if (MenuScreen.this.playerType == 0) {
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
@@ -221,6 +229,8 @@ public class MenuScreen{
 						break; 
 					case CHARACTERMODE:
 						selectCombat(mainmenu, stage);
+						break;
+					default:
 						break;
 					}
 				}
@@ -234,7 +244,7 @@ public class MenuScreen{
 					 * 		start server > select world > select character > select combat 
 				*/
 				
-				else if(playerType == 1) {
+				else if(MenuScreen.this.playerType == 1) {
 					switch(status) {
 					//go to next page 
 					case WORLDMODE:
@@ -242,12 +252,14 @@ public class MenuScreen{
 						selectCombat(mainmenu, stage); 
 						break;
 					case CHARACTERMODE:
-						if (joinedServer == 1){
+						if (MenuScreen.this.joinedServer == 1){
 							;
 						}
 						else{
 							selectCombat(mainmenu, stage);
 						}
+						break;
+					default:
 						break; 
 					}
 					
@@ -255,22 +267,22 @@ public class MenuScreen{
 			}
 		});
 		
-		Button quitButton = new TextButton("Exit", skin);
+		Button quitButton = new TextButton("Exit", this.skin); //$NON-NLS-1$
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", skin).show(stage);	
+				new ExitGame("Quit Game", MenuScreen.this.skin).show(stage);	 //$NON-NLS-1$
 		}});
 
 
 		mainmenu.row();
-		mainmenu.add(backButton);
-		mainmenu.add(nextButton);
+		mainmenu.add(this.backButton);
+		mainmenu.add(this.nextButton);
 		mainmenu.add(quitButton);
 	}
 	
 	public void setJoinedServer(){
-		joinedServer = 1; 
+		this.joinedServer = 1; 
 	}
 }

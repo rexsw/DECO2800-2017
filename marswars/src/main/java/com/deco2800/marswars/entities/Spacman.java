@@ -5,46 +5,36 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.buildings.BuildingType;
+import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.*;
-import com.deco2800.marswars.technology.Technology;
-import com.deco2800.marswars.util.Array2D;
-
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import com.deco2800.marswars.managers.TechnologyManager;
 
 /**
  * A generic player instance for the game
  * Created by timhadwen on 19/7/17.
  */
-public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealth, HasOwner {
+
+public class Spacman extends BaseEntity implements Tickable, Clickable,
+		HasHealth, HasAction, HasProgress {
+	//LineOfSight lineOfSight;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
-	/* Note from Building Team, I see we have a new way of processing actions, 
-	 * however they cannot take the building type as a parameter.
-	 * I will continue to use the simple implementation, but should merge 
-	 * functionality later. Don't want to modify the actiontype class too much.
-	 */
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
-	
-	private int owner;
 
 	private int spacManCost = 10;
 	
@@ -52,7 +42,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	
 	// this is the resource gathered by this unit, it may shift to other unit in a later stage
 	private GatheredResource gatheredResource = null;
-	private ActionType nextAction;
+	private ActionType nextAction = null;
+	private BaseEntity nextBuild = null;
 
 	/**
 	 * Constructor for the Spacman
@@ -62,13 +53,13 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	public Spacman(float posX, float posY, float posZ) {
 		super(posX, posY, posZ, 1, 1, 2);
+		LOGGER.info("I LIVE");
 		this.setTexture("spacman_green");
 		this.setCost(spacManCost);
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.GATHER);
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.BUILD);
-		this.nextAction = null;
 		//TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		this.setMoveSpeed(0.025f);
 		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
@@ -123,8 +114,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onTick(int i) {
+		if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
 		/* Don't let spacman stand on a tile with another entity,
-			do really basic formation stuff instead
+			and update fogmap
+			
 		 */
 		if (!currentAction.isPresent()) {
 			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
@@ -171,6 +164,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	 */
 	@Override
 	public void onClick(MouseHandler handler) {
+		LOGGER.error("TEAM NUMBER" + this.getOwner());
 		if(!this.isAi()) {
 			// If Spacman is building, cannot interrupt with left click
 			if (currentAction.isPresent()) {
@@ -181,7 +175,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			handler.registerForRightClickNotification(this);
 			this.setTexture("spacman_blue");
 			LOGGER.error("Clicked on spacman");
-			build = ActionSetter.setAction(this, BuildingType.BASE);
 			this.makeSelected();
 		} else {
 			this.makeSelected();
@@ -304,43 +297,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		LOGGER.info("Begin Building!");
 	}
 	
-	/**
-	 * Set the owner of this spacman
-	 * @param owner
-	 */
-	@Override
-	public void setOwner(int owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * Get the owner of this spacman
-	 * @return owner
-	 */
-	@Override
-	public int getOwner() {
-		return this.owner;
-	}
-
-	/**
-	 * Check if this spacman has the same owner as the other Abstract enitity
-	 * @param entity
-	 * @return true if they do have the same owner, false if not
-	 */
-	@Override
-	public boolean sameOwner(AbstractEntity entity) {
-		boolean isInstance = entity instanceof HasOwner;
-		return isInstance && this.owner == ((HasOwner) entity).getOwner();
-	}
-	
-	/**
-	 * Check if this spacman currently has an action
-	 * @return true if an action is present
-	 */
-	@Override
-	public boolean isWorking() {
-		return currentAction.isPresent();
-	}
 	
 	/**
 	 * Set an current action for this spacman
@@ -352,6 +308,16 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 	}
 
 	/**
+	 * Returns the current action of the entity
+	 * @return current action
+	 */
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
+
+
+	/**
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param nextAction the action to be forced
 	 */
@@ -361,13 +327,39 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
 	}
 
+	/**
+	 * Forces the spacman to only try the chosen action on the next rightclick
+	 * @param toBuild unit to build
+	 */
+	@Override
+	public void setNextAction(BaseEntity toBuild, ActionType nextAction) {
+		this.nextAction = nextAction;
+		this.nextBuild = toBuild;
+		LOGGER.info("Next action set as  building unit " + toBuild.getStats().getName());
+	}
+
 	public EntityStats getStats() {
 		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
 	}
 	
 	@Override
-	public boolean isAi() {
-		return owner >= 0;
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
 	}
 
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
+	}
 }

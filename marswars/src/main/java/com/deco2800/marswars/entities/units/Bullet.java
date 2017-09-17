@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ import com.deco2800.marswars.managers.GameManager;
  * @author Tze Thong Khor
  *
  */
-public class Bullet extends MissileEntity implements Tickable {
+public class Bullet extends MissileEntity implements Tickable, HasAction {
 	
 	private Optional<DecoAction> currentAction = Optional.empty();
 	
@@ -29,7 +30,6 @@ public class Bullet extends MissileEntity implements Tickable {
     public Bullet(float posX, float posY, float posZ, AttackableEntity target, int damage, int armorDamage) {
         super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage);
         this.setTexture("bullet");
-        this.initActions();
         this.addNewAction(ActionType.IMPACT);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
@@ -69,5 +69,10 @@ public class Bullet extends MissileEntity implements Tickable {
      * Set the speed of the bullet.
      */
     public void setSpeed(float speed) { this.speed = speed; }
+
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
     
 }

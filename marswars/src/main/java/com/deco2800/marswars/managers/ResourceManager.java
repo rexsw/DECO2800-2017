@@ -1,9 +1,7 @@
 package com.deco2800.marswars.managers;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -114,7 +112,8 @@ private static final String CLOSED = "closed.wav";
 
 	/**
 	 * Sets the current biomass
-	 * @param water
+	 * @param biomass
+	 * @param team
 	 */
 	public void setBiomass(int biomass, int team) {
 		if(this.biomass.containsKey(team)) {
@@ -128,5 +127,11 @@ private static final String CLOSED = "closed.wav";
 			this.biomass.put(team, biomass);
 		}
 	}
+
+
+	
+	/* This class does not use the setAction(DecoAction)
+	 * functions from HasOwner
+	 */
 	
 }

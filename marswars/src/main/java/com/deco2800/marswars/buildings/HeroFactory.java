@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.buildings;
+package com.deco2800.marswars.buildings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,6 +11,8 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -21,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
-        HasProgress, HasOwner {
+        HasProgress, HasOwner, HasAction {
 
     /* A single action for this building */
     Optional<DecoAction> currentAction = Optional.empty();
@@ -39,8 +41,8 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
      * @param posY its y position on the world.
      * @param posZ its z position on the world.
      */
-    public HeroFactory(AbstractWorld world, float posX, float posY, float posZ) {
-        super(posX, posY, posZ, BuildingType.BUNKER);
+    public HeroFactory(AbstractWorld world, float posX, float posY, float posZ, int owner) {
+        super(posX, posY, posZ, BuildingType.BUNKER, owner);
         this.setTexture("bunker");  // temporary texture
         this.setEntityType(EntityType.BUILDING);
         this.world = world;
@@ -201,12 +203,6 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
         return currentAction;
     }
 
-    @Override
-    public boolean isAi() {
-        return owner >= 0;
-    }
-
-
     /**
      * Create the 'Create Hero' button object
      * @return Button
@@ -241,6 +237,15 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
                     (world, this.getPosX() - 1, this.getPosY() - 1, 0)));
             // increment golbal hero counter here
         }
+    }
+
+    /**
+     * Returns the current action of the entity
+     * @return current action
+     */
+    @Override
+    public Optional<DecoAction> getCurrentAction() {
+        return currentAction;
     }
 
 }

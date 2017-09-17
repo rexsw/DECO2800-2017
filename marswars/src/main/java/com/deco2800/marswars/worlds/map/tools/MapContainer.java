@@ -2,21 +2,13 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.entities.units.UnitTypes;
-import com.deco2800.marswars.entities.buildings.Barracks;
-import com.deco2800.marswars.entities.buildings.Base;
-import com.deco2800.marswars.entities.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.buildings.BuildingType;
-import com.deco2800.marswars.entities.buildings.Bunker;
-import com.deco2800.marswars.entities.buildings.Turret;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -107,7 +99,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-                this.getRandomBuilding();
+               this.getRandomBuilding();
+               this.getRandomEntity();
+               this.getRandomResource();
             }
         }
     }
@@ -233,20 +227,10 @@ public class MapContainer {
      * @param y its y coordinate
      * @param z its z coordinate
      */
-    public void setEntity(UnitTypes entityType, float x, float y, float z){
+    public void setEntity(EntityID entityType, float x, float y, float z){
         BaseEntity entity = null;
         switch (entityType){
-            case ASTRONAUT:
-                entity = new Astronaut(x,y,z, 0);
-                break;
-            case TANK:
-                entity = new Tank(x,y,z, 0);
-                break;
-            case SPACMAN:
-                return;
-            case SOLDIER:
-                entity = new Soldier(x,y,z, 0);
-                break;
+
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");
         }
@@ -305,17 +289,14 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(!checkForEntity(x, y)){
-            return;
-        }
-        if(random == BuildingType.BASE){
-            newBuilding = new Base(world, x,y,0);
-        } else if(random == BuildingType.TURRET){
-            newBuilding = new Turret(world, x,y,0);
-        } else if(random == BuildingType.BUNKER){
-            newBuilding = new Bunker(world, x,y,0);
-        } else if(random == BuildingType.BARRACKS){
-            newBuilding = new Barracks(world, x,y,0);
+        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, 0);
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, 0);
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, 0);
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+            newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, 0);
         }
         else {
             return;
@@ -362,7 +343,7 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        UnitTypes random = UnitTypes.values()[r.nextInt(UnitTypes.values().length)];
+        EntityID random = EntityID.values()[r.nextInt(EntityID.values().length)];
         LOGGER.info("chosen entity type: " + random);
         BaseEntity entity = null;
         int x = r.nextInt(width-1);
@@ -371,17 +352,14 @@ public class MapContainer {
             return;
         }
         switch (random){
-            case ASTRONAUT:
-                entity = new Astronaut(x,y,0, 0);
-                break;
-            case TANK:
-                entity = new Tank(x,y,0, 0);
-                break;
+//            case ASTRONAUT:
+//                entity = new Astronaut(x,y,0, 0);
+//                break;
+//            case TANK:
+//                entity = new Tank(x,y,0, 0);
+//                break;
             case SPACMAN:
                 entity = new Spacman(x, y, 0);
-            case SOLDIER:
-                entity = new Soldier(x,y,0, 0);
-                break;
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");
         }

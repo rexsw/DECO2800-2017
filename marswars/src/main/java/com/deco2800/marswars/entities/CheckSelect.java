@@ -16,8 +16,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param LengthZ
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ) {
-		super(posX, posY, posZ, lengthX, lengthY, lengthZ, lengthX, lengthY, false);
-		this.setTexture("grass");
+		super(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ, lengthX, lengthY, false);
 		super.canWalkOver = true;
 	}
 	

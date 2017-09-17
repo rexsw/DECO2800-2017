@@ -26,7 +26,7 @@ public class SpacmanTest {
 		Spacman man = new Spacman(1,1,1);
 		assertEquals(man.getHealth(), 100);
 		assertEquals(man.checkBackpack(), false);
-		assertFalse(man.isWorking());
+		assertFalse(man.showProgress());
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class SpacmanTest {
 		DecoAction action = Mockito.mock(DecoAction.class);
 		man.setAction(action);
 		
-		assertTrue(man.isWorking());
+		assertTrue(man.showProgress());
 	}
 	
 	@Test
