@@ -611,7 +611,6 @@ public class HUDView extends ApplicationAdapter{
 		button.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.info(selectedEntity.getClass().toString());
 				int index = buttonList.indexOf(actor); //Get the index of this button
 				if (index < currentActions.size()) {
 					Object current = currentActions.get(index);

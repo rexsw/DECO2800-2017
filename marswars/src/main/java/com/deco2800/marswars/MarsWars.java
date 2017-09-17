@@ -373,6 +373,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Commander hero = new Commander(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(hero);
 		Tank tank = new Tank(x, y, 0, teamid);
+		Carrier carrier = new Carrier(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(carrier);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
