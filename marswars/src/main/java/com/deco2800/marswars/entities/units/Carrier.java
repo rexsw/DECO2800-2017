@@ -7,9 +7,21 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.deco2800.marswars.actions.ActionSetter;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.UnloadAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
@@ -27,8 +39,10 @@ public class Carrier extends Soldier {
     private Optional<DecoAction> currentAction = Optional.empty();
 
     private Soldier[] loadedUnits = new Soldier[capacity];
+	private ActionType nextAction;
 
-    public Carrier(float posX, float posY, float posZ, int owner) {
+
+	public Carrier(float posX, float posY, float posZ, int owner) {
 	super(posX, posY, posZ, owner);
 
 	// set all the attack attributes
@@ -40,6 +54,9 @@ public class Carrier extends Soldier {
 	this.setAttackRange(0);
 	this.setAttackSpeed(0);
 	this.isCarrier();
+	this.addNewAction(ActionType.LOAD);
+	this.addNewAction(ActionType.UNLOAD);
+	this.removeActions(ActionType.DAMAGE);
     }
 
     @Override
@@ -56,31 +73,36 @@ public class Carrier extends Soldier {
 	    this.setTexture(defaultTextureName);
 	    return;
 	}
-	if (!entities.isEmpty()
-		&& entities.get(0) instanceof Soldier) {
-	    Soldier target = (Soldier) entities.get(0);
-	    load(target);
+		if (nextAction != null) {
+			ActionSetter.setAction(this, x, y, nextAction);
+			nextAction = null;
+		}else {
+			if (!entities.isEmpty()
+					&& entities.get(0) instanceof Soldier) {
+				Soldier target = (Soldier) entities.get(0);
+				load(target);
 
-	} else {
-	    BaseWorld world = GameManager.get().getWorld();
-	    float newPosX = x + 3;
-	    float newPosY = y + 3;
-	    if(newPosX > world.getWidth()) {
-		newPosX = x - 3;
-	    }
-	    if(newPosY > world.getLength()) {
-		newPosY = y - 3;
-	    }
-	    for (int i = 0; i < capacity; i++) {
-		if (!(loadedUnits[i] == null)) {
-		    LOGGER.error("moving unit " + i);
-		
-		    loadedUnits[i].setCurrentAction(Optional.of(new MoveAction((int) newPosX, (int) newPosY, loadedUnits[i])));
+			} else {
+				BaseWorld world = GameManager.get().getWorld();
+				float newPosX = x + 3;
+				float newPosY = y + 3;
+				if (newPosX > world.getWidth()) {
+					newPosX = x - 3;
+				}
+				if (newPosY > world.getLength()) {
+					newPosY = y - 3;
+				}
+				for (int i = 0; i < capacity; i++) {
+					if (!(loadedUnits[i] == null)) {
+						LOGGER.error("moving unit " + i);
+
+						loadedUnits[i].setCurrentAction(Optional.of(new MoveAction((int) newPosX, (int) newPosY, loadedUnits[i])));
+					}
+				}
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+				LOGGER.error("Assigned action move to" + x + " " + y);
+			}
 		}
-	    }
-	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	    LOGGER.error("Assigned action move to" + x + " " + y);
-	}
 	this.setTexture(defaultTextureName);
 	SoundManager sound = (SoundManager) GameManager.get()
 		.getManager(SoundManager.class);
@@ -141,7 +163,7 @@ public class Carrier extends Soldier {
 
 		
 	}
-
+    
     public void load(Soldier target) {
 	int x = (int) target.getPosX();
 	int y = (int) target.getPosY();
@@ -179,14 +201,22 @@ public class Carrier extends Soldier {
      * 
      * @return unloads all Passengers
      */
-    public void unloadPassenger() {
-	for (int i = 0; i < capacity; i++) {
-	    if (!(loadedUnits[i] == null)) {
-		loadedUnits[i].setUnloaded();
-		LOGGER.error("Unit unloaded.");
-		loadedUnits[i] = null;
-	    }
-	}
+    public boolean unloadPassenger() {
+		LOGGER.info("Everyone off!");
+		int empty = 0;
+		for (int i = 0; i < capacity; i++) {
+			if (!(loadedUnits[i] == null)) {
+			loadedUnits[i].setUnloaded();
+			LOGGER.error("Unit unloaded.");
+			loadedUnits[i] = null;
+			empty++;
+			}
+		}
+		if(empty == 0) {
+			return false;
+		} else {
+			return true;
+		}
     }
     
 	/**
@@ -195,4 +225,15 @@ public class Carrier extends Soldier {
 	public EntityStats getStats() {
 		return new EntityStats("Carrier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
+
+	@Override
+	public void setNextAction(ActionType a) {
+	    if(a == ActionType.UNLOAD) {
+		unloadPassenger();
+	    } else {
+		LOGGER.info("Assigned action " + ActionSetter.getActionName(a));
+		this.nextAction = a;
+	    }
+	}
+
 }

@@ -3,6 +3,8 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
@@ -40,6 +42,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String name;
 	protected float tempx;
 	protected float tempy;
+	private ActionType nextAction;
 
 	/**
 	 * Sets the position X
@@ -201,18 +204,23 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(defaultTextureName);
 			return;
 		}
-		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-			// we cant assign different owner yet
-			AttackableEntity target = (AttackableEntity) entities.get(0);
-			attack(target);
-			
-		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+
+		if (nextAction != null) {
+			ActionSetter.setAction(this, x, y, nextAction);
+			nextAction = null;
+		}else {
+			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+				// we cant assign different owner yet
+				AttackableEntity target = (AttackableEntity) entities.get(0);
+				attack(target);
+
+			} else {
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			}
+			this.setTexture(defaultTextureName);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound(movementSound);
 		}
-		
-		
-		
-		
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
@@ -312,7 +320,12 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	public EntityStats getStats() {
 		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
-	
+
+	@Override
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
+	}
+
 	public String getMissileTexture() {
 		return defaultMissileName;
 	}
