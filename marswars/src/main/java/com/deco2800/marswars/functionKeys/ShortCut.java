@@ -12,6 +12,7 @@ import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 
 /**
@@ -21,8 +22,8 @@ import com.deco2800.marswars.util.Array2D;
  * @author Matthew Lee
  */
 public class ShortCut {
-	
-	
+
+
 	private Set<Integer> inputKeys = new HashSet<>();
 	private static int bCounter = 0;
 	private final int speed = 10;
@@ -153,59 +154,51 @@ public class ShortCut {
 	}
 
 
-
-
-	//this method is to move the camera to the home base by clicking the Z button
-	//has not differentiated player's and ai's home base yet
-
+	/**
+	 * this method is to move the camera to the home base by clicking the Z button
+	 *has not differentiated player's and ai's home base yet
+	 * @param g the gamemanager.
+	 * @param camera the orthographicCamera.
+	 */
 	public void moveCameraToBase(GameManager g,OrthographicCamera camera) {
 		Array2D<List<BaseEntity>> a = g.get().getWorld().getCollisionMap();
+		BaseWorld  w = g.getWorld();
+		List<BaseEntity> l = w.getEntities();
 		float xNow = camera.position.x;
 		float yNow = camera.position.y;
 		float baseX;
 		float baseY;
 		if (inputKeys.contains(Input.Keys.Z)) {
-			for (int i = 0; i < a.getLength(); i++) {
-			for (int j = 0; j < a.getWidth(); j++) {
-				List<BaseEntity> c1 = a.get(i,j);
-				for (BaseEntity e:c1)
+				for(BaseEntity i: l)
 				{
-					if(e instanceof  Base) {
-					baseX = e.getBox3D().getX();
-					baseY = e.getBox3D().getY();
+					if(i instanceof  Base)
+					{
+						baseX = i.getPosX();
+						baseY = i.getPosY();
+						System.out.println(baseX+"   "+baseY);
+						System.out.println(xNow+"   "+yNow);
+						inputKeys.remove(Input.Keys.Z);
 
-					System.out.println(baseX);
-					System.out.println(baseY);
-					System.out.println(xNow);
-					System.out.println(yNow);
-					inputKeys.remove(Input.Keys.Z);
-
-
-					if(baseX>=xNow && baseY>=yNow)
-					{
-						camera.translate((Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
-					}
-					else if(baseX<=xNow && baseY<=yNow)
-					{
-						camera.translate(-(Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
-					}
-					else if(baseX>=xNow && baseY<=yNow)
-					{
-						camera.translate((Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
-					}
-					else if(baseX<=xNow && baseY>=yNow)
-					{
-						camera.translate(-(Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
-					}
+						camera.position.x = baseX*58;
+						camera.position.y = baseY*18;
+						camera.update();
 						return;
 
+
 					}
+
 				}
-				}
-			}
+
+
+
 
 		}
 	}
+
+
+
+
+
 
 
 

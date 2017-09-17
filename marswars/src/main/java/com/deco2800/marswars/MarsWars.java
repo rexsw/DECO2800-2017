@@ -430,9 +430,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Handles keyboard input.
 	 */
 	private void handleInput() {
-		forceMapLimits(); //intentionally put at the start to create a
+		 //intentionally put at the start to create a
 						  //nice animation
-		
+	forceMapLimits();
 		final int speed = 10; //zoom speed
 		final int pxTolerance = 20; // modifies how close to the edge the cursor
 									//has to be before the map starts moving.
@@ -557,8 +557,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		//y axis limits
 		if(camera.position.y > mapLength/2) {
+			System.out.println(mapLength/2);
 			camera.position.y = mapLength/2;
 		}else if(camera.position.y < 0-mapLength/2) {
+			System.out.println(mapLength/2);
 			camera.position.y = 0-mapLength/2;
 		}
 		GameManager.get().setCamera(camera);
