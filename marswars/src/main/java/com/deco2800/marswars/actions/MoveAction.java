@@ -3,6 +3,7 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.managers.GameManager;
@@ -52,6 +53,7 @@ public class MoveAction implements DecoAction {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.entity = entity;
+		
 		
 		if (entity instanceof AttackableEntity) {
 			speed = ((AttackableEntity) entity).getSpeed();
@@ -109,7 +111,12 @@ public class MoveAction implements DecoAction {
 			/* grab the next point on the path and attempt to move towards it */
 			float tmpgoalX = path.get(0).getX();
 			float tmpgoalY = path.get(0).getY();
-
+			
+			//set unit such that it is facing towards the temporary goal
+			if(entity instanceof Soldier) {
+				Soldier soldier = (Soldier) entity;
+				soldier.faceTowards(tmpgoalX,tmpgoalY);
+			}
 			/* If we have arrived (or close enough to) then remove this point from the path and continue */
 			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {
 				entity.setPosX(tmpgoalX);
@@ -158,6 +165,22 @@ public class MoveAction implements DecoAction {
 		return 0;
 	}
 
+	/**
+	 * return tampgoal x and y
+	 * @return
+	 */
+
+	public float getTempx() {
+		float tmpgoalX = path.get(0).getX();
+		return tmpgoalX;
+	}
+
+	public float getTempy() {
+		float tmpgoalY = path.get(0).getY();
+		return tmpgoalY;
+	}
+	
+	
 	/**
 	 * Prevents the current action from progressing.
 	 */
