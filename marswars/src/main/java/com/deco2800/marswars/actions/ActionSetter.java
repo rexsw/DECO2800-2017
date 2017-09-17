@@ -91,7 +91,7 @@ public final class ActionSetter {
      */
     private static boolean doDamage(BaseEntity performer, BaseEntity target) {
         if (target instanceof AttackableEntity && performer instanceof AttackableEntity) {
-            performer.setAction(new DamageAction((AttackableEntity) performer, (AttackableEntity) target));
+            performer.setAction(new AttackAction((AttackableEntity) performer, (AttackableEntity) target));
             return true;
         } else {
             return false;

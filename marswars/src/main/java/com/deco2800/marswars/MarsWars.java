@@ -91,22 +91,21 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
 		this.skin = new Skin(Gdx.files.internal("uiskin.json")); //$NON-NLS-1$
-		
+		GameManager.get().setSkin(this.skin);
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		this.timeManager.setGameStartTime();
-		
+
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
-		this.stage.addActor(this.menu.buildMenu());
+//		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
+//		this.stage.addActor(this.menu.buildMenu());
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
 		GameManager.get().setCamera(this.camera);
-
 		playGame();
 	}
 	
@@ -167,10 +166,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private void addAIEntities() {
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setAI(length, width, 1);
-		setPlayer(length/2, width/2, Colours.PURPLE, -1);
+		setPlayer(length, width, 1, 1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
+		GameManager.get().getManager(WinManager.class);
 	}
 	
 	private void setThread() {
@@ -196,7 +195,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 							lastGameTick = TimeUtils.nanoTime();
 						}
 					}
-						MarsWars.this.lastGameTick = TimeUtils.nanoTime();
+						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -214,6 +213,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Add another button to the menu */
 		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
 		this.view.disableHUD();
+		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
+		this.stage.addActor(this.menu.buildMenu());
 	}
 
 	/**
@@ -308,66 +309,80 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	}
 	
 	/**
-	 * generates a new AI team with basic unit at a give x-y co-ord
-	 * @ensure the x,y pair are within the game map
+	 * generates a number of player and ai teams with basic unit at a give x-y
+	 * co-ord
+	 * 
+	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
+	 * @param lenght
+	 *            int length of the map
+	 * @param width
+	 *            int width of the map
+	 * @param aiteams
+	 *            int number of ai teams
+	 * @param playerteams
+	 *            int number of playerteams
 	 */
-	public void setAI(int length, int width, int teams) {
-		ArrayList<Colours> colour = new ArrayList<Colours>();
-		int x,y;
-		colour.add(Colours.BLUE);
-		colour.add(Colours.YELLOW);
-		colour.add(Colours.PINK);
-		colour.add(Colours.GREEN);
-		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
-		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		for(int teamid = 1; teamid < teams+1;teamid++) {
-			x = ThreadLocalRandom.current().nextInt(3, length -3);
-			y = ThreadLocalRandom.current().nextInt(3, width -3);
-			rm.setBiomass(0, teamid);
-			rm.setRocks(0, teamid);
-			rm.setCrystal(0, teamid);
-			rm.setWater(0, teamid);
-			cm.setColour(teamid, colour.get(teamid-1));
-			AiManager aim = (AiManager) GameManager.get().getManager(AiManager.class);
+	private void setPlayer(int length, int width, int aiteams,
+			int playerteams) {
+		int x, y, playerid;
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get()
+				.getManager(ResourceManager.class);
+		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
+			x = ThreadLocalRandom.current().nextInt(1, length - 1);
+			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			cm.setColour(teamid);
+			Setunit(teamid, x, y, rm);
+			AiManager aim = (AiManager) GameManager.get()
+					.getManager(AiManager.class);
 			aim.addTeam(teamid);
-			Astronaut ai = new Astronaut(x, y, 0, teamid);
-			Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-			Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-			Soldier soldier = new Soldier(x, y,0,teamid);
-			GameManager.get().getWorld().addEntity(soldier);
-			Tank tank = new Tank(x,y,0,teamid);
-			GameManager.get().getWorld().addEntity(tank);
-			GameManager.get().getWorld().addEntity(ai);
-			GameManager.get().getWorld().addEntity(ai1);
-			GameManager.get().getWorld().addEntity(aibase);
+		}
+		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
+			playerid = teamid * (-1);
+			x = ThreadLocalRandom.current().nextInt(1, length - 1);
+			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			cm.setColour(playerid);
+			Setunit(playerid, x, y, rm);
 		}
 	}
 
-	public void setPlayer(int x, int y, Colours colour, int teamid) {
-		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
-		cm.setColour(teamid, colour);
-		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+	/**
+	 * adds a teams units to the game and sets the resource manager
+	 * 
+	 * @param teamid
+	 *            int the team's id
+	 * @param x
+	 *            int the x location of the team's spawn
+	 * @param y
+	 *            int the y location of the team's spawn
+	 * @param rm
+	 *            ResourceManager the ResourceManager of the game to set
+	 */
+	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
-		Base p2 = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		Spacman p = new Spacman(x + 1, y + 2, 0);
-		p.setOwner(teamid);
-		Astronaut p1 = new Astronaut(x - 1, y - 1, 0, teamid);
-		p1.setOwner(teamid);
-		Soldier soldier = new Soldier(x - 1, y + 1, 0, teamid);
-		Tank tank = new Tank(x - 2,y - 2, 0, teamid);
-		Carrier carrier = new Carrier(x + 4, y + 4, 0, teamid);
-		GameManager.get().getWorld().addEntity(p);
-		GameManager.get().getWorld().addEntity(tank);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(soldier);
-		GameManager.get().getWorld().addEntity(p1);
-		GameManager.get().getWorld().addEntity(p2);
-		
+		Astronaut ai = new Astronaut(x, y, 0, teamid);
+		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		Soldier soldier = new Soldier(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(soldier);		
 		// test hero
 		Commander hero = new Commander(x,y,0,teamid);
 		GameManager.get().getWorld().addEntity(hero);
+		Tank tank = new Tank(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(tank);
+		GameManager.get().getWorld().addEntity(ai);
+		GameManager.get().getWorld().addEntity(ai1);
+		GameManager.get().getWorld().addEntity(aibase);
+	}
+
+	/**
+	 * @return the Graphical User Interface
+	 */
+	public HUDView getGUI(){
+		return this.view;
 	}
 }

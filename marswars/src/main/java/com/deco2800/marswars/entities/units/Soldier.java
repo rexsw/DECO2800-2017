@@ -8,7 +8,7 @@ import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DamageAction;
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -31,6 +31,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
+	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
 
@@ -51,7 +52,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			modifyFogOfWarMap(true,3);
 
 //		}
-
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.1f); 
+		this.setSpeed(0.01f); 
 		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
@@ -118,7 +118,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				 this!= target //prevent soldier suicide when owner is not set
 				) {
 			
-			currentAction = Optional.of(new DamageAction(this, target));
+			currentAction = Optional.of(new AttackAction(this, target));
 
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
@@ -170,7 +170,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			//LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -271,4 +270,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public EntityStats getStats() {
 		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
+	
+	public String getMissileTexture() {
+		return defaultMissileName;
+	}
+	
 }
