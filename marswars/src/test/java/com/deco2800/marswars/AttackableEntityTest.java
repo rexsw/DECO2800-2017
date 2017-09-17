@@ -12,7 +12,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import java.util.List;
-import com.deco2800.marswars.actions.DamageAction;
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.entities.units.MissileEntity;
@@ -155,7 +155,7 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetAction() {
-		DamageAction act = new DamageAction(test, enemy);
+		AttackAction act = new AttackAction(test, enemy);
 		test.setAction(act);
 		assertEquals(test.getCurrentAction().get(), act);
 		assertEquals(test.showProgress(), true);
