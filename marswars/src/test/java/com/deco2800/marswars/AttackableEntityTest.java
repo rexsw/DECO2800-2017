@@ -145,8 +145,8 @@ public class AttackableEntityTest {
 	public void testSetHealth() {
 		test.setHealth(100);
 		assertEquals(test.getHealth(), 100);
-		GameManager.get().getWorld().addEntity(test);
 		GameManager.get().setMiniMap(new MiniMap());
+		GameManager.get().getWorld().addEntity(test);
 		List<BaseEntity> alive = GameManager.get().getWorld().getEntities();
 		assertEquals(true, alive.contains(test));
 		test.setHealth(0);
