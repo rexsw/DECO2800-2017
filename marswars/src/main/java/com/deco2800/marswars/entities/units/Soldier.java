@@ -176,6 +176,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 		}
 		if(this.getPosX()>=x && this.getPosY()>=y) {
+			
 			this.setTexture(downleftTextureName);
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
@@ -277,6 +278,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
 		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 		this.movementSound = "endturn.wav";
+	}
+	//set textture only for soldiers
+	public void setSoldierTextture() {
+		//TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		//this.upleftTextureName =tm.loadUnitSprite("Soldier"+this.getColor+"upleft") ;
+	    //this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+	    //this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+	    //this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 	}
 
 	/**
