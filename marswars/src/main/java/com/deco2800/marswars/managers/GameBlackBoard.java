@@ -34,7 +34,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		//adds to the history of each field every few ticks
 		timer++;
 		if(timer % 50 == 0) {
-			LOGGER.info("tick");
+			//LOGGER.info("tick");
 			for(int teamid: teams) {
 				values.get(teamid).get("Biomass").add(rm.getBiomass(teamid));
 				values.get(teamid).get("Crystal").add(rm.getCrystal(teamid));
