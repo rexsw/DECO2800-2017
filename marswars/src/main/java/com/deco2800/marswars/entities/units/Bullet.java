@@ -1,7 +1,10 @@
 package com.deco2800.marswars.entities.units;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * A missile.
@@ -24,15 +28,16 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bullet.class);
 
     public Bullet(float posX, float posY, float posZ, AttackableEntity target, int damage, int armorDamage, String missileTexture,
-    			int area) {
-        super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage, missileTexture, area);
+    			int areaDamage, int owner) {
+        super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage, missileTexture, areaDamage, owner);
         this.setTexture(missileTexture);
         this.setSpeed(0.05f); 
         this.setTarget(target);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
         this.setMissileTexture(missileTexture);
-        this.setArea(area);
+        this.setareaDamage(areaDamage);
+        this.setOwner(owner);
         this.addNewAction(ActionType.MOVE);
         currentAction = Optional.of(new MoveAction((int) target.getPosX(), (int) target.getPosY(), this));
     }
@@ -70,19 +75,81 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     }
     
     /**
-     * Impact on the target and damage enemy depends on this radius.
+     * Impact on the target and damage enemy depends on this areaDamage.
      */
     public void impact() {
-    	if (this.getArea() == 0) {
-	    	if (this.getTarget().getArmor() > 0) {
-	    		this.getTarget().setHealth(this.getTarget().getHealth() - this.getDamageDeal() / 2);
-	    		this.getTarget().setArmor(this.getTarget().getArmor() - this.getArmorDamage());
-			} else {
-				this.getTarget().setHealth(this.getTarget().getHealth() - this.getDamageDeal());
-			}
+    	if (this.getareaDamage() == 0) {
+	    	causeDamage(this.getTarget(), this.getDamageDeal(), this.getArmorDamage());
+    	} else {
+    		ArrayList<AttackableEntity> listOfEntity = new ArrayList<AttackableEntity>();
+    		int length = 1 + 2 * this.getareaDamage();
+    		addEnemyEntity(length, listOfEntity);
+    		for (AttackableEntity entity : listOfEntity) {
+    			causeDamage(entity, this.getDamageDeal(), this.getArmorDamage());
+    			
+    		}
     	}
     }
+    
+ 
+    /**
+     * Helper function. Reduce the health and armor of the enemy.
+     * @param target
+     * 			Target entity
+     * @param damage
+     * 			Normal damage
+     * @param armorDamage
+     * 			Armor damage
+     */
+    public void causeDamage(AttackableEntity target, int damage, int armorDamage) {
+    	if (target.getArmor() > 0) {
+    		target.setHealth(target.getHealth() - damage/2);
+    		target.setArmor(target.getArmor() - armorDamage);
+    	} else {
+    		target.setHealth(target.getHealth() - damage);
+    	}
+    	if (target.getHealth() <= 0) {
+    		GameManager.get().getWorld().removeEntity(target);
+    	}
+    	LOGGER.info("Enemy health " + target.getHealth());
+    }
 
+    /**
+     * Loop through the area of the square(length * length) and add an attackableEntity enemy to listOfEntity
+     * @param length 
+     * 			the length of the square
+     * @param listOfEntity
+     * 			the list to add enemy entity
+     */
+    public void addEnemyEntity(int length, ArrayList<AttackableEntity> listOfEntity) {
+    	BaseWorld world = GameManager.get().getWorld();
+    	int posX = (int) this.getTarget().getPosX();
+		int posY = (int) this.getTarget().getPosY();
+		// find all the position of the square
+		for (int i = 0; i < length * 2; i++) {
+			for (int y = 0; y < length; y++) {
+				int x =  length - i + length;
+				int centerX = x + posX;
+				int centerY = y + posY;
+				// invalid position
+				//LOGGER.info("Checking valid position");
+				if (centerX < 0 || centerX > world.getWidth() || centerY > world.getLength()) {
+					continue;
+				}
+				// check for attackableentity enemy and add them to listOfEntity
+				List<BaseEntity> entitiesList = GameManager.get().getWorld().getEntities(centerX, centerY);
+				if (entitiesList.size() > 0) {
+					for (BaseEntity entity: entitiesList) {
+						// need to change the condition at some point
+						if (entity instanceof AttackableEntity && !this.sameOwner(entity)) {
+							listOfEntity.add((AttackableEntity) entity);
+						}
+					}
+				}
+			}
+		}		
+    }
+    
 	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;

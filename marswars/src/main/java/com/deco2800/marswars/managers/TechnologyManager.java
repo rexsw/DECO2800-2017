@@ -20,7 +20,6 @@ public class TechnologyManager extends Manager{
 
     // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
     public HashMap<String, int[]> unitAttributes = new HashMap<>();
-
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
     private Technology heroFactory;

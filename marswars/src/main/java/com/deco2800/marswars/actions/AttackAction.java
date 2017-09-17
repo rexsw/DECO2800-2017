@@ -42,7 +42,7 @@ public class AttackAction implements DecoAction {
 				moveTowardsAction();
 				return;
 			case ATTACK:
-				attackAction();
+				attack();
 				break;
 			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
 				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
@@ -63,7 +63,7 @@ public class AttackAction implements DecoAction {
 
 	private void setUpMissile() {
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
-				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", 0)); //((Soldier) entity).getMissileTexture()
+				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", entity.getAreaDamage(), entity.getOwner())); //((Soldier) entity).getMissileTexture()
 	}
 	
 	@Override
@@ -91,14 +91,13 @@ public class AttackAction implements DecoAction {
 		action.doAction();
 	}
 	
-	private void attackAction() {
+	private void attack() {
 	    float distance;
 		if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 			attackInterval -= attackSpeed;
 			distance = getDistanceToEnemy();
 			if (attackInterval <= 0 && distance <= entity.getAttackRange()) {
 				setUpMissile();
-				LOGGER.info("Enemy health " + enemy.getHealth());
 				attackInterval = 1000;
 			} else if (distance > entity.getAttackRange()) {
 				state = State.SETUP_MOVE;
