@@ -584,34 +584,48 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * Adds in the minimap window 
 	 */
-	private void addMiniMapMenu(){
-		LOGGER.debug("Creating minimap menu"); //$NON-NLS-1$
-		minimap = new Window("Map", skin); //$NON-NLS-1$
-		
-		//set the properties of the minimap window
-		minimap.add(GameManager.get().getMiniMap().getBackground());
-		minimap.align(Align.topLeft);
-		minimap.setPosition(0, 0);
-		minimap.setMovable(false);
-		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
-		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
-		
-		//add the map window to the stage
-		stage.addActor(minimap);
-	}
+    private void addMiniMapMenu(){
+        LOGGER.debug("Creating minimap menu");
+        //the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
+        //TODO update the skin
+        minimap = new Window("Map", skin);
+
+        //set the properties of the minimap window
+        GameManager.get().getMiniMap().stageReference = minimap;
+        minimap.add(GameManager.get().getMiniMap().getBackground());
+        minimap.align(Align.topLeft);
+        minimap.setPosition(0, 0);
+        minimap.setMovable(false);
+        minimap.setWidth(GameManager.get().getMiniMap().getWidth());
+        minimap.setHeight(GameManager.get().getMiniMap().getHeight());
+
+        //add the map window to the stage
+        stage.addActor(minimap);
+    }
 
 	/**
 	 *
 	 * adds everything in GameManager.get().getMiniMap().getEntitiesOnMap() to the minimap
 	 */
-	private void addEntitiesToMiniMap() {
-		List<MiniMapEntity> entities = GameManager.get().getMiniMap().getEntitiesOnMap();
-		for (int i = 0; i < entities.size(); i++) {
-			Image unit = new Image(textureManager.getTexture(entities.get(i).getTexture()));
-			unit.setPosition(entities.get(i).x, entities.get(i).y);
-			stage.addActor(unit);
-		}
-	}
+    private void addEntitiesToMiniMap() {
+        MiniMap miniMap = GameManager.get().getMiniMap();
+        for (int i = 0; i < miniMap.getWidth(); i++) {
+            for (int j = 0; j < miniMap.getHeight(); j++) {
+                if (miniMap.miniMapDisplay[i][j] > 0) { // if there is a unit there, add it on to the minimap
+                    //TODO add a case for if there WAS a friendly unit there but NOW an enemy unit is there
+                    if (miniMap.entitiesOnMiniMap[i][j] == null) { // skip if there is already an icon there
+                        miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(miniMap.getEntity(i, j).getTexture()));
+                        miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
+                        try {
+                            stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
+                        } catch (NullPointerException e) {
+                            // entity hasn't reached that position yet so do nothing
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	/**
      * Clears the currently displayed minimap

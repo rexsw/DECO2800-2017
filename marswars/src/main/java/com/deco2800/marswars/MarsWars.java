@@ -130,8 +130,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 * Creates the game minimap 
 	 */
 	public void createMiniMap() {
-		MiniMap m = new MiniMap("minimap", 220, 220); //$NON-NLS-1$
-		m.render();
+		MiniMap m = new MiniMap("minimap", 220, 220);
 		//initialise the minimap and set the image
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(this.reg);
@@ -273,7 +272,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 		if(!this.gameStarted) {
-			GameManager.get().getMiniMap().render();
+			//GameManager.get().getMiniMap().render();
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
 			this.view.enableHUD();
