@@ -41,7 +41,7 @@ public class MainMenu {
 		this.skin = skin;
 		this.stage = stage; 
 		this.mainmenu = window; 
-		this.mainmenu.setDebug(true);
+		//this.mainmenu.setDebug(true);
 		createMenu();
     }
 

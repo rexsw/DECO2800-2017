@@ -79,6 +79,7 @@ public class HUDView extends ApplicationAdapter{
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
+	private static Window entitiesPicker; //window that selects available entities
 		
 	private Button peonButton;
 	private Label helpText;
@@ -146,7 +147,7 @@ public class HUDView extends ApplicationAdapter{
 		this.textureManager = textureManager;
 		
 		//Generate the game stats
-		this.stats = new GameStats(stage, skin, this);
+		this.stats = new GameStats(stage, skin, this, textureManager);
 		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
@@ -402,7 +403,6 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating HUD manipulation buttons"); //$NON-NLS-1$
 		
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
-			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button"); //$NON-NLS-1$
 		TextureRegion minusRegion = new TextureRegion(minusImage);
@@ -417,8 +417,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button"); //$NON-NLS-1$
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion techRegion = new TextureRegion(techImage);
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
@@ -526,6 +524,8 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}	
 		});
+
+		addEntitiesPickerMenu();
 	}	
 	
 	/**
@@ -619,34 +619,70 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * Adds in the minimap window 
 	 */
-	private void addMiniMapMenu(){
-		LOGGER.debug("Creating minimap menu"); //$NON-NLS-1$
-		minimap = new Window("Map", skin); //$NON-NLS-1$
-		
-		//set the properties of the minimap window
-		minimap.add(GameManager.get().getMiniMap().getBackground());
-		minimap.align(Align.topLeft);
-		minimap.setPosition(0, 0);
-		minimap.setMovable(false);
-		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
-		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
-		
-		//add the map window to the stage
-		stage.addActor(minimap);
+    private void addMiniMapMenu(){
+        LOGGER.debug("Creating minimap menu");
+        //the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
+        //TODO update the skin
+        minimap = new Window("Map", skin);
+
+        //set the properties of the minimap window
+        GameManager.get().getMiniMap().stageReference = minimap;
+        minimap.add(GameManager.get().getMiniMap().getBackground());
+        minimap.align(Align.topLeft);
+        minimap.setPosition(0, 0);
+        minimap.setMovable(false);
+        minimap.setWidth(GameManager.get().getMiniMap().getWidth());
+        minimap.setHeight(GameManager.get().getMiniMap().getHeight());
+
+        //add the map window to the stage
+        stage.addActor(minimap);
+    }
+
+	/**
+	 * Add the customise window / entities picker.
+	 * This method shall only be called when the "Customize" button from the start menu is clicked.
+	 * If this method is call, it will cause that the actions window be set to not visible.
+	 */
+	private void addEntitiesPickerMenu(){
+		entitiesPicker = new Window("Customize World", skin);
+		entitiesPicker.align(Align.topLeft);
+		entitiesPicker.setPosition(220,0);
+		entitiesPicker.setMovable(false);
+		entitiesPicker.setVisible(false);
+		entitiesPicker.setWidth(stage.getWidth()-220);
+		entitiesPicker.setHeight(220);
+
+		stage.addActor(entitiesPicker);
+
+	}
+
+	public static void showEntitiesPicker( boolean isVisible){
+		entitiesPicker.setVisible(isVisible);
 	}
 
 	/**
 	 *
 	 * adds everything in GameManager.get().getMiniMap().getEntitiesOnMap() to the minimap
 	 */
-	private void addEntitiesToMiniMap() {
-		List<MiniMapEntity> entities = GameManager.get().getMiniMap().getEntitiesOnMap();
-		for (int i = 0; i < entities.size(); i++) {
-			Image unit = new Image(textureManager.getTexture(entities.get(i).getTexture()));
-			unit.setPosition(entities.get(i).x, entities.get(i).y);
-			stage.addActor(unit);
-		}
-	}
+    private void addEntitiesToMiniMap() {
+        MiniMap miniMap = GameManager.get().getMiniMap();
+        for (int i = 0; i < miniMap.getWidth(); i++) {
+            for (int j = 0; j < miniMap.getHeight(); j++) {
+                if (miniMap.miniMapDisplay[i][j] > 0) { // if there is a unit there, add it on to the minimap
+                    //TODO add a case for if there WAS a friendly unit there but NOW an enemy unit is there
+                    if (miniMap.entitiesOnMiniMap[i][j] == null) { // skip if there is already an icon there
+                        miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(miniMap.getEntity(i, j).getTexture()));
+                        miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
+                        try {
+                            stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
+                        } catch (NullPointerException e) {
+                            // entity hasn't reached that position yet so do nothing
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	/**
      * Clears the currently displayed minimap

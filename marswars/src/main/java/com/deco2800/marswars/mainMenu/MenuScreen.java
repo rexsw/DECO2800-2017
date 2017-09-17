@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
+import com.deco2800.marswars.hud.HUDView;
 
 /**
  * @author Naziah Siddique
@@ -53,13 +54,15 @@ public class MenuScreen{
 		Label modeInfo = new Label("SELECT A MODE", this.skin); //$NON-NLS-1$
 		Button singlePlayerButton = new TextButton("Single Player", this.skin); //$NON-NLS-1$
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin); //$NON-NLS-1$
-		
+		Button customizeButton = new TextButton("Customize", this.skin);
+
 		Label menuInfo = new Label("click play! to remove this window", this.skin); //$NON-NLS-1$
 		Button playGame = new TextButton("play!", this.skin); //$NON-NLS-1$
 		
 		playerMode.add(modeInfo).align(Align.center).row();
 		playerMode.add(singlePlayerButton).pad(10).row();
 		playerMode.add(multiplayerButton).row();
+		playerMode.add(customizeButton).row();
 		playerMode.add(menuInfo).align(Align.bottom).row();
 		playerMode.add(playGame).align(Align.bottom);
 		
@@ -78,6 +81,15 @@ public class MenuScreen{
 				selectServerMode(mainmenu, stage);
 			}
 		});
+
+		customizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				HUDView.showEntitiesPicker(true);
+				mainmenu.setVisible(false);
+
+			}
+		});
 		
 		playGame.addListener(new ChangeListener() {
 			@Override
@@ -85,10 +97,12 @@ public class MenuScreen{
 				mainmenu.setVisible(false);
 			}
 		});
+		
+		mainmenu.align(Align.bottomLeft);
 
 		mainmenu.add(playerMode);
 		//why you no work properly :( 
-		//playerMode.setFillParent(true);
+		playerMode.setFillParent(true);
 		//playerMode.setPosition(0, 0);
 	}
 	
