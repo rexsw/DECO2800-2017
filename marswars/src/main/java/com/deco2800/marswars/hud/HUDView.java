@@ -400,6 +400,8 @@ public class HUDView extends ApplicationAdapter{
 
 
 		LOGGER.debug("Creating HUD manipulation buttons"); //$NON-NLS-1$
+		
+		shopDialog = new ShopDialog("Shop", skin, textureManager);
 			
 		//remove dispActions button + image for it 
 		Texture minusImage = textureManager.getTexture("minus_button"); //$NON-NLS-1$
@@ -438,8 +440,8 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.add(dispTech).pad(BUTTONPAD);
 		HUDManip.add(dispFog).pad(BUTTONPAD);
 		HUDManip.add(dispStats).pad(BUTTONPAD);
-		HUDManip.add(removeActions).pad(BUTTONPAD);
 		HUDManip.add(dispShop).padRight(BUTTONPAD);
+		HUDManip.add(removeActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
 		
@@ -487,11 +489,17 @@ public class HUDView extends ApplicationAdapter{
 		dispStats.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-					shopDialog.show(stage);
 				stats.showStats(); 
 			}
 		});
 		
+		dispShop.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				shopDialog.show(stage);
+			}
+		});
+				
 		shopDialog.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
