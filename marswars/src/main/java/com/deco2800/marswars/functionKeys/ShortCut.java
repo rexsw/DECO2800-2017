@@ -39,14 +39,11 @@ import com.deco2800.marswars.worlds.BaseWorld;
  * @author Matthew Lee
  */
 public class ShortCut {
-<<<<<<< HEAD
 
-
-=======
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShortCut.class);
 	
->>>>>>> e1ab7b7f5a8bc1f2c2167a1119ea30e69d15b541
+
 	private Set<Integer> inputKeys = new HashSet<>();
 	
 	private final int speed = 10;
