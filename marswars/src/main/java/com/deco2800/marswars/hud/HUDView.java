@@ -915,24 +915,27 @@ public class HUDView extends ApplicationAdapter{
 
 		//HUD toggle listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-			if (inventoryToggle) {
-				LOGGER.debug("Enable hud"); //$NON-NLS-1$
-				actionsWindow.setVisible(true);
-				minimap.setVisible(true);
-				resourceTable.setVisible(true);
-				//show (-) button to make resources invisible
-				dispActions.remove();
-				HUDManip.add(removeActions);
-				inventoryToggle = false;
-			} else {
-				LOGGER.debug("Disable Hud"); //$NON-NLS-1$
-				actionsWindow.setVisible(false);
-				minimap.setVisible(false);
-				resourceTable.setVisible(false);
-				//show (+) to show resources again
-				removeActions.remove();
-				HUDManip.add(dispActions);
-				inventoryToggle = true;
+			if(messageToggle==false) {
+
+				if (inventoryToggle) {
+					LOGGER.debug("Enable hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(true);
+					minimap.setVisible(true);
+					resourceTable.setVisible(true);
+					//show (-) button to make resources invisible
+					dispActions.remove();
+					HUDManip.add(removeActions);
+					inventoryToggle = false;
+				} else {
+					LOGGER.debug("Disable Hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(false);
+					minimap.setVisible(false);
+					resourceTable.setVisible(false);
+					//show (+) to show resources again
+					removeActions.remove();
+					HUDManip.add(dispActions);
+					inventoryToggle = true;
+				}
 			}
 		}
 
