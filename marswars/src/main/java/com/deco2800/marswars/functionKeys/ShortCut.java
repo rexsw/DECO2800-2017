@@ -2,7 +2,11 @@ package com.deco2800.marswars.functionKeys;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
 import java.util.Scanner;
+
+import java.util.List;
+
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +16,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.entities.BaseEntity;
+
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
@@ -19,6 +24,11 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
+
+import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.buildings.Base;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.util.Array2D;
 
 
 /**
@@ -53,7 +63,7 @@ public class ShortCut {
 	private boolean spacmanSelect = false;
 	private boolean moveToEntity = false;
 	
-	public void process(OrthographicCamera camera) {
+	public void process(GameManager g,OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.UP) || inputKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -80,6 +90,8 @@ public class ShortCut {
 		addExtraSpacMan();
 		addExtraAiSpacMan();
 		addExtraTank();
+
+		moveCameraToBase(g,camera);
 		quitGame();
 	}
 	
@@ -190,6 +202,68 @@ public class ShortCut {
 		} else {
 			moveToEntity = false;
 		}
+	}
+
+
+
+	//this method is to move the camera to the home base by clicking the Z button
+	//has not differentiated player's and ai's home base yet
+
+	public void moveCameraToBase(GameManager g,OrthographicCamera camera) {
+		Array2D<List<BaseEntity>> a = g.get().getWorld().getCollisionMap();
+		float xNow = camera.position.x;
+		float yNow = camera.position.y;
+		float baseX;
+		float baseY;
+		if (inputKeys.contains(Input.Keys.Z)) {
+			for (int i = 0; i < a.getLength(); i++) {
+			for (int j = 0; j < a.getWidth(); j++) {
+				List<BaseEntity> c1 = a.get(i,j);
+				for (BaseEntity e:c1)
+				{
+					if(e instanceof  Base) {
+					baseX = e.getBox3D().getX();
+					baseY = e.getBox3D().getY();
+
+					System.out.println(baseX);
+					System.out.println(baseY);
+					System.out.println(xNow);
+					System.out.println(yNow);
+					inputKeys.remove(Input.Keys.Z);
+
+
+					if(baseX>=xNow && baseY>=yNow)
+					{
+						camera.translate((Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
+					}
+					else if(baseX<=xNow && baseY<=yNow)
+					{
+						camera.translate(-(Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
+					}
+					else if(baseX>=xNow && baseY<=yNow)
+					{
+						camera.translate((Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
+					}
+					else if(baseX<=xNow && baseY>=yNow)
+					{
+						camera.translate(-(Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
+					}
+						return;
+
+					}
+				}
+				}
+			}
+
+		}
+	}
+
+
+
+
+	public void moveToOneOfTheEntity() {
+		
+
 	}
 	
 	public void storeEntityPosition() {
