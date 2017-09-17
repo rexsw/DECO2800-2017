@@ -29,6 +29,7 @@ public class MainMenu {
 	private Window mainmenu; 
 	private Label title;
 	boolean status = true;
+	private MarsWars marsWars;
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -40,7 +41,8 @@ public class MainMenu {
 	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars) {
 		this.skin = skin;
 		this.stage = stage; 
-		this.mainmenu = window; 
+		this.mainmenu = window;
+		this.marsWars = marswars;
 		//this.mainmenu.setDebug(true);
 		createMenu();
     }
@@ -52,7 +54,7 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		new MenuScreen(this.skin, this.mainmenu, this.stage);
+		new MenuScreen(this.skin, this.mainmenu, this.stage,marsWars.getGUI());
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
 	
