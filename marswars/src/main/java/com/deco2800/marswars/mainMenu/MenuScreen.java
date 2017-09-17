@@ -2,12 +2,7 @@ package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
@@ -36,15 +31,17 @@ public class MenuScreen{
 	}
 	
 	private Skin skin; 
-	private LobbyButton lobby; 
+	private LobbyButton lobby;
+	private HUDView gui;
 	
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
 	
-	public MenuScreen(Skin skin, Window window, Stage stage) {
+	public MenuScreen(Skin skin, Window window, Stage stage, HUDView gui) {
 		this.skin = skin;
+		this.gui = gui;
 		playerModeSelect(window, stage);
 	}
 	
@@ -85,7 +82,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				HUDView.showEntitiesPicker(true);
+				MenuScreen.this.gui.showEntitiesPicker(true);
 				mainmenu.setVisible(false);
 
 			}

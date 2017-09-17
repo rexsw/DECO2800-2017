@@ -73,7 +73,7 @@ public class HUDView extends ApplicationAdapter{
 	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions
-	private static Window entitiesPicker; //window that selects available entities
+	private Window entitiesPicker; //window that selects available entities
 		
 	private Button peonButton;
 	private Label helpText;
@@ -479,22 +479,28 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
-				//disable fog
-				if (fogToggle) {
-					LOGGER.debug("fog of war is now off"); //$NON-NLS-1$
-					FogManager.toggleFog(false);
-					fogToggle = false; 
-				}else {
-					LOGGER.debug("fog of war is now on"); //$NON-NLS-1$
-					FogManager.toggleFog(true);
-					fogToggle = true; 
-				}
+				toggleFog();
 			}	
 		});
 
 		addEntitiesPickerMenu();
-	}	
-	
+	}
+
+	/**
+	 * Toggle fog on an off
+	 */
+	private void toggleFog(){
+		//disable fog
+		if (fogToggle) {
+			LOGGER.debug("fog of war is now off"); //$NON-NLS-1$
+			FogManager.toggleFog(false);
+			fogToggle = false;
+		}else {
+			LOGGER.debug("fog of war is now on"); //$NON-NLS-1$
+			FogManager.toggleFog(true);
+			fogToggle = true;
+		}
+	}
 	/**
 	 * Adds in the selectable menu for the inventory for resources 
 	 */
@@ -623,8 +629,16 @@ public class HUDView extends ApplicationAdapter{
 
 	}
 
-	public static void showEntitiesPicker( boolean isVisible){
+	/**
+	 * Displays the entities picker menu.
+	 * If picker is shown then fog is off and game is paused
+	 *
+	 * @param isVisible whether to display the picker or hide it.
+	 */
+	public void showEntitiesPicker( boolean isVisible){
 		entitiesPicker.setVisible(isVisible);
+		toggleFog();
+		// pause not implemented yet.
 	}
 
 	/**

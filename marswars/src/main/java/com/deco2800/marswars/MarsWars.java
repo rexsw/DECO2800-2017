@@ -96,16 +96,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		this.timeManager.setGameStartTime();
-		
+
 		//not sure why i have to create a window here and pass it into the menu
 		//but creating a window in menu crashes the game
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
-		this.stage.addActor(this.menu.buildMenu());
+//		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
+//		this.stage.addActor(this.menu.buildMenu());
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
 		GameManager.get().setCamera(this.camera);
-
 		playGame();
 	}
 	
@@ -213,6 +212,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Add another button to the menu */
 		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
 		this.view.disableHUD();
+		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
+		this.stage.addActor(this.menu.buildMenu());
 	}
 
 	/**
@@ -364,5 +365,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getWorld().addEntity(soldier);
 		GameManager.get().getWorld().addEntity(p1);
 		GameManager.get().getWorld().addEntity(p2);
+	}
+
+	/**
+	 * @return the Graphical User Interface
+	 */
+	public HUDView getGUI(){
+		return this.view;
 	}
 }
