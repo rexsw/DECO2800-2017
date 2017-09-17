@@ -474,6 +474,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			camera.zoom *= 1.05;
 		}
 		shortCut.process(camera);
+		
 		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth) &&
 				(cursorY > pxTolerance && cursorY + pxTolerance <= windowHeight)) {
