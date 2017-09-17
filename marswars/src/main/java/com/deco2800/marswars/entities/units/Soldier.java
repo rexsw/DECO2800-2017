@@ -31,6 +31,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
+	protected String upleftTextureName;
+	protected String uprightTextureName;
+	protected String downleftTextureName;
+	protected String downrightTextureName;
 	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
@@ -171,7 +175,23 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 		}
-		this.setTexture(defaultTextureName);
+		if(this.getPosX()>=x && this.getPosY()>=y) {
+			this.setTexture(downleftTextureName);
+		}
+		else if(this.getPosX()>=x && this.getPosY()<y) {
+			this.setTexture(upleftTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()>=y) {
+			this.setTexture(downrightTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()<y) {
+			this.setTexture(uprightTextureName);
+		}
+		else {
+			this.setTexture(defaultTextureName);
+		}
+		
+		
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
@@ -252,6 +272,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
+		this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
+		this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+		this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 		this.movementSound = "endturn.wav";
 	}
 
