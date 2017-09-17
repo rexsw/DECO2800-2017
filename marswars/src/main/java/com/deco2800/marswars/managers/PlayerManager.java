@@ -4,6 +4,5 @@ public class PlayerManager extends AbstractPlayerManager {
 	/*
 	 * currently mostly just to hold to the players entities
 	 */
-	private int teamid = 0;
 
 }
