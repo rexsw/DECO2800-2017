@@ -31,6 +31,7 @@ public class Tank extends Soldier {
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
 	
+	
 	/**
 	 * @return The stats of the entity
 	 */
