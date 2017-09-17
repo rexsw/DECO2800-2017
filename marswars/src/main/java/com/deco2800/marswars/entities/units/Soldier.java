@@ -175,17 +175,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		} else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 		}
+		
 		if(this.getPosX()>=x && this.getPosY()>=y) {
 			
 			this.setTexture(downleftTextureName);
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
-			this.setTexture(upleftTextureName);
-		}
-		else if(this.getPosX()<x && this.getPosY()>=y) {
+			
 			this.setTexture(downrightTextureName);
 		}
+		else if(this.getPosX()<x && this.getPosY()>=y) {
+			
+			this.setTexture(upleftTextureName);
+		}
 		else if(this.getPosX()<x && this.getPosY()<y) {
+			
 			this.setTexture(uprightTextureName);
 		}
 		else {
