@@ -8,8 +8,10 @@ import java.util.Set;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.buildings.Base;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.util.Array2D;
 
 
 /**
@@ -156,44 +158,54 @@ public class ShortCut {
 	//this method is to move the camera to the home base by clicking the Z button
 	//has not differentiated player's and ai's home base yet
 
-	public void moveCameraToBase(GameManager g,OrthographicCamera camera){
-		List<BaseEntity> a =  g.get().getWorld().getEntities();
+	public void moveCameraToBase(GameManager g,OrthographicCamera camera) {
+		Array2D<List<BaseEntity>> a = g.get().getWorld().getCollisionMap();
 		float xNow = camera.position.x;
 		float yNow = camera.position.y;
-        if(inputKeys.contains(Input.Keys.Z)) {
-            for (BaseEntity e : a) {
-                if (e instanceof Base) {
-                    float x = e.getPosX();
-                    float y = e.getPosY();
-					System.out.println(x+y);
-					System.out.println(xNow+yNow);
+		float baseX;
+		float baseY;
+		if (inputKeys.contains(Input.Keys.Z)) {
+			for (int i = 0; i < a.getLength(); i++) {
+			for (int j = 0; j < a.getWidth(); j++) {
+				List<BaseEntity> c1 = a.get(i,j);
+				for (BaseEntity e:c1)
+				{
+					if(e instanceof  Base) {
+					baseX = e.getBox3D().getX();
+					baseY = e.getBox3D().getY();
+
+					System.out.println(baseX);
+					System.out.println(baseY);
+					System.out.println(xNow);
+					System.out.println(yNow);
 					inputKeys.remove(Input.Keys.Z);
 
-					if(x >= xNow && y >= yNow){
-						System.out.println((Math.abs(x-xNow))+(Math.abs(y-yNow)));
-						camera.translate((Math.abs(x-xNow)),(Math.abs(y-yNow)));
-					}
-					else if(x <= xNow && y <= yNow){
-						System.out.println((-Math.abs(x-xNow))+(-Math.abs(y-yNow)));
-						camera.translate(-(Math.abs(x-xNow)),-(Math.abs(y-yNow)));
-					}
-					else if(x >= xNow && y <= yNow){
-						System.out.println((Math.abs(x-xNow))+(-Math.abs(y-yNow)));
-						camera.translate((Math.abs(x-xNow)),-(Math.abs(y-yNow)));
-					}
-					else if(x <= xNow && y >= yNow){
-						System.out.println((-Math.abs(x-xNow))+(Math.abs(y-yNow)));
-						camera.translate(-(Math.abs(x-xNow)),(Math.abs(y-yNow)));
-					}
 
-					break;
+					if(baseX>=xNow && baseY>=yNow)
+					{
+						camera.translate((Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
+					}
+					else if(baseX<=xNow && baseY<=yNow)
+					{
+						camera.translate(-(Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
+					}
+					else if(baseX>=xNow && baseY<=yNow)
+					{
+						camera.translate((Math.abs(baseX-xNow)) ,(-Math.abs(baseY-yNow)));
+					}
+					else if(baseX<=xNow && baseY>=yNow)
+					{
+						camera.translate(-(Math.abs(baseX-xNow)) ,(Math.abs(baseY-yNow)));
+					}
+						return;
+
+					}
 				}
-            }
-        }
+				}
+			}
+
+		}
 	}
-
-
-
 
 
 

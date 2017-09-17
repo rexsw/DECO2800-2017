@@ -457,6 +457,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		//move the map in the chosen direction
 		if (downKeys.contains(Input.Keys.UP) || downKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
+			System.out.println(camera.position.x);
+			System.out.println(camera.position.y);
 		}
 		if (downKeys.contains(Input.Keys.DOWN) || downKeys.contains(Input.Keys.S)) {
 			camera.translate(0, -1 * speed * camera.zoom, 0);
