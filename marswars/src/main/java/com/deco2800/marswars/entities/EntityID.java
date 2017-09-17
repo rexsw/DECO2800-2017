@@ -2,7 +2,7 @@ package com.deco2800.marswars.entities;
 
 
 /**
- * A list of all entities that are considered NPC and Spacman
+ * A list of all entities that are considered Units and Spacman
  *
  * NOTE: This list shouldn't include entities such as buildings or resources.
  */

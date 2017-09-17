@@ -10,15 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -51,6 +43,7 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 	private static final int CRITICALHEALTH = 30; //critical health of spacmen
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
+    private static final int TYPES_OF_ENTITIES = 4;
 
 	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
@@ -611,36 +604,6 @@ public class HUDView extends ApplicationAdapter{
     }
 
 	/**
-	 * Add the customise window / entities picker.
-	 * This method shall only be called when the "Customize" button from the start menu is clicked.
-	 * If this method is call, it will cause that the actions window be set to not visible.
-	 */
-	private void addEntitiesPickerMenu(){
-		entitiesPicker = new Window("Customize World", skin);
-		entitiesPicker.align(Align.topLeft);
-		entitiesPicker.setPosition(220,0);
-		entitiesPicker.setMovable(false);
-		entitiesPicker.setVisible(false);
-		entitiesPicker.setWidth(stage.getWidth()-220);
-		entitiesPicker.setHeight(220);
-
-		stage.addActor(entitiesPicker);
-
-	}
-
-	/**
-	 * Displays the entities picker menu.
-	 * If picker is shown then fog is off and game is paused
-	 *
-	 * @param isVisible whether to display the picker or hide it.
-	 */
-	public void showEntitiesPicker( boolean isVisible){
-		entitiesPicker.setVisible(isVisible);
-		toggleFog();
-		// pause not implemented yet.
-	}
-
-	/**
 	 *
 	 * adds everything in GameManager.get().getMiniMap().getEntitiesOnMap() to the minimap
 	 */
@@ -720,6 +683,230 @@ public class HUDView extends ApplicationAdapter{
 			pixmap.dispose();
 		}
 	}
+
+    /**
+     *  Creates the basic structure of the Entities picker menu
+     */
+	private void setupEntitiesPickerMenu(){
+        entitiesPicker = new Window("Customize World", skin);
+        entitiesPicker.align(Align.topLeft);
+        entitiesPicker.setPosition(220,0);
+        entitiesPicker.setMovable(false);
+        entitiesPicker.setVisible(false);
+        entitiesPicker.setWidth(stage.getWidth()-220);
+        entitiesPicker.setHeight(220);
+    }
+
+    /**
+     * Add the customise window / entities picker.
+     * This method shall only be called when the "Customize" button from the start menu is clicked.
+     * If this method is call, it will cause that the actions window be set to not visible.
+     */
+    private void addEntitiesPickerMenu(){
+        setupEntitiesPickerMenu();
+
+        Table table = new Table();
+        TextButton unitsButton = new TextButton("Units",skin);
+        unitsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addUnitsPickerMenu();
+            }
+        });
+        TextButton buildingsButton = new TextButton("Buildings",skin);
+        buildingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addBuildingsPickerMenu();
+            }
+        });
+        TextButton resourcesButton = new TextButton("Resources",skin);
+        resourcesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addResourcesPickerMenu();
+            }
+        });
+        TextButton terrainsButton = new TextButton("Terrains",skin);
+        terrainsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addTerrainsPickerMenu();
+            }
+        });
+
+        table.add(unitsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(buildingsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(resourcesButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(terrainsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        entitiesPicker.add(table);
+        stage.addActor(entitiesPicker);
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available units
+     */
+    private void addUnitsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton astronautButton = new TextButton("Astronaut",skin);
+        TextButton carrierButton = new TextButton("Carrier",skin);
+        TextButton healerButton = new TextButton("Healer",skin);
+        TextButton heroSpacmanButton = new TextButton("Hero Spacman",skin);
+        TextButton soldierButton = new TextButton("Soldier",skin);
+        TextButton spacmanButton = new TextButton("Spacman",skin);
+        TextButton tankButton = new TextButton("Tank",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(astronautButton).width(buttonWidth).height(buttonHeight);
+        table.add(carrierButton).width(buttonWidth).height(buttonHeight);
+        table.add(healerButton).width(buttonWidth).height(buttonHeight);
+        table.add(heroSpacmanButton).width(buttonWidth).height(buttonHeight);
+        table.add(soldierButton).width(buttonWidth).height(buttonHeight);
+        table.row();
+        table.add(spacmanButton).width(buttonWidth).height(buttonHeight);
+        table.add(tankButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available buildings
+     */
+    private void addBuildingsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton barracksButton = new TextButton("Barracks",skin);
+        TextButton baseButton = new TextButton("Base",skin);
+        TextButton bunkerButton = new TextButton("Bunker",skin);
+        TextButton heroFactoryButton = new TextButton("Hero Factory",skin);
+        TextButton turretButton = new TextButton("Turret",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(barracksButton).width(buttonWidth).height(buttonHeight);
+        table.add(baseButton).width(buttonWidth).height(buttonHeight);
+        table.add(bunkerButton).width(buttonWidth).height(buttonHeight);
+        table.add(heroFactoryButton).width(buttonWidth).height(buttonHeight);
+        table.add(turretButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available resources
+     */
+    private void addResourcesPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton biomassButton = new TextButton("Biomass",skin);
+        TextButton crystalButton = new TextButton("Crystal",skin);
+        TextButton rockButton = new TextButton("Rock",skin);
+        TextButton waterButton = new TextButton("Water",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(biomassButton).width(buttonWidth).height(buttonHeight);
+        table.add(crystalButton).width(buttonWidth).height(buttonHeight);
+        table.add(rockButton).width(buttonWidth).height(buttonHeight);
+        table.add(waterButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available terrains
+     */
+    private void addTerrainsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton caveButton = new TextButton("Cave",skin);
+        TextButton lakeButton = new TextButton("Lake",skin);
+        TextButton pondButton = new TextButton("Pond",skin);
+        TextButton quicksandButton = new TextButton("Quicksand",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(caveButton).width(buttonWidth).height(buttonHeight);
+        table.add(lakeButton).width(buttonWidth).height(buttonHeight);
+        table.add(pondButton).width(buttonWidth).height(buttonHeight);
+        table.add(quicksandButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Displays the entities picker menu.
+     * If picker is shown then fog is off and game is paused
+     *
+     * @param isVisible whether to display the picker or hide it.
+     */
+    public void showEntitiesPicker( boolean isVisible){
+        entitiesPicker.setVisible(isVisible);
+        toggleFog();
+        // pause not implemented yet.
+    }
     
     /**
      * Enables action button based on the actions avaliable to 
