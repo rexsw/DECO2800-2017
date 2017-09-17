@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 
 /*
@@ -26,4 +27,11 @@ public class Tank extends Soldier {
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Tank", this.getHealth(), null, this.getCurrentAction(), this);
+	}
 }

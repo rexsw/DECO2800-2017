@@ -20,8 +20,8 @@ public class WorkInProgress extends Dialog{
 	public WorkInProgress(String title, Skin skin) {
 		super(title, skin);		
 		{
-			text("Sorry, this feature is currently a work in progress, we promise it'll be finished soon!");
-			button("OK");
+			text("Sorry, this feature is currently a work in progress, we promise it'll be finished soon!"); //$NON-NLS-1$
+			button("OK"); //$NON-NLS-1$
 		}
 	}
 }

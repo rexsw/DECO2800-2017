@@ -16,11 +16,11 @@ public class TimeManagerTest {
 		int count = 500;
 		timeManager.pause();
 		timeManager.onTick(1);
-		float inGameTime = timeManager.getInGameTime();
+		float inGameTime = timeManager.getGameSeconds();
 		while (count != 0){
 			count--;
 		}
-		float newInGameTime = timeManager.getInGameTime();
+		float newInGameTime = timeManager.getGameSeconds();
 		assertTrue(inGameTime == newInGameTime);
 		System.out.println(newInGameTime);
 		System.out.println(inGameTime);
@@ -167,23 +167,23 @@ public class TimeManagerTest {
 		assertEquals("Hours Not 0", 0, timeManager.getHours());
 		assertEquals("Minutes not 0", 0, timeManager.getMinutes());
 		assertEquals("Seconds not 0 as expected", 0,
-				timeManager.getInGameTime());
+				timeManager.getGameSeconds());
 		timeManager.addTime(108000);
 		assertEquals("Seconds not 108000 as expected", 108000, 
-				timeManager.getInGameTime());
+				timeManager.getGameSeconds());
 		timeManager.addTime(1);
 		assertEquals("Seconds not 108001 as expected", 108001, 
-				timeManager.getInGameTime());
+				timeManager.getGameSeconds());
 		timeManager.addTime(-1);
 		assertEquals("Seconds not 108002 as expected", 108002, 
-				timeManager.getInGameTime());
+				timeManager.getGameSeconds());
 		timeManager.resetInGameTime();
 	}
 
 	@Test
 	public void resetInGameTime() {
 		timeManager.resetInGameTime();
-		assertTrue(timeManager.getInGameTime() == 0);
+		assertTrue(timeManager.getGameSeconds() == 0);
 	}
 	
 	@Test

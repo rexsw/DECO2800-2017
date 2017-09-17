@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.MarsWars;
 
 /**
@@ -18,18 +17,17 @@ import com.deco2800.marswars.MarsWars;
  * FLOW DIAGRAM: 
  * TODO add in flow diagram of the main menu
  *  
- * @author Toby 
+ * @author Toby Guinea
  *
  */
 public class MainMenu {
 	private static final int MENUHEIGHT = 300; 
 	private static final int MENUWIDTH = 400;
 	private Skin skin;
-	private MarsWars marswars;
 	private Stage stage; 
 	
-	Window mainmenu; 
-	Label title;
+	private Window mainmenu; 
+	private Label title;
 	boolean status = true;
 
 	/**
@@ -41,10 +39,9 @@ public class MainMenu {
 	 */
 	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars) {
 		this.skin = skin;
-		this.marswars = marswars;
 		this.stage = stage; 
-		mainmenu = window; 
-		mainmenu.setDebug(true);
+		this.mainmenu = window; 
+		//this.mainmenu.setDebug(true);
 		createMenu();
     }
 
@@ -53,15 +50,17 @@ public class MainMenu {
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
-		MenuScreen screen = new MenuScreen(skin, mainmenu, stage);
-		mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		/*Creates the screens for the menu that walk the player 
+		 * through setting up their customized game */
+		new MenuScreen(this.skin, this.mainmenu, this.stage);
+		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
 	
 	public Window buildMenu(){
-		return mainmenu;
+		return this.mainmenu;
 	}
 	
 	public void resize(int width, int height) {
-		mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
 	}
 }

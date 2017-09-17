@@ -33,25 +33,25 @@ public class MiniMap {
 	 */
     public MiniMap(String mapId, int width, int height) {
         TextureManager reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-        backgroundImage = new Image(reg.getTexture(mapId));
+        this.backgroundImage = new Image(reg.getTexture(mapId));
         this.width = width;
         this.height = height;
-        entitiesOnMap = new ArrayList<MiniMapEntity>();
+        this.entitiesOnMap = new ArrayList<MiniMapEntity>();
     }
     
     /**
 	 * refreshes the minimap.png file in memory
 	 */
     public void updateMap(TextureManager reg) {
-    	reg.saveTexture("minimap", "resources/HUDAssets/minimap.png");
-    	backgroundImage = new Image(reg.getTexture("minimap"));
+    	reg.saveTexture("minimap", "resources/HUDAssets/minimap.png"); //$NON-NLS-1$ //$NON-NLS-2$
+    	this.backgroundImage = new Image(reg.getTexture("minimap")); //$NON-NLS-1$
     }
 
     /**
      * @return the minimap image
 	 */
     public Image getBackground() {
-        return backgroundImage;
+        return this.backgroundImage;
     }
     
     /**
@@ -63,7 +63,7 @@ public class MiniMap {
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
 		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
 		//save the buffer into a png
-		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap);
+		PixmapIO.writePNG(Gdx.files.local("resources/HUDAssets/minimap.png"), pixmap); //$NON-NLS-1$
 		//clear the pixmap from memory
 		pixmap.dispose();
 	}
@@ -76,7 +76,7 @@ public class MiniMap {
      */
     public void addEntity(int team, float x, float y) {
         // TODO convert to map coordinates
-        entitiesOnMap.add(new MiniMapEntity(team, x, y));
+        this.entitiesOnMap.add(new MiniMapEntity(team, x, y));
     }
 
     /**
@@ -84,7 +84,7 @@ public class MiniMap {
      * @return List of MiniMapEntities.
      */
     public List<MiniMapEntity> getEntitiesOnMap() {
-        return entitiesOnMap;
+        return this.entitiesOnMap;
     }
 
     /**
@@ -94,7 +94,7 @@ public class MiniMap {
      * @return true if the click was on the minimap, false otherwise.
      */
     public boolean clickedOn(int x, int y) {
-        if (x < width && y > Gdx.graphics.getHeight() - height) {
+        if (x < this.width && y > Gdx.graphics.getHeight() - this.height) {
             moveMap(x, Gdx.graphics.getHeight() - y);
             return true;
         }
@@ -108,8 +108,8 @@ public class MiniMap {
      */
     private void moveMap(int x, int y) {
         // What portion of the minimap screen was clicked
-        float fractionWidthClick = (float) x / width;
-        float fractionHeightClick = (float) y / height;
+        float fractionWidthClick = (float) x / this.width;
+        float fractionHeightClick = (float) y / this.height;
 
         // Width and height of the game world
         int mapWidth = GameManager.get().getWorld().getWidth()*58;
@@ -122,10 +122,10 @@ public class MiniMap {
     }
 
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     public int getHeight() {
-        return height;
+        return this.height;
     }
 }

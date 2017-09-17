@@ -8,24 +8,24 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class BaseEntity extends AbstractEntity implements Selectable {
+public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private int cost = 0;
 	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
 	private ActionList validActions;
 	private boolean selected = false;
+	private int owner = 0;
+	private boolean fixPos = false;
 	protected float speed = 0.05f;
 
 	/**
@@ -132,7 +132,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	public void fixPosition(int xPos, int yPos, int zPos) {
 		modifyCollisionMap(false);
-		if (GameManager.get().getWorld() instanceof BaseWorld) {
+		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
@@ -410,11 +410,65 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		return;
 	}
 
+	/**
+	 * Set the owner of this Entity
+	 * @param owner
+	 */
+	@Override
+	public void setOwner(int owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Get the owner of this Entity
+	 * @return owner
+	 */
+	@Override
+	public int getOwner() {
+		return this.owner;
+	}
+
+	/**
+	 * Check if this Entity has the same owner as the other Abstract Entity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+	
+	/**
+	 * Sets boolean fixPosition
+	 * @param fix
+	 */
+	public void setFix(boolean fix) {
+		fixPos = fix;
+	}
+	
+	/**
+	 * returns boolean fixPosition
+	 * @return true if entity must be fixed
+	 */
+	public boolean getFix() {
+		return fixPos;
+	}
+
 	public float getMoveSpeed() {
 		return speed;
 	}
 
 	public void setMoveSpeed(float speed) {
 		this.speed = speed;
+	}
+	
+	/**
+	 * checks if this entity is AI
+	 * @return true if entity is owned by AI
+	 */
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
 	}
 }

@@ -11,6 +11,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
 //import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -99,5 +100,12 @@ public class Astronaut extends Soldier {
 	@Override
 	public String toString(){
 		return "Astronaut";
+	}
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Astronaut", this.getHealth(), null, this.getCurrentAction(), this);
 	}
 }
