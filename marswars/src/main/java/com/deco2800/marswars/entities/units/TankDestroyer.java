@@ -4,25 +4,27 @@ import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 
 /*
- * A Sniper unit, does longer range and more armour than a soldier 
- * has a slower attack speed instead
+ * A heavier combat unit, does longer range and more armour than a soldier 
+ * intended to be slower, more expensive and and slower to fire
  * 
  */
-public class Sniper extends Soldier {
+public class TankDestroyer extends Soldier {
 	
-	public Sniper(float posX, float posY, float posZ, int owner) {
+	public TankDestroyer(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		//this.movementSound = "tankMovementSound";
 		
 		// set all the attack attributes
 		this.setMaxHealth(1000);
 		this.setHealth(1000);
-		this.setDamage(200);
-		this.setArmor(200);
+		this.setDamage(100);
+		this.setArmor(500);
 		this.setArmorDamage(200);
-		this.setAttackRange(20);
-		this.setAttackSpeed(5);
-		this.setAreaDamage(0);
+		this.setAttackRange(10);
+		this.setAttackSpeed(10);
+		//setAttributes();
+		this.setAreaDamage(1);
+		
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the
@@ -34,6 +36,6 @@ public class Sniper extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Sniper", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("TankDestroyer", this.getHealth(), null, this.getCurrentAction(), this);
 	}
 }
