@@ -97,6 +97,7 @@ public final class ActionSetter {
      */
     private static boolean doLoad(BaseEntity performer, BaseEntity target) {
         if (target instanceof Soldier && performer instanceof Soldier) {
+            LOGGER.info("Try to load");
             performer.setAction(new LoadAction((Soldier) performer, (Soldier) target));
             return true;
         } else {
@@ -107,11 +108,10 @@ public final class ActionSetter {
     /**
      * Assigns the unload action to the entity
      * @param performer the entity to be assigned the action
-     * @param x the x co-ordinates of the action
-     * @param y the y co-ordinates of the action
      * @return true
      */
     private static boolean doUnload(Soldier performer) {
+        LOGGER.info("Try to unload");
         performer.setAction(new UnloadAction(performer));
         return true;
     }

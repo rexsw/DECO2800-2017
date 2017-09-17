@@ -39,9 +39,10 @@ public class Carrier extends Soldier {
     private Optional<DecoAction> currentAction = Optional.empty();
 
     private Soldier[] loadedUnits = new Soldier[capacity];
+	private ActionType nextAction;
 
 
-    public Carrier(float posX, float posY, float posZ, int owner) {
+	public Carrier(float posX, float posY, float posZ, int owner) {
 	super(posX, posY, posZ, owner);
 
 	// set all the attack attributes
@@ -72,31 +73,36 @@ public class Carrier extends Soldier {
 	    this.setTexture(defaultTextureName);
 	    return;
 	}
-	if (!entities.isEmpty()
-		&& entities.get(0) instanceof Soldier) {
-	    Soldier target = (Soldier) entities.get(0);
-	    load(target);
+		if (nextAction != null) {
+			ActionSetter.setAction(this, x, y, nextAction);
+			nextAction = null;
+		}else {
+			if (!entities.isEmpty()
+					&& entities.get(0) instanceof Soldier) {
+				Soldier target = (Soldier) entities.get(0);
+				load(target);
 
-	} else {
-	    BaseWorld world = GameManager.get().getWorld();
-	    float newPosX = x + 3;
-	    float newPosY = y + 3;
-	    if(newPosX > world.getWidth()) {
-		newPosX = x - 3;
-	    }
-	    if(newPosY > world.getLength()) {
-		newPosY = y - 3;
-	    }
-	    for (int i = 0; i < capacity; i++) {
-		if (!(loadedUnits[i] == null)) {
-		    LOGGER.error("moving unit " + i);
-		
-		    loadedUnits[i].setCurrentAction(Optional.of(new MoveAction((int) newPosX, (int) newPosY, loadedUnits[i])));
+			} else {
+				BaseWorld world = GameManager.get().getWorld();
+				float newPosX = x + 3;
+				float newPosY = y + 3;
+				if (newPosX > world.getWidth()) {
+					newPosX = x - 3;
+				}
+				if (newPosY > world.getLength()) {
+					newPosY = y - 3;
+				}
+				for (int i = 0; i < capacity; i++) {
+					if (!(loadedUnits[i] == null)) {
+						LOGGER.error("moving unit " + i);
+
+						loadedUnits[i].setCurrentAction(Optional.of(new MoveAction((int) newPosX, (int) newPosY, loadedUnits[i])));
+					}
+				}
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+				LOGGER.error("Assigned action move to" + x + " " + y);
+			}
 		}
-	    }
-	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	    LOGGER.error("Assigned action move to" + x + " " + y);
-	}
 	this.setTexture(defaultTextureName);
 	SoundManager sound = (SoundManager) GameManager.get()
 		.getManager(SoundManager.class);
@@ -196,20 +202,21 @@ public class Carrier extends Soldier {
      * @return unloads all Passengers
      */
     public boolean unloadPassenger() {
-	int empty = 0;
-	for (int i = 0; i < capacity; i++) {
-	    if (!(loadedUnits[i] == null)) {
-		loadedUnits[i].setUnloaded();
-		LOGGER.error("Unit unloaded.");
-		loadedUnits[i] = null;
-		empty++;
-	    }
-	}
-	if(empty == 0) {
-	    return false;
-	} else {
-	    return true;
-	}
+		LOGGER.info("Everyone off!");
+		int empty = 0;
+		for (int i = 0; i < capacity; i++) {
+			if (!(loadedUnits[i] == null)) {
+			loadedUnits[i].setUnloaded();
+			LOGGER.error("Unit unloaded.");
+			loadedUnits[i] = null;
+			empty++;
+			}
+		}
+		if(empty == 0) {
+			return false;
+		} else {
+			return true;
+		}
     }
     
 	/**
@@ -218,4 +225,11 @@ public class Carrier extends Soldier {
 	public EntityStats getStats() {
 		return new EntityStats("Carrier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
+
+	@Override
+	public void setNextAction(ActionType a) {
+		LOGGER.info("Assigned action " + ActionSetter.getActionName(a));
+		this.nextAction = a;
+	}
+
 }
