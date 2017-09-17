@@ -22,6 +22,7 @@ public class Sniper extends Soldier {
 		this.setArmorDamage(200);
 		this.setAttackRange(20);
 		this.setAttackSpeed(5);
+		this.setAreaDamage(0);
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the
