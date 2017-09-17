@@ -38,6 +38,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
+	protected float tempx;
+	protected float tempy;
 
 	/**
 	 * Sets the position X
@@ -154,7 +156,43 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			LOGGER.info("Clicked on ai soldier");
 		}
 	}
+	
+	/*public float getTmpx() {
+		
+		tempx=this.getTempx();
+		return tempx;
+	}
 
+	public float getTmpy() {
+		
+		tempy=this.getTempy();
+		return tempy;
+	}*/
+	/*
+	 * Changes the texture to reflect the direction that the soldier is moving in
+	 */
+	public void faceTowards(float x, float y) {
+if(this.getPosX()>=x && this.getPosY()>=y) {
+			
+			this.setTexture(downleftTextureName);
+		}
+		else if(this.getPosX()>=x && this.getPosY()<y) {
+			
+			this.setTexture(downrightTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()>=y) {
+			
+			this.setTexture(upleftTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()<y) {
+			
+			this.setTexture(uprightTextureName);
+		}
+		else {
+			this.setTexture(defaultTextureName);
+		}
+	}
+	
 	@Override
 	public void onRightClick(float x, float y) {
 		List<BaseEntity> entities;
@@ -176,25 +214,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 		}
 		
-		if(this.getPosX()>=x && this.getPosY()>=y) {
-			
-			this.setTexture(downleftTextureName);
-		}
-		else if(this.getPosX()>=x && this.getPosY()<y) {
-			
-			this.setTexture(downrightTextureName);
-		}
-		else if(this.getPosX()<x && this.getPosY()>=y) {
-			
-			this.setTexture(upleftTextureName);
-		}
-		else if(this.getPosX()<x && this.getPosY()<y) {
-			
-			this.setTexture(uprightTextureName);
-		}
-		else {
-			this.setTexture(defaultTextureName);
-		}
+		
 		
 		
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
