@@ -3,15 +3,15 @@ package com.deco2800.marswars.entities.items;
 /**
  * Enumerate to store the meta data for all the specific Weapon type items.
  * 
- * Meta Data details: name = the item's name baseDamage = amount of damage
- * (normal and armour damage) to be added on without any multipliers being
- * applied. baseRange = the amount of distance between the target and the hero
- * spacmen. This is addedn o without any multipliers. baseSpeed = amount of ms
- * attack speed it changes without any multipliers being applied baseCost = the
- * resource costs for the item without any multipliers being applied where order
- * of the resources in the array is [rocks, crystals, water, biomass]. 
+ * Meta Data details: 
+ * name = the item's name 
+ * baseDamage = amount of damage (normal and armour damage) to be added on without any multipliers being applied. 
+ * baseRange = the amount of distance between the target and the hero spacmen. This is added on without any multipliers. 
+ * baseSpeed = amount of attack speed it changes without any multipliers being applied 
+ * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the 
+ * array is [rocks, crystals, water, biomass].
  * 
- * @author Michael
+ * @author Mason
  *
  */
 public enum WeaponType implements ItemType {
@@ -45,8 +45,7 @@ public enum WeaponType implements ItemType {
 	 * @param baseCost
 	 *            of this weapon
 	 */
-	WeaponType(String name, String texture, int baseDamage, int baseRange,
-			int baseSpeed, int[] baseCost) {
+	WeaponType(String name, String texture, int baseDamage, int baseRange, int baseSpeed, int[] baseCost) {
 		this.name = name;
 		this.baseDamage = baseDamage;
 		this.baseRange = baseRange;
@@ -83,8 +82,7 @@ public enum WeaponType implements ItemType {
 	}
 
 	/**
-	 * Gets the damage the item will add on (only normal damage, armour damage
-	 * will be handled in weapon class).
+	 * Gets the damage the item will add on (only normal damage, armour damage will be handled in weapon class).
 	 * 
 	 * @return the amount of damage that the item will add on.
 	 */
@@ -113,9 +111,8 @@ public enum WeaponType implements ItemType {
 	/**
 	 * Gets the build cost of this item.
 	 * 
-	 * @return Array of integers which represent the cost to build each
-	 *         resource. Order of the resources in this array is [rocks,
-	 *         crystals, water, biomass].
+	 * @return Array of integers which represent the cost to build each resource. Order of the resources in this array
+	 *         is [rocks, crystals, water, biomass].
 	 */
 	@Override
 	public int[] getCost() {
@@ -156,16 +153,14 @@ public enum WeaponType implements ItemType {
 	}
 
 	/**
-	 * Gets the description of the Weapon item which specifies its effects and
-	 * stat changes.
+	 * Gets the description of the Weapon item which specifies its effects and stat changes.
 	 * 
 	 * @return The description of the item as a string.
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nDamage: " + this.getWeaponDamage()
-				+ "\nSpeed: " + this.getWeaponSpeed() + "\nRange: "
-				+ this.getWeaponRange();
+		return "Name: " + this.getName() + "\nDamage: " + this.getWeaponDamage() + "\nSpeed: " + this.getWeaponSpeed()
+				+ "\nRange: " + this.getWeaponRange();
 	}
 
 }

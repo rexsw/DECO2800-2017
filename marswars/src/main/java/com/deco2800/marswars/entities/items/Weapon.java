@@ -22,7 +22,6 @@ public class Weapon extends Item {
     private WeaponType type;
 //    private int lvl;
     private List<Effect> effects;
-    //private AttackEffect effect;
 
     /**
 	 * Constructor for an Weapon item. Takes in an Weapontype enumerate value which specifies the stat changes the

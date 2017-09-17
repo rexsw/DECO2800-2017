@@ -3,20 +3,39 @@ package com.deco2800.marswars.entities.items.effects;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 
+/**
+ * Class defines effect that increases defensive stats of a unit i.e. armour, max armour, hp, max hp and movement speed.
+ * 
+ * armour = amount of to add to armour and max armour stats
+ * health = amount to add to hp and max hp stats
+ * movementSpeed = amount to add to movement speed stat
+ * @author Mason
+ *
+ */
 public class DefenceEffect implements Effect{
 	private int armour;
 	private int health;
 	private float moveSpeed;
 	
+	/**
+	 * Constructor for the defence effect. Class fields would be set here.
+	 * @param armour  amount of to add to armour and max armour stats
+	 * @param health  amount to add to hp and max hp stats
+	 * @param moveSpeed  amount to add to movement speed stat
+	 */
 	public DefenceEffect(int armour, int health, float moveSpeed) {
 		this.armour = armour;
 		this.health = health;
 		this.moveSpeed = moveSpeed;
 	}
 	
+	/**
+	 * Method to apply the additions to the defence stats to the provided attackable entity
+	 * @param entity  The attackable entity to receive the effect
+	 */
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		if (entity instanceof Commander) {
+		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
 			
 			hero.setMaxArmor(hero.getMaxArmor() + this.armour);
@@ -29,9 +48,14 @@ public class DefenceEffect implements Effect{
 		
 	}
 
+	/**
+	 * Method to remove this effect off of the provided entity. Should only be used on entities that have this effect 
+	 * applied to them.
+	 * @param entity  attackable entity with this effect applied to remove it from them.
+	 */
 	@Override
 	public void removeEffect(AttackableEntity entity) {
-		if (entity instanceof Commander) {
+		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
 			
 			hero.setMaxArmor(hero.getMaxArmor() - this.armour);
@@ -42,6 +66,11 @@ public class DefenceEffect implements Effect{
 		}
 	}
 	
+	/**
+	 * Method to create a string that describes the effect i.e. says that this effect increases armour, health and 
+	 * movement speed.
+	 * @return string stating how much will be added onto armour, health and movement speed by this effect. 
+	 */
 	@Override
 	public String generateDescription() {
 		StringBuilder string = new StringBuilder("");

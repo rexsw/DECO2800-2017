@@ -16,7 +16,6 @@ package com.deco2800.marswars.entities.items;
  *
  */
 public enum ArmourType implements ItemType {
-	// armour value, cost(rcwb), level
 	// organic armour
 	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }); 
 
