@@ -8,6 +8,7 @@ import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.TimeManager;
 
 /**
  * Manages the features for the game 
@@ -26,6 +27,8 @@ public class Game{
 	long lastMenuTick = 0;
 	long pauseTime = 0;
 
+	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+
 	
 	public Game(Skin skin, Stage stage, OrthographicCamera camera){
 		this.stage = stage; 
@@ -37,10 +40,12 @@ public class Game{
 	}
 	
 	private void startGame(){
+		timeManager.setGameStartTime();
+		timeManager.unPause();
 		//inputP = new InputProcessor(this.camera, this.stage, this.skin);
 		//inputP.setInputProcessor();
-		createMiniMap();
-		setGUI();	
+		//createMiniMap();
+		//setGUI();	
 	}
 	
 	/*
@@ -68,15 +73,15 @@ public class Game{
 	 * that the game is in full play
 	 */
 	public void render(){
-		GameManager.get().getMiniMap().render();
-		GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
-		this.view.updateMiniMapMenu();
-		this.view.enableHUD();
-		GameManager.get().toggleActiveView();
+		//GameManager.get().getMiniMap().render();
+		//GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
+		//this.view.updateMiniMapMenu();
+		//this.view.enableHUD();
+		//GameManager.get().toggleActiveView();
 	}
 	
 	public void resize(int width, int height){
-		this.view.resize(width, height);
+		//this.view.resize(width, height);
 	}
 	
 }

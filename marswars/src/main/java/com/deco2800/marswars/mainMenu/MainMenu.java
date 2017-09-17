@@ -42,12 +42,13 @@ public class MainMenu {
 	 * @param marswars
 	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars, OrthographicCamera camera) {
+	public MainMenu(Skin skin, Stage stage, MarsWars marswars, OrthographicCamera camera) {
 		this.skin = skin;
 		this.stage = stage; 
-		this.mainmenu = window; 
+		this.mainmenu = new Window("Its a start", skin); 
 		//this.mainmenu.setDebug(true);
 		createMenu();
+		buildMenu();
     }
 
 	/**
@@ -61,8 +62,9 @@ public class MainMenu {
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
 	
-	public Window buildMenu(){
-		return this.mainmenu;
+	public void buildMenu(){
+		this.stage.addActor(mainmenu);
+		//return this.mainmenu;
 	}
 	
 	public void startGame(boolean start){

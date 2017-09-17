@@ -93,14 +93,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
-		// zero game length clock (i.e. Tell TimeManager new game has been launched)
-		this.timeManager.setGameStartTime();
 		
-		//not sure why i have to create a window here and pass it into the menu
-		//but creating a window in menu crashes the game
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this, camera); //$NON-NLS-1$
-		this.stage.addActor(this.menu.buildMenu());
+		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
+						
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
@@ -116,7 +111,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	 */
 	public void playGame(){
 		createMiniMap();
-		//inputP.setInputProcessor();
 		createMap();
 		this.inputP.setInputProcessor();
 
@@ -124,6 +118,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		addAIEntities();
 		setThread();
 		setGUI();
+		timeManager.pause();
 	}
 	
 	/**
