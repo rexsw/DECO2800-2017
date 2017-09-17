@@ -7,9 +7,21 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.deco2800.marswars.actions.ActionSetter;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.UnloadAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
@@ -28,6 +40,7 @@ public class Carrier extends Soldier {
 
     private Soldier[] loadedUnits = new Soldier[capacity];
 
+
     public Carrier(float posX, float posY, float posZ, int owner) {
 	super(posX, posY, posZ, owner);
 
@@ -40,6 +53,9 @@ public class Carrier extends Soldier {
 	this.setAttackRange(0);
 	this.setAttackSpeed(0);
 	this.isCarrier();
+	this.addNewAction(ActionType.LOAD);
+	this.addNewAction(ActionType.UNLOAD);
+	this.removeActions(ActionType.DAMAGE);
     }
 
     @Override
@@ -141,7 +157,7 @@ public class Carrier extends Soldier {
 
 		
 	}
-
+    
     public void load(Soldier target) {
 	int x = (int) target.getPosX();
 	int y = (int) target.getPosY();
@@ -179,13 +195,20 @@ public class Carrier extends Soldier {
      * 
      * @return unloads all Passengers
      */
-    public void unloadPassenger() {
+    public boolean unloadPassenger() {
+	int empty = 0;
 	for (int i = 0; i < capacity; i++) {
 	    if (!(loadedUnits[i] == null)) {
 		loadedUnits[i].setUnloaded();
 		LOGGER.error("Unit unloaded.");
 		loadedUnits[i] = null;
+		empty++;
 	    }
+	}
+	if(empty == 0) {
+	    return false;
+	} else {
+	    return true;
 	}
     }
     

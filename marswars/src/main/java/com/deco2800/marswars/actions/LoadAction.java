@@ -67,7 +67,7 @@ public class LoadAction implements DecoAction {
 
     private void moveTowardsAction() {
 	    float distance;
-		// When close to the enemy's attack range, attack.
+		// When close to the target, load.
 		if (action.completed()) {
 			state = State.LOAD_STATE;
 			return;
