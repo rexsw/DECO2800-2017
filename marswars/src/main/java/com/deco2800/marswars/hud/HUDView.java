@@ -497,7 +497,10 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.show(stage);
 			}
 		});
-				
+		/*
+		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
+		 * window.		
+		 */
 		shopDialog.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
@@ -854,7 +857,13 @@ public class HUDView extends ApplicationAdapter{
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
-					shopDialog.addHeroIcon((Commander) e);
+					/*
+					 * only add your own commander as option in shop to buy items for. May need to cheng condition when
+					 * multiplayer gets implemented
+					 */
+					if (!e.isAi()) {
+						shopDialog.addHeroIcon((Commander) e);
+					}
 				}
 			}
 		}
