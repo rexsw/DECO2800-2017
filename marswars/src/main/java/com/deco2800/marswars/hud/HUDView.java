@@ -207,7 +207,7 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		messageButton = new ImageButton(messageRegionDraw);
 
-
+		//create cheat button + image for it
 		messageImage = textureManager.getTexture("chat_button");
 		messageRegion = new TextureRegion(messageImage);
 		messageRegionDraw = new TextureRegionDrawable(messageRegion);
