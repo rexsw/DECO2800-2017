@@ -491,6 +491,7 @@ public class HUDView extends ApplicationAdapter{
 			}	
 		});
 
+		setupEntitiesPickerMenu();
 		addEntitiesPickerMenu();
 	}
 
@@ -718,8 +719,7 @@ public class HUDView extends ApplicationAdapter{
      * If this method is call, it will cause that the actions window be set to not visible.
      */
     private void addEntitiesPickerMenu(){
-        setupEntitiesPickerMenu();
-
+		entitiesPicker.clear();
         Table table = new Table();
         TextButton unitsButton = new TextButton("Units",skin);
         unitsButton.addListener(new ChangeListener() {
@@ -922,11 +922,17 @@ public class HUDView extends ApplicationAdapter{
      * If picker is shown then fog is off and game is paused
      *
      * @param isVisible whether to display the picker or hide it.
+	 * @param isPlaying whether a game is being played.
      */
-    public void showEntitiesPicker( boolean isVisible){
+    public void showEntitiesPicker( boolean isVisible, boolean isPlaying){
         entitiesPicker.setVisible(isVisible);
-        toggleFog();
-        // pause not implemented yet.
+        // this call allows the menu to reset instead of using its latest state
+        addEntitiesPickerMenu();
+        if(!isPlaying) {
+			toggleFog();
+			// pause not implemented yet.
+		}
+
     }
     
     /**

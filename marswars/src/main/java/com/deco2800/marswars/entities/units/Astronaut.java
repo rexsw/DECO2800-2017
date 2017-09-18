@@ -70,14 +70,14 @@ public class Astronaut extends Soldier {
 	@Override
 	public void makeSelected() {
 		super.makeSelected();
-		GameManager.get().getGui().showEntitiesPicker(true);
+		GameManager.get().getGui().showEntitiesPicker(true, true);
 
 	}
 
 	@Override
 	public void deselect() {
 		super.deselect();
-		GameManager.get().getGui().showEntitiesPicker(false);
+		GameManager.get().getGui().showEntitiesPicker(false, true);
 
 	}
 

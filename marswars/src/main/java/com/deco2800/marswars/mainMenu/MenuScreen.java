@@ -1,6 +1,5 @@
 package com.deco2800.marswars.mainMenu;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -85,8 +84,9 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//MenuScreen.this.gui.showEntitiesPicker(true); to be changed DO NOT DELETE
-				//mainmenu.setVisible(false);
+				//MenuScreen.this.gui.showEntitiesPicker(true, true); to be changed DO NOT DELETE
+				menu.startGame(true);
+				mainmenu.setVisible(false);
 
 			}
 		});
