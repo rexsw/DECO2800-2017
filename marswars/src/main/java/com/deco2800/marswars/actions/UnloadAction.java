@@ -3,10 +3,14 @@ package com.deco2800.marswars.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.LoadAction.State;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 
+/**
+ * An UnloadAction for UNloading units from a carrier unit
+ * 
+ * @author Han Wei
+ */
 public class UnloadAction implements DecoAction {
 
     enum State {
@@ -21,11 +25,20 @@ public class UnloadAction implements DecoAction {
     private int ticksLoad = 50;
     private boolean actionPaused = false;
 
+    /**
+     * Constructor for the UnloadAction
+     * 
+     * @param carrier
+     *            The carrier unit assigned to load
+     */
     public UnloadAction(Soldier carrier) {
 	super();
 	this.carrier = carrier;
     }
 
+    /**
+     * Sets the state to unload
+     */
     @Override
     public void doAction() {
 	switch (state) {
@@ -37,6 +50,10 @@ public class UnloadAction implements DecoAction {
 	    return;
 	}
     }
+
+    /**
+     * Unload units after 50 ticks
+     */
 
     private void unloadAction() {
 	LOGGER.info("unloaded units");
@@ -52,14 +69,24 @@ public class UnloadAction implements DecoAction {
 
     }
 
+    /**
+     * Checks completed state
+     * 
+     * @return returns boolean stating if loading was completed
+     */
     @Override
     public boolean completed() {
 	return completed;
     }
 
+    /**
+     * Returns number from 0 to 100 representing completion
+     * 
+     * @return percentage of completion
+     */
     @Override
     public int actionProgress() {
-	return 0;
+	return 100 - (ticksLoad * 2);
     }
 
     /**

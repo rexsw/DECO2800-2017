@@ -22,11 +22,15 @@ public class Tank extends Soldier {
 		this.setArmorDamage(150);
 		this.setAttackRange(10);
 		this.setAttackSpeed(20);
+		//setAttributes();
+		this.setAreaDamage(1);
+		
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
+	
 	
 	/**
 	 * @return The stats of the entity

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.buildings.Base;
@@ -19,22 +18,18 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
-import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.hud.*;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -70,13 +65,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	
 	private boolean gameStarted = false;
-	MainMenu menu;
-
-	Skin skin;
-	
-	HUDView view;
+	private MainMenu menu;
+	private Skin skin;
+	private HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
@@ -92,50 +84,22 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage = new Stage(new ScreenViewport());
 		this.skin = new Skin(Gdx.files.internal("uiskin.json")); //$NON-NLS-1$
 		GameManager.get().setSkin(this.skin);
+		GameManager.get().setStage(this.stage);
+
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
-		// zero game length clock (i.e. Tell TimeManager new game has been launched)
-		this.timeManager.setGameStartTime();
-
-		//not sure why i have to create a window here and pass it into the menu
-		//but creating a window in menu crashes the game
-//		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
-//		this.stage.addActor(this.menu.buildMenu());
+								
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
+		
+		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
+		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
 
-		GameManager.get().setCamera(this.camera);
-		playGame();
-	}
-	
-	/**
-	 * Constructs the rest of the game. 
-	 * Note: the following methods will be removed from marswars soon to be abstracted 
-	 * into their relevant classes
-	 */
-	public void playGame(){
-		createMiniMap();
-		//inputP.setInputProcessor();
 		createMap();
 		this.inputP.setInputProcessor();
-
-		fogOfWar();
-		addAIEntities();
-		setThread();
-		setGUI();
+		GameManager.get().setCamera(this.camera);
 	}
-	
-	/**
-	 * Creates the game minimap 
-	 */
-	public void createMiniMap() {
-		MiniMap m = new MiniMap("minimap", 220, 220);
-		//initialise the minimap and set the image
-		GameManager.get().setMiniMap(m);
-		GameManager.get().getMiniMap().updateMap(this.reg);
-	}
-	
+		
 	/**
 	 * Creates game map
 	 */
@@ -145,78 +109,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setWorld(world);
 		world.loadMapContainer(map);
 		
-		
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
 	}
-	
-	/*
-	 * Initializes fog of war
-	 */
-	private void fogOfWar() {
-		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}
-	
-	/*
-	 * adds entities for the ai and set then to be ai owned
-	 */
-	private void addAIEntities() {
-		int length = GameManager.get().getWorld().getLength();
-		int width = GameManager.get().getWorld().getWidth();
-		setPlayer(length, width, 1, 1);
-		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
-		black.set();
-		GameManager.get().getManager(WinManager.class);
-	}
-	
-	private void setThread() {
-		// do something important here, asynchronously to the rendering thread
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				// do something important here, asynchronously to the rendering thread
-				while(true) {
-					if (!MarsWars.this.timeManager.isPaused()) {
-						/*
-						 * threshold here need to be tweaked to make things move better for different CPUs 
-						 */
-						if(TimeUtils.nanoTime() - MarsWars.this.lastGameTick > 1000000) {
-							for (Renderable e : GameManager.get().getWorld().getEntities()) {
-								if (e instanceof Tickable) {
-									((Tickable) e).onTick(0);
-
-								}
-							}
-							GameManager.get().onTick(0);
-							lastGameTick = TimeUtils.nanoTime();
-						}
-					}
-						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						LOGGER.error(e.toString());
-					}
-				}
-			}
-		}).start();
-	}
 	
-	/*
-	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
-	 */
-	private void setGUI() {
-		/* Add another button to the menu */
-		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.view.disableHUD();
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
-		this.stage.addActor(this.menu.buildMenu());
-	}
-
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -229,8 +127,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
          */
 		SpriteBatch batch = new SpriteBatch();
 
-		/*
-         * Update the input managers
+		/* Update the input managers
          */
 		this.inputP.handleInput(this.pauseTime);
         /*
@@ -247,8 +144,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		// Render background first
 		String backgroundString = this.bgManager.getBackground();
-		TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		Texture background = textureManager.getTexture(backgroundString);
+		Texture background = reg.getTexture(backgroundString);
 		batch.begin();
 		batch.draw(background, this.camera.position.x - this.camera.viewportWidth*this.camera.zoom/2 , this.camera.position.y -
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
@@ -260,13 +156,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		tileRenderer.setView(this.camera);
 		tileRenderer.render();
 
-		/*
-         * Use the selected renderer to render objects onto the map
-         */
-		this.renderer.render(batch, this.camera);		
-
 		this.view.render(this.lastMenuTick);
-
+		this.menu.renderGame(camera, batch);
+		
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
 		this.stage.act();
@@ -274,10 +166,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 		if(!this.gameStarted) {
-			//GameManager.get().getMiniMap().render();
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
-			this.view.enableHUD();
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
 		}
@@ -308,83 +198,5 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		// Don't need this at the moment
 	}
 	
-	/**
-	 * generates a number of player and ai teams with basic unit at a give x-y
-	 * co-ord
-	 * 
-	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
-	 * @param lenght
-	 *            int length of the map
-	 * @param width
-	 *            int width of the map
-	 * @param aiteams
-	 *            int number of ai teams
-	 * @param playerteams
-	 *            int number of playerteams
-	 */
-	private void setPlayer(int length, int width, int aiteams,
-			int playerteams) {
-		int x, y, playerid;
-		ColourManager cm = (ColourManager) GameManager.get()
-				.getManager(ColourManager.class);
-		ResourceManager rm = (ResourceManager) GameManager.get()
-				.getManager(ResourceManager.class);
-		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
-			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
-			AiManager aim = (AiManager) GameManager.get()
-					.getManager(AiManager.class);
-			aim.addTeam(teamid);
-		}
-		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
-			playerid = teamid * (-1);
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
-			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
-		}
-	}
-
-	/**
-	 * adds a teams units to the game and sets the resource manager
-	 * 
-	 * @param teamid
-	 *            int the team's id
-	 * @param x
-	 *            int the x location of the team's spawn
-	 * @param y
-	 *            int the y location of the team's spawn
-	 * @param rm
-	 *            ResourceManager the ResourceManager of the game to set
-	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(0, teamid);
-		rm.setRocks(0, teamid);
-		rm.setCrystal(0, teamid);
-		rm.setWater(0, teamid);
-		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		Soldier soldier = new Soldier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(soldier);		
-		// test hero
-		Commander hero = new Commander(x,y,0,teamid);
-		GameManager.get().getWorld().addEntity(hero);
-		Tank tank = new Tank(x, y, 0, teamid);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(tank);
-		GameManager.get().getWorld().addEntity(ai);
-		GameManager.get().getWorld().addEntity(ai1);
-		GameManager.get().getWorld().addEntity(aibase);
-	}
-
-	/**
-	 * @return the Graphical User Interface
-	 */
-	public HUDView getGUI(){
-		return this.view;
-	}
 }
+
