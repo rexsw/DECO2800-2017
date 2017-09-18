@@ -142,8 +142,14 @@ public class HUDView extends ApplicationAdapter{
 		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
-		//create the HUD 
+		//initialise the minimap and set the image
+		MiniMap m = new MiniMap("minimap", 220, 220);
+		GameManager.get().setMiniMap(m);
+		GameManager.get().getMiniMap().updateMap(this.textureManager);
+		
+		//create the HUD + set gui to GM 
 		createLayout();
+		GameManager.get().setGui(this);
 	}
 
 	/**
@@ -1003,6 +1009,9 @@ public class HUDView extends ApplicationAdapter{
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
+		
+		/*Update Minimap*/
+		this.updateMiniMapMenu();
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);

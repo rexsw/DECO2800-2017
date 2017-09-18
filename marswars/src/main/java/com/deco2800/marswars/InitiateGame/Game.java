@@ -2,11 +2,22 @@ package com.deco2800.marswars.InitiateGame;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -14,89 +25,78 @@ import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.ColourManager;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.managers.WinManager;
+import com.deco2800.marswars.renderers.Render3D;
+import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.FogWorld;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Manages the features for the game 
  * @author cherr
  *
  */
-public class Game{
-	private Stage stage; 
-	private HUDView view; 
-	private Skin skin; 
-	private TextureManager reg; 
-	private InputProcessor inputP;
-	private OrthographicCamera camera; 
-	
+public class Game{	
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+	
+	/**
+	 * Set the renderer.
+	 * 3D is for Isometric worlds
+	 * 2D is for Side Scrolling worlds
+	 * Check the documentation for each renderer to see how it handles AbstractEntity coordinates
+	 */
+	Renderer renderer = new Render3D();
 
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
+	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
 
-	
-	public Game(Skin skin, Stage stage, OrthographicCamera camera){
-		this.stage = stage; 
-		this.skin = skin; 
-		this.camera = camera;
-		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
+
+	public Game(){
 		startGame();
-
 	}
 	
 	private void startGame(){
 		timeManager.setGameStartTime();
 		timeManager.unPause();
 		this.addAIEntities();
-		//inputP = new InputProcessor(this.camera, this.stage, this.skin);
-		//inputP.setInputProcessor();
-		//createMiniMap();
-		//setGUI();	
+		this.setThread();
+		this.fogOfWar();
 	}
-	
+		
 	/*
-	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
+	 * Initializes fog of war
 	 */
-	private void setGUI() {
-		/* Add another button to the menu */
-		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.view.disableHUD();
-	}
-	
-	/**
-	 * Creates the game minimap 
-	 */
-	private void createMiniMap() {
-		MiniMap m = new MiniMap("minimap", 220, 220); //$NON-NLS-1$
-		//m.render();
-		//initialise the minimap and set the image
-		GameManager.get().setMiniMap(m);
-		GameManager.get().getMiniMap().updateMap(this.reg);
-	}
+	private void fogOfWar() {
+		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
+		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
+		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+	}	
+
 
 	/**
 	 * Can assume that since this class has been instantiated
 	 * that the game is in full play
+	 * @param batch 
 	 */
-	public void render(){
-		//GameManager.get().getMiniMap().render();
-		//GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
-		//this.view.updateMiniMapMenu();
-		//this.view.enableHUD();
-		//GameManager.get().toggleActiveView();
+	public void render(OrthographicCamera camera, SpriteBatch batch){
+		this.renderer.render(batch, camera);			
 	}
 	
-	public void resize(int width, int height){
-		//this.view.resize(width, height);
-	}
-
 	/*
 	 * adds entities for the ai and set then to be ai owned
 	 */
@@ -108,7 +108,6 @@ public class Game{
 		black.set();
 		GameManager.get().getManager(WinManager.class);
 	}
-
 	
 	/**
 	 * generates a number of player and ai teams with basic unit at a give x-y
@@ -179,4 +178,38 @@ public class Game{
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(aibase);
 	}
+	
+	private void setThread() {
+		// do something important here, asynchronously to the rendering thread
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// do something important here, asynchronously to the rendering thread
+				while(true) {
+					if (!timeManager.isPaused()) {
+						/*
+						 * threshold here need to be tweaked to make things move better for different CPUs 
+						 */
+						if(TimeUtils.nanoTime() - lastGameTick > 100000) {
+							for (Renderable e : GameManager.get().getWorld().getEntities()) {
+								if (e instanceof Tickable) {
+									((Tickable) e).onTick(0);
+								}
+							}
+							GameManager.get().onTick(0);
+							lastGameTick = TimeUtils.nanoTime();
+						}
+					}
+						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						LOGGER.error(e.toString());
+					}
+				}
+			}
+		}).start();
+	}
+
 }

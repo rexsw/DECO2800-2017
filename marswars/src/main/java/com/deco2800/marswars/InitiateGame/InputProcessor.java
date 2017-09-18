@@ -286,7 +286,9 @@ public class InputProcessor{
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		GameManager.get().toggleActiveView();
+		if (GameManager.get().getWorld() != null){
+			GameManager.get().toggleActiveView();
+		}
 	}
 
 	/**
