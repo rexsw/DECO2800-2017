@@ -125,6 +125,8 @@ public class TextureManager extends Manager {
         this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
+        this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
+        this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
         
         //----------Unit Assets:
         //Soldier:

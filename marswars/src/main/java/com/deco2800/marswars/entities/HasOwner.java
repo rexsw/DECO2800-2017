@@ -40,6 +40,11 @@ public interface HasOwner {
 	 */	
 	public void setAction(DecoAction action);
 	
+	/**
+	 * test is the entity is controlled by ai ie owner id >= 1
+	 * 
+	 * @return true iif this entity is controlled by an ai
+	 */
 	public boolean isAi();
 
 }
