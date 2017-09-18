@@ -90,7 +90,7 @@ public class BaseWorld extends AbstractWorld {
 		if (!entity.isCollidable())
 			return;
 
-		if (entity instanceof AttackableEntity) {
+		if (entity instanceof AttackableEntity && GameManager.get().getMiniMap() != null) {
 			// put things that can be attacked on the minimap
 			GameManager.get().getMiniMap().addEntity(entity);
 		}
@@ -119,7 +119,7 @@ public class BaseWorld extends AbstractWorld {
 	@Override
 	public void removeEntity(BaseEntity entity) {
 		super.removeEntity(entity);
-		if (entity instanceof AttackableEntity) {
+		if (entity instanceof AttackableEntity && GameManager.get().getMiniMap() != null) {
 			// remove entity from the minimap when they are removed from the world
 			GameManager.get().getMiniMap().removeEntity(entity);
 		}
