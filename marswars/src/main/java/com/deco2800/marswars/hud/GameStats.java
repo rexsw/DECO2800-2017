@@ -201,6 +201,7 @@ public class GameStats{
 	
 	private void removeStats(){
 		timeManager.unPause();
+		hud.setPauseCheck(0);
 		window.clear();
 		window.setVisible(false);
 		hud.enableHUD(); //enable all UI again 
