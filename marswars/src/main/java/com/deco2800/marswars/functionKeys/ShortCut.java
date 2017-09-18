@@ -208,7 +208,7 @@ public class ShortCut {
 	}
 
 	/**
-	 * this method is to move the camera to the home base by clicking the Z button
+	 * this method is to move the camera to the home base by clicking the backspace button
 	 *has not differentiated player's and ai's home base yet
 	 * @param g the gamemanager.
 	 * @param camera the orthographicCamera.
@@ -221,7 +221,7 @@ public class ShortCut {
 		float yNow = camera.position.y;
 		float baseX;
 		float baseY;
-		if (inputKeys.contains(Input.Keys.Z)) {
+		if (inputKeys.contains(Input.Keys.BACKSPACE)) {
 				for(BaseEntity i: l)
 				{
 					if(i instanceof  Base)
