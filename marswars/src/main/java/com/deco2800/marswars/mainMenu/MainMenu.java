@@ -49,10 +49,8 @@ public class MainMenu {
 		this.stage = stage; 
 		this.mainmenu = new Window("Its a start", skin); 
 		this.marsWars = marswars;
-		//this.mainmenu.setDebug(true);
 		createMenu();
-		buildMenu();
-    }
+	}
 
 	/**
 	 * Set the main menu size and adds in the table
@@ -64,13 +62,9 @@ public class MainMenu {
 		marsWars.getGUI().disableHUD();
 		new MenuScreen(this.skin, this.mainmenu, this.stage, this, this.marsWars.getGUI());
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
-	}
-	
-	public void buildMenu(){
 		this.stage.addActor(mainmenu);
-		//return this.mainmenu;
 	}
-	
+		
 	public void startGame(boolean start){
 		gameStarted = start;
 		marsWars.getGUI().enableHUD();
