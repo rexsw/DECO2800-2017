@@ -614,13 +614,16 @@ public class HUDView extends ApplicationAdapter{
                 if (miniMap.miniMapDisplay[i][j] > 0) { // if there is a unit there, add it on to the minimap
                     //TODO add a case for if there WAS a friendly unit there but NOW an enemy unit is there
                     if (miniMap.entitiesOnMiniMap[i][j] == null) { // skip if there is already an icon there
-                        miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(miniMap.getEntity(i, j).getTexture()));
-                        miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
-                        try {
-                            stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
-                        } catch (NullPointerException e) {
-                            // entity hasn't reached that position yet so do nothing
-                        }
+						MiniMapEntity e = miniMap.getEntity(i, j);
+						if (e.toBeDisplayed()) {
+							miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(e.getTexture()));
+							miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
+							try {
+								stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
+							} catch (NullPointerException exception) {
+								// entity hasn't reached that position yet so do nothing
+							}
+						}
                     }
                 }
             }

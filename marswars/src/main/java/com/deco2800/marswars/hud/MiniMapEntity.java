@@ -42,4 +42,16 @@ public class MiniMapEntity {
             return "AI_unit";
         }
     }
+
+    /**
+     *
+     * Only frienly units, and enemys not obscured by the fog of war should be displayed on the minimap
+     *
+     * @return true if the entity is to be displayed on the minimap, false otherwise
+     */
+    public boolean toBeDisplayed() {
+        // TODO fill in this function
+
+        return true;
+    }
 }
