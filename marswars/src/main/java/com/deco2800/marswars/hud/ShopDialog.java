@@ -16,8 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.ArmourType;
 import com.deco2800.marswars.entities.items.ItemType;
+import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.WeaponType;
@@ -53,10 +55,10 @@ public class ShopDialog extends Dialog{
 		this.textureManager = manager;	
 		this.itemList = new ArrayList<>();
 		//Making the items table to buy from
-		this.getContentTable().setDebug(true);
+		this.getContentTable().debugCell();
 		this.getContentTable().left();
 		
-		status = new Label("update me", skin);
+		status = new Label("Welcome to the shop!", skin);
 		/*
 		 * Note: need to change the below for loops to dynamically determine if they have been researched or not.
 		 */
@@ -75,7 +77,7 @@ public class ShopDialog extends Dialog{
 		
 		final Table scrollTable = new Table();
 		scrollTable.top();
-		scrollTable.debugAll();
+		scrollTable.debugCell();
 		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
 		scrollTable.add(new Label("Description", skin)).width(iconSize).expandX().top().left();
 		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
@@ -92,12 +94,18 @@ public class ShopDialog extends Dialog{
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item);
 		                	selectedHero.addItemToInventory(weapon);
-		                	status.setText("Bought " + weapon.getName() + " for " + selectedHero.toString());
+		                	status.setText("Bought " + weapon.getName() + "(Weapon) for " + selectedHero.toString());
+	                	} else if (item instanceof ArmourType) {
+	                		Armour armour = new Armour((ArmourType) item);
+	                		selectedHero.addItemToInventory(armour);
+	                		status.setText("Bought " + armour.getName() + "(Armour) for " + selectedHero.toString());
 	                	} else {
-	                		status.setText("not a weapon");
+	                		Special special = new Special((SpecialType) item);
+	                		selectedHero.addItemToInventory(special);
+	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
 	                	}
 	                } else {
-	                	status.setText("unsuccessful shopping!!!!!");
+	                	status.setText("unsuccessful shopping, please select a hero");
 	                }
 	                }
 	        });
@@ -110,26 +118,17 @@ public class ShopDialog extends Dialog{
 		
 		//making the right side table for the Commander icons.
         final ScrollPane scroller = new ScrollPane(scrollTable);
-        
-//        Texture heroImage = textureManager.getTexture("hero_button");
-//		Texture heroOffImage = textureManager.getTexture("hero_button_off");
-//        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
 
         heroTable = new Table();
         heroTable.top();
         heroTable.add(new Label("Commander", skin)).width(iconSize);
         heroTable.row();
-//        table.add(heroButton).width(iconSize).height(iconSize).top();
         
         this.getContentTable().add(scroller).fill().expand().top();
         this.getContentTable().add(heroTable).width(iconSize).top();
         
-        
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
-        
-        
-        
 	}
 	
 	/**

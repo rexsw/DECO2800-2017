@@ -30,7 +30,7 @@ public class Armour extends Item {
 	 * @param type The ArmouType enumerate that has the stored meta data for the specific item to be created.
 	 * @param lvl the level of the item to be created.
 	 */
-	public Armour(ArmourType type, int lvl) {
+	public Armour(ArmourType type) {
 		this.effects = new ArrayList<>();
 		this.type = type;
 		//this.lvl = lvl;
@@ -114,5 +114,16 @@ public class Armour extends Item {
 	public String getDescription() {
 		return this.getName() + "\nArmour: " + this.getArmourValue() + "\nHealth: " + this.getArmourHealth()
 				+ "\nMovementSpeed: " + this.getMoveSpeed();
+	}
+
+	/**
+	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
+	 * tuple.
+	 * 
+	 * @return saved texture string of the item icon in string format
+	 */
+	@Override
+	public String getTexture() {
+		return type.getTextureString();
 	}
 }

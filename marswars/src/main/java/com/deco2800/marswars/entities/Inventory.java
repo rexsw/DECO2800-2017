@@ -1,9 +1,11 @@
 package com.deco2800.marswars.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -14,13 +16,13 @@ public class Inventory {
 	private Commander owner;
     private Armour armour;
     private Weapon weapon;
-    private ArrayList<Item> specials;
+    private List<Special> specials;
 
     public Inventory(Commander owner) {
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;
-        this.specials = new ArrayList<Item>();
+        this.specials = new ArrayList<>();
     }
 
     public boolean addToInventory(Item item) {
@@ -50,7 +52,7 @@ public class Inventory {
                 return true;
             case SPECIAL:
             	if (this.specials.size() < 4) {
-            		this.specials.add(item);
+            		this.specials.add((Special)item);
             		return true;
             	}
                 return false;
@@ -94,6 +96,17 @@ public class Inventory {
         }
     }
     
+    public Weapon getWeapon() {
+    	return this.weapon;
+    }
+    
+    public Armour getArmour() {
+    	return this.armour;
+    }
+    
+    public List<Special> getSpecials() {
+    	return this.specials;
+    }
     // I think when user click item on the HUD GUI, it should be handled here. not too sure, need discuss
     public void useItem() {
     }

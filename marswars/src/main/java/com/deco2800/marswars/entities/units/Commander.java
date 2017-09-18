@@ -1,11 +1,13 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.*;
-import com.deco2800.marswars.managers.MouseHandler;
-
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A hero for the game previously called as HeroSpacman.
@@ -20,8 +22,8 @@ import java.util.Optional;
  */
 public class Commander extends Soldier {
 
-	Inventory inventory;
-
+	private Inventory inventory;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
@@ -35,15 +37,6 @@ public class Commander extends Soldier {
 	 */
 	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		//this.name = "Commander";
-		//this.setAllTextture();
-		//this.setTexture("spacman_red");
-		//this.setEntityType(EntityType.HERO);
-		
-//		this.addNewAction(ActionType.DAMAGE);
-//		this.addNewAction(ActionType.MOVE);
-		//default values
-//		setAttributes();
 		
 		this.name = "Commander";
 		setAttributes();
@@ -66,36 +59,57 @@ public class Commander extends Soldier {
 		}
 	}
 
-	/**
-	 * Method to make handle the changes signaling HUD listeners when clicked on Commander to allow for displaying 
-	 * difference options to control the Commander with the mouse (also handles th backend side of this i.e. changing 
-	 * the state of the Commander to be selected).
-	 * @param handler  The MouseHandler instance for the game which provides the medium to obtain information about 
-	 * player mouse movement and clicks.
-	 */
-	@Override
-	public void onClick(MouseHandler handler) {
-		this.makeSelected();
-		handler.registerForRightClickNotification(this);
-	}
 
-	/**
-	 * Method to provide functionality for the right mouse button click once the Commander has been selected.
-	 * 
-	 */
-	@Override
-	public void onRightClick(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	}
+//	@Override
+//	public void onTick(int i) {
+//		if (!currentAction.isPresent()) {
+//			return;
+//		}
+//
+//		if (!currentAction.get().completed()) {
+//			currentAction.get().doAction();
+//		}
+//	}
+//
 
-	@Override
-	public boolean isSelected() {
-		return false;
-	}
 
-	@Override
-	public void deselect() {
-	}
+//	@Override
+//	public void onRightClick(float x, float y) {
+//		List<BaseEntity> entities;
+//		try {
+//			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
+//
+//		} catch (IndexOutOfBoundsException e) {
+//			// if the right click occurs outside of the game world, nothing will happen
+//			LOGGER.info("Right click occurred outside game world.");
+//			this.setTexture(defaultTextureName);
+//			return;
+//		}
+//		
+//		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
+//				
+//		if (attack) {
+//			// we cant assign different owner yet
+//			AttackableEntity target = (AttackableEntity) entities.get(0);
+//			attack(target);
+//			
+//		} else {
+//			this.setCurrentAction(Optional.of(new MoveAction((int) x, (int) y, this)));
+//			LOGGER.error("Assigned action move to" + x + " " + y);
+//		}
+//		this.setTexture(defaultTextureName);
+//		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//		sound.playSound(movementSound);
+//	}
+//
+//	@Override
+//	public boolean isSelected() {
+//		return false;
+//	}
+//
+//	@Override
+//	public void deselect() {
+//	}
 
 	public boolean addItemToInventory(Item item) {
 		return inventory.addToInventory(item);
@@ -113,13 +127,13 @@ public class Commander extends Soldier {
 		return inventory;
 	}
 
-	@Override
-	public boolean equals(Object other) { // need more compare later
-		if (other instanceof Commander) {
-			return this.toString().equals(((Commander)other).toString());
-		}
-		return false;
-	}
+//	@Override
+//	public boolean equals(Object other) { // need more compare later
+//		if (other instanceof Commander) {
+//			return this.toString().equals(((Commander)other).toString());
+//		}
+//		return false;
+//	}
 	
 	@Override
 	public int hashCode() { // need more hash later
@@ -129,55 +143,16 @@ public class Commander extends Soldier {
 	    return result;
 	}
 	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Commander", this.getHealth(), null, this.getCurrentAction(), this);
+	}
+	
 	@Override
 	public String toString(){
 		return this.name;
 	}
 	
-//	public boolean getActivation (Item activeItem) {
-//		return activeItem.getActivation();
-//	}
-//
-//	public void activateItem(Item activeItem) {
-//		activeItem.activateItem();
-//	}
-//
-//	public void deactivateItem(ActiveItem activeItem) {
-//		activeItem.deactivateItem();
-//	}
-
-//	// used when button in inventory clicked to wear armour
-//	public void applyArmour(Armour armour) {
-//		this.armour += armour.getArmourValue();
-//	}
-//
-//	// used when button in inventory clicked to wear weapon
-//	public void applyWeapon(Weapon weapon) {
-//		this.weaponDamage += weapon.getWeaponDamage();
-//		this.attackSpeed += weapon.getWeaponSpeed();
-//		this.attackRange += weapon.getWeaponRange();
-//	}
-
-	// used when button in inventory clicked to assign special item to the hero
-//    public void applySpecial(Special special) {
-//		// need to finish this
-//		String type = special.getSpecialType();
-//		switch(type) {
-//			case "Heal":
-//				// do stuff
-//				break;
-//			case "Damage":
-//				// do stuff
-//				break;
-//			case "Speed":
-//				// do stuff
-//				break;
-//			default:
-//				// anything here??
-//				break;
-//		}
-//	}
-
-
-
 }

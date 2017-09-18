@@ -114,7 +114,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 	}
 
-	
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -197,6 +196,4 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void dispose () {
 		// Don't need this at the moment
 	}
-	
 }
-

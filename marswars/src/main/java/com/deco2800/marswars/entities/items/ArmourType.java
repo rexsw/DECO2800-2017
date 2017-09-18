@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities.items;
 
+import com.badlogic.gdx.graphics.Texture;
+
 /**
  * Enumerate to store the meta data for all the specific Armour type items.
  * 
@@ -162,5 +164,4 @@ public enum ArmourType implements ItemType {
 		}
 		return result;
 	}
-
 }
