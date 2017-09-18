@@ -152,6 +152,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public int getHealth() {
+		System.err.println("my health:"+this.health);
 		return this.health;
 	}
 

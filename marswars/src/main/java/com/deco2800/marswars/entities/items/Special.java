@@ -101,4 +101,15 @@ public class Special extends Item {
 	public List<Effect> getEffect() {
 		return new ArrayList<Effect>(effects);
 	}
+
+	/**
+	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
+	 * tuple.
+	 * 
+	 * @return saved texture string of the item icon in string format
+	 */
+	@Override
+	public String getTexture() {
+		return type.getTextureString();
+	}
 }

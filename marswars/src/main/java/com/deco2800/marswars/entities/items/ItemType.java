@@ -13,6 +13,7 @@ import com.deco2800.marswars.managers.TextureManager;
 public interface ItemType {
 	/**
 	 * Method to get the name of the item that is defined in the enumerate tuple.
+	 * 
 	 * @return String that is the name of the item defined in the enumerate tuple.
 	 */
 	String getName();
@@ -20,12 +21,14 @@ public interface ItemType {
 	/**
 	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
 	 * tuple.
-	 * @return saved texture string of the item icon.
+	 * 
+	 * @return saved texture string of the item icon in string format
 	 */
 	String getTextureString();
 	
 	/**
 	 * Gets the cost of the item defined in the enumerate tuple as an integer array. 
+	 * 
 	 * @return array of integers representing the cost to buy/upgrade the item. The order of the resources in the array
 	 * is [rocks, crystals, water, biomass]. 
 	 */
@@ -33,7 +36,8 @@ public interface ItemType {
 	
 	/**
 	 * Gets the description defined in the enumerate tuple. 
-	 * @return
+	 * 
+	 * @return the description string
 	 */
 	String getDescription();
 	

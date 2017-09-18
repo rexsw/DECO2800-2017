@@ -29,6 +29,9 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.items.Armour;
+import com.deco2800.marswars.entities.items.Special;
+import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -126,7 +129,11 @@ public class HUDView extends ApplicationAdapter{
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	
+	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
+	private Commander heroSelected;
+	private Table heroInventory; // hero inventory display
+	
 	private GameStats stats;
 
 	/**
@@ -272,14 +279,15 @@ public class HUDView extends ApplicationAdapter{
 		
 	/**
 	 * Adds the player Icon, health for a single spacman, and name to the huD (goes into top left).
+	 * Also inventory for the hero character
 	 * Does this by creating a nested table. The basic parent table layout is shown below: 
 	 * +---------------------------+
 	 * |    :)    |______________  |
 	 * |  Player  |______________| |
 	 * |   img    |           100  |
 	 * |__________|----------------+
-	 * | p. Name  |
-	 * |-----+----|
+	 * | p. Name  | x x x x x x    |
+	 * |-----+----|----------------+
 	 * |     |    |
 	 * | >:( | 12 |
 	 * |-----|----|
@@ -320,29 +328,11 @@ public class HUDView extends ApplicationAdapter{
 		
 		this.nameLabel = playerName;
 		
-		Table heroInventory = new Table();
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.DARK_GRAY);
-		pixmap.fill();
-		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
-		pixmap.dispose();
-		//heroInventory.debugAll();
-		ImageButton b1 = generateItemButton(textureManager.getTexture("power_gloves"));
-		ImageButton b2 = generateItemButton(textureManager.getTexture("power_gloves")); 
-		ImageButton b3 = generateItemButton(textureManager.getTexture("power_gloves")); 
-		ImageButton b4 = generateItemButton(textureManager.getTexture("power_gloves")); 
-		ImageButton b5 = generateItemButton(textureManager.getTexture("power_gloves")); 
-		ImageButton b6 = generateItemButton(textureManager.getTexture("power_gloves")); 
-		heroInventory.add(b1).width(30).height(30).pad(5);
-		heroInventory.add(b2).width(30).height(30).pad(5);
-		heroInventory.add(b3).width(30).height(30).pad(5);
-		heroInventory.add(b4).width(30).height(30).pad(5);
-		heroInventory.add(b5).width(30).height(30).pad(5);
-		heroInventory.add(b6).width(30).height(30).pad(5);
-		
-		//heroInventory.clear();
-		playerdetails.add(heroInventory);
+		// add in the hero inventory display
+		heroInventory = new Table();
+		setUpHeroInventory();
 		heroInventory.setVisible(false);
+		playerdetails.add(heroInventory);
 		
 		//add in player stats to a new table 
 		Table playerStats = new Table();
@@ -371,7 +361,83 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(playerdetails);
 	}
 	
+	/**
+	 * This method just set up the hero inventory to let it has a dark background
+	 */
+	private void setUpHeroInventory() {
+		heroInventory = new Table();
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.DARK_GRAY);
+		pixmap.fill();
+		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
+		pixmap.dispose();
+	}
 	
+	/**
+	 * This method will gets called when user select a hero character, this method then 
+	 * display this hero's items on the HUD
+	 */
+	private void updateHeroInventory(Commander hero) {	
+		ImageButton weaponBtn;
+		ImageButton armourBtn;
+		heroInventory.clear();
+		
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.DARK_GRAY);
+		pixmap.fill();
+		
+		Inventory inventory = hero.getInventory();
+		Weapon weapon = inventory.getWeapon();
+		Armour armour = inventory.getArmour();
+		List<Special> specials = inventory.getSpecials();
+		//heroInventory.debugAll();
+		if(weapon != null) {
+			 weaponBtn= generateItemButton(textureManager.getTexture(weapon.getTexture()));
+			//will add handler later
+//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
+//			{
+//			    @Override
+//			    public void clicked(InputEvent event, float x, float y)
+//			    {
+//			        
+//			    }
+//			});
+		} else {
+			weaponBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
+		}
+		heroInventory.add(weaponBtn).width(30).height(30).pad(3);
+		
+		if(armour != null) {
+			armourBtn = generateItemButton(textureManager.getTexture(armour.getTexture()));
+			//will add handler later
+//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
+//			{
+//			    @Override
+//			    public void clicked(InputEvent event, float x, float y)
+//			    {
+//			        
+//			    }
+//			});
+		} else {
+			armourBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
+		}
+		heroInventory.add(armourBtn).width(30).height(30).pad(3);
+		
+		int size = specials.size();
+		for(Special s : specials) {
+			ImageButton specialBtn = generateItemButton(textureManager.getTexture(s.getTexture()));
+			heroInventory.add(specialBtn).width(30).height(30).pad(3);
+			// handler here
+		}
+		for(int i = 0; i < 4-size; i++) {
+			ImageButton specialBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
+			heroInventory.add(specialBtn).width(30).height(30).pad(3);
+		}
+		
+		//heroInventory.setVisible(false);
+		
+	}
+
 	/**
 	 * Adds in progress bar to the top left of the screen 
 	 */
@@ -529,6 +595,9 @@ public class HUDView extends ApplicationAdapter{
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
                 	shopDialog.hide();
+                	if (heroSelected != null) {
+                		updateHeroInventory(heroSelected);
+                	}
                     return true;
                 }
                 return false;
@@ -737,6 +806,7 @@ public class HUDView extends ApplicationAdapter{
 
 	/**
      * Currently sets the health to 100 once a selectable unit is selected.
+     * If target is a hero, display inventory
      * @param target unit clicked on by player
      */
     private void setEnitity(BaseEntity target) {
@@ -755,6 +825,15 @@ public class HUDView extends ApplicationAdapter{
 		EntityStats stats = target.getStats();
 		updateSelectedStats(stats);
         enterActions();
+
+        // display hero inventory
+        heroInventory.setVisible(false);
+        heroSelected = null;
+        if(target instanceof Commander) {
+        	heroSelected = (Commander) target;
+        	heroInventory.setVisible(true);
+        	updateHeroInventory((Commander)target);
+        }
     }
 
     /**

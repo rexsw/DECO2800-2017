@@ -112,5 +112,16 @@ public class Weapon extends Item {
 		return this.getName() + "\nDamage: " + this.getWeaponDamage() + "\nSpeed: " + this.getWeaponSpeed() + "\nRange: " + this.getWeaponRange();
     	
     }
+
+    /**
+	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
+	 * tuple.
+	 * 
+	 * @return saved texture string of the item icon in string format
+	 */
+	@Override
+	public String getTexture() {
+		return type.getTextureString();
+	}
 }
 

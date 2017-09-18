@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.items;
 
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.items.effects.Effect;
 
 /**
@@ -32,26 +33,37 @@ public abstract class Item {
 	
 	/**
 	 * Method to get the item type i.e. the enumerates above.
+	 * 
 	 * @return WEAPON for Weapon items, ARMOUR for Armour items and SPECIAL for Special items.
 	 */
 	public abstract Type getItemType();
 
 	/**
 	 * Gets the name of the item.
+	 * 
 	 * @return String that is the name of the item.
 	 */
 	public abstract String getName();
 
 	/**
 	 * Gets the item's description which would describe the item's effect(s).
+	 * 
 	 * @return String that has the item's description.
 	 */
 	public abstract String getDescription();
 
 	/**
 	 * Gets all the effects of the item.
+	 * 
 	 * @return List of Effect classes which are all the item effects of the item.
 	 */
 	public abstract List<Effect> getEffect();
+	
+	/**
+	 * Gets the texture of this item for display purpose
+	 * 
+	 * @return the texture of this item in String
+	 */
+	public abstract String getTexture();
 
 }
