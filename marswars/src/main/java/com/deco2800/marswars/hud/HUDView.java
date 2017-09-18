@@ -760,6 +760,12 @@ public class HUDView extends ApplicationAdapter{
             }
         });
         TextButton astronautButton = new TextButton("Astronaut",skin);
+        astronautButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+
+			}
+		});
         TextButton carrierButton = new TextButton("Carrier",skin);
         TextButton healerButton = new TextButton("Healer",skin);
         TextButton heroSpacmanButton = new TextButton("Hero Spacman",skin);

@@ -82,7 +82,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				MenuScreen.this.gui.showEntitiesPicker(true);
+				//MenuScreen.this.gui.showEntitiesPicker(true); to be changed DO NOT DELETE
 				mainmenu.setVisible(false);
 
 			}

@@ -215,6 +215,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.view.disableHUD();
 		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
 		this.stage.addActor(this.menu.buildMenu());
+		GameManager.get().setGui(this.view);
 	}
 
 	/**
