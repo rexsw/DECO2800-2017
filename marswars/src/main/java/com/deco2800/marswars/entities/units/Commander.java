@@ -8,7 +8,13 @@ import com.deco2800.marswars.managers.MouseHandler;
 import java.util.Optional;
 
 /**
- * A hero for the game
+ * A hero for the game previously called as HeroSpacman.
+ * Class for the hero character that the player chooses at the start of the game. This unit will be different to other 
+ * in that it will have skills and can equip items.
+ * 
+ * inventory = instance of the Inventory class to store items that the Commander has equipped.
+ * currentAction = the Commander's action that it is currently taking.
+ * 
  * Created by timhadwen on 19/7/17.
  * Edited by Zeid Ismail on 8/09
  */
@@ -19,6 +25,14 @@ public class Commander extends Soldier {
 
 	Optional<DecoAction> currentAction = Optional.empty();
 
+	/**
+	 * Constructor for the Commander in the specified location and with the specified owner (i.e. who controls the 
+	 * Commander or which team it belongs to).
+	 * @param posX  the Commander's X position in the world when spawned
+	 * @param posY the Commander's Y position in the world when spawned
+	 * @param posZ  the Commander's Z position in the world when spawned
+	 * @param owner  the team id indicating which team the Commander belongs to a.k.a who controls this Commander.
+	 */
 	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		//this.name = "Commander";
@@ -36,23 +50,39 @@ public class Commander extends Soldier {
 		this.inventory = new Inventory(this);
 	}
 
+	/**
+	 * Method to check, execute and update the Commander's actions for the Commander to actually do and appear to do 
+	 * the assigned current action.
+	 * @param i  The current game tick.
+	 */
 	@Override
 	public void onTick(int i) {
-		if (!currentAction.isPresent()) {
+		if (!currentAction.isPresent()) { //no need to update or do anything if there already is no assigned action
 			return;
 		}
-
+		//Do the assigned action if it's not completed already.
 		if (!currentAction.get().completed()) {
 			currentAction.get().doAction();
 		}
 	}
 
+	/**
+	 * Method to make handle the changes signaling HUD listeners when clicked on Commander to allow for displaying 
+	 * difference options to control the Commander with the mouse (also handles th backend side of this i.e. changing 
+	 * the state of the Commander to be selected).
+	 * @param handler  The MouseHandler instance for the game which provides the medium to obtain information about 
+	 * player mouse movement and clicks.
+	 */
 	@Override
 	public void onClick(MouseHandler handler) {
 		this.makeSelected();
 		handler.registerForRightClickNotification(this);
 	}
 
+	/**
+	 * Method to provide functionality for the right mouse button click once the Commander has been selected.
+	 * 
+	 */
 	@Override
 	public void onRightClick(float x, float y) {
 		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));

@@ -216,7 +216,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
 
 				/* Ensure new position is on the map */
-				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
 				/* Check that the new position is free */
