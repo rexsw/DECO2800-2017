@@ -1,5 +1,6 @@
 package com.deco2800.marswars.hud;
 
+import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
@@ -56,6 +57,11 @@ public class CodeInterpreter {
         {
             switchNight();
         }
+        else if (a.equals("whosyourdaddy"))
+        {
+            invincible();
+        }
+
 
 
     }
@@ -152,7 +158,9 @@ public class CodeInterpreter {
 
 
 
-
+    public void invincible(){
+        MarsWars.invincible = 1;
+    }
 
 
 

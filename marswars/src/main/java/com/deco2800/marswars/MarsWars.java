@@ -12,10 +12,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
@@ -30,9 +27,8 @@ import com.deco2800.marswars.InitiateGame.InputProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -68,7 +64,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
-
+	public static int invincible;
 	
 	private boolean gameStarted = false;
 	MainMenu menu;
@@ -280,6 +276,30 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			this.view.enableHUD();
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
+			
+			
+			
+			
+			if(invincible == 1)
+			{
+				List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
+				for(BaseEntity e:entitylist)
+				{
+					if(e.getOwner() == -1 && e instanceof AttackableEntity)
+					{
+					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
+					}
+				}
+	
+			}
+			
+			
+			
+			
+			
+			
+	
+			
 		}
 	}
 	
