@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.hud.ExitGame;
 
 /**
  * A class the handles winning the game
@@ -29,12 +30,14 @@ public class WinManager extends Manager implements TickableManager {
 			LOGGER.info("tick winner " + teams);
 			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
 			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
+			winnermsn.show(GameManager.get().getStage());
 		}
 		teams = ((ResourceManager) GameManager.get().getManager(ResourceManager.class)).CappedTeam();
 		if(teams != 0) {
 			//economic win for a team
 			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(teams);
 			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Economic");
+			winnermsn.show(GameManager.get().getStage());
 		}
 	}
 	

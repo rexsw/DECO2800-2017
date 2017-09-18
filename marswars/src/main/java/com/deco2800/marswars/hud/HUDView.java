@@ -18,9 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -29,10 +31,14 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+<<<<<<< HEAD
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.units.Commander;
+=======
+import com.deco2800.marswars.entities.units.Astronaut;
+>>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -55,10 +61,11 @@ import java.util.List;
  */
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
-	private static final int BUTTONSIZE = 40; //sets size of image buttons 
+	private static final int BUTTONSIZE = 50; //sets size of image buttons 
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 	private static final int CRITICALHEALTH = 30; //critical health of spacmen
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
+    private static final int TYPES_OF_ENTITIES = 4;
 
 	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
@@ -78,7 +85,6 @@ public class HUDView extends ApplicationAdapter{
     private Table welcomeMsg; 	 //contains welcome message 
 	private ChatBox chatbox;	 //table for the chat
 	private Window messageWindow;//window for the chatbox 
-	private Window mainMenu;     //window for the old menu
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
@@ -110,7 +116,6 @@ public class HUDView extends ApplicationAdapter{
 	//Toggles; checks if the feature is visible on-screen or not
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
-	private boolean menuToggle;
 	private boolean fogToggle = true; 
 	//Image buttons to display/ remove lower HUD 
 	private ImageButton dispActions;//Button for displaying actions window 
@@ -146,8 +151,6 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
 		LOGGER.debug("Creating Hud");
-		// zero game length clock (i.e. tell TimeManager new game has been launched)
-		timeManager.setGameStartTime();
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
@@ -158,8 +161,14 @@ public class HUDView extends ApplicationAdapter{
 		//create chatbox
 		this.chatbox = new ChatBox(skin, textureManager);
 		
-		//create the HUD 
+		//initialise the minimap and set the image
+		MiniMap m = new MiniMap("minimap", 220, 220);
+		GameManager.get().setMiniMap(m);
+		GameManager.get().getMiniMap().updateMap(this.textureManager);
+		
+		//create the HUD + set gui to GM 
 		createLayout();
+		GameManager.get().setGui(this);
 	}
 
 	/**
@@ -171,14 +180,7 @@ public class HUDView extends ApplicationAdapter{
 		addMessages();
 		addBottomPanel();
 	}
-	
-	/**
-	 * To allow for old menu use - will be removed later
-	 * */
-	public void setMenu(Window window){
-		mainMenu = window; 
-	}
-	
+		
 	/**
 	 * Contains top right section of the HUD to be displayed 
 	 * on screen and set to stage. 
@@ -219,13 +221,29 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
 		quitButton = new ImageButton(quitRegionDraw);
 
+		//Create + align time displays 
 		LOGGER.debug("Creating time labels"); //$NON-NLS-1$
-		gameTimeDisp = new Label("Time: 0:00", skin); //$NON-NLS-1$
+		gameTimeDisp = new Label("0:00", skin); //$NON-NLS-1$
 		gameLengthDisp = new Label("00:00:00", skin); //$NON-NLS-1$
+		gameTimeDisp.setAlignment(Align.center);
+		gameLengthDisp.setAlignment(Align.center);
+		
+		/*images for the time display*/
+		Image clockbgImage0 = new Image(textureManager.getTexture("clock"));
+		Image clockbgImage1 = new Image(textureManager.getTexture("clock"));
+		
+		/*stack time display on top of images*/
+		Stack gametimeStack = new Stack();
+		gametimeStack.add(clockbgImage0);
+		gametimeStack.add(gameTimeDisp);
+		
+		Stack gamelengthStack = new Stack();
+		gamelengthStack.add(clockbgImage1);
+		gamelengthStack.add(gameLengthDisp);
 
 		//add in quit + help + chat buttons and time labels
-		overheadRight.add(gameTimeDisp).padRight(BUTTONPAD);
-		overheadRight.add(gameLengthDisp).padRight(BUTTONPAD);
+		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
+		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
@@ -302,13 +320,13 @@ public class HUDView extends ApplicationAdapter{
 		playerdetails = new Table();
 		playerdetails.pad(10);
 		playerdetails.setWidth(150);
-		//playerdetails.align(Align.left | Align.top);
 		playerdetails.setPosition(0, stage.getHeight());
 		
 		//Icon for player- 
 		//TODO get main menu working to select an icon and then display 
 		selectedImage = new Image(textureManager.getTexture("spacman_blue"));
 		playerdetails.add(selectedImage).height(100).width(100);
+		
 		//create table for health bar display
 		Table healthTable = new Table();
 		//Create the health bar 
@@ -612,6 +630,7 @@ public class HUDView extends ApplicationAdapter{
 			}	
 		});
 
+		setupEntitiesPickerMenu();
 		addEntitiesPickerMenu();
 	}
 
@@ -740,36 +759,6 @@ public class HUDView extends ApplicationAdapter{
     }
 
 	/**
-	 * Add the customise window / entities picker.
-	 * This method shall only be called when the "Customize" button from the start menu is clicked.
-	 * If this method is call, it will cause that the actions window be set to not visible.
-	 */
-	private void addEntitiesPickerMenu(){
-		entitiesPicker = new Window("Customize World", skin);
-		entitiesPicker.align(Align.topLeft);
-		entitiesPicker.setPosition(220,0);
-		entitiesPicker.setMovable(false);
-		entitiesPicker.setVisible(false);
-		entitiesPicker.setWidth(stage.getWidth()-220);
-		entitiesPicker.setHeight(220);
-
-		stage.addActor(entitiesPicker);
-
-	}
-
-	/**
-	 * Displays the entities picker menu.
-	 * If picker is shown then fog is off and game is paused
-	 *
-	 * @param isVisible whether to display the picker or hide it.
-	 */
-	public void showEntitiesPicker( boolean isVisible){
-		entitiesPicker.setVisible(isVisible);
-		toggleFog();
-		// pause not implemented yet.
-	}
-
-	/**
 	 *
 	 * adds everything in GameManager.get().getMiniMap().getEntitiesOnMap() to the minimap
 	 */
@@ -859,6 +848,243 @@ public class HUDView extends ApplicationAdapter{
 			pixmap.dispose();
 		}
 	}
+
+    /**
+     *  Creates the basic structure of the Entities picker menu
+     */
+	private void setupEntitiesPickerMenu(){
+        entitiesPicker = new Window("Spawn", skin);
+        entitiesPicker.align(Align.topLeft);
+        entitiesPicker.setPosition(220,0);
+        entitiesPicker.setMovable(false);
+        entitiesPicker.setVisible(false);
+        entitiesPicker.setWidth(stage.getWidth()-220);
+        entitiesPicker.setHeight(220);
+    }
+
+    /**
+     * Add the customise window / entities picker.
+     * This method shall only be called when the "Customize" button from the start menu is clicked.
+     * If this method is call, it will cause that the actions window be set to not visible.
+     */
+    private void addEntitiesPickerMenu(){
+		entitiesPicker.clear();
+        Table table = new Table();
+        TextButton unitsButton = new TextButton("Units",skin);
+        unitsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addUnitsPickerMenu();
+            }
+        });
+        TextButton buildingsButton = new TextButton("Buildings",skin);
+        buildingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addBuildingsPickerMenu();
+            }
+        });
+        TextButton resourcesButton = new TextButton("Resources",skin);
+        resourcesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addResourcesPickerMenu();
+            }
+        });
+        TextButton terrainsButton = new TextButton("Terrains",skin);
+        terrainsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addTerrainsPickerMenu();
+            }
+        });
+
+        table.add(unitsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(buildingsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(resourcesButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        table.add(terrainsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+        entitiesPicker.add(table);
+        stage.addActor(entitiesPicker);
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available units
+     */
+    private void addUnitsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton astronautButton = new TextButton("Astronaut",skin);
+        astronautButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+//				float x = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+//				float y = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
+			}
+		});
+        TextButton carrierButton = new TextButton("Carrier",skin);
+        TextButton healerButton = new TextButton("Healer",skin);
+        TextButton heroSpacmanButton = new TextButton("Hero Spacman",skin);
+        TextButton soldierButton = new TextButton("Soldier",skin);
+        TextButton spacmanButton = new TextButton("Spacman",skin);
+        TextButton tankButton = new TextButton("Tank",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(astronautButton).width(buttonWidth).height(buttonHeight);
+        table.add(carrierButton).width(buttonWidth).height(buttonHeight);
+        table.add(healerButton).width(buttonWidth).height(buttonHeight);
+        table.add(heroSpacmanButton).width(buttonWidth).height(buttonHeight);
+        table.add(soldierButton).width(buttonWidth).height(buttonHeight);
+        table.row();
+        table.add(spacmanButton).width(buttonWidth).height(buttonHeight);
+        table.add(tankButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available buildings
+     */
+    private void addBuildingsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton barracksButton = new TextButton("Barracks",skin);
+        TextButton baseButton = new TextButton("Base",skin);
+        TextButton bunkerButton = new TextButton("Bunker",skin);
+        TextButton heroFactoryButton = new TextButton("Hero Factory",skin);
+        TextButton turretButton = new TextButton("Turret",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(barracksButton).width(buttonWidth).height(buttonHeight);
+        table.add(baseButton).width(buttonWidth).height(buttonHeight);
+        table.add(bunkerButton).width(buttonWidth).height(buttonHeight);
+        table.add(heroFactoryButton).width(buttonWidth).height(buttonHeight);
+        table.add(turretButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available resources
+     */
+    private void addResourcesPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton biomassButton = new TextButton("Biomass",skin);
+        TextButton crystalButton = new TextButton("Crystal",skin);
+        TextButton rockButton = new TextButton("Rock",skin);
+        TextButton waterButton = new TextButton("Water",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(biomassButton).width(buttonWidth).height(buttonHeight);
+        table.add(crystalButton).width(buttonWidth).height(buttonHeight);
+        table.add(rockButton).width(buttonWidth).height(buttonHeight);
+        table.add(waterButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Creates the sub menu that displays all available terrains
+     */
+    private void addTerrainsPickerMenu(){
+        entitiesPicker.clear();
+
+        Table table = new Table();
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        entitiesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addEntitiesPickerMenu();
+                entitiesPicker.setVisible(true);
+            }
+        });
+        TextButton caveButton = new TextButton("Cave",skin);
+        TextButton lakeButton = new TextButton("Lake",skin);
+        TextButton pondButton = new TextButton("Pond",skin);
+        TextButton quicksandButton = new TextButton("Quicksand",skin);
+
+        float buttonWidth = entitiesPicker.getWidth()/6;
+        float buttonHeight = entitiesPicker.getHeight();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setFadeScrollBars(false);
+
+        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        table.add(caveButton).width(buttonWidth).height(buttonHeight);
+        table.add(lakeButton).width(buttonWidth).height(buttonHeight);
+        table.add(pondButton).width(buttonWidth).height(buttonHeight);
+        table.add(quicksandButton).width(buttonWidth).height(buttonHeight);
+
+        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+    }
+
+    /**
+     * Displays the entities picker menu.
+     * If picker is shown then fog is off and game is paused
+     *
+     * @param isVisible whether to display the picker or hide it.
+	 * @param isPlaying whether a game is being played.
+     */
+    public void showEntitiesPicker( boolean isVisible, boolean isPlaying){
+        entitiesPicker.setVisible(isVisible);
+        // this call allows the menu to reset instead of using its latest state
+        addEntitiesPickerMenu();
+        if(!isPlaying) {
+			toggleFog();
+			// pause not implemented yet.
+		}
+
+    }
     
     /**
      * Enables action button based on the actions avaliable to 
@@ -876,7 +1102,6 @@ public class HUDView extends ApplicationAdapter{
 					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
 				}
         }
-
     }
 
 	/**
@@ -921,7 +1146,7 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void render(long lastMenuTick){
 		/* Update time & set color depending if night/day */
-		gameTimeDisp.setText(" Time: " + timeManager.toString()); //$NON-NLS-1$
+		gameTimeDisp.setText(timeManager.toString()); //$NON-NLS-1$
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		addEntitiesToMiniMap();
@@ -934,6 +1159,9 @@ public class HUDView extends ApplicationAdapter{
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
+		
+		/*Update Minimap*/
+		this.updateMiniMapMenu();
 		
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);

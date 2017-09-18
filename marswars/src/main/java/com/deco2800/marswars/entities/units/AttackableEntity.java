@@ -36,11 +36,13 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
+	private int areaDamage; // the area of damage 
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
 	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
+		this.setAreaDamage(0);
 		this.modifyCollisionMap(true);
 	}
 	
@@ -296,6 +298,14 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	public boolean showProgress() {
 		return currentAction.isPresent();
+	}
+	
+	public int getAreaDamage() {
+		return areaDamage;
+	}
+	
+	public void setAreaDamage(int areaDamage) {
+		this.areaDamage = areaDamage;
 	}
 
 }

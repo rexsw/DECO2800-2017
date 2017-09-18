@@ -5,7 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.mainMenu.Game;
+import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Renderable;
