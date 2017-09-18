@@ -15,7 +15,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isNight = true;
 	private boolean isGamePaused = false;
 	private boolean isProductionPaused = false;
-	private long time = 0;
+	private static long time = 0;
 	private long gameStartTime = 0;
 
 	private static final Logger LOGGER =

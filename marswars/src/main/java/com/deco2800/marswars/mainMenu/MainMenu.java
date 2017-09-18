@@ -33,6 +33,8 @@ public class MainMenu {
 	boolean gameStarted = false;
 	private OrthographicCamera camera; 
 	private Game game; 
+	boolean status = true;
+	private MarsWars marsWars;
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -46,6 +48,7 @@ public class MainMenu {
 		this.skin = skin;
 		this.stage = stage; 
 		this.mainmenu = new Window("Its a start", skin); 
+		this.marsWars = marswars;
 		//this.mainmenu.setDebug(true);
 		createMenu();
 		buildMenu();

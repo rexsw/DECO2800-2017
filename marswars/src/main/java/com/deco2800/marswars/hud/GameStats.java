@@ -1,8 +1,12 @@
 package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -15,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.managers.GameBlackBoard;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 
 /**
@@ -67,8 +73,21 @@ public class GameStats{
 	}
 	
 	private Table setGraph(){
-		Table graphTable = new Table();
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		float[] test = new float[100];
+		for(int i =0; i < 100; i++) {
+			test[i] = (float) (i * 2.5);
+		}
+		ShapeRenderer sr= new ShapeRenderer();
+		sr.begin(ShapeRenderer.ShapeType.Filled);
+		sr.setColor(1, 1, 0, 1);
+		sr.end();
+		sr.begin(ShapeRenderer.ShapeType.Line);
+		sr.polyline(test);
+		sr.rect(0, 0, 160, 160);
+		sr.end();
 		
+		Table graphTable = new Table();
 		Label graphInfo = new Label("-Graph goes here-", skin); 
 		graphTable.add(graphInfo).align(Align.center);
 		
@@ -190,4 +209,5 @@ public class GameStats{
 	public void resizeStats(int width, int height) {
 		window.setPosition(width/2-STATSWIDTH/2, height/2-STATSHEIGHT/2);
 	}
+	
 }

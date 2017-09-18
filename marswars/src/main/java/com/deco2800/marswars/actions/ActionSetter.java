@@ -3,6 +3,8 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -56,6 +58,8 @@ public final class ActionSetter {
                     return doGather(performer, entities.get(0));
                 case DAMAGE:
                     return doDamage(performer, entities.get(0));
+                case LOAD:
+                    return doLoad(performer, entities.get(0));
                 default:
                     break;
             }
@@ -64,6 +68,8 @@ public final class ActionSetter {
         switch (designatedAction) {
             case MOVE:
                 return doMove(performer, x, y);
+            case UNLOAD:
+                return doUnload((Soldier) performer);
             default:
                 return false;
         }
@@ -82,7 +88,37 @@ public final class ActionSetter {
         }
         return doBuild(performer, building);
     }
+    
 
+    /**
+     *Assigns the performer to attempt to load the target
+     * @param performer The entity that will load
+     * @param target The entity that will be loaded
+     * @return True if both entities are instances of Soldier, false otherwise
+     */
+    private static boolean doLoad(BaseEntity performer, BaseEntity target) {
+        if (target instanceof Soldier && performer instanceof Carrier) {
+            LOGGER.info("Try to load");
+            Carrier carrier =  (Carrier)performer;
+            carrier.load((Soldier) target);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Assigns the unload action to the entity
+     * @param performer the entity to be assigned the action
+     * @return true
+     */
+    private static boolean doUnload(Soldier performer) {
+        LOGGER.info("Try to unload");
+        performer.setAction(new UnloadAction(performer));
+        return true;
+    }
+    
+   
     /**
      *Assigns the performer to attempt to attack the target
      * @param performer The entity that will attack
@@ -91,7 +127,7 @@ public final class ActionSetter {
      */
     private static boolean doDamage(BaseEntity performer, BaseEntity target) {
         if (target instanceof AttackableEntity && performer instanceof AttackableEntity) {
-            performer.setAction(new DamageAction((AttackableEntity) performer, (AttackableEntity) target));
+            performer.setAction(new AttackAction((AttackableEntity) performer, (AttackableEntity) target));
             return true;
         } else {
             return false;
@@ -154,6 +190,10 @@ public final class ActionSetter {
                 return "Create";
             case BUILD:
                 return "Construct";
+            case LOAD:
+        	return "Load";
+            case UNLOAD:
+        	return "Unload";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }

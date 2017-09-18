@@ -62,7 +62,7 @@ public class Game{
 	 */
 	private void createMiniMap() {
 		MiniMap m = new MiniMap("minimap", 220, 220); //$NON-NLS-1$
-		m.render();
+		//m.render();
 		//initialise the minimap and set the image
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(this.reg);

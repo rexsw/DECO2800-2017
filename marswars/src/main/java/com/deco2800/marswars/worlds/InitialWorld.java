@@ -3,6 +3,7 @@ package com.deco2800.marswars.worlds;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -59,6 +60,16 @@ public class InitialWorld extends BaseWorld {
 	}
 
 
+	/**
+	 * Adds cluster of enemy spacman, needs to be improved
+	 */
+	private void addEnemyGroup(int x, int y){
+		if(x-1 < 0 || y-1 < 0 || y +1 >= this.getLength() || x + 1 >= this.getWidth()){
+			return;
+		}
+		this.addEntity(new Soldier(x, y, 0, 2)); //Changed to Soldier
+
+	}
 
 	/**
 	 * Adds randomly placed spacman onto grid

@@ -3,12 +3,14 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DamageAction;
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -31,8 +33,16 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
+	protected String upleftTextureName;
+	protected String uprightTextureName;
+	protected String downleftTextureName;
+	protected String downrightTextureName;
+	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
+	protected float tempx;
+	protected float tempy;
+	private ActionType nextAction;
 
 	/**
 	 * Sets the position X
@@ -51,7 +61,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			modifyFogOfWarMap(true,3);
 
 //		}
-
 	}
 
 	/**
@@ -91,7 +100,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
-
 	}
 
 	//sets all attack attributes
@@ -108,27 +116,24 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.1f); 
+		this.setSpeed(0.01f); 
+		this.setAreaDamage(0);
 		this.setUnloaded(); //default load status = 0
 	}
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (	!this.sameOwner(target)&&//(belongs to another player, currently always true)`
+		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
 				 this!= target //prevent soldier suicide when owner is not set
 				) {
-			
-			currentAction = Optional.of(new DamageAction(this, target));
-
+						currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
-		else 
-		{
+		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
 	}
-
 
 	/**
 	 * this is used to reset the texture to deselect entities
@@ -150,7 +155,43 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			LOGGER.info("Clicked on ai soldier");
 		}
 	}
+	
+	/*public float getTmpx() {
+		
+		tempx=this.getTempx();
+		return tempx;
+	}
 
+	public float getTmpy() {
+		
+		tempy=this.getTempy();
+		return tempy;
+	}*/
+	/*
+	 * Changes the texture to reflect the direction that the soldier is moving in
+	 */
+	public void faceTowards(float x, float y) {
+if(this.getPosX()>=x && this.getPosY()>=y) {
+			
+			this.setTexture(downleftTextureName);
+		}
+		else if(this.getPosX()>=x && this.getPosY()<y) {
+			
+			this.setTexture(downrightTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()>=y) {
+			
+			this.setTexture(upleftTextureName);
+		}
+		else if(this.getPosX()<x && this.getPosY()<y) {
+			
+			this.setTexture(uprightTextureName);
+		}
+		else {
+			this.setTexture(defaultTextureName);
+		}
+	}
+	
 	@Override
 	public void onRightClick(float x, float y) {
 		List<BaseEntity> entities;
@@ -163,16 +204,23 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setTexture(defaultTextureName);
 			return;
 		}
-		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-			// we cant assign different owner yet
-			AttackableEntity target = (AttackableEntity) entities.get(0);
-			attack(target);
-			
-		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			//LOGGER.error("Assigned action move to" + x + " " + y);
+
+		if (nextAction != null) {
+			ActionSetter.setAction(this, x, y, nextAction);
+			nextAction = null;
+		}else {
+			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+				// we cant assign different owner yet
+				AttackableEntity target = (AttackableEntity) entities.get(0);
+				attack(target);
+
+			} else {
+				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			}
+			this.setTexture(defaultTextureName);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			sound.playSound(movementSound);
 		}
-		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
@@ -184,9 +232,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	@Override
 	public void onTick(int tick) {
 		if (!currentAction.isPresent()) {
-			if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
+			if (this.getOwner() == -1)  {
+				modifyFogOfWarMap(true,3);
+			}
 			// make stances here.
-			int xPosition =(int)this.getPosX();
+			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
@@ -197,16 +247,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			}
 			boolean moveAway = entitiesSize > 2;
 			if (moveAway) {
-			
-				BaseWorld world = GameManager.get().getWorld();
-
+					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
 				 * place to move to
 				 */
 				Random r = new Random();
 				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
-
 				/* Ensure new position is on the map */
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
 					return;
@@ -216,17 +263,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					// No good
 					return;
 				}
-
-				//LOGGER.info("Spacman is on a tile with another entity, move out of the way");
-
+				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			return;
 		}
-		
 		if (!currentAction.get().completed()) {
+			//LOGGER.info("DO action");
 			currentAction.get().doAction(); 
 		} else {
 			//LOGGER.info("Action is completed. Deleting");
@@ -253,6 +298,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
 		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
+		this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
+		this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+		this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
 		this.movementSound = "endturn.wav";
 	}
 
@@ -271,4 +320,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public EntityStats getStats() {
 		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
 	}
+
+	@Override
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
+	}
+
+	public String getMissileTexture() {
+		return defaultMissileName;
+	}
+	
 }

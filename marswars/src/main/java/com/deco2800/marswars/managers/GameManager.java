@@ -2,6 +2,8 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
@@ -27,8 +29,9 @@ public class GameManager implements TickableManager {
 
 	private BaseWorld gameWorld;
 
-
-
+	private Skin gameskin;
+	
+	private Stage gamestage;
 
 	private BaseWorld mapWorld;
 	
@@ -195,7 +198,47 @@ public class GameManager implements TickableManager {
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
+	
+	/**
+	 * sets the currently used game skin
+	 * 
+	 * @param Skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setSkin(Skin setskin) {
+		gameskin = setskin;
+	}
+	
+	/**
+	 * gets the currently used game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getSkin() {
+		return gameskin;
+	}
 
+	/**
+	 * sets the currently used game stage
+	 * 
+	 * @param stage setsstage the stage used to display the
+	 * games gui
+	 */
+	public void setStage(Stage setsstage) {
+		gamestage = setsstage;
+	}
+	
+	/**
+	 * gets the currently used game stage
+	 * 
+	 * @return stage the skin used to display the
+	 * games gui 
+	 */
+	public Stage getStage() {
+		return gamestage;
+	}	
+	
 	/**
 	 * On tick method for ticking managers with the TickableManager interface
 	 * @param i

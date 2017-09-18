@@ -4,6 +4,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Renderable;
@@ -88,6 +90,11 @@ public class BaseWorld extends AbstractWorld {
 		if (!entity.isCollidable())
 			return;
 
+		if (entity instanceof AttackableEntity) {
+			// put things that can be attacked on the minimap
+			GameManager.get().getMiniMap().addEntity(entity);
+		}
+
 		//Add to the collision map
 		int[] collisionCoords = makeCollisionCoords(entity);
 		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
@@ -112,6 +119,10 @@ public class BaseWorld extends AbstractWorld {
 	@Override
 	public void removeEntity(BaseEntity entity) {
 		super.removeEntity(entity);
+		if (entity instanceof AttackableEntity) {
+			// remove entity from the minimap when they are removed from the world
+			GameManager.get().getMiniMap().removeEntity(entity);
+		}
 		if (!entity.isCollidable())
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
