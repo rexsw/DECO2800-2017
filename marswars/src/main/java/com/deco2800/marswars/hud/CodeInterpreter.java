@@ -143,7 +143,6 @@ public class CodeInterpreter {
     public void switchDay(){
         Manager manager = GameManager.get().getManager(TimeManager.class);
         TimeManager tm = (TimeManager)manager;
-        tm.setDay();
 
 
     }
@@ -153,7 +152,7 @@ public class CodeInterpreter {
     public void switchNight(){
         Manager manager = GameManager.get().getManager(TimeManager.class);
         TimeManager tm = (TimeManager)manager;
-        tm.setNight();
+
     }
 
 

@@ -276,31 +276,23 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			this.view.enableHUD();
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
-			
-			
-			
-			
-			if(invincible == 1)
-			{
-				List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
-				for(BaseEntity e:entitylist)
-				{
-					if(e.getOwner() == -1 && e instanceof AttackableEntity)
-					{
-					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
-					}
-				}
-	
-			}
-			
-			
-			
-			
-			
-			
-	
-			
 		}
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() == -1 && e instanceof AttackableEntity)
+				{
+					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
+				}
+			}
+
+		}
+
+
+
+
 	}
 	
 	/**
