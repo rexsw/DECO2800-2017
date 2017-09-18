@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-<<<<<<< HEAD
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.Astronaut;
@@ -17,8 +16,6 @@ import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
-=======
->>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
@@ -115,77 +112,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
-<<<<<<< HEAD
-	}
-	
-	/*
-	 * Initializes fog of war
-	 */
-	private void fogOfWar() {
-		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
-		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}
-	
-	/*
-	 * adds entities for the ai and set then to be ai owned
-	 */
-	private void addAIEntities() {
-		int length = GameManager.get().getWorld().getLength();
-		int width = GameManager.get().getWorld().getWidth();
-		setPlayer(length, width, 1, 1);
-		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
-		black.set();
-		GameManager.get().getManager(WinManager.class);
-	}
-	
-	private void setThread() {
-		// do something important here, asynchronously to the rendering thread
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				// do something important here, asynchronously to the rendering thread
-				while(true) {
-					if (!MarsWars.this.timeManager.isPaused()) {
-						/*
-						 * threshold here need to be tweaked to make things move better for different CPUs 
-						 */
-						if(TimeUtils.nanoTime() - MarsWars.this.lastGameTick > 1000000) {
-							for (Renderable e : GameManager.get().getWorld().getEntities()) {
-								if (e instanceof Tickable) {
-									((Tickable) e).onTick(0);
-
-								}
-							}
-							GameManager.get().onTick(0);
-							lastGameTick = TimeUtils.nanoTime();
-						}
-					}
-						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						LOGGER.error(e.toString());
-					}
-				}
-			}
-		}).start();
-	}
-	
-	/*
-	 * Setup GUI > Refer to com.deco2800.marwars.hud for this now 
-	 */
-	private void setGUI() {
-		/* Add another button to the menu */
-		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.view.disableHUD();
-		this.menu = new MainMenu(this.skin, this.stage, new Window("its a start", this.skin), this); //$NON-NLS-1$
-		this.stage.addActor(this.menu.buildMenu());
-	}
-=======
 	}	
->>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588
 
 	/**
 	 * Renderer thread
@@ -269,88 +196,4 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void dispose () {
 		// Don't need this at the moment
 	}
-<<<<<<< HEAD
-	
-	/**
-	 * generates a number of player and ai teams with basic unit at a give x-y
-	 * co-ord
-	 * 
-	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
-	 * @param lenght
-	 *            int length of the map
-	 * @param width
-	 *            int width of the map
-	 * @param aiteams
-	 *            int number of ai teams
-	 * @param playerteams
-	 *            int number of playerteams
-	 */
-	private void setPlayer(int length, int width, int aiteams,
-			int playerteams) {
-		int x, y, playerid;
-		ColourManager cm = (ColourManager) GameManager.get()
-				.getManager(ColourManager.class);
-		ResourceManager rm = (ResourceManager) GameManager.get()
-				.getManager(ResourceManager.class);
-		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
-			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
-			AiManager aim = (AiManager) GameManager.get()
-					.getManager(AiManager.class);
-			aim.addTeam(teamid);
-		}
-		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
-			playerid = teamid * (-1);
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
-			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
-		}
-	}
-
-	/**
-	 * adds a teams units to the game and sets the resource manager
-	 * 
-	 * @param teamid
-	 *            int the team's id
-	 * @param x
-	 *            int the x location of the team's spawn
-	 * @param y
-	 *            int the y location of the team's spawn
-	 * @param rm
-	 *            ResourceManager the ResourceManager of the game to set
-	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(0, teamid);
-		rm.setRocks(0, teamid);
-		rm.setCrystal(0, teamid);
-		rm.setWater(0, teamid);
-		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		Soldier soldier = new Soldier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(soldier);		
-		// test hero
-		Commander hero = new Commander(x,y,0,teamid);
-		GameManager.get().getWorld().addEntity(hero);
-		Tank tank = new Tank(x, y, 0, teamid);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(tank);
-		GameManager.get().getWorld().addEntity(ai);
-		GameManager.get().getWorld().addEntity(ai1);
-		GameManager.get().getWorld().addEntity(aibase);
-	}
-
-	/**
-	 * @return the Graphical User Interface
-	 */
-	public HUDView getGUI(){
-		return this.view;
-	}
 }
-=======
-}
->>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588

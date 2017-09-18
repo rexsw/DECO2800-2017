@@ -46,20 +46,13 @@ public class TechnologyManager extends Manager{
         techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
                 "An expensive technology"));
 
-<<<<<<< HEAD
-        // ?, health, damage, armour, armour damage, atk range, atk speed
-        unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
-        unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
-        unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
-        unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
-=======
  // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
         unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
         unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
         unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
         unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
->>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588
+        unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
 
         //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
 //        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});

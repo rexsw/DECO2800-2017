@@ -31,14 +31,11 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
-<<<<<<< HEAD
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.units.Commander;
-=======
 import com.deco2800.marswars.entities.units.Astronaut;
->>>>>>> f2497590ee2dfc8c1dc0d17ac0a048760367d588
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -49,7 +46,6 @@ import com.deco2800.marswars.managers.TextureManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
