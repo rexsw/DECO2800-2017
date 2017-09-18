@@ -2,6 +2,7 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.Colours;
 import com.deco2800.marswars.managers.GameManager;
@@ -33,8 +34,10 @@ public class BaseWorldTest extends BaseTest {
 
     @Before
     public void setup(){
+    	baseWorld = new BaseWorld(10 ,15);
+    	GameManager.get().setWorld(new BaseWorld(10, 15));
+    	GameManager.get().setMiniMap(new MiniMap());
 		cm.setColour(1);
-        baseWorld = new BaseWorld(10 ,15);
         entity = new Commander(0, 0, 0, 1);
     }
 
