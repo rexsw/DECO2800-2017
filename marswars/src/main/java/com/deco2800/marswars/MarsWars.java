@@ -94,9 +94,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setStage(this.stage);
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-		
-		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
-						
+								
 		// zero game length clock (i.e. Tell TimeManager new game has been launched)
 		this.timeManager.setGameStartTime();
 
@@ -121,6 +119,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		addAIEntities();
 		setThread();
 		setGUI();
+		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
+		view.disableHUD();
+
 		timeManager.pause();
 	}
 	
@@ -142,7 +143,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		CustomizedWorld world = new CustomizedWorld(map);
 		GameManager.get().setWorld(world);
 		world.loadMapContainer(map);
-		
 		
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
@@ -270,10 +270,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 		if(!this.gameStarted) {
-			//GameManager.get().getMiniMap().render();
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
-			this.view.enableHUD();
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
 		}

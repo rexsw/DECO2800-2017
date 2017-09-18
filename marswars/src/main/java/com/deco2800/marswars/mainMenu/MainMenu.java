@@ -61,7 +61,8 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		marsWars.getGUI().disableHUD();
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this, this.marsWars.getGUI());
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 	}
 	
@@ -72,6 +73,7 @@ public class MainMenu {
 	
 	public void startGame(boolean start){
 		gameStarted = start;
+		marsWars.getGUI().enableHUD();
 		game = new Game(skin, stage, camera);
 
 	}

@@ -41,9 +41,10 @@ public class MenuScreen{
 	private int joinedServer; 
 	private MainMenu menu; 
 	
-	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
+	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu, HUDView gui) {
 		this.skin = skin;
 		this.menu = mainMenu;
+		this.gui = gui;
 		playerModeSelect(window, stage);
 	}
 	

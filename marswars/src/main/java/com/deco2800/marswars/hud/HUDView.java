@@ -218,7 +218,7 @@ public class HUDView extends ApplicationAdapter{
 
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
+		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
