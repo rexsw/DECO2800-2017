@@ -103,7 +103,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		createMiniMap();
 		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
+		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$		
+		GameManager.get().setGui(this.view);
 
 		GameManager.get().setCamera(this.camera);
 		playGame();
@@ -192,6 +193,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}).start();
 	}
 	
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
