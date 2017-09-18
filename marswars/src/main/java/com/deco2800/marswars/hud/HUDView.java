@@ -320,6 +320,30 @@ public class HUDView extends ApplicationAdapter{
 		
 		this.nameLabel = playerName;
 		
+		Table heroInventory = new Table();
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.DARK_GRAY);
+		pixmap.fill();
+		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
+		pixmap.dispose();
+		//heroInventory.debugAll();
+		ImageButton b1 = generateItemButton(textureManager.getTexture("power_gloves"));
+		ImageButton b2 = generateItemButton(textureManager.getTexture("power_gloves")); 
+		ImageButton b3 = generateItemButton(textureManager.getTexture("power_gloves")); 
+		ImageButton b4 = generateItemButton(textureManager.getTexture("power_gloves")); 
+		ImageButton b5 = generateItemButton(textureManager.getTexture("power_gloves")); 
+		ImageButton b6 = generateItemButton(textureManager.getTexture("power_gloves")); 
+		heroInventory.add(b1).width(30).height(30).pad(5);
+		heroInventory.add(b2).width(30).height(30).pad(5);
+		heroInventory.add(b3).width(30).height(30).pad(5);
+		heroInventory.add(b4).width(30).height(30).pad(5);
+		heroInventory.add(b5).width(30).height(30).pad(5);
+		heroInventory.add(b6).width(30).height(30).pad(5);
+		
+		//heroInventory.clear();
+		playerdetails.add(heroInventory);
+		heroInventory.setVisible(false);
+		
 		//add in player stats to a new table 
 		Table playerStats = new Table();
 		playerSpacmen = new Label("Alive spacmen: 0", skin); //$NON-NLS-1$
@@ -1030,6 +1054,16 @@ public class HUDView extends ApplicationAdapter{
 		
 		//resize stats
 		stats.resizeStats(width, height);
-		
     }
+	
+	/**
+	 * Private helper method to make image buttons for the items with the provided texture (the item icon image).
+	 * @param image  Texture that is the desired item icon for the button
+	 * @return ImageButton object that has the provided image for the item icon
+	 */
+	private ImageButton generateItemButton(Texture image) {
+		TextureRegion imgRegion = new TextureRegion(image);
+		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
+		return new ImageButton(imgDraw);
+	}
 }

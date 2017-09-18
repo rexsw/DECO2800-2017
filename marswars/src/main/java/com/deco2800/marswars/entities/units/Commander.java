@@ -1,6 +1,7 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -36,36 +37,36 @@ public class Commander extends Soldier {
 		this.inventory = new Inventory(this);
 	}
 
-	@Override
-	public void onTick(int i) {
-		if (!currentAction.isPresent()) {
-			return;
-		}
-
-		if (!currentAction.get().completed()) {
-			currentAction.get().doAction();
-		}
-	}
-
-	@Override
-	public void onClick(MouseHandler handler) {
-		this.makeSelected();
-		handler.registerForRightClickNotification(this);
-	}
-
-	@Override
-	public void onRightClick(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-	}
-
-	@Override
-	public boolean isSelected() {
-		return false;
-	}
-
-	@Override
-	public void deselect() {
-	}
+//	@Override
+//	public void onTick(int i) {
+//		if (!currentAction.isPresent()) {
+//			return;
+//		}
+//
+//		if (!currentAction.get().completed()) {
+//			currentAction.get().doAction();
+//		}
+//	}
+//
+//	@Override
+//	public void onClick(MouseHandler handler) {
+//		this.makeSelected();
+//		handler.registerForRightClickNotification(this);
+//	}
+//
+//	@Override
+//	public void onRightClick(float x, float y) {
+//		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+//	}
+//
+//	@Override
+//	public boolean isSelected() {
+//		return false;
+//	}
+//
+//	@Override
+//	public void deselect() {
+//	}
 
 	public boolean addItemToInventory(Item item) {
 		return inventory.addToInventory(item);
@@ -97,6 +98,13 @@ public class Commander extends Soldier {
 	    int result = 1;
 	    result = prime * result + getOwner();
 	    return result;
+	}
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Commander", this.getHealth(), null, this.getCurrentAction(), this);
 	}
 	
 	@Override
