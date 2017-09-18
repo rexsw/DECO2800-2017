@@ -29,6 +29,7 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -710,7 +711,7 @@ public class HUDView extends ApplicationAdapter{
      *  Creates the basic structure of the Entities picker menu
      */
 	private void setupEntitiesPickerMenu(){
-        entitiesPicker = new Window("Customize World", skin);
+        entitiesPicker = new Window("Spawn", skin);
         entitiesPicker.align(Align.topLeft);
         entitiesPicker.setPosition(220,0);
         entitiesPicker.setMovable(false);
@@ -784,7 +785,9 @@ public class HUDView extends ApplicationAdapter{
         astronautButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-
+//				float x = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+//				float y = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
 			}
 		});
         TextButton carrierButton = new TextButton("Carrier",skin);
@@ -957,7 +960,6 @@ public class HUDView extends ApplicationAdapter{
 					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
 				}
         }
-
     }
 
 	/**
