@@ -41,7 +41,7 @@ public class WeatherManager extends Manager implements Tickable {
             if (currentTime > interval + 1000) {
                 world = GameManager.get().getWorld();
                 this.generateFlood();
-                this.applyEffects(); 
+                this.applyEffects();
                 this.setInterval();
                 LOGGER.info("WEATHER MAN TICKING");
             }
