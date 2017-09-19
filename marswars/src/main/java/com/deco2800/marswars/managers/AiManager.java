@@ -72,6 +72,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
+			GameManager.get().getWorld().addEntity(r);
 			x.setAction(new GenerateAction(r));
 		}
 	}

@@ -1,12 +1,14 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.AiManager;
@@ -37,7 +39,13 @@ public class AiManagerTest {
 		assertFalse(entity.showProgress());
 		test.onTick(0);
 		assertTrue(entity.showProgress());
+		assertEquals(500-30, rm.getRocks(1));
+		List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+		assertEquals(2,entityList.size());
 	}
+	
+	
+	
 	
 	@Test
 	public void aiListTeams() {
