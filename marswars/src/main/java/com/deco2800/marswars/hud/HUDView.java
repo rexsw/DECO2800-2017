@@ -6,24 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-<<<<<<< HEAD
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-=======
 import com.badlogic.gdx.scenes.scene2d.*;
->>>>>>> e4d51fc5277409bc1428f323a744ea69a05d54e2
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -33,22 +16,10 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
-<<<<<<< HEAD
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
-=======
-import com.deco2800.marswars.entities.items.Armour;
-import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.*;
->>>>>>> e4d51fc5277409bc1428f323a744ea69a05d54e2
 import com.deco2800.marswars.renderers.Renderable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

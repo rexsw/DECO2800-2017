@@ -3,6 +3,7 @@ package com.deco2800.marswars;
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.deco2800.marswars.entities.Inventory;
@@ -13,7 +14,7 @@ import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
-
+@Ignore
 public class InvetoryTest {
 	BaseWorld baseWorld;
 	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
