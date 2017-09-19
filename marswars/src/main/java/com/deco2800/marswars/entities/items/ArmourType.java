@@ -1,7 +1,5 @@
 package com.deco2800.marswars.entities.items;
 
-import com.badlogic.gdx.graphics.Texture;
-
 /**
  * Enumerate to store the meta data for all the specific Armour type items.
  * 
@@ -19,13 +17,15 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }); 
+	ARMOUR1("A1", "defence_helmet", 150, 300, 0.02f, new int[] { 20, 20, 0, 0 }),
+
+	BOOTS1("BootI", "boot_i", 0, 10, 1f, new int[] { 1000, 2000, 1000, 5000});
 
 	private String name;
 	private int baseArmour;
 	private int[] baseCost;
 	private int baseHealth;
-	private int baseSpeed;
+	private float baseSpeed;
 	// private float ratio;
 	private String texture;
 
@@ -46,7 +46,7 @@ public enum ArmourType implements ItemType {
 	 *            cost for building it
 	 */
 	ArmourType(String name, String texture, int baseArmour, int baseHealth,
-			int baseSpeed, int[] baseCost) {
+			float baseSpeed, int[] baseCost) {
 		this.name = name;
 		this.baseArmour = baseArmour;
 		this.baseHealth = baseHealth;
@@ -104,7 +104,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Movement Speed that the item will add on.
 	 */
-	int getMoveSpeed() {
+	float getMoveSpeed() {
 		return this.baseSpeed;
 	}
 
