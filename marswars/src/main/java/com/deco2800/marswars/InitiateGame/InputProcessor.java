@@ -231,6 +231,7 @@ public class InputProcessor{
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
 					multiSelection.addEndTile(worldCoords.x,worldCoords.y);
 					multiSelection.clickAllTiles();
+					multiSelection.resetSelectedTiles();
 					return true;
 
 				}
@@ -241,6 +242,15 @@ public class InputProcessor{
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
 					if(multiSelectionFlag){
+						float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+						float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+						MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, 0,false);
+						float projX = worldCoords.x / tileWidth;
+						float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
+						projX -= projY - projX;
+						MultiSelection.updateSelectedTiles((int)projX,(int)projY);
 						return true;
 					}
 

@@ -12,8 +12,10 @@ import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.worlds.SelectedTiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +71,13 @@ public class Render3D implements Renderer {
             blackFogs.add(e);
         }
 
+        // Tutor approved workaround to avoid changing whole structure of game
+        List<MultiSelectionTile> multiSelection_temp = SelectedTiles.getMultiSelectionTile();
+        List<AbstractEntity> multiSelection = new ArrayList<>();
+        for (MultiSelectionTile e : multiSelection_temp) {
+            multiSelection.add(e);
+        }
+
         /* Sort entities into walkables and entities */
         for (AbstractEntity r : renderables) {
             if (r.canWalOver()) {
@@ -89,6 +98,9 @@ public class Render3D implements Renderer {
 
         //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
+
+        //render multiselection
+        renderEntities(multiSelection,batch,camera,0);
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
@@ -148,6 +160,12 @@ public class Render3D implements Renderer {
         for (int index = 0; index < entities.size(); index++) {
 
             Renderable entity = entities.get(index);
+
+            //multi selection entities
+            if(entity instanceof MultiSelectionTile){
+                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==1)
+                continue;
+            }
 
             //carrier unit: if the entity is loaded, don't render him
             if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) continue;

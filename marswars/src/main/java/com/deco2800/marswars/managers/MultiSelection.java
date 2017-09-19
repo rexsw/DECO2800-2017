@@ -3,6 +3,7 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.List;
@@ -11,11 +12,62 @@ import java.util.List;
  * Created by Treenhan on 9/19/17.
  * this class holds the information about multiselection
  */
-public class MultiSelection {
-    AbstractWorld world = GameManager.get().getWorld();
+public class MultiSelection extends Manager {
+    private static AbstractWorld world = GameManager.get().getWorld();
+
+    private static Array2D<Integer> selectedTiles;
+
+    public static Integer getSelectedTiles(int x, int y){
+        return selectedTiles.get(x,y);
+    }
+
+    public static void resetSelectedTiles() {
+        int width=world.getWidth();
+        int length=world.getLength();
+        selectedTiles = new Array2D<Integer>(width, length);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < length; j++) {
+                selectedTiles.set(i, j, 0);
+            }
+        }
+    }
 
 
-    private int[] tiles = new int[4];
+    public static void updateSelectedTiles(int endX,int endY){
+        tiles[2]=endX;
+        tiles[3]=endY;
+        if (tiles[0] >= tiles[2]) {
+            if (tiles[1] >= tiles[3]) {
+                for (int i = tiles[2]; i <= tiles[0]; i++) {
+                    for (int j = tiles[3]; j <= tiles[1]; j++) {
+                        selectedTiles.set(i,j,1);
+                    }
+                }
+            } else {
+                for (int i = tiles[2]; i <= tiles[0]; i++) {
+                    for (int j = tiles[1]; j <= tiles[3]; j++) {
+                        selectedTiles.set(i,j,1);
+                    }
+                }
+            }
+        } else {
+            if (tiles[1] >= tiles[3]) {
+                for (int i = tiles[0]; i <= tiles[2]; i++) {
+                    for (int j = tiles[3]; j <= tiles[1]; j++) {
+                        selectedTiles.set(i,j,1);
+                    }
+                }
+            } else {
+                for (int i = tiles[0]; i <= tiles[2]; i++) {
+                    for (int j = tiles[1]; j <= tiles[3]; j++) {
+                        selectedTiles.set(i,j,1);
+                    }
+                }
+            }
+        }
+    }
+
+    private static int[] tiles = new int[4];
 
     public void addStartTile(float x, float y){
         float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
