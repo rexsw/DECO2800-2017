@@ -44,10 +44,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
 				if(e instanceof Astronaut) {
 					Astronaut x = (Astronaut)e;
-					useSpacman(x);
+					//useSpacman(x);
 				} else if(e instanceof Base) {
 					Base x = (Base)e;
-					generateSpacman(x);
+					//generateSpacman(x);
 				} else if(e instanceof Soldier) {
 					Soldier x = (Soldier)e;
 					//Action depends on current state
@@ -104,11 +104,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
-				LOGGER.info("ai - setting unit to move to base" + base.toString());
+
 				Base y = (Base) base;
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
-						(AbstractEntity)soldier));
+						(AttackableEntity)soldier));
 				return;
 			}
 		}

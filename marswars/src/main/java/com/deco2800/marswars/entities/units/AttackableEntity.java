@@ -7,6 +7,7 @@ import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -33,10 +34,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
 	private float speed; // the movement speed of the entity
-	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
 	private int areaDamage; // the area of damage 
+	protected ActionType nextAction; //Queue actions
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -305,6 +306,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	public void setAreaDamage(int areaDamage) {
 		this.areaDamage = areaDamage;
+	}
+	
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
 	}
 
 }

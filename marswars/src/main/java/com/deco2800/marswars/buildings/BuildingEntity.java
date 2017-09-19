@@ -9,15 +9,13 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.managers.ColourManager;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
 import com.deco2800.marswars.managers.SoundManager;
 
 /**
@@ -36,8 +34,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	// Current action of this building
 	private Optional<DecoAction> currentAction = Optional.empty();
 	//owner of this building
-	private MouseHandler currentHandler;
-	//Current mousehandler manager
+	private String colour;
+	//Colour for this building
+	protected int fogRange;
+	//distance building can see in fog
+	private boolean built = true;
+	//building has functionality if built is true
 	/**
 	 * Constructor for the BuildingEntity
 	 * @param posX
@@ -53,44 +55,57 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
 		this.addNewAction(ActionType.GENERATE);
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+		//colour = cm.getColour(owner); TEXTURES NOT READY
+		colour = "";
 		switch(building) {
 		case TURRET:
-			this.setCost(200);
-			graphics = Arrays.asList("turret1", "turret2", "turret3");
-			this.setTexture(graphics.get(graphics.size()-1));
+			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
 			this.setSpeed(1f);
 			this.setHealth(1850);
+			this.setMaxHealth(1850);
 			this.building = "Turret";
+			fogRange = 7;
 			break;
 		case BASE:
-			this.setCost(350);
-			graphics = Arrays.asList("base1", "base2", "base3");
-			this.setTexture(graphics.get(graphics.size()-1));
+			graphics = Arrays.asList("base1"+colour, "base2"+colour, "base3"+colour, "base4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
 			this.setSpeed(.5f);
 			this.setHealth(2500);
+			this.setMaxHealth(2500);
 			this.setFix(true);
 			this.building = "Base";
+			fogRange = 3;
 			break;
 		case BARRACKS:
-			this.setCost(300);
-			graphics = Arrays.asList("barracks1", "barracks2", "barracks3");
-			this.setTexture(graphics.get(graphics.size()-1));
+			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
 			this.setSpeed(1.5f);
 			this.setHealth(2000);
+			this.setMaxHealth(2000);
 			this.setFix(true);
 			this.building = "Barracks";
+			fogRange = 3;
 			break;
 		case BUNKER:
-			this.setCost(100);
-			graphics = Arrays.asList("bunker1", "bunker2", "bunker3");
-			this.setTexture(graphics.get(graphics.size()-1));
+			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
 			this.setSpeed(.5f);
 			this.setHealth(800);
+			this.setMaxHealth(800);
 			this.building = "Bunker";
+			fogRange = 2;
+			break;
+		case HEROFACTORY:
+			this.setCost(350);
+			//Update this
 			break;
 		default:
 			break;
 		}
+		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 		this.setCost(0); //free cost for testing
 	}
@@ -179,7 +194,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 */
 	public void onClick(MouseHandler handler) {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		currentHandler = handler;
 		if(!this.isAi()) {
 			if (!this.isSelected()) {
 				this.makeSelected();
@@ -210,6 +224,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 * @param i time since last tick
 	 */
 	public void onTick(int i) {
+		if (this.getOwner() == -1 && built)  {
+			modifyFogOfWarMap(true, fogRange);
+		}
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();
 
@@ -223,6 +240,33 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats(building, this.getHealth(), null, currentAction, this);
+		return new EntityStats(building, this.getHealth(), this.getMaxHealth(), null, currentAction, this);
+	}
+	
+	/**
+	 * @return Building Name
+	 */
+	public String getbuilding() {
+		return building;
+	}
+	
+	/**
+	 * Set the 'built' state of building
+	 * @param built building functions only accessible if build state is true
+	 */
+	public void setBuilt(boolean built) {
+		this.built = built;
+	}
+	
+	/**
+	 * Set the health of the entity
+	 * @param the health of the entity
+	 */
+	@Override
+	public void setHealth(int health) {
+		if (this.getHealth() < this.getMaxHealth()/3 && built) {
+			this.setTexture(graphics.get(3));
+		}
+		super.setHealth(health);
 	}
 }

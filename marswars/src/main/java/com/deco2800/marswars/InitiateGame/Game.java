@@ -131,8 +131,12 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
 			Setunit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
@@ -141,8 +145,12 @@ public class Game{
 		}
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
 			Setunit(playerid, x, y, rm);
 		}

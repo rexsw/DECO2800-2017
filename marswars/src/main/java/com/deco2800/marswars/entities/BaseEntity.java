@@ -6,10 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import java.util.Optional;
@@ -27,6 +29,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private int owner = 0;
 	private boolean fixPos = false;
 	protected float speed = 0.05f;
+	protected Optional<DecoAction> currentAction = Optional.empty();
+	protected ActionType nextAction;
 
 	/**
 	 * Constructor for the base entity
@@ -130,16 +134,19 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param yPos
 	 * @param zPos
 	 */
-	public void fixPosition(int xPos, int yPos, int zPos) {
-		modifyCollisionMap(false);
+	public void fixPosition(int xPos, int yPos, int zPos, int addxWidth, int addYLength) {
 		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
 			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
-			for (int x = left; x < right; x++) {
-				for (int y = bottom; y < top; y++) {
+			if (left < 0 || right+addxWidth > baseWorld.getWidth() || bottom > baseWorld.getLength() || top+addYLength <0) {
+				return;
+			}
+			modifyCollisionMap(false);
+			for (int x = left; x < right+addxWidth; x++) {
+				for (int y = bottom; y < top+addYLength; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
 				}
 			}	
@@ -382,24 +389,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("UNNAMED",0, null, Optional.empty(), this);
-	}
-
-	/**
-	 * Forces the unit to only try the chosen action on the next rightclick
-	 * @param nextAction the action to be forced
-	 */
-	public void setNextAction(ActionType nextAction) {
-		return;
-	}
-
-	/**
-	 * Forces the unit to only try the chosen action on the next rightclick
-	 * this variant is for building
-	 * @param toBuild the unit to be built
-	 */
-	public void setNextAction(BaseEntity toBuild, ActionType action) {
-		return;
+		return new EntityStats("UNNAMED",0,0, null, Optional.empty(), this);
 	}
 
 	/**
@@ -407,7 +397,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param action the action to perform
 	 */
 	public void setAction(DecoAction action) {
-		return;
+		currentAction = Optional.of(action);
+	}
+	
+	/**
+	 * get the current action of the base entity
+	 * @return returns current action (can be empty)
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
 	}
 
 	/**
@@ -470,5 +468,13 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	@Override
 	public boolean isAi() {
 		return owner >= 0;
+	}
+	
+	/**
+	 * Sets the action using the actionsetter class
+	 * @param current ActionType to be set
+	 */
+	public void setNextAction(ActionType current) {
+		nextAction = current;
 	}
 }

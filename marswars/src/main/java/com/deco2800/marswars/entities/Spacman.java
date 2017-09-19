@@ -35,6 +35,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
+	
+	private int maxHealth = 100;
 
 	private int spacManCost = 10;
 	
@@ -321,7 +323,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param nextAction the action to be forced
 	 */
-	@Override
 	public void setNextAction(ActionType nextAction) {
 		this.nextAction = nextAction;
 		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
@@ -331,7 +332,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param toBuild unit to build
 	 */
-	@Override
 	public void setNextAction(BaseEntity toBuild, ActionType nextAction) {
 		this.nextAction = nextAction;
 		this.nextBuild = toBuild;
@@ -339,7 +339,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	}
 
 	public EntityStats getStats() {
-		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
+		return new EntityStats("Spacman",this.health, this.maxHealth, this.gatheredResource, this.currentAction, this);
 	}
 	
 	@Override
