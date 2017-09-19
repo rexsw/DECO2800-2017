@@ -1,5 +1,6 @@
 package com.deco2800.marswars.InitiateGame;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +51,9 @@ public class InputProcessor{
 
 	private boolean multiSelectionFlag=false;
 	private MultiSelection multiSelection = new MultiSelection();
+
+	MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InputProcessor.class);
 
@@ -86,21 +90,6 @@ public class InputProcessor{
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
-		//TODO remove this 
-		/*
-		if (this.downKeys.contains(Input.Keys.ESCAPE) && currentSeconds > pauseTime + 1000) {
-			if (currentSeconds > pauseTime + 1000) {
-				if (this.timeManager.isPaused()) {
-					this.timeManager.unPause();
-					pauseTime = this.timeManager.getGlobalTime();
-				} else {
-					LOGGER.info("PAUSING #############################"); //$NON-NLS-1$
-					this.timeManager.pause();
-					pauseTime = this.timeManager.getGlobalTime();
-				}
-			}
-		}*/
 
 		//move the map in the chosen direction
 		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
@@ -121,6 +110,7 @@ public class InputProcessor{
 		if ((this.downKeys.contains(Input.Keys.MINUS)) && (this.camera.zoom < 10)) {
 			this.camera.zoom *= 1.05;
 		}
+
 		if (this.downKeys.contains(Input.Keys.C)){
 			if(this.cSwitcher == 0){
 				ArrayList<Float> xyPosition = new ArrayList<Float>();
@@ -242,6 +232,7 @@ public class InputProcessor{
 					multiSelection.addEndTile(worldCoords.x,worldCoords.y);
 					multiSelection.clickAllTiles();
 					return true;
+
 				}
 				return true;
 
@@ -291,6 +282,7 @@ public class InputProcessor{
 				if(keyCode==Input.Keys.SHIFT_LEFT || keyCode==Input.Keys.SHIFT_RIGHT) multiSelectionFlag=false;
 
 				InputProcessor.this.downKeys.remove(keyCode);
+
 				return true;
 			}
 			

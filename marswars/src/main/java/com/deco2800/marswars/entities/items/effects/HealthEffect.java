@@ -62,7 +62,7 @@ public class HealthEffect implements Effect{
 	@Override
 	public String generateDescription() {
 		StringBuilder string = new StringBuilder("");
-		if (isDamage) {
+		if (!isDamage) {
 			string.append("Heal: " + health + "\n");
 		} else {
 			string.append("Damage: " + health + "\n");

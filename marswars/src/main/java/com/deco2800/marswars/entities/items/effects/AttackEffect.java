@@ -46,9 +46,7 @@ public class AttackEffect implements Effect{
 	public void applyEffect(AttackableEntity entity) {
 		if (entity instanceof Commander) { //only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
-			System.err.println("damage: " + hero.getDamageDeal());
 			hero.setDamage(hero.getDamageDeal() + this.attackDamage);
-			System.err.println("damage after: " + hero.getDamageDeal());
 			hero.setAttackSpeed(hero.getAttackSpeed() + this.attackSpeed);
 			hero.setAttackRange(hero.getAttackRange() + this.attackRange);
 			hero.setArmorDamage(hero.getArmorDamage() + this.armourDamage);

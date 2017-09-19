@@ -2,6 +2,7 @@ package com.deco2800.marswars.InitiateGame;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +26,6 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.AiManager;
-import com.deco2800.marswars.managers.BackgroundManager;
-import com.deco2800.marswars.managers.ColourManager;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameBlackBoard;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.managers.WinManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -62,8 +53,12 @@ public class Game{
 	 */
 	Renderer renderer = new Render3D();
 
-	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
-	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private BackgroundManager bgManager = (BackgroundManager)
+			GameManager.get().getManager(BackgroundManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
@@ -72,11 +67,12 @@ public class Game{
 	}
 	
 	private void startGame(){
-		timeManager.setGameStartTime();
-		timeManager.unPause();
+		this.timeManager.setGameStartTime();
+		this.timeManager.unPause();
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
+		//this.weatherManager.setWeatherEvent();
 	}
 		
 	/*
@@ -115,7 +111,7 @@ public class Game{
 	 * co-ord
 	 * 
 	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
-	 * @param lenght
+	 * @param length
 	 *            int length of the map
 	 * @param width
 	 *            int width of the map
@@ -195,7 +191,7 @@ public class Game{
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 100000) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
@@ -205,7 +201,6 @@ public class Game{
 							lastGameTick = TimeUtils.nanoTime();
 						}
 					}
-						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
