@@ -13,36 +13,39 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.TextureManager;
 
 public class UnitStatsBox extends Table{
-	private Skin skin;
 	private TextureManager tm;
 	private Image unitImage;
-	private String unitName;
 	private Pixmap pixmap; 		   //used for progress bar 
-	ProgressBar.ProgressBarStyle barStyle;
+	
 	//Player stats + progress bar 
-		private Label healthLabel;     //numeric indicator for health level
-		private Label nameLabel;       //name of player 
-		private ProgressBar healthBar; //progress bar displaying spacmen health
-		
+	private Label healthLabel;     //numeric indicator for health level
+	private Label nameLabel;       //name of player 
+	private ProgressBar healthBar; //progress bar displaying spacmen health
+	private ProgressBar armourBar;
+	
 
-		private Table heroInventory; // hero inventory display
-		private static final int CRITICALHEALTH = 30; //critical health of spacmen
+	private ProgressBar.ProgressBarStyle healthBarStyle;
+	private Table heroInventory; // hero inventory display
+	private static final int CRITICALHEALTH = 20; //critical health of spacmen
+		
+	private Label atkDmgLabel;
+	private Label atkRngLabel;
+	private Label atkSpeedLabel;
+	private Label armourLabel;
+	private Label moveSpeedLabel;
+		
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UnitStatsBox.class);
 
@@ -53,35 +56,58 @@ public class UnitStatsBox extends Table{
      * @param textureManager textureManager of the game
      */
     public UnitStatsBox(Skin skin, TextureManager textureManager) {
-        this.skin = skin;
+    	LOGGER.debug("Initiate unit stats table");
         this.tm = textureManager;
-        // Create the elements of chat box
-        unitImage = new Image(textureManager.getTexture("spacman_blue"));
-		this.add(unitImage).height(100).width(100);
+        // character table
+        Table charTable = new Table();
+        this.unitImage = new Image(textureManager.getTexture("spacman_blue"));
+        this.nameLabel = new Label("Name", skin);
+        initiateProgressBar();
+        
+        charTable.add(unitImage).height(100).width(100);
+		charTable.row();
+		charTable.add(nameLabel).top();
+		this.add(charTable);
+		
+		// create a table for bar and text display
+		Table statsTable = new Table();
 		
 		//create table for health bar display
-		Table healthTable = new Table();
+		Table barTable = new Table();
 		//Create the health bar 
-		LOGGER.debug("Creating health bar"); //$NON-NLS-1$
-		addProgressBar();
-		healthLabel = new Label("Health: ", skin); //$NON-NLS-1$
-		healthTable.add(healthLabel).align(Align.left);
-		healthTable.row();
-		healthTable.add(healthBar);
+		healthLabel = new Label("Health", skin); 
+		armourLabel = new Label("Armour", skin);
 		
-		this.add(healthTable);
-
-		//add in player name
+		barTable.add(healthBar);
+		barTable.add(healthLabel).left();
+		barTable.row();
+		barTable.add(armourBar);
+		barTable.add(armourLabel).left();
+		
+		statsTable.add(barTable);
+		statsTable.row();
+		
+		Table textTable = new Table();
+		this.atkDmgLabel = new Label("Attack", skin);
+		this.atkRngLabel = new Label("Attack Range", skin);
+		this.atkSpeedLabel = new Label("Attack Speed", skin);
+		this.moveSpeedLabel = new Label("Move Speed", skin);
+		textTable.add(this.atkDmgLabel).left();
+		textTable.add(this.atkRngLabel).left();
+		textTable.row();
+		textTable.add(this.atkSpeedLabel).left();
+		textTable.add(this.moveSpeedLabel).left();
+		
+		statsTable.add(textTable);
+		
+		this.add(statsTable);
 		this.row();
-		this.nameLabel = new Label("Name", skin); //$NON-NLS-1$
-		this.add(nameLabel);
-		
 		
 		// add in the hero inventory display
 		heroInventory = new Table();
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
-		this.add(heroInventory);
+		this.add(heroInventory).colspan(2);
     }
     
     /**
@@ -169,62 +195,94 @@ public class UnitStatsBox extends Table{
 	public void showInventory() {
 		this.heroInventory.setVisible(true);
 	}
-	/**
-	 * Adds in progress bar to the top left of the screen 
-	 */
-	private void addProgressBar(){
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.DARK_GRAY);
-		pixmap.fill();
-		barStyle = new ProgressBar.ProgressBarStyle();
-		barStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
 
+	private void initiateProgressBar(){
+		ProgressBar.ProgressBarStyle armourBarStyle;
+		healthBarStyle = new ProgressBar.ProgressBarStyle();
+		armourBarStyle = new ProgressBar.ProgressBarStyle();
+		
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GRAY);
+		pixmap.fill();
+		healthBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		armourBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+		
 		pixmap = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.GREEN);
 		pixmap.fill();
-		barStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		healthBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		armourBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 		pixmap.dispose();
 
 		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.GREEN);
 		pixmap.fill();
-		barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 		pixmap.dispose();
 
-		healthBar = new ProgressBar(0,100, 1, false, barStyle);
-		healthBar.setValue(100);
+		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.BLUE);
+		pixmap.fill();
+		armourBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+		
+		healthBar = new ProgressBar(0,100, 1, false, healthBarStyle);
+		healthBar.setValue(50);
+		
+		armourBar = new ProgressBar(0,100, 1, false, armourBarStyle);
+		armourBar.setValue(50);
 	}
 	
     /**
      * Updates the health bar to the selected entity's health stats
-     * @param stats
+     * @param target
      */
-    public void updateSelectedStats (EntityStats stats) {
-		healthBar.setValue(stats.getHealth());
-		nameLabel.setText(stats.getName());
-		healthLabel.setText("Health: " + stats.getHealth()); //$NON-NLS-1$
+    public void updateSelectedStats (AttackableEntity target) {
+    	// update health bar
+    	if (target.getMaxHealth() == 0) {
+    		LOGGER.debug("GOT zero MaxHealth, ERROR!");
+    		return;
+    	}
+    	int healthPercent = target.getHealth()/target.getMaxHealth()*100;
+		healthBar.setValue(healthPercent);
+		// update health label
+		healthLabel.setText(target.getHealth() + "/" + target.getMaxHealth());
+		// update image
+		TextureRegion entityRegion = new TextureRegion(tm.getTexture(target.getTexture()));
+		TextureRegionDrawable redraw = new TextureRegionDrawable(entityRegion);
+		unitImage.setDrawable(redraw);
+		// update name label
+		nameLabel.setText(target.toString());
+		// update armour bar and label
+		if (target.getMaxArmor() != 0) {
+			armourBar.setValue(target.getArmor()/target.getMaxArmor()*100);
+			armourLabel.setText(target.getArmor() +"/" + target.getMaxArmor());
+		} else {
+			armourBar.setValue(0);
+			armourLabel.setText("0/0");
+		}
+		
 		//Update the health progress bad to red once health is below 20 
-		if (stats.getHealth() <= CRITICALHEALTH) {
+		if (healthPercent <= CRITICALHEALTH) {
 			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 			pixmap.setColor(Color.RED);
 			pixmap.fill();
-			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+			healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 			pixmap.dispose();
-		} else if (stats.getHealth() > CRITICALHEALTH){
+		} else {
 			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
 			pixmap.setColor(Color.GREEN);
 			pixmap.fill();
-			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+			healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
 			pixmap.dispose();
 		}
+		
+		this.atkDmgLabel.setText("Atk: "+ target.getDamageDeal());
+		this.atkRngLabel.setText("Atk Range: " + target.getAttackRange());
+		this.atkSpeedLabel.setText("Atk Speed: "+ target.getAttackSpeed());
+		this.moveSpeedLabel.setText("Move Speed: " + target.getMoveSpeed());
 	}
-    
-    public void updateImage(Texture texture) {
-    	TextureRegion entityRegion = new TextureRegion(texture);
-		TextureRegionDrawable redraw = new TextureRegionDrawable(entityRegion);
-		unitImage.setDrawable(redraw);
-    }
 
     /**
 	 * Private helper method to make image buttons for the items with the provided texture (the item icon image).

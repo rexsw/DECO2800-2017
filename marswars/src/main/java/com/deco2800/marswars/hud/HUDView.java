@@ -31,6 +31,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -309,16 +310,8 @@ public class HUDView extends ApplicationAdapter{
 		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
 		statsTable.setWidth(200);
 		statsTable.pad(5);
+		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
-//		
-//		playerdetails = new Table();
-//		playerdetails.pad(10);
-//		playerdetails.setWidth(150);
-//		playerdetails.setPosition(0, stage.getHeight());
-		
-		
-		//Icon for player- 
-		//TODO get main menu working to select an icon and then display 
 	}
 
 	/**
@@ -619,7 +612,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	/**
-     * Currently sets the health to 100 once a selectable unit is selected.
+     * Display an attackable unit's stats once it's been selected
      * If target is a hero, display inventory
      * @param target unit clicked on by player
      */
@@ -628,25 +621,28 @@ public class HUDView extends ApplicationAdapter{
 			disableButton(buttonList.get(i));
 		}
 		if (selectedEntity == null) {
+			this.statsTable.setVisible(false);
             return;
         }
-		// needs simplify here MX
-		this.statsTable.updateImage(textureManager.getTexture(target.getTexture()));
 		
         selectedEntity = target;
 		currentActions = target.getValidActions();
-		EntityStats stats = target.getStats();
-		this.statsTable.updateSelectedStats(stats);
-        enterActions();
 
-        // display hero inventory
-        this.statsTable.hideInventory();
-        heroSelected = null;
-        if(target instanceof Commander) {
-        	heroSelected = (Commander) target;
-        	this.statsTable.showInventory();
-        	this.statsTable.updateHeroInventory((Commander)target);
-        }
+        enterActions();
+        
+		if(target instanceof AttackableEntity) {
+			this.statsTable.setVisible(true);
+			this.statsTable.updateSelectedStats(((AttackableEntity) target));
+
+	        // display hero inventory
+	        this.statsTable.hideInventory();
+	        heroSelected = null;
+	        if(target instanceof Commander) {
+	        	heroSelected = (Commander) target;
+	        	this.statsTable.showInventory();
+	        	this.statsTable.updateHeroInventory((Commander)target);
+	        }
+		}	
     }
 
 
