@@ -64,9 +64,9 @@ public class UnitStatsBox extends Table{
         this.nameLabel = new Label("Name", skin);
         initiateProgressBar();
         
-        charTable.add(unitImage).height(100).width(100);
+        charTable.add(unitImage).height(100).width(90);
 		charTable.row();
-		charTable.add(nameLabel).top();
+		charTable.add(nameLabel).height(20);
 		this.add(charTable);
 		
 		// create a table for bar and text display
@@ -78,11 +78,11 @@ public class UnitStatsBox extends Table{
 		healthLabel = new Label("Health", skin); 
 		armourLabel = new Label("Armour", skin);
 		
-		barTable.add(healthBar);
-		barTable.add(healthLabel).left();
+		barTable.add(healthBar).height(30).width(150);
+		barTable.add(healthLabel).right().height(30).expandX();
 		barTable.row();
-		barTable.add(armourBar);
-		barTable.add(armourLabel).left();
+		barTable.add(armourBar).height(30).width(150);
+		barTable.add(armourLabel).right().height(30).expandX();
 		
 		statsTable.add(barTable);
 		statsTable.row();
@@ -92,13 +92,13 @@ public class UnitStatsBox extends Table{
 		this.atkRngLabel = new Label("Attack Range", skin);
 		this.atkSpeedLabel = new Label("Attack Speed", skin);
 		this.moveSpeedLabel = new Label("Move Speed", skin);
-		textTable.add(this.atkDmgLabel).left();
-		textTable.add(this.atkRngLabel).left();
+		textTable.add(this.atkDmgLabel).left().expandX().height(30);
+		textTable.add(this.atkSpeedLabel).left().expandX().height(30);
 		textTable.row();
-		textTable.add(this.atkSpeedLabel).left();
+		textTable.add(this.atkRngLabel).left();
 		textTable.add(this.moveSpeedLabel).left();
 		
-		statsTable.add(textTable);
+		statsTable.add(textTable).width(220);
 		
 		this.add(statsTable);
 		this.row();
@@ -154,7 +154,7 @@ public class UnitStatsBox extends Table{
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
-		heroInventory.add(weaponBtn).width(30).height(30).pad(3);
+		heroInventory.add(weaponBtn).width(35).height(35).pad(3);
 		
 		if(armour != null) {
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
@@ -170,17 +170,17 @@ public class UnitStatsBox extends Table{
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
-		heroInventory.add(armourBtn).width(30).height(30).pad(3);
+		heroInventory.add(armourBtn).width(35).height(35).pad(3);
 		
 		int size = specials.size();
 		for(Special s : specials) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
-			heroInventory.add(specialBtn).width(30).height(30).pad(3);
+			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 			// handler here
 		}
 		for(int i = 0; i < 4-size; i++) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
-			heroInventory.add(specialBtn).width(30).height(30).pad(3);
+			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		
 		//heroInventory.setVisible(false);
@@ -279,9 +279,9 @@ public class UnitStatsBox extends Table{
 		}
 		
 		this.atkDmgLabel.setText("Atk: "+ target.getDamageDeal());
-		this.atkRngLabel.setText("Atk Range: " + target.getAttackRange());
+		this.atkRngLabel.setText("Range: " + target.getAttackRange());
 		this.atkSpeedLabel.setText("Atk Speed: "+ target.getAttackSpeed());
-		this.moveSpeedLabel.setText("Move Speed: " + target.getMoveSpeed());
+		this.moveSpeedLabel.setText("Move Speed: " + target.getSpeed());
 	}
 
     /**
