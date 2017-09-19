@@ -9,6 +9,13 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
@@ -86,7 +93,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 		
 		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.menu = new MainMenu(this.skin, this.stage, this, camera); //$NON-NLS-1$
+		this.menu = new MainMenu(this.skin, this.stage, this, this.camera);
 
 		createMap();
 		this.inputP.setInputProcessor();
@@ -105,7 +112,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
-	}	
+	}
 
 	/**
 	 * Renderer thread
@@ -136,7 +143,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		// Render background first
 		String backgroundString = this.bgManager.getBackground();
-		Texture background = reg.getTexture(backgroundString);
+		Texture background = this.reg.getTexture(backgroundString);
 		batch.begin();
 		batch.draw(background, this.camera.position.x - this.camera.viewportWidth*this.camera.zoom/2 , this.camera.position.y -
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
@@ -149,7 +156,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		tileRenderer.render();
 
 		this.view.render(this.lastMenuTick);
-		this.menu.renderGame(camera, batch);
+		this.menu.renderGame(this.camera, batch);
 		
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$

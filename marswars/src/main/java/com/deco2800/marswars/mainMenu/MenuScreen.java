@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.GameManager;
 
 /**
  * @author Naziah Siddique
@@ -32,12 +33,12 @@ public class MenuScreen{
 	
 	private Skin skin; 
 	private LobbyButton lobby;
-	private HUDView gui;
+	private HUDView hud;
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
-	private MainMenu menu; 
+	private MainMenu menu;
 	
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
@@ -83,8 +84,8 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//MenuScreen.this.gui.showEntitiesPicker(true, true); to be changed DO NOT DELETE
 				menu.startGame(true);
+				GameManager.get().getGui().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 
 			}
@@ -282,7 +283,7 @@ public class MenuScreen{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", MenuScreen.this.skin).show(stage);	 //$NON-NLS-1$
+				new ExitGame("Quit Game", MenuScreen.this.skin, hud).show(stage);	 //$NON-NLS-1$
 		}});
 
 

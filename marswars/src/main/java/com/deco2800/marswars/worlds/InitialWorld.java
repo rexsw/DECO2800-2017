@@ -78,7 +78,7 @@ public class InitialWorld extends BaseWorld {
 		Random r = new Random();
 		int x = r.nextInt(this.getLength()-1);
 		int y = r.nextInt(this.getWidth()-1);
-		this.addEntity(new HeroSpacman(this, x, y, 0));
+		//this.addEntity(new HeroSpacman(this, x, y, 0)); // NEED TO FIX THIS TO MAKE IT WORK
 	}
 
 

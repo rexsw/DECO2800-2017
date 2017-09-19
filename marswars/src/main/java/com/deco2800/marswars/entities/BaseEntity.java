@@ -6,12 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import java.util.Optional;
@@ -139,6 +137,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
+			right = right < baseWorld.getWidth() ? right : baseWorld.getWidth() - 1;
 			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
 			if (left < 0 || right+addxWidth > baseWorld.getWidth() || bottom > baseWorld.getLength() || top+addYLength <0) {

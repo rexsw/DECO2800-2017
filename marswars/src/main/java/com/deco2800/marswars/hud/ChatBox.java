@@ -53,14 +53,16 @@ public class ChatBox extends Table {
     private Skin skin;
     
     private TextureManager textureManager;
+    private HUDView hud;
     
     /**
      * Creates a new instance of a ChatBox.
      * 
      * @param skin The UI skin to be applied to all elements of the ChatBox.
      */
-    public ChatBox(Skin skin, TextureManager textureManager) {
+    public ChatBox(Skin skin, TextureManager textureManager, HUDView hud) {
         this.skin = skin;
+        this.hud = hud;
         // Create the elements of chat box
         
         this.setTextureManager(textureManager);

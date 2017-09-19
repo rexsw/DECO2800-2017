@@ -131,7 +131,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 				Random r = new Random();
 				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
 				/* Ensure new position is on the map */
-				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
 				/* Check that the new position is free */

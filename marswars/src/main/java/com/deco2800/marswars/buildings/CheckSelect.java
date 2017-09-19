@@ -1,7 +1,5 @@
 package com.deco2800.marswars.buildings;
 
-import java.util.Arrays;
-
 import com.deco2800.marswars.entities.BaseEntity;
 
 /**

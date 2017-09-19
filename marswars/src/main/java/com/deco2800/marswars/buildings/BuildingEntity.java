@@ -13,7 +13,6 @@ import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.ColourManager;
-import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
