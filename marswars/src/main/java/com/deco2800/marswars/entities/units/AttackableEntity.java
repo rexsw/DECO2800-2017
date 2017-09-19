@@ -36,7 +36,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
-	private int areaDamage; // the area of damage 
+	private int areaDamage = 0; // the area of damage 
 	private boolean gotHit; // if the unit get hitted, it will be true;
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
@@ -170,12 +170,15 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		if (this.getHealth() > health) {
 			this.setGotHit(true);
 		}
-		
 		if (health <= 0) {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
+		}
+		if (health >= this.getMaxHealth()) {
+			this.health = this.getMaxHealth();
+			return;
 		}
 		this.health  = health;
 	}

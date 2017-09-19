@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
@@ -27,6 +29,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -65,6 +70,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+
+	public static int invincible;
+	
 
 	private boolean gameStarted = false;
 	private MainMenu menu;
@@ -174,6 +182,22 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
 		}
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() == -1 && e instanceof AttackableEntity)
+				{
+					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
+				}
+			}
+
+		}
+
+
+
+
 	}
 	
 	/**

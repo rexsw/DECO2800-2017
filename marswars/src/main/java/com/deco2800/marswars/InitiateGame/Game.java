@@ -22,6 +22,7 @@ import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.hud.HUDView;
@@ -170,6 +171,8 @@ public class Game{
 		Tank tank = new Tank(x, y, 0, teamid);
 		Carrier carrier = new Carrier(x, y, 0, teamid);
 		Commander commander = new Commander(x,y,0,teamid);
+		Medic medic = new Medic(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(medic);
 		GameManager.get().getWorld().addEntity(commander);
 		
 		GameManager.get().getWorld().addEntity(carrier);
