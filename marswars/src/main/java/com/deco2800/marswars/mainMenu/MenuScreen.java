@@ -1,6 +1,5 @@
 package com.deco2800.marswars.mainMenu;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -34,17 +33,17 @@ public class MenuScreen{
 	private Skin skin; 
 	private LobbyButton lobby;
 	private HUDView gui;
-	
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
 	private MainMenu menu; 
+	private HUDView hud;
 	
-	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu, HUDView gui) {
+	
+	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
-		this.gui = gui;
 		playerModeSelect(window, stage);
 	}
 	
@@ -85,8 +84,9 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//MenuScreen.this.gui.showEntitiesPicker(true); to be changed DO NOT DELETE
-				//mainmenu.setVisible(false);
+				//MenuScreen.this.gui.showEntitiesPicker(true, true); to be changed DO NOT DELETE
+				menu.startGame(true);
+				mainmenu.setVisible(false);
 
 			}
 		});
@@ -283,7 +283,7 @@ public class MenuScreen{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", MenuScreen.this.skin).show(stage);	 //$NON-NLS-1$
+				new ExitGame("Quit Game", MenuScreen.this.skin, hud).show(stage);	 //$NON-NLS-1$
 		}});
 
 

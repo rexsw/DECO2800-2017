@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -147,6 +148,9 @@ public class Render3D implements Renderer {
         for (int index = 0; index < entities.size(); index++) {
 
             Renderable entity = entities.get(index);
+
+            //carrier unit: if the entity is loaded, don't render him
+            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) continue;
 
             //fog of war: leave the CheckSelect on top of everything
             if(iteration==1 && !(entity instanceof CheckSelect)) continue;

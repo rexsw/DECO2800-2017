@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HeroSpacman;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.ColourManager;

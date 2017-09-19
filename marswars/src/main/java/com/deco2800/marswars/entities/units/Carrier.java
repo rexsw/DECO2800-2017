@@ -97,21 +97,21 @@ public class Carrier extends Soldier {
 
 	    } else {
 		BaseWorld world = GameManager.get().getWorld();
-		float newPosX = x + 3;
-		float newPosY = y + 3;
-		if (newPosX > world.getWidth()) {
-		    newPosX = x - 3;
-		}
-		if (newPosY > world.getLength()) {
-		    newPosY = y - 3;
-		}
+//		float newPosX = x + 3;
+//		float newPosY = y + 3;
+//		if (newPosX > world.getWidth()) {
+//		    newPosX = x - 3;
+//		}
+//		if (newPosY > world.getLength()) {
+//		    newPosY = y - 3;
+//		}
 		for (int i = 0; i < capacity; i++) {
 		    if (!(loadedUnits[i] == null)) {
 			LOGGER.error("moving unit " + i);
 
 			loadedUnits[i].setCurrentAction(
-				Optional.of(new MoveAction((int) newPosX,
-					(int) newPosY, loadedUnits[i])));
+				Optional.of(new MoveAction((int) x,
+					(int) y, loadedUnits[i])));
 		    }
 		}
 		currentAction = Optional

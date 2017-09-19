@@ -1,12 +1,14 @@
 package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.InitiateGame.Game;
+import com.deco2800.marswars.managers.GameManager;
 
 /**
  * Creates a main menu window, which adds in a table depending on the 
@@ -59,17 +61,16 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		marsWars.getGUI().disableHUD();
-		new MenuScreen(this.skin, this.mainmenu, this.stage, this, this.marsWars.getGUI());
+		GameManager.get().getGui().disableHUD();
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		this.stage.addActor(mainmenu);
 	}
 		
 	public void startGame(boolean start){
 		gameStarted = start;
-		marsWars.getGUI().enableHUD();
-		game = new Game(skin, stage, camera);
-
+		GameManager.get().getGui().enableHUD();
+		game = new Game(); //Start up a new game
 	}
 	
 	public boolean gameStarted(){
@@ -79,14 +80,11 @@ public class MainMenu {
 	
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
-		if(gameStarted){
-			game.resize(width, height);
-		}
 	}
 	
-	public void renderGame(){
+	public void renderGame(OrthographicCamera camera2, SpriteBatch batch){
 		if(gameStarted){
-			game.render();
+			game.render(camera2, batch);
 		}
 	}
 }
