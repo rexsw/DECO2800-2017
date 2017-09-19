@@ -1208,20 +1208,35 @@ public class HUDView extends ApplicationAdapter{
 		
 		//keyboard listeners for hotkeys
 		
-		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-			if (messageToggle){
-				messageWindow.setVisible(false);
-				messageToggle = false; 
-				this.setChatActiveCheck(0);
-			} else {
-				messageWindow.setVisible(true);
-				messageToggle = true;
-				this.setChatActiveCheck(1);
+		if(pauseCheck == 0) {
+			//chat listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+				if (messageToggle){
+					messageWindow.setVisible(false);
+					messageToggle = false; 
+					this.setChatActiveCheck(0);
+				} else {
+					messageWindow.setVisible(true);
+					messageToggle = true;
+					this.setChatActiveCheck(1);
+				}
 			}
 		}
 		
 		if(chatActiveCheck == 0) {
+			//pause menu listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+				if (pauseCheck == 0){
+					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+				} else {
+					timeManager.unPause();
+					this.setPauseCheck(0);
+					pause.hide();
+				}
+			}
+		}
+		
+		if(chatActiveCheck == 0 && pauseCheck == 0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
@@ -1266,17 +1281,6 @@ public class HUDView extends ApplicationAdapter{
 				if (helpCheck == 0) {
 					this.setHelpCheck(1);
 					new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
-				}
-			}
-			
-			//pause menu listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
-				} else {
-					timeManager.unPause();
-					this.setPauseCheck(0);
-					pause.hide();
 				}
 			}
 		}
