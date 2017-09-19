@@ -26,6 +26,8 @@ public class TechTreeView extends Dialog{
 			button("Unlock Armour Level 3", 4); //$NON-NLS-1$
 
 			button("OK", 0); //$NON-NLS-1$
+			
+			timeManager.pause();
 		}
 	}
 

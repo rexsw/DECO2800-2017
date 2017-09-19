@@ -274,9 +274,11 @@ public class HUDView extends ApplicationAdapter{
 				if (messageToggle){
 					messageWindow.setVisible(false);
 					messageToggle = false; 
+					hud.setChatActiveCheck(0);
 				} else {
 					messageWindow.setVisible(true);
 					messageToggle = true;
+					hud.setChatActiveCheck(1);
 				}
 				
 			}

@@ -27,6 +27,7 @@ public class WorkInProgress extends Dialog{
 		{
 			text("Sorry, this feature is currently a work in progress, we promise it'll be finished soon!"); //$NON-NLS-1$
 			button("OK", 0); //$NON-NLS-1$
+			timeManager.pause();
 		}
 	}
 	
