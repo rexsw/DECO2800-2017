@@ -45,6 +45,8 @@ public class Carrier extends Soldier {
 
     private Optional<DecoAction> currentAction = Optional.empty();
 
+	private String loadSound = "carrier-loading-sound.mp3";
+
     private Soldier[] loadedUnits = new Soldier[capacity];
     private ActionType nextAction;
 
@@ -221,6 +223,8 @@ public class Carrier extends Soldier {
      * @return true if able to load the target, false otherwise
      */
     public boolean loadPassengers(Soldier target) {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound(loadSound);
 	for (int i = 0; i < capacity; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
@@ -247,6 +251,8 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassenger() {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound(loadSound);
 	LOGGER.info("Everyone off!");
 	int empty = 0;
 	for (int i = 0; i < capacity; i++) {
