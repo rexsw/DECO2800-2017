@@ -24,7 +24,7 @@ public class Commander extends Soldier {
 
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
-
+	//master merging testing
 	Optional<DecoAction> currentAction = Optional.empty();
 
 	/**
