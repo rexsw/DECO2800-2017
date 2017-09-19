@@ -43,21 +43,21 @@ public class Commander extends Soldier {
 		this.inventory = new Inventory(this);
 	}
 
-	/**
-	 * Method to check, execute and update the Commander's actions for the Commander to actually do and appear to do 
-	 * the assigned current action.
-	 * @param i  The current game tick.
-	 */
-	@Override
-	public void onTick(int i) {
-		if (!currentAction.isPresent()) { //no need to update or do anything if there already is no assigned action
-			return;
-		}
-		//Do the assigned action if it's not completed already.
-		if (!currentAction.get().completed()) {
-			currentAction.get().doAction();
-		}
-	}
+//	/**
+//	 * Method to check, execute and update the Commander's actions for the Commander to actually do and appear to do 
+//	 * the assigned current action.
+//	 * @param i  The current game tick.
+//	 */
+//	@Override
+//	public void onTick(int i) {
+//		if (!currentAction.isPresent()) { //no need to update or do anything if there already is no assigned action
+//			return;
+//		}
+//		//Do the assigned action if it's not completed already.
+//		if (!currentAction.get().completed()) {
+//			currentAction.get().doAction();
+//		}
+//	}
 
 
 //	@Override
