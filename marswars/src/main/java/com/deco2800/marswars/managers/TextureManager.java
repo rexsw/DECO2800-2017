@@ -184,6 +184,13 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (textureType.equals("missile")) {
+            	 path = String.format("resources/UnitAssets/%s/%s.png",
+                         unitType,textureType);
+            	String retVal = textureType + unitType;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             //find the team colour of the owner:
             String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
@@ -199,7 +206,7 @@ public class TextureManager extends Manager {
         }
         
     }
-
+    
     /**
      * Gets a texture object for a given string id
      * @param id Texture identifier
