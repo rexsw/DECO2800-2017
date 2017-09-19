@@ -25,8 +25,8 @@ import com.deco2800.marswars.managers.GameManager;
  *
  */
 public class MainMenu {
-	private static final int MENUHEIGHT = 300; 
-	private static final int MENUWIDTH = 400;
+	private static final int MENUHEIGHT = 350; 
+	private static final int MENUWIDTH = 500;
 	private Skin skin;
 	private Stage stage; 
 	
@@ -69,8 +69,10 @@ public class MainMenu {
 		
 	public void startGame(boolean start){
 		gameStarted = start;
-		GameManager.get().getGui().enableHUD();
-		game = new Game(); //Start up a new game
+		if (gameStarted){
+			GameManager.get().getGui().enableHUD();
+			game = new Game(); //Start up a new game
+		}
 	}
 	
 	public boolean gameStarted(){
