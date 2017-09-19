@@ -104,13 +104,12 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * 			Armor damage
      */
     public void causeDamage(AttackableEntity target, int damage, int armorDamage) {
-    	if (target.getArmor() > 0) {
-    		
-    		target.setHealth(target.getHealth() - damage/2);
-    		target.setArmor(target.getArmor() - armorDamage);
-    	} else {
-    		target.setHealth(target.getHealth() - damage);
-    	}
+	    	if (target.getArmor() > 0 && damage >= 0) {
+	    		target.setHealth(target.getHealth() - damage/2);
+	    		target.setArmor(target.getArmor() - armorDamage);
+	    	} else {
+	    		target.setHealth(target.getHealth() - damage);
+	    	}
     	LOGGER.info("Enemy health " + target.getHealth());
     }
 
