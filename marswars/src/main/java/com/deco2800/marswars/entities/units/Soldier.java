@@ -54,6 +54,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
+
 		super.setPosX(x);
 		//lineOfSight.setPosX(x);
 //		if(!this.isAi()) {1
@@ -74,6 +75,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
+
 		super.setPosY(y);
 		//lineOfSight.setPosY(y);
 //		if(!this.isAi()) {
@@ -120,6 +122,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setAreaDamage(0);
 		this.setUnloaded(); //default load status = 0
 	}
+	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
@@ -145,7 +148,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(!this.isAi() & this.getLoadStatus() != 1) {
+		if(!this.isAi() && this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
@@ -155,36 +158,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			LOGGER.info("Clicked on ai soldier");
 		}
 	}
-	
-	/*public float getTmpx() {
-		
-		tempx=this.getTempx();
-		return tempx;
-	}
 
-	public float getTmpy() {
-		
-		tempy=this.getTempy();
-		return tempy;
-	}*/
-	/*
+	/**
 	 * Changes the texture to reflect the direction that the soldier is moving in
 	 */
 	public void faceTowards(float x, float y) {
-if(this.getPosX()>=x && this.getPosY()>=y) {
-			
+		if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(downleftTextureName);
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
-			
 			this.setTexture(downrightTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()>=y) {
-			
 			this.setTexture(upleftTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()<y) {
-			
 			this.setTexture(uprightTextureName);
 		}
 		else {
@@ -228,10 +216,15 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}
-	
+
 	@Override
 	public void onTick(int tick) {
+
 		if (!currentAction.isPresent()) {
+			
+			//this will disable collision check for the entities inside the carrier
+			boolean isTheEntityLoaded=false;
+
 			if (this.getOwner() == -1)  {
 				modifyFogOfWarMap(true,3);
 			}
@@ -241,12 +234,18 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
 			for (BaseEntity e: entities) {
+				if (e instanceof Soldier) {
+					if(((Soldier)e).getLoadStatus()==1){
+						isTheEntityLoaded = true;
+					}
+
+				}
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
 			}
-			boolean moveAway = entitiesSize > 2;
-			if (moveAway) {
+			boolean moveAway = entitiesSize > 1;
+			if (moveAway && !isTheEntityLoaded) {
 					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
@@ -255,7 +254,7 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 				Random r = new Random();
 				Point p = new Point(xPosition + r.nextInt(2) - 1, yPosition + r.nextInt(2) - 1);
 				/* Ensure new position is on the map */
-				if (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth() || p.getY() > world.getLength()) {
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
 				/* Check that the new position is free */
@@ -263,7 +262,7 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 					// No good
 					return;
 				}
-				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));

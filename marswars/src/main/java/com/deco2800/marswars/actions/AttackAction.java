@@ -63,7 +63,7 @@ public class AttackAction implements DecoAction {
 
 	private void setUpMissile() {
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
-				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", entity.getAreaDamage(), entity.getOwner())); //((Soldier) entity).getMissileTexture()
+				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}
 	
 	@Override

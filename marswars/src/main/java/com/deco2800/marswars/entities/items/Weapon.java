@@ -1,62 +1,127 @@
 package com.deco2800.marswars.entities.items;
 
-public class Weapon extends PassiveItem {
+import java.util.ArrayList;
+import java.util.List;
 
-    private WeaponType weaponType;
-    private int itemXp;
+import com.deco2800.marswars.entities.items.effects.AttackEffect;
+import com.deco2800.marswars.entities.items.effects.Effect;
 
-    public Weapon(String name, WeaponType type) {
-        super(name);
-        super.setItemType("Weapon");
-        this.itemXp = 0;
-        this.weaponType = type;
-        switch (type) {
-            case WEAPON1LEVEL1:
-                // decrement resources
-                break;
-            case WEAPON1LEVEL2:
-                // decrement resources
-                break;
-            case WEAPON1LEVEL3:
-                // decrement resources
-                break;
-            case WEAPON2LEVEL1:
-                // decrement resources
-                break;
-            case WEAPON2LEVEL2:
-                // decrement resources
-                break;
-            case WEAPON2LEVEL3:
-                // decrement resources
-                break;
-            default:
-                // anything here???
-                break;
-        }
+/**
+ * Class for Attack items. Attack items would be passive items that have offensive passive effects. These effect are not
+ * limited to simple stat changes. Stats that Attack items can change are damage (normal and armour damage), the range
+ * that the user can attack the enemy from and attack speed of the units..
+ * 
+ * type = the Weapon Type enumerate value which stores the basic meta data needed for the weapon item.
+ * lvl = the item's level which would determine the costs and stat increases for it's current and further upgrades.
+ * effects = the list of Effect classes which contain the item's effect(s) (i.e. their functionality).
+ * 
+ * @author Mason
+ *
+ */
+public class Weapon extends Item {
+    private WeaponType type;
+//    private int lvl;
+    private List<Effect> effects;
 
+    /**
+	 * Constructor for an Weapon item. Takes in an Weapontype enumerate value which specifies the stat changes the
+	 * Weapon item is to have as well as its name, costs and the ratio for increasing these when upgraded.
+	 * @param type The ArmouType enumerate that has the stored meta data for the specific item to be created.
+	 * @param lvl the level of the item to be created.
+	 */
+    public Weapon(WeaponType type) {
+    	this.effects = new ArrayList<>();
+        this.type = type;
+//        this.lvl = lvl;
+        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
     }
 
-    public int getWeaponDamage() { return weaponType.getWeaponDamage(); }
-
-    public int getWeaponSpeed() { return weaponType.getWeaponSpeed(); }
-
-    public int getWeaponRange() { return weaponType.getWeaponSpeed(); }
-
-    public int[] getWeaponCost() {return weaponType.getWeaponCost(); }
-
-    public int getWeaponLevel() { return weaponType.getWeaponLevel(); }
-
-    public int getItemXp() { return this.itemXp; }
-
-    public void addItemXp(int xp) {
-        this.itemXp += xp;
+    /**
+	 * Gets the current damage (normal and armour damage) the item will add on. Takes into account the multiplier based 
+	 * on the item's current level. 
+	 * @return the current amount of damage (normal and armour damage) that the item will add on.
+	 */
+    public int getWeaponDamage() {
+        return type.getWeaponDamage();
     }
-    /** for use when buildings/tech allows a direct upgrade, ie without
-     needing item xp
-     */
-    public void changeWeaponType(WeaponType type) {
-        this.weaponType = type;
+    
+    /**
+	 * Gets the current attack range the item will add on. Takes into account the multiplier based on the item's current
+	 *  level. 
+	 * @return the current range of the damage change that the item will add on.
+	 */
+    public int getWeaponRange() {
+    	return type.getWeaponRange();
+    }
+    
+    /**
+	 * Gets the current attack speed the item will add on. Takes into account the multiplier based on the item's current
+	 *  level. 
+	 * @return the current amount attack speed that the item will add on.
+	 */
+    public int getWeaponSpeed() {
+    	return type.getWeaponSpeed();
     }
 
+//    /**
+//	 * Gets the current level of the Weapon item.
+//	 * 
+//	 * @return the current level of the Weapon item.
+//	 */
+//    public int getLevel() {
+//    	return this.lvl;
+//    }
+    
+    /**
+	 * Gets a list of all the effects the Weapon item has.
+	 * 
+	 * @return A new List of Effect objects that represent each effect of the item.
+	 */
+    @Override
+    public List<Effect> getEffect() {
+    	return new ArrayList<Effect>(effects);
+    }
+    
+    /**
+	 * Gets the item type of the Weapon item.
+	 * 
+	 * @return The enumerate of Item Type that corresponds to Weapon items.
+	 */
+    @Override
+    public Type getItemType() {
+        return Type.WEAPON;
+    }
 
+    /**
+	 * Gets the item name
+	 * 
+	 * @return string that is the item name
+	 */
+    @Override
+    public String getName() {
+        return type.getName();
+    }
+    
+    /**
+	 * Gets the description of the Weapon item which specifies its effects and stat changes.
+	 * 
+	 *  @return The description of the item as a string.
+	 */
+    @Override
+    public String getDescription() {
+		return this.getName() + "\nDamage: " + this.getWeaponDamage() + "\nSpeed: " + this.getWeaponSpeed() + "\nRange: " + this.getWeaponRange();
+    	
+    }
+
+    /**
+	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
+	 * tuple.
+	 * 
+	 * @return saved texture string of the item icon in string format
+	 */
+	@Override
+	public String getTexture() {
+		return type.getTextureString();
+	}
 }
+
