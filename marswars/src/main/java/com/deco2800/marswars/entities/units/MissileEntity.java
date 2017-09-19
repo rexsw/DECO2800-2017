@@ -23,11 +23,12 @@ public class MissileEntity extends BaseEntity implements HasAction{
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
     private String missileTexture;
     private int areaDamage;
+    private AttackableEntity ownerEntity;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(MissileEntity.class);
 
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
-                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner) {
+                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner, AttackableEntity ownerEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
         this.modifyCollisionMap(true);
     }
@@ -123,5 +124,12 @@ public class MissileEntity extends BaseEntity implements HasAction{
     	this.speed = speed; 
     }
     
+    public void setOwnerEntity(AttackableEntity ownerEntity) {
+    	this.ownerEntity = ownerEntity;
+    }
+    
+    public AttackableEntity getOwnerEntity() {
+    	return  ownerEntity;
+    }
 
 }

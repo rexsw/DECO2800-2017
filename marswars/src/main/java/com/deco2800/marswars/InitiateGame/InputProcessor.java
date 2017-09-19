@@ -1,5 +1,6 @@
 package com.deco2800.marswars.InitiateGame;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +46,8 @@ public class InputProcessor{
 	private int cameraPointer = 0;
 	Set<Integer> downKeys = new HashSet<>();
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+	
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InputProcessor.class);
 
@@ -80,21 +83,6 @@ public class InputProcessor{
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
-		//TODO remove this 
-		/*
-		if (this.downKeys.contains(Input.Keys.ESCAPE) && currentSeconds > pauseTime + 1000) {
-			if (currentSeconds > pauseTime + 1000) {
-				if (this.timeManager.isPaused()) {
-					this.timeManager.unPause();
-					pauseTime = this.timeManager.getGlobalTime();
-				} else {
-					LOGGER.info("PAUSING #############################"); //$NON-NLS-1$
-					this.timeManager.pause();
-					pauseTime = this.timeManager.getGlobalTime();
-				}
-			}
-		}*/
 
 		//move the map in the chosen direction
 		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
@@ -114,6 +102,10 @@ public class InputProcessor{
 		}
 		if ((this.downKeys.contains(Input.Keys.MINUS)) && (this.camera.zoom < 10)) {
 			this.camera.zoom *= 1.05;
+		}
+		if ((this.downKeys.contains(Input.Keys.CONTROL_LEFT)) || (this.downKeys.contains(Input.Keys.CONTROL_RIGHT))) {
+			//Signal to mouse handler to allow multiple selections
+			mouseHandler.controlDown();
 		}
 		if (this.downKeys.contains(Input.Keys.C)){
 			if(this.cSwitcher == 0){
@@ -211,7 +203,6 @@ public class InputProcessor{
 					}
 
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
 				}
 				return true;
@@ -249,6 +240,10 @@ public class InputProcessor{
 			@Override
 			public boolean keyUp(int keyCode) {
 				InputProcessor.this.downKeys.remove(keyCode);
+				//If control is released disable multiple selection
+				if (keyCode == 129 || keyCode == 130) {
+					mouseHandler.controlUp();
+				}
 				return true;
 			}
 			

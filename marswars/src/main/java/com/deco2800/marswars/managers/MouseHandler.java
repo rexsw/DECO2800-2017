@@ -28,6 +28,8 @@ public class MouseHandler extends Manager {
 	private boolean ignoreLeftClick = false;
 	
 	private BaseEntity unitSelected = null;
+	
+	private boolean control = false;
 
 	/**
 	 * Currently only handles objects on height 0
@@ -46,6 +48,12 @@ public class MouseHandler extends Manager {
 				unitSelected.deselect();
 			}
 			// Left click
+			// If control is not held down 
+			if (control == false) {
+				// Clear all selected units
+				listeners.clear();
+			}
+			
 			AbstractWorld world = GameManager.get().getWorld();
 
 			// If we get another left click ignore the previous listeners
@@ -76,7 +84,6 @@ public class MouseHandler extends Manager {
 						((Spacman) c).setTexture("spacman_green");
 					}	
 				}
-				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
@@ -152,7 +159,6 @@ public class MouseHandler extends Manager {
 			for (Clickable c : listeners) {
 				c.onRightClick(projX, projY);
 			}
-			listeners.clear();
 			AbstractWorld world = GameManager.get().getWorld();
 			((CustomizedWorld)world).deSelectAll();
 		}
@@ -174,5 +180,18 @@ public class MouseHandler extends Manager {
 		ignoreLeftClick = ignore;
 	}
 	
+	/**
+	 * Method called to block the ability to select multiple units
+	 */
+	public void controlUp() {
+		control = false;
+	}
+	
+	/**
+	 * Method called to allow the ability to select multiple units
+	 */
+	public void controlDown() {
+		control = true;
+	}
 
 }
