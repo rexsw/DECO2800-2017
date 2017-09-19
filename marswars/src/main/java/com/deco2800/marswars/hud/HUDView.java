@@ -122,7 +122,13 @@ public class HUDView extends ApplicationAdapter{
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	private GameStats stats;
 	
+	HUDView hud = this;
+	
 	int pauseCheck = 0;
+	int helpCheck = 0;
+	int techCheck = 0;
+	int chatActiveCheck = 0;
+	int exitCheck = 0;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -142,7 +148,7 @@ public class HUDView extends ApplicationAdapter{
 		//Generate the game stats
 		this.stats = new GameStats(stage, skin, this, textureManager);
 		//create chatbox
-		this.chatbox = new ChatBox(skin, textureManager);
+		this.chatbox = new ChatBox(skin, textureManager, this);
 		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
@@ -247,7 +253,7 @@ public class HUDView extends ApplicationAdapter{
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
+				new WorkInProgress("Help  Menu", skin, hud).show(stage); //$NON-NLS-1$
 			}
 		});
 		
@@ -257,7 +263,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", skin).show(stage);
+				new ExitGame("Quit Game", skin, hud).show(stage);
 			}});
 
 		//Creates the message button listener 
@@ -473,7 +479,7 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin).show(stage); //$NON-NLS-1$
+				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
 
 		});
@@ -1040,61 +1046,77 @@ public class HUDView extends ApplicationAdapter{
 		
 		//keyboard listeners for hotkeys
 		
-		//help listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-			new ExitGame("Quit Game", skin).show(stage); //$NON-NLS-1$
-		}
-		
 		//chat listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 				messageToggle = false; 
+				this.setChatActiveCheck(0);
 			} else {
 				messageWindow.setVisible(true);
 				messageToggle = true;
+				this.setChatActiveCheck(1);
 			}
 		}
 		
-		//tech tree listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-			new TechTreeView("TechTree", skin).show(stage); //$NON-NLS-1$
-		}
-		
-		//HUD toggle listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-			if (inventoryToggle) {
-				LOGGER.debug("Enable hud"); //$NON-NLS-1$
-				actionsWindow.setVisible(true);
-				minimap.setVisible(true);
-				resourceTable.setVisible(true);
-				//show (-) button to make resources invisible
-				dispActions.remove();
-				HUDManip.add(removeActions);
-				inventoryToggle = false;
-			} else {
-				LOGGER.debug("Disable Hud"); //$NON-NLS-1$
-				actionsWindow.setVisible(false);
-				minimap.setVisible(false);
-				resourceTable.setVisible(false);
-				//show (+) to show resources again
-				removeActions.remove();
-				HUDManip.add(dispActions);
-				inventoryToggle = true;
+		if(chatActiveCheck == 0) {
+			//help listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+				if (exitCheck == 0) {
+					this.setExitCheck(1);
+					new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			//tech tree listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+				if(techCheck == 0) {
+					timeManager.pause();
+					this.setTechCheck(1);
+					new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			//HUD toggle listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+				if (inventoryToggle) {
+					LOGGER.debug("Enable hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(true);
+					minimap.setVisible(true);
+					resourceTable.setVisible(true);
+					//show (-) button to make resources invisible
+					dispActions.remove();
+					HUDManip.add(removeActions);
+					inventoryToggle = false;
+				} else {
+					LOGGER.debug("Disable Hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(false);
+					minimap.setVisible(false);
+					resourceTable.setVisible(false);
+					//show (+) to show resources again
+					removeActions.remove();
+					HUDManip.add(dispActions);
+					inventoryToggle = true;
+				}
+			}
+			
+			//help button listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+				if (helpCheck == 0) {
+					this.setHelpCheck(1);
+					timeManager.pause();
+					new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			//pause menu listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+				if (pauseCheck == 0){
+					new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+				}
 			}
 		}
 		
-		//help button listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-			new WorkInProgress("Help  Menu", skin).show(stage); //$NON-NLS-1$
-		}
-		
-		//pause menu listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			if (pauseCheck == 0){
-				new PauseMenu("Pause Menu", skin, stats, this).show(stage);
-			}
-		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
@@ -1196,6 +1218,23 @@ public class HUDView extends ApplicationAdapter{
 	
 	public void setPauseCheck(int i) {
 		pauseCheck = i;	
+	}
+	
+	public void setChatActiveCheck(int i) {
+		chatActiveCheck = i;
+	}
+	
+	public void setExitCheck(int i) {
+		exitCheck = i;
+	}
+	
+	public void setTechCheck(int i) {
+		techCheck = i;
+	}
+
+	public void setHelpCheck(int i) {
+		helpCheck = i;
+		
 	}
 }
 
