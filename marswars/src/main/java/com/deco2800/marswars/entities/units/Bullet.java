@@ -68,6 +68,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 			} else { // either the target is not existing anymore or the action is completed
 				//LOGGER.info("Action is completed. Deleting");
 				currentAction = Optional.empty();
+				GameManager.get().getWorld().removeEntity(this);
 			}
     	} catch (Exception e) {
     		//Bullets are freezing for an unknown reason fix needed
@@ -109,9 +110,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		target.setArmor(target.getArmor() - armorDamage);
     	} else {
     		target.setHealth(target.getHealth() - damage);
-    	}
-    	if (target.getHealth() <= 0) {
-    		GameManager.get().getWorld().removeEntity(target);
     	}
     	LOGGER.info("Enemy health " + target.getHealth());
     }
