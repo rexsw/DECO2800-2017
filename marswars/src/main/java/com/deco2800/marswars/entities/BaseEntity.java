@@ -136,8 +136,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
+			right = right < baseWorld.getWidth() ? right : baseWorld.getWidth() - 1;
 			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
+			top = top < baseWorld.getLength() ? top : baseWorld.getLength()- 1;
 			for (int x = left; x < right; x++) {
 				for (int y = bottom; y < top; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
