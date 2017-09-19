@@ -83,6 +83,7 @@ public class HUDView extends ApplicationAdapter{
 	private Window messageWindow;//window for the chatbox 
 	private Window minimap;		 //window for containing the minimap
 	private Window actionsWindow;    //window for the players actions 
+	private Window statWindow; //window for unit stat
 	private ShopDialog shopDialog; // Dialog for shop page
 	private static Window entitiesPicker; //window that selects available entities
 
@@ -96,9 +97,6 @@ public class HUDView extends ApplicationAdapter{
 	private Label waterCount;
 	
 	//Player stats + progress bar 
-	private Image spacman; 		   //image of spacman
-	private Label playerSpacmen;   //counts spacmen on baord
-	private Label playerEnemySpacmen; //counts enemies seen on board
 	private Label healthLabel;     //numeric indicator for health level
 	private Label nameLabel;       //name of player 
 	private ProgressBar healthBar; //progress bar displaying spacmen health
@@ -328,6 +326,7 @@ public class HUDView extends ApplicationAdapter{
 		playerdetails.setWidth(150);
 		playerdetails.setPosition(0, stage.getHeight());
 		
+		
 		//Icon for player- 
 		//TODO get main menu working to select an icon and then display 
 		selectedImage = new Image(textureManager.getTexture("spacman_blue"));
@@ -358,30 +357,6 @@ public class HUDView extends ApplicationAdapter{
 		heroInventory.setVisible(false);
 		playerdetails.add(heroInventory);
 		
-		//add in player stats to a new table 
-		Table playerStats = new Table();
-		playerSpacmen = new Label("Alive spacmen: 0", skin); //$NON-NLS-1$
-		playerEnemySpacmen = new Label("Evil spacman: 0", skin); //$NON-NLS-1$
-		
-		//image for spacman
-		Texture spacmanTex = textureManager.getTexture("spacman_green"); //$NON-NLS-1$
-		spacman = new Image(spacmanTex);
-		//image for enemy spatman
-		Texture spatmanTex = textureManager.getTexture("spatman_blue"); //$NON-NLS-1$
-		Image spatman = new Image(spatmanTex);
-
-		//add in spacmen and enemy stats to stats 
-		playerStats.padLeft(20).padTop(60);
-		playerStats.align(Align.left);
-		playerStats.add(spacman).height(60).width(60).padBottom(10);
-		playerStats.add(playerSpacmen).center();
-		playerStats.row();
-		playerStats.add(spatman).height(60).width(40);
-		playerStats.add(playerEnemySpacmen).center();
-		
-		//add in stats table 
-		playerdetails.row();
-		playerdetails.add(playerStats);
 		stage.addActor(playerdetails);
 	}
 	
@@ -605,11 +580,11 @@ public class HUDView extends ApplicationAdapter{
 		 */
 		shopDialog.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	if (heroSelected != null) {
+            		updateHeroInventory(heroSelected);
+            	}
                 if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
                 	shopDialog.hide();
-                	if (heroSelected != null) {
-                		updateHeroInventory(heroSelected);
-                	}
                     return true;
                 }
                 return false;
@@ -1167,17 +1142,13 @@ public class HUDView extends ApplicationAdapter{
 		/*Set value for health bar*/
 		healthBar.setValue(0);
 		
-		int spacmenCount = 0; 		//counts the number of spacmen in game
-		int enemySpacmanCount = 0;  //counts the number of spatmen in game
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
 				selectedEntity = e;
 			}
-			if (e instanceof Spacman) {
-				spacmenCount++; 
-			}
+			
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
@@ -1193,16 +1164,6 @@ public class HUDView extends ApplicationAdapter{
 		}
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
-
-	    /* Update the spacmen + enemy spatmen counts */
-	    playerSpacmen.setText("" + spacmenCount); //$NON-NLS-1$
-		playerEnemySpacmen.setText("" + enemySpacmanCount); //$NON-NLS-1$
-		
-		if (spacmenCount == 0) {
-			/*TODO get spacman icon to be spacman_ded when there
-			are no spacmen left*/
-			spacman = new Image(textureManager.getTexture("spacman_ded")); //$NON-NLS-1$
-		}
 		
 		//keyboard listeners for hotkeys
 		
