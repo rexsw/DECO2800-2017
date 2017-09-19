@@ -122,6 +122,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setAreaDamage(0);
 		this.setUnloaded(); //default load status = 0
 	}
+	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
@@ -157,36 +158,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			LOGGER.info("Clicked on ai soldier");
 		}
 	}
-	
-	/*public float getTmpx() {
-		
-		tempx=this.getTempx();
-		return tempx;
-	}
 
-	public float getTmpy() {
-		
-		tempy=this.getTempy();
-		return tempy;
-	}*/
-	/*
+	/**
 	 * Changes the texture to reflect the direction that the soldier is moving in
 	 */
 	public void faceTowards(float x, float y) {
-if(this.getPosX()>=x && this.getPosY()>=y) {
-			
+		if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(downleftTextureName);
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
-			
 			this.setTexture(downrightTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()>=y) {
-			
 			this.setTexture(upleftTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()<y) {
-			
 			this.setTexture(uprightTextureName);
 		}
 		else {
@@ -230,11 +216,12 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}
-	
+
 	@Override
 	public void onTick(int tick) {
-		if (!currentAction.isPresent()) {
 
+		if (!currentAction.isPresent()) {
+			
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
@@ -308,13 +295,18 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	
 	public void setAllTextture() {
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
-		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
-		this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
-		this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-		this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
-		this.movementSound = "endturn.wav";
+		try {
+			this.selectedTextureName = tm.loadUnitSprite(this, "selected");
+			this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
+			this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
+			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.movementSound = "endturn.wav";
+		}
+		catch(NullPointerException n){
+			return;
+		}
 	}
 
 	/**

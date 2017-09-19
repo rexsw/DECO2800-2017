@@ -27,9 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AiManager extends AbstractPlayerManager implements TickableManager {
 	private List<Integer> teamid = new LinkedList<Integer>();
-	private int numAIPlayers;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
-	private Map<Integer, Integer> alive = new HashMap<Integer, Integer>();
 	private State state = State.DEFAULT;
 	private long timeAtStateChange;
 	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
@@ -74,6 +72,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
+			GameManager.get().getWorld().addEntity(r);
 			x.setAction(new GenerateAction(r));
 		}
 	}
@@ -124,38 +123,25 @@ private void useSpacman(Astronaut x) {
 		LOGGER.error("ai - set spacman to grather");
 	}
 }
-			
-			
-	/**
-	 * if the ai has no more spacman under it's control, removes it's units
-	 * and sets it to "dead" so it won't tick anymore 
-	 */
-	public boolean isKill(int key) {
-		//in this case "dead" is an Ai with no spacman
-		if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).count(key, "Units") == 0) {
-		LOGGER.info("ai - is kill");
-		alive.put(key, 0);
-		return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
-	/**
-	 * @return true iff Ai is alive else false 
-	 */
-	public boolean alive(int key) {
-		return alive.get(key)==1;
-	}
-	
-	public void addTeam(int id) {
+
+	public void addTeam(Integer id) {
 		teamid.add(id);
-		alive.put(id, 1);
 	}
-	
+	/**
+	 * @return List<Integer> a list of integers of ai team ids
+	 */
 	public List<Integer> getAiTeam(){
 		return teamid;
+	}
+	
+	/**
+	 * 
+	 * @param id int the team's id to kill and remove from the list of ai players
+	 */
+	public void kill(Integer id) {
+		if(teamid.contains(id)) {
+			teamid.remove(id);
+		}
 	}
 	
 	/**
