@@ -357,14 +357,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	/**
-	 * Implements a collapsible tab for the chat lobby 
-=======
-
-	}
-
-	/**
 	 * Implements a collapsible tab for the chat lobby
->>>>>>> 45d4c54441e3bfb48c8e0571890dd097f7234c03
 	 */
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box"); //$NON-NLS-1$
