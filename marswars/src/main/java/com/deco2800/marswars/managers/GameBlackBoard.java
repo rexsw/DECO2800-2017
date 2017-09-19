@@ -101,7 +101,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return true iff the map has been set correctly 
 	 */
 	public boolean isSet() {
-		return !values.isEmpty();
+		return values.size() != 0;
 	}
 	
 	/**

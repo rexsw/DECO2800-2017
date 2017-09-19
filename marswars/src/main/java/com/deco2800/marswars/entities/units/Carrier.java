@@ -38,12 +38,15 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 
 public class Carrier extends Soldier {
+	private static final float MOVING_SPEED=0.03f;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
     private static final int capacity = 3;
 
     private Optional<DecoAction> currentAction = Optional.empty();
+
+	private String loadSound = "carrier-loading-sound.mp3";
 
     private Soldier[] loadedUnits = new Soldier[capacity];
     private ActionType nextAction;
@@ -96,26 +99,17 @@ public class Carrier extends Soldier {
 		load(target);
 
 	    } else {
-		BaseWorld world = GameManager.get().getWorld();
-//		float newPosX = x + 3;
-//		float newPosY = y + 3;
-//		if (newPosX > world.getWidth()) {
-//		    newPosX = x - 3;
-//		}
-//		if (newPosY > world.getLength()) {
-//		    newPosY = y - 3;
-//		}
 		for (int i = 0; i < capacity; i++) {
 		    if (!(loadedUnits[i] == null)) {
 			LOGGER.error("moving unit " + i);
 
 			loadedUnits[i].setCurrentAction(
 				Optional.of(new MoveAction((int) x,
-					(int) y, loadedUnits[i])));
+					(int) y, loadedUnits[i],MOVING_SPEED)));
 		    }
 		}
 		currentAction = Optional
-			.of(new MoveAction((int) x, (int) y, this));
+			.of(new MoveAction((int) x, (int) y, this,MOVING_SPEED));
 		LOGGER.error("Assigned action move to" + x + " " + y);
 	    }
 	}
@@ -181,7 +175,7 @@ public class Carrier extends Soldier {
 		// yPosition);
 		/* Finally move to that position using a move action */
 		currentAction = Optional.of(
-			new MoveAction((int) p.getX(), (int) p.getY(), this));
+			new MoveAction((int) p.getX(), (int) p.getY(), this,MOVING_SPEED));
 	    }
 	    return;
 	}
@@ -209,7 +203,7 @@ public class Carrier extends Soldier {
 	    currentAction = Optional.of(new LoadAction(this, target));
 	    LOGGER.error("Assigned action load target at " + x + " " + y);
 	} else {
-	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this,MOVING_SPEED));
 	    LOGGER.error("Unloadable target");
 	}
     }
@@ -221,6 +215,8 @@ public class Carrier extends Soldier {
      * @return true if able to load the target, false otherwise
      */
     public boolean loadPassengers(Soldier target) {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound(loadSound);
 	for (int i = 0; i < capacity; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
@@ -247,6 +243,8 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassenger() {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		sound.playSound(loadSound);
 	LOGGER.info("Everyone off!");
 	int empty = 0;
 	for (int i = 0; i < capacity; i++) {
