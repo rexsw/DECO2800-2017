@@ -103,7 +103,7 @@ public class Game{
 	private void addAIEntities() {
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setPlayer(length, width, 1, 1);
+		setPlayer(length, width, 0, 1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);

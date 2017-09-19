@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Interpolation.Bounce;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -78,19 +80,6 @@ public class GameStats{
 	
 	private Table setGraph(){
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
-		float[] test = new float[100];
-		for(int i =0; i < 100; i++) {
-			test[i] = (float) (i * 2.5);
-		}
-		ShapeRenderer sr= new ShapeRenderer();
-		sr.begin(ShapeRenderer.ShapeType.Filled);
-		sr.setColor(1, 1, 0, 1);
-		sr.end();
-		sr.begin(ShapeRenderer.ShapeType.Line);
-		sr.polyline(test);
-		sr.rect(0, 0, 160, 160);
-		sr.end();
-		
 		Table graphTable = new Table();
 		Label graphInfo = new Label("-Graph goes here-", skin);  //$NON-NLS-1$
 		graphTable.add(graphInfo).align(Align.center);
@@ -185,6 +174,8 @@ public class GameStats{
 		window.row();
 		
 		window.add(getExitButton()).align(Align.bottom | Align.right);
+		
+
 		return window; 
 	}
 	

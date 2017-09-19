@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -91,6 +93,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		createMap();
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
+		
+		
 	}
 		
 	/**
@@ -157,6 +161,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
+		
 		if(!this.gameStarted) {
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();

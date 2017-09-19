@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.hud.GameStats;
 
 /**
  * A class the handles winning the game
@@ -81,8 +82,8 @@ public class WinManager extends Manager implements TickableManager {
 			if (object == (Object) 1) {
 				System.exit(0);
 			} else {
-				// later add viewing of game stats here
-				System.exit(0);
+				GameStats stats = new GameStats(GameManager.get().getStage(), GameManager.get().getSkin(),GameManager.get().getGui(),(TextureManager) GameManager.get().getManager(TextureManager.class));
+				stats.showStats();
 			}
 		}
 	}
