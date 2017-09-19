@@ -7,21 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -34,20 +20,15 @@ import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.managers.TextureManager;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashSet;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -901,7 +882,8 @@ public class HUDView extends ApplicationAdapter{
 		mapButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//GameManager.get().getMarsWars().create();
+				// to be implemented
+				// needs a restart function that takes a MapTypes parameter
 			}
 		});
 		TextButton sizeButton = new TextButton("World Size",skin);
@@ -909,6 +891,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				// to be implemented
+				// needs a restart function that takes a MapSizeTypes parameter
 			}
 		});
 

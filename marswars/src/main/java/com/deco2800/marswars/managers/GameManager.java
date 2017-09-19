@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -46,8 +45,6 @@ public class GameManager implements TickableManager {
 	private MiniMap miniMap;
 
 	private HUDView gui;
-
-	private MarsWars marsWars;
 
 	/**
 	 * Returns an instance of the GM
@@ -275,14 +272,6 @@ public class GameManager implements TickableManager {
 				((TickableManager) m).onTick(0);
 			}
 		}
-	}
-
-	public void setMarsWars(MarsWars marsWars){
-		this.marsWars = marsWars;
-	}
-
-	public MarsWars getMarsWars( ){
-		return marsWars;
 	}
 
 
