@@ -13,7 +13,7 @@ import java.util.List;
  * this class holds the information about multiselection
  */
 public class MultiSelection extends Manager {
-    private static AbstractWorld world = GameManager.get().getWorld();
+    //private static AbstractWorld world = GameManager.get().getWorld();
 
     private static Array2D<Integer> selectedTiles;
 
@@ -22,6 +22,7 @@ public class MultiSelection extends Manager {
     }
 
     public static void resetSelectedTiles() {
+        AbstractWorld world = GameManager.get().getWorld();
         int width=world.getWidth();
         int length=world.getLength();
         selectedTiles = new Array2D<Integer>(width, length);
@@ -34,6 +35,18 @@ public class MultiSelection extends Manager {
 
 
     public static void updateSelectedTiles(int endX,int endY){
+        AbstractWorld world = GameManager.get().getWorld();
+        if (endX < 0){
+            endX=0;
+        }else if( endX > world.getWidth()){
+            endX=world.getWidth();
+        }
+
+        if (endY < 0){
+            endY=0;
+        }else if( endY > world.getLength()){
+            endY=world.getLength();
+        }
         tiles[2]=endX;
         tiles[3]=endY;
         if (tiles[0] >= tiles[2]) {
@@ -79,9 +92,7 @@ public class MultiSelection extends Manager {
         projY = -(y - tileHeight / 2f) / tileHeight + projX;
         projX -= projY - projX;
 
-//        if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
-//            return;//TODO put the boundary in
-//        }
+
 
         tiles[0]=(int)projX;
         tiles[1]=(int)projY;

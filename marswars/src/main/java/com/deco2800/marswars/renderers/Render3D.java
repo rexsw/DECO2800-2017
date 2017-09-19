@@ -89,6 +89,9 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
+        //render multiselection
+        renderEntities(multiSelection,batch,camera,0);
+
         //render the entities
         renderEntities(walkables, batch, camera,0);
         renderEntities(entities, batch, camera,0);
@@ -99,8 +102,7 @@ public class Render3D implements Renderer {
         //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
 
-        //render multiselection
-        renderEntities(multiSelection,batch,camera,0);
+
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
@@ -163,7 +165,7 @@ public class Render3D implements Renderer {
 
             //multi selection entities
             if(entity instanceof MultiSelectionTile){
-                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==1)
+                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
                 continue;
             }
 
