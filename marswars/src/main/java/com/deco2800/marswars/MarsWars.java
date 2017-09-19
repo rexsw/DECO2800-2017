@@ -1,30 +1,25 @@
 package com.deco2800.marswars;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.InitiateGame.InputProcessor;
+import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.hud.*;
-import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +53,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Stage stage;
 	Window window;
 
-	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private BackgroundManager bgManager = (BackgroundManager)
+			GameManager.get().getManager(BackgroundManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -157,7 +156,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		this.view.render(this.lastMenuTick);
 		this.menu.renderGame(this.camera, batch);
-		
+
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
 		this.stage.act();

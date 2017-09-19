@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+<<<<<<< HEAD
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -20,6 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+=======
+import com.badlogic.gdx.scenes.scene2d.*;
+>>>>>>> e4d51fc5277409bc1428f323a744ea69a05d54e2
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -29,6 +33,7 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
+<<<<<<< HEAD
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -36,14 +41,20 @@ import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
+=======
+import com.deco2800.marswars.entities.items.Armour;
+import com.deco2800.marswars.entities.items.Special;
+import com.deco2800.marswars.entities.items.Weapon;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.*;
+>>>>>>> e4d51fc5277409bc1428f323a744ea69a05d54e2
 import com.deco2800.marswars.renderers.Renderable;
-import com.deco2800.marswars.managers.TextureManager;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashSet;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -56,7 +67,7 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONSIZE = 50; //sets size of image buttons 
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
-    private static final int TYPES_OF_ENTITIES = 4;
+    private static final int NUMBER_OF_MENU_OPTIONS = 6;
 
 	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
@@ -128,6 +139,8 @@ public class HUDView extends ApplicationAdapter{
 	int techCheck = 0;
 	int chatActiveCheck = 0;
 	int exitCheck = 0;
+	
+	Dialog pause;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -656,7 +669,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.setMovable(false);
         entitiesPicker.setVisible(false);
         entitiesPicker.setWidth(stage.getWidth()-220);
-        entitiesPicker.setHeight(220);
+        entitiesPicker.setHeight(150);
     }
 
     /**
@@ -700,10 +713,29 @@ public class HUDView extends ApplicationAdapter{
             }
         });
 
-        table.add(unitsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(buildingsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(resourcesButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(terrainsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+		TextButton mapButton = new TextButton("Maps",skin);
+		mapButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// to be implemented
+				// needs a restart function that takes a MapTypes parameter
+			}
+		});
+		TextButton sizeButton = new TextButton("World Size",skin);
+		sizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// to be implemented
+				// needs a restart function that takes a MapSizeTypes parameter
+			}
+		});
+
+        table.add(unitsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(buildingsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(resourcesButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(terrainsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+		table.add(mapButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+		table.add(sizeButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
         entitiesPicker.add(table);
         stage.addActor(entitiesPicker);
 
@@ -1084,7 +1116,11 @@ public class HUDView extends ApplicationAdapter{
 			//pause menu listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 				if (pauseCheck == 0){
-					new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+				} else {
+					timeManager.unPause();
+					this.setPauseCheck(0);
+					pause.hide();
 				}
 			}
 		}
