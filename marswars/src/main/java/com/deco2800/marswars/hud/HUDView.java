@@ -144,6 +144,8 @@ public class HUDView extends ApplicationAdapter{
 	int techCheck = 0;
 	int chatActiveCheck = 0;
 	int exitCheck = 0;
+	
+	Dialog pause;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -1270,7 +1272,11 @@ public class HUDView extends ApplicationAdapter{
 			//pause menu listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 				if (pauseCheck == 0){
-					new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+				} else {
+					timeManager.unPause();
+					this.setPauseCheck(0);
+					pause.hide();
 				}
 			}
 		}
