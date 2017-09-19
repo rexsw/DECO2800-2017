@@ -2,15 +2,11 @@ package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
+import com.deco2800.marswars.hud.HUDView;
 
 /**
  * @author Naziah Siddique
@@ -35,15 +31,18 @@ public class MenuScreen{
 	}
 	
 	private Skin skin; 
-	private LobbyButton lobby; 
-	
+	private LobbyButton lobby;
+	private HUDView gui;
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
+	private MainMenu menu; 
 	
-	public MenuScreen(Skin skin, Window window, Stage stage) {
+	
+	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
+		this.menu = mainMenu;
 		playerModeSelect(window, stage);
 	}
 	
@@ -53,13 +52,15 @@ public class MenuScreen{
 		Label modeInfo = new Label("SELECT A MODE", this.skin); //$NON-NLS-1$
 		Button singlePlayerButton = new TextButton("Single Player", this.skin); //$NON-NLS-1$
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin); //$NON-NLS-1$
-		
+		Button customizeButton = new TextButton("Customize", this.skin);
+
 		Label menuInfo = new Label("click play! to remove this window", this.skin); //$NON-NLS-1$
 		Button playGame = new TextButton("play!", this.skin); //$NON-NLS-1$
 		
 		playerMode.add(modeInfo).align(Align.center).row();
 		playerMode.add(singlePlayerButton).pad(10).row();
 		playerMode.add(multiplayerButton).row();
+		playerMode.add(customizeButton).row();
 		playerMode.add(menuInfo).align(Align.bottom).row();
 		playerMode.add(playGame).align(Align.bottom);
 		
@@ -78,10 +79,21 @@ public class MenuScreen{
 				selectServerMode(mainmenu, stage);
 			}
 		});
+
+		customizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				//MenuScreen.this.gui.showEntitiesPicker(true, true); to be changed DO NOT DELETE
+				menu.startGame(true);
+				mainmenu.setVisible(false);
+
+			}
+		});
 		
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				menu.startGame(true);
 				mainmenu.setVisible(false);
 			}
 		});
