@@ -45,9 +45,9 @@ public class CheatBox extends Table {
     private TextureManager textureManager;
 
     /**
-     * Creates a new instance of a ChatBox.
+     * Creates a new instance of a CheatBox.
      *
-     * @param skin The UI skin to be applied to all elements of the ChatBox.
+     * @param skin The UI skin to be applied to all elements of the CheatBox.
      */
     public CheatBox(Skin skin, TextureManager textureManager) {
         this.skin = skin;
@@ -72,7 +72,7 @@ public class CheatBox extends Table {
     }
 
     /**
-     * Sends the message in the chat text field when the enter key is pressed.
+     * extract the text field when the enter key is pressed.
      */
     @Override
     public void act(float delta) {
@@ -85,7 +85,7 @@ public class CheatBox extends Table {
     }
 
     /**
-     * Adds the new message to the bottom of the chat panel.
+     * Adds the new message to the bottom of the panel.
      *
      * @param newMessage The message to be added.
      */
@@ -106,14 +106,7 @@ public class CheatBox extends Table {
     }
 
     /**
-     * Gets the string currently in the messageTextField and sends the message
-     * to the server if the string is valid. Resets messageTextField to be
-     * empty.
-     *
-     * A valid string is not empty.
-     *
-     * Note: This method is currently implemented to just add message to
-     * chat box for testing purposes.Does not send to server.
+     *if the cheatcode is not empty, send to the CodeInterpreter to execute
      */
     private void readCheatCode() {
         String message = this.messageTextField.getText();

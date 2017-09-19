@@ -106,6 +106,7 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetArmor() {
+		test.setMaxArmor(100);
 		test.setArmor(100);
 		assertEquals(test.getArmor(), 100);
 		test.setArmor(-100);

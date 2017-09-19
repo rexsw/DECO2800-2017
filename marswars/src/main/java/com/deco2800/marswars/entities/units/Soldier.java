@@ -102,6 +102,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
+		setStance(2); // Default stance for soldier is aggressive
 	}
 
 	//sets all attack attributes
@@ -277,6 +278,18 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
+			// Stances are considered after this point
+			switch (getStance()) {
+				case 0:	
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+			}
+			
 			return;
 		}
 		if (!currentAction.get().completed()) {
@@ -312,6 +325,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
 			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
 			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){

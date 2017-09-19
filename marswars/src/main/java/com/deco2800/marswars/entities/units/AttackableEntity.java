@@ -41,6 +41,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
+	private int stance = 0; // the behavior of the unit responding to enemies
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -95,9 +96,11 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public void setArmor(int armor) {
 		if (armor < 0) {
 			this.armor = 0;
-			return;
+		} else if (armor > getMaxArmor()) {
+			this.armor = getMaxArmor();
+		} else {
+			this.armor = armor;
 		}
-		this.armor = armor;
 	}
 	
 	/**
@@ -183,6 +186,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.health  = health;
 	}
 
+	/**
+	 * Get the current action of the entity
+	 * @return the current action
+	 */
 	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
@@ -256,7 +263,13 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setLoyalty(int loyalty) {
-		this.loyalty = loyalty;
+		if (loyalty < 0) {
+			this.loyalty = 0;
+		} else if (loyalty > getMaxLoyalty()) {
+			this.loyalty = getMaxLoyalty();
+		} else {
+			this.loyalty = loyalty;
+		}
 	}
 
 	/**
@@ -282,7 +295,16 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	}
 	
 	/**
+	 * Get the maximum loyalty value of the unit
+	 * @return the maximum loyalty of the entity
+	 */
+	public int getMaxLoyalty() {
+		return maxLoyalty;
+	}
+	
+	/**
 	 * Set the movement speed of the entity
+	 * @param the new speed of the unit
 	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
@@ -290,6 +312,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	/**
 	 * Get the movement speed of the entity
+	 * @return the movement speed
 	 */
 	public float getSpeed() {
 		return speed;
@@ -422,5 +445,30 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 				this.setGotHitInterval(this.getMaxgotHitInterval());
 			}
 		}
+	}
+	
+	/**
+	 * This method returns a value denoting the stance of the unit.
+	 * 0 = Passive - Default unit behavior no reaction to enemies.
+	 * 1 = Defensive - Unit will attack enemies within their range but not move.
+	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
+	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * @return the entity stance
+	 */
+	public int getStance() {
+		return stance;
+	}
+	
+	/**
+	 * Changes the stance of the unit.
+	 * The new stance is chosen according to the list.
+	 * 0 = Passive - Default unit behavior no reaction to enemies. Possible building behavior.
+	 * 1 = Defensive - Unit will attack enemies within their range but not move. Possible building behavior.
+	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
+	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * @param the integer corresponding with the stance
+	 */
+	public void setStance(int stance) {
+		this.stance = stance;
 	}
 }
