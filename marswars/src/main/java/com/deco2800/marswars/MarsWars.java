@@ -58,8 +58,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Stage stage;
 	Window window;
 
-	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private BackgroundManager bgManager = (BackgroundManager)
+			GameManager.get().getManager(BackgroundManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -157,7 +161,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		this.view.render(this.lastMenuTick);
 		this.menu.renderGame(this.camera, batch);
-		
+
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
 		this.stage.act();
