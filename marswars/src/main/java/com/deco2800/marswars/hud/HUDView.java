@@ -131,6 +131,7 @@ public class HUDView extends ApplicationAdapter{
 	int helpCheck = 0;
 	int techCheck = 0;
 	int chatActiveCheck = 0;
+	int cheatActiveCheck = 0;
 	int exitCheck = 0;
 	
 	Dialog pause;
@@ -253,12 +254,12 @@ public class HUDView extends ApplicationAdapter{
 
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-
+		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
-		overheadRight.add(cheatButton).padRight(BUTTONPAD);
+
 
 
 		welcomeMsg = new Table();
@@ -311,12 +312,13 @@ public class HUDView extends ApplicationAdapter{
 		cheatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				if (messageToggle){
+				if (cheatActiveCheck==1){
 					cheatWindow.setVisible(false);
-					messageToggle = false;
+					cheatActiveCheck = 0;
 				} else {
 					cheatWindow.setVisible(true);
-					messageToggle = true;
+					cheatbox.setVisible(true);
+					cheatActiveCheck = 1;
 				}
 
 			}
@@ -379,7 +381,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("cheatbox"); //$NON-NLS-1$
 		cheatWindow = new Window("Cheat", skin); //$NON-NLS-1$
 		cheatWindow.setMovable(false);
-		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-BUTTONPAD,
+		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-50,
 				Math.round(stage.getHeight()-cheatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
 		cheatWindow.add(cheatbox);
 		cheatWindow.setVisible(false);
@@ -1149,7 +1151,7 @@ public class HUDView extends ApplicationAdapter{
 
 
 		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 
@@ -1164,7 +1166,7 @@ public class HUDView extends ApplicationAdapter{
 		}
 
 		
-		if(chatActiveCheck == 0) {
+		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
@@ -1266,6 +1268,8 @@ public class HUDView extends ApplicationAdapter{
 		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
+		cheatbox.setVisible(false);
+		cheatWindow.setVisible(false);
 	}
 
 	/**
