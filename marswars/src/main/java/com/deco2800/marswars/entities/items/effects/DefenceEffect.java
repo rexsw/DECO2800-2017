@@ -43,8 +43,7 @@ public class DefenceEffect implements Effect{
 			hero.setMaxHealth(hero.getMaxHealth() + this.health);
 			hero.setHealth(hero.getHealth() + this.health);
 			//only allows the resulting movement speed to be positive.
-			hero.setMoveSpeed(hero.getMoveSpeed() + this.moveSpeed > 0 ? hero.getMoveSpeed() + this.moveSpeed : 0.01f);
-			//hero.setSpeed(0.05f);
+			hero.setSpeed(hero.getSpeed() + this.moveSpeed > 0 ? hero.getSpeed() + this.moveSpeed : 0.0001f);
 		}
 		
 	}
@@ -63,7 +62,7 @@ public class DefenceEffect implements Effect{
 			hero.setArmor(hero.getArmor() > this.armour ? hero.getArmor() - this.armour : 1);
 			hero.setMaxHealth(hero.getMaxHealth() - this.health);
 			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
-			hero.setMoveSpeed(hero.getMoveSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
+			hero.setSpeed(hero.getSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
 			
 		}
 	}
