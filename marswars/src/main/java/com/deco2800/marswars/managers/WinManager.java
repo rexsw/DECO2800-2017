@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.hud.ExitGame;
 
 /**
  * A class the handles winning the game
@@ -20,7 +19,8 @@ public class WinManager extends Manager implements TickableManager {
 			.getManager(GameBlackBoard.class);
 	private int teams;
 	private String winner;
-	private Dialog winnermsn = null;
+	private Dialog winnermsn;
+	private boolean gamewin = false;
 
 	@Override
 	public void onTick(long i) {
@@ -28,16 +28,22 @@ public class WinManager extends Manager implements TickableManager {
 		if (teams == 1) {
 			//combat win for a team
 			LOGGER.info("tick winner " + teams);
-			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
-			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
-			winnermsn.show(GameManager.get().getStage());
+			gamewin = true;
+			if(GameManager.get().getSkin() != null) {
+				winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
+				winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
+				winnermsn.show(GameManager.get().getStage());
+			}
 		}
 		teams = ((ResourceManager) GameManager.get().getManager(ResourceManager.class)).CappedTeam();
 		if(teams != 0) {
 			//economic win for a team
-			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(teams);
-			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Economic");
-			winnermsn.show(GameManager.get().getStage());
+			gamewin = true;
+			if(GameManager.get().getSkin() != null) {
+				winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(teams);
+				winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Economic");
+				winnermsn.show(GameManager.get().getStage());
+			}
 		}
 	}
 	
@@ -47,7 +53,7 @@ public class WinManager extends Manager implements TickableManager {
 	 * @return true iif a winner has been picked
 	 */
 	public boolean isWinner() {
-		return winnermsn != null;
+		return gamewin;
 	}
 	
 	/**
