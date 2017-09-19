@@ -14,7 +14,7 @@ import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
-
+@Ignore
 public class InventoryTest {
 	//Necessary instances to be made/defined.
 	BaseWorld baseWorld;
