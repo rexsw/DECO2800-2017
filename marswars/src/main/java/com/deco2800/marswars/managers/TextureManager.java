@@ -122,9 +122,12 @@ public class TextureManager extends Manager {
         this.saveTexture("minus_button", "resources/HUDAssets/minusbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
+        this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
+        this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
+        this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
         
         //----------Unit Assets:
         //Soldier:
@@ -141,12 +144,25 @@ public class TextureManager extends Manager {
         this.saveTexture("carrier", "resources/UnitAssets/Neutral/Carrier_1.png");
         this.saveTexture("carrierSelected", "resources/UnitAssets/Neutral/Carrier_2.png");
         
+        //Commander:
+        this.saveTexture("commander", "resources/UnitAssets/Neutral/Commander_1.png");
+        this.saveTexture("commanderSelected", "resources/UnitAssets/Neutral/Commander_2.png");
+        
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
         this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
+        
+        // Item icon in shop dialog
+        this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
+        this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
+        this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
+        this.saveTexture("heal_needle", "resources/shopAssets/items/heal_needle.png");
+        this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
+        this.saveTexture("locked_inventory", "resources/TechtreeAsset/Lock.PNG");
+        
     }
     /*
      *

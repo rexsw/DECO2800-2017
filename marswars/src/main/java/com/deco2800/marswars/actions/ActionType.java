@@ -5,5 +5,5 @@ package com.deco2800.marswars.actions;
  */
 
 public enum ActionType {
-    DAMAGE, GATHER, MOVE, GENERATE, IMPACT, BUILD, CREATEITEM
+    DAMAGE, GATHER, MOVE, GENERATE, IMPACT, BUILD, CREATEITEM, LOAD, UNLOAD
 }

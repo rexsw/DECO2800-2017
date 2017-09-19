@@ -9,9 +9,11 @@ public class ExitGame extends Dialog{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+	HUDView hud;
 
-	public ExitGame(String title, Skin skin) {
+	public ExitGame(String title, Skin skin, HUDView hud) {
 		super(title, skin);
+		this.hud = hud;
 		
 			{
 				text("Are you sure you want to quit? ");
@@ -25,6 +27,7 @@ public class ExitGame extends Dialog{
 				if(object == (Object) 1){
 					System.exit(0);
 				} else {
+					this.hud.setExitCheck(0);
 					timeManager.unPause();
 				}
 			}	

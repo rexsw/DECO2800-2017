@@ -233,9 +233,10 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
             resourceManager.setBiomass(resourceManager.getBiomass(this.owner)
                             - 30,
                     this.owner);
-            currentAction = Optional.of(new GenerateAction(new HeroSpacman
+           /* currentAction = Optional.of(new GenerateAction(new HeroSpacman
                     (world, this.getPosX() - 1, this.getPosY() - 1, 0)));
             // increment golbal hero counter here
+             */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
 

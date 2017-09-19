@@ -4,6 +4,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Renderable;
@@ -69,11 +71,13 @@ public class BaseWorld extends AbstractWorld {
 	 * @return int array of the coordinates. would be in order of left, right, bottom top.
 	 */
 	public int[] makeCollisionCoords(BaseEntity entity) {
+		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
 		int[] result = new int[4];
 		result[0] = (int)entity.getPosX();
-		result[1] = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		result[1] =  right < this.getWidth() ? right : this.getWidth() - 1; //limit to world width (-1 because index)
 		result[2] = (int)entity.getPosY();
-		result[3] = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+		result[3] = top < this.getLength() ? top : this.getLength() - 1; //limit to world length (-1 because index)
 		return result;
 	}
 	
@@ -87,6 +91,11 @@ public class BaseWorld extends AbstractWorld {
 
 		if (!entity.isCollidable())
 			return;
+
+		if (entity instanceof AttackableEntity && GameManager.get().getMiniMap() != null) {
+			// put things that can be attacked on the minimap
+			GameManager.get().getMiniMap().addEntity(entity);
+		}
 
 		//Add to the collision map
 		int[] collisionCoords = makeCollisionCoords(entity);
@@ -112,6 +121,10 @@ public class BaseWorld extends AbstractWorld {
 	@Override
 	public void removeEntity(BaseEntity entity) {
 		super.removeEntity(entity);
+		if (entity instanceof AttackableEntity && GameManager.get().getMiniMap() != null) {
+			// remove entity from the minimap when they are removed from the world
+			GameManager.get().getMiniMap().removeEntity(entity);
+		}
 		if (!entity.isCollidable())
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);

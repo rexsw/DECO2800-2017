@@ -2,20 +2,16 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import java.util.List;
-import com.deco2800.marswars.actions.DamageAction;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.actions.AttackAction;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -144,6 +140,7 @@ public class AttackableEntityTest {
 	public void testSetHealth() {
 		test.setHealth(100);
 		assertEquals(test.getHealth(), 100);
+		GameManager.get().setMiniMap(new MiniMap());
 		GameManager.get().getWorld().addEntity(test);
 		List<BaseEntity> alive = GameManager.get().getWorld().getEntities();
 		assertEquals(true, alive.contains(test));
@@ -155,7 +152,7 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetAction() {
-		DamageAction act = new DamageAction(test, enemy);
+		AttackAction act = new AttackAction(test, enemy);
 		test.setAction(act);
 		assertEquals(test.getCurrentAction().get(), act);
 		assertEquals(test.showProgress(), true);
