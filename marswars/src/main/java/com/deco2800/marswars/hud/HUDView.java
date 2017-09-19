@@ -1073,7 +1073,6 @@ public class HUDView extends ApplicationAdapter{
 			//tech tree listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 				if(techCheck == 0) {
-					timeManager.pause();
 					this.setTechCheck(1);
 					new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
 				}
@@ -1106,7 +1105,6 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 				if (helpCheck == 0) {
 					this.setHelpCheck(1);
-					timeManager.pause();
 					new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
 				}
 			}
