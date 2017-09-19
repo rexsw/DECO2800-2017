@@ -13,6 +13,9 @@ import com.deco2800.marswars.entities.units.Soldier;
  */
 public class LoadAction implements DecoAction {
 
+	//this speeds up the carrier unit
+	private static final float MOVING_SPEED=0.03f;
+
     enum State {
 	START_STATE, MOVE_STATE, LOAD_STATE
     }
@@ -56,7 +59,7 @@ public class LoadAction implements DecoAction {
 	    break;
 	default:
 	    action = new MoveAction(target.getPosX(), target.getPosY(),
-		    carrier);
+		    carrier,MOVING_SPEED);
 	    state = State.MOVE_STATE;
 	    return;
 	}

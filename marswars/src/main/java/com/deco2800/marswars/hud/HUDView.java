@@ -449,7 +449,7 @@ public class HUDView extends ApplicationAdapter{
 		});
 
 		setupEntitiesPickerMenu();
-		addEntitiesPickerMenu();
+		addEntitiesPickerMenu(true);
 	}
 
 	/**
@@ -663,22 +663,26 @@ public class HUDView extends ApplicationAdapter{
      * Add the customise window / entities picker.
      * This method shall only be called when the "Customize" button from the start menu is clicked.
      * If this method is call, it will cause that the actions window be set to not visible.
+	 *
+	 * @param inGame whether is used during a game play
      */
-    private void addEntitiesPickerMenu(){
+    private void addEntitiesPickerMenu(boolean inGame){
 		entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText("Spawn");
+
         Table table = new Table();
         TextButton unitsButton = new TextButton("Units",skin);
         unitsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addUnitsPickerMenu();
+                addUnitsPickerMenu(inGame);
             }
         });
         TextButton buildingsButton = new TextButton("Buildings",skin);
         buildingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addBuildingsPickerMenu();
+                addBuildingsPickerMenu(inGame);
             }
         });
         TextButton resourcesButton = new TextButton("Resources",skin);
@@ -707,19 +711,29 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available units
+	 *
+	 * @param inGame whether is being used during a game play
      */
-    private void addUnitsPickerMenu(){
+    public void addUnitsPickerMenu(boolean inGame){
         entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText("Spawn Units");
+
+		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
-        entitiesButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                addEntitiesPickerMenu();
-                entitiesPicker.setVisible(true);
-            }
-        });
+		table.align(Align.left);
+        if(!inGame) {
+			TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+			entitiesButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					addEntitiesPickerMenu(inGame);
+					entitiesPicker.setVisible(true);
+				}
+			});
+			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+		}
         TextButton astronautButton = new TextButton("Astronaut",skin);
         astronautButton.addListener(new ChangeListener() {
 			@Override
@@ -736,12 +750,9 @@ public class HUDView extends ApplicationAdapter{
         TextButton spacmanButton = new TextButton("Spacman",skin);
         TextButton tankButton = new TextButton("Tank",skin);
 
-        float buttonWidth = entitiesPicker.getWidth()/6;
-        float buttonHeight = entitiesPicker.getHeight();
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
-        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
         table.add(astronautButton).width(buttonWidth).height(buttonHeight);
         table.add(carrierButton).width(buttonWidth).height(buttonHeight);
         table.add(healerButton).width(buttonWidth).height(buttonHeight);
@@ -757,32 +768,39 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available buildings
+	 *
+	 * @param inGame whether is being used during a game play
      */
-    private void addBuildingsPickerMenu(){
+    public void addBuildingsPickerMenu(boolean inGame){
         entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText("Generate Buildings");
+
+		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
-        entitiesButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                addEntitiesPickerMenu();
-                entitiesPicker.setVisible(true);
-            }
-        });
+        table.align(Align.left);
+		if(!inGame) {
+			TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+			entitiesButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					addEntitiesPickerMenu(inGame);
+					entitiesPicker.setVisible(true);
+				}
+			});
+			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+		}
         TextButton barracksButton = new TextButton("Barracks",skin);
         TextButton baseButton = new TextButton("Base",skin);
         TextButton bunkerButton = new TextButton("Bunker",skin);
         TextButton heroFactoryButton = new TextButton("Hero Factory",skin);
         TextButton turretButton = new TextButton("Turret",skin);
 
-        float buttonWidth = entitiesPicker.getWidth()/6;
-        float buttonHeight = entitiesPicker.getHeight();
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
 
-        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
         table.add(barracksButton).width(buttonWidth).height(buttonHeight);
         table.add(baseButton).width(buttonWidth).height(buttonHeight);
         table.add(bunkerButton).width(buttonWidth).height(buttonHeight);
@@ -795,31 +813,36 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available resources
+	 *
      */
     private void addResourcesPickerMenu(){
         entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText("Spawn Resources");
+
+		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
-        entitiesButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                addEntitiesPickerMenu();
-                entitiesPicker.setVisible(true);
-            }
-        });
+		table.align(Align.left);
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu(false);
+				entitiesPicker.setVisible(true);
+			}
+		});
+		table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+
         TextButton biomassButton = new TextButton("Biomass",skin);
         TextButton crystalButton = new TextButton("Crystal",skin);
         TextButton rockButton = new TextButton("Rock",skin);
         TextButton waterButton = new TextButton("Water",skin);
 
-        float buttonWidth = entitiesPicker.getWidth()/6;
-        float buttonHeight = entitiesPicker.getHeight();
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
 
-        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
         table.add(biomassButton).width(buttonWidth).height(buttonHeight);
         table.add(crystalButton).width(buttonWidth).height(buttonHeight);
         table.add(rockButton).width(buttonWidth).height(buttonHeight);
@@ -831,31 +854,36 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available terrains
+	 *
      */
     private void addTerrainsPickerMenu(){
         entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText(" Generate Terrains");
+
+		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
-        entitiesButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                addEntitiesPickerMenu();
-                entitiesPicker.setVisible(true);
-            }
-        });
+		table.align(Align.left);
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu(false);
+				entitiesPicker.setVisible(true);
+			}
+		});
+		table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+
         TextButton caveButton = new TextButton("Cave",skin);
         TextButton lakeButton = new TextButton("Lake",skin);
         TextButton pondButton = new TextButton("Pond",skin);
         TextButton quicksandButton = new TextButton("Quicksand",skin);
 
-        float buttonWidth = entitiesPicker.getWidth()/6;
-        float buttonHeight = entitiesPicker.getHeight();
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
 
-        table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
         table.add(caveButton).width(buttonWidth).height(buttonHeight);
         table.add(lakeButton).width(buttonWidth).height(buttonHeight);
         table.add(pondButton).width(buttonWidth).height(buttonHeight);
@@ -875,7 +903,7 @@ public class HUDView extends ApplicationAdapter{
     public void showEntitiesPicker( boolean isVisible, boolean isPlaying){
         entitiesPicker.setVisible(isVisible);
         // this call allows the menu to reset instead of using its latest state
-        addEntitiesPickerMenu();
+        addEntitiesPickerMenu(isPlaying);
         if(!isPlaying) {
 			toggleFog();
 			// pause not implemented yet.
