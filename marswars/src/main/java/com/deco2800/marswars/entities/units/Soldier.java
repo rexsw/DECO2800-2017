@@ -111,6 +111,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setHealth(t.getUnitAttribute(this.name, 1));
 		this.setDamage(t.getUnitAttribute(this.name, 2));
 		this.setArmor(t.getUnitAttribute(this.name, 3));
+		this.setMaxArmor(t.getUnitAttribute(this.name, 3));
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
@@ -118,7 +119,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.01f); 
+		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
 	

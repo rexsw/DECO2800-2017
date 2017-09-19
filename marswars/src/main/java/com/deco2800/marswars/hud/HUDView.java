@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -17,11 +16,9 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.items.Armour;
-import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import org.slf4j.Logger;
@@ -40,7 +37,6 @@ public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	private static final int BUTTONSIZE = 50; //sets size of image buttons 
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
-	private static final int CRITICALHEALTH = 30; //critical health of spacmen
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
     private static final int NUMBER_OF_MENU_OPTIONS = 6;
 
@@ -52,14 +48,12 @@ public class HUDView extends ApplicationAdapter{
 	private ImageButton helpButton;
 	private ImageButton messageButton;
 
-	ProgressBar.ProgressBarStyle barStyle;
 	//HUD elements 
-	private Image selectedImage; //The current image to be displayed in top left
 	private Table overheadRight; //contains all basic quit/help/chat buttons
 	private Table resourceTable; //contains table of resource images + count
-    private Table playerdetails; //contains player icon, health and game stats
     private Table HUDManip;		 //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message 
+	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
 	private Window messageWindow;//window for the chatbox 
 	private Window minimap;		 //window for containing the minimap
@@ -76,14 +70,6 @@ public class HUDView extends ApplicationAdapter{
 	private Label biomassCount; 
 	private Label waterCount;
 	
-	//Player stats + progress bar 
-	private Image spacman; 		   //image of spacman
-	private Label playerSpacmen;   //counts spacmen on baord
-	private Label playerEnemySpacmen; //counts enemies seen on board
-	private Label healthLabel;     //numeric indicator for health level
-	private Label nameLabel;       //name of player 
-	private ProgressBar healthBar; //progress bar displaying spacmen health
-	private Pixmap pixmap; 		   //used for progress bar 
 	
 	//Action buttons
 	private List<TextButton> buttonList;
@@ -114,7 +100,6 @@ public class HUDView extends ApplicationAdapter{
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
-	private Table heroInventory; // hero inventory display
 	
 	private GameStats stats;
 	
@@ -305,173 +290,13 @@ public class HUDView extends ApplicationAdapter{
 	 * 
 	 */
 	private void addPlayerDetails(){
-		LOGGER.debug("Adding player icon"); //$NON-NLS-1$
-		playerdetails = new Table();
-		playerdetails.pad(10);
-		playerdetails.setWidth(150);
-		playerdetails.setPosition(0, stage.getHeight());
-		
-		//Icon for player- 
-		//TODO get main menu working to select an icon and then display 
-		selectedImage = new Image(textureManager.getTexture("spacman_blue"));
-		playerdetails.add(selectedImage).height(100).width(100);
-		
-		//create table for health bar display
-		Table healthTable = new Table();
-		//Create the health bar 
-		LOGGER.debug("Creating health bar"); //$NON-NLS-1$
-		addProgressBar();
-		healthLabel = new Label("Health: ", skin); //$NON-NLS-1$
-		healthTable.add(healthLabel).align(Align.left);
-		healthTable.row();
-		healthTable.add(healthBar);
-		
-		playerdetails.add(healthTable);
-
-		//add in player name
-		playerdetails.row();
-		Label playerName = new Label("Name", skin); //$NON-NLS-1$
-		playerdetails.add(playerName);
-		
-		this.nameLabel = playerName;
-		
-		// add in the hero inventory display
-		heroInventory = new Table();
-		setUpHeroInventory();
-		heroInventory.setVisible(false);
-		playerdetails.add(heroInventory);
-		
-		//add in player stats to a new table 
-		Table playerStats = new Table();
-		playerSpacmen = new Label("Alive spacmen: 0", skin); //$NON-NLS-1$
-		playerEnemySpacmen = new Label("Evil spacman: 0", skin); //$NON-NLS-1$
-		
-		//image for spacman
-		Texture spacmanTex = textureManager.getTexture("spacman_green"); //$NON-NLS-1$
-		spacman = new Image(spacmanTex);
-		//image for enemy spatman
-		Texture spatmanTex = textureManager.getTexture("spatman_blue"); //$NON-NLS-1$
-		Image spatman = new Image(spatmanTex);
-
-		//add in spacmen and enemy stats to stats 
-		playerStats.padLeft(20).padTop(60);
-		playerStats.align(Align.left);
-		playerStats.add(spacman).height(60).width(60).padBottom(10);
-		playerStats.add(playerSpacmen).center();
-		playerStats.row();
-		playerStats.add(spatman).height(60).width(40);
-		playerStats.add(playerEnemySpacmen).center();
-		
-		//add in stats table 
-		playerdetails.row();
-		playerdetails.add(playerStats);
-		stage.addActor(playerdetails);
+		LOGGER.debug("drawing unit stats");
+		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
+		statsTable.setWidth(200);
+		statsTable.pad(5);
+		this.statsTable.setVisible(false);
+		stage.addActor(statsTable);
 	}
-	
-	/**
-	 * This method just set up the hero inventory to let it has a dark background
-	 */
-	private void setUpHeroInventory() {
-		heroInventory = new Table();
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.DARK_GRAY);
-		pixmap.fill();
-		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
-		pixmap.dispose();
-	}
-	
-	/**
-	 * This method will gets called when user select a hero character, this method then 
-	 * display this hero's items on the HUD
-	 */
-	private void updateHeroInventory(Commander hero) {	
-		ImageButton weaponBtn;
-		ImageButton armourBtn;
-		heroInventory.clear();
-		
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.DARK_GRAY);
-		pixmap.fill();
-		
-		Inventory inventory = hero.getInventory();
-		Weapon weapon = inventory.getWeapon();
-		Armour armour = inventory.getArmour();
-		List<Special> specials = inventory.getSpecials();
-		//heroInventory.debugAll();
-		if(weapon != null) {
-			 weaponBtn= generateItemButton(textureManager.getTexture(weapon.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
-		} else {
-			weaponBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
-		}
-		heroInventory.add(weaponBtn).width(30).height(30).pad(3);
-		
-		if(armour != null) {
-			armourBtn = generateItemButton(textureManager.getTexture(armour.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
-		} else {
-			armourBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
-		}
-		heroInventory.add(armourBtn).width(30).height(30).pad(3);
-		
-		int size = specials.size();
-		for(Special s : specials) {
-			ImageButton specialBtn = generateItemButton(textureManager.getTexture(s.getTexture()));
-			heroInventory.add(specialBtn).width(30).height(30).pad(3);
-			// handler here
-		}
-		for(int i = 0; i < 4-size; i++) {
-			ImageButton specialBtn = generateItemButton(textureManager.getTexture("locked_inventory"));
-			heroInventory.add(specialBtn).width(30).height(30).pad(3);
-		}
-		
-		//heroInventory.setVisible(false);
-		
-	}
-
-	/**
-	 * Adds in progress bar to the top left of the screen 
-	 */
-	private void addProgressBar(){
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.DARK_GRAY);
-		pixmap.fill();
-		barStyle = new ProgressBar.ProgressBarStyle();
-		barStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		barStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		healthBar = new ProgressBar(0,100, 1, false, barStyle);
-		healthBar.setValue(100);
-	}
-
 
 	/**
 	 * Implements a collapsible tab for the chat lobby 
@@ -588,11 +413,11 @@ public class HUDView extends ApplicationAdapter{
 		 */
 		shopDialog.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	if (heroSelected != null) {
+            		statsTable.updateHeroInventory(heroSelected);
+            	}
                 if (x < 0 || x > shopDialog.getWidth() || y < 0 || y > shopDialog.getHeight()){
                 	shopDialog.hide();
-                	if (heroSelected != null) {
-                		updateHeroInventory(heroSelected);
-                	}
                     return true;
                 }
                 return false;
@@ -771,7 +596,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	/**
-     * Currently sets the health to 100 once a selectable unit is selected.
+     * Display an attackable unit's stats once it's been selected
      * If target is a hero, display inventory
      * @param target unit clicked on by player
      */
@@ -780,51 +605,30 @@ public class HUDView extends ApplicationAdapter{
 			disableButton(buttonList.get(i));
 		}
 		if (selectedEntity == null) {
+			this.statsTable.setVisible(false);
             return;
         }
-		Texture entity = textureManager.getTexture(target.getTexture());
-		TextureRegion entityRegion = new TextureRegion(entity);
-		TextureRegionDrawable redraw = new TextureRegionDrawable(entityRegion);
-		selectedImage.setDrawable(redraw);
+		
         selectedEntity = target;
 		currentActions = target.getValidActions();
-		EntityStats stats = target.getStats();
-		updateSelectedStats(stats);
-        enterActions();
 
-        // display hero inventory
-        heroInventory.setVisible(false);
-        heroSelected = null;
-        if(target instanceof Commander) {
-        	heroSelected = (Commander) target;
-        	heroInventory.setVisible(true);
-        	updateHeroInventory((Commander)target);
-        }
+        enterActions();
+        
+		if(target instanceof AttackableEntity) {
+			this.statsTable.setVisible(true);
+			this.statsTable.updateSelectedStats(((AttackableEntity) target));
+
+	        // display hero inventory
+	        this.statsTable.hideInventory();
+	        heroSelected = null;
+	        if(target instanceof Commander) {
+	        	heroSelected = (Commander) target;
+	        	this.statsTable.showInventory();
+	        	this.statsTable.updateHeroInventory((Commander)target);
+	        }
+		}	
     }
 
-    /**
-     * Updates the health bar to the selected entity's health stats
-     * @param stats
-     */
-    private void updateSelectedStats (EntityStats stats) {
-		healthBar.setValue(stats.getHealth());
-		nameLabel.setText(stats.getName());
-		healthLabel.setText("Health: " + stats.getHealth()); //$NON-NLS-1$
-		//Update the health progress bad to red once health is below 20 
-		if (stats.getHealth() <= CRITICALHEALTH) {
-			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-			pixmap.setColor(Color.RED);
-			pixmap.fill();
-			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-			pixmap.dispose();
-		} else if (stats.getHealth() > CRITICALHEALTH){
-			pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-			pixmap.setColor(Color.GREEN);
-			pixmap.fill();
-			barStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-			pixmap.dispose();
-		}
-	}
 
     /**
      *  Creates the basic structure of the Entities picker menu
@@ -1194,20 +998,13 @@ public class HUDView extends ApplicationAdapter{
 		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
 		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
 		
-		/*Set value for health bar*/
-		healthBar.setValue(0);
-		
-		int spacmenCount = 0; 		//counts the number of spacmen in game
-		int enemySpacmanCount = 0;  //counts the number of spatmen in game
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
 				selectedEntity = e;
 			}
-			if (e instanceof Spacman) {
-				spacmenCount++; 
-			}
+			
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
@@ -1223,16 +1020,6 @@ public class HUDView extends ApplicationAdapter{
 		}
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
-
-	    /* Update the spacmen + enemy spatmen counts */
-	    playerSpacmen.setText("" + spacmenCount); //$NON-NLS-1$
-		playerEnemySpacmen.setText("" + enemySpacmanCount); //$NON-NLS-1$
-		
-		if (spacmenCount == 0) {
-			/*TODO get spacman icon to be spacman_ded when there
-			are no spacmen left*/
-			spacman = new Image(textureManager.getTexture("spacman_ded")); //$NON-NLS-1$
-		}
 		
 		//keyboard listeners for hotkeys
 		
@@ -1302,9 +1089,9 @@ public class HUDView extends ApplicationAdapter{
 				if (pauseCheck == 0){
 					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
 				} else {
-					timeManager.unPause();
 					this.setPauseCheck(0);
 					pause.hide();
+					timeManager.unPause();
 				}
 			}
 		}
@@ -1341,7 +1128,6 @@ public class HUDView extends ApplicationAdapter{
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
-	    playerdetails.setVisible(false);
 	    HUDManip.setVisible(false);
 		chatbox.setVisible(false);
 		messageWindow.setVisible(false);
@@ -1355,7 +1141,6 @@ public class HUDView extends ApplicationAdapter{
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
-	    playerdetails.setVisible(true);
 	    HUDManip.setVisible(true);
 		chatbox.setVisible(true);
 		minimap.setVisible(true);
@@ -1370,9 +1155,9 @@ public class HUDView extends ApplicationAdapter{
 	public void resize(int width, int height) {
         //Top Left
         LOGGER.debug("Window resized, rescaling hud"); //$NON-NLS-1$
-		playerdetails.setWidth(100);
-        playerdetails.align(Align.left | Align.top);
-        playerdetails.setPosition(0, stage.getHeight());
+		statsTable.setWidth(100);
+		statsTable.align(Align.left | Align.top);
+		statsTable.setPosition(0, stage.getHeight());
         //Top of panel
         overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);
@@ -1426,17 +1211,5 @@ public class HUDView extends ApplicationAdapter{
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
-	}
-
-
-	/**
-	 * Private helper method to make image buttons for the items with the provided texture (the item icon image).
-	 * @param image  Texture that is the desired item icon for the button
-	 * @return ImageButton object that has the provided image for the item icon
-	 */
-	private ImageButton generateItemButton(Texture image) {
-		TextureRegion imgRegion = new TextureRegion(image);
-		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-		return new ImageButton(imgDraw);
 	}
 }

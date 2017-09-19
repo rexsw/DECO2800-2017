@@ -1,10 +1,12 @@
 package com.deco2800.marswars.InitiateGame;
 
-import java.awt.event.KeyEvent;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.deco2800.marswars.managers.MultiSelection;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +48,12 @@ public class InputProcessor{
 	private int cameraPointer = 0;
 	Set<Integer> downKeys = new HashSet<>();
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+
+	private boolean multiSelectionFlag=false;
+	private MultiSelection multiSelection = new MultiSelection();
+
 	MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
-	
+
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InputProcessor.class);
 
@@ -61,6 +67,7 @@ public class InputProcessor{
 	 * Handles keyboard input.
 	 */
 	public void handleInput(long pauseTime) {
+
 		final int speed = 10; //zoom speed
 		final int pxTolerance = 20; // modifies how close to the edge the cursor
 									//has to be before the map starts moving.
@@ -83,21 +90,6 @@ public class InputProcessor{
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
-		//TODO remove this 
-		/*
-		if (this.downKeys.contains(Input.Keys.ESCAPE) && currentSeconds > pauseTime + 1000) {
-			if (currentSeconds > pauseTime + 1000) {
-				if (this.timeManager.isPaused()) {
-					this.timeManager.unPause();
-					pauseTime = this.timeManager.getGlobalTime();
-				} else {
-					LOGGER.info("PAUSING #############################"); //$NON-NLS-1$
-					this.timeManager.pause();
-					pauseTime = this.timeManager.getGlobalTime();
-				}
-			}
-		}*/
 
 		//move the map in the chosen direction
 		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
@@ -118,10 +110,7 @@ public class InputProcessor{
 		if ((this.downKeys.contains(Input.Keys.MINUS)) && (this.camera.zoom < 10)) {
 			this.camera.zoom *= 1.05;
 		}
-		if ((this.downKeys.contains(Input.Keys.CONTROL_LEFT)) || (this.downKeys.contains(Input.Keys.CONTROL_RIGHT))) {
-			//Signal to mouse handler to allow multiple selections
-			mouseHandler.controlDown();
-		}
+
 		if (this.downKeys.contains(Input.Keys.C)){
 			if(this.cSwitcher == 0){
 				ArrayList<Float> xyPosition = new ArrayList<Float>();
@@ -204,49 +193,83 @@ public class InputProcessor{
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				if (GameManager.get().getActiveView() == 1) {
-					InputProcessor.this.camera.position.set(InputProcessor.this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-					InputProcessor.this.camera.zoom = 1;
-					GameManager.get().toggleActiveView();
-				} else {
+				if(!multiSelectionFlag) {
+					if (GameManager.get().getActiveView() == 1) {
+						InputProcessor.this.camera.position.set(InputProcessor.this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+						InputProcessor.this.camera.zoom = 1;
+						GameManager.get().toggleActiveView();
+					} else {
 
-					this.originX = screenX;
-					this.originY = screenY;
-					// if the click is on the minimap
-					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
-						return true;
+						this.originX = screenX;
+						this.originY = screenY;
+						// if the click is on the minimap
+						if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+							return true;
+						}
+
+						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+						MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button,false);
+
+
 					}
 
+				}else{
+				//TODO add button 0 and call the function to handle mouse click
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button);
+					multiSelection.addStartTile(worldCoords.x,worldCoords.y);
+
+					return true;
 				}
 				return true;
 			}
 
 			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
+			public boolean touchUp(int screenX,int screenY, int pointer, int button){//TODO add button 0 and call the function to handle mouse click
+				//this is used for multiselection
+				if(multiSelectionFlag){
+					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+					multiSelection.addEndTile(worldCoords.x,worldCoords.y);
+					multiSelection.clickAllTiles();
+					return true;
 
-				this.originX -= screenX;
-				this.originY -= screenY;
-
-				// invert the y axis
-				this.originY = -this.originY;
-
-				this.originX += InputProcessor.this.camera.position.x;
-				this.originY += InputProcessor.this.camera.position.y;
-
-				InputProcessor.this.camera.translate(this.originX - InputProcessor.this.camera.position.x, this.originY - InputProcessor.this.camera.position.y);
-
-				this.originX = screenX;
-				this.originY = screenY;
-				
-				GameManager.get().setCamera(InputProcessor.this.camera);
-
+				}
 				return true;
+
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+					if(multiSelectionFlag){
+						return true;
+					}
+
+					this.originX -= screenX;
+					this.originY -= screenY;
+
+					// invert the y axis
+					this.originY = -this.originY;
+
+					this.originX += InputProcessor.this.camera.position.x;
+					this.originY += InputProcessor.this.camera.position.y;
+
+					InputProcessor.this.camera.translate(this.originX - InputProcessor.this.camera.position.x, this.originY - InputProcessor.this.camera.position.y);
+
+					this.originX = screenX;
+					this.originY = screenY;
+
+					GameManager.get().setCamera(InputProcessor.this.camera);
+
+					return true;
+
 			}
 
 			@Override
 			public boolean keyDown(int keyCode) {
+
+				//enable multiSelection through touch and drag
+				if(keyCode==Input.Keys.SHIFT_LEFT || keyCode==Input.Keys.SHIFT_RIGHT) multiSelectionFlag=true;
+
 				InputProcessor.this.downKeys.add(keyCode);
 				keyPressed(keyCode);
 				return true;
@@ -254,11 +277,12 @@ public class InputProcessor{
 
 			@Override
 			public boolean keyUp(int keyCode) {
+
+				//disable multiSelection through touch and drag
+				if(keyCode==Input.Keys.SHIFT_LEFT || keyCode==Input.Keys.SHIFT_RIGHT) multiSelectionFlag=false;
+
 				InputProcessor.this.downKeys.remove(keyCode);
-				//If control is released disable multiple selection
-				if (keyCode == 129 || keyCode == 130) {
-					mouseHandler.controlUp();
-				}
+
 				return true;
 			}
 			
