@@ -1089,9 +1089,9 @@ public class HUDView extends ApplicationAdapter{
 				if (pauseCheck == 0){
 					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
 				} else {
-					timeManager.unPause();
 					this.setPauseCheck(0);
 					pause.hide();
+					timeManager.unPause();
 				}
 			}
 		}
