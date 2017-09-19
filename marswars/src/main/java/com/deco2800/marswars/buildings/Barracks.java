@@ -1,32 +1,11 @@
 package com.deco2800.marswars.buildings;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GenerateAction;
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.MouseHandler;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by JudahBennett on 25/8/17.
@@ -44,5 +23,18 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public Barracks(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BARRACKS, owner);
+	}
+
+	@Override
+	public void makeSelected() {
+		super.makeSelected();
+		GameManager.get().getGui().showEntitiesPicker(true, true);
+		GameManager.get().getGui().addUnitsPickerMenu(true);
+	}
+
+	@Override
+	public void deselect() {
+		super.deselect();
+		GameManager.get().getGui().showEntitiesPicker(false, true);
 	}
 }

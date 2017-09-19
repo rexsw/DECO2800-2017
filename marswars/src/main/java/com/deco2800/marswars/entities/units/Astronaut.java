@@ -71,7 +71,7 @@ public class Astronaut extends Soldier {
 	public void makeSelected() {
 		super.makeSelected();
 		GameManager.get().getGui().showEntitiesPicker(true, true);
-
+		GameManager.get().getGui().addBuildingsPickerMenu(true);
 	}
 
 	@Override
