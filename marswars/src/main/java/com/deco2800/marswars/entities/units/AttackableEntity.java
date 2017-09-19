@@ -37,6 +37,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
 	private int areaDamage; // the area of damage 
+	private boolean gotHit; // if the unit get hitted, it will be true;
+	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
+	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
+	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -158,11 +162,15 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	}
 
 	/**
-	 * Set the health of the entity
+	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
 	 * @param the health of the entity
 	 */
 	@Override
 	public void setHealth(int health) {
+		if (this.getHealth() > health) {
+			this.setGotHit(true);
+		}
+		
 		if (health <= 0) {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
@@ -229,21 +237,37 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		return attackSpeed;
 	}
 
+	/**
+	 * Get the loyalty attribute of the entity
+	 * @return the loyalty value of the entity
+	 */
 	@Override
 	public int getLoyalty() {
 		return loyalty;
 	}
 
+	/**
+	 * Set the loyalty attribute of the entity
+	 * @param loyalty
+	 * 		The loyalty attribute value
+	 */
 	@Override
 	public void setLoyalty(int loyalty) {
 		this.loyalty = loyalty;
 	}
 
+	/**
+	 * Get the loyalty damage attribute of the entity
+	 * @return the loyalty damage of the entity
+	 */
 	@Override
 	public int getLoyaltyDamage() {
 		return loyaltyDamage;
 	}
 
+	/**
+	 * Set the loyalty damage of the entity
+	 */
 	@Override
 	public void setLoyaltyDamage(int loyaltyDamage) {
 		this.loyaltyDamage = loyaltyDamage;
@@ -254,10 +278,16 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.maxLoyalty = maxLoyalty;
 	}
 	
+	/**
+	 * Set the movement speed of the entity
+	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 	
+	/**
+	 * Get the movement speed of the entity
+	 */
 	public float getSpeed() {
 		return speed;
 	}
@@ -299,12 +329,95 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		return currentAction.isPresent();
 	}
 	
+	/**
+	 * Get the area damage of the entity.
+	 * @return
+	 */
 	public int getAreaDamage() {
 		return areaDamage;
 	}
 	
+	/**
+	 * Set the area damage of the entity
+	 * @param areaDamage
+	 */
 	public void setAreaDamage(int areaDamage) {
 		this.areaDamage = areaDamage;
 	}
 
+	/**
+	 * Set the gotHitInterval of the entity. 
+	 * @param interval
+	 */
+	public void setGotHitInterval(int interval) {
+		this.gotHitInterval = interval;
+	}
+	
+	/**
+	 * Get the value of gotHitInterval.
+	 * @return
+	 */
+	public int getGotHitInterval() {
+		return this.gotHitInterval;
+	}
+	
+	/**
+	 * Get the initial value of the gotHitInterval
+	 * @return
+	 */
+	public int getMaxgotHitInterval() {
+		return this.maxGotHitInterval;
+	}
+	
+	/**
+	 * Set the gotHit status. If the entity got hit, the status should be set true and the 
+	 * gotHitInterval will be set to the max. Else set false.
+	 * @param status
+	 */
+	public void setGotHit(boolean status) {
+		this.gotHit = status;
+		if (status) {
+			this.setGotHitInterval(this.getMaxgotHitInterval());
+		}
+	}
+	
+	/**
+	 * Return the status of got hit by any enemy.
+	 * @return
+	 */
+	public boolean gotHit() {
+		return gotHit;
+	}
+	
+	/**
+	 * Set the enemy of the entity. Should set the enemy who hit the entity.
+	 * @param enemy
+	 */
+	public void setEnemy(AttackableEntity enemy) {
+		this.enemy = enemy;
+	}
+	
+	/**
+	 * Get the enemy who hit the entity.
+	 * @return
+	 * 	
+	 */
+	public AttackableEntity getEnemy() {
+		return enemy;
+	}
+	
+	/**
+	 * If the entity gotHit status is true, we need a way to set it to be false after it is not getting hit from anyone. The gotHitInterval is used to 
+	 * determine the cool down period of the gotHit status from true to false. After the period, the gotHit status will be set false and the goHitInterval
+	 * will be set to its initial value.
+	 */
+	public void gotHitIntervalCoolDown() {
+		if (this.gotHit()) {
+			this.setGotHitInterval(getGotHitInterval() - 10);
+			if (this.getGotHitInterval() <= 0) {
+				this.setGotHit(false);
+				this.setGotHitInterval(this.getMaxgotHitInterval());
+			}
+		}
+	}
 }
