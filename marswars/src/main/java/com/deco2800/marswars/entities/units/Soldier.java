@@ -308,13 +308,18 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	
 	public void setAllTextture() {
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		this.selectedTextureName = tm.loadUnitSprite(this, "selected");
-		this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
-		this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
-		this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-		this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-		this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
-		this.movementSound = "endturn.wav";
+		try {
+			this.selectedTextureName = tm.loadUnitSprite(this, "selected");
+			this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
+			this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
+			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.movementSound = "endturn.wav";
+		}
+		catch(NullPointerException n){
+			return;
+		}
 	}
 
 	/**
