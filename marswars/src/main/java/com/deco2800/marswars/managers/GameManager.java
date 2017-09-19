@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
@@ -42,6 +43,8 @@ public class GameManager implements TickableManager {
 	private int activeView = 0; // 0 is gameWorld, 1 is mapWorld
 
 	private MiniMap miniMap;
+
+	private HUDView gui;
 
 	/**
 	 * Returns an instance of the GM
@@ -147,7 +150,21 @@ public class GameManager implements TickableManager {
 	public void setMiniMap(MiniMap map) {
 		miniMap = map;
 	}
-	
+
+	/**
+	 * Sets the used GUI to easy access
+	 * @param gui the gui the game is using
+	 */
+	public void setGui(HUDView gui){
+		this.gui = gui;
+	}
+
+	/**
+	 * @return returns the gui the game is using
+	 */
+	public HUDView getGui(){
+		return this.gui;
+	}
 
 	/**
 	 * Gets the current map world.

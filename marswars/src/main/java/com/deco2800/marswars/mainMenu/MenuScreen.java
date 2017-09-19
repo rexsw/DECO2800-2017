@@ -33,15 +33,16 @@ public class MenuScreen{
 	private Skin skin; 
 	private LobbyButton lobby;
 	private HUDView gui;
-	
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
 	private int joinedServer; 
+	private MainMenu menu; 
 	
-	public MenuScreen(Skin skin, Window window, Stage stage, HUDView gui) {
+	
+	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
-		this.gui = gui;
+		this.menu = mainMenu;
 		playerModeSelect(window, stage);
 	}
 	
@@ -82,7 +83,8 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				MenuScreen.this.gui.showEntitiesPicker(true);
+				//MenuScreen.this.gui.showEntitiesPicker(true, true); to be changed DO NOT DELETE
+				menu.startGame(true);
 				mainmenu.setVisible(false);
 
 			}
@@ -91,6 +93,7 @@ public class MenuScreen{
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				menu.startGame(true);
 				mainmenu.setVisible(false);
 			}
 		});
