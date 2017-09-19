@@ -72,7 +72,7 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
-		this.weatherManager.setWeatherEvent();
+		//this.weatherManager.setWeatherEvent();
 	}
 		
 	/*
