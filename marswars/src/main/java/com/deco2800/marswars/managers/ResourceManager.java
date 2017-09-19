@@ -130,10 +130,11 @@ private static final String CLOSED = "closed.wav";
 
 
 	
-	/* This class does not use the setAction(DecoAction)
-	 * functions from HasOwner
+	/**
+	 * test if a team as reached the resource win condition
+	 * 
+	 * @return int a non zero teamid if there a winer else 0 if no winer
 	 */
-	
 	public int CappedTeam() {
 		for(int teamid:rocks.keySet()) {
 			if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
