@@ -177,12 +177,11 @@ public class ShopDialog extends Dialog{
         	public void clicked(InputEvent event, float x, float y){
                 if(heroButton.isChecked()) {
                 	heroButton.setChecked(true);
-                	status.setText("set true");
-                	System.out.println(hero.getArmorDamage());
+                	status.setText("Select " + hero.toString());
                 	selectedHero = hero;
                 } else {
                 	heroButton.setChecked(false);
-                	status.setText("set false");
+                	status.setText("Unselect "+ hero.toString());
                 	selectedHero = null;
                 }
                 }

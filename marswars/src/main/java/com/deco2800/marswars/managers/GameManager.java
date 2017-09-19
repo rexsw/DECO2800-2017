@@ -239,7 +239,7 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game stage
 	 * 
-	 * @param stage setsstage the stage used to display the
+	 * @param setsstage the stage used to display the
 	 * games gui
 	 */
 	public void setStage(Stage stage) {

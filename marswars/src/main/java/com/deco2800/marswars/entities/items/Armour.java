@@ -63,7 +63,7 @@ public class Armour extends Item {
 	 * @return the amount of movement speed the item will add on. Negative numbers will mean Movement Speed stat will 
 	 * decrease when applied.
 	 */
-	public int getMoveSpeed() {
+	public float getMoveSpeed() {
 		return type.getMoveSpeed();
 	}
 

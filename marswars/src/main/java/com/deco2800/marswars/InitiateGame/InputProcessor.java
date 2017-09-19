@@ -83,21 +83,6 @@ public class InputProcessor{
 			// Don't process any inputs if in map view mode
 			return;
 		}
-		
-		//TODO remove this 
-		/*
-		if (this.downKeys.contains(Input.Keys.ESCAPE) && currentSeconds > pauseTime + 1000) {
-			if (currentSeconds > pauseTime + 1000) {
-				if (this.timeManager.isPaused()) {
-					this.timeManager.unPause();
-					pauseTime = this.timeManager.getGlobalTime();
-				} else {
-					LOGGER.info("PAUSING #############################"); //$NON-NLS-1$
-					this.timeManager.pause();
-					pauseTime = this.timeManager.getGlobalTime();
-				}
-			}
-		}*/
 
 		//move the map in the chosen direction
 		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
