@@ -38,6 +38,7 @@ public class MenuScreen{
 	private int playerType; 
 	private int joinedServer; 
 	private MainMenu menu; 
+	private HUDView hud;
 	
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
@@ -282,7 +283,7 @@ public class MenuScreen{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", MenuScreen.this.skin).show(stage);	 //$NON-NLS-1$
+				new ExitGame("Quit Game", MenuScreen.this.skin, hud).show(stage);	 //$NON-NLS-1$
 		}});
 
 
