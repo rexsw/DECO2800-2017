@@ -122,6 +122,8 @@ public class HUDView extends ApplicationAdapter{
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	private GameStats stats;
+	
+	int pauseCheck = 0;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -428,15 +430,11 @@ public class HUDView extends ApplicationAdapter{
 		
 		//add toggle Fog of war (FOR DEBUGGING) 
 		Button dispFog = new TextButton("Fog", skin);
-		
-		//add button for game stats (might just move this over to the game menu?)
-		Button dispStats = new TextButton("Stat2800", skin);
 				
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispTech).pad(BUTTONPAD);
 		HUDManip.add(dispFog).pad(BUTTONPAD);
-		HUDManip.add(dispStats).pad(BUTTONPAD);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
 		
 		stage.addActor(HUDManip);
@@ -479,14 +477,6 @@ public class HUDView extends ApplicationAdapter{
 				new TechTreeView("TechTree", skin).show(stage); //$NON-NLS-1$
 			}
 
-		});
-		
-		/*Display the player's stats*/
-		dispStats.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				stats.showStats(); 
-			}
 		});
 		
 		
@@ -1109,7 +1099,9 @@ public class HUDView extends ApplicationAdapter{
 		
 		//pause menu listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			new PauseMenu("Pause Menu", skin).show(stage);
+			if (pauseCheck == 0){
+				new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+			}
 		}
 			
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
@@ -1209,6 +1201,10 @@ public class HUDView extends ApplicationAdapter{
 		stats.resizeStats(width, height);
 		
     }
+	
+	public void setPauseCheck(int i) {
+		pauseCheck = i;	
+	}
 }
 
 
