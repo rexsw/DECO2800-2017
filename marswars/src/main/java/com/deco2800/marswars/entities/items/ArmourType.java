@@ -19,7 +19,9 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }); 
+	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }), 
+	
+	BOOTS1("BootI", "boot_i", 0, 10, 99999, new int[] { 1000, 2000, 1000, 5000});
 
 	private String name;
 	private int baseArmour;
