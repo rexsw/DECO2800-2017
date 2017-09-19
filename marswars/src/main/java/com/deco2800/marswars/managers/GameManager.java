@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -45,6 +46,8 @@ public class GameManager implements TickableManager {
 	private MiniMap miniMap;
 
 	private HUDView gui;
+
+	private MarsWars marsWars;
 
 	/**
 	 * Returns an instance of the GM
@@ -219,11 +222,11 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game skin
 	 * 
-	 * @param Skin setskin the skin used to display the
+	 * @param skin setskin the skin used to display the
 	 * games gui
 	 */
-	public void setSkin(Skin setskin) {
-		gameskin = setskin;
+	public void setSkin(Skin skin) {
+		gameskin = skin;
 	}
 	
 	/**
@@ -242,8 +245,8 @@ public class GameManager implements TickableManager {
 	 * @param stage setsstage the stage used to display the
 	 * games gui
 	 */
-	public void setStage(Stage setsstage) {
-		gamestage = setsstage;
+	public void setStage(Stage stage) {
+		gamestage = stage;
 	}
 	
 	/**
@@ -272,6 +275,14 @@ public class GameManager implements TickableManager {
 				((TickableManager) m).onTick(0);
 			}
 		}
+	}
+
+	public void setMarsWars(MarsWars marsWars){
+		this.marsWars = marsWars;
+	}
+
+	public MarsWars getMarsWars( ){
+		return marsWars;
 	}
 
 

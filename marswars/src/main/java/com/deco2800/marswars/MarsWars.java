@@ -1,30 +1,28 @@
 package com.deco2800.marswars;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.InitiateGame.InputProcessor;
+import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.managers.BackgroundManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.hud.*;
-import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +96,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		createMap();
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
+		GameManager.get().setMarsWars(this);
 	}
 		
 	/**

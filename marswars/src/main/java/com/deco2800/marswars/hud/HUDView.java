@@ -61,7 +61,7 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
 	private static final int CRITICALHEALTH = 30; //critical health of spacmen
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
-    private static final int TYPES_OF_ENTITIES = 4;
+    private static final int NUMBER_OF_MENU_OPTIONS = 6;
 
 	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
@@ -853,7 +853,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.setMovable(false);
         entitiesPicker.setVisible(false);
         entitiesPicker.setWidth(stage.getWidth()-220);
-        entitiesPicker.setHeight(220);
+        entitiesPicker.setHeight(150);
     }
 
     /**
@@ -897,10 +897,27 @@ public class HUDView extends ApplicationAdapter{
             }
         });
 
-        table.add(unitsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(buildingsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(resourcesButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
-        table.add(terrainsButton).width(entitiesPicker.getWidth()/TYPES_OF_ENTITIES).height(entitiesPicker.getHeight());
+		TextButton mapButton = new TextButton("Maps",skin);
+		mapButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				//GameManager.get().getMarsWars().create();
+			}
+		});
+		TextButton sizeButton = new TextButton("World Size",skin);
+		sizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// to be implemented
+			}
+		});
+
+        table.add(unitsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(buildingsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(resourcesButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+        table.add(terrainsButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+		table.add(mapButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
+		table.add(sizeButton).width(entitiesPicker.getWidth()/ NUMBER_OF_MENU_OPTIONS).height(entitiesPicker.getHeight());
         entitiesPicker.add(table);
         stage.addActor(entitiesPicker);
 
