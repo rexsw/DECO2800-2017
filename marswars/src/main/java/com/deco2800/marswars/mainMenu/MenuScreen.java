@@ -4,11 +4,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 /**
  * @author Naziah Siddique
@@ -24,6 +27,11 @@ import com.deco2800.marswars.managers.GameManager;
  * 		start server > select world > select character > select combat 
  */
 public class MenuScreen{
+	static final int BUTTONWIDTH = 150; 
+	static final int BUTTONHEIGHT = 40;
+	static final int BUTTONPAD = 5; 
+	
+	static final int NAVBUTTONSIZE = 40;
 	
 	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
@@ -32,32 +40,19 @@ public class MenuScreen{
 		CHARACTERMODE;  // choosing character, goes back to select world
 	}
 	
-	enum MapSize{
-		UNSELECTED, 
-		SMOL,
-		MEDIUM,
-		LARGE;
-	}
-	
-	enum World{
-		UNSELECTED,
-		MOON,			//moon type tileset
-		MARS, 			//mars type tileset
-		DESSERT,		//the yellow map 
-	}
-	
 	private Skin skin; 
 	private LobbyButton lobby;
 	private HUDView hud;
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
-	private int joinedServer; 
+	private boolean joinedServer; 
 	private MainMenu menu;
-	private Label currentWorldType; 
-	private Label currentWorldSize;
-	World mapType = World.UNSELECTED;
-	MapSize mapSize = MapSize.UNSELECTED;
+	MapTypes mapType;
+	MapSizeTypes mapSize;
+	Table navigationButtons;
+	Button playButton;
+	Button quitButton;
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
@@ -66,9 +61,12 @@ public class MenuScreen{
 	}
 	
 	public void playerModeSelect(Window mainmenu, Stage stage) {
+		mainmenu.align(Align.center);
+		
 		Table playerMode = new Table();
-		playerMode.setDebug(true);
+		playerMode.setDebug(true);		
 		Label modeInfo = new Label("SELECT A MODE", this.skin); //$NON-NLS-1$
+		
 		Button singlePlayerButton = new TextButton("Single Player", this.skin); //$NON-NLS-1$
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin); //$NON-NLS-1$
 		Button customizeButton = new TextButton("Customize", this.skin);
@@ -77,11 +75,13 @@ public class MenuScreen{
 		Button playGame = new TextButton("Select world", this.skin); //$NON-NLS-1$
 		
 		playerMode.add(modeInfo).align(Align.center).row();
-		playerMode.add(singlePlayerButton).pad(10).row();
-		playerMode.add(multiplayerButton).row();
-		playerMode.add(customizeButton).row();
-		playerMode.add(menuInfo).align(Align.bottom).row();
-		playerMode.add(playGame).align(Align.bottom);
+		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		playerMode.add(multiplayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		playerMode.add(customizeButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		mainmenu.add(playerMode).row();
+
+		mainmenu.add(menuInfo).row();
+		mainmenu.add(playGame);
 		
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
@@ -115,13 +115,6 @@ public class MenuScreen{
 				selectWorldMode(mainmenu, stage);
 			}
 		});
-		
-		mainmenu.align(Align.bottomLeft);
-
-		mainmenu.add(playerMode);
-		//why you no work properly :( 
-		playerMode.setFillParent(true);
-		//playerMode.setPosition(0, 0);
 	}
 	
 	public void selectCharacter(Window mainmenu, Stage stage) {
@@ -135,30 +128,40 @@ public class MenuScreen{
 		
 		
 		mainmenu.add(playerTable);
-		addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
-		
+		Table nav = addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
+		if (this.joinedServer){
+			this.addPlayButton(nav, mainmenu);
+		}
 	}
 	
 	public void selectWorldMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
 		mainmenu.setDebug(true);
+		mainmenu.align(Align.center);
 		
-		Table worldTable = new Table(); 
-		Label worldInfo = new Label("Select a world to play in", this.skin); //$NON-NLS-1$
+		Table worldTable = new Table();
+		worldTable.setDebug(true);
+		worldTable.align(Align.topLeft);
+		Label worldInfo = new Label("Select a world to play in!", this.skin); //$NON-NLS-1$
 		
 		Label worldSelected = new Label("You current selection:", skin);
 		Label currentWorldSelection = new Label("No type selected, ", skin);
 		Label currentSizeSelection = new Label("no map size selected.", skin);
+		Table worldInfoTable = new Table();
+		worldInfoTable.add(currentWorldSelection, currentSizeSelection);
 		
 		/*BUTTONS FOR SELECTING MAP TYPE*/
+		Table worldTypeButtons = new Table();
 		Button moon = new TextButton("moon", skin);
 		Button mars = new TextButton("mars", skin);
 		Button desert = new TextButton("desert", skin);		
 		
+		worldTypeButtons.add(moon, mars, desert);
+		
 		moon.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapType = World.MOON;
+				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
 			}
 		});	
@@ -166,7 +169,7 @@ public class MenuScreen{
 		mars.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapType = World.MARS;
+				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
 			}
 		});	
@@ -174,75 +177,103 @@ public class MenuScreen{
 		desert.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapType = World.DESSERT;
+				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
 			}
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
+		Button tiny = new TextButton("tiny", skin);
 		Button smol = new TextButton("smol", skin);
 		Button medium = new TextButton("medium", skin);
 		Button large = new TextButton("large", skin);
+		Button veryLarge = new TextButton("very large", skin);
+		
+		Table worldSizeButtons = new Table();
+		worldSizeButtons.add(tiny, smol, medium, large, veryLarge);
+
+		tiny.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mapSize = MapSizeTypes.TINY;
+				currentSizeSelection.setText("tiny map selected.");
+			}
+		});
 		
 		smol.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapSize = MapSize.SMOL;
+				mapSize = MapSizeTypes.SMALL;
 				currentSizeSelection.setText("smol map selected.");
 			}
 		});
-		
+
 		medium.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapSize = MapSize.MEDIUM;
+				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setText("medium map selected.");
 			}
 		});
-		
+
 		large.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mapSize = MapSize.LARGE;
+				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setText("large map selected.");
 			}
 		});
 		
+		veryLarge.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mapSize = MapSizeTypes.VERY_LARGE;
+				currentSizeSelection.setText("very large map selected.");
+			}
+		});
+		
 		Button playGame = new TextButton("Play!", skin);
+
 		//FOR DEBUGGING 
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menu.startGame(true);
-				mainmenu.setVisible(false);
+				if(!(mapSize == null|| mapType == null)){
+					MapContainer map = new MapContainer(mapType, mapSize);
+					CustomizedWorld world = new CustomizedWorld(map);
+					GameManager.get().setWorld(world);
+					world.loadMapContainer(map);
+					GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32,0);
+					
+					menu.startGame(true);
+					mainmenu.setVisible(false);
+				}else{
+					;
+				}
 			}
 		});
 
-		worldTable.add(worldInfo).row();		
-		worldTable.add(moon, mars, desert);
-		worldTable.row();
-		worldTable.add(smol, medium, large);
-		worldTable.row();
-						
-		worldTable.add(worldSelected).row();
-		worldTable.add(currentWorldSelection, currentSizeSelection);		
-		mainmenu.add(worldTable);
+		mainmenu.add(worldInfo).align(Align.left | Align.top).row();		
+		worldTable.add(worldTypeButtons).row();
+		worldTable.add(worldSizeButtons).row();						
+		worldTable.add(worldSelected).align(Align.left).row();
+		worldTable.add(worldInfoTable).align(Align.left);
+		mainmenu.add(worldTable).align(Align.left | Align.center);
 		mainmenu.row();
+		mainmenu.add(playGame).row();
 		addNavigationButton(ScreenMode.WORLDMODE, mainmenu, stage);
-		mainmenu.row();
-		mainmenu.add(playGame);
 	}
 	
 	public void selectCombat(Window mainmenu, Stage stage) {
 		mainmenu.clear();
 
-		Table gameTable = new Table();
-		
+		Table gameTable = new Table();		
 		Label combatInfo = new Label("Select a combat mode", this.skin); //$NON-NLS-1$
-		
+
 		gameTable.add(combatInfo).row();
-		addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
 		mainmenu.add(gameTable);
+		Table nav = addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
+		nav.removeActor(nextButton); //remove the next button since there is no next
 	}
 	
 	public void selectServerMode(Window mainmenu, Stage stage) {
@@ -254,10 +285,10 @@ public class MenuScreen{
 		Label serverInfo = new Label("Join a server or start your own!", this.skin); //$NON-NLS-1$
 				
 		serverTable.add(serverInfo).row();
-		serverTable.add(this.lobby.addStartServerButton(this)).row();
-		serverTable.add(this.lobby.addJoinServerButton(this));
-		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
+		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		mainmenu.add(serverTable);
+		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
 	}
 	
 	/**
@@ -266,9 +297,9 @@ public class MenuScreen{
 	 * @param mainmenu
 	 * @param stage
 	 */
-	public void addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
-		this.backButton = new TextButton("< Go Back", this.skin); //$NON-NLS-1$
-		this.nextButton = new TextButton("> Next", this.skin); //$NON-NLS-1$
+	public Table addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
+		this.backButton = new TextButton("<", this.skin); //$NON-NLS-1$
+		this.nextButton = new TextButton(">", this.skin); //$NON-NLS-1$
 		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
@@ -310,7 +341,7 @@ public class MenuScreen{
 						selectServerMode(mainmenu, stage); 
 						break;
 					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer == 1){
+						if (MenuScreen.this.joinedServer){
 							selectServerMode(mainmenu, stage);
 						}
 						else{
@@ -343,15 +374,10 @@ public class MenuScreen{
 					}
 				}
 				
-				/* If multiplayer mode */
-				
-				/* Multiplayer: 
+				/* If multiplayer mode
 					 * 		join server > select character 
-					 * 
-					 * Multiplayer: 
 					 * 		start server > select world > select character > select combat 
-				*/
-				
+				*/				
 				else if(MenuScreen.this.playerType == 1) {
 					switch(status) {
 					//go to next page 
@@ -360,7 +386,7 @@ public class MenuScreen{
 						selectCombat(mainmenu, stage); 
 						break;
 					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer == 1){
+						if (MenuScreen.this.joinedServer){
 							;
 						}
 						else{
@@ -375,24 +401,46 @@ public class MenuScreen{
 			}
 		});
 		
-		Button quitButton = new TextButton("Exit", this.skin); //$NON-NLS-1$
+		quitButton = new TextButton("Exit", this.skin); //$NON-NLS-1$
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", MenuScreen.this.skin, hud).show(stage);	 //$NON-NLS-1$
 		}});
-
-
+		
 		mainmenu.row();
-		mainmenu.add(this.backButton);
-		mainmenu.add(this.nextButton);
-		mainmenu.add(quitButton);
+		navigationButtons = new Table();
+		mainmenu.add(navigationButtons);
+		navigationButtons.add(this.backButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
+		navigationButtons.add(this.nextButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
+		navigationButtons.add(quitButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
+		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
+		
+		return navigationButtons; 
+	}
+	
+	private void addPlayButton(Table nav, Window mainmenu){
+		Button playButton = new TextButton("Play!", this.skin);
+		playButton.setSize(NAVBUTTONSIZE, NAVBUTTONSIZE);
+		playButton.pad(BUTTONPAD);
+		playButton.addListener(new ChangeListener() {
+			@Override
+			//could abstract this into another class
+			public void changed(ChangeEvent event, Actor actor) {
+				MapContainer map = new MapContainer(mapType, mapSize);
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+				GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32,0);
+				mainmenu.setVisible(false);
+				menu.startGame(true);
+		}});
+		
+		nav.addActorAt(2, playButton);
 	}
 	
 	public void setJoinedServer(){
-		this.joinedServer = 1; 
+		this.joinedServer = true; 
 	}
-	
-	
 }

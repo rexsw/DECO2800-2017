@@ -29,7 +29,9 @@ import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +39,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manages the features for the game 
- * @author cherr
- *
+ * @author Naziah Siddique
  */
 public class Game{	
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+	private OrthographicCamera camera; 
 	
 	/**
 	 * Set the renderer.
@@ -64,6 +66,7 @@ public class Game{
 
 	public Game(){
 		startGame();
+		this.camera = GameManager.get().getCamera();
 	}
 	
 	private void startGame(){
@@ -74,7 +77,21 @@ public class Game{
 		this.fogOfWar();
 		//this.weatherManager.setWeatherEvent();
 	}
+	
+	/**
+	 * Creates game map
+	 */
+	private void createMap() {
+		MapContainer map = new MapContainer();
+		CustomizedWorld world = new CustomizedWorld(map);
+		GameManager.get().setWorld(world);
+		world.loadMapContainer(map);
 		
+		/* Move camera to the center of the world */
+		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(this.camera);
+	}
+
 	/*
 	 * Initializes fog of war
 	 */
