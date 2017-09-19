@@ -6,21 +6,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.deco2800.marswars.entities.Inventory;
-import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.items.WeaponType;
+import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
-public class InvetoryTest {
+public class InventoryTest {
 	BaseWorld baseWorld;
 	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
 	Commander entity;
 	Inventory bag;
 	Weapon wep1 = new Weapon(WeaponType.WEAPON1);
 	Weapon wep2 = new Weapon(WeaponType.WEAPON2);
+	Armour arm1 = new Armour(ArmourType.ARMOUR1);
+	Armour arm2 = new Armour(ArmourType.BOOTS1);
 	
 	/**
 	 * Setting up the Commander with Inventory to test Inventory class capabilities
