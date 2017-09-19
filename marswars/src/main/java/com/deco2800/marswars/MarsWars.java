@@ -16,7 +16,6 @@ import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;

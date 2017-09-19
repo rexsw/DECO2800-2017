@@ -90,7 +90,6 @@ public class HUDView extends ApplicationAdapter{
 	private Label crystalCount;
 	private Label biomassCount;
 	private Label waterCount;
-
 	//Action buttons
 	private List<TextButton> buttonList;
 	private ActionList currentActions;
@@ -349,18 +348,23 @@ public class HUDView extends ApplicationAdapter{
 	 *
 	 */
 	private void addPlayerDetails(){
-
 		LOGGER.debug("drawing unit stats");
 		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
 		statsTable.setWidth(200);
 		statsTable.pad(5);
 		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
+	}
+
+	/**
+	 * Implements a collapsible tab for the chat lobby 
+=======
 
 	}
 
 	/**
 	 * Implements a collapsible tab for the chat lobby
+>>>>>>> 45d4c54441e3bfb48c8e0571890dd097f7234c03
 	 */
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box"); //$NON-NLS-1$
@@ -715,6 +719,9 @@ public class HUDView extends ApplicationAdapter{
 
 	/**
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 45d4c54441e3bfb48c8e0571890dd097f7234c03
      * Display an attackable unit's stats once it's been selected
      * If target is a hero, display inventory
      * @param target unit clicked on by player
@@ -725,7 +732,6 @@ public class HUDView extends ApplicationAdapter{
 			disableButton(buttonList.get(i));
 		}
 		if (selectedEntity == null) {
-
 			this.statsTable.setVisible(false);
             return;
         }
@@ -1122,15 +1128,12 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
 		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
 		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
-
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
 				selectedEntity = e;
 			}
-
-			
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
@@ -1261,7 +1264,6 @@ public class HUDView extends ApplicationAdapter{
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
-
 	    HUDManip.setVisible(false);
 
 		chatbox.setVisible(false);
@@ -1278,7 +1280,6 @@ public class HUDView extends ApplicationAdapter{
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
-
 	    HUDManip.setVisible(true);
 
 		chatbox.setVisible(true);

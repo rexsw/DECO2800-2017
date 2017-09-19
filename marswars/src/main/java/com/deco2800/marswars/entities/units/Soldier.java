@@ -120,23 +120,32 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
 		this.setSpeed(0.05f); 
-		this.setAreaDamage(0);
 		this.setUnloaded(); //default load status = 0
 	}
 	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
-				 this!= target //prevent soldier suicide when owner is not set
-				) {
-						currentAction = Optional.of(new AttackAction(this, target));
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
+	}
+	
+	/**
+	 * Helper function for attack. Override if the entity has different types of target.
+	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
+	 */
+	public boolean setTargetType(AttackableEntity target) {
+		if (!this.sameOwner(target) //(belongs to another player, currently always true)
+				&& this!= target) { //prevent soldier suicide when owner is not set
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -193,7 +202,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setTexture(defaultTextureName);
 			return;
 		}
-
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
@@ -213,6 +221,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
+	
 
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
@@ -327,8 +336,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	}
 
 	@Override
-	public void setNextAction(ActionType a) {
-		this.nextAction = a;
+	public void setNextAction(ActionType action) {
+		this.nextAction = action;
 	}
 
 	public String getMissileTexture() {
