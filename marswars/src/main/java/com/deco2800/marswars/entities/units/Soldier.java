@@ -54,6 +54,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
+
 		super.setPosX(x);
 		//lineOfSight.setPosX(x);
 //		if(!this.isAi()) {1
@@ -74,6 +75,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
 //		}
+
 		super.setPosY(y);
 		//lineOfSight.setPosY(y);
 //		if(!this.isAi()) {
@@ -145,7 +147,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if(!this.isAi() & this.getLoadStatus() != 1) {
+		if(!this.isAi() && this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
@@ -232,6 +234,10 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	@Override
 	public void onTick(int tick) {
 		if (!currentAction.isPresent()) {
+
+			//this will disable collision check for the entities inside the carrier
+			boolean isTheEntityLoaded=false;
+
 			if (this.getOwner() == -1)  {
 				modifyFogOfWarMap(true,3);
 			}
@@ -241,12 +247,18 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
 			for (BaseEntity e: entities) {
+				if (e instanceof Soldier) {
+					if(((Soldier)e).getLoadStatus()==1){
+						isTheEntityLoaded = true;
+					}
+
+				}
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
 			}
-			boolean moveAway = entitiesSize > 2;
-			if (moveAway) {
+			boolean moveAway = entitiesSize > 1;
+			if (moveAway && !isTheEntityLoaded) {
 					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
@@ -263,7 +275,7 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 					// No good
 					return;
 				}
-				LOGGER.info("Spacman is on a tile with another entity, move out of the way");
+				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
