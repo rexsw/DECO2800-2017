@@ -9,6 +9,13 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
@@ -105,7 +112,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Move camera to the center of the world */
 		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
-	}	
+	}
 
 	/**
 	 * Renderer thread

@@ -71,11 +71,13 @@ public class BaseWorld extends AbstractWorld {
 	 * @return int array of the coordinates. would be in order of left, right, bottom top.
 	 */
 	public int[] makeCollisionCoords(BaseEntity entity) {
+		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
 		int[] result = new int[4];
 		result[0] = (int)entity.getPosX();
-		result[1] = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		result[1] =  right < this.getWidth() ? right : this.getWidth() - 1; //limit to world width (-1 because index)
 		result[2] = (int)entity.getPosY();
-		result[3] = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+		result[3] = top < this.getLength() ? top : this.getLength() - 1; //limit to world length (-1 because index)
 		return result;
 	}
 	
