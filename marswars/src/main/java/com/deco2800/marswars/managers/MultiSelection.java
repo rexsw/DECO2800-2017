@@ -102,8 +102,6 @@ public class MultiSelection {
     }
 
     public void callMouseHandler(int x, int y){
-        List<BaseEntity> entities = GameManager.get().getWorld().getEntities(x,y);
-        if(entities.isEmpty())return;
         MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
         mouseHandler.handleMouseClick(x, y, 0,true);
 

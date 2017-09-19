@@ -70,6 +70,7 @@ public class MouseHandler extends Manager {
 
 
 			if (entities.isEmpty()) {
+				if(skipChecking) return;//this line is for multiselection
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
 					if (c instanceof BaseEntity) {
