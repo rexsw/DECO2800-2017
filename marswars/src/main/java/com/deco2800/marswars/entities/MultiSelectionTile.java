@@ -6,7 +6,7 @@ package com.deco2800.marswars.entities;
 public class MultiSelectionTile extends AbstractEntity{
     /**
      *
-     * This is the constructor for a black tile
+     * This is the constructor for a multi selection tile
      *
      * @author Treenhan
      * @param posX set X position for the line of sight tile

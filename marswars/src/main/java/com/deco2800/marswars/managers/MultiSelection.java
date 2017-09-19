@@ -8,19 +8,33 @@ import com.deco2800.marswars.worlds.AbstractWorld;
 
 import java.util.List;
 
-/**
+/**this class will contain info for multi selection
  * Created by Treenhan on 9/19/17.
  * this class holds the information about multiselection
  */
 public class MultiSelection extends Manager {
     //private static AbstractWorld world = GameManager.get().getWorld();
 
+    /**
+     * this array contain the status of each tile
+     * if it is 1 = it is selected
+     * if it is 0 = it is not selected
+     */
     private static Array2D<Integer> selectedTiles;
 
+    /**
+     * get the status of a selected tile
+     * @param x
+     * @param y
+     * @return
+     */
     public static Integer getSelectedTiles(int x, int y){
         return selectedTiles.get(x,y);
     }
 
+    /**
+     * reset the whole array to 0 after selecting
+     */
     public static void resetSelectedTiles() {
         AbstractWorld world = GameManager.get().getWorld();
         int width=world.getWidth();
@@ -33,8 +47,14 @@ public class MultiSelection extends Manager {
         }
     }
 
-
+    /**
+     * update the selecting area based on the ending points
+     * @param endX
+     * @param endY
+     */
     public static void updateSelectedTiles(int endX,int endY){
+
+        //this check the boundaries
         AbstractWorld world = GameManager.get().getWorld();
         if (endX < 0){
             endX=0;
@@ -47,8 +67,12 @@ public class MultiSelection extends Manager {
         }else if( endY > world.getLength()){
             endY=world.getLength();
         }
+
+        //assign the ending points
         tiles[2]=endX;
         tiles[3]=endY;
+
+        //loop through to get the selected area
         if (tiles[0] >= tiles[2]) {
             if (tiles[1] >= tiles[3]) {
                 for (int i = tiles[2]; i <= tiles[0]; i++) {
@@ -80,8 +104,20 @@ public class MultiSelection extends Manager {
         }
     }
 
+    /**
+     * this array contains the starting and ending point of the selection
+     * tiles[0]=startX
+     * tiles[1]=startY
+     * tiles[2]=endX
+     * tiles[3]=endY
+     */
     private static int[] tiles = new int[4];
 
+    /**
+     * this function will add the starting tile
+     * @param x
+     * @param y
+     */
     public void addStartTile(float x, float y){
         float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
         float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
@@ -93,11 +129,16 @@ public class MultiSelection extends Manager {
         projX -= projY - projX;
 
 
-
+        //adding the starting tile
         tiles[0]=(int)projX;
         tiles[1]=(int)projY;
     }
 
+    /**
+     * this function will add the ending tile
+     * @param x
+     * @param y
+     */
     public void addEndTile(float x, float y){
         float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
         float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
@@ -112,27 +153,17 @@ public class MultiSelection extends Manager {
 //            return;//TODO put the boundary in
 //        }
 
+        //add the ending tile
         tiles[2]=(int)projX;
         tiles[3]=(int)projY;
     }
 
-    public int getStartX(){
-        return tiles[0];
-    }
-
-    public int getStartY(){
-        return tiles[1];
-    }
-
-    public int getEndX(){
-        return tiles[2];
-    }
-
-    public int getEndY(){
-        return tiles[3];
-    }
-
+    /**
+     * this function will loop through the selected area and call left click to each tile
+     */
     public void clickAllTiles() {
+
+        //loop through the area and call the mouse handler at every position
         if (tiles[0] >= tiles[2]) {
             if (tiles[1] >= tiles[3]) {
                 for (int i = tiles[2]; i <= tiles[0]; i++) {
@@ -164,6 +195,7 @@ public class MultiSelection extends Manager {
         }
     }
 
+    //this function will call the mouse handler at a specific position
     public void callMouseHandler(int x, int y){
         MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
         mouseHandler.handleMouseClick(x, y, 0,true);

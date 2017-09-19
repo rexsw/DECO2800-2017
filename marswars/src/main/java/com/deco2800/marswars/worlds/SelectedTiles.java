@@ -10,15 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * this class contains the tiles grid for the selected tiles
  * Created by Treenhan on 9/20/17.
  */
 public class SelectedTiles {
 
+    //this is the array of selected tiles
     protected static ArrayList<MultiSelectionTile> selectedTileMap = new ArrayList<MultiSelectionTile>();
 
 
     /**
-     * this return the black fog map
+     * this return the selected tiles grid
      * @return
      */
     public static List<MultiSelectionTile> getMultiSelectionTile() {
@@ -26,7 +28,7 @@ public class SelectedTiles {
     }
 
     /**
-     * this function initialize the fog world by filling everything with gray and black tiles
+     * this function initialize this class by putting the tile everywhere throughout the array
      * @param width
      * @param length
      */
@@ -41,11 +43,11 @@ public class SelectedTiles {
 
 
     /**
-     * add FogEntity entity to the fog world
+     * add all the entities to the selected tiles
      * @param entity
      */
     public static void addEntity(MultiSelectionTile entity, ArrayList<MultiSelectionTile> selectedTileMap) {
-        //Add to the fog map
+
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
         int bottom = (int)entity.getPosY();
