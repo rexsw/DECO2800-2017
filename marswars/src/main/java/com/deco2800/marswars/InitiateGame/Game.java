@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
@@ -16,24 +17,29 @@ import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
-
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 /**
  * Manages the features for the game 
- * @author cherr
- *
+ * @author Naziah Siddique
  */
 public class Game{	
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+	private OrthographicCamera camera; 
 	
 	/**
 	 * Set the renderer.
@@ -51,12 +57,17 @@ public class Game{
 			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
+	
+	private HUDView view; 
 
-	public Game(){
-		startGame();
+	public Game(MapTypes mapType, MapSizeTypes mapSize){
+		this.camera = GameManager.get().getCamera();
+		startGame(mapType, mapSize);
 	}
 	
-	private void startGame(){
+	private void startGame(MapTypes mapType, MapSizeTypes mapSize){
+		this.createMap(mapType, mapSize);
+		this.view = new HUDView(GameManager.get().getStage(), GameManager.get().getSkin(), GameManager.get());
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities();
@@ -65,7 +76,31 @@ public class Game{
 		this.selectedTiles();
 		//this.weatherManager.setWeatherEvent();
 	}
+	
+	/**
+	 * Creates game map
+	 * @param mapSize 
+	 * @param mapType 
+	 */
+	private void createMap(MapTypes mapType, MapSizeTypes mapSize) {
+		if (mapType == null || mapSize == null){
+			MapContainer map = new MapContainer();
+			CustomizedWorld world = new CustomizedWorld(map);
+			GameManager.get().setWorld(world);
+			world.loadMapContainer(map);
+		}else{
+			MapContainer map = new MapContainer(mapType, mapSize);
+			CustomizedWorld world = new CustomizedWorld(map);
+			GameManager.get().setWorld(world);
+			world.loadMapContainer(map);
+		}
 		
+		/* Move camera to the center of the world */
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(this.camera);
+		GameManager.get().toggleActiveView();
+	}
+
 	/*
 	 * Initializes fog of war
 	 */
@@ -84,15 +119,25 @@ public class Game{
 		SelectedTiles.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 
-
-
 	/**
 	 * Can assume that since this class has been instantiated
 	 * that the game is in full play
 	 * @param batch 
+	 * @param camera2 
 	 */
-	public void render(OrthographicCamera camera, SpriteBatch batch){
-		this.renderer.render(batch, camera);			
+	public void render(SpriteBatch batch, OrthographicCamera camera2){
+		/* Render the tiles second */
+		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
+		tileRenderer.setView(camera2);
+		tileRenderer.render();
+		
+		this.renderer.render(batch, camera2);
+		GameManager.get().getGui().render(this.lastMenuTick);
+	}
+	
+	public void resize(int width, int height){
+		view.resize(width, height);
+		System.out.println("resizp lis");
 	}
 	
 	/*
@@ -181,8 +226,10 @@ public class Game{
 		Carrier carrier = new Carrier(x, y, 0, teamid);
 		Commander commander = new Commander(x,y,0,teamid);
 		Medic medic = new Medic(x, y, 0, teamid);
+		Hacker hacker = new Hacker(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(medic);
 		GameManager.get().getWorld().addEntity(commander);
+		GameManager.get().getWorld().addEntity(hacker);
 		GameManager.get().getWorld().addEntity(carrier);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
@@ -202,7 +249,7 @@ public class Game{
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) { //initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);

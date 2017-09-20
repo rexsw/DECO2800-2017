@@ -86,12 +86,19 @@ public class BuildAction implements DecoAction{
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);
-					completed = true;
 					if (sound != null && id != 0) {
 						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
 						soundManager.stopSound(sound, id);
 					}
 				}
+				if (base != null){
+					GameManager.get().getWorld().removeEntity(base);
+					if (sound != null && id != 0) {
+						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
+						soundManager.stopSound(sound, id);
+					}
+				}
+				completed = true;
 			}
 			if (state == State.SELECT_SPACE) {
 				relocateSelect--;

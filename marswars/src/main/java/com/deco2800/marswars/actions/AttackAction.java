@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Bullet;
+import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -92,6 +93,12 @@ public class AttackAction implements DecoAction {
 	}
 	
 	private void attack() {
+		if (entity instanceof Hacker) {
+			if (entity.sameOwner(enemy)) {
+				completed = true;
+				return;
+			}
+		}
 	    float distance;
 		if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 			attackInterval -= attackSpeed;

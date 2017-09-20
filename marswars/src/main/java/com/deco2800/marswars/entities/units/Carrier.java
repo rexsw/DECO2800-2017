@@ -130,6 +130,8 @@ public class Carrier extends Soldier {
      */
     @Override
     public void onTick(int tick) {
+		loyalty_regeneration();
+		checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)
 		modifyFogOfWarMap(true, 3);
