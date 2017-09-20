@@ -244,7 +244,7 @@ public class UnitStatsBox extends Table{
     		LOGGER.debug("GOT zero MaxHealth, ERROR!");
     		return;
     	}
-    	int healthPercent = target.getHealth()/target.getMaxHealth()*100;
+    	int healthPercent = (int)((float)target.getHealth() / (float)target.getMaxHealth() * 100);
 		healthBar.setValue(healthPercent);
 		// update health label
 		healthLabel.setText(target.getHealth() + "/" + target.getMaxHealth());

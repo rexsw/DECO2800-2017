@@ -34,6 +34,6 @@ public class Sniper extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Sniper", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Sniper", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 }

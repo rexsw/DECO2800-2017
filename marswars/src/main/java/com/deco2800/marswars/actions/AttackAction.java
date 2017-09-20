@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -63,7 +63,7 @@ public class AttackAction implements DecoAction {
 
 	private void setUpMissile() {
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
-				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
+				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}
 	
 	@Override

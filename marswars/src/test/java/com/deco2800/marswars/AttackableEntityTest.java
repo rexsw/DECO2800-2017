@@ -106,6 +106,7 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetArmor() {
+		test.setMaxArmor(100);
 		test.setArmor(100);
 		assertEquals(test.getArmor(), 100);
 		test.setArmor(-100);
@@ -138,7 +139,9 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetHealth() {
+		test.setMaxHealth(100);
 		test.setHealth(100);
+		
 		assertEquals(test.getHealth(), 100);
 		GameManager.get().setMiniMap(new MiniMap());
 		GameManager.get().getWorld().addEntity(test);

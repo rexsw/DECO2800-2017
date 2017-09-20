@@ -3,7 +3,6 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
@@ -13,6 +12,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
@@ -28,8 +28,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class); 
-	
-	private Optional<DecoAction> currentAction = Optional.empty();
+
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
@@ -102,6 +101,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
+		setStance(2); // Default stance for soldier is aggressive
 	}
 
 	//sets all attack attributes
@@ -119,24 +119,33 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.01f); 
-		this.setAreaDamage(0);
+		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
 	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
-				 this!= target //prevent soldier suicide when owner is not set
-				) {
-						currentAction = Optional.of(new AttackAction(this, target));
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
+	}
+	
+	/**
+	 * Helper function for attack. Override if the entity has different types of target.
+	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
+	 */
+	public boolean setTargetType(AttackableEntity target) {
+		if (!this.sameOwner(target) //(belongs to another player, currently always true)
+				&& this!= target) { //prevent soldier suicide when owner is not set
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -157,6 +166,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			   this.makeSelected();
 		} else {
 			LOGGER.info("Clicked on ai soldier");
+			this.makeSelected();
 		}
 	}
 
@@ -193,7 +203,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setTexture(defaultTextureName);
 			return;
 		}
-
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
@@ -213,6 +222,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
+	
 
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
@@ -244,6 +254,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
+				if (e instanceof BuildingEntity) {
+					entitiesSize++;
+				}
 			}
 			boolean moveAway = entitiesSize > 1;
 			if (moveAway && !isTheEntityLoaded) {
@@ -268,6 +281,18 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
+			// Stances are considered after this point
+			switch (getStance()) {
+				case 0:	
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+			}
+			
 			return;
 		}
 		if (!currentAction.get().completed()) {
@@ -303,6 +328,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
 			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
 			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){
@@ -323,12 +349,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Soldier", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 
 	@Override
-	public void setNextAction(ActionType a) {
-		this.nextAction = a;
+	public void setNextAction(ActionType action) {
+		this.nextAction = action;
 	}
 
 	public String getMissileTexture() {
