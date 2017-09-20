@@ -944,8 +944,10 @@ public class HUDView extends ApplicationAdapter{
     		formatPane.add(rock).width(40).height(40).pad(10).align(Align.left);
         	addPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
-                	if(selectedEntity.getAction().isPresent()) {
-                		selectedEntity.getAction().get().completed();
+                	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+                		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
+                		cancelBuild.cancelBuild();
+                		cancelBuild.doAction();
                 	}
                 	selectedEntity.setAction(new BuildAction(selectedEntity, b));
                 }
