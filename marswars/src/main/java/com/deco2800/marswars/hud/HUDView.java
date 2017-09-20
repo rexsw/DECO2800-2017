@@ -234,9 +234,6 @@ public class HUDView extends ApplicationAdapter{
 		messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		cheatButton = new ImageButton(messageRegionDraw);
 
-
-
-
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
 		TextureRegion quitRegion = new TextureRegion(quitImage);
@@ -274,11 +271,11 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
 
 
-
 		welcomeMsg = new Table();
 		welcomeMsg.setWidth(stage.getWidth());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		//Image clockbgImage1 = new Image(textureManager.getTexture("logo"));
 		Label welcomeText = new Label("Welcome to Spacwars!", skin); //$NON-NLS-1$
 		welcomeMsg.add(welcomeText);
 

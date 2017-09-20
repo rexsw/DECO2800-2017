@@ -123,19 +123,27 @@ public class TextureManager extends Manager {
         this.saveTexture("large_flower", "resources/resourceAssets/flowerl.png");
         this.saveTexture("medium_flower", "resources/resourceAssets/flowerm.png");
         this.saveTexture("small_flower", "resources/resourceAssets/flowers.png");
+        
+        // ------------HUD Assets
+        //Header Buttons:
         this.saveTexture("chat_button", "resources/HUDAssets/chatbutton.png");
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
         this.saveTexture("plus_button", "resources/HUDAssets/plusbutton.png");
         this.saveTexture("minus_button", "resources/HUDAssets/minusbutton.png");
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
+        //Footer Buttons:
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
         this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
         this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
+        //Other Assets
         this.saveTexture("map", "resources/HUDAssets/map.png");
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
+        
+        //----------- MainMenu Assets:
+        this.saveTexture("menubackground", "resources/Mainmenu/background.png");       
         
         //----------Unit Assets:
         //Soldier:

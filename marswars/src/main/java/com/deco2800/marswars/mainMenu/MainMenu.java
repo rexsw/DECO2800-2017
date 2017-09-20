@@ -11,6 +11,7 @@ import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 
+
 /**
  * Creates a main menu window, which adds in a table depending on the 
  * state of the main menu progression.
@@ -66,6 +67,7 @@ public class MainMenu {
 		GameManager.get().getGui().disableHUD();
 		menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		//mainmenu.set background;
 		this.stage.addActor(mainmenu);
 	}
 		
