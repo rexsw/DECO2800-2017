@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.deco2800.marswars.managers.MultiSelection;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
