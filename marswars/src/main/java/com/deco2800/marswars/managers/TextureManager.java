@@ -253,7 +253,9 @@ public class TextureManager extends Manager {
     public void saveTexture(String id, String filename) {
         LOGGER.info("Saving texture" + id + " with Filename " + filename);
         try{
-            textureMap.put(id, new Texture(filename));
+        	if (textureMap.get(id) == null) {
+        		textureMap.put(id, new Texture(filename));
+        	}
         }
         catch(Exception e){
             LOGGER.error(String.format("Failed to load texture %s from %s", id,filename));

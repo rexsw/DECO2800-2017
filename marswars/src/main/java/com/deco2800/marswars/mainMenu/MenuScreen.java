@@ -124,7 +124,6 @@ public class MenuScreen{
 				menu.startGame(true, mapType, mapSize);
 				GameManager.get().getGui().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
-
 			}
 		});
 		
