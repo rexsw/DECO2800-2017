@@ -1207,7 +1207,7 @@ public class HUDView extends ApplicationAdapter{
 			buttonList.get(index).clearChildren();
 			buttonList.get(index).setWidth(buttonWidth);
 			buttonList.get(index).setHeight(buttonHeight);
-			Texture entity = textureManager.getTexture("resources/HUDAssets/arrowbutton.png");
+			Texture entity = textureManager.getTexture("PLACEHOLDER");
 			TextureRegion entityRegion = new TextureRegion(entity);
 			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
 			ImageButton addPane = new ImageButton(buildPreview);
