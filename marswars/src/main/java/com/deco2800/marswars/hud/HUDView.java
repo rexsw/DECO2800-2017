@@ -935,13 +935,13 @@ public class HUDView extends ApplicationAdapter{
     		TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
     		ImageButton addPane = new ImageButton(buildPreview);
     		table.center();
-    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .6f);
-    		formatPane.row();
+    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+    		formatPane.row().padBottom(20);
     		formatPane.add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
     		formatPane.add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
-    		formatPane.add(rock).width(40).height(40).pad(10).align(Align.left);
+    		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
         	addPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
