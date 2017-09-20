@@ -1099,8 +1099,6 @@ public class HUDView extends ApplicationAdapter{
 				CustomizedWorld world = new CustomizedWorld(map);
 				GameManager.get().setWorld(world);
 				world.loadMapContainer(map);
-				GameManager.get().getCamera().translate(GameManager.get().getStage().getWidth()/2,
-						GameManager.get().getStage().getWidth()/2);
 			}
 		});
 	}
@@ -1120,8 +1118,6 @@ public class HUDView extends ApplicationAdapter{
 				CustomizedWorld world = new CustomizedWorld(map);
 				GameManager.get().setWorld(world);
 				world.loadMapContainer(map);
-				GameManager.get().getCamera().translate(GameManager.get().getStage().getWidth()/2,
-						GameManager.get().getStage().getWidth()/2);
 			}
 		});
 	}
