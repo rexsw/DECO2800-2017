@@ -112,6 +112,9 @@ public class HUDView extends ApplicationAdapter{
 	int exitCheck = 0;
 	
 	Dialog pause;
+	Dialog help;
+	Dialog techTree;
+	Dialog quit;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -1056,7 +1059,18 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
 					this.setExitCheck(1);
-					new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			if (exitCheck == 1) {
+				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+					System.exit(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+					this.setExitCheck(0);
+					quit.hide();
+					timeManager.unPause();
+					
 				}
 			}
 			
@@ -1064,7 +1078,11 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 				if(techCheck == 0) {
 					this.setTechCheck(1);
-					new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+					techTree = new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+				} else {
+					this.setTechCheck(0);
+					techTree.hide();
+					timeManager.unPause();
 				}
 			}
 			
@@ -1095,7 +1113,11 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 				if (helpCheck == 0) {
 					this.setHelpCheck(1);
-					new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
+					help = new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
+				} else {
+					this.setHelpCheck(0);
+					help.hide();
+					timeManager.unPause();
 				}
 			}
 		}
