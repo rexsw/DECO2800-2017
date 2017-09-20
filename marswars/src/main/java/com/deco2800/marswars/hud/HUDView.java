@@ -741,7 +741,7 @@ public class HUDView extends ApplicationAdapter{
      */
     private void addEntitiesPickerMenu(){
 		entitiesPicker.clear();
-		entitiesPicker.getTitleLabel().setText("Spawn");
+		entitiesPicker.getTitleLabel().setText("Customize");
 
         Table table = new Table();
         TextButton unitsButton = new TextButton("Units",skin);
@@ -808,7 +808,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn Units");
 
-		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
 		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
