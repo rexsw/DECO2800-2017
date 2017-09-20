@@ -1213,7 +1213,9 @@ public class HUDView extends ApplicationAdapter{
 		gameTimeDisp.setText(timeManager.toString()); //$NON-NLS-1$
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
+		/*Update Minimap*/
 		addEntitiesToMiniMap();
+		this.updateMiniMapMenu();
 
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
@@ -1223,9 +1225,6 @@ public class HUDView extends ApplicationAdapter{
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
-
-		/*Update Minimap*/
-		this.updateMiniMapMenu();
 
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
@@ -1386,12 +1385,6 @@ public class HUDView extends ApplicationAdapter{
 			
 		}
 		
-		if(!gameStarted) {
-			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
-			GameManager.get().toggleActiveView();
-			gameStarted = true;
-		}
-
 	}
 
 	/**

@@ -111,6 +111,7 @@ public class Game{
 		
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
+		GameManager.get().toggleActiveView();
 	}
 
 	/*
