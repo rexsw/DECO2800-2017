@@ -28,7 +28,7 @@ public class AiManagerTest {
 		GameManager.get().setWorld(baseWorld);
 		GameManager.get().setSkin(null);
     }
-    
+     
 	@Test
 	public void aiTestBase() {
 		entity =  new Base(GameManager.get().getWorld(), 1, 1, 0, 1);

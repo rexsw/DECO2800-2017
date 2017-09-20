@@ -6,6 +6,8 @@ import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
+import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -57,8 +59,37 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 						soldierDefend(x);
 						break;
 					}
+				} else if(e instanceof AmbientAnimal){
+					ambientController((AmbientAnimal)e);
 				}
 			}
+		}
+	}
+	
+	
+	/**
+	 * A controller which control the ambient animal's actions
+	 * @param ambient
+	 */
+	public void ambientController(AmbientAnimal ambient){
+		AmbientState as = ambient.getState();
+		switch(as){
+		case DEFAULT:
+			break;
+		case TRAVEL:
+			break;
+		case ATTACKBACK:
+			break;
+		}
+	}
+	
+	public void ambientTravel(AmbientAnimal ambient){
+		if (ambient.getTravelTime() < ambient.getMaxTravelTime()) {
+			//add moveAction() here
+			ambient.setTravelTime(ambient.getTravelTime() + 1);
+		} else {
+			ambient.setTravelTime(0);
+			ambient.setState(AmbientState.DEFAULT);
 		}
 	}
 	

@@ -1,56 +1,61 @@
 package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasAction;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.managers.AiManager.State;
 
 
-public class AmbientAnimal extends Soldier{
-	
-	
-	public AmbientAnimal(float posX, float posY, float posZ, int owner) {
-		super(posX, posY, posZ, 0);
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(75);
-		this.setArmorDamage(150);
-		this.setAttackRange(10);
-		this.setAttackSpeed(20);
-		//setAttributes();
-		this.setAreaDamage(1);
-	}
 
-	private Optional<DecoAction> currentAction = Optional.empty();
+public class AmbientAnimal extends AttackableEntity{
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
+	private AmbientState state;
+	private int maxTravelTime;
+	private int traveledTime;
 	
-	
-	@Override
-	public void onTick(int tick){
-		//do nothing
+	public static enum AmbientState {
+		DEFAULT, TRAVEL, ATTACKBACK
 	}
-	@Override
-	public void onClick(MouseHandler handler) {
-		// TODO Auto-generated method stub
+	
+	public AmbientAnimal(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
+		super(posX, posY, posZ, 1, 1, 1);
+		maxTravelTime = 5;
+		traveledTime = 0;
+		state = AmbientState.DEFAULT;
+		this.setOwner(0);
+		this.setEntityType(EntityType.UNIT);
 		
 	}
-
-	@Override
-	public void onRightClick(float x, float y) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * attack the unit who attacked it
+	 */
+	public void attack() {
+		Optional.of(new AttackAction(this, this.getEnemy()));
 	}
 	
-	public void attack(AttackableEntity target) {
-		currentAction = Optional.of(new AttackAction(this, target));
+	public void setState(AmbientState newState){
+		state = newState;
+	}
+	
+	public AmbientState getState(){
+		return state;
+	}
+	
+	public int getMaxTravelTime(){
+		return maxTravelTime;
+	}
+	public int getTravelTime(){
+		return traveledTime;
+	}
+	
+	
+	
+	public void setTravelTime(int time){
+		this.traveledTime = time;
 	}
 	
 	
