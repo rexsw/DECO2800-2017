@@ -150,7 +150,7 @@ public class Commander extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Commander", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Commander", this.getHealth(), this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
 	@Override

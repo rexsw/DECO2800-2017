@@ -142,6 +142,7 @@ public class Carrier extends Soldier {
 		if (e instanceof MissileEntity) {
 		    entitiesSize--;
 		}
+
 	    }
 	    boolean moveAway = entitiesSize > 2;
 	    if (moveAway) {
@@ -268,7 +269,7 @@ public class Carrier extends Soldier {
      * @return The stats of the entity
      */
     public EntityStats getStats() {
-	return new EntityStats("Carrier", this.getHealth(), null,
+	return new EntityStats("Carrier", this.getHealth(),this.getMaxHealth(), null,
 		this.getCurrentAction(), this);
     }
 

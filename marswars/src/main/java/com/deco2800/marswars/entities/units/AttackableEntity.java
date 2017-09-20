@@ -7,6 +7,7 @@ import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -33,7 +34,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
 	private float speed; // the movement speed of the entity
-	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
 	private int areaDamage = 0; // the area of damage 
@@ -141,7 +141,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * Set the maximum health of the entity
 	 * @param maxHealth the maximum health of the entity
 	 */
-	@Override
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 	}
@@ -150,27 +149,24 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * Return the maximum health of the entity
 	 * @return the maximum health of the entity
 	 */
-	@Override
 	public int getMaxHealth() {
-		return maxHealth;
+		return this.maxHealth;
 	}
 	
 	/**
 	 * Return the current health of the entity
 	 * @return current health
 	 */
-	@Override
 	public int getHealth() {
-		return this.health;
+		return health;
 	}
 
 	/**
 	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
 	 * @param the health of the entity
 	 */
-	@Override
 	public void setHealth(int health) {
-		if (this.getHealth() > health) {
+		if (this.health > health) {
 			this.setGotHit(true);
 		}
 		if (health <= 0) {
@@ -369,6 +365,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	public void setAreaDamage(int areaDamage) {
 		this.areaDamage = areaDamage;
+	}
+	
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
 	}
 
 	/**

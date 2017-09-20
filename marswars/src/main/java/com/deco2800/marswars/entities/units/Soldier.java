@@ -3,7 +3,6 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.managers.*;
@@ -13,6 +12,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
@@ -28,8 +28,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class); 
-	
-	private Optional<DecoAction> currentAction = Optional.empty();
+
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
@@ -167,6 +166,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			   this.makeSelected();
 		} else {
 			LOGGER.info("Clicked on ai soldier");
+			this.makeSelected();
 		}
 	}
 
@@ -253,6 +253,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				}
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
+				}
+				if (e instanceof BuildingEntity) {
+					entitiesSize++;
 				}
 			}
 			boolean moveAway = entitiesSize > 1;
@@ -346,7 +349,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Soldier", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 
 	@Override

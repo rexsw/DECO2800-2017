@@ -35,6 +35,6 @@ public class Tank extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Tank", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Tank", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 }
