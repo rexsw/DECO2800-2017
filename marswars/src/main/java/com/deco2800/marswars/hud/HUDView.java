@@ -1161,7 +1161,7 @@ public class HUDView extends ApplicationAdapter{
 		/*Update Minimap*/
 		this.updateMiniMapMenu();
 
-
+		stats.render();
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rockCount.setText("" + resourceManager.getRocks(-1)); //$NON-NLS-1$

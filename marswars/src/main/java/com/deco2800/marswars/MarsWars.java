@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -160,14 +158,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
-		
         /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
 		tileRenderer.setView(this.camera);
 		tileRenderer.render();
-
-		this.view.render(this.lastMenuTick);
+		
 		this.menu.renderGame(this.camera, batch);
+		this.view.render(this.lastMenuTick);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
