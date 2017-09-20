@@ -3,8 +3,11 @@ package com.deco2800.marswars.entities.units;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +135,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.info("Same owner");
+			//LOGGER.info("Same owner");
 		}
 	}
 	
@@ -217,10 +220,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			}
 			this.setTexture(defaultTextureName);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound(movementSound);
+			Sound loadedSound = sound.loadSound(movementSound);
+			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(movementSound);
+		Sound loadedSound = sound.loadSound(movementSound);
+		sound.playSound(loadedSound);
 	}
 	
 
@@ -228,9 +233,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.currentAction = currentAction;
 	}
 
+	
 	@Override
 	public void onTick(int tick) {
-
+		loyalty_regeneration();
+		checkOwnerChange();
 		if (!currentAction.isPresent()) {
 			
 			//this will disable collision check for the entities inside the carrier
@@ -244,6 +251,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			int yPosition = (int) this.getPosY();
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
+			boolean waterPresent = false;
 			for (BaseEntity e: entities) {
 				if (e instanceof Soldier) {
 					if(((Soldier)e).getLoadStatus()==1){
@@ -254,11 +262,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
+				if (e instanceof Water) {
+					waterPresent = true;
+				}
 				if (e instanceof BuildingEntity) {
 					entitiesSize++;
 				}
 			}
-			boolean moveAway = entitiesSize > 1;
+			boolean moveAway = (entitiesSize > 1 && ! waterPresent) ||
+					(entitiesSize > 2 && waterPresent);
 			if (moveAway && !isTheEntityLoaded) {
 					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
@@ -271,13 +283,16 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
-				/* Check that the new position is free */
-				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+				/* Check that the new position is free
+				with the exception of Water entities */
+				List<BaseEntity> tileEntities =
+						world.getEntities((int)p.getX(), (int)p.getY());
+
+				if (this.moveAway(tileEntities)) {
 					// No good
 					return;
 				}
-				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
-			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+				//LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
@@ -359,6 +374,31 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 	public String getMissileTexture() {
 		return defaultMissileName;
+	}
+	
+	/**
+	 * Increase the loyalty of the entity in a certain period. Please include this to your unit if you override ontick
+	 */
+	public void loyalty_regeneration() {
+		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
+		if ((this.getLoyaltyRegenInterval()) <= 0) {
+			//LOGGER.info("Regen loyalty");
+			this.setLoyalty(this.getLoyalty() + 0);
+			this.resetLoyaltyRegenInterval();
+			return;
+		}
+	}
+	
+	/**
+	 * If the owner status change, the texture should be reloaded.
+	 * Please include this to your unit if you override ontick
+	 */
+	public void checkOwnerChange() {
+		if (this.getOwnerChangedStatus()) {
+			this.setAllTextture();
+			this.setOwnerChangedStatus(false);
+			this.setTexture(defaultTextureName);
+		}
 	}
 	
 }

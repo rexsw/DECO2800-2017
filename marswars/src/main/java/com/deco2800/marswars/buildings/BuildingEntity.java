@@ -3,8 +3,12 @@ package com.deco2800.marswars.buildings;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import com.deco2800.marswars.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.Clickable;
@@ -21,7 +25,8 @@ import com.deco2800.marswars.managers.SoundManager;
  *
  * 
  */
-public class BuildingEntity extends AttackableEntity implements Clickable, Tickable, HasProgress {
+public class BuildingEntity extends AttackableEntity implements Clickable,
+		Tickable, HasProgress, HasAction, Floodable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
 	// list of available graphic for this building
@@ -30,22 +35,23 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	private float buildSize;
 	private String building;
 	// Current action of this building
-	private Optional<DecoAction> currentAction = Optional.empty();
+	protected Optional<DecoAction> currentAction = Optional.empty();
 	//owner of this building
+	private MouseHandler currentHandler;
+	//Current mousehandler manager
+	// bool for weather event tracking
+	boolean isFlooded = false;
 	private String colour;
 	//Colour for this building
 	protected int fogRange;
 	//distance building can see in fog
-	private boolean built = true;
+	protected boolean built = true;
 	//building has functionality if built is true
 	/**
 	 * Constructor for the BuildingEntity
 	 * @param posX
 	 * @param posY
 	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
 	 */
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
 		super(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
@@ -103,7 +109,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 			break;
 		}
 		//this.setCost(building.getCost());
-		this.setCost(0);
+		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 	}
 	
@@ -196,13 +202,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
 				LOGGER.info("clicked on base");
-				sound.playSound("closed.wav");
-				LOGGER.info("info"+ String.valueOf(super.getHealth()));
+				Sound loadedSound = sound.loadSound("closed.wav");
+				sound.playSound(loadedSound);
 			}
 		} else {
 			this.makeSelected();
 			LOGGER.info("clicked on ai base");
-			sound.playSound("endturn.wav");
+			Sound loadedSound = sound.loadSound("endturn.wav");
+			sound.playSound(loadedSound);
+			
 		}
 	}
 
@@ -213,7 +221,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 */
 	public void onRightClick(float x, float y) {
 		//base has no action on right click for now
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		this.deselect();
 	}
 
@@ -243,16 +250,42 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	}
 	
 	/**
+	 * Returns the 'built' state of building
+	 * @return returns true if building is completed
+	 */
+	public boolean getBuilt() {
+		return built;
+	}
+	
+	/**
 	 * Set the 'built' state of building
 	 * @param built building functions only accessible if build state is true
 	 */
 	public void setBuilt(boolean built) {
 		this.built = built;
 	}
-	
+
+	/**
+	 * Sets the boolean describing whether or not the BuildingEntity is
+	 * currently under the flooding effect.
+	 * @param state
+	 */
+	public void setFlooded(boolean state){
+		this.isFlooded = state;
+	}
+
+	/**
+	 * Returns the boolean describing whether or not the BuildingEntity is
+	 * currently under the flooding effect.
+	 * @return state
+	 */
+	public boolean isFlooded() {
+		return this.isFlooded;
+	}
+
 	/**
 	 * Set the health of the entity
-	 * @param the health of the entity
+	 * @param health of the entity
 	 */
 	@Override
 	public void setHealth(int health) {

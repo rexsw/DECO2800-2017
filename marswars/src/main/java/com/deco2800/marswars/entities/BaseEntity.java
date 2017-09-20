@@ -6,12 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,7 +27,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private EntityType entityType = EntityType.NOT_SET;
 	private ActionList validActions;
 	private boolean selected = false;
-	private int owner = 0;
+	protected int owner = 0;
 	private boolean fixPos = false;
 	protected float speed = 0.05f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
@@ -475,7 +478,25 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public boolean isAi() {
 		return owner >= 0;
 	}
-	
+
+	/**
+	 * Tells the entity if it needs to move from the given tile; i.e. is it
+	 * sharing the tile with entities other than special terrain entities.
+	 * @param entities
+	 * @return
+	 */
+	public boolean moveAway (List<BaseEntity> entities) {
+		int entitiesSize = entities.size();
+		boolean waterPresent = false;
+		for (BaseEntity e : entities) {
+			if (e instanceof Water) {
+				waterPresent = true;
+			}
+		}
+		return (entitiesSize > 1 && !waterPresent) ||
+				(entitiesSize > 2 && waterPresent);
+	}
+
 	/**
 	 * Sets the action using the actionsetter class
 	 * @param current ActionType to be set
