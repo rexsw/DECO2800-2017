@@ -372,24 +372,27 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	}
 	
 	/**
-	 * Increase the loyalty of the entity in a certain period
+	 * Increase the loyalty of the entity in a certain period. Please include this to your unit if you override ontick
 	 */
 	public void loyalty_regeneration() {
 		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
 		if ((this.getLoyaltyRegenInterval()) <= 0) {
-			this.setLoyalty(this.getLoyalty() + 10);
+			//LOGGER.info("Regen loyalty");
+			this.setLoyalty(this.getLoyalty() + 0);
 			this.resetLoyaltyRegenInterval();
 			return;
 		}
 	}
 	
 	/**
-	 * If the owner status change, the texture should be reloaded
+	 * If the owner status change, the texture should be reloaded.
+	 * Please include this to your unit if you override ontick
 	 */
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);
+			this.setTexture(defaultTextureName);
 		}
 	}
 	
