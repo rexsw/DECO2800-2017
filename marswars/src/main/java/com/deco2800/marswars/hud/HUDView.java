@@ -100,6 +100,8 @@ public class HUDView extends ApplicationAdapter{
 	private Label crystalCount;
 	private Label biomassCount;
 	private Label waterCount;
+	private Label popCount;
+	private Label maxPopCount;
 
 	//Action buttons
 	private List<TextButton> buttonList;
@@ -563,6 +565,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount = new Label("Crystal: 0", skin); //$NON-NLS-1$
 		biomassCount = new Label("Biomass: 0", skin); //$NON-NLS-1$
 		waterCount = new Label("Water: 0", skin); //$NON-NLS-1$
+		popCount = new Label("0 ", skin);
+		maxPopCount = new Label(" / 10", skin);
 
 		//add rock image
 		Texture rockTex = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
@@ -584,7 +588,9 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(biomass).width(40).height(40).pad(10);
 		resourceTable.add(biomassCount).padRight(60);
 		resourceTable.add(water).width(40).height(40).pad(10);
-		resourceTable.add(waterCount).padRight(60);
+		resourceTable.add(waterCount).padRight(50);
+		resourceTable.add(popCount).padRight(10);
+		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
 
@@ -942,7 +948,7 @@ public class HUDView extends ApplicationAdapter{
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
     		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
-        	addPane.addListener(new ChangeListener() {
+        	formatPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
                 		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
@@ -1168,6 +1174,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
 		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
 		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
+		popCount.setText("" + resourceManager.getPopulation(-1)); //$NON-NLS-1$
+		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1)); //$NON-NLS-1$
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {

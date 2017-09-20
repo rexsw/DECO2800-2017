@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
@@ -105,7 +106,8 @@ public class Astronaut extends Soldier {
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(movementSound);
+		Sound loadedSound = sound.loadSound(movementSound);
+		sound.playSound(loadedSound);
 	}
 
 

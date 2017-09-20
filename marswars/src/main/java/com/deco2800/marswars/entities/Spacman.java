@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -220,7 +221,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		}
 		this.setTexture("spacman_green");
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("endturn.wav");
+		Sound loadedSound = sound.loadSound("endturn.wav");
+		sound.playSound(loadedSound);
 		this.deselect();
 		this.nextAction = null;
 	}

@@ -1,15 +1,23 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.worlds.AbstractWorld;
+
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.buildings.Barracks;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.buildings.Bunker;
 import com.deco2800.marswars.buildings.CheckSelect;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -56,7 +64,7 @@ public class BuildAction implements DecoAction{
 			GameManager.get().getManager(TimeManager.class);
 	private boolean actionPaused = false;
 	private long id;
-	private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/quack.wav"));
+	private Sound sound;
 
 	/**
 	 * Constructor for the BuildAction
@@ -79,7 +87,10 @@ public class BuildAction implements DecoAction{
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);
 					completed = true;
-					sound.stop(id);
+					if (sound != null && id != 0) {
+						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
+						soundManager.stopSound(sound, id);
+					}
 				}
 			}
 			if (state == State.SELECT_SPACE) {
@@ -123,14 +134,17 @@ public class BuildAction implements DecoAction{
 			} else if (state == State.BUILD_STRUCTURE) {
 				if (base != null) {
 					if (currentHealth == 10) {
-						id = sound.play(1f);
-						sound.setLooping(id, true);
+						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
+						sound = soundManager.loadSound("building.wav");
+						id = soundManager.playSound(sound);
+						soundManager.loopSound(sound, id);
 					}
 					if (currentHealth >= maxHealth) {
 						currentHealth = maxHealth;
 						base.animate3();
 						base.setBuilt(true);
-						sound.stop(id);
+						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
+						soundManager.stopSound(sound, id);
 						completed = true;
 						LOGGER.error("FINALISED");
 					} else if (maxHealth / 2 < currentHealth) {
@@ -182,11 +196,8 @@ public class BuildAction implements DecoAction{
 		if (temp != null && validBuild) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			base = new BuildingEntity((int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, building, actor.getOwner());
-			base.setFix(true);
-			base.setBuilt(false);
-			base.animate1();
-			if (resourceManager.getRocks(actor.getOwner()) >= base.getCost()) {
+			if (resourceManager.getRocks(actor.getOwner()) >= building.getCost()) {
+				createBuilding();
 				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
 				GameManager.get().getWorld().addEntity(base);
 				this.buildingSpeed = base.getBuildSpeed();
@@ -208,6 +219,38 @@ public class BuildAction implements DecoAction{
 				completed = true;
 			}
 		}
+	}
+	
+	/**
+	 * Creates the building depending on the building type
+	 */
+	private void createBuilding() {
+		switch(building) {
+		case TURRET:
+			base = new Turret(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+			break;
+		case BASE:
+			base = new Base(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+			break;
+		case BARRACKS:
+			base = new Barracks(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+			break;
+		case BUNKER:
+			base = new Bunker(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+			break;
+		case HEROFACTORY:
+			//Update this
+			break;
+		default:
+			break;
+		}
+		base.setFix(true);
+		base.setBuilt(false);
+		base.animate1();
 	}
 
 	/**

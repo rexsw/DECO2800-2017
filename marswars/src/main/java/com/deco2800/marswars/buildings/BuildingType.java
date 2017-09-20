@@ -23,7 +23,8 @@ public enum BuildingType {
     	return buildingSize;
     }
     public int getCost() {
-    	return buildCost;
+    	return 0;
+    	//return buildCost; Free for testing atm
     }
     public String getBuildTexture() {
     	return buildTexture;

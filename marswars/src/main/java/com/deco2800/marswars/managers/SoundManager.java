@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * SoundManager
- * Required to play sounds in the game engine.
+ * For now all this class does is return a Sound instance of the file in the sounds folder
+ * With the returned Sound instance, id can be assigned and Sound can be acted on by
+ * commands belonging to the Sound library
  * @Author Tim Hadwen
  */
 public class SoundManager extends Manager {
@@ -17,14 +19,62 @@ public class SoundManager extends Manager {
 
 	/**
 	 * Plays a fun test sound on a new thread
+	 * @param soundString file name to be loaded as a sound
 	 */
-	public void playSound(String soundString) {
-		LOGGER.info("Playing sound effect");
+	public Sound loadSound(String soundString) {
+		LOGGER.info("Loading sound effect");
 		try {
 			Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/" + soundString));
-			long id = sound.play(1f);
+			return sound;
 		} catch (GdxRuntimeException e) {
 			LOGGER.error("Could not load sound effect " + soundString);
 		}
+		return null;
 	}
+	
+	/**
+	 * Plays the Sound object
+	 * @param sound Sound object to be played
+	 * @return returns the ID of the sound being played
+	 */
+	public long playSound(Sound sound) {
+		LOGGER.info("Playing sound effect");
+		try {
+			long id = sound.play(1f);
+			return id;
+		} catch (GdxRuntimeException e) {
+			LOGGER.error("Could not play sound effect ");
+		}
+		return 0;
+	}
+	
+	/**
+	 * Loops a sound which is playing
+	 * @param sound Sound object to be played
+	 * @param id The id of the played sound
+	 */
+	public void loopSound(Sound sound, long id) {
+		LOGGER.info("Looping sound effect");
+		try {
+			sound.setLooping(id, true);
+		} catch (GdxRuntimeException e) {
+			LOGGER.error("Could not loop sound effect ");
+		}
+	}
+	
+	/**
+	 * Stops a sound being played and disposes of the Sound object
+	 * @param sound Sound object to be played
+	 * @param id The id of the played sound
+	 */
+	public void stopSound(Sound sound, long id) {
+		LOGGER.info("Stopping sound effect");
+		try {
+			sound.stop(id);
+			sound.dispose();
+		} catch (GdxRuntimeException e) {
+			LOGGER.error("Could not stop sound effect ");
+		}
+	}
+	
 }
