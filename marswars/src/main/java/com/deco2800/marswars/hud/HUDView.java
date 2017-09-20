@@ -935,13 +935,13 @@ public class HUDView extends ApplicationAdapter{
     		TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
     		ImageButton addPane = new ImageButton(buildPreview);
     		table.center();
-    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .6f);
-    		formatPane.row();
+    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f).padTop(30);
+    		formatPane.row().padBottom(25);
     		formatPane.add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
     		formatPane.add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
-    		formatPane.add(rock).width(40).height(40).pad(10).align(Align.left);
+    		formatPane.add(rock).width(40).height(40).align(Align.left).padBottom(30);
         	addPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent()) {
@@ -950,7 +950,7 @@ public class HUDView extends ApplicationAdapter{
                 	selectedEntity.setAction(new BuildAction(selectedEntity, b));
                 }
             });
-    		table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
+    		table.add(formatPane).width(buttonWidth).height(buttonHeight - 20).align(Align.center);
     		
         }
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
