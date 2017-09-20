@@ -4,14 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
@@ -40,21 +36,18 @@ public class MainMenu {
 	boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
-	private TextureManager reg; 
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
 	 * @param skin
 	 * @param stage
-	 * @param reg 
 	 * @param window
 	 * @param marswars
 	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, TextureManager reg) {
+	public MainMenu(Skin skin, Stage stage) {
 		this.skin = skin;
 		this.stage = stage; 
-		this.reg = reg;
 		this.mainmenu = new Window("Its a start", skin); 
 		GameManager.get().setMainMenu(this);
 		createMenu();

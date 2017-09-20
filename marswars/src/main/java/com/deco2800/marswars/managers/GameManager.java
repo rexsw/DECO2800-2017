@@ -210,7 +210,7 @@ public class GameManager implements TickableManager {
 		this.gameWorld = null;
 		this.gui = null;
 		this.miniMap = null;
-		this.menu = new MainMenu(this.gameskin, this.gamestage, (TextureManager) this.getManager(TextureManager.class));
+		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
