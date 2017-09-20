@@ -1165,23 +1165,18 @@ public class HUDView extends ApplicationAdapter{
 		}
 		for (int i = 0; i < currentActions.size(); i++) {
 			enableButton(buttonList.get(i));
-			buttonList.get(i).setText("Borked");
 		}
-
 		//Format Actions
 		formatActionButtons(0);
-
 		//Format Entities
 		formatUnitButtons(currentActions.getActions().size());
-
 		//Format Buildings
 		formatBuildingButtons(currentActions.getActions().size() + currentActions.getUnits().size());
 
     }
 
 	private void formatUnitButtons(int index) {
-		LOGGER.info("Format units with index="+index+" n="+currentActions.getUnits().size());
-		float buttonWidth = actionsWindow.getWidth()/NUMBER_ACTION_BUTTONS;
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
 		float buttonHeight = actionsWindow.getHeight();
 		for (EntityID e : currentActions.getUnits()) {
 			buttonList.get(index).setVisible(true);
@@ -1205,12 +1200,27 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	private void formatActionButtons(int index) {
-
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
+		float buttonHeight = actionsWindow.getHeight();
+		for (ActionType a : currentActions.getActions()) {
+			buttonList.get(index).setVisible(true);
+			buttonList.get(index).clearChildren();
+			buttonList.get(index).setWidth(buttonWidth);
+			buttonList.get(index).setHeight(buttonHeight);
+			Texture entity = textureManager.getTexture("resources/HUDAssets/arrowbutton.png");
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			buttonList.get(index).row().padBottom(20);
+			buttonList.get(index).add(new Label(a.name(), skin)).align(Align.left).padLeft(10);
+			index++;
+		}
 	}
 
 
 	private void formatBuildingButtons(int index){
-		float buttonWidth = actionsWindow.getWidth()/NUMBER_ACTION_BUTTONS;
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
 		float buttonHeight = actionsWindow.getHeight();
 		for (BuildingType b : currentActions.getBuildings()) {
 			buttonList.get(index).setVisible(true);

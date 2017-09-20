@@ -199,6 +199,27 @@ public final class ActionSetter {
         }
     }
 
+    public static String getActionSprite(ActionType a) {
+        switch (a) {
+            case MOVE:
+                return "Move";
+            case GATHER:
+                return  "Gather";
+            case DAMAGE:
+                return "Attack";
+            case GENERATE:
+                return "Create";
+            case BUILD:
+                return "Construct";
+            case LOAD:
+                return "Load";
+            case UNLOAD:
+                return "Unload";
+            default:
+                return "";
+        }
+    }
+
     public static void setBuild(BaseEntity target, EntityID c) {
         switch (c) {
             default:

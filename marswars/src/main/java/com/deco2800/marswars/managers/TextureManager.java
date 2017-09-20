@@ -248,8 +248,6 @@ public class TextureManager extends Manager {
         path = String.format("resources/UnitAssets/%s/Yellow/%s.png",
                 unitType,textureType);
         //try to load the texture into the textureMap
-        LOGGER.info(String.format("Loading texture %s for %s from %s",
-                textureType, unitType, path));
         String retVal = textureType + teamColour + unitType;
         saveTexture(retVal,path);
         return retVal;
