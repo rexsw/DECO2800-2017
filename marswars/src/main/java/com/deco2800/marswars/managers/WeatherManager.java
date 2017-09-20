@@ -156,7 +156,7 @@ public class WeatherManager extends Manager implements Tickable {
             }
             // set flooded in here
             if (! stillFlooded) {
-                timeManager.unPauseEntity(e);
+                timeManager.unPause(e);
                 ((BuildingEntity) e).setFlooded(false);
             }
         }

@@ -186,7 +186,7 @@ public class TimeManager extends Manager implements TickableManager {
 	/**
 	 * Resumes all paused entity actions for the entities in the given list.
 	 */
-	public void unPauseSelection(List<BaseEntity> entities) {
+	public void unPause(List<BaseEntity> entities) {
 		for (BaseEntity e: entities) {
 			if (e instanceof HasAction) {
 				if (((HasAction) e).getCurrentAction().isPresent()) {
@@ -199,7 +199,7 @@ public class TimeManager extends Manager implements TickableManager {
 	/**
 	 * Resumes all paused entity actions for the entities in the given list.
 	 */
-	public void unPauseEntity(BaseEntity entity) {
+	public void unPause(BaseEntity entity) {
 		if (entity instanceof HasAction) {
 			if (((HasAction) entity).getCurrentAction().isPresent()) {
 				((HasAction) entity).getCurrentAction().get().resumeAction();
