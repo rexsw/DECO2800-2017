@@ -1161,7 +1161,7 @@ public class HUDView extends ApplicationAdapter{
         	buildingsAvailable.add(BuildingType.HEROFACTORY);
         }
         // this call allows the menu to reset instead of using its latest state
-            addBuildingsPickerMenu(false);
+            addBuildingsPickerMenu(true);
         if(!isPlaying) {
 			entitiesPicker.setVisible(true);
 			toggleFog();
