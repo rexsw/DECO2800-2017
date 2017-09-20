@@ -10,18 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -31,22 +19,23 @@ import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TechnologyManager;
-import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -107,10 +96,10 @@ public class HUDView extends ApplicationAdapter{
 
 
 	//Toggles; checks if the feature is visible on-screen or not
-
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
 	private boolean fogToggle = true; 
+	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD 
 	private ImageButton dispActions;//Button for displaying actions window 
 	private ImageButton removeActions; //button for removing actions window 
@@ -158,13 +147,13 @@ public class HUDView extends ApplicationAdapter{
 	 * @param gameManager handles selectables
 	 * @param textureManager
 	 */
-	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
+	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
 
 		LOGGER.debug("Creating Hud");
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
-		this.textureManager = textureManager;
+		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
 
 		//Generate the game stats
 		this.stats = new GameStats(stage, skin, this, textureManager);
@@ -172,13 +161,13 @@ public class HUDView extends ApplicationAdapter{
 
 		this.chatbox = new ChatBox(skin, textureManager, this);
 		this.cheatbox = new CheatBox(skin,textureManager);
+		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(this.textureManager);
 		
 		//create the HUD + set gui to GM 
-
 		createLayout();
 		GameManager.get().setGui(this);
 	}
@@ -234,9 +223,6 @@ public class HUDView extends ApplicationAdapter{
 		messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		cheatButton = new ImageButton(messageRegionDraw);
 
-
-
-
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
 		TextureRegion quitRegion = new TextureRegion(quitImage);
@@ -264,21 +250,18 @@ public class HUDView extends ApplicationAdapter{
 		gamelengthStack.add(gameLengthDisp);
 
 		//add in quit + help + chat buttons and time labels
-
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
 
-
-
 		welcomeMsg = new Table();
 		welcomeMsg.setWidth(stage.getWidth());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		//Image clockbgImage1 = new Image(textureManager.getTexture("logo"));
 		Label welcomeText = new Label("Welcome to Spacwars!", skin); //$NON-NLS-1$
 		welcomeMsg.add(welcomeText);
 
@@ -336,8 +319,6 @@ public class HUDView extends ApplicationAdapter{
 
 			}
 		});
-
-
 	}
 
 
@@ -386,8 +367,6 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(messageWindow);
 	}
 
-
-
 	private void Cheat(){
 		LOGGER.debug("cheatbox"); //$NON-NLS-1$
 		cheatWindow = new Window("Cheat", skin); //$NON-NLS-1$
@@ -400,14 +379,6 @@ public class HUDView extends ApplicationAdapter{
 
 		stage.addActor(cheatWindow);
 	}
-
-
-
-
-
-
-
-
 
 	/**
 	 * Adds in the bottom panel of the HUD
@@ -532,7 +503,7 @@ public class HUDView extends ApplicationAdapter{
 		});
 
 		setupEntitiesPickerMenu();
-		addEntitiesPickerMenu(true);
+		addEntitiesPickerMenu();
 	}
 
 	/**
@@ -659,35 +630,6 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(minimap);
 	}
 
-	/**
-	 * Add the customise window / entities picker.
-	 * This method shall only be called when the "Customize" button from the start menu is clicked.
-	 * If this method is call, it will cause that the actions window be set to not visible.
-	 */
-	private void addEntitiesPickerMenu(){
-		entitiesPicker = new Window("Customize World", skin);
-		entitiesPicker.align(Align.topLeft);
-		entitiesPicker.setPosition(220,0);
-		entitiesPicker.setMovable(false);
-		entitiesPicker.setVisible(false);
-		entitiesPicker.setWidth(stage.getWidth()-220);
-		entitiesPicker.setHeight(220);
-
-		stage.addActor(entitiesPicker);
-
-	}
-
-	/**
-	 * Displays the entities picker menu.
-	 * If picker is shown then fog is off and game is paused
-	 *
-	 * @param isVisible whether to display the picker or hide it.
-	 */
-	public void showEntitiesPicker( boolean isVisible){
-		entitiesPicker.setVisible(isVisible);
-		toggleFog();
-		// pause not implemented yet.
-	}
 
 	/**
 	 *
@@ -778,25 +720,24 @@ public class HUDView extends ApplicationAdapter{
      * This method shall only be called when the "Customize" button from the start menu is clicked.
      * If this method is call, it will cause that the actions window be set to not visible.
 	 *
-	 * @param inGame whether is used during a game play
      */
-    private void addEntitiesPickerMenu(boolean inGame){
+    private void addEntitiesPickerMenu(){
 		entitiesPicker.clear();
-		entitiesPicker.getTitleLabel().setText("Spawn");
+		entitiesPicker.getTitleLabel().setText("Customize");
 
         Table table = new Table();
         TextButton unitsButton = new TextButton("Units",skin);
         unitsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addUnitsPickerMenu(inGame);
+                addUnitsPickerMenu(false);
             }
         });
         TextButton buildingsButton = new TextButton("Buildings",skin);
         buildingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addBuildingsPickerMenu(inGame);
+                addBuildingsPickerMenu(false);
             }
         });
         TextButton resourcesButton = new TextButton("Resources",skin);
@@ -818,16 +759,14 @@ public class HUDView extends ApplicationAdapter{
 		mapButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				// to be implemented
-				// needs a restart function that takes a MapTypes parameter
+				addMapTypesPickerMenu();
 			}
 		});
 		TextButton sizeButton = new TextButton("World Size",skin);
 		sizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				// to be implemented
-				// needs a restart function that takes a MapSizeTypes parameter
+				addMapSizesPickerMenu();
 			}
 		});
 
@@ -851,7 +790,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn Units");
 
-		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
 		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
@@ -861,7 +800,7 @@ public class HUDView extends ApplicationAdapter{
 			entitiesButton.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					addEntitiesPickerMenu(inGame);
+					addEntitiesPickerMenu();
 					entitiesPicker.setVisible(true);
 				}
 			});
@@ -900,32 +839,29 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available buildings
-     * @param fullMenu allows to go back to menu options if true
+     * @param isPlaying allows to go back to menu options if true
      */
-    private void addBuildingsPickerMenu(boolean fullMenu){
+    private void addBuildingsPickerMenu(boolean isPlaying){
         entitiesPicker.clear();
         Table table = new Table();
+		table.align(Align.left);
         TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
             entitiesButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    addEntitiesPickerMenu(true);
+                    addEntitiesPickerMenu();
                     entitiesPicker.setVisible(true);
                 }
             });
-        float buttonWidth;
-        if(fullMenu) {
-        	buttonWidth = entitiesPicker.getWidth()/buildingsAvailable.size() + 1;
-        }
-        else {
-            buttonWidth = entitiesPicker.getWidth()/buildingsAvailable.size();
-        }
+        float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
         float buttonHeight = entitiesPicker.getHeight();
+        int columns = 0;
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
-        if(fullMenu) {
+        if(!isPlaying) {
             table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+            columns = 1;
         }
         // Adds all build buttons and listeners for each available building
         for (BuildingType b : buildingsAvailable) {
@@ -934,7 +870,6 @@ public class HUDView extends ApplicationAdapter{
     		TextureRegion entityRegion = new TextureRegion(entity);
     		TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
     		ImageButton addPane = new ImageButton(buildPreview);
-    		table.center();
     		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
     		formatPane.row().padBottom(20);
     		formatPane.add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
@@ -953,9 +888,13 @@ public class HUDView extends ApplicationAdapter{
                 }
             });
     		table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
+    		columns++;
+    		if(columns % NUMBER_OF_MENU_OPTIONS == 0){
+				table.row();
+			}
     		
         }
-        entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
 
     }
 
@@ -967,7 +906,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn Resources");
 
-		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
 		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
@@ -976,7 +915,7 @@ public class HUDView extends ApplicationAdapter{
 		entitiesButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				addEntitiesPickerMenu(false);
+				addEntitiesPickerMenu();
 				entitiesPicker.setVisible(true);
 			}
 		});
@@ -1008,7 +947,7 @@ public class HUDView extends ApplicationAdapter{
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText(" Generate Terrains");
 
-		float buttonWidth = entitiesPicker.getWidth()/6;
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
 		float buttonHeight = entitiesPicker.getHeight();
 
         Table table = new Table();
@@ -1017,7 +956,7 @@ public class HUDView extends ApplicationAdapter{
 		entitiesButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				addEntitiesPickerMenu(false);
+				addEntitiesPickerMenu();
 				entitiesPicker.setVisible(true);
 			}
 		});
@@ -1041,6 +980,130 @@ public class HUDView extends ApplicationAdapter{
 
     }
 
+	/**
+	 * Populate the menu with map size options
+	 */
+	private void addMapSizesPickerMenu(){
+		entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText(" Choose Map Size");
+
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
+		float buttonHeight = entitiesPicker.getHeight();
+
+		Table table = new Table();
+		table.align(Align.left);
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu();
+				entitiesPicker.setVisible(true);
+			}
+		});
+		table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+
+		TextButton tinyButton = new TextButton("Tiny",skin);
+		sizeButtonHandler(tinyButton, MapSizeTypes.TINY);
+		TextButton smallButton = new TextButton("Small",skin);
+		sizeButtonHandler(smallButton, MapSizeTypes.SMALL);
+		TextButton mediumButton = new TextButton("Medium",skin);
+		sizeButtonHandler(mediumButton, MapSizeTypes.MEDIUM);
+		TextButton largeButton = new TextButton("Large",skin);
+		sizeButtonHandler(largeButton, MapSizeTypes.LARGE);
+		TextButton veryLargeButton = new TextButton("Very Large",skin);
+		sizeButtonHandler(veryLargeButton, MapSizeTypes.VERY_LARGE);
+
+		ScrollPane scrollPane = new ScrollPane(table, skin);
+		scrollPane.setScrollingDisabled(true,false);
+		scrollPane.setFadeScrollBars(false);
+
+		table.add(tinyButton).width(buttonWidth).height(buttonHeight);
+		table.add(smallButton).width(buttonWidth).height(buttonHeight);
+		table.add(mediumButton).width(buttonWidth).height(buttonHeight);
+		table.add(largeButton).width(buttonWidth).height(buttonHeight);
+		table.add(veryLargeButton).width(buttonWidth).height(buttonHeight);
+
+		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+	}
+
+	/**
+	 * Populate the menu with map types options
+	 */
+	private void addMapTypesPickerMenu(){
+		entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText(" Choose Map");
+
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
+		float buttonHeight = entitiesPicker.getHeight();
+
+		Table table = new Table();
+		table.align(Align.left);
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu();
+				entitiesPicker.setVisible(true);
+			}
+		});
+		table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+
+		TextButton marsButton = new TextButton("Mars",skin);
+		typesButtonHandler(marsButton, MapTypes.MARS);
+		TextButton moonButton = new TextButton("Moon",skin);
+		typesButtonHandler(moonButton, MapTypes.MOON);
+		TextButton sunButton = new TextButton("Sun",skin);
+		typesButtonHandler(sunButton, MapTypes.SUN);
+
+		ScrollPane scrollPane = new ScrollPane(table, skin);
+		scrollPane.setScrollingDisabled(true,false);
+		scrollPane.setFadeScrollBars(false);
+
+		table.add(marsButton).width(buttonWidth).height(buttonHeight);
+		table.add(moonButton).width(buttonWidth).height(buttonHeight);
+		table.add(sunButton).width(buttonWidth).height(buttonHeight);
+
+		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+	}
+
+	/**
+	 * Handler for the size buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapSize the new map size
+	 */
+	private void sizeButtonHandler(TextButton button, MapSizeTypes mapSize){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(oldWorld.getMapType(), mapSize);
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
+
+	/**
+	 * Handler for the map types buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapType the new map type
+	 */
+	private void typesButtonHandler(TextButton button, MapTypes mapType){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(mapType, oldWorld.getMapSizeType());
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
+
     /**
      * Displays the entities picker menu.
      * If picker is shown then fog is off and game is paused
@@ -1051,10 +1114,12 @@ public class HUDView extends ApplicationAdapter{
     public void showEntitiesPicker( boolean isVisible, boolean isPlaying){
         entitiesPicker.setVisible(isVisible);
         // this call allows the menu to reset instead of using its latest state
-            addEntitiesPickerMenu(true);
+            addEntitiesPickerMenu();
         if(!isPlaying) {
+			entitiesPicker.setVisible(true);
 			toggleFog();
-			// pause not implemented yet.
+			timeManager.pause();
+
 		}
     }
     
@@ -1074,10 +1139,11 @@ public class HUDView extends ApplicationAdapter{
         	buildingsAvailable.add(BuildingType.HEROFACTORY);
         }
         // this call allows the menu to reset instead of using its latest state
-            addBuildingsPickerMenu(false);
+            addBuildingsPickerMenu(true);
         if(!isPlaying) {
+			entitiesPicker.setVisible(true);
 			toggleFog();
-			// pause not implemented yet.
+			timeManager.pause();
 		}
     }
     
@@ -1147,7 +1213,9 @@ public class HUDView extends ApplicationAdapter{
 		gameTimeDisp.setText(timeManager.toString()); //$NON-NLS-1$
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
+		/*Update Minimap*/
 		addEntitiesToMiniMap();
+		this.updateMiniMapMenu();
 
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
@@ -1158,10 +1226,6 @@ public class HUDView extends ApplicationAdapter{
 			gameLengthDisp.setColor(Color.BLUE);
 		}
 
-		/*Update Minimap*/
-		this.updateMiniMapMenu();
-
-		stats.render();
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rockCount.setText("" + resourceManager.getRocks(-1)); //$NON-NLS-1$
@@ -1224,7 +1288,7 @@ public class HUDView extends ApplicationAdapter{
 			//pause menu listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+					pause = new PauseMenu("Pause Menu", skin, stage, stats, this).show(stage);
 				} else {
 					timeManager.unPause();
 					this.setPauseCheck(0);
@@ -1287,7 +1351,6 @@ public class HUDView extends ApplicationAdapter{
 					HUDManip.add(dispActions);
 					inventoryToggle = true;
 				}
-
 			}
 			
 			//help button listener
@@ -1321,7 +1384,7 @@ public class HUDView extends ApplicationAdapter{
 			lastMenuTick = TimeUtils.nanoTime();
 			
 		}
-
+		
 	}
 
 	/**

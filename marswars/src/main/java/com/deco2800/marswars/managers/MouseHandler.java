@@ -35,136 +35,119 @@ public class MouseHandler extends Manager {
 	 * @param y
 	 */
 	public void handleMouseClick(float x, float y, int button,boolean skipChecking) {
-		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+		if (GameManager.get().getWorld() != null){
+			float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+			float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
-		float projX;
-		float projY;
-		if (button == 0 && !ignoreLeftClick) {
-			if (unitSelected != null && unitSelected instanceof BuildingEntity) {
-				unregisterForRightClickNotification((Clickable) unitSelected);
-				unitSelected.deselect();
-			}
-			// Left click cancels building selection confirmation
-			if (unitSelected !=null && unitSelected instanceof Astronaut) {
-				Astronaut castAstro = (Astronaut)unitSelected;
-				if (castAstro.getBuild() !=null) {
-					if (castAstro.getBuild().selectMode()) {
-						LOGGER.info("cancel");
-						castAstro.getBuild().cancelBuild();
-						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-						castAstro.deselect();
-						return;
-					}
-				}
-
-			}
-			// Left click
-			AbstractWorld world = GameManager.get().getWorld();
-
-			// If we get another left click ignore the previous listeners
-//				listeners.clear(); // Remove this to allow multiselect
-		if(!skipChecking) {
-			projX = x / tileWidth;
-			projY = -(y - tileHeight / 2f) / tileHeight + projX;
-			projX -= projY - projX;
-		}else{
-			projX=x;
-			projY=y;
-		}
-
-			if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
-				return;
-			}
-
-			LOGGER.info(String.format("Clicked on tile x:%f y:%f", projX,projY));
-
-			List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
-			
-
-
-			if (entities.isEmpty()) {
-				if(skipChecking) return;//this line is for multiselection
-				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
-				for (Clickable c : listeners) {
-					if (c instanceof Soldier) ((Soldier)c).resetTexture();
-				}			listeners.clear();
-				((CustomizedWorld)world).deSelectAll();
-				listeners.clear();//Deselect all the entities selected before
-				return;
-			}
-
-/*			for (BaseEntity e: entities) {
-				if (e instanceof Clickable) {
-					LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
-					((Clickable) entities.get(entities.size() - 1)).onClick(this);
-					break;
-				}
-			}
-			((CustomizedWorld)world).deSelectAll();*/
-			
-			
-			List<BaseEntity> staticEntities = new ArrayList<BaseEntity>(entities);
-			boolean isClickable=false;
-			BaseEntity chosen = null;
-			for (BaseEntity e: staticEntities) {
-				if (e instanceof Clickable) {
-					if (e instanceof HasOwner) {
-						//giving preference to Player's own entities.
-						if (! ((HasOwner) e).isAi()) {
-							if(e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1)
-							chosen = e;
-							isClickable = true;
-							if (e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1) { //preference for player's non-building entities.
-								break;
-							}
-						}
-					}
-					if (chosen == null) {
-						//taking the first clickable entity found that is not the Player's. May not have an owner.
-						chosen = e;
-						isClickable = true;
-					}
-				}
-			}
-			if (chosen != null) {
-				LOGGER.info(String.format("Clicked on %s", chosen).toString());
-				((Clickable) chosen).onClick(this);
-				//Checks if last clicked entity was unit and deselect unit if current selection is building
-				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
+			float projX;
+			float projY;
+			if (button == 0 && !ignoreLeftClick) {
+				if (unitSelected != null && unitSelected instanceof BuildingEntity) {
 					unregisterForRightClickNotification((Clickable) unitSelected);
 					unitSelected.deselect();
-					if (unitSelected instanceof Soldier) {
-						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-					}
-					unitSelected = (BuildingEntity)chosen;
 				}
-				unitSelected = (BaseEntity)chosen;
+				// Left click cancels building selection confirmation
+				if (unitSelected !=null && unitSelected instanceof Astronaut) {
+					Astronaut castAstro = (Astronaut)unitSelected;
+					if (castAstro.getBuild() !=null) {
+						if (castAstro.getBuild().selectMode()) {
+							LOGGER.info("cancel");
+							castAstro.getBuild().cancelBuild();
+							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+							castAstro.deselect();
+							return;
+						}
+					}
 
+				}
+				// Left click
+				AbstractWorld world = GameManager.get().getWorld();
+
+				// If we get another left click ignore the previous listeners
+//					listeners.clear(); // Remove this to allow multiselect
+			if(!skipChecking) {
+				projX = x / tileWidth;
+				projY = -(y - tileHeight / 2f) / tileHeight + projX;
+				projX -= projY - projX;
+			}else{
+				projX=x;
+				projY=y;
 			}
-			
-			//if(isClickable){
-			//	((CustomizedWorld)world).deSelectAll();
-			//}
-			
-			/*if (entities.get(entities.size() - 1) instanceof Clickable) {
-				LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
-				((Clickable) entities.get(entities.size() - 1)).onClick(this);
-			} else {
-				
-				((CustomizedWorld)world).deSelectAll();*/
-			//}
-		} else if (button == 1) {
-			// Right click
-			projX = x/tileWidth;
-			projY = -(y - tileHeight / 2f) / tileHeight + projX;
-			projX -= projY - projX;
 
-			for (Clickable c : listeners) {
-				c.onRightClick(projX, projY);
+				if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
+					return;
+				}
+
+				LOGGER.info(String.format("Clicked on tile x:%f y:%f", projX,projY));
+
+				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
+				
+				if (entities.isEmpty()) {
+					if(skipChecking) return;//this line is for multiselection
+					LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
+					for (Clickable c : listeners) {
+						if (c instanceof Soldier) ((Soldier)c).resetTexture();
+					}			listeners.clear();
+					((CustomizedWorld)world).deSelectAll();
+					listeners.clear();//Deselect all the entities selected before
+					return;
+				}
+				
+				List<BaseEntity> staticEntities = new ArrayList<BaseEntity>(entities);
+				boolean isClickable=false;
+				BaseEntity chosen = null;
+				for (BaseEntity e: staticEntities) {
+					if (e instanceof Clickable) {
+						if (e instanceof HasOwner) {
+							//giving preference to Player's own entities.
+							if (! ((HasOwner) e).isAi()) {
+								if(e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1)
+								chosen = e;
+								isClickable = true;
+								if (e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1) { //preference for player's non-building entities.
+									break;
+								}
+							}
+						}
+						if (chosen == null) {
+							//taking the first clickable entity found that is not the Player's. May not have an owner.
+							chosen = e;
+							isClickable = true;
+						}
+					}
+				}
+				if (chosen != null) {
+					LOGGER.info(String.format("Clicked on %s", chosen).toString());
+					((Clickable) chosen).onClick(this);
+					//Checks if last clicked entity was unit and deselect unit if current selection is building
+					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
+						unregisterForRightClickNotification((Clickable) unitSelected);
+						unitSelected.deselect();
+						if (unitSelected instanceof Soldier) {
+							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+						}
+						unitSelected = (BuildingEntity)chosen;
+					}
+					unitSelected = (BaseEntity)chosen;
+
+				}
+				
+			} else if (button == 1) {
+				// Right click
+				projX = x/tileWidth;
+				projY = -(y - tileHeight / 2f) / tileHeight + projX;
+				projX -= projY - projX;
+
+				for (Clickable c : listeners) {
+					c.onRightClick(projX, projY);
+				}
+				listeners.clear();
+				AbstractWorld world = GameManager.get().getWorld();
+				((CustomizedWorld)world).deSelectAll();
 			}
 			AbstractWorld world = GameManager.get().getWorld();
 			((CustomizedWorld)world).deSelectAll();
+
 		}
 	}
 

@@ -1,12 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
@@ -111,7 +105,6 @@ public class Astronaut extends Soldier {
 
 	@Override
 	public void makeSelected() {
-		
 		super.makeSelected();
 		if (!this.isAi()) {
 			GameManager.get().getGui().showBuildMenu(this, true, true);
