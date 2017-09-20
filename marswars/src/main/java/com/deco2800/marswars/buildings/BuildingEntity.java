@@ -3,15 +3,12 @@ package com.deco2800.marswars.buildings;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import com.deco2800.marswars.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -25,7 +22,8 @@ import com.deco2800.marswars.managers.SoundManager;
  *
  * 
  */
-public class BuildingEntity extends AttackableEntity implements Clickable, Tickable, HasProgress {
+public class BuildingEntity extends AttackableEntity implements Clickable,
+		Tickable, HasProgress, HasAction, Floodable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
 	// list of available graphic for this building
@@ -38,14 +36,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	//owner of this building
 	private MouseHandler currentHandler;
 	//Current mousehandler manager
+
+	// bool for weather event tracking
+	boolean isFlooded = false;
+
 	/**
 	 * Constructor for the BuildingEntity
 	 * @param posX
 	 * @param posY
 	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
 	 */
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
 		super(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
@@ -224,5 +223,23 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 */
 	public EntityStats getStats() {
 		return new EntityStats(building, this.getHealth(), null, currentAction, this);
+	}
+
+	/**
+	 * Sets the boolean describing whether or not the BuildingEntity is
+	 * currently under the flooding effect.
+	 * @param state
+	 */
+	public void setFlooded(boolean state){
+		this.isFlooded = state;
+	}
+
+	/**
+	 * Returns the boolean describing whether or not the BuildingEntity is
+	 * currently under the flooding effect.
+	 * @return state
+	 */
+	public boolean isFlooded() {
+		return this.isFlooded;
 	}
 }

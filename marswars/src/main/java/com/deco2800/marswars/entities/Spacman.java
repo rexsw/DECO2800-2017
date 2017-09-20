@@ -12,6 +12,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -120,20 +121,27 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 			
 		 */
 		if (!currentAction.isPresent()) {
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
+			// Fix move away condition to allow for Water entity
+			List<BaseEntity> entities = GameManager.get().getWorld().
+					getEntities((int)this.getPosX(), (int)this.getPosY());
+			boolean moveAway = this.moveAway(entities);
+			if (moveAway) {
 				BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
 				 * place to move to
 				 */
 				Random r = new Random();
-				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
+				Point p = new Point(this.getPosX() + r.nextInt(2) - 1,
+						this.getPosY() + r.nextInt(2) - 1);
 				/* Ensure new position is on the map */
-				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth()
+						|| p.getY() >= world.getLength()) {
 					return;
 				}
 				/* Check that the new position is free */
-				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+				entities = world.getEntities((int)p.getX(), (int)p.getY());
+				if (this.moveAway(entities)) {
 					// No good
 					return;
 				}

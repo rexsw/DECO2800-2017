@@ -8,6 +8,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A TimeManager class for SpacWars. Provides methods for tracking InGameTime,
+ * GameLengthTime and GlobalTime, as well as methods for pausing and unpausing
+ * the game and it's entities.
+ *
+ * @author Isaac Doidge
+ */
 public class TimeManager extends Manager implements TickableManager {
 	
 	private static final int DAYBREAK = 6; //daybreak at 6am
@@ -172,6 +179,30 @@ public class TimeManager extends Manager implements TickableManager {
 				if (((HasAction) e).getCurrentAction().isPresent()) {
 					((HasAction) e).getCurrentAction().get().resumeAction();
 				}
+			}
+		}
+	}
+
+	/**
+	 * Resumes all paused entity actions for the entities in the given list.
+	 */
+	public void unPauseSelection(List<BaseEntity> entities) {
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().resumeAction();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Resumes all paused entity actions for the entities in the given list.
+	 */
+	public void unPauseEntity(BaseEntity entity) {
+		if (entity instanceof HasAction) {
+			if (((HasAction) entity).getCurrentAction().isPresent()) {
+				((HasAction) entity).getCurrentAction().get().resumeAction();
 			}
 		}
 	}

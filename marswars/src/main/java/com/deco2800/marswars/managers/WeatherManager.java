@@ -1,9 +1,7 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.buildings.Barracks;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.Bunker;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
@@ -11,21 +9,23 @@ import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+/**
+ * A WeatherManager class for tracking and controlling SpacWars dynamic
+ * weather events and their respective effects.
+ *
+ * @author Isaac Doidge
+ */
 public class WeatherManager extends Manager implements Tickable {
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
-    private ArrayList<BuildingEntity> pausedBuildings;
-    private boolean damaged = false;
     private BaseWorld world = GameManager.get().getWorld();
     private Random random = new Random();
-    long interval = 0;
-    long currentTime = 0;
-    boolean eventStarted = false;
+    private long interval = 0;
+    private long currentTime = 0;
+    private boolean eventStarted = false;
+    private boolean damaged = false;
 
 
     private static final org.slf4j.Logger LOGGER =
@@ -35,18 +35,27 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public void setWeatherEvent() {
-        LOGGER.info("WEATHER MAN TICKING");
+        //LOGGER.info("WEATHER MAN TICKING");
         currentTime = timeManager.getGlobalTime();
-        if (! timeManager.isPaused()) { //this.isRaining()) {
-            if (currentTime > interval + 1000) {
-                world = GameManager.get().getWorld();
-                this.generateFlood();
-                this.applyEffects();
-                this.setInterval();
-                LOGGER.info("WEATHER MAN TICKING");
-            }
+        if (! timeManager.isPaused()) {
+            // Generate floodwaters if raining
+            //if (timeManager.getHours() <= 2) {//this.isRaining()) {
+                if (currentTime > interval + 10) {
+                    world = GameManager.get().getWorld();
+                    this.generateFlood();
+                    this.applyEffects();
+                    this.setInterval();
+                    //LOGGER.info("WEATHER MAN TICKING");
+                }
+            //}
+            //if (timeManager.getHours() > 2) {
+                // While water still exists, continue to apply effects
+            //    if (this.retreatWaters()) {
+            //        this.applyEffects();
+             //   }
+            //}
+
         } else {
-            //this.resumeProduction();
             eventStarted = false;
         }
     }
@@ -62,7 +71,8 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public boolean isRaining() {
-        return timeManager.getGameDays() % 3 == 0;
+        return timeManager.getGameDays() % 3 == 0
+                || timeManager.getGameDays() % 4 == 0;
     }
 
     /**
@@ -70,45 +80,57 @@ public class WeatherManager extends Manager implements Tickable {
      */
     private void applyEffects() {
         ArrayList<float []> areaOfEffect = getAffectedTiles();
-        // Maybe set time condition based on seconds passed to ensure dot works as intended?
-        // ALSO VERY INEFFICIENT
+        ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
+        ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
         for (float [] tile: areaOfEffect) {
             List<BaseEntity> entities =
                     GameManager.get().getWorld().getEntities((int) tile[0],
                             (int) tile[1]);
-            for (BaseEntity e: entities) {
+            Iterator<BaseEntity> iterator = entities.iterator();
+            while (iterator.hasNext()) {
+                BaseEntity e = iterator.next();
                 if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
                     if (e instanceof Soldier) {
-                        applyContinuousDamage(e);
+                        damagedUnits.add(e);
+                        //applyContinuousDamage(e);
                     } else if (e instanceof BuildingEntity) {
-                        haltProduction((BuildingEntity) e);
+                        //LOGGER.info("BUILDING PAUSED");
+                        pausedBuildings.add(e);
+                        //timeManager.pause(e);
+                        ((BuildingEntity) e).setFlooded(true);
                     }
                 }
             }
         }
+        applyContinuousDamage(damagedUnits);
+        timeManager.pause(pausedBuildings);
+        resumeProduction(pausedBuildings, areaOfEffect);
     }
 
     /**
      * Sets the damage over time taken by units caught in the weather event.
-     * @param e - the entity to take damage
+     * @param damagedUnits - the entities to take damage
      */
-    private void applyContinuousDamage(BaseEntity e) {
-        int timeBetween = 5;
+    private void applyContinuousDamage(List<BaseEntity> damagedUnits) {
+        int timeBetween = 2;
         // assuming that the function will not always be called 5 seconds apart
-        if (timeManager.getPlaySeconds() % 10 > timeBetween && ! damaged) {
-            ((Soldier) e).setDamage(((Soldier) e).getMaxHealth() / 5);
+        if (timeManager.getPlaySeconds() % 5 > timeBetween && ! damaged) {
+            for (BaseEntity e: damagedUnits) {
+                LOGGER.info("APPLYING DAMAGE &&&&&&&&&&&&&&");
+                ((Soldier) e).setHealth(((Soldier) e).getHealth() / 20 - 1);
+            }
             damaged = true;
-        } else {
+        } else if (timeManager.getPlaySeconds() % 5 < timeBetween) {
             damaged = false;
         }
+        damagedUnits.clear();
     }
 
     /**
      * Halts the production or build progression of the passed building
      * @param e - the building to be affected
      */
-    private void haltProduction(BuildingEntity e) {
-        pausedBuildings.add(e);
+   /* private void haltProduction(BuildingEntity e) {
         if (e instanceof Barracks) {
             ((Barracks) e).getCurrentAction().get().pauseAction();
         } else  if (e instanceof Bunker) {
@@ -117,19 +139,25 @@ public class WeatherManager extends Manager implements Tickable {
             ((Base) e).getAction().get().pauseAction();
         }
     }
+    */
 
     /**
      * Returns any building caught in the weather events area of effect to its
      * normal state.
      */
-    private void resumeProduction() {
-        for (BuildingEntity building: pausedBuildings) {
-            if (building instanceof Barracks) {
-                ((Barracks) building).getCurrentAction().get().resumeAction();
-            } else  if (building instanceof Bunker) {
-                ((Bunker) building).getCurrentAction().get().resumeAction();
-            } else  if (building instanceof Base) {
-                ((Base) building).getCurrentAction().get().resumeAction();
+    private void resumeProduction(List<BaseEntity> pausedBuildings,
+                                  List<float []> areaOfEffect) {
+        for (BaseEntity e: pausedBuildings) {
+            boolean stillFlooded = false;
+            for (float [] tile: areaOfEffect) {
+                if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
+                    stillFlooded = true;
+                }
+            }
+            // set flooded in here
+            if (! stillFlooded) {
+                timeManager.unPauseEntity(e);
+                ((BuildingEntity) e).setFlooded(false);
             }
         }
     }
@@ -173,8 +201,9 @@ public class WeatherManager extends Manager implements Tickable {
      * @return
      */
     private Point findFreePoint(Water existingWater) {
-        Point position = new Point(-1,-1);
+        Point badPosition = new Point(-1,-1);
         boolean waterFound = false;
+        int waterCount = 0;
         // Make list of all possible tile positions around current Water entity
         ArrayList<Point> positionList = new ArrayList<>();
         positionList.add(new Point(existingWater.getPosX() + 1,
@@ -189,6 +218,10 @@ public class WeatherManager extends Manager implements Tickable {
                 existingWater.getPosY() + 1));
         positionList.add(new Point(existingWater.getPosX() - 1,
                 existingWater.getPosY() - 1));
+        positionList.add(new Point(existingWater.getPosX() + 1,
+                existingWater.getPosY() - 1));
+        positionList.add(new Point(existingWater.getPosX() - 1,
+                existingWater.getPosY() + 1));
         /* rearrange list each time function is called so water is not always
         placed in the same direction from the previous water */
         Collections.shuffle(positionList);
@@ -201,7 +234,8 @@ public class WeatherManager extends Manager implements Tickable {
                 for (BaseEntity e : entities) {
                     if (e instanceof Water) {
                         waterFound = true;
-                        //break;
+                        waterCount++;
+                        break;
                     }
                 }
                 if (!waterFound) {
@@ -209,22 +243,28 @@ public class WeatherManager extends Manager implements Tickable {
                 }
             }
         }
-        return position;
+        /* No possible positions for placement - indicate this to increase
+        efficiency of future checks */
+        // For some reason, this count check is necessary; above logic is not
+        // entirely complete (should be trivially surrounded if arriving here)
+        if (waterCount == 8) {
+            existingWater.setSurrounded();
+        }
+        return badPosition;
     }
 
-    // ALTERNATELY COULD JUST INCREASE THE SIZE OF A SINGLE ENTITY?
     /**
      * Generates new water entities in a random position adjacent to existing
      * water entities with a fixed chance.
      * @param existingWater
      */
     private void generateWater(Water existingWater) {
-        LOGGER.info("GENERATING WATER");
+        //LOGGER.info("GENERATING WATER");
         if (random.nextInt(100) < 11) {
             // Point math needs fixing
             Point position = findFreePoint(existingWater);
             if (! this.checkPosition(position)) {
-                LOGGER.info("FINDING NEW POS");
+                //LOGGER.info("FINDING NEW POS");
                 generateWater(existingWater);
             }
             // Previous check should cover this, but to confirm
@@ -245,22 +285,23 @@ public class WeatherManager extends Manager implements Tickable {
      * multiplied.
      */
     private void generateFlood() {
-        LOGGER.info("GENERATING FLOOD");
-        // COLLISION MAP IS AUTOMATICALLY UPDATED, BUT ARE ENTITIES?
+        //LOGGER.info("GENERATING FLOOD");
         List<BaseEntity> entities = world.getEntities();
         Boolean waterFound = false;
         // Find existing water entities
         for (BaseEntity e : entities) {
             if (e instanceof Water) {
                 waterFound = true;
-                this.generateWater((Water) e);
+                if (! ((Water) e).isSurrounded()) {
+                    this.generateWater((Water) e);
+                }
             }
         }
         if (waterFound) {
-            LOGGER.info("WATER FOUND");
+            //LOGGER.info("WATER FOUND");
             return;
         } else {
-            LOGGER.info("NO WATER YET");
+            //LOGGER.info("NO WATER YET");
             // No water found in map... Create some
             this.generateFirstDrop();
             return;
@@ -272,7 +313,7 @@ public class WeatherManager extends Manager implements Tickable {
      * none currently exist.
      */
     private void generateFirstDrop() {
-        LOGGER.info("GENERATING DROP");
+        //LOGGER.info("GENERATING DROP");
         Random r = new Random();
         int width = world.getWidth();
         int length = world.getLength();
@@ -281,18 +322,43 @@ public class WeatherManager extends Manager implements Tickable {
                 - 1, length - r.nextInt(length/4) - 1);
         // Ensure position valid (should be trivially true)
         if (! checkPosition(p)) {
-            LOGGER.info("POSITION CHECKED");
+            //LOGGER.info("POSITION CHECKED");
             Water firstDrop = new Water(world, p.getX(),
                     p.getY(), 0);
             world.addEntity(firstDrop);
-            LOGGER.info("WATER FINE");
+           // LOGGER.info("WATER FINE");
             this.generateWater(firstDrop);
-            LOGGER.info("DROP GENERATED");
+            //LOGGER.info("DROP GENERATED");
             return;
         } else {
-            LOGGER.info("BAD POSITION");
+            //LOGGER.info("BAD POSITION");
             return;
         }
+    }
+
+    /**
+     * Systematically removes the Water entities created by the flood, returns
+     * false when no further entities remain.
+     */
+    private boolean retreatWaters() {
+        //LOGGER.info("GENERATING FLOOD");
+        List<BaseEntity> entities = world.getEntities();
+        Boolean waterFound = false;
+        Iterator<BaseEntity> iterator = entities.iterator();
+        // Find existing water entities
+        while (iterator.hasNext()) {
+            LOGGER.info("REMOVING");
+            BaseEntity entity = iterator.next();
+            if (entity instanceof Water) {
+                LOGGER.info("WATER FOUND");
+                waterFound = true;
+                // Remove Water with 10% chance every call
+                //if (random.nextInt(100) > 90) {
+                    iterator.remove();
+                //}
+            }
+        }
+        return waterFound;
     }
 
     //POSSIBLY ADD FUNCTION FOR PERIODICALLY ADDING MORE WATER IN NEW PLACES,

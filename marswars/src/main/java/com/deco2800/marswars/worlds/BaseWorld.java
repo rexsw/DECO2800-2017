@@ -123,7 +123,7 @@ public class BaseWorld extends AbstractWorld {
 		super.removeEntity(entity);
 		if (entity instanceof AttackableEntity && GameManager.get().getMiniMap() != null) {
 			// remove entity from the minimap when they are removed from the world
-			GameManager.get().getMiniMap().removeEntity(entity);
+			//GameManager.get().getMiniMap().removeEntity(entity);
 		}
 		if (!entity.isCollidable())
 			return;
