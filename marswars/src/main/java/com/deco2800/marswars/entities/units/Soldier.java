@@ -133,7 +133,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.info("Same owner");
+			//LOGGER.info("Same owner");
 		}
 	}
 	
@@ -288,7 +288,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					// No good
 					return;
 				}
-				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
+				//LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
