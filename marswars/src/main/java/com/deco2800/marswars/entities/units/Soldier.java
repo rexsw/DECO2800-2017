@@ -231,7 +231,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 	@Override
 	public void onTick(int tick) {
-
+		loyalty_regeneration();
+		checkOwnerChange();
 		if (!currentAction.isPresent()) {
 			
 			//this will disable collision check for the entities inside the carrier
@@ -368,6 +369,28 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 	public String getMissileTexture() {
 		return defaultMissileName;
+	}
+	
+	/**
+	 * Increase the loyalty of the entity in a certain period
+	 */
+	public void loyalty_regeneration() {
+		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
+		if ((this.getLoyaltyRegenInterval()) <= 0) {
+			this.setLoyalty(this.getLoyalty() + 10);
+			this.resetLoyaltyRegenInterval();
+			return;
+		}
+	}
+	
+	/**
+	 * If the owner status change, the texture should be reloaded
+	 */
+	public void checkOwnerChange() {
+		if (this.getOwnerChangedStatus()) {
+			this.setAllTextture();
+			this.setOwnerChangedStatus(false);
+		}
 	}
 	
 }
