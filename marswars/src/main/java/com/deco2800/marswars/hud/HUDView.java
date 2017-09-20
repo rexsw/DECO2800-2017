@@ -145,6 +145,9 @@ public class HUDView extends ApplicationAdapter{
 	int exitCheck = 0;
 	
 	Dialog pause;
+	Dialog help;
+	Dialog techTree;
+	Dialog quit;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -775,9 +778,9 @@ public class HUDView extends ApplicationAdapter{
      * This method shall only be called when the "Customize" button from the start menu is clicked.
      * If this method is call, it will cause that the actions window be set to not visible.
 	 *
-	 * @param fullMenu whether is used during a game play
+	 * @param inGame whether is used during a game play
      */
-    public void addEntitiesPickerMenu(boolean fullMenu){
+    private void addEntitiesPickerMenu(boolean inGame){
 		entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn");
 
@@ -786,14 +789,14 @@ public class HUDView extends ApplicationAdapter{
         unitsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addUnitsPickerMenu(fullMenu);
+                addUnitsPickerMenu(inGame);
             }
         });
         TextButton buildingsButton = new TextButton("Buildings",skin);
         buildingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addBuildingsPickerMenu(fullMenu);
+                addBuildingsPickerMenu(inGame);
             }
         });
         TextButton resourcesButton = new TextButton("Resources",skin);
@@ -842,9 +845,9 @@ public class HUDView extends ApplicationAdapter{
     /**
      * Creates the sub menu that displays all available units
 	 *
-	 * @param fullMenu whether is being used during a game play
+	 * @param inGame whether is being used during a game play
      */
-    public void addUnitsPickerMenu(boolean fullMenu){
+    public void addUnitsPickerMenu(boolean inGame){
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn Units");
 
@@ -853,25 +856,26 @@ public class HUDView extends ApplicationAdapter{
 
         Table table = new Table();
 		table.align(Align.left);
-		table.setSize(buttonWidth, buttonHeight + 20);
-		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
-		entitiesButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				addEntitiesPickerMenu(true);
-				entitiesPicker.setVisible(true);
-			}
-		});
-		if(fullMenu) {
+        if(!inGame) {
+			TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+			entitiesButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					addEntitiesPickerMenu(inGame);
+					entitiesPicker.setVisible(true);
+				}
+			});
 			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
 		}
+        
         TextButton astronautButton = new TextButton("Astronaut",skin);
         astronautButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//
+				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
 			}
 		});
+    
         TextButton carrierButton = new TextButton("Carrier",skin);
         TextButton healerButton = new TextButton("Healer",skin);
         TextButton heroSpacmanButton = new TextButton("Hero Spacman",skin);
@@ -879,10 +883,8 @@ public class HUDView extends ApplicationAdapter{
         TextButton spacmanButton = new TextButton("Spacman",skin);
         TextButton tankButton = new TextButton("Tank",skin);
 
-
-
         ScrollPane scrollPane = new ScrollPane(table, skin);
-        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
         table.add(astronautButton).width(buttonWidth).height(buttonHeight);
         table.add(carrierButton).width(buttonWidth).height(buttonHeight);
@@ -894,7 +896,6 @@ public class HUDView extends ApplicationAdapter{
         table.add(tankButton).width(buttonWidth).height(buttonHeight);
 
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
-
     }
 
     /**
@@ -903,7 +904,6 @@ public class HUDView extends ApplicationAdapter{
      */
     private void addBuildingsPickerMenu(boolean fullMenu){
         entitiesPicker.clear();
-		entitiesPicker.getTitleLabel().setText("Generate Building");
         Table table = new Table();
         TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
             entitiesButton.addListener(new ChangeListener() {
@@ -953,12 +953,15 @@ public class HUDView extends ApplicationAdapter{
                 }
             });
     		table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
+    		
         }
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
     }
 
     /**
      * Creates the sub menu that displays all available resources
+	 *
      */
     private void addResourcesPickerMenu(){
         entitiesPicker.clear();
@@ -994,10 +997,12 @@ public class HUDView extends ApplicationAdapter{
         table.add(waterButton).width(buttonWidth).height(buttonHeight);
 
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
     }
 
     /**
      * Creates the sub menu that displays all available terrains
+	 *
      */
     private void addTerrainsPickerMenu(){
         entitiesPicker.clear();
@@ -1185,8 +1190,20 @@ public class HUDView extends ApplicationAdapter{
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 		
-		//keyboard listeners for hotkeys
-
+		//keyboard listeners for hotkeys		
+		if(pauseCheck == 0) {
+			//chat listener
+			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
+						&& messageToggle) {
+					messageWindow.setVisible(false);
+					messageToggle = false; 
+					this.setChatActiveCheck(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
+					messageWindow.setVisible(true);
+					messageToggle = true;
+					this.setChatActiveCheck(1);
+				}
+		}
 
 		//chat listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
@@ -1202,14 +1219,37 @@ public class HUDView extends ApplicationAdapter{
 				this.setChatActiveCheck(1);
 			}
 		}
-
+			
+		if(chatActiveCheck == 0) {
+			//pause menu listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+				if (pauseCheck == 0){
+					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+				} else {
+					timeManager.unPause();
+					this.setPauseCheck(0);
+					pause.hide();
+				}
+			}
+		}
 		
 		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
 					this.setExitCheck(1);
-					new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			if (exitCheck == 1) {
+				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+					System.exit(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+					this.setExitCheck(0);
+					quit.hide();
+					timeManager.unPause();
+					
 				}
 			}
 			
@@ -1217,7 +1257,11 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 				if(techCheck == 0) {
 					this.setTechCheck(1);
-					new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+					techTree = new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+				} else {
+					this.setTechCheck(0);
+					techTree.hide();
+					timeManager.unPause();
 				}
 			}
 			
@@ -1250,24 +1294,15 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 				if (helpCheck == 0) {
 					this.setHelpCheck(1);
-					new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
-				}
-			}
-			
-			//pause menu listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+					help = new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
 				} else {
-					this.setPauseCheck(0);
-					pause.hide();
+					this.setHelpCheck(0);
+					help.hide();
 					timeManager.unPause();
 				}
 			}
 		}
 		
-			
-
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
 			getActionWindow().removeActor(helpText);
@@ -1279,18 +1314,14 @@ public class HUDView extends ApplicationAdapter{
 					//helpText = ((Selectable) e).getHelpText();
 					somethingSelected = true;
 				}
-
 			}
 			if (!somethingSelected) {
-				//peonButton = new TextButton("Select a Unit", skin);
-				//helpText.setText("Welcome to SpacWars");
+			
 			}
-			//etActionWindow().add(peonButton);
-			//etActionWindow().add(helpText);
-
 			lastMenuTick = TimeUtils.nanoTime();
-
+			
 		}
+
 	}
 
 	/**
@@ -1370,22 +1401,43 @@ public class HUDView extends ApplicationAdapter{
 
     }
 	
+	/** 
+	 * When used in the code will set the pauseCheck integer to 1 when there
+	 * is an active Pause menu and 0 otherwise
+	 */
 	public void setPauseCheck(int i) {
 		pauseCheck = i;	
 	}
 	
+	/** 
+	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
+	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
+	 * stop the other hotkeys from being used while the chatbox is visible
+	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
 	}
 	
+	/** 
+	 * When used in the code will set the exitCheck integer to 1 when there
+	 * is an active dialog asking the user if they wish to quit, and 0 otherwise
+	 */
 	public void setExitCheck(int i) {
 		exitCheck = i;
 	}
 	
+	/**
+	 * When used in the code will set the techCheck integer to 1 when the tech
+	 * tree is visible and 0 otherwise
+	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
 	}
 
+	/**
+	 *  When used in the code will set the helpCheck integer to 1 when there
+	 * is an active Help window and 0 otherwise
+	 */
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
