@@ -214,16 +214,10 @@ public class GameStats{
 				gameGraph = new GameGraph(Field.BUILDINGS);
 			}
 		});
-		b8.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.TECHNOLOGY);
-			}
-		});	
 		techButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				//gameGraph = new GameGraph("Buildings");
+				gameGraph = new GameGraph(Field.TECHNOLOGY);
 			}
 		});	
 
