@@ -165,6 +165,7 @@ public class TextureManager extends Manager {
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
+        this.saveTexture("multi_selection", "resources/placeholderassets/multiselection.png");
 
 
         // Item icon in shop dialog

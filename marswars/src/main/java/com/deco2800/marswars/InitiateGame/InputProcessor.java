@@ -194,6 +194,7 @@ public class InputProcessor{
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 				if(!multiSelectionFlag) {
+					MultiSelection.resetSelectedTiles();
 					if (GameManager.get().getActiveView() == 1) {
 						InputProcessor.this.camera.position.set(InputProcessor.this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
 						InputProcessor.this.camera.zoom = 1;
@@ -231,6 +232,7 @@ public class InputProcessor{
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
 					multiSelection.addEndTile(worldCoords.x,worldCoords.y);
 					multiSelection.clickAllTiles();
+					MultiSelection.resetSelectedTiles();
 					return true;
 
 				}
@@ -241,6 +243,17 @@ public class InputProcessor{
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
 					if(multiSelectionFlag){
+						MultiSelection.resetSelectedTiles();
+						float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+						float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+						MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, 0,false);
+						float projX = worldCoords.x / tileWidth;
+						float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
+						projX -= projY - projX;
+
+						MultiSelection.updateSelectedTiles((int)projX,(int)projY);
 						return true;
 					}
 
@@ -268,7 +281,10 @@ public class InputProcessor{
 			public boolean keyDown(int keyCode) {
 
 				//enable multiSelection through touch and drag
-				if(keyCode==Input.Keys.SHIFT_LEFT || keyCode==Input.Keys.SHIFT_RIGHT) multiSelectionFlag=true;
+				if(keyCode==Input.Keys.SHIFT_LEFT || keyCode==Input.Keys.SHIFT_RIGHT) {
+					multiSelectionFlag=true;
+					MultiSelection.resetSelectedTiles();
+				}
 
 				InputProcessor.this.downKeys.add(keyCode);
 				keyPressed(keyCode);
