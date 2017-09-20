@@ -1,11 +1,14 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.MarsWars;
+import com.deco2800.marswars.InitiateGame.Game;
+import com.deco2800.marswars.managers.GameManager;
 
 /**
  * Creates a main menu window, which adds in a table depending on the 
@@ -18,19 +21,22 @@ import com.deco2800.marswars.MarsWars;
  * FLOW DIAGRAM: 
  * TODO add in flow diagram of the main menu
  *  
- * @author Toby 
+ * @author Toby Guinea
  *
  */
 public class MainMenu {
 	private static final int MENUHEIGHT = 300; 
 	private static final int MENUWIDTH = 400;
 	private Skin skin;
-	private MarsWars marswars;
 	private Stage stage; 
 	
-	Window mainmenu; 
-	Label title;
+	private Window mainmenu; 
+	private Label title;
+	boolean gameStarted = false;
+	private OrthographicCamera camera; 
+	private Game game; 
 	boolean status = true;
+	private MarsWars marsWars;
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -38,30 +44,47 @@ public class MainMenu {
 	 * @param stage
 	 * @param window
 	 * @param marswars
+	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars) {
+	public MainMenu(Skin skin, Stage stage, MarsWars marswars, OrthographicCamera camera) {
 		this.skin = skin;
-		this.marswars = marswars;
 		this.stage = stage; 
-		mainmenu = window; 
-		mainmenu.setDebug(true);
+		this.mainmenu = new Window("Its a start", skin); 
+		this.marsWars = marswars;
 		createMenu();
-    }
+	}
 
 	/**
 	 * Set the main menu size and adds in the table
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
-		MenuScreen screen = new MenuScreen(skin, mainmenu, stage);
-		mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		/*Creates the screens for the menu that walk the player 
+		 * through setting up their customized game */
+		GameManager.get().getGui().disableHUD();
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		this.stage.addActor(mainmenu);
+	}
+		
+	public void startGame(boolean start){
+		gameStarted = start;
+		GameManager.get().getGui().enableHUD();
+		game = new Game(); //Start up a new game
 	}
 	
-	public Window buildMenu(){
-		return mainmenu;
+	public boolean gameStarted(){
+		boolean started = gameStarted;
+		return started; 
 	}
 	
 	public void resize(int width, int height) {
-		mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+	}
+	
+	public void renderGame(OrthographicCamera camera2, SpriteBatch batch){
+		if(gameStarted){
+			game.render(camera2, batch);
+		}
 	}
 }

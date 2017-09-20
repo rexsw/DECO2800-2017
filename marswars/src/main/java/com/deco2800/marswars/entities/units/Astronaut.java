@@ -1,23 +1,21 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
-//import com.deco2800.marswars.entities.Resource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+
+//import com.deco2800.marswars.entities.Resource;
 
 /**
  * A combat unit that can gather resources
@@ -67,7 +65,22 @@ public class Astronaut extends Soldier {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
-	
+
+
+	@Override
+	public void makeSelected() {
+		super.makeSelected();
+		GameManager.get().getGui().showEntitiesPicker(true, true);
+		GameManager.get().getGui().addBuildingsPickerMenu(true);
+	}
+
+	@Override
+	public void deselect() {
+		super.deselect();
+		GameManager.get().getGui().showEntitiesPicker(false, true);
+
+	}
+
 	/**
 	 * Add gathered resource to unit's backpack
 	 * @param resource
@@ -99,5 +112,12 @@ public class Astronaut extends Soldier {
 	@Override
 	public String toString(){
 		return "Astronaut";
+	}
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Astronaut", this.getHealth(), null, this.getCurrentAction(), this);
 	}
 }

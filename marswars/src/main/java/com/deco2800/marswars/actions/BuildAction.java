@@ -3,15 +3,13 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.CheckSelect;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 
@@ -39,8 +37,7 @@ public class BuildAction implements DecoAction{
 	private float projY;
 	private int relocateSelect = 10;
 	private CheckSelect temp;
-	private float buildingHeight = 3;
-	private float buildingLength = 3;
+	private float buildingDims;
 	private boolean validBuild;
 	private int buildProgress = 0;
 	private State state = State.SELECT_SPACE;
@@ -48,10 +45,10 @@ public class BuildAction implements DecoAction{
 	private float progress = 0;
 	private float buildingSpeed = 1;
 	private BuildingEntity base;
-	private BaseEntity spac;
+	private BaseEntity actor;
 	private MoveAction moveAction = null;
 	private BuildingType building;
-
+	private float fixPos = 0f;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	private boolean actionPaused = false;
@@ -62,8 +59,9 @@ public class BuildAction implements DecoAction{
 	 * @param building Type of building to be constructed
 	 */
 	public BuildAction(BaseEntity builder, BuildingType building) {
-		this.spac = builder;
+		this.actor = builder;
 		this.building = building;
+		this.buildingDims = (int)(building.getBuildSize());
 	}
 	
 	/**
@@ -88,28 +86,16 @@ public class BuildAction implements DecoAction{
 					projX -= projY - projX;
 					projX = (int) projX;
 					projY = (int) projY;
-					if (!(projX < ((buildingHeight + 1) / 2) || projX >
-							(GameManager.get().getWorld().getWidth() -
-									((buildingHeight + 1.5) / 2))
-							|| projY < ((buildingHeight + 1) / 2) || projY >
-							GameManager.get().getWorld().getLength() -
-									buildingLength)) {
-						temp = new CheckSelect(projX -
-								((buildingHeight + 1) / 2), projY, 0f,
-								buildingHeight, buildingLength, 0f);
-						int left = (int) temp.getPosX();
-						int right = (int) Math.ceil(temp.getPosX() +
-								temp.getXLength());
-						int bottom = (int) temp.getPosY();
-						int top = (int) Math.ceil(temp.getPosY() +
-								temp.getYLength());
-						for (int x = left + 1; x < right + 1; x++) {
-							for (int y = bottom - 1; y < top - 1; y++) {
-								if (GameManager.get().getWorld().hasEntity(x, y)) {
-									validBuild = false;
-								}
-							}
-						}
+					if (buildingDims % 2 == 0) {
+						fixPos = .5f;
+					}
+					if (!(projX < (((buildingDims + 1) / 2) - fixPos) || projX >
+							(GameManager.get().getWorld().getWidth() - buildingDims - fixPos)
+							|| projY < (((buildingDims + 1) / 2) - fixPos) || projY >
+							GameManager.get().getWorld().getLength() - buildingDims - fixPos)) {
+						temp = new CheckSelect(projX+fixPos-((int)((buildingDims+1)/2)), projY+fixPos, 0f,
+								buildingDims, buildingDims, 0f);
+						validBuild = GameManager.get().getWorld().checkValidPlace(temp.getPosX(), temp.getPosY(), buildingDims, fixPos);
 						if (validBuild) {
 							temp.setGreen();
 							GameManager.get().getWorld().addEntity(temp);
@@ -125,18 +111,18 @@ public class BuildAction implements DecoAction{
 			} else if (state == State.BUILD_STRUCTURE) {
 				if (base != null) {
 					if (progress >= 100) {
-						base.setTexture("homeBase");
+						base.animate3();
 						this.completed = true;
 					} else if (progress > 50) {
-						base.setTexture("homeBase2");
+						base.animate2();
 						progress = progress + (buildingSpeed * speedMultiplier);
 					} else {
-						base.setTexture("homeBase1");
+						base.animate1();
 						progress = progress + (buildingSpeed * speedMultiplier);
 					}
 				}
 			} else if (state == State.SETUP_MOVE) {
-				moveAction = new MoveAction(projX, projY, spac);
+				moveAction = new MoveAction(projX, projY, actor);
 				state = State.MOVE_ACTION;
 			} else if (state == State.MOVE_ACTION) {
 				if (moveAction.completed()) {
@@ -152,7 +138,6 @@ public class BuildAction implements DecoAction{
 	 * Checks completed state
 	 * @return returns boolean stating if building was completed
 	 */
-	
 	@Override
 	public boolean completed() {
 		return completed;
@@ -162,7 +147,6 @@ public class BuildAction implements DecoAction{
 	 * Returns number from 0 to 100 representing completion
 	 * @return percentage of completion 
 	 */
-	
 	@Override
 	public int actionProgress() {
 		return buildProgress;
@@ -171,25 +155,22 @@ public class BuildAction implements DecoAction{
 	/**
 	 * Can be called on to force this action to begin building.
 	 */
-	
 	public void finaliseBuild() {
 		if (temp != null && validBuild) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			base = new BuildingEntity((int)projX-((buildingHeight+1)/2), (int)projY, 0f, building);
-			if (resourceManager.getRocks(((HasOwner) spac).getOwner()) >= base.getCost()) {
-				resourceManager.setRocks(resourceManager.getRocks(((HasOwner) spac).getOwner()) - base.getCost(), ((HasOwner) spac).getOwner());
-				if (building == BuildingType.BASE) {
-					base.setTexture("homeBase1");
-					GameManager.get().getWorld().addEntity(base);
-				}
-				
+			base = new BuildingEntity((int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, building, actor.getOwner());
+			base.animate1();
+			if (resourceManager.getRocks(actor.getOwner()) >= base.getCost()) {
+				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
+				GameManager.get().getWorld().addEntity(base);
+				base.fixPosition((int)(projX-((buildingDims-1)/2)), (int)(projY -((buildingDims-1)/2)), 0);
 				this.buildingSpeed = base.getSpeed();
 				state = State.SETUP_MOVE;
-				LOGGER.error("BUILDING NEW STRUCTURE");
+				LOGGER.info("BUILDING NEW STRUCTURE");
 			}
 			else {
-				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE");
+				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE" + resourceManager.getRocks(actor.getOwner()));
 				completed = true;
 			}
 

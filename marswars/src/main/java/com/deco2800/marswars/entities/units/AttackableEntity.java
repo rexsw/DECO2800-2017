@@ -3,16 +3,16 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.Optional;
 
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.GameBlackBoard;
+import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.util.Box3D;
 
 /**
@@ -20,8 +20,8 @@ import com.deco2800.marswars.util.Box3D;
  * @author Tze Thong Khor on 25/8/17
  *
  */
-public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner{
-	
+
+public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress, HasAction{
 	private int maxHealth; // maximum health of the entity
 	private int health; // current health of the entity
 	private int maxArmor; // maximum armor of the entity
@@ -32,16 +32,21 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyalty; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
-	private int owner; // the owner of the player
 	private float speed; // the movement speed of the entity
 	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
-	private MissileEntity missile; // the type of missile
+	private int loadStatus; //whether the target is loaded
+	private int areaDamage; // the area of damage 
+	private boolean gotHit; // if the unit get hitted, it will be true;
+	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
+	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
+	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
 	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
+		this.setAreaDamage(0);
 		this.modifyCollisionMap(true);
 	}
 	
@@ -157,18 +162,25 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	}
 
 	/**
-	 * Set the health of the entity
+	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
 	 * @param the health of the entity
 	 */
 	@Override
 	public void setHealth(int health) {
+		if (this.getHealth() > health) {
+			this.setGotHit(true);
+		}
+		
 		if (health <= 0) {
+			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 		}
 		this.health  = health;
 	}
-	
+
+	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
 	}
@@ -178,44 +190,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	public void setEmptyAction() {
 		currentAction = Optional.empty();
-	}
-
-	/**
-	 * Set the owner of the entity
-	 * @param the owner of the entity
-	 */
-	@Override
-	public void setOwner(int owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * Return the owner of the entity
-	 * @return the owner of the entity
-	 */
-	@Override
-	public int getOwner() {
-		return this.owner;
-	}
-
-	/**
-	 * Check if an entity shares the same owner
-	 * @param an entity
-	 * @return true if the parameter shares the same owner, false otherwise
-	 */
-	@Override
-	public boolean sameOwner(AbstractEntity entity) {
-		boolean isInstance = entity instanceof HasOwner;
-		return isInstance && this.owner == ((HasOwner) entity).getOwner();
-	}
-
-	/**
-	 * Check if the entity currently has an action
-	 * @return true if there is an ongoing action
-	 */
-	@Override
-	public boolean isWorking() {
-		return currentAction.isPresent();
 	}
 
 	/**
@@ -263,21 +237,37 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		return attackSpeed;
 	}
 
+	/**
+	 * Get the loyalty attribute of the entity
+	 * @return the loyalty value of the entity
+	 */
 	@Override
 	public int getLoyalty() {
 		return loyalty;
 	}
 
+	/**
+	 * Set the loyalty attribute of the entity
+	 * @param loyalty
+	 * 		The loyalty attribute value
+	 */
 	@Override
 	public void setLoyalty(int loyalty) {
 		this.loyalty = loyalty;
 	}
 
+	/**
+	 * Get the loyalty damage attribute of the entity
+	 * @return the loyalty damage of the entity
+	 */
 	@Override
 	public int getLoyaltyDamage() {
 		return loyaltyDamage;
 	}
 
+	/**
+	 * Set the loyalty damage of the entity
+	 */
 	@Override
 	public void setLoyaltyDamage(int loyaltyDamage) {
 		this.loyaltyDamage = loyaltyDamage;
@@ -288,18 +278,146 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.maxLoyalty = maxLoyalty;
 	}
 	
-
-	@Override
-	public boolean isAi() {
-		return owner >= 0;
-	}
-
+	/**
+	 * Set the movement speed of the entity
+	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 	
+	/**
+	 * Get the movement speed of the entity
+	 */
 	public float getSpeed() {
 		return speed;
 	}
+	
+	public int getLoadStatus() {
+	    	return loadStatus;
+	}
+	
+	public void setLoaded() {
+	    loadStatus = 1;
+	}
+	
+	public void setUnloaded() {
+	    loadStatus = 0;
+	}
+	
+	public void isCarrier() {
+	    loadStatus = 2;
+	}
 
+	@Override
+	/**
+	 * Get the progress of current action
+	 * @return int
+	 */
+	public int getProgress() {
+		if (currentAction.isPresent()) {
+			return currentAction.get().actionProgress();
+		}
+		return 0;
+	}
+
+	@Override
+	/**
+	 * Returns true if there is a current action, false if not
+	 * @return boolean
+	 */
+	public boolean showProgress() {
+		return currentAction.isPresent();
+	}
+	
+	/**
+	 * Get the area damage of the entity.
+	 * @return
+	 */
+	public int getAreaDamage() {
+		return areaDamage;
+	}
+	
+	/**
+	 * Set the area damage of the entity
+	 * @param areaDamage
+	 */
+	public void setAreaDamage(int areaDamage) {
+		this.areaDamage = areaDamage;
+	}
+
+	/**
+	 * Set the gotHitInterval of the entity. 
+	 * @param interval
+	 */
+	public void setGotHitInterval(int interval) {
+		this.gotHitInterval = interval;
+	}
+	
+	/**
+	 * Get the value of gotHitInterval.
+	 * @return
+	 */
+	public int getGotHitInterval() {
+		return this.gotHitInterval;
+	}
+	
+	/**
+	 * Get the initial value of the gotHitInterval
+	 * @return
+	 */
+	public int getMaxgotHitInterval() {
+		return this.maxGotHitInterval;
+	}
+	
+	/**
+	 * Set the gotHit status. If the entity got hit, the status should be set true and the 
+	 * gotHitInterval will be set to the max. Else set false.
+	 * @param status
+	 */
+	public void setGotHit(boolean status) {
+		this.gotHit = status;
+		if (status) {
+			this.setGotHitInterval(this.getMaxgotHitInterval());
+		}
+	}
+	
+	/**
+	 * Return the status of got hit by any enemy.
+	 * @return
+	 */
+	public boolean gotHit() {
+		return gotHit;
+	}
+	
+	/**
+	 * Set the enemy of the entity. Should set the enemy who hit the entity.
+	 * @param enemy
+	 */
+	public void setEnemy(AttackableEntity enemy) {
+		this.enemy = enemy;
+	}
+	
+	/**
+	 * Get the enemy who hit the entity.
+	 * @return
+	 * 	
+	 */
+	public AttackableEntity getEnemy() {
+		return enemy;
+	}
+	
+	/**
+	 * If the entity gotHit status is true, we need a way to set it to be false after it is not getting hit from anyone. The gotHitInterval is used to 
+	 * determine the cool down period of the gotHit status from true to false. After the period, the gotHit status will be set false and the goHitInterval
+	 * will be set to its initial value.
+	 */
+	public void gotHitIntervalCoolDown() {
+		if (this.gotHit()) {
+			this.setGotHitInterval(getGotHitInterval() - 10);
+			if (this.getGotHitInterval() <= 0) {
+				this.setGotHit(false);
+				this.setGotHitInterval(this.getMaxgotHitInterval());
+			}
+		}
+	}
 }

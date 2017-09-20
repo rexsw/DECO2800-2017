@@ -1,10 +1,13 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,12 @@ public class MouseHandler extends Manager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MouseHandler.class);
 
 	private List<Clickable> listeners = new ArrayList<>();
+	
+	private boolean ignoreLeftClick = false;
+	
+	private BaseEntity unitSelected = null;
+	
+	private boolean control = false;
 
 	/**
 	 * Currently only handles objects on height 0
@@ -33,9 +42,18 @@ public class MouseHandler extends Manager {
 
 		float projX;
 		float projY;
-
-		if (button == 0) {
+		if (button == 0 && !ignoreLeftClick) {
+			if (unitSelected != null && unitSelected instanceof BuildingEntity) {
+				unregisterForRightClickNotification((Clickable) unitSelected);
+				unitSelected.deselect();
+			}
 			// Left click
+			// If control is not held down 
+			if (control == false) {
+				// Clear all selected units
+				listeners.clear();
+			}
+			
 			AbstractWorld world = GameManager.get().getWorld();
 
 			// If we get another left click ignore the previous listeners
@@ -58,9 +76,14 @@ public class MouseHandler extends Manager {
 			if (entities.isEmpty()) {
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
+					if (c instanceof BaseEntity) {
+						((BaseEntity) c).deselect();
+					}
 					if (c instanceof Soldier) ((Soldier)c).resetTexture();
+					if (c instanceof Spacman) {
+						((Spacman) c).setTexture("spacman_green");
+					}	
 				}
-				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
@@ -81,10 +104,13 @@ public class MouseHandler extends Manager {
 				if (e instanceof Clickable) {
 					if (e instanceof HasOwner) {
 						//giving preference to Player's own entities.
-						if (! ((HasOwner) e).isAi() ) {
+						if (! ((HasOwner) e).isAi()) {
+							if(e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1)
 							chosen = e;
 							isClickable = true;
-							break;
+							if (e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1) { //preference for player's non-building entities.
+								break;
+							}
 						}
 					}
 					if (chosen == null) {
@@ -97,11 +123,25 @@ public class MouseHandler extends Manager {
 			if (chosen != null) {
 				LOGGER.info(String.format("Clicked on %s", chosen).toString());
 				((Clickable) chosen).onClick(this);
+				//Checks if last clicked entity was unit and deselect unit if current selection is building
+				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier || unitSelected instanceof Spacman)) {
+					unregisterForRightClickNotification((Clickable) unitSelected);
+					unitSelected.deselect();
+					if (unitSelected instanceof Soldier) {
+						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+					}
+					else {
+						unitSelected.setTexture("spacman_green");
+					}
+					unitSelected = (BuildingEntity)chosen;
+				}
+				unitSelected = (BaseEntity)chosen;
+
 			}
 			
-			if(isClickable){
-				((CustomizedWorld)world).deSelectAll();
-			}
+			//if(isClickable){
+			//	((CustomizedWorld)world).deSelectAll();
+			//}
 			
 			/*if (entities.get(entities.size() - 1) instanceof Clickable) {
 				LOGGER.info(String.format("Clicked on %s", entities.get(entities.size() - 1).toString()));
@@ -119,11 +159,39 @@ public class MouseHandler extends Manager {
 			for (Clickable c : listeners) {
 				c.onRightClick(projX, projY);
 			}
-			listeners.clear();
+			AbstractWorld world = GameManager.get().getWorld();
+			((CustomizedWorld)world).deSelectAll();
 		}
 	}
 
 	public void registerForRightClickNotification(Clickable thing) {
 		listeners.add(thing);
 	}
+	
+	public void unregisterForRightClickNotification(Clickable thing) {
+		listeners.remove(thing);
+	}
+	
+	/**
+	 * Force ignore future left clicks
+	 * @param ignore
+	 */
+	public void ignoreLeftClicks(boolean ignore) {
+		ignoreLeftClick = ignore;
+	}
+	
+	/**
+	 * Method called to block the ability to select multiple units
+	 */
+	public void controlUp() {
+		control = false;
+	}
+	
+	/**
+	 * Method called to allow the ability to select multiple units
+	 */
+	public void controlDown() {
+		control = true;
+	}
+
 }

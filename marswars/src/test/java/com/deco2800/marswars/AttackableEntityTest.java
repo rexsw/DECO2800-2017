@@ -2,20 +2,16 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import java.util.List;
-import com.deco2800.marswars.actions.DamageAction;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.actions.AttackAction;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -53,13 +49,13 @@ public class AttackableEntityTest {
 		assertEquals(test.getArmor(), 0);
 		assertEquals(test.getMaxArmor(), 0);
 		assertEquals(test.getAttackSpeed(), 0);
-		assertEquals(test.isWorking(), false);
+		assertEquals(test.showProgress(), false);
 		assertEquals(test.getOwner(), -1);
 		assertEquals(test.getDamageDeal(), 0);
 		assertEquals(test.getMaxHealth(), 0);
 		assertEquals(test.getHealth(), 0);
 		assertEquals(test.getCurrentAction(), Optional.empty());
-		assertEquals(test.isWorking(), false);
+		assertEquals(test.showProgress(), false);
 		assertEquals(test.getArmorDamage(), 0);
 		
 		assertEquals(constructor2Test.getPosX(), 5, 0.1);
@@ -72,13 +68,13 @@ public class AttackableEntityTest {
 		assertEquals(constructor2Test.getArmor(), 0);
 		assertEquals(constructor2Test.getMaxArmor(), 0);
 		assertEquals(constructor2Test.getAttackSpeed(), 0);
-		assertEquals(constructor2Test.isWorking(), false);
+		assertEquals(constructor2Test.showProgress(), false);
 		assertEquals(constructor2Test.getOwner(), 0);
 		assertEquals(constructor2Test.getDamageDeal(), 0);
 		assertEquals(constructor2Test.getMaxHealth(), 0);
 		assertEquals(constructor2Test.getHealth(), 0);
 		assertEquals(constructor2Test.getCurrentAction(), Optional.empty());
-		assertEquals(constructor2Test.isWorking(), false);
+		assertEquals(constructor2Test.showProgress(), false);
 		assertEquals(constructor2Test.getArmorDamage(), 0);
 		
 		assertEquals(constructor3Test.getPosX(), 15, 0.1);
@@ -91,13 +87,13 @@ public class AttackableEntityTest {
 		assertEquals(constructor3Test.getArmor(), 0);
 		assertEquals(constructor3Test.getMaxArmor(), 0);
 		assertEquals(constructor3Test.getAttackSpeed(), 0);
-		assertEquals(constructor3Test.isWorking(), false);
+		assertEquals(constructor3Test.showProgress(), false);
 		assertEquals(constructor3Test.getOwner(), 1);
 		assertEquals(constructor3Test.getDamageDeal(), 0);
 		assertEquals(constructor3Test.getMaxHealth(), 0);
 		assertEquals(constructor3Test.getHealth(), 0);
 		assertEquals(constructor3Test.getCurrentAction(), Optional.empty());
-		assertEquals(constructor3Test.isWorking(), false);
+		assertEquals(constructor3Test.showProgress(), false);
 		assertEquals(constructor3Test.getArmorDamage(), 0);
 	}
 
@@ -144,6 +140,7 @@ public class AttackableEntityTest {
 	public void testSetHealth() {
 		test.setHealth(100);
 		assertEquals(test.getHealth(), 100);
+		GameManager.get().setMiniMap(new MiniMap());
 		GameManager.get().getWorld().addEntity(test);
 		List<BaseEntity> alive = GameManager.get().getWorld().getEntities();
 		assertEquals(true, alive.contains(test));
@@ -155,13 +152,13 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetAction() {
-		DamageAction act = new DamageAction(test, enemy);
+		AttackAction act = new AttackAction(test, enemy);
 		test.setAction(act);
 		assertEquals(test.getCurrentAction().get(), act);
-		assertEquals(test.isWorking(), true);
+		assertEquals(test.showProgress(), true);
 		test.setEmptyAction();
 		assertEquals(test.getCurrentAction(), Optional.empty());
-		assertEquals(test.isWorking(), false);
+		assertEquals(test.showProgress(), false);
 	}
 
 	@Test

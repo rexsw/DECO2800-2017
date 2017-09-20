@@ -1,9 +1,7 @@
 package com.deco2800.marswars.managers;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -114,7 +112,8 @@ private static final String CLOSED = "closed.wav";
 
 	/**
 	 * Sets the current biomass
-	 * @param water
+	 * @param biomass
+	 * @param team
 	 */
 	public void setBiomass(int biomass, int team) {
 		if(this.biomass.containsKey(team)) {
@@ -127,6 +126,23 @@ private static final String CLOSED = "closed.wav";
 		else {
 			this.biomass.put(team, biomass);
 		}
+	}
+
+
+	
+	/**
+	 * test if a team as reached the resource win condition
+	 * 
+	 * @return int a non zero teamid if there a winer else 0 if no winer
+	 */
+	public int CappedTeam() {
+		for(int teamid:rocks.keySet()) {
+			if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
+					crystal.get(teamid) > 400 && water.get(teamid) > 400) {
+				return teamid;
+			}
+		}
+		return 0;
 	}
 	
 }
