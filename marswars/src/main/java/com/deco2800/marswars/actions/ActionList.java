@@ -6,6 +6,8 @@ import com.deco2800.marswars.net.Action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -31,60 +33,38 @@ public class ActionList extends ArrayList<Object> {
      */
     @Override
     public boolean add(Object o) {
-        if (o instanceof ActionType || o instanceof EntityID) {
+        if (o instanceof ActionType || o instanceof EntityID || o instanceof BuildingType) {
             super.add(o);
-            ArrayList<Object> sorted = this.getSorted();
-            super.clear();
-            for (Object o2 : sorted) super.add(o2);
+            Collections.sort(this, (Comparator<Object>) (lhs, rhs) -> {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                if (lhs instanceof ActionType && !(rhs instanceof ActionType)) return -1;
+                else if (lhs instanceof ActionType && (rhs instanceof ActionType)) return 0;
+                else if (!(lhs instanceof ActionType) && (rhs instanceof ActionType)) return 1;
+                else if ((lhs instanceof EntityID) && !(rhs instanceof EntityID)) return -1;
+                else if ((lhs instanceof EntityID) && (rhs instanceof EntityID)) return 0;
+                else if ((lhs instanceof BuildingType) && (rhs instanceof EntityID)) return 1;
+                else if ((lhs instanceof BuildingType) && (rhs instanceof BuildingType)) return 0;
+                else return 0;
+            });
+            return true;
         }
         return false;
     }
 
-    private ArrayList<Object> getSorted() { //TODO: implement a batter sorting algorithm
-        ArrayList<Object> sorted = this.stream().filter(o -> o instanceof ActionType).collect(Collectors.toCollection(ArrayList::new));
-        sorted.addAll(this.getEntities().stream().filter(o -> ActionSetter.getBuildingType(o) == null).collect(Collectors.toList()));
-        sorted.addAll(this.getEntities().stream().filter(o -> ActionSetter.getBuildingType(o) != null).collect(Collectors.toList()));
-        return sorted;
-    }
+
 
     public ArrayList<ActionType> getActions() {
-        ArrayList<ActionType> a = new ArrayList<>();
-        for (Object o : this) {
-            if (o instanceof ActionType) a.add((ActionType) o);
-        }
-        return a;
-    }
-
-    public ArrayList<EntityID> getEntities() {
-        ArrayList<EntityID> a = new ArrayList<>();
-        for (Object o : this) {
-            if (o instanceof EntityID) a.add((EntityID) o);
-        }
+        ArrayList<ActionType> a = this.stream().filter(o -> o instanceof ActionType).map(o -> (ActionType) o).collect(Collectors.toCollection(ArrayList::new));
         return a;
     }
 
     public ArrayList<BuildingType> getBuildings() {
-        ArrayList<BuildingType> a = new ArrayList<>();
-        for (Object o : this) {
-            if (!(o instanceof EntityID)) continue;
-            EntityID e = (EntityID) o;
-            if (buildingsAvailable.contains(ActionSetter.getBuildingType(e))) {
-                BuildingType b = ActionSetter.getBuildingType(e);
-                if (b!= null) a.add(b);
-            }
-        }
+        ArrayList<BuildingType> a = this.stream().filter(o -> o instanceof BuildingType).map(o -> (BuildingType) o).collect(Collectors.toCollection(ArrayList::new));
         return a;
     }
 
     public ArrayList<EntityID> getUnits() {
-        ArrayList<EntityID> a = new ArrayList<>();
-        for (Object o : this) {
-            if (!(o instanceof EntityID)) continue;
-            EntityID e = (EntityID) o;
-            if (!buildingsAvailable.contains(ActionSetter.getBuildingType(e))) {
-                a.add((EntityID) o);
-            }
-        }
+        ArrayList<EntityID> a = this.stream().filter(o -> (o instanceof EntityID)).map(o -> (EntityID) o).collect(Collectors.toCollection(ArrayList::new));
         return a;
     }
 }

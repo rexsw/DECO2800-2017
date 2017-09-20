@@ -56,7 +56,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 				0f, building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
-		this.addNewAction(ActionType.GENERATE);
+		this.addNewAction(EntityID.ASTRONAUT);
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		//colour = cm.getColour(owner); TEXTURES NOT READY

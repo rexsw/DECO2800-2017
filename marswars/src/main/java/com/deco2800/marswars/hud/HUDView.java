@@ -598,19 +598,18 @@ public class HUDView extends ApplicationAdapter{
 					Object current = currentActions.get(index);
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
-					} else if (currentActions.get(index) instanceof EntityID) {
+					} else if (currentActions.get(index) instanceof BuildingType) {
 						LOGGER.info("Is entity");
-						if (buildingsAvailable.contains(ActionSetter.getBuildingType((EntityID) currentActions.get(index)))) {
-							LOGGER.info("Try to build");
-							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
-								BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
-								cancelBuild.cancelBuild();
-								cancelBuild.doAction();
-							}
-							selectedEntity.setAction(new BuildAction(selectedEntity, ActionSetter.getBuildingType((EntityID) currentActions.get(index))));
+						LOGGER.info("Try to build");
+						if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+							BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
+							cancelBuild.cancelBuild();
+							cancelBuild.doAction();
 						}
+						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
 					}
-				}
+					}
+
 			}
 		});
 	}
@@ -1164,6 +1163,11 @@ public class HUDView extends ApplicationAdapter{
 		if (currentActions == null) {
 			return;
 		}
+		for (int i = 0; i < currentActions.size(); i++) {
+			enableButton(buttonList.get(i));
+			buttonList.get(i).setText("Borked");
+		}
+
 		//Format Actions
 		formatActionButtons(0);
 
@@ -1173,17 +1177,31 @@ public class HUDView extends ApplicationAdapter{
 		//Format Buildings
 		formatBuildingButtons(currentActions.getActions().size() + currentActions.getUnits().size());
 
-        for (int i = 0; i < currentActions.size(); i++) {
-				enableButton(buttonList.get(i));
-				if (currentActions.get(i) instanceof ActionType) { //If it is an action
-					buttonList.get(i).setText(ActionSetter.getActionName((ActionType)currentActions.get(i)));
-				} else { //If it isnt an action it is something to build
-					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
-				}
-        }
     }
 
 	private void formatUnitButtons(int index) {
+		LOGGER.info("Format units with index="+index+" n="+currentActions.getUnits().size());
+		float buttonWidth = actionsWindow.getWidth()/NUMBER_ACTION_BUTTONS;
+		float buttonHeight = actionsWindow.getHeight();
+		for (EntityID e : currentActions.getUnits()) {
+			buttonList.get(index).setVisible(true);
+			buttonList.get(index).clearChildren();
+			buttonList.get(index).setWidth(buttonWidth);
+			buttonList.get(index).setHeight(buttonHeight);
+			Texture entity = textureManager.getTexture((textureManager.loadUnitSprite(e)));
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			buttonList.get(index).row().padBottom(20);
+			buttonList.get(index).add(new Label(e.name(), skin)).align(Align.left).padLeft(10);
+			buttonList.get(index).add(new Label(String.valueOf(0),skin)).align(Align.left);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			index++;
+		}
+
 	}
 
 	private void formatActionButtons(int index) {
@@ -1192,7 +1210,6 @@ public class HUDView extends ApplicationAdapter{
 
 
 	private void formatBuildingButtons(int index){
-		// Adds all build buttons and listeners for each available building
 		float buttonWidth = actionsWindow.getWidth()/NUMBER_ACTION_BUTTONS;
 		float buttonHeight = actionsWindow.getHeight();
 		for (BuildingType b : currentActions.getBuildings()) {
