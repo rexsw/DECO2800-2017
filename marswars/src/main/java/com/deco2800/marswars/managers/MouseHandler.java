@@ -29,14 +29,14 @@ public class MouseHandler extends Manager {
 	
 	private BaseEntity unitSelected = null;
 	
-	private boolean control = false;
+	//private boolean control = false;
 
 	/**
 	 * Currently only handles objects on height 0
 	 * @param x
 	 * @param y
 	 */
-	public void handleMouseClick(float x, float y, int button) {
+	public void handleMouseClick(float x, float y, int button,boolean skipChecking) {
 		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
@@ -47,21 +47,33 @@ public class MouseHandler extends Manager {
 				unregisterForRightClickNotification((Clickable) unitSelected);
 				unitSelected.deselect();
 			}
-			// Left click
-			// If control is not held down 
-			if (control == false) {
-				// Clear all selected units
-				listeners.clear();
+			// Left click cancels building selection confirmation
+			if (unitSelected !=null && unitSelected instanceof Astronaut) {
+				Astronaut castAstro = (Astronaut)unitSelected;
+				if (castAstro.getBuild() !=null) {
+					if (castAstro.getBuild().selectMode()) {
+						LOGGER.info("cancel");
+						castAstro.getBuild().cancelBuild();
+						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+						castAstro.deselect();
+						return;
+					}
+				}
+
 			}
-			
+			// Left click
 			AbstractWorld world = GameManager.get().getWorld();
 
 			// If we get another left click ignore the previous listeners
 //				listeners.clear(); // Remove this to allow multiselect
-
-			projX = x/tileWidth;
+		if(!skipChecking) {
+			projX = x / tileWidth;
 			projY = -(y - tileHeight / 2f) / tileHeight + projX;
 			projX -= projY - projX;
+		}else{
+			projX=x;
+			projY=y;
+		}
 
 			if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
 				return;
@@ -74,16 +86,13 @@ public class MouseHandler extends Manager {
 
 
 			if (entities.isEmpty()) {
+				if(skipChecking) return;//this line is for multiselection
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
-					if (c instanceof BaseEntity) {
-						((BaseEntity) c).deselect();
-					}
 					if (c instanceof Soldier) ((Soldier)c).resetTexture();
-					if (c instanceof Spacman) {
-						((Spacman) c).setTexture("spacman_green");
-					}	
-				}
+				}			listeners.clear();
+				((CustomizedWorld)world).deSelectAll();
+				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
 
@@ -124,14 +133,11 @@ public class MouseHandler extends Manager {
 				LOGGER.info(String.format("Clicked on %s", chosen).toString());
 				((Clickable) chosen).onClick(this);
 				//Checks if last clicked entity was unit and deselect unit if current selection is building
-				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier || unitSelected instanceof Spacman)) {
+				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
 					unregisterForRightClickNotification((Clickable) unitSelected);
 					unitSelected.deselect();
 					if (unitSelected instanceof Soldier) {
 						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-					}
-					else {
-						unitSelected.setTexture("spacman_green");
 					}
 					unitSelected = (BuildingEntity)chosen;
 				}
@@ -159,6 +165,7 @@ public class MouseHandler extends Manager {
 			for (Clickable c : listeners) {
 				c.onRightClick(projX, projY);
 			}
+			listeners.clear();
 			AbstractWorld world = GameManager.get().getWorld();
 			((CustomizedWorld)world).deSelectAll();
 		}
@@ -180,18 +187,18 @@ public class MouseHandler extends Manager {
 		ignoreLeftClick = ignore;
 	}
 	
-	/**
-	 * Method called to block the ability to select multiple units
-	 */
-	public void controlUp() {
-		control = false;
-	}
-	
-	/**
-	 * Method called to allow the ability to select multiple units
-	 */
-	public void controlDown() {
-		control = true;
-	}
+//	/**
+//	 * Method called to block the ability to select multiple units
+//	 */
+//	public void controlUp() {
+//		control = false;
+//	}
+//
+//	/**
+//	 * Method called to allow the ability to select multiple units
+//	 */
+//	public void controlDown() {
+//		control = true;
+//	}
 
 }

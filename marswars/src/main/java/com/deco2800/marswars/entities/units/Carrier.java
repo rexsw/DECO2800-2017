@@ -95,19 +95,21 @@ public class Carrier extends Soldier {
 	    nextAction = null;
 	} else {
 	    if (!entities.isEmpty() && entities.get(0) instanceof Soldier) {
-		Soldier target = (Soldier) entities.get(0);
-		load(target);
-
-	    } else {
-		for (int i = 0; i < capacity; i++) {
-		    if (!(loadedUnits[i] == null)) {
-			LOGGER.error("moving unit " + i);
-
-			loadedUnits[i].setCurrentAction(
-				Optional.of(new MoveAction((int) x,
-					(int) y, loadedUnits[i],MOVING_SPEED)));
-		    }
+			Soldier target = (Soldier) entities.get(0);
+			load(target);
 		}
+
+			for (int i = 0; i < capacity; i++) {
+				if (!(loadedUnits[i] == null)) {
+					LOGGER.error("moving unit " + i);
+
+					loadedUnits[i].setCurrentAction(
+							Optional.of(new MoveAction((int) x,
+									(int) y, loadedUnits[i],MOVING_SPEED)));
+				}
+			}
+
+		if (!(!entities.isEmpty() && entities.get(0) instanceof Soldier)) {
 		currentAction = Optional
 			.of(new MoveAction((int) x, (int) y, this,MOVING_SPEED));
 		LOGGER.error("Assigned action move to" + x + " " + y);
@@ -140,6 +142,7 @@ public class Carrier extends Soldier {
 		if (e instanceof MissileEntity) {
 		    entitiesSize--;
 		}
+
 	    }
 	    boolean moveAway = entitiesSize > 2;
 	    if (moveAway) {
@@ -266,7 +269,7 @@ public class Carrier extends Soldier {
      * @return The stats of the entity
      */
     public EntityStats getStats() {
-	return new EntityStats("Carrier", this.getHealth(), null,
+	return new EntityStats("Carrier", this.getHealth(),this.getMaxHealth(), null,
 		this.getCurrentAction(), this);
     }
 

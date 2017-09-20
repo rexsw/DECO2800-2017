@@ -134,11 +134,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
-				LOGGER.info("ai - setting unit to move to base" + base.toString());
+
 				Base y = (Base) base;
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
-						(AbstractEntity)soldier));
+						(AttackableEntity)soldier));
 				return;
 			}
 		}

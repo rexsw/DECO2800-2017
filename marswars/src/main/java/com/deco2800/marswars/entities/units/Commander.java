@@ -4,6 +4,8 @@ import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.*;
+import com.deco2800.marswars.managers.GameManager;
+
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -41,6 +43,7 @@ public class Commander extends Soldier {
 		this.name = "Commander";
 		setAttributes();
 		this.inventory = new Inventory(this);
+		//GameManager.get().getGui().
 	}
 
 //	/**
@@ -147,7 +150,7 @@ public class Commander extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Commander", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Commander", this.getHealth(), this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
 	@Override
