@@ -1193,31 +1193,18 @@ public class HUDView extends ApplicationAdapter{
 		//keyboard listeners for hotkeys		
 		if(pauseCheck == 0) {
 			//chat listener
-			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
-						&& messageToggle) {
-					messageWindow.setVisible(false);
-					messageToggle = false; 
-					this.setChatActiveCheck(0);
-				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
-					messageWindow.setVisible(true);
-					messageToggle = true;
-					this.setChatActiveCheck(1);
-				}
-		}
-
-		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
-			if (messageToggle){
-				messageWindow.setVisible(false);
-
-				messageToggle = false; 
-				this.setChatActiveCheck(0);
-
-			} else {
+			if(Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
 				messageWindow.setVisible(true);
 				messageToggle = true;
 				this.setChatActiveCheck(1);
 			}
+		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
+				&& messageToggle) {
+			messageWindow.setVisible(false);
+			messageToggle = false; 
+			this.setChatActiveCheck(0);
 		}
 			
 		if(chatActiveCheck == 0) {
@@ -1233,23 +1220,22 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		
-		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
+		if (exitCheck == 1) {
+			if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+				System.exit(0);
+			} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+				this.setExitCheck(0);
+				quit.hide();
+				timeManager.unPause();	
+			}
+		}
+		
+		if(chatActiveCheck == 0 && exitCheck ==0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
 					this.setExitCheck(1);
 					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
-				}
-			}
-			
-			if (exitCheck == 1) {
-				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-					System.exit(0);
-				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-					this.setExitCheck(0);
-					quit.hide();
-					timeManager.unPause();
-					
 				}
 			}
 			
