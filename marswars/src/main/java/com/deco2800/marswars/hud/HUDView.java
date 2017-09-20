@@ -29,16 +29,24 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TechnologyManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -79,7 +87,9 @@ public class HUDView extends ApplicationAdapter{
 	private CheatBox cheatbox;
 	private Window cheatWindow;//window for the cheatbox
 
-
+	//Buildings available to the player (adds default available buildings)
+	private ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+			BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
 
 
 	private Button peonButton;
@@ -90,6 +100,7 @@ public class HUDView extends ApplicationAdapter{
 	private Label crystalCount;
 	private Label biomassCount;
 	private Label waterCount;
+
 	//Action buttons
 	private List<TextButton> buttonList;
 	private ActionList currentActions;
@@ -130,6 +141,7 @@ public class HUDView extends ApplicationAdapter{
 	int helpCheck = 0;
 	int techCheck = 0;
 	int chatActiveCheck = 0;
+	int cheatActiveCheck = 0;
 	int exitCheck = 0;
 	
 	Dialog pause;
@@ -252,12 +264,12 @@ public class HUDView extends ApplicationAdapter{
 
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-
+		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
-		overheadRight.add(cheatButton).padRight(BUTTONPAD);
+
 
 
 		welcomeMsg = new Table();
@@ -310,12 +322,13 @@ public class HUDView extends ApplicationAdapter{
 		cheatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				if (messageToggle){
+				if (cheatActiveCheck==1){
 					cheatWindow.setVisible(false);
-					messageToggle = false;
+					cheatActiveCheck = 0;
 				} else {
 					cheatWindow.setVisible(true);
-					messageToggle = true;
+					cheatbox.setVisible(true);
+					cheatActiveCheck = 1;
 				}
 
 			}
@@ -355,14 +368,7 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	/**
-	 * Implements a collapsible tab for the chat lobby 
-=======
-
-	}
-
-	/**
 	 * Implements a collapsible tab for the chat lobby
->>>>>>> 45d4c54441e3bfb48c8e0571890dd097f7234c03
 	 */
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box"); //$NON-NLS-1$
@@ -383,7 +389,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("cheatbox"); //$NON-NLS-1$
 		cheatWindow = new Window("Cheat", skin); //$NON-NLS-1$
 		cheatWindow.setMovable(false);
-		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-BUTTONPAD,
+		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-50,
 				Math.round(stage.getHeight()-cheatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
 		cheatWindow.add(cheatbox);
 		cheatWindow.setVisible(false);
@@ -716,10 +722,6 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 	/**
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 45d4c54441e3bfb48c8e0571890dd097f7234c03
      * Display an attackable unit's stats once it's been selected
      * If target is a hero, display inventory
      * @param target unit clicked on by player
@@ -878,6 +880,8 @@ public class HUDView extends ApplicationAdapter{
         TextButton spacmanButton = new TextButton("Spacman",skin);
         TextButton tankButton = new TextButton("Tank",skin);
 
+
+
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
@@ -896,45 +900,61 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available buildings
-	 *
-	 * @param inGame whether is being used during a game play
+     * @param fullMenu allows to go back to menu options if true
      */
-    public void addBuildingsPickerMenu(boolean inGame){
+    private void addBuildingsPickerMenu(boolean fullMenu){
         entitiesPicker.clear();
-		entitiesPicker.getTitleLabel().setText("Generate Buildings");
-
-		float buttonWidth = entitiesPicker.getWidth()/6;
-		float buttonHeight = entitiesPicker.getHeight();
-
         Table table = new Table();
-        table.align(Align.left);
-		if(!inGame) {
-			TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
-			entitiesButton.addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					addEntitiesPickerMenu(inGame);
-					entitiesPicker.setVisible(true);
-				}
-			});
-			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
-		}
-        TextButton barracksButton = new TextButton("Barracks",skin);
-        TextButton baseButton = new TextButton("Base",skin);
-        TextButton bunkerButton = new TextButton("Bunker",skin);
-        TextButton heroFactoryButton = new TextButton("Hero Factory",skin);
-        TextButton turretButton = new TextButton("Turret",skin);
-
+        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+            entitiesButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    addEntitiesPickerMenu(true);
+                    entitiesPicker.setVisible(true);
+                }
+            });
+        float buttonWidth;
+        if(fullMenu) {
+        	buttonWidth = entitiesPicker.getWidth()/buildingsAvailable.size() + 1;
+        }
+        else {
+            buttonWidth = entitiesPicker.getWidth()/buildingsAvailable.size();
+        }
+        float buttonHeight = entitiesPicker.getHeight();
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
-
-        table.add(barracksButton).width(buttonWidth).height(buttonHeight);
-        table.add(baseButton).width(buttonWidth).height(buttonHeight);
-        table.add(bunkerButton).width(buttonWidth).height(buttonHeight);
-        table.add(heroFactoryButton).width(buttonWidth).height(buttonHeight);
-        table.add(turretButton).width(buttonWidth).height(buttonHeight);
-
+        if(fullMenu) {
+            table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+        }
+        // Adds all build buttons and listeners for each available building
+        for (BuildingType b : buildingsAvailable) {
+        	Button formatPane = new Button(skin);
+    		Texture entity = textureManager.getTexture(b.getBuildTexture());
+    		TextureRegion entityRegion = new TextureRegion(entity);
+    		TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+    		ImageButton addPane = new ImageButton(buildPreview);
+    		table.center();
+    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+    		formatPane.row().padBottom(20);
+    		formatPane.add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
+    		formatPane.add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
+    		Texture rockTex = textureManager.getTexture("rock_HUD");
+    		Image rock = new Image(rockTex);
+    		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
+        	addPane.addListener(new ChangeListener() {
+                public void changed(ChangeEvent event, Actor actor) {
+                	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+                		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
+                		cancelBuild.cancelBuild();
+                		cancelBuild.doAction();
+                	}
+                	selectedEntity.setAction(new BuildAction(selectedEntity, b));
+                }
+            });
+    		table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
+    		
+        }
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
 
     }
@@ -1031,12 +1051,34 @@ public class HUDView extends ApplicationAdapter{
     public void showEntitiesPicker( boolean isVisible, boolean isPlaying){
         entitiesPicker.setVisible(isVisible);
         // this call allows the menu to reset instead of using its latest state
-        addEntitiesPickerMenu(isPlaying);
+            addEntitiesPickerMenu(true);
         if(!isPlaying) {
 			toggleFog();
 			// pause not implemented yet.
 		}
-
+    }
+    
+    /**
+     * Displays the build menu
+     * If picker is shown then fog is off and game is paused
+     *
+     * @param isVisible whether to display the picker or hide it.
+	 * @param isPlaying whether a game is being played.
+     */
+    public void showBuildMenu(Astronaut builder, boolean isVisible, boolean isPlaying){
+        entitiesPicker.setVisible(isVisible);
+        TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+        
+        if(t.getActive().contains(t.getTech(1))){
+        	//Implement tech here  (need to change if statement probably)
+        	buildingsAvailable.add(BuildingType.HEROFACTORY);
+        }
+        // this call allows the menu to reset instead of using its latest state
+            addBuildingsPickerMenu(false);
+        if(!isPlaying) {
+			toggleFog();
+			// pause not implemented yet.
+		}
     }
     
     /**
@@ -1152,7 +1194,7 @@ public class HUDView extends ApplicationAdapter{
 
 
 		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 
@@ -1167,7 +1209,7 @@ public class HUDView extends ApplicationAdapter{
 		}
 
 		
-		if(chatActiveCheck == 0) {
+		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
@@ -1268,6 +1310,8 @@ public class HUDView extends ApplicationAdapter{
 		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
+		cheatbox.setVisible(false);
+		cheatWindow.setVisible(false);
 	}
 
 	/**

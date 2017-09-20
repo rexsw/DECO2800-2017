@@ -10,16 +10,17 @@ import com.deco2800.marswars.managers.TimeManager;
 import java.util.List;
 
 /**
- * Created by dell on 2017/9/18.
+ * This class is to interprete and excute the cheatcode catched in cheatbox
  */
 public class CodeInterpreter {
 
 
 
 
-
-
-
+    /**
+     * call different methods when receiving different codes
+     * @param String the code catched in cheatbox
+     */
     public void executeCode(String a){
         if (a.equals("killOne"))
         {
@@ -49,14 +50,14 @@ public class CodeInterpreter {
             int result = Integer.parseInt(str);;
             addBiomass(result);
         }
-        else if (a.equals("day"))
-        {
-            switchDay();
-        }
-        else if (a.equals("night"))
-        {
-            switchNight();
-        }
+       // else if (a.equals("day"))
+       // {
+       //     switchDay();
+       // }
+       // else if (a.equals("night"))
+       // {
+       //     switchNight();
+        //}
         else if (a.equals("whosyourdaddy"))
         {
             invincible();
@@ -67,7 +68,9 @@ public class CodeInterpreter {
     }
 
 
-
+    /**
+     * If the code is equal to "killOne", reduce one enemy
+     */
     public void reduceOneEnemy()
     {
         List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
@@ -82,7 +85,9 @@ public class CodeInterpreter {
         }
     }
 
-
+    /**
+     * If the code is equal to "killAll", reduce all enemy
+     */
     public void reduceAllEnemy()
     {
         List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
@@ -99,7 +104,10 @@ public class CodeInterpreter {
     }
 
 
-
+    /**
+     * If the code contains "rock" and digits, add the number of rock indicated by the digits.
+     * @param int the number indicated by the digits
+     */
     public void addRock(int a){
         Manager manager = GameManager.get().getManager(ResourceManager.class);
         ResourceManager rm = (ResourceManager)manager;
@@ -109,7 +117,10 @@ public class CodeInterpreter {
 
 
 
-
+    /**
+     * If the code contains "biomass" and digits, add the number of biomass indicated by the digits.
+     *  @param int the number indicated by the digits
+     */
     public void addBiomass(int a){
         Manager manager = GameManager.get().getManager(ResourceManager.class);
         ResourceManager rm = (ResourceManager)manager;
@@ -119,7 +130,10 @@ public class CodeInterpreter {
 
 
 
-
+    /**
+     * If the code contains "crystal" and digits, add the number of crystal indicated by the digits.
+     *  @param int the number indicated by the digits
+     */
     public void addCrystal(int a){
         Manager manager = GameManager.get().getManager(ResourceManager.class);
         ResourceManager rm = (ResourceManager)manager;
@@ -129,7 +143,10 @@ public class CodeInterpreter {
 
 
 
-
+    /**
+     * If the code contains "water" and digits, add the number of water indicated by the digits.
+     *  @param int the number indicated by the digits
+     */
     public void addWater(int a){
         Manager manager = GameManager.get().getManager(ResourceManager.class);
         ResourceManager rm = (ResourceManager)manager;
@@ -140,23 +157,25 @@ public class CodeInterpreter {
 
 
 
-    public void switchDay(){
-        Manager manager = GameManager.get().getManager(TimeManager.class);
-        TimeManager tm = (TimeManager)manager;
+    //public void switchDay(){
+      //  Manager manager = GameManager.get().getManager(TimeManager.class);
+        //TimeManager tm = (TimeManager)manager;
 
 
-    }
-
-
-
-    public void switchNight(){
-        Manager manager = GameManager.get().getManager(TimeManager.class);
-        TimeManager tm = (TimeManager)manager;
-
-    }
+    //}
 
 
 
+    //public void switchNight(){
+      //  Manager manager = GameManager.get().getManager(TimeManager.class);
+        //TimeManager tm = (TimeManager)manager;
+
+    //}
+
+
+    /**
+     * If the code is "whosyourdaddy", set the player's team to be invincible.
+     */
     public void invincible(){
         MarsWars.invincible = 1;
     }

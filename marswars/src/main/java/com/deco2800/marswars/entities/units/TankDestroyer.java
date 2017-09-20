@@ -36,6 +36,6 @@ public class TankDestroyer extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("TankDestroyer", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("TankDestroyer", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 }

@@ -47,8 +47,21 @@ public class MouseHandler extends Manager {
 				unregisterForRightClickNotification((Clickable) unitSelected);
 				unitSelected.deselect();
 			}
+			// Left click cancels building selection confirmation
+			if (unitSelected !=null && unitSelected instanceof Astronaut) {
+				Astronaut castAstro = (Astronaut)unitSelected;
+				if (castAstro.getBuild() !=null) {
+					if (castAstro.getBuild().selectMode()) {
+						LOGGER.info("cancel");
+						castAstro.getBuild().cancelBuild();
+						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+						castAstro.deselect();
+						return;
+					}
+				}
 
-			
+			}
+			// Left click
 			AbstractWorld world = GameManager.get().getWorld();
 
 			// If we get another left click ignore the previous listeners
@@ -76,14 +89,9 @@ public class MouseHandler extends Manager {
 				if(skipChecking) return;//this line is for multiselection
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
-					if (c instanceof BaseEntity) {
-						((BaseEntity) c).deselect();
-					}
 					if (c instanceof Soldier) ((Soldier)c).resetTexture();
-					if (c instanceof Spacman) {
-						((Spacman) c).setTexture("spacman_green");
-					}	
-				}
+				}			listeners.clear();
+				((CustomizedWorld)world).deSelectAll();
 				listeners.clear();//Deselect all the entities selected before
 				return;
 			}
@@ -125,14 +133,11 @@ public class MouseHandler extends Manager {
 				LOGGER.info(String.format("Clicked on %s", chosen).toString());
 				((Clickable) chosen).onClick(this);
 				//Checks if last clicked entity was unit and deselect unit if current selection is building
-				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier || unitSelected instanceof Spacman)) {
+				if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
 					unregisterForRightClickNotification((Clickable) unitSelected);
 					unitSelected.deselect();
 					if (unitSelected instanceof Soldier) {
 						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-					}
-					else {
-						unitSelected.setTexture("spacman_green");
 					}
 					unitSelected = (BuildingEntity)chosen;
 				}

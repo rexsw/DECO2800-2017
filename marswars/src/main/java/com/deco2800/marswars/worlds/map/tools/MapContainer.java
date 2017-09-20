@@ -107,8 +107,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-               this.getRandomBuilding();
-               this.getRandomEntity();
+            	//I removed random entities and buildings for now, don't think they make sense in a strategy game
+              // this.getRandomBuilding();
+              // this.getRandomEntity();
                this.getRandomResource();
             }
         }
@@ -281,13 +282,13 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        if(random == BuildingType.BASE && world.checkValidPlace(BuildingType.BASE, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, 0);
-        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(BuildingType.TURRET, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, 0);
-        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(BuildingType.BUNKER, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, 0);
-        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(BuildingType.BARRACKS, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, 0);
         }
         else {

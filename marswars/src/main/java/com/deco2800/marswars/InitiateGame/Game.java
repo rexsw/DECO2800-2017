@@ -3,6 +3,8 @@ package com.deco2800.marswars.InitiateGame;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.worlds.SelectedTiles;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +75,7 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
+		this.selectedTiles();
 		//this.weatherManager.setWeatherEvent();
 	}
 		
@@ -83,7 +86,17 @@ public class Game{
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}	
+	}
+
+	/*
+ * Initializes fog of war
+ */
+	private void selectedTiles() {
+		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
+		multiSelection.resetSelectedTiles();
+		SelectedTiles.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+	}
+
 
 
 	/**
@@ -129,8 +142,12 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
 			Setunit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
@@ -139,8 +156,12 @@ public class Game{
 		}
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
 			Setunit(playerid, x, y, rm);
 		}
