@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ public class GameManager implements TickableManager {
 	private MiniMap miniMap;
 
 	private HUDView gui;
+	
+	private MainMenu menu;
 
 	/**
 	 * Returns an instance of the GM
@@ -123,6 +126,22 @@ public class GameManager implements TickableManager {
 	 */
 	public void setMapWorld(BaseWorld world) {
 		this.mapWorld = world;
+	}
+	
+	/**
+	 * Sets the current main menu display
+	 * @param menu
+	 */
+	public void setMainMenu(MainMenu menu){
+		this.menu = menu;
+	}
+	
+	/**
+	 * Returns the current main menu
+	 * @return menu
+	 */
+	public MainMenu getMainMenu(){
+		return menu;
 	}
 
 	/**

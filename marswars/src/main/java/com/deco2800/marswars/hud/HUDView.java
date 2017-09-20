@@ -107,10 +107,10 @@ public class HUDView extends ApplicationAdapter{
 
 
 	//Toggles; checks if the feature is visible on-screen or not
-
 	private boolean messageToggle; 
 	private boolean inventoryToggle; 
 	private boolean fogToggle = true; 
+	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD 
 	private ImageButton dispActions;//Button for displaying actions window 
 	private ImageButton removeActions; //button for removing actions window 
@@ -172,13 +172,13 @@ public class HUDView extends ApplicationAdapter{
 
 		this.chatbox = new ChatBox(skin, textureManager, this);
 		this.cheatbox = new CheatBox(skin,textureManager);
+		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
 		GameManager.get().setMiniMap(m);
 		GameManager.get().getMiniMap().updateMap(this.textureManager);
 		
 		//create the HUD + set gui to GM 
-
 		createLayout();
 		GameManager.get().setGui(this);
 	}
@@ -234,9 +234,6 @@ public class HUDView extends ApplicationAdapter{
 		messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		cheatButton = new ImageButton(messageRegionDraw);
 
-
-
-
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
 		TextureRegion quitRegion = new TextureRegion(quitImage);
@@ -264,16 +261,12 @@ public class HUDView extends ApplicationAdapter{
 		gamelengthStack.add(gameLengthDisp);
 
 		//add in quit + help + chat buttons and time labels
-
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		//overheadRight.add(gamelengthStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
 		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
-
-
 
 		welcomeMsg = new Table();
 		welcomeMsg.setWidth(stage.getWidth());
@@ -336,8 +329,6 @@ public class HUDView extends ApplicationAdapter{
 
 			}
 		});
-
-
 	}
 
 
@@ -400,14 +391,6 @@ public class HUDView extends ApplicationAdapter{
 
 		stage.addActor(cheatWindow);
 	}
-
-
-
-
-
-
-
-
 
 	/**
 	 * Adds in the bottom panel of the HUD
@@ -1161,7 +1144,6 @@ public class HUDView extends ApplicationAdapter{
 		/*Update Minimap*/
 		this.updateMiniMapMenu();
 
-		stats.render();
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rockCount.setText("" + resourceManager.getRocks(-1)); //$NON-NLS-1$
@@ -1193,25 +1175,38 @@ public class HUDView extends ApplicationAdapter{
 		//keyboard listeners for hotkeys		
 		if(pauseCheck == 0) {
 			//chat listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
+			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
+						&& messageToggle) {
+					messageWindow.setVisible(false);
+					messageToggle = false; 
+					this.setChatActiveCheck(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
+					messageWindow.setVisible(true);
+					messageToggle = true;
+					this.setChatActiveCheck(1);
+				}
+		}
+
+		//chat listener
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
+			if (messageToggle){
+				messageWindow.setVisible(false);
+
+				messageToggle = false; 
+				this.setChatActiveCheck(0);
+
+			} else {
 				messageWindow.setVisible(true);
 				messageToggle = true;
 				this.setChatActiveCheck(1);
 			}
-		}
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
-				&& messageToggle) {
-			messageWindow.setVisible(false);
-			messageToggle = false; 
-			this.setChatActiveCheck(0);
 		}
 			
 		if(chatActiveCheck == 0) {
 			//pause menu listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stats, this).show(stage);
+					pause = new PauseMenu("Pause Menu", skin, stage, stats, this).show(stage);
 				} else {
 					timeManager.unPause();
 					this.setPauseCheck(0);
@@ -1220,22 +1215,23 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		
-		if (exitCheck == 1) {
-			if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-				System.exit(0);
-			} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-				this.setExitCheck(0);
-				quit.hide();
-				timeManager.unPause();	
-			}
-		}
-		
-		if(chatActiveCheck == 0 && exitCheck ==0) {
+		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			//help listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
 					this.setExitCheck(1);
 					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			if (exitCheck == 1) {
+				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+					System.exit(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+					this.setExitCheck(0);
+					quit.hide();
+					timeManager.unPause();
+					
 				}
 			}
 			
@@ -1273,7 +1269,6 @@ public class HUDView extends ApplicationAdapter{
 					HUDManip.add(dispActions);
 					inventoryToggle = true;
 				}
-
 			}
 			
 			//help button listener
@@ -1306,6 +1301,12 @@ public class HUDView extends ApplicationAdapter{
 			}
 			lastMenuTick = TimeUtils.nanoTime();
 			
+		}
+		
+		if(!gameStarted) {
+			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
+			GameManager.get().toggleActiveView();
+			gameStarted = true;
 		}
 
 	}

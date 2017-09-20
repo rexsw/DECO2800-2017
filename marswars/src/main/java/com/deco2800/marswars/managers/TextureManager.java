@@ -67,7 +67,10 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker (Being Built).png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker.png"));
-        //Environment
+        
+	        textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
+	        
+	        //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
         textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));

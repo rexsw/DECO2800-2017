@@ -102,7 +102,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menu.startGame(true);
+				menu.startGame(true, mapType, mapSize);
 				GameManager.get().getGui().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 
@@ -143,7 +143,6 @@ public class MenuScreen{
 		worldTable.setDebug(true);
 		worldTable.align(Align.topLeft);
 		Label worldInfo = new Label("Select a world to play in!", this.skin); //$NON-NLS-1$
-		
 		Label worldSelected = new Label("You current selection:", skin);
 		Label currentWorldSelection = new Label("No type selected, ", skin);
 		Label currentSizeSelection = new Label("no map size selected.", skin);
@@ -245,10 +244,8 @@ public class MenuScreen{
 					world.loadMapContainer(map);
 					GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32,0);
 					
-					menu.startGame(true);
+					menu.startGame(true, mapType, mapSize);
 					mainmenu.setVisible(false);
-				}else{
-					;
 				}
 			}
 		});
@@ -426,17 +423,10 @@ public class MenuScreen{
 		playButton.pad(BUTTONPAD);
 		playButton.addListener(new ChangeListener() {
 			@Override
-			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				MapContainer map = new MapContainer(mapType, mapSize);
-				CustomizedWorld world = new CustomizedWorld(map);
-				GameManager.get().setWorld(world);
-				world.loadMapContainer(map);
-				GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32,0);
 				mainmenu.setVisible(false);
-				menu.startGame(true);
+				menu.startGame(true, mapType, mapSize);
 		}});
-		
 		nav.addActorAt(2, playButton);
 	}
 	
