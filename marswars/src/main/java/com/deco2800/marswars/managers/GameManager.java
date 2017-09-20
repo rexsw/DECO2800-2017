@@ -1,5 +1,6 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -48,6 +49,8 @@ public class GameManager implements TickableManager {
 	private HUDView gui;
 	
 	private MainMenu menu;
+	
+	private TextureManager gameTexture;
 
 	/**
 	 * Returns an instance of the GM
@@ -199,6 +202,16 @@ public class GameManager implements TickableManager {
 	 */
 	public int getActiveView() {
 		return activeView;
+	}
+	
+	public void resetGame(){
+		gamestage.clear();
+		this.mapWorld = null;
+		this.gameWorld = null;
+		this.gui = null;
+		this.miniMap = null;
+		this.menu = new MainMenu(this.gameskin, this.gamestage, (TextureManager) this.getManager(TextureManager.class));
+		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**

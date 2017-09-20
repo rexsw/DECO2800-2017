@@ -7,32 +7,24 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
-import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.MapSizeTypes;
-import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.*;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos

@@ -147,13 +147,13 @@ public class HUDView extends ApplicationAdapter{
 	 * @param gameManager handles selectables
 	 * @param textureManager
 	 */
-	public HUDView(Stage stage, Skin skin, GameManager gameManager, TextureManager textureManager) {
+	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
 
 		LOGGER.debug("Creating Hud");
 		this.skin = skin;
 		this.stage = stage;
 		this.gameManager = gameManager;
-		this.textureManager = textureManager;
+		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
 
 		//Generate the game stats
 		this.stats = new GameStats(stage, skin, this, textureManager);

@@ -76,7 +76,7 @@ public class MainMenu {
 	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize){
 		gameStarted = start;
 		if (gameStarted){
-			game = new Game(mapType, mapSize, reg); //Start up a new game
+			game = new Game(mapType, mapSize); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 	}

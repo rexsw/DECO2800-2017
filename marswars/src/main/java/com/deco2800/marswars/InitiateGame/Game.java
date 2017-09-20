@@ -7,15 +7,9 @@ import com.deco2800.marswars.worlds.SelectedTiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
@@ -27,7 +21,6 @@ import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.hud.HUDView;
-import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -39,7 +32,6 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Manages the features for the game 
@@ -69,17 +61,15 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-	private TextureManager reg;
 
-	public Game(MapTypes mapType, MapSizeTypes mapSize, TextureManager reg){
-		this.reg = reg;
+	public Game(MapTypes mapType, MapSizeTypes mapSize){
 		this.camera = GameManager.get().getCamera();
 		startGame(mapType, mapSize);
 	}
 	
 	private void startGame(MapTypes mapType, MapSizeTypes mapSize){
 		this.createMap(mapType, mapSize);
-		this.view = new HUDView(GameManager.get().getStage(), GameManager.get().getSkin(), GameManager.get(), reg);
+		this.view = new HUDView(GameManager.get().getStage(), GameManager.get().getSkin(), GameManager.get());
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities();
@@ -108,7 +98,6 @@ public class Game{
 		}
 		
 		/* Move camera to the center of the world */
-		
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32, 0);
 		GameManager.get().setCamera(this.camera);
 		GameManager.get().toggleActiveView();

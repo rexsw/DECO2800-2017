@@ -64,6 +64,7 @@ public class PauseMenu extends Dialog{
 				this.hud.setPauseCheck(0);
 			} else if (object == (Object) 3) {
 				this.hud.setPauseCheck(0);
+				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
 				System.exit(0);
 			} else {
