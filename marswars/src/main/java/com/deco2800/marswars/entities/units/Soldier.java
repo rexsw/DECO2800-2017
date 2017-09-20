@@ -229,6 +229,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.currentAction = currentAction;
 	}
 
+	
 	@Override
 	public void onTick(int tick) {
 		loyalty_regeneration();
