@@ -86,7 +86,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of damage that the item will add on.
 	 */
-	int getWeaponDamage() {
+	public int getWeaponDamage() {
 		return this.baseDamage;
 	}
 
@@ -95,7 +95,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of attack range that the item will add on.
 	 */
-	int getWeaponRange() {
+	public int getWeaponRange() {
 		return this.baseRange;
 	}
 
@@ -104,7 +104,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of Attack speed that the item will add on.
 	 */
-	int getWeaponSpeed() {
+	public int getWeaponSpeed() {
 		return this.baseSpeed;
 	}
 

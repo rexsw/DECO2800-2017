@@ -87,7 +87,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Armour (max and current) that the item will add on.
 	 */
-	int getArmourValue() {
+	public int getArmourValue() {
 		return this.baseArmour;
 	}
 
@@ -96,7 +96,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Health (max and current) that the item will add on.
 	 */
-	int getArmourHealth() {
+	public int getArmourHealth() {
 		return this.baseHealth;
 	}
 
@@ -105,7 +105,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Movement Speed that the item will add on.
 	 */
-	float getMoveSpeed() {
+	public float getMoveSpeed() {
 		return this.baseSpeed;
 	}
 
