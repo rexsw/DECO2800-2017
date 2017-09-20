@@ -853,6 +853,7 @@ public class HUDView extends ApplicationAdapter{
 
         Table table = new Table();
 		table.align(Align.left);
+		table.setSize(buttonWidth, buttonHeight + 20);
 		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
 		entitiesButton.addListener(new ChangeListener() {
 			@Override
@@ -868,9 +869,7 @@ public class HUDView extends ApplicationAdapter{
         astronautButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-//				float x = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-//				float y = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
-				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
+				//
 			}
 		});
         TextButton carrierButton = new TextButton("Carrier",skin);
@@ -883,7 +882,7 @@ public class HUDView extends ApplicationAdapter{
 
 
         ScrollPane scrollPane = new ScrollPane(table, skin);
-        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setScrollingDisabled(true, false);
         scrollPane.setFadeScrollBars(false);
         table.add(astronautButton).width(buttonWidth).height(buttonHeight);
         table.add(carrierButton).width(buttonWidth).height(buttonHeight);
@@ -904,6 +903,7 @@ public class HUDView extends ApplicationAdapter{
      */
     private void addBuildingsPickerMenu(boolean fullMenu){
         entitiesPicker.clear();
+		entitiesPicker.getTitleLabel().setText("Generate Building");
         Table table = new Table();
         TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
             entitiesButton.addListener(new ChangeListener() {
@@ -953,15 +953,12 @@ public class HUDView extends ApplicationAdapter{
                 }
             });
     		table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
-    		
         }
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
-
     }
 
     /**
      * Creates the sub menu that displays all available resources
-	 *
      */
     private void addResourcesPickerMenu(){
         entitiesPicker.clear();
@@ -997,12 +994,10 @@ public class HUDView extends ApplicationAdapter{
         table.add(waterButton).width(buttonWidth).height(buttonHeight);
 
         entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
-
     }
 
     /**
      * Creates the sub menu that displays all available terrains
-	 *
      */
     private void addTerrainsPickerMenu(){
         entitiesPicker.clear();
