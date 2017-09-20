@@ -1,9 +1,15 @@
 package com.deco2800.marswars.hud;
 
+import org.apache.log4j.BasicConfigurator;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.MarsWars;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -28,12 +34,14 @@ public class PauseMenu extends Dialog{
 	private Skin skin;
 	private GameStats stats;
 	private HUDView hud;
+	private MainMenu menu;
 	
-	public PauseMenu(String title, Skin skin, GameStats stats, HUDView hud) {
+	public PauseMenu(String title, Skin skin, Stage stage, GameStats stats, HUDView hud) {
 		super(title, skin);
 		this.skin = skin;
 		this.stats = stats;
 		this.hud = hud;
+		this.stage = stage;
 		
 		{
 			hud.setPauseCheck(1);
@@ -55,8 +63,8 @@ public class PauseMenu extends Dialog{
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
 			} else if (object == (Object) 3) {
-				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
+				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
 				System.exit(0);
 			} else {

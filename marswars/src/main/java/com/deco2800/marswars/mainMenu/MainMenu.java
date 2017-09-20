@@ -1,15 +1,16 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 
 /**
  * Creates a main menu window, which adds in a table depending on the 
@@ -32,13 +33,9 @@ public class MainMenu {
 	private Stage stage; 
 	
 	private Window mainmenu; 
-	private Label title;
 	boolean gameStarted = false;
-	private OrthographicCamera camera; 
 	private Game game;
-	private MenuScreen menuScreen;
 	boolean status = true;
-	private MarsWars marsWars;
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -48,11 +45,11 @@ public class MainMenu {
 	 * @param marswars
 	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, MarsWars marswars, OrthographicCamera camera) {
+	public MainMenu(Skin skin, Stage stage) {
 		this.skin = skin;
 		this.stage = stage; 
 		this.mainmenu = new Window("Its a start", skin); 
-		this.marsWars = marswars;
+		GameManager.get().setMainMenu(this);
 		createMenu();
 	}
 
@@ -63,17 +60,17 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		GameManager.get().getGui().disableHUD();
-		menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		//GameManager.get().getGui().disableHUD();
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		this.stage.addActor(mainmenu);
 	}
 		
-	public void startGame(boolean start){
+	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize){
 		gameStarted = start;
 		if (gameStarted){
-			GameManager.get().getGui().enableHUD();
-			game = new Game(); //Start up a new game
+			game = new Game(mapType, mapSize); //Start up a new game
+			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 	}
 	
@@ -84,11 +81,14 @@ public class MainMenu {
 	
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		if(gameStarted){
+			game.resize(width, height);
+		}
 	}
 	
-	public void renderGame(OrthographicCamera camera2, SpriteBatch batch){
+	public void renderGame(SpriteBatch batch, OrthographicCamera camera){
 		if(gameStarted){
-			game.render(camera2, batch);
+			game.render(batch, camera);
 		}
 	}
 }

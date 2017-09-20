@@ -39,9 +39,8 @@ import com.deco2800.marswars.managers.GameBlackBoard.Field;
 public class GameStats{
 	private static final int STATSWIDTH = 600; 
 	private static final int STATSHEIGHT = 400;
-	private static final int BUTTONPAD = 20; 
+	private static final int BUTTONPAD = 10; 
 	private static final int BUTTONSIZE = 60; 
-
 
 	/*Constructors*/
 	private Skin skin; 
@@ -62,8 +61,36 @@ public class GameStats{
 		this.hud = hud; 
 		this.textureManager = textureManager; 
 		this.window = new Window("SPACWARS STATS", skin); //$NON-NLS-1$
+		window.setMovable(false);
 		window.setVisible(false);
 		gameGraph = new GameGraph(null); 
+	}
+	
+	/**
+	 * Displays statistics window on game screen. 
+	 * In doing so, this method must also: 
+	 *  - Pause the game
+	 *  - Disable all other game UI 
+	 */
+	public void showStats(){
+		timeManager.pause();
+		stage.addActor(buildStats());
+		window.setVisible(true);
+	}
+	
+	/**
+	 * Remove statistics window from the game screen.
+	 * In doing so, the method must also: 
+	 *   - Unpause the game
+	 *   - clear the window so that the stats mayb by built again
+	 *   - re-enable the HUD
+	 */
+	private void removeStats(){
+		timeManager.unPause();
+		hud.setPauseCheck(0);
+		window.clear();
+		window.setVisible(false);
+		hud.enableHUD(); //enable all UI again 
 	}
 	
 	/**
@@ -71,7 +98,7 @@ public class GameStats{
 	 */
 	private void setLayout(){
 		Table graphTable = setGraph(); 
-		graphTable.setPosition(0, STATSHEIGHT);
+		graphTable.setPosition(20, STATSHEIGHT);
 		window.add(graphTable);
 		window.row();
 		
@@ -79,9 +106,12 @@ public class GameStats{
 		Table statsButtons = setStatusButtons();
 		statsButtons.setPosition(0, 0);
 		window.add(statsButtons);
-		window.row();
 	}
 	
+	/**
+	 * Display the graph of the statistics window
+	 * @return
+	 */
 	private Table setGraph(){
 		Table graphTable = new Table();
 		Label graphInfo = new Label("-Graph goes here-", skin);  //$NON-NLS-1$
@@ -105,7 +135,6 @@ public class GameStats{
 		TextureRegion rockRegion = new TextureRegion(rockImage);
 		TextureRegionDrawable rockRegionDraw = new TextureRegionDrawable(rockRegion);
 		ImageButton rockButton = new ImageButton(rockRegionDraw);
-	
 		
 		//Biomass image button
 		Texture bioImage = textureManager.getTexture("biomass_HUD"); //$NON-NLS-1$
@@ -118,12 +147,31 @@ public class GameStats{
 		TextureRegion crystalRegion = new TextureRegion(crystalImage);
 		TextureRegionDrawable crystalRegionDraw = new TextureRegionDrawable(crystalRegion);
 		ImageButton crystalButton = new ImageButton(crystalRegionDraw);
-
-		Button b5 = new TextButton("Combat Units", skin); //$NON-NLS-1$
-		Button b6 = new TextButton("Units Lost", skin); //$NON-NLS-1$
-		Button b7 = new TextButton("Buildings", skin); //$NON-NLS-1$
-		Button b8 = new TextButton("Technology", skin); //$NON-NLS-1$
 		
+		//Buildings button 
+		Texture baseImage = textureManager.getTexture("base3"); //$NON-NLS-1$
+		TextureRegion baseRegion = new TextureRegion(baseImage);
+		TextureRegionDrawable baseRegionDraw = new TextureRegionDrawable(baseRegion);
+		ImageButton baseButton = new ImageButton(baseRegionDraw);
+		
+		//Units Lost
+		Texture unitImage = textureManager.getTexture("soldier"); //$NON-NLS-1$
+		TextureRegion unitRegion = new TextureRegion(unitImage);
+		TextureRegionDrawable unitRegionDraw = new TextureRegionDrawable(unitRegion);
+		ImageButton unitButton = new ImageButton(unitRegionDraw);
+		
+		//Combat Units
+		Texture combatImage = textureManager.getTexture("tank"); //$NON-NLS-1$
+		TextureRegion combatRegion = new TextureRegion(combatImage);
+		TextureRegionDrawable combatRegionDraw = new TextureRegionDrawable(combatRegion);
+		ImageButton combatButton = new ImageButton(combatRegionDraw);
+		
+		//Technology
+		Texture techImage = textureManager.getTexture("power_gloves"); //$NON-NLS-1$
+		TextureRegion techRegion = new TextureRegion(techImage);
+		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
+		ImageButton techButton = new ImageButton(techRegionDraw);
+
 		bioButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
@@ -148,19 +196,19 @@ public class GameStats{
 				gameGraph = new GameGraph(Field.WATER);
 			}
 		});
-		b5.addListener(new ChangeListener() {
+		combatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = new GameGraph(Field.COMBAT_UNITS);
 			}
 		});
-		b6.addListener(new ChangeListener() {
+		unitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = new GameGraph(Field.UNITS_LOST);
 			}
 		});
-		b7.addListener(new ChangeListener() {
+		baseButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = new GameGraph(Field.BUILDINGS);
@@ -172,17 +220,21 @@ public class GameStats{
 				gameGraph = new GameGraph(Field.TECHNOLOGY);
 			}
 		});	
-
+		techButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				//gameGraph = new GameGraph("Buildings");
+			}
+		});	
 
 		pStatsTable.add(bioButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(crystalButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(rockButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(waterButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE).row();
-		pStatsTable.add(b5).pad(BUTTONPAD);
-		pStatsTable.add(b6).pad(BUTTONPAD);
-		pStatsTable.add(b7).pad(BUTTONPAD);
-		pStatsTable.add(b8).pad(BUTTONPAD).row();		
-		
+		pStatsTable.add(baseButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
+		pStatsTable.add(combatButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
+		pStatsTable.add(unitButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
+		pStatsTable.add(techButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE).row();		
 		return pStatsTable; 
 	}
 	
@@ -211,15 +263,11 @@ public class GameStats{
 		//TODO PAUSE GAME HERE  
 		hud.disableHUD();
 		window.setDebug(true);
-		window.setVisible(false);
-		
 		window.setSize(STATSWIDTH, STATSHEIGHT);
 		window.setPosition((Gdx.graphics.getWidth()-STATSWIDTH)/2, (Gdx.graphics.getHeight()-STATSHEIGHT)/2);
+		window.align(Align.center);
 
 		Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin); //$NON-NLS-1$
-		
-		window.align(Align.top | Align.left);
-		
 		window.add(statsText).align(Align.left | Align.top).row();
 				
 		setLayout();
@@ -230,27 +278,6 @@ public class GameStats{
 
 		return window; 
 	}
-	
-	/**
-	 * Displays statistics window on game screen. 
-	 * In doing so, this method must also: 
-	 *  - Pause the game
-	 *  - Disable all other game UI 
-	 */
-	public void showStats(){
-		timeManager.pause();
-		stage.addActor(buildStats());
-		window.setVisible(true);
-	}
-	
-	private void removeStats(){
-		timeManager.unPause();
-		hud.setPauseCheck(0);
-		window.clear();
-		window.setVisible(false);
-		hud.enableHUD(); //enable all UI again 
-	}
-	
 	
 	/**
 	 * Resize the in-game statistics 

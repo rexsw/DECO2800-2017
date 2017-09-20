@@ -7,32 +7,24 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
-import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.MapSizeTypes;
-import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.*;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -61,12 +53,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Stage stage;
 	Window window;
 
-	private TimeManager timeManager = (TimeManager)
-			GameManager.get().getManager(TimeManager.class);
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
@@ -74,11 +62,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	public static int invincible;
 	
-
-	private boolean gameStarted = false;
 	private MainMenu menu;
 	private Skin skin;
-	private HUDView view;
 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
@@ -102,30 +87,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 		
-		this.view = new com.deco2800.marswars.hud.HUDView(this.stage, this.skin, GameManager.get(), this.reg);
-		this.menu = new MainMenu(this.skin, this.stage, this, this.camera);
-
-		createMap();
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 		
-		
+		this.menu = new MainMenu(this.skin, this.stage);
 	}
 		
-	/**
-	 * Creates game map
-	 */
-	private void createMap() {
-		MapContainer map = new MapContainer();
-		CustomizedWorld world = new CustomizedWorld(map);
-		GameManager.get().setWorld(world);
-		world.loadMapContainer(map);
-		
-		/* Move camera to the center of the world */
-		this.camera.translate(GameManager.get().getWorld().getWidth()*32, 0);
-		GameManager.get().setCamera(this.camera);
-	}
-
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -161,13 +128,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
-        /* Render the tiles second */
-		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
-		tileRenderer.setView(this.camera);
-		tileRenderer.render();
 		
-		this.menu.renderGame(this.camera, batch);
-		this.view.render(this.lastMenuTick);
+		//Render the rest of the game
+		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -175,13 +138,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
-		
-		if(!this.gameStarted) {
-			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
-			this.view.updateMiniMapMenu();
-			GameManager.get().toggleActiveView();
-			this.gameStarted = true;
-		}
+	
 		if(invincible == 1)
 		{
 			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
@@ -192,12 +149,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
 				}
 			}
-
 		}
-
-
-
-
 	}
 	
 	/**
@@ -213,8 +165,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.camera.update();
 		GameManager.get().setCamera(this.camera);
 		this.stage.getViewport().update(width, height, true);
-		this.view.resize(width, height);
-		this.menu.resize(width, height);
+		GameManager.get().getMainMenu().resize(width, height);
 	}
 
 	/**

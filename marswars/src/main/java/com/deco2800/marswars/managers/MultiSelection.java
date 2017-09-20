@@ -37,12 +37,14 @@ public class MultiSelection extends Manager {
      */
     public static void resetSelectedTiles() {
         AbstractWorld world = GameManager.get().getWorld();
-        int width=world.getWidth();
-        int length=world.getLength();
-        selectedTiles = new Array2D<Integer>(width, length);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < length; j++) {
-                selectedTiles.set(i, j, 0);
+        if (world != null){
+            int width=world.getWidth();
+            int length=world.getLength();
+            selectedTiles = new Array2D<Integer>(width, length);
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < length; j++) {
+                    selectedTiles.set(i, j, 0);
+                }
             }
         }
     }
@@ -119,19 +121,21 @@ public class MultiSelection extends Manager {
      * @param y
      */
     public void addStartTile(float x, float y){
-        float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-        float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
-        float projX;
-        float projY;
+    	if (GameManager.get().getWorld() != null){
+            float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+            float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+            float projX;
+            float projY;
 
-        projX = x/tileWidth;
-        projY = -(y - tileHeight / 2f) / tileHeight + projX;
-        projX -= projY - projX;
+            projX = x/tileWidth;
+            projY = -(y - tileHeight / 2f) / tileHeight + projX;
+            projX -= projY - projX;
 
 
-        //adding the starting tile
-        tiles[0]=(int)projX;
-        tiles[1]=(int)projY;
+            //adding the starting tile
+            tiles[0]=(int)projX;
+            tiles[1]=(int)projY;
+    	}
     }
 
     /**
