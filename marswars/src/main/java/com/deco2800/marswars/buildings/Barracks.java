@@ -4,7 +4,6 @@ import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
@@ -23,18 +22,5 @@ public class Barracks extends BuildingEntity implements Clickable, Tickable, Has
 	 */
 	public Barracks(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BARRACKS, owner);
-	}
-
-	@Override
-	public void makeSelected() {
-		super.makeSelected();
-		GameManager.get().getGui().showEntitiesPicker(true, true);
-		GameManager.get().getGui().addUnitsPickerMenu(true);
-	}
-
-	@Override
-	public void deselect() {
-		super.deselect();
-		GameManager.get().getGui().showEntitiesPicker(false, true);
 	}
 }

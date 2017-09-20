@@ -38,7 +38,7 @@ public class AttackEffect implements Effect{
 	
 	/**
 	 * Method to activate the item's effect which in this case is to add the stored stats to the provided attackable 
-	 * entity.
+	 * entity. Cannot make the unit's stats drop to 0 or below.
 	 * 
 	 * @param entity  The entity to apply the effect to. 
 	 */
@@ -46,10 +46,15 @@ public class AttackEffect implements Effect{
 	public void applyEffect(AttackableEntity entity) {
 		if (entity instanceof Commander) { //only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
-			hero.setDamage(hero.getDamageDeal() + this.attackDamage);
-			hero.setAttackSpeed(hero.getAttackSpeed() + this.attackSpeed);
-			hero.setAttackRange(hero.getAttackRange() + this.attackRange);
-			hero.setArmorDamage(hero.getArmorDamage() + this.armourDamage);
+			//for below, only add stats if the resulting stat is positive, otherwise set to 1
+			hero.setDamage(hero.getDamageDeal() + this.attackDamage > 0 ? hero.getDamageDeal() + this.attackDamage :
+				1);
+			hero.setAttackSpeed(hero.getAttackSpeed() + this.attackSpeed > 0 ? 
+					hero.getAttackSpeed() + this.attackSpeed : 1);
+			hero.setAttackRange(hero.getAttackRange() + this.attackRange > 0 ? 
+					hero.getAttackRange() + this.attackRange : 1);
+			hero.setArmorDamage(hero.getArmorDamage() + this.armourDamage > 0 ?
+					hero.getArmorDamage() + this.armourDamage : 1);
 		}
 	}
 	
@@ -62,10 +67,15 @@ public class AttackEffect implements Effect{
 	public void removeEffect(AttackableEntity entity) {
 		if (entity instanceof Commander) { //only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
-			hero.setDamage(hero.getDamageDeal() - this.attackDamage);
-			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed);
-			hero.setAttackRange(hero.getAttackRange() - this.attackRange);
-			hero.setArmorDamage(hero.getArmorDamage() - this.armourDamage);
+			hero.setDamage(hero.getDamageDeal() - this.attackDamage > 0 ? hero.getDamageDeal() - this.attackDamage :
+				1);
+			System.err.println("damage after: " + hero.getDamageDeal());
+			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed > 0 ? 
+					hero.getAttackSpeed() - this.attackSpeed : 1);
+			hero.setAttackRange(hero.getAttackRange() - this.attackRange > 0 ? 
+					hero.getAttackRange() - this.attackRange : 1);
+			hero.setArmorDamage(hero.getArmorDamage() - this.armourDamage > 0 ?
+					hero.getArmorDamage() - this.armourDamage : 1);
 		}
 	}
 

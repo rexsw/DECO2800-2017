@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Interpolation.Bounce;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
@@ -46,9 +49,10 @@ public class GameStats{
 	private TextureManager textureManager; 
 	
 	private Window window; 
-	
+	private GameGraph gameGraph;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+	private GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 	
 	
 	public GameStats(Stage stage, Skin skin, HUDView hud, TextureManager textureManager){
@@ -57,7 +61,8 @@ public class GameStats{
 		this.hud = hud; 
 		this.textureManager = textureManager; 
 		this.window = new Window("SPACWARS STATS", skin); //$NON-NLS-1$
-		new GameGraph(); 
+		window.setVisible(false);
+		gameGraph = new GameGraph("Fake"); 
 	}
 	
 	/**
@@ -77,20 +82,6 @@ public class GameStats{
 	}
 	
 	private Table setGraph(){
-		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
-		float[] test = new float[100];
-		for(int i =0; i < 100; i++) {
-			test[i] = (float) (i * 2.5);
-		}
-		ShapeRenderer sr= new ShapeRenderer();
-		sr.begin(ShapeRenderer.ShapeType.Filled);
-		sr.setColor(1, 1, 0, 1);
-		sr.end();
-		sr.begin(ShapeRenderer.ShapeType.Line);
-		sr.polyline(test);
-		sr.rect(0, 0, 160, 160);
-		sr.end();
-		
 		Table graphTable = new Table();
 		Label graphInfo = new Label("-Graph goes here-", skin);  //$NON-NLS-1$
 		graphTable.add(graphInfo).align(Align.center);
@@ -131,6 +122,49 @@ public class GameStats{
 		Button b6 = new TextButton("Units Lost", skin); //$NON-NLS-1$
 		Button b7 = new TextButton("Buildings", skin); //$NON-NLS-1$
 		Button b8 = new TextButton("Technology", skin); //$NON-NLS-1$
+		
+		bioButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Biomass");
+			}
+		});
+		crystalButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Crystal");
+			}
+		});
+		rockButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Rocks");
+			}
+		});
+		waterButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Water");
+			}
+		});
+		b5.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Combat Units");
+			}
+		});
+		b6.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Units Lost");
+			}
+		});
+		b7.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph("Buildings");
+			}
+		});	
 
 
 		pStatsTable.add(bioButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
@@ -170,7 +204,7 @@ public class GameStats{
 		//TODO PAUSE GAME HERE  
 		hud.disableHUD();
 		window.setDebug(true);
-		window.setVisible(true);
+		window.setVisible(false);
 		
 		window.setSize(STATSWIDTH, STATSHEIGHT);
 		window.setPosition((Gdx.graphics.getWidth()-STATSWIDTH)/2, (Gdx.graphics.getHeight()-STATSHEIGHT)/2);
@@ -185,6 +219,8 @@ public class GameStats{
 		window.row();
 		
 		window.add(getExitButton()).align(Align.bottom | Align.right);
+		
+
 		return window; 
 	}
 	
@@ -197,6 +233,7 @@ public class GameStats{
 	public void showStats(){
 		timeManager.pause();
 		stage.addActor(buildStats());
+		window.setVisible(true);
 	}
 	
 	private void removeStats(){
@@ -215,6 +252,12 @@ public class GameStats{
 	 */
 	public void resizeStats(int width, int height) {
 		window.setPosition(width/2-STATSWIDTH/2, height/2-STATSHEIGHT/2);
+	}
+
+	public void render() {
+		if (window.isVisible()){
+			gameGraph.render();
+		}
 	}
 	
 }

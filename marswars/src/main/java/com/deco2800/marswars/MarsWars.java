@@ -15,16 +15,24 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Moos
@@ -64,6 +72,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastMenuTick = 0;
 	long pauseTime = 0;
 
+	public static int invincible;
+	
+
 	private boolean gameStarted = false;
 	private MainMenu menu;
 	private Skin skin;
@@ -97,6 +108,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		createMap();
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
+		
+		
 	}
 		
 	/**
@@ -148,14 +161,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
-		
         /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
 		tileRenderer.setView(this.camera);
 		tileRenderer.render();
-
-		this.view.render(this.lastMenuTick);
+		
 		this.menu.renderGame(this.camera, batch);
+		this.view.render(this.lastMenuTick);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -163,12 +175,29 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
+		
 		if(!this.gameStarted) {
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
 			GameManager.get().toggleActiveView();
 			this.gameStarted = true;
 		}
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() == -1 && e instanceof AttackableEntity)
+				{
+					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
+				}
+			}
+
+		}
+
+
+
+
 	}
 	
 	/**

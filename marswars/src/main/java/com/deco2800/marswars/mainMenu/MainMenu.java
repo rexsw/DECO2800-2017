@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.InitiateGame.Game;
@@ -25,8 +26,8 @@ import com.deco2800.marswars.managers.GameManager;
  *
  */
 public class MainMenu {
-	private static final int MENUHEIGHT = 300; 
-	private static final int MENUWIDTH = 400;
+	private static final int MENUHEIGHT = 350; 
+	private static final int MENUWIDTH = 500;
 	private Skin skin;
 	private Stage stage; 
 	
@@ -34,7 +35,8 @@ public class MainMenu {
 	private Label title;
 	boolean gameStarted = false;
 	private OrthographicCamera camera; 
-	private Game game; 
+	private Game game;
+	private MenuScreen menuScreen;
 	boolean status = true;
 	private MarsWars marsWars;
 
@@ -62,15 +64,17 @@ public class MainMenu {
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
 		GameManager.get().getGui().disableHUD();
-		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		this.stage.addActor(mainmenu);
 	}
 		
 	public void startGame(boolean start){
 		gameStarted = start;
-		GameManager.get().getGui().enableHUD();
-		game = new Game(); //Start up a new game
+		if (gameStarted){
+			GameManager.get().getGui().enableHUD();
+			game = new Game(); //Start up a new game
+		}
 	}
 	
 	public boolean gameStarted(){

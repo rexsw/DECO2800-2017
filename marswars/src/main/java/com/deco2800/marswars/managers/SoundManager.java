@@ -22,7 +22,7 @@ public class SoundManager extends Manager {
 		LOGGER.info("Playing sound effect");
 		try {
 			Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/" + soundString));
-			sound.play(1f);
+			long id = sound.play(1f);
 		} catch (GdxRuntimeException e) {
 			LOGGER.error("Could not load sound effect " + soundString);
 		}

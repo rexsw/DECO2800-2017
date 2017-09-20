@@ -38,27 +38,35 @@ public class TextureManager extends Manager {
      */
     public TextureManager() {
     	//Select indicators
-	    	textureMap.put("greenSelect", new Texture("resources/buildSelect/greenSelect.png"));
-	    	textureMap.put("redSelect", new Texture("resources/buildSelect/redSelect.png"));
+	    	textureMap.put("greenSelect1", new Texture("resources/buildSelect/greenSelect1.png"));
+	    	textureMap.put("redSelect1", new Texture("resources/buildSelect/redSelect1.png"));
+	    	textureMap.put("greenSelect2", new Texture("resources/buildSelect/greenSelect2.png"));
+	    	textureMap.put("redSelect2", new Texture("resources/buildSelect/redSelect2.png"));
+	    	textureMap.put("greenSelect3", new Texture("resources/buildSelect/greenSelect3.png"));
+	    	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
 	        this.saveTexture("selected", "resources/placeholderassets/selected.png");
 	        this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
         //Buildings
         	//Base Stages
-        	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/Homebase(Foundation).png"));
-        	textureMap.put("base2", new Texture("resources/BuildingAssets/Building process/Homebase/Homebase (Being Built).png"));
-        	textureMap.put("base3", new Texture("resources/BuildingAssets/Building process/Homebase/Homebase(Red faction).png"));
+        	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/base1.png"));
+        	textureMap.put("base2", new Texture("resources/BuildingAssets/Building process/Homebase/base2.png"));
+        	textureMap.put("base3", new Texture("resources/BuildingAssets/Building process/Homebase/base3.png"));
+        	textureMap.put("base4", new Texture("resources/BuildingAssets/Destroyed Buildings/destroyed2.png"));
         	//Barracks Stages
-        	textureMap.put("barracks1",new Texture("resources/BuildingAssets/Building process/Barracks/barracks(foundation).png"));
-        	textureMap.put("barracks2",new Texture("resources/BuildingAssets/Building process/Barracks/barracks(Being built).png"));
-        	textureMap.put("barracks3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks (red faction).png"));
+        	textureMap.put("barracks1",new Texture("resources/BuildingAssets/Building process/Barracks/barracks1.png"));
+        	textureMap.put("barracks2",new Texture("resources/BuildingAssets/Building process/Barracks/barracks2.png"));
+        	textureMap.put("barracks3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks3.png"));
+        	textureMap.put("barracks4", new Texture("resources/BuildingAssets/Destroyed Buildings/destoyed.png"));
         	//Turret Stages
         	textureMap.put("turret1",new Texture("resources/BuildingAssets/Building process/Turret/turret (Foundation).png"));
         	textureMap.put("turret2",new Texture("resources/BuildingAssets/Building process/Turret/turret (Being Built).png"));
         	textureMap.put("turret3",new Texture("resources/BuildingAssets/Building process/Turret/turret (Occupied).png"));
+        	textureMap.put("turret4",new Texture("resources/BuildingAssets/Building process/Turret/turret (Occupied).png"));
 	        //Bunker Stages
 	        textureMap.put("bunker1",new Texture("resources/BuildingAssets/Building process/Bunker/bunker (foundation).png"));
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker (Being Built).png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker.png"));
+	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker.png"));
         //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
@@ -114,7 +122,7 @@ public class TextureManager extends Manager {
         this.saveTexture("small_mine", "resources/resourceAssets/mines.png");       
         this.saveTexture("large_flower", "resources/resourceAssets/flowerl.png");
         this.saveTexture("medium_flower", "resources/resourceAssets/flowerm.png");
-        this.saveTexture("small_flower", "resources/resourceAssets/flowers.png");   
+        this.saveTexture("small_flower", "resources/resourceAssets/flowers.png");
         this.saveTexture("chat_button", "resources/HUDAssets/chatbutton.png");
         this.saveTexture("help_button", "resources/HUDAssets/helpbutton.png");
         this.saveTexture("quit_button", "resources/HUDAssets/quitbutton.png");
@@ -157,6 +165,7 @@ public class TextureManager extends Manager {
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
+        this.saveTexture("multi_selection", "resources/placeholderassets/multiselection.png");
 
 
         // Item icon in shop dialog
@@ -188,6 +197,13 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (textureType.equals("missile")) {
+            	 path = String.format("resources/UnitAssets/%s/%s.png",
+                         unitType,textureType);
+            	String retVal = textureType + unitType;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             //find the team colour of the owner:
             String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
@@ -203,7 +219,7 @@ public class TextureManager extends Manager {
         }
         
     }
-
+    
     /**
      * Gets a texture object for a given string id
      * @param id Texture identifier
