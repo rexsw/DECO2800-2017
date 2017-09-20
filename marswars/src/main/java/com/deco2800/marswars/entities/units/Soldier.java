@@ -101,6 +101,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
+		setStance(2); // Default stance for soldier is aggressive
 	}
 
 	//sets all attack attributes
@@ -110,6 +111,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setHealth(t.getUnitAttribute(this.name, 1));
 		this.setDamage(t.getUnitAttribute(this.name, 2));
 		this.setArmor(t.getUnitAttribute(this.name, 3));
+		this.setMaxArmor(t.getUnitAttribute(this.name, 3));
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
@@ -117,23 +119,33 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.01f); 
-		this.setAreaDamage(0);
+		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
+	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
-				 this!= target //prevent soldier suicide when owner is not set
-				) {
-						currentAction = Optional.of(new AttackAction(this, target));
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 			LOGGER.info("Same owner");
 		}
+	}
+	
+	/**
+	 * Helper function for attack. Override if the entity has different types of target.
+	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
+	 */
+	public boolean setTargetType(AttackableEntity target) {
+		if (!this.sameOwner(target) //(belongs to another player, currently always true)
+				&& this!= target) { //prevent soldier suicide when owner is not set
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -157,36 +169,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.makeSelected();
 		}
 	}
-	
-	/*public float getTmpx() {
-		
-		tempx=this.getTempx();
-		return tempx;
-	}
 
-	public float getTmpy() {
-		
-		tempy=this.getTempy();
-		return tempy;
-	}*/
-	/*
+	/**
 	 * Changes the texture to reflect the direction that the soldier is moving in
 	 */
 	public void faceTowards(float x, float y) {
-if(this.getPosX()>=x && this.getPosY()>=y) {
-			
+		if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(downleftTextureName);
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
-			
 			this.setTexture(downrightTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()>=y) {
-			
 			this.setTexture(upleftTextureName);
 		}
 		else if(this.getPosX()<x && this.getPosY()<y) {
-			
 			this.setTexture(uprightTextureName);
 		}
 		else {
@@ -206,7 +203,6 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setTexture(defaultTextureName);
 			return;
 		}
-
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
@@ -226,15 +222,17 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		sound.playSound(movementSound);
 	}
+	
 
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}
-	
+
 	@Override
 	public void onTick(int tick) {
-		if (!currentAction.isPresent()) {
 
+		if (!currentAction.isPresent()) {
+			
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
@@ -283,6 +281,18 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
+			// Stances are considered after this point
+			switch (getStance()) {
+				case 0:	
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+			}
+			
 			return;
 		}
 		if (!currentAction.get().completed()) {
@@ -318,6 +328,7 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
 			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
 			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){
@@ -342,8 +353,8 @@ if(this.getPosX()>=x && this.getPosY()>=y) {
 	}
 
 	@Override
-	public void setNextAction(ActionType a) {
-		this.nextAction = a;
+	public void setNextAction(ActionType action) {
+		this.nextAction = action;
 	}
 
 	public String getMissileTexture() {

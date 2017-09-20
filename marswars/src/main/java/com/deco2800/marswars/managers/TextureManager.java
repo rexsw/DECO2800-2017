@@ -162,7 +162,11 @@ public class TextureManager extends Manager {
         this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
         this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
         this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
-        
+
+        //Tiles:
+        this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
+
+
         // Item icon in shop dialog
         this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
         this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
@@ -192,6 +196,13 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (textureType.equals("missile")) {
+            	 path = String.format("resources/UnitAssets/%s/%s.png",
+                         unitType,textureType);
+            	String retVal = textureType + unitType;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             //find the team colour of the owner:
             String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
@@ -207,7 +218,7 @@ public class TextureManager extends Manager {
         }
         
     }
-
+    
     /**
      * Gets a texture object for a given string id
      * @param id Texture identifier

@@ -4,6 +4,7 @@ import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.buildings.BuildingEntity;
@@ -12,6 +13,7 @@ import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.SoundManager;
 
 
 /**
@@ -42,19 +44,20 @@ public class BuildAction implements DecoAction{
 	private boolean validBuild;
 	private State state = State.SELECT_SPACE;
 	private float speedMultiplier = 3.33f;
-	private float progress = 0;
 	private float buildingSpeed = 1;
 	private BuildingEntity base;
 	private BaseEntity actor;
 	private int maxHealth;
-	private int currentHealth;
+	private int currentHealth = 10;
 	private MoveAction moveAction = null;
 	private BuildingType building;
 	private float fixPos = 0f;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	private boolean actionPaused = false;
-	
+	private long id;
+	private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/quack.wav"));
+
 	/**
 	 * Constructor for the BuildAction
 	 * @param builder The unit assigned the construction
@@ -71,11 +74,12 @@ public class BuildAction implements DecoAction{
 	 * When called on, switches state to move builder and begin building
 	 */
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused) {
+		if (! timeManager.isPaused() && ! actionPaused && completed == false) {
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);
 					completed = true;
+					sound.stop(id);
 				}
 			}
 			if (state == State.SELECT_SPACE) {
@@ -118,19 +122,27 @@ public class BuildAction implements DecoAction{
 				}
 			} else if (state == State.BUILD_STRUCTURE) {
 				if (base != null) {
+					if (currentHealth == 10) {
+						id = sound.play(1f);
+						sound.setLooping(id, true);
+					}
 					if (currentHealth >= maxHealth) {
 						currentHealth = maxHealth;
 						base.animate3();
 						base.setBuilt(true);
+						sound.stop(id);
 						completed = true;
+						LOGGER.error("FINALISED");
 					} else if (maxHealth / 2 < currentHealth) {
 						base.animate2();
 						currentHealth = (int) (currentHealth + (buildingSpeed * speedMultiplier));
+						base.setHealth(currentHealth);
 					} else {
 						base.animate1();
 						currentHealth = (int) (currentHealth + (buildingSpeed * speedMultiplier));
+						base.setHealth(currentHealth);
 					}
-					base.setHealth(currentHealth);
+					
 				}
 			} else if (state == State.SETUP_MOVE) {
 				moveAction = new MoveAction(projX, projY, actor);
@@ -160,7 +172,7 @@ public class BuildAction implements DecoAction{
 	 */
 	@Override
 	public int actionProgress() {
-		return (int)progress;
+		return (int)(100 * (base.getMaxHealth() / base.getHealth()));
 	}
 	
 	/**
@@ -177,12 +189,11 @@ public class BuildAction implements DecoAction{
 			if (resourceManager.getRocks(actor.getOwner()) >= base.getCost()) {
 				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
 				GameManager.get().getWorld().addEntity(base);
-				this.buildingSpeed = base.getSpeed();
-				maxHealth = base.getHealth();
-				currentHealth = 1;
+				this.buildingSpeed = base.getBuildSpeed();
+				maxHealth = base.getMaxHealth();
 				base.setHealth(currentHealth);
 				state = State.SETUP_MOVE;
-				LOGGER.info("BUILDING NEW STRUCTURE");
+				LOGGER.info("BUILDING NEW " + building.toString());
 			}
 			else {
 				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE" + resourceManager.getRocks(actor.getOwner()));

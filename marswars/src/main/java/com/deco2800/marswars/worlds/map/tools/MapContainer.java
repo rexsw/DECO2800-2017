@@ -52,6 +52,20 @@ public class MapContainer {
         //Not yet implemented
     }
 
+    /**
+     * Creates a new Map container from a given map with random elements.
+     *
+     * @param type the type of the map.
+     * @param size the size of the map.
+     */
+    public MapContainer(MapTypes type, MapSizeTypes size){
+        mapPath = getFixedMap(type, size);
+        TiledMap mockMap = new TmxMapLoader().load(mapPath);
+        width = mockMap.getProperties().get("width", Integer.class);
+        length = mockMap.getProperties().get("height", Integer.class);
+        LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
+    }
+
 
     /**
      * Creates a new Map container from a given map.
@@ -425,6 +439,48 @@ public class MapContainer {
                 LOGGER.error("Unknown Map Size type");
         }
         switch (randomType){
+            case MARS:
+                newPath+="Mars.tmx";
+                break;
+            case MOON:
+                newPath+="Moon.tmx";
+                break;
+            case SUN:
+                newPath+="Sun.tmx";
+                break;
+            default:
+                LOGGER.error("Unknown Map type");
+        }
+        return newPath;
+    }
+
+    /**
+     * Chooses a fixed map (.tmx file) of a fixed size
+     *
+     * @return the new map file path.
+     */
+    protected String getFixedMap(MapTypes type, MapSizeTypes size){
+        String newPath = "resources/mapAssets/";
+        switch (size){
+            case TINY:
+                newPath+="tiny";
+                break;
+            case SMALL:
+                newPath+="small";
+                break;
+            case MEDIUM:
+                newPath+="medium";
+                break;
+            case LARGE:
+                newPath+="large";
+                break;
+            case VERY_LARGE:
+                newPath+="veryLarge";
+                break;
+            default:
+                LOGGER.error("Unknown Map Size type");
+        }
+        switch (type){
             case MARS:
                 newPath+="Mars.tmx";
                 break;

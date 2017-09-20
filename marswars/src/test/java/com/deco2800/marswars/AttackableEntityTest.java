@@ -2,10 +2,8 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.hud.MiniMap;
@@ -14,9 +12,6 @@ import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import java.util.List;
 import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.entities.units.MissileEntity;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -111,6 +106,7 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetArmor() {
+		test.setMaxArmor(100);
 		test.setArmor(100);
 		assertEquals(test.getArmor(), 100);
 		test.setArmor(-100);
@@ -143,7 +139,9 @@ public class AttackableEntityTest {
 
 	@Test
 	public void testSetHealth() {
+		test.setMaxHealth(100);
 		test.setHealth(100);
+		
 		assertEquals(test.getHealth(), 100);
 		GameManager.get().setMiniMap(new MiniMap());
 		GameManager.get().getWorld().addEntity(test);

@@ -28,13 +28,15 @@ public class MouseHandler extends Manager {
 	private boolean ignoreLeftClick = false;
 	
 	private BaseEntity unitSelected = null;
+	
+	//private boolean control = false;
 
 	/**
 	 * Currently only handles objects on height 0
 	 * @param x
 	 * @param y
 	 */
-	public void handleMouseClick(float x, float y, int button) {
+	public void handleMouseClick(float x, float y, int button,boolean skipChecking) {
 		float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 		float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 
@@ -64,10 +66,14 @@ public class MouseHandler extends Manager {
 
 			// If we get another left click ignore the previous listeners
 //				listeners.clear(); // Remove this to allow multiselect
-
-			projX = x/tileWidth;
+		if(!skipChecking) {
+			projX = x / tileWidth;
 			projY = -(y - tileHeight / 2f) / tileHeight + projX;
 			projX -= projY - projX;
+		}else{
+			projX=x;
+			projY=y;
+		}
 
 			if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
 				return;
@@ -80,6 +86,7 @@ public class MouseHandler extends Manager {
 
 
 			if (entities.isEmpty()) {
+				if(skipChecking) return;//this line is for multiselection
 				LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 				for (Clickable c : listeners) {
 					if (c instanceof Soldier) ((Soldier)c).resetTexture();
@@ -180,5 +187,18 @@ public class MouseHandler extends Manager {
 		ignoreLeftClick = ignore;
 	}
 	
+//	/**
+//	 * Method called to block the ability to select multiple units
+//	 */
+//	public void controlUp() {
+//		control = false;
+//	}
+//
+//	/**
+//	 * Method called to allow the ability to select multiple units
+//	 */
+//	public void controlDown() {
+//		control = true;
+//	}
 
 }

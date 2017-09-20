@@ -459,7 +459,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setMoveSpeed(float speed) {
 		this.speed = speed;
 	}
+
+	public void setBuildSpeed(float speed) {
+		this.buildSpeed = speed;
+	}
 	
+	public float getBuildSpeed() {
+		return buildSpeed;
+	}
 	/**
 	 * checks if this entity is AI
 	 * @return true if entity is owned by AI

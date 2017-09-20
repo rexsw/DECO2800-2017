@@ -219,11 +219,11 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game skin
 	 * 
-	 * @param Skin setskin the skin used to display the
+	 * @param skin setskin the skin used to display the
 	 * games gui
 	 */
-	public void setSkin(Skin setskin) {
-		gameskin = setskin;
+	public void setSkin(Skin skin) {
+		gameskin = skin;
 	}
 	
 	/**
@@ -239,11 +239,11 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game stage
 	 * 
-	 * @param stage setsstage the stage used to display the
+	 * @param setsstage the stage used to display the
 	 * games gui
 	 */
-	public void setStage(Stage setsstage) {
-		gamestage = setsstage;
+	public void setStage(Stage stage) {
+		gamestage = stage;
 	}
 	
 	/**

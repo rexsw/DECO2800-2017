@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -62,18 +61,18 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		case TURRET:
 			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
 			this.setTexture(graphics.get(graphics.size()-2));
-			this.setSpeed(1f);
-			this.setHealth(1850);
+			this.setBuildSpeed(1f);
 			this.setMaxHealth(1850);
+			this.setHealth(1850);
 			this.building = "Turret";
 			fogRange = 7;
 			break;
 		case BASE:
 			graphics = Arrays.asList("base1"+colour, "base2"+colour, "base3"+colour, "base4"+colour);
 			this.setTexture(graphics.get(graphics.size()-2));
-			this.setSpeed(.5f);
-			this.setHealth(2500);
+			this.setBuildSpeed(.5f);
 			this.setMaxHealth(2500);
+			this.setHealth(2500);
 			this.setFix(true);
 			this.building = "Base";
 			fogRange = 3;
@@ -81,9 +80,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		case BARRACKS:
 			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
 			this.setTexture(graphics.get(graphics.size()-2));
-			this.setSpeed(1.5f);
-			this.setHealth(2000);
+			this.setBuildSpeed(1.5f);
 			this.setMaxHealth(2000);
+			this.setHealth(2000);
 			this.setFix(true);
 			this.building = "Barracks";
 			fogRange = 3;
@@ -91,22 +90,21 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
 			this.setTexture(graphics.get(graphics.size()-2));
-			this.setSpeed(.5f);
-			this.setHealth(800);
+			this.setBuildSpeed(.5f);
 			this.setMaxHealth(800);
+			this.setHealth(800);
 			this.building = "Bunker";
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			this.setCost(350);
 			//Update this
 			break;
 		default:
 			break;
 		}
-		this.setCost(building.getCost());
+		//this.setCost(building.getCost());
+		this.setCost(0);
 		buildSize = building.getBuildSize();
-		this.setCost(0); //free cost for testing
 	}
 	
 
@@ -199,6 +197,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 				handler.registerForRightClickNotification(this);
 				LOGGER.info("clicked on base");
 				sound.playSound("closed.wav");
+				LOGGER.info("info"+ String.valueOf(super.getHealth()));
 			}
 		} else {
 			this.makeSelected();
@@ -235,12 +234,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 		}
 	}
 	
-	/**
-	 * @return The stats of the entity
-	 */
-	public EntityStats getStats() {
-		return new EntityStats(building, this.getHealth(), this.getMaxHealth(), null, currentAction, this);
-	}
 	
 	/**
 	 * @return Building Name
@@ -263,9 +256,19 @@ public class BuildingEntity extends AttackableEntity implements Clickable, Ticka
 	 */
 	@Override
 	public void setHealth(int health) {
+		super.setHealth(health);
 		if (this.getHealth() < this.getMaxHealth()/3 && built) {
 			this.setTexture(graphics.get(3));
 		}
-		super.setHealth(health);
 	}
+	
+	/**
+	 * Returns buildings name
+	 * @return String name of building
+	 */
+	@Override
+	public String toString(){
+		return building;
+	}
+	
 }
