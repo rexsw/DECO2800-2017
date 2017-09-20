@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -244,6 +245,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			int yPosition = (int) this.getPosY();
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
+			boolean waterPresent = false;
 			for (BaseEntity e: entities) {
 				if (e instanceof Soldier) {
 					if(((Soldier)e).getLoadStatus()==1){
@@ -254,11 +256,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
+				if (e instanceof Water) {
+					waterPresent = true;
+				}
 				if (e instanceof BuildingEntity) {
 					entitiesSize++;
 				}
 			}
-			boolean moveAway = entitiesSize > 1;
+			boolean moveAway = (entitiesSize > 1 && ! waterPresent) ||
+					(entitiesSize > 2 && waterPresent);
 			if (moveAway && !isTheEntityLoaded) {
 					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
@@ -271,13 +277,16 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
-				/* Check that the new position is free */
-				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+				/* Check that the new position is free
+				with the exception of Water entities */
+				List<BaseEntity> tileEntities =
+						world.getEntities((int)p.getX(), (int)p.getY());
+
+				if (this.moveAway(tileEntities)) {
 					// No good
 					return;
 				}
 				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
-			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}

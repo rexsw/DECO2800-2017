@@ -4,7 +4,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.SelectedTiles;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,7 +231,7 @@ public class Game{
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						if(TimeUtils.nanoTime() - lastGameTick > 100000) {
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);

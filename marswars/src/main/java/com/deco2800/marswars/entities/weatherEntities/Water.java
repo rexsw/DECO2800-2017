@@ -16,11 +16,12 @@ import java.util.Optional;
  * Use Resource Class instead
  * Created by timhadwen on 29/7/17.
  */
-public class Water extends BaseEntity implements HasHealth, Tickable, HasAction {
+public class Water extends BaseEntity implements HasHealth, Tickable {
 
     private WeatherManager weatherManager = (WeatherManager)
             GameManager.get().getManager(WeatherManager.class);
     private Optional<DecoAction> currentAction = Optional.empty();
+    private boolean surrounded = false;
 
     /**
      * Constructor for the Water
@@ -33,6 +34,14 @@ public class Water extends BaseEntity implements HasHealth, Tickable, HasAction 
         super(posX, posY, posZ, 1, 1, 1f);
         this.setTexture("water_draft");
         this.canWalkOver = true;
+    }
+
+    public void setSurrounded() {
+        this.surrounded = true;
+    }
+
+    public boolean isSurrounded() {
+        return this.surrounded;
     }
 
     /**
@@ -54,29 +63,11 @@ public class Water extends BaseEntity implements HasHealth, Tickable, HasAction 
     }
 
     /**
-     * Set an current action for this Water
-     * @param action
-     */
-    @Override
-    public void setAction(DecoAction action) {
-        currentAction = Optional.of(action);
-    }
-
-    /**
-     * Returns the current action of the entity
-     * @return current action
-     */
-    @Override
-    public Optional<DecoAction> getCurrentAction() {
-        return currentAction;
-    }
-
-    /**
      * Causes effects to come into play each game tick.
      * @param tick Current game tick
      */
     @Override
     public void onTick(int tick) {
-        weatherManager.setWeatherEvent();
+        //weatherManager.setWeatherEvent();
     }
 }
