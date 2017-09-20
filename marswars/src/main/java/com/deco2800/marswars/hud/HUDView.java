@@ -272,6 +272,7 @@ public class HUDView extends ApplicationAdapter{
 		welcomeMsg.setWidth(stage.getWidth());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
+		//Image clockbgImage1 = new Image(textureManager.getTexture("logo"));
 		Label welcomeText = new Label("Welcome to Spacwars!", skin); //$NON-NLS-1$
 		welcomeMsg.add(welcomeText);
 

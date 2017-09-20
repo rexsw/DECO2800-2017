@@ -15,6 +15,7 @@ import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
+
 /**
  * Creates a main menu window, which adds in a table depending on the 
  * state of the main menu progression.
@@ -69,7 +70,6 @@ public class MainMenu {
 		//GameManager.get().getGui().disableHUD();
 		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
-		
 		this.stage.addActor(mainmenu);
 	}
 		
