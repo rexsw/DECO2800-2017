@@ -775,9 +775,9 @@ public class HUDView extends ApplicationAdapter{
      * This method shall only be called when the "Customize" button from the start menu is clicked.
      * If this method is call, it will cause that the actions window be set to not visible.
 	 *
-	 * @param inGame whether is used during a game play
+	 * @param fullMenu whether is used during a game play
      */
-    private void addEntitiesPickerMenu(boolean inGame){
+    public void addEntitiesPickerMenu(boolean fullMenu){
 		entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn");
 
@@ -786,14 +786,14 @@ public class HUDView extends ApplicationAdapter{
         unitsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addUnitsPickerMenu(inGame);
+                addUnitsPickerMenu(fullMenu);
             }
         });
         TextButton buildingsButton = new TextButton("Buildings",skin);
         buildingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addBuildingsPickerMenu(inGame);
+                addBuildingsPickerMenu(fullMenu);
             }
         });
         TextButton resourcesButton = new TextButton("Resources",skin);
@@ -842,9 +842,9 @@ public class HUDView extends ApplicationAdapter{
     /**
      * Creates the sub menu that displays all available units
 	 *
-	 * @param inGame whether is being used during a game play
+	 * @param fullMenu whether is being used during a game play
      */
-    public void addUnitsPickerMenu(boolean inGame){
+    public void addUnitsPickerMenu(boolean fullMenu){
         entitiesPicker.clear();
 		entitiesPicker.getTitleLabel().setText("Spawn Units");
 
@@ -853,15 +853,15 @@ public class HUDView extends ApplicationAdapter{
 
         Table table = new Table();
 		table.align(Align.left);
-        if(!inGame) {
-			TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
-			entitiesButton.addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					addEntitiesPickerMenu(inGame);
-					entitiesPicker.setVisible(true);
-				}
-			});
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu(true);
+				entitiesPicker.setVisible(true);
+			}
+		});
+		if(fullMenu) {
 			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
 		}
         TextButton astronautButton = new TextButton("Astronaut",skin);
