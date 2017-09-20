@@ -208,4 +208,21 @@ public final class ActionSetter {
         }
         return;
     }
+
+    public static BuildingType getBuildingType(EntityID e) {
+        switch (e) {
+            case BARRACKS:
+                return BuildingType.BARRACKS;
+            case BASE:
+                return BuildingType.BASE;
+            case TURRET:
+                return BuildingType.TURRET;
+            case BUNKER:
+                return BuildingType.BUNKER;
+            case HEROFACTORY:
+                return BuildingType.HEROFACTORY;
+            default:
+                return null;
+        }
+    }
 }
