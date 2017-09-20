@@ -26,6 +26,7 @@ import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.GameBlackBoard.Field;
 
 /**
  * Displays the game stats in a separate window during the 
@@ -62,7 +63,7 @@ public class GameStats{
 		this.textureManager = textureManager; 
 		this.window = new Window("SPACWARS STATS", skin); //$NON-NLS-1$
 		window.setVisible(false);
-		gameGraph = new GameGraph("Fake"); 
+		gameGraph = new GameGraph(null); 
 	}
 	
 	/**
@@ -126,43 +127,49 @@ public class GameStats{
 		bioButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Biomass");
+				gameGraph = new GameGraph(Field.BIOMASS);
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Crystal");
+				gameGraph = new GameGraph(Field.CRYSTAL);
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Rocks");
+				gameGraph = new GameGraph(Field.ROCKS);
 			}
 		});
 		waterButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Water");
+				gameGraph = new GameGraph(Field.WATER);
 			}
 		});
 		b5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Combat Units");
+				gameGraph = new GameGraph(Field.COMBAT_UNITS);
 			}
 		});
 		b6.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Units Lost");
+				gameGraph = new GameGraph(Field.UNITS_LOST);
 			}
 		});
 		b7.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph("Buildings");
+				gameGraph = new GameGraph(Field.BUILDINGS);
+			}
+		});
+		b8.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor){
+				gameGraph = new GameGraph(Field.TECHNOLOGY);
 			}
 		});	
 
