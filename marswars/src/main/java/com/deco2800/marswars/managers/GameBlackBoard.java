@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +34,13 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	public void onTick(long i) {
 		//adds to the history of each field every few ticks
 		timer++;
-		if(timer % 50 == 0) {
+		if(timer % 10 == 0) {
 			//LOGGER.info("tick");
 			for(int teamid: teams) {
 				values.get(teamid).get("Biomass").add(rm.getBiomass(teamid));
 				values.get(teamid).get("Crystal").add(rm.getCrystal(teamid));
 				values.get(teamid).get("Rocks").add(rm.getRocks(teamid));
-				values.get(teamid).get("Rocks").add(rm.getWater(teamid));
+				values.get(teamid).get("Water").add(rm.getWater(teamid));
 				values.get(teamid).get("Units").add(this.count(teamid, "Units"));
 				values.get(teamid).get("Units Lost").add(this.count(teamid, "Units Lost"));
 				values.get(teamid).get("Combat Units").add(this.count(teamid, "Combat Units"));
@@ -194,9 +195,12 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return float[] an array of the history of this field 
 	 */
 	public float[] getHistory(int teamid, String history){
-		float[] returnv = new float[index+1];
-		for(int i = 0; i < index+1; i++) {
-			returnv[i] = this.values.get(teamid).get(history).get(i);
+		float[] returnv = new float[(index+2)*2];
+		returnv[0] = 0;
+		returnv[1] = 0;
+		for(int i = 0; i < index; i+=2) {
+			returnv[i + 2] = this.values.get(teamid).get(history).get(i-i);
+			returnv[i + 3] = this.values.get(teamid).get(history).get(i-i);
 		}
 		return returnv;
 	}

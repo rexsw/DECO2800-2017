@@ -105,6 +105,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		createMap();
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
+		
+		
 	}
 		
 	/**
@@ -156,14 +158,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
-		
         /* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
 		tileRenderer.setView(this.camera);
 		tileRenderer.render();
-
-		this.view.render(this.lastMenuTick);
+		
 		this.menu.renderGame(this.camera, batch);
+		this.view.render(this.lastMenuTick);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -171,6 +172,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
+		
 		if(!this.gameStarted) {
 			GameManager.get().getMiniMap().updateMap((TextureManager)(GameManager.get().getManager(TextureManager.class)));
 			this.view.updateMiniMapMenu();
