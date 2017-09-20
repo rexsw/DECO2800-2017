@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -293,14 +294,50 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			// Stances are considered after this point
+			
+			//Enemies within attack range are found
+			List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+			List<AttackableEntity> enemy = new ArrayList<AttackableEntity>();
+			//For each entity in the world
+			for (BaseEntity e: entityList) {
+				//If an attackable entity
+				if (e instanceof AttackableEntity) {
+					//Not owned by the same player
+					AttackableEntity attackable = ((AttackableEntity) e);
+					if (!this.sameOwner(attackable)) {
+						//Within attacking distance
+						float diffX = attackable.getPosX() - this.getPosX();
+						float diffY = attackable.getPosY() - this.getPosY();
+						if (Math.abs(diffX) + Math.abs(diffY) <= this.getAttackRange()) {
+							enemy.add((AttackableEntity) e);
+						}
+					}
+				}
+			}
 			switch (getStance()) {
+				//Passive
 				case 0:	
 					break;
+				//Defensive
 				case 1:
 					break;
+				//Aggressive
 				case 2:
+					if (!enemy.isEmpty()) {
+						//Attack closest enemy
+						for (int i=1; i<=getAttackRange(); i++) {
+							for (AttackableEntity a: enemy) {
+								float xDistance = a.getPosX() - this.getPosX();
+								float yDistance = a.getPosY() - this.getPosY();
+								if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+									attack(a);
+								}
+							}
+						}
+					}
 					break;
 				case 3:
+				//Skirmishing
 					break;
 			}
 			
