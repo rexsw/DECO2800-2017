@@ -1025,19 +1025,19 @@ public class HUDView extends ApplicationAdapter{
 		
 		if(pauseCheck == 0) {
 			//chat listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-				if (messageToggle){
+			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
+						&& messageToggle) {
 					messageWindow.setVisible(false);
 					messageToggle = false; 
 					this.setChatActiveCheck(0);
-				} else {
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
 					messageWindow.setVisible(true);
 					messageToggle = true;
 					this.setChatActiveCheck(1);
-				}
 			}
 		}
 		
+			
 		if(chatActiveCheck == 0) {
 			//pause menu listener
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
