@@ -607,6 +607,8 @@ public class HUDView extends ApplicationAdapter{
 							cancelBuild.doAction();
 						}
 						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
+					} else {
+						ActionSetter.setGenerate(selectedEntity, (EntityID) currentActions.get(index));
 					}
 					}
 

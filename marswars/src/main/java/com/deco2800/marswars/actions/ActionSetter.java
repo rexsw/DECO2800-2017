@@ -2,6 +2,7 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -199,31 +200,14 @@ public final class ActionSetter {
         }
     }
 
-    public static String getActionSprite(ActionType a) {
-        switch (a) {
-            case MOVE:
-                return "Move";
-            case GATHER:
-                return  "Gather";
-            case DAMAGE:
-                return "Attack";
-            case GENERATE:
-                return "Create";
-            case BUILD:
-                return "Construct";
-            case LOAD:
-                return "Load";
-            case UNLOAD:
-                return "Unload";
-            default:
-                return "";
-        }
-    }
-
-    public static void setBuild(BaseEntity target, EntityID c) {
+    public static void setGenerate(BaseEntity target, EntityID c) {
+        LOGGER.info("Building " + c.name());
         switch (c) {
+            case ASTRONAUT:
+                target.setAction(new GenerateAction(new Astronaut(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
             default:
-                target.setAction(new GenerateAction(new Spacman(target.getPosX() - 10, target.getPosY() - 10, 0)));
+                target.setAction(new GenerateAction(new Spacman(target.getPosX(), target.getPosY(), 0)));
                 break;
 
         }
