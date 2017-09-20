@@ -4,7 +4,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
@@ -30,6 +32,12 @@ public class MapContainer {
    
     // path of the .tmx map file
     private String mapPath = "";
+
+    // default map type
+    private MapTypes mapType = MapTypes.MARS;
+
+    // default map size
+    private MapSizeTypes mapSizeType = MapSizeTypes.MEDIUM;
     
     // width of the map loaded
     private int width;
@@ -107,8 +115,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-               this.getRandomBuilding();
-               this.getRandomEntity();
+            	//I removed random entities and buildings for now, don't think they make sense in a strategy game
+              // this.getRandomBuilding();
+              // this.getRandomEntity();
                this.getRandomResource();
             }
         }
@@ -281,13 +290,13 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        if(random == BuildingType.BASE && world.checkValidPlace(BuildingType.BASE, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, 0);
-        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(BuildingType.TURRET, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, 0);
-        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(BuildingType.BUNKER, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, 0);
-        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(BuildingType.BARRACKS, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, 0);
         }
         else {
@@ -421,18 +430,23 @@ public class MapContainer {
         switch (randomSize){
             case TINY:
                 newPath+="tiny";
+                mapSizeType = MapSizeTypes.TINY;
                 break;
             case SMALL:
                 newPath+="small";
+                mapSizeType = MapSizeTypes.SMALL;
                 break;
             case MEDIUM:
                 newPath+="medium";
+                mapSizeType = MapSizeTypes.MEDIUM;
                 break;
             case LARGE:
                 newPath+="large";
+                mapSizeType = MapSizeTypes.LARGE;
                 break;
             case VERY_LARGE:
                 newPath+="veryLarge";
+                mapSizeType = MapSizeTypes.VERY_LARGE;
                 break;
             default:
                 LOGGER.error("Unknown Map Size type");
@@ -440,12 +454,15 @@ public class MapContainer {
         switch (randomType){
             case MARS:
                 newPath+="Mars.tmx";
+                mapType = MapTypes.MARS;
                 break;
             case MOON:
                 newPath+="Moon.tmx";
+                mapType = MapTypes.MOON;
                 break;
             case SUN:
                 newPath+="Sun.tmx";
+                mapType = MapTypes.SUN;
                 break;
             default:
                 LOGGER.error("Unknown Map type");
@@ -463,18 +480,23 @@ public class MapContainer {
         switch (size){
             case TINY:
                 newPath+="tiny";
+                mapSizeType = MapSizeTypes.TINY;
                 break;
             case SMALL:
                 newPath+="small";
+                mapSizeType = MapSizeTypes.SMALL;
                 break;
             case MEDIUM:
                 newPath+="medium";
+                mapSizeType = MapSizeTypes.MEDIUM;
                 break;
             case LARGE:
                 newPath+="large";
+                mapSizeType = MapSizeTypes.LARGE;
                 break;
             case VERY_LARGE:
                 newPath+="veryLarge";
+                mapSizeType = MapSizeTypes.VERY_LARGE;
                 break;
             default:
                 LOGGER.error("Unknown Map Size type");
@@ -482,16 +504,33 @@ public class MapContainer {
         switch (type){
             case MARS:
                 newPath+="Mars.tmx";
+                mapType = MapTypes.MARS;
                 break;
             case MOON:
                 newPath+="Moon.tmx";
+                mapType = MapTypes.MOON;
                 break;
             case SUN:
                 newPath+="Sun.tmx";
+                mapType = MapTypes.SUN;
                 break;
             default:
                 LOGGER.error("Unknown Map type");
         }
         return newPath;
+    }
+
+    /**
+     * @return returns the current map type
+     */
+    public MapTypes getMapType() {
+        return mapType;
+    }
+
+    /**
+     * @return returns the current map size
+     */
+    public MapSizeTypes getMapSizeType() {
+        return mapSizeType;
     }
 }

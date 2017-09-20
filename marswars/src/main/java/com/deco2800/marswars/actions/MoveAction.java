@@ -93,9 +93,9 @@ public class MoveAction implements DecoAction {
 				path = pathfinder.getPath();
 			}
 
-			if (entity instanceof AttackableEntity) {
+			if (path != null && entity instanceof AttackableEntity) {
 				// remove the entity from the minimap
-				GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
+				//GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
 			}
 
 			/* If the path is null its probably completed */

@@ -7,6 +7,7 @@ import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -33,14 +34,14 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty; // the max loyalty of the entity
 	private float speed; // the movement speed of the entity
-	private Optional<DecoAction> currentAction = Optional.empty(); // current action
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
-	private int areaDamage; // the area of damage 
+	private int areaDamage = 0; // the area of damage 
 	private boolean gotHit; // if the unit get hitted, it will be true;
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
+	private int stance = 0; // the behavior of the unit responding to enemies
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -95,9 +96,11 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public void setArmor(int armor) {
 		if (armor < 0) {
 			this.armor = 0;
-			return;
+		} else if (armor > getMaxArmor()) {
+			this.armor = getMaxArmor();
+		} else {
+			this.armor = armor;
 		}
-		this.armor = armor;
 	}
 	
 	/**
@@ -138,7 +141,6 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * Set the maximum health of the entity
 	 * @param maxHealth the maximum health of the entity
 	 */
-	@Override
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 	}
@@ -147,39 +149,43 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * Return the maximum health of the entity
 	 * @return the maximum health of the entity
 	 */
-	@Override
 	public int getMaxHealth() {
-		return maxHealth;
+		return this.maxHealth;
 	}
 	
 	/**
 	 * Return the current health of the entity
 	 * @return current health
 	 */
-	@Override
 	public int getHealth() {
-		return this.health;
+		return health;
 	}
 
 	/**
 	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
 	 * @param the health of the entity
 	 */
-	@Override
 	public void setHealth(int health) {
-		if (this.getHealth() > health) {
+		if (this.health > health) {
 			this.setGotHit(true);
 		}
-		
 		if (health <= 0) {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 		}
+		if (health >= this.getMaxHealth()) {
+			this.health = this.getMaxHealth();
+			return;
+		}
 		this.health  = health;
 	}
 
+	/**
+	 * Get the current action of the entity
+	 * @return the current action
+	 */
 	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;
@@ -253,7 +259,13 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setLoyalty(int loyalty) {
-		this.loyalty = loyalty;
+		if (loyalty < 0) {
+			this.loyalty = 0;
+		} else if (loyalty > getMaxLoyalty()) {
+			this.loyalty = getMaxLoyalty();
+		} else {
+			this.loyalty = loyalty;
+		}
 	}
 
 	/**
@@ -279,7 +291,16 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	}
 	
 	/**
+	 * Get the maximum loyalty value of the unit
+	 * @return the maximum loyalty of the entity
+	 */
+	public int getMaxLoyalty() {
+		return maxLoyalty;
+	}
+	
+	/**
 	 * Set the movement speed of the entity
+	 * @param the new speed of the unit
 	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
@@ -287,6 +308,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	/**
 	 * Get the movement speed of the entity
+	 * @return the movement speed
 	 */
 	public float getSpeed() {
 		return speed;
@@ -343,6 +365,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	public void setAreaDamage(int areaDamage) {
 		this.areaDamage = areaDamage;
+	}
+	
+	public void setNextAction(ActionType a) {
+		this.nextAction = a;
 	}
 
 	/**
@@ -419,5 +445,30 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 				this.setGotHitInterval(this.getMaxgotHitInterval());
 			}
 		}
+	}
+	
+	/**
+	 * This method returns a value denoting the stance of the unit.
+	 * 0 = Passive - Default unit behavior no reaction to enemies.
+	 * 1 = Defensive - Unit will attack enemies within their range but not move.
+	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
+	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * @return the entity stance
+	 */
+	public int getStance() {
+		return stance;
+	}
+	
+	/**
+	 * Changes the stance of the unit.
+	 * The new stance is chosen according to the list.
+	 * 0 = Passive - Default unit behavior no reaction to enemies. Possible building behavior.
+	 * 1 = Defensive - Unit will attack enemies within their range but not move. Possible building behavior.
+	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
+	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * @param the integer corresponding with the stance
+	 */
+	public void setStance(int stance) {
+		this.stance = stance;
 	}
 }

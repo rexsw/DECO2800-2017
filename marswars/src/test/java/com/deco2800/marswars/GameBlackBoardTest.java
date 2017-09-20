@@ -64,7 +64,7 @@ public class GameBlackBoardTest {
 	public void getHistoryTest() {
 		GameBlackBoard test = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		test.set();
-		Assert.assertEquals(1,test.getHistory(1, "Units").length);
+		Assert.assertEquals(4,test.getHistory(1, "Units").length);
 	}
 	
 }
