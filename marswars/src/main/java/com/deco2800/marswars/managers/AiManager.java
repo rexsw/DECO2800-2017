@@ -44,28 +44,6 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 
 	@Override
 	public void onTick(long l) {
-		//for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-		//	if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
-			//	if(e instanceof Astronaut) {
-			//		Astronaut x = (Astronaut)e;
-			//		useSpacman(x);
-			//	} else if(e instanceof Base) {
-			//		Base x = (Base)e;
-			//		generateSpacman(x);
-			//	} else if(e instanceof Soldier) {
-			//		Soldier x = (Soldier)e;
-			//		//Action depends on current state
-			//		switch (state) {
-			//		case AGGRESSIVE:
-			//			useEnemy(x);
-			//			break;
-			//		case DEFAULT:
-			//			soldierDefend(x);
-			//			break;
-			//		}
-		//		}
-		//	}
-		//}
 		//Increase the current tick count
 		tickNumber++;
 		//Check for state change every 10 ticks

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -829,11 +830,10 @@ public class HUDView extends ApplicationAdapter{
         
         TextButton astronautButton = new TextButton("Astronaut",skin);
         astronautButton.addListener(new ChangeListener() {
-			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
-			}
-		});
+			};
+        });
     
         TextButton carrierButton = new TextButton("Carrier",skin);
         TextButton healerButton = new TextButton("Healer",skin);
@@ -843,7 +843,7 @@ public class HUDView extends ApplicationAdapter{
         TextButton tankButton = new TextButton("Tank",skin);
 
         ScrollPane scrollPane = new ScrollPane(table, skin);
-        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setScrollingDisabled(true, false);
         scrollPane.setFadeScrollBars(false);
         table.add(astronautButton).width(buttonWidth).height(buttonHeight);
         table.add(carrierButton).width(buttonWidth).height(buttonHeight);
@@ -1194,7 +1194,7 @@ public class HUDView extends ApplicationAdapter{
 				if (currentActions.get(i) instanceof ActionType) { //If it is an action
 					buttonList.get(i).setText(ActionSetter.getActionName((ActionType)currentActions.get(i)));
 				} else { //If it isnt an action it is something to build
-					//buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
+					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
 				}
         }
     }
