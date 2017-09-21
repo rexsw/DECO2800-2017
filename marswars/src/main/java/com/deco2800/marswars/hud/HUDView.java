@@ -89,6 +89,8 @@ public class HUDView extends ApplicationAdapter{
 	private Label crystalCount;
 	private Label biomassCount;
 	private Label waterCount;
+	private Label popCount;
+	private Label maxPopCount;
 
 	//Action buttons
 	private List<TextButton> buttonList;
@@ -537,6 +539,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount = new Label("Crystal: 0", skin); //$NON-NLS-1$
 		biomassCount = new Label("Biomass: 0", skin); //$NON-NLS-1$
 		waterCount = new Label("Water: 0", skin); //$NON-NLS-1$
+		popCount = new Label("0 ", skin);
+		maxPopCount = new Label(" / 10", skin);
 
 		//add rock image
 		Texture rockTex = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
@@ -558,7 +562,9 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(biomass).width(40).height(40).pad(10);
 		resourceTable.add(biomassCount).padRight(60);
 		resourceTable.add(water).width(40).height(40).pad(10);
-		resourceTable.add(waterCount).padRight(60);
+		resourceTable.add(waterCount).padRight(50);
+		resourceTable.add(popCount).padRight(10);
+		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
 
@@ -683,9 +689,12 @@ public class HUDView extends ApplicationAdapter{
 		
         selectedEntity = target;
 		currentActions = target.getValidActions();
-
-        enterActions();
-        
+		if (target instanceof Astronaut) {
+	        enterActions(false);
+		}
+		else {
+			enterActions(true);
+		}
 		if(target instanceof AttackableEntity) {
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
@@ -841,7 +850,7 @@ public class HUDView extends ApplicationAdapter{
      * Creates the sub menu that displays all available buildings
      * @param isPlaying allows to go back to menu options if true
      */
-    private void addBuildingsPickerMenu(boolean isPlaying){
+    private void addBuildingsPickerMenu(boolean addBack){
         entitiesPicker.clear();
         Table table = new Table();
 		table.align(Align.left);
@@ -859,7 +868,7 @@ public class HUDView extends ApplicationAdapter{
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
-        if(!isPlaying) {
+        if(addBack) {
             table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
             columns = 1;
         }
@@ -877,7 +886,7 @@ public class HUDView extends ApplicationAdapter{
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
     		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
-        	addPane.addListener(new ChangeListener() {
+        	formatPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
                 		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
@@ -1130,7 +1139,7 @@ public class HUDView extends ApplicationAdapter{
      * @param isVisible whether to display the picker or hide it.
 	 * @param isPlaying whether a game is being played.
      */
-    public void showBuildMenu(Astronaut builder, boolean isVisible, boolean isPlaying){
+    public void showBuildMenu(Astronaut builder, boolean isVisible, boolean isPlaying) {
         entitiesPicker.setVisible(isVisible);
         TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
         
@@ -1139,7 +1148,7 @@ public class HUDView extends ApplicationAdapter{
         	buildingsAvailable.add(BuildingType.HEROFACTORY);
         }
         // this call allows the menu to reset instead of using its latest state
-            addBuildingsPickerMenu(true);
+            addBuildingsPickerMenu(false);
         if(!isPlaying) {
 			entitiesPicker.setVisible(true);
 			toggleFog();
@@ -1152,11 +1161,11 @@ public class HUDView extends ApplicationAdapter{
      * the selected entity
      */
 
-	private void enterActions() {
+	private void enterActions(boolean display) {
 		if (currentActions == null) {
 			return;
 		}
-
+		actionsWindow.setVisible(display);
         for (int i = 0; i < currentActions.size(); i++) {
 				enableButton(buttonList.get(i));
 				if (currentActions.get(i) instanceof ActionType) { //If it is an action
@@ -1232,6 +1241,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
 		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
 		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
+		popCount.setText("" + resourceManager.getPopulation(-1)); //$NON-NLS-1$
+		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1)); //$NON-NLS-1$
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {

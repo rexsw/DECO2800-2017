@@ -25,7 +25,7 @@ import com.deco2800.marswars.util.Box3D;
 
 public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress, HasAction{
 	private int maxHealth; // maximum health of the entity
-	private int health; // current health of the entity
+	protected int health; // current health of the entity
 	private int maxArmor; // maximum armor of the entity
 	private int armor; // current armor of the entity
 	private int armorDamage; // armorDamage of the entity

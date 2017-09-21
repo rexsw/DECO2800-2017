@@ -1,10 +1,13 @@
 package com.deco2800.marswars.entities.units;
 
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
@@ -51,7 +54,6 @@ public class Astronaut extends Soldier {
 		}
 		if(!this.isAi() & this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
 			LOGGER.info("Clicked on soldier");
 			this.makeSelected();
@@ -99,7 +101,8 @@ public class Astronaut extends Soldier {
 		}
 		this.setTexture(defaultTextureName);
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(movementSound);
+		Sound loadedSound = sound.loadSound(movementSound);
+		sound.playSound(loadedSound);
 	}
 
 
@@ -184,5 +187,37 @@ public class Astronaut extends Soldier {
 	 */
 	public EntityStats getStats() {
 		return new EntityStats("Astronaut", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+	}
+	
+	/**
+	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
+	 * This method overrides the basic method to also remove building if astronaut is killed durin build process
+	 * @param the health of the entity
+	 */
+	@Override
+	public void setHealth(int health) {
+		LOGGER.info("SETTING HEALTH");
+		if (this.health > health) {
+			this.setGotHit(true);
+		}
+		if (health <= 0) {
+			if (this.getAction().isPresent()) {
+				if (this.getAction().get() instanceof BuildAction) {
+					LOGGER.info("TRIED AT LEAST");
+					BuildAction destroyBuild = (BuildAction)this.getAction().get();
+					destroyBuild.cancelBuild();
+					destroyBuild.doAction();
+				}
+			}
+			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+			black.updateDead(this);
+			GameManager.get().getWorld().removeEntity(this);
+			LOGGER.info("DEAD");
+		}
+		if (health >= this.getMaxHealth()) {
+			this.health = this.getMaxHealth();
+			return;
+		}
+		this.health  = health;
 	}
 }

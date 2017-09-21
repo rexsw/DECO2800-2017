@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.weatherEntities.Water;
@@ -219,10 +221,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			}
 			this.setTexture(defaultTextureName);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound(movementSound);
+			Sound loadedSound = sound.loadSound(movementSound);
+			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(movementSound);
+		Sound loadedSound = sound.loadSound(movementSound);
+		sound.playSound(loadedSound);
 	}
 	
 

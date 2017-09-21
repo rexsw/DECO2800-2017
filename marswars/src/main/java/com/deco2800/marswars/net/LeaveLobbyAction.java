@@ -3,7 +3,7 @@ package com.deco2800.marswars.net;
 /**
  * Network action object for when somebody leaves the lobby.
  */
-public class LeaveLobbyAction implements Action {
+public class LeaveLobbyAction extends ChatAction {
     private String username;
 
     public LeaveLobbyAction() {

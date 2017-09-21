@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -116,9 +117,9 @@ public class Carrier extends Soldier {
 	    }
 	}
 	this.setTexture(defaultTextureName);
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	sound.playSound(movementSound);
+	SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+	Sound loadedSound = sound.loadSound(movementSound);
+	sound.playSound(loadedSound);
     }
 
     /**
@@ -221,7 +222,8 @@ public class Carrier extends Soldier {
      */
     public boolean loadPassengers(Soldier target) {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(loadSound);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
 	for (int i = 0; i < capacity; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
@@ -249,7 +251,8 @@ public class Carrier extends Soldier {
      */
     public boolean unloadPassenger() {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(loadSound);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
 	LOGGER.info("Everyone off!");
 	int empty = 0;
 	for (int i = 0; i < capacity; i++) {

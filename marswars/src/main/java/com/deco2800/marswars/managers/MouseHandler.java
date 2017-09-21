@@ -92,7 +92,7 @@ public class MouseHandler extends Manager {
 					LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 					for (Clickable c : listeners) {
 						if (c instanceof Soldier) ((Soldier)c).resetTexture();
-					}			listeners.clear();
+					}
 					((CustomizedWorld)world).deSelectAll();
 					listeners.clear();//Deselect all the entities selected before
 					return;
@@ -106,7 +106,6 @@ public class MouseHandler extends Manager {
 						if (e instanceof HasOwner) {
 							//giving preference to Player's own entities.
 							if (! ((HasOwner) e).isAi()) {
-								if(e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1)
 								chosen = e;
 								isClickable = true;
 								if (e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1) { //preference for player's non-building entities.
@@ -128,9 +127,7 @@ public class MouseHandler extends Manager {
 					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
 						unregisterForRightClickNotification((Clickable) unitSelected);
 						unitSelected.deselect();
-						if (unitSelected instanceof Soldier) {
-							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-						}
+						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
 						unitSelected = (BuildingEntity)chosen;
 					}
 					unitSelected = (BaseEntity)chosen;
@@ -149,9 +146,6 @@ public class MouseHandler extends Manager {
 				AbstractWorld world = GameManager.get().getWorld();
 				((CustomizedWorld)world).deSelectAll();
 			}
-			AbstractWorld world = GameManager.get().getWorld();
-			((CustomizedWorld)world).deSelectAll();
-
 		}
 	}
 

@@ -31,9 +31,6 @@ import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Manages the features for the game 
  * @author Naziah Siddique
@@ -219,6 +216,7 @@ public class Game{
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
+		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
@@ -232,7 +230,6 @@ public class Game{
 		GameManager.get().getWorld().addEntity(medic);
 		GameManager.get().getWorld().addEntity(commander);
 		GameManager.get().getWorld().addEntity(hacker);
-		
 		GameManager.get().getWorld().addEntity(carrier);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
