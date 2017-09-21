@@ -318,32 +318,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					}
 				}
 			}
-			switch (getStance()) {
-				//Passive
-				case 0:	
-					break;
-				//Defensive
-				case 1:
-					break;
-				//Aggressive
-				case 2:
-					if (!enemy.isEmpty()) {
-						//Attack closest enemy
-						for (int i=1; i<=getAttackRange(); i++) {
-							for (AttackableEntity a: enemy) {
-								float xDistance = a.getPosX() - this.getPosX();
-								float yDistance = a.getPosY() - this.getPosY();
-								if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
-									attack(a);
-								}
-							}
-						}
-					}
-					break;
-				case 3:
-				//Skirmishing
-					break;
-			}
+			
+			getStances(enemy);
 			
 			return;
 		}
@@ -356,6 +332,47 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 
 		
+	}
+	
+	/**
+	 * Get the stance of the entity and react.
+	 * @param enemy
+	 */
+	public void getStances(List<AttackableEntity> enemy) {
+		switch (getStance()) {
+			//Passive
+			case 0:	
+				break;
+			//Defensive
+			case 1:
+				break;
+			//Aggressive
+			case 2:
+				if (!enemy.isEmpty()) {
+					aggresiveBehaviour(enemy);
+				}
+				break;
+			case 3:
+			//Skirmishing
+				break;
+		}
+	}
+	
+	/**
+	 * Will attack any enemy in its attackrange.
+	 * @param enemy
+	 */
+	public void aggresiveBehaviour(List<AttackableEntity> enemy) {
+		//Attack closest enemy
+		for (int i=1; i<=getAttackRange(); i++) {
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					attack(a);
+				}
+			}
+		}
 	}
 	
 	@Override
