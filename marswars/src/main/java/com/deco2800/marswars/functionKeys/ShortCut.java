@@ -61,13 +61,28 @@ public class ShortCut {
 	private boolean spac = false;
 	private boolean aiSpac = false;
 	private boolean tank = false;
-	private boolean aiTank = false;
 	private boolean soldier = false;
 	private boolean spacmanSelect = false;
 	private boolean moveToEntity = false;
 	private boolean delete = false;
 	
 	public void process(GameManager g,OrthographicCamera camera) {
+		moveCamera(camera);
+		storeCameraPosition(camera);
+		cameraGoToTheStoredPosition(camera);
+		cameraBackToLastPosition(camera);
+		cameraDeleteLastPosition();
+		entityOnClick(g);
+		//moveToOneOfTheEntity(camera);
+		addExtraSpacMan();
+		addExtraAiSpacMan();
+		addExtraTank();
+		addExtraSoldier();
+		moveCameraToBase(g,camera);
+		quitGame();
+	}
+	
+	public void moveCamera(OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.UP) || inputKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
 		}
@@ -86,19 +101,6 @@ public class ShortCut {
 		if ((inputKeys.contains(Input.Keys.MINUS)) && (camera.zoom < 10)) {
 			camera.zoom *= 1.05;
 		}
-		storeCameraPosition(camera);
-		cameraGoToTheStoredPosition(camera);
-		cameraBackToLastPosition(camera);
-		cameraDeleteLastPosition();
-		//entityOnClick();
-		//moveToOneOfTheEntity(camera);
-		addExtraSpacMan();
-		addExtraAiSpacMan();
-		addExtraTank();
-		addExtraSoldier();
-
-		moveCameraToBase(g,camera);
-		quitGame();
 	}
 	
 	public void addKey(int key) {
@@ -264,10 +266,6 @@ public class ShortCut {
 					}
 
 				}
-
-
-
-
 		}
 	}
 
@@ -289,11 +287,16 @@ public class ShortCut {
 		
 	}
 	
-	public void entityOnClick() {
+	public void entityOnClick(GameManager g) {
 		if (inputKeys.contains(Input.Keys.V)){
 			if (spacmanSelect == false) {
-				for (Renderable e : GameManager.get().getWorld().getEntities()) {
-					if ((e instanceof Spacman) && !((Spacman) e).isSelected()) {
+				for (Renderable e : g.get().getWorld().getEntities()) {
+					
+					if ((e instanceof BaseEntity)) {
+						LOGGER.error("it is an spacman");
+						LOGGER.error("it is an spacman " +((BaseEntity)e).isSelected() );
+					}
+					if ((e instanceof Spacman) && ((Spacman) e).isSelected()) {
 						spacmanList.add((Spacman) e);
 						LOGGER.error("stored a spacman");
 					}

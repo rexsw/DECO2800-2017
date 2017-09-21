@@ -189,7 +189,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable, HasHealt
 			LOGGER.error("Clicked on ai spacman");
 		}
 	}
-
+	
 	/**
 	 * On rightclick method for spacman
 	 * @param x
