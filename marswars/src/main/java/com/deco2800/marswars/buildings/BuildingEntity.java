@@ -72,6 +72,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setBuildSpeed(1f);
 			this.setMaxHealth(1850);
 			this.setHealth(1850);
+			this.setDamage(10);
 			this.building = "Turret";
 			fogRange = 7;
 			break;
