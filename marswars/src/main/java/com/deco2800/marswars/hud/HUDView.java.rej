@@ -1,0 +1,10 @@
+diff a/marswars/src/main/java/com/deco2800/marswars/hud/HUDView.java b/marswars/src/main/java/com/deco2800/marswars/hud/HUDView.java	(rejected hunks)
+@@ -38,7 +38,7 @@
+  */
+ public class HUDView extends ApplicationAdapter{
+ 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+-	
++
+ 	private static final int BUTTONSIZE = 40; //sets size of image buttons 
+ 	private static final int BUTTONPAD = 10;  //sets padding between image buttons 
+ 	private static final int CRITICALHEALTH = 30; //critical health of spacmen 

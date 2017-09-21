@@ -14,7 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.ChatAction;
+import com.deco2800.marswars.net.ConnectionManager;
+import com.deco2800.marswars.net.MessageAction;
+import com.esotericsoftware.kryonet.Connection;
 
 
 /**
@@ -36,7 +42,9 @@ import com.deco2800.marswars.managers.TextureManager;
  * @author James McCall
  */
 public class ChatBox extends Table {
-    
+    NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+
+
     // Size variables for the chat Pane to keep it at a fixed size
     private static final float CHAT_WIDTH = 300;
     private static final float CHAT_HEIGHT = 150;
@@ -54,7 +62,7 @@ public class ChatBox extends Table {
     
     private TextureManager textureManager;
     private HUDView hud;
-    
+
     /**
      * Creates a new instance of a ChatBox.
      * 
@@ -76,7 +84,20 @@ public class ChatBox extends Table {
 
         this.chatMessages = new Table(this.skin);
         this.chatPane = new ScrollPane(this.chatMessages, this.skin);
-        
+
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ChatAction) {
+                            ChatAction action = (ChatAction) o;
+                            // TODO - reimplement logging? maybe logging manager?
+//                            this.logAction(action);
+                            addNewMessage(action.toString());
+                        }
+                    }
+                }
+        );
         // Set up properties of the elements then set layout
         setUpInputElements();
         setUpChatMessages();        
@@ -130,11 +151,11 @@ public class ChatBox extends Table {
      */
     private void sendMessage() {
         String message = this.messageTextField.getText();
-        if (!"".equals(message)) { //$NON-NLS-1$
-            // Currently not implemented correctly, adds to chat box instead of sending to server.
-            addNewMessage(message);
+        if (!"".equals(message)) {
+            MessageAction action = new MessageAction(message);
+            netManager.getNetworkClient().sendObject(action);
         }
-        this.messageTextField.setText(""); //$NON-NLS-1$
+        messageTextField.setText("");
     }
     
     /**
@@ -189,6 +210,6 @@ public class ChatBox extends Table {
 
 	public void setTextureManager(TextureManager textureManager) {
 		this.textureManager = textureManager;
-	}    
+	}
     
 }
