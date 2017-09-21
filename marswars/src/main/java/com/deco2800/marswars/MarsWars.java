@@ -67,9 +67,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
-	
+
 	private InputProcessor inputP;
-	
+
 	/**
 	 * Creates the required objects for the game to start.
 	 * Called when the game first starts
@@ -83,16 +83,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-								
+
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
-		
+
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
-		
+
 		this.menu = new MainMenu(this.skin, this.stage);
 	}
-		
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -138,7 +138,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
-	
+
 		if(invincible == 1)
 		{
 			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
@@ -151,7 +151,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}
 	}
-	
+
 	/**
 	 * Resizes the viewport.
 	 *

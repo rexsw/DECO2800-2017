@@ -29,7 +29,7 @@ public class MouseHandler extends Manager {
 	
 	private BaseEntity unitSelected = null;
 	
-	//private boolean control = false;
+	private boolean multiselect = false;
 
 	/**
 	 * Currently only handles objects on height 0
@@ -44,6 +44,10 @@ public class MouseHandler extends Manager {
 			float projX;
 			float projY;
 			if (button == 0 && !ignoreLeftClick) {
+				// Left click
+				if (!multiselect) {
+					listeners.clear();
+				}
 				if (unitSelected != null && unitSelected instanceof BuildingEntity) {
 					unregisterForRightClickNotification((Clickable) unitSelected);
 					unitSelected.deselect();
@@ -62,7 +66,6 @@ public class MouseHandler extends Manager {
 					}
 
 				}
-				// Left click
 				AbstractWorld world = GameManager.get().getWorld();
 
 				// If we get another left click ignore the previous listeners
@@ -89,7 +92,7 @@ public class MouseHandler extends Manager {
 					LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 					for (Clickable c : listeners) {
 						if (c instanceof Soldier) ((Soldier)c).resetTexture();
-					}			listeners.clear();
+					}
 					((CustomizedWorld)world).deSelectAll();
 					listeners.clear();//Deselect all the entities selected before
 					return;
@@ -103,7 +106,6 @@ public class MouseHandler extends Manager {
 						if (e instanceof HasOwner) {
 							//giving preference to Player's own entities.
 							if (! ((HasOwner) e).isAi()) {
-								if(e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1)
 								chosen = e;
 								isClickable = true;
 								if (e instanceof Soldier && ((Soldier)e).getLoadStatus()!=1) { //preference for player's non-building entities.
@@ -125,9 +127,7 @@ public class MouseHandler extends Manager {
 					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
 						unregisterForRightClickNotification((Clickable) unitSelected);
 						unitSelected.deselect();
-						if (unitSelected instanceof Soldier) {
-							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
-						}
+						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
 						unitSelected = (BuildingEntity)chosen;
 					}
 					unitSelected = (BaseEntity)chosen;
@@ -143,11 +143,9 @@ public class MouseHandler extends Manager {
 				for (Clickable c : listeners) {
 					c.onRightClick(projX, projY);
 				}
-				listeners.clear();
 				AbstractWorld world = GameManager.get().getWorld();
 				((CustomizedWorld)world).deSelectAll();
 			}
-
 		}
 	}
 
@@ -167,18 +165,12 @@ public class MouseHandler extends Manager {
 		ignoreLeftClick = ignore;
 	}
 	
-//	/**
-//	 * Method called to block the ability to select multiple units
-//	 */
-//	public void controlUp() {
-//		control = false;
-//	}
-//
-//	/**
-//	 * Method called to allow the ability to select multiple units
-//	 */
-//	public void controlDown() {
-//		control = true;
-//	}
+	/**
+	 * Control if multiple units can be selected
+	 * @param true to enable, false to disable
+	 */
+	public void multiSelect(boolean enable) {
+		this.multiselect = enable;
+	}
 
 }
