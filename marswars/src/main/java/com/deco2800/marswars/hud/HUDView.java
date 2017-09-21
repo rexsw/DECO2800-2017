@@ -1353,36 +1353,8 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		
-		if(this.getPauseCheck() == 0) {
-			//chat listener
-			if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.getChatActiveCheck() == 0) {
-				this.messageWindow.setVisible(true);
-				this.messageToggle = true;
-				this.hud.setChatActiveCheck(1);
-			} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-				this.messageWindow.setVisible(false);
-				this.messageToggle = false; 
-				this.hud.setChatActiveCheck(0);
-			}
-		}
-			
-		if(chatActiveCheck == 0) {
-			//pause menu listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stage, stats, this).show(stage);
-				} else {
-					timeManager.unPause();
-					this.setPauseCheck(0);
-					pause.hide();
-				}
-			}
-		}
-		
-		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
-			//Will check all of the specified hotkeys to see if any have been pressed
-			hotkeys.checkKeys();
-		}
+		//Will check all of the specified hotkeys to see if any have been pressed
+		hotkeys.checkKeys();
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
