@@ -63,14 +63,14 @@ public class HUDView extends ApplicationAdapter{
 
 	//HUD elements 
 	private Table overheadRight; //contains all basic quit/help/chat buttons
-	private Table resourceTable; //contains table of resource images + count
-    private Table HUDManip;		 //contains buttons for toggling HUD + old menu
+	Table resourceTable; //contains table of resource images + count
+    Table HUDManip;		 //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message 
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
 	private Window messageWindow;//window for the chatbox 
-	private Window minimap;		 //window for containing the minimap
-	private Window actionsWindow;    //window for the players actions 
+	Window minimap;		 //window for containing the minimap
+	Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
 	private static Window entitiesPicker; //window that selects available entities
 	private CheatBox cheatbox;
@@ -101,8 +101,8 @@ public class HUDView extends ApplicationAdapter{
 	private boolean fogToggle = true; 
 	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD 
-	private ImageButton dispActions;//Button for displaying actions window 
-	private ImageButton removeActions; //button for removing actions window 
+	ImageButton dispActions;//Button for displaying actions window 
+	ImageButton removeActions; //button for removing actions window 
 
 	private TextureRegionDrawable plusRegionDraw;
 	private TextureRegionDrawable minusRegionDraw;
@@ -125,6 +125,7 @@ public class HUDView extends ApplicationAdapter{
 	private GameStats stats;
 	
 	HUDView hud = this;
+	Hotkeys hotkeys;
 	
 	int pauseCheck = 0;
 	int helpCheck = 0;
@@ -179,6 +180,8 @@ public class HUDView extends ApplicationAdapter{
 		addMessages();
 		addBottomPanel();
 		Cheat();
+		
+		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
 	}
 
 	/**
@@ -432,7 +435,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
-				if (inventoryToggle) {
+				if (isInventoryToggle()) {
 					LOGGER.debug("Enable hud"); //$NON-NLS-1$
 					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
@@ -440,7 +443,7 @@ public class HUDView extends ApplicationAdapter{
 					//show (-) button to make resources invisible
 					dispActions.remove();
 					HUDManip.add(removeActions);
-					inventoryToggle = false;
+					setInventoryToggle(false);
 				}
 			}
 		});
@@ -456,7 +459,7 @@ public class HUDView extends ApplicationAdapter{
 				//show (+) to show resources again
 				removeActions.remove();
 				HUDManip.add(dispActions);
-				inventoryToggle = true;
+				setInventoryToggle(true);
 			}
 		});
 
@@ -1330,23 +1333,9 @@ public class HUDView extends ApplicationAdapter{
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 		
-		//keyboard listeners for hotkeys		
-		if(pauseCheck == 0) {
-			//chat listener
-			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
-						&& messageToggle) {
-					messageWindow.setVisible(false);
-					messageToggle = false; 
-					this.setChatActiveCheck(0);
-				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
-					messageWindow.setVisible(true);
-					messageToggle = true;
-					this.setChatActiveCheck(1);
-				}
-		}
-
+		
 		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 
@@ -1357,6 +1346,19 @@ public class HUDView extends ApplicationAdapter{
 				messageWindow.setVisible(true);
 				messageToggle = true;
 				this.setChatActiveCheck(1);
+			}
+		}
+		
+		if(this.getPauseCheck() == 0) {
+			//chat listener
+			if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.getChatActiveCheck() == 0) {
+				this.messageWindow.setVisible(true);
+				this.messageToggle = true;
+				this.hud.setChatActiveCheck(1);
+			} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+				this.messageWindow.setVisible(false);
+				this.messageToggle = false; 
+				this.hud.setChatActiveCheck(0);
 			}
 		}
 			
@@ -1374,72 +1376,8 @@ public class HUDView extends ApplicationAdapter{
 		}
 		
 		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
-			//help listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-				if (exitCheck == 0) {
-					this.setExitCheck(1);
-					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
-				}
-			}
-			
-			if (exitCheck == 1) {
-				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-					System.exit(0);
-				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-					this.setExitCheck(0);
-					quit.hide();
-					timeManager.unPause();
-					
-				}
-			}
-			
-			//tech tree listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-				if(techCheck == 0) {
-					this.setTechCheck(1);
-					techTree = new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
-				} else {
-					this.setTechCheck(0);
-					techTree.hide();
-					timeManager.unPause();
-				}
-			}
-			
-			//HUD toggle listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-
-				if (inventoryToggle) {
-					LOGGER.debug("Enable hud"); //$NON-NLS-1$
-					actionsWindow.setVisible(true);
-					minimap.setVisible(true);
-					resourceTable.setVisible(true);
-					//show (-) button to make resources invisible
-					dispActions.remove();
-					HUDManip.add(removeActions);
-					inventoryToggle = false;
-				} else {
-					LOGGER.debug("Disable Hud"); //$NON-NLS-1$
-					actionsWindow.setVisible(false);
-					minimap.setVisible(false);
-					resourceTable.setVisible(false);
-					//show (+) to show resources again
-					removeActions.remove();
-					HUDManip.add(dispActions);
-					inventoryToggle = true;
-				}
-			}
-			
-			//help button listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-				if (helpCheck == 0) {
-					this.setHelpCheck(1);
-					help = new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
-				} else {
-					this.setHelpCheck(0);
-					help.hide();
-					timeManager.unPause();
-				}
-			}
+			//Will check all of the specified hotkeys to see if any have been pressed
+			hotkeys.checkKeys();
 		}
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
@@ -1548,6 +1486,10 @@ public class HUDView extends ApplicationAdapter{
 		pauseCheck = i;	
 	}
 	
+	public int getPauseCheck() {
+		return pauseCheck;
+	}
+	
 	/** 
 	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
 	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
@@ -1555,6 +1497,10 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
+	}
+	
+	public int getChatActiveCheck() {
+		return chatActiveCheck;
 	}
 	
 	/** 
@@ -1565,12 +1511,20 @@ public class HUDView extends ApplicationAdapter{
 		exitCheck = i;
 	}
 	
+	public int getExitCheck() {
+		return exitCheck;
+	}
+	
 	/**
 	 * When used in the code will set the techCheck integer to 1 when the tech
 	 * tree is visible and 0 otherwise
 	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
+	}
+	
+	public int getTechCheck() {
+		return techCheck;
 	}
 
 	/**
@@ -1580,5 +1534,17 @@ public class HUDView extends ApplicationAdapter{
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
+	}
+	
+	public int getHelpCheck() {
+		return helpCheck;
+	}
+
+	public boolean isInventoryToggle() {
+		return inventoryToggle;
+	}
+
+	public void setInventoryToggle(boolean inventoryToggle) {
+		this.inventoryToggle = inventoryToggle;
 	}
 }
