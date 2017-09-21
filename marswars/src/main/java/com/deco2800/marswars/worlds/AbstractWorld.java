@@ -3,6 +3,7 @@ package com.deco2800.marswars.worlds;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.ArrayList;
@@ -55,7 +56,9 @@ public abstract class AbstractWorld {
      * @param entity the entity to be removed.
      */
     public void removeEntity(BaseEntity entity) {
+        entity.modifyFogOfWarMap(false,3);
         entities.remove(entity);
+
     }
 
     /**
