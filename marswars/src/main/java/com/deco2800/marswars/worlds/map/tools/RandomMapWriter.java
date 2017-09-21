@@ -41,11 +41,12 @@ public class RandomMapWriter {
     private Map<pointInt, String> tileOverride = new HashMap<pointInt, String>();
 
     /**
-     * create a new Random Map Writer
+     * create a new Random Map Writer.  tile ID's are not checked so the .list must be known to be valid
+     * before passing it in. Ensure the noiseMap
      * @param width width of the map to be generated
      * @param height height of the map to be generated
-     * @param orderTiles integer list of of tile ID's,
-     * @param noiseMap the noiseMap to use
+     * @param orderTiles integer list of of tile ID's
+     * @param noiseMap the noiseMap to use, ensure it matches the width and height of the map
      */
     public RandomMapWriter(int width, int height, List<Integer> orderTiles, NoiseMap noiseMap) {
         this.width = width;
@@ -60,6 +61,8 @@ public class RandomMapWriter {
 
     /**
      * write it outtt! (to the file)
+     * Map must be written out before being used, any custom tiles added must occur BEFORE this function is called or
+     * they will not be included in the final TMX file.
      */
     public void writeMap() throws IOException{
         PrintWriter writer = new PrintWriter(new File(FILENAME));

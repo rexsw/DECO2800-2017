@@ -70,8 +70,8 @@ public class MapContainer {
         try{
             randomTiles.writeMap();
         }catch(Exception e){
-            //oh shit what the fuck do we do? (file IO error)
-            //we should probably throw some error and crash the game?
+            //oh no what do we do? (file IO error)
+            //we should probably throw some error and crash the game if this fails :[] ?
         }
         TiledMap mockMap = new TmxMapLoader().load(randomTiles.FILENAME);
         width = mockMap.getProperties().get("width", Integer.class);
@@ -432,21 +432,22 @@ public class MapContainer {
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
         String newPath = "resources/mapAssets/";
+        int size = 100;
         switch (randomSize){
             case TINY:
-                newPath+="tiny";
+                size = 40;
                 break;
             case SMALL:
-                newPath+="small";
+                size = 60;
                 break;
             case MEDIUM:
-                newPath+="medium";
+                size = 100;
                 break;
             case LARGE:
-                newPath+="large";
+                size = 150;
                 break;
             case VERY_LARGE:
-                newPath+="veryLarge";
+                size = 250;
                 break;
             default:
                 LOGGER.error("Unknown Map Size type");
