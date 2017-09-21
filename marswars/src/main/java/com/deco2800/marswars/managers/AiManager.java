@@ -112,10 +112,9 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if(!x.showProgress() && rm.getRocks(x.getOwner()) > 30) {
 			//sets the ai base to make more spacman if possible
-			LOGGER.info("ai - set base to make spacman");
+			//LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
-			GameManager.get().getWorld().addEntity(r);
 			x.setAction(new GenerateAction(r));
 		}
 	}
@@ -124,14 +123,14 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Orders a soldier to attack an enemy
 	 * @param x
 	 */
-	private void soldierAttack(Soldier x) {
+	public void soldierAttack(Soldier x) {
 		//lets the ai target player spacman with it's enemyspacmen
 		if(x.showProgress()) {
 			return;
 		}
 		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
 			if(r instanceof AttackableEntity && !x.sameOwner(r)) {
-				//LOGGER.error("ai - setting unit to attack " + r.toString());
+				LOGGER.error("ai - setting unit to attack " + r.toString());
 				AttackableEntity y = (AttackableEntity) r;
 				x.attack(y);
 				return;
@@ -143,7 +142,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Tasks all soldiers to move back to base
 	 * @param x
 	 */
-	private void soldierDefend(Soldier soldier) {
+	public void soldierDefend(Soldier soldier) {
 		//lets the ai target player spacman with it's enemyspacmen
 		if(soldier.showProgress()) {
 			return;
@@ -164,13 +163,12 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Orders an Astronaut to gather resources
 	 * @param x
 	 */
-	private void useSpacman(Astronaut x) {
+	public void useSpacman(Astronaut x) {
 		if(!(x.showProgress())) {
 			//allow spacmans to collect the closest resources
 			//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
 			Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 			x.setAction(new GatherAction(x, (Resource) resource.get()));
-			//LOGGER.info(resource.get().getTexture() + "");
 			LOGGER.info("ai - set spacman to gather");
 		}
 	}
@@ -210,7 +208,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * @param offset
 	 * @return
 	 */
-	private boolean tickLock(int modulus, int offset){
+	public boolean tickLock(int modulus, int offset){
 		if (((this.tickNumber + offset) % modulus) == 0) {
 			return true;
 		}
@@ -292,7 +290,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public int getStateIndex(Integer teamID) {
 		int position = teamid.indexOf(teamID);
 		if (position == -1) {
-			LOGGER.error("Invalid Team Id");
+			//LOGGER.error("Invalid Team Id");
 		}
 		return position;
 	}
