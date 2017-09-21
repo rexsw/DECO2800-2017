@@ -56,7 +56,7 @@ public abstract class AbstractWorld {
      * @param entity the entity to be removed.
      */
     public void removeEntity(BaseEntity entity) {
-        entity.modifyFogOfWarMap(false,3);
+
         entities.remove(entity);
 
     }

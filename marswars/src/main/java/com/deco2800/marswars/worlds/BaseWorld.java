@@ -123,12 +123,13 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	@Override
 	public void removeEntity(BaseEntity entity) {
-		super.removeEntity(entity);
 		if (entity instanceof Soldier) {
 			((Soldier)entity).modifyFogOfWarMap(false,3);
 			// remove entity from the minimap when they are removed from the world
 			//GameManager.get().getMiniMap().removeEntity(entity);
 		}
+		super.removeEntity(entity);
+
 		if (!entity.isCollidable())
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
