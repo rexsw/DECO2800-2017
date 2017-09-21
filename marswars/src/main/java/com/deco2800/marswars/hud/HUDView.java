@@ -1216,6 +1216,10 @@ public class HUDView extends ApplicationAdapter{
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
 			buttonList.get(index).add(new Label(a.name(), skin)).align(Align.left).padLeft(10);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			rock.setVisible(false);
+			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
 			index++;
 		}
 	}

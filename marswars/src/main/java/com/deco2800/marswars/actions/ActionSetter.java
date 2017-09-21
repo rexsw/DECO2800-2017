@@ -5,10 +5,12 @@ import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -206,8 +208,19 @@ public final class ActionSetter {
             case ASTRONAUT:
                 target.setAction(new GenerateAction(new Astronaut(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
+            case CARRIER:
+                target.setAction(new GenerateAction(new Carrier(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case HEALER:
+                target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SOLDIER:
+                target.setAction(new GenerateAction(new Soldier(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case TANK:
+                target.setAction(new GenerateAction(new Tank(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
             default:
-                target.setAction(new GenerateAction(new Spacman(target.getPosX(), target.getPosY(), 0)));
                 break;
 
         }
