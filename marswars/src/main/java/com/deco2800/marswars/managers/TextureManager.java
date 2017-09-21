@@ -139,7 +139,7 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         //Footer Buttons:
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
-        this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
+        this.saveTexture("shop_button", "resources/shopAssets/items/shop_button.png");
         this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
         //Other Assets
         this.saveTexture("map", "resources/HUDAssets/map.png");
@@ -189,6 +189,14 @@ public class TextureManager extends Manager {
         this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
         this.saveTexture("locked_inventory", "resources/TechtreeAsset/Lock.PNG");
         
+        
+        // stats icon
+        this.saveTexture("armour_stats", "resources/statsAssets/armor_stats.png");
+        this.saveTexture("health_stats", "resources/statsAssets/health_stats.png");
+        this.saveTexture("attack_speed_stats", "resources/statsAssets/attack_speed_stats.png");
+        this.saveTexture("range_stats", "resources/statsAssets/range_stats.png");
+        this.saveTexture("move_speed_stats", "resources/statsAssets/move_speed_stats.png");
+        this.saveTexture("attack_stats", "resources/statsAssets/attack_stats.png");
     }
     /*
      *

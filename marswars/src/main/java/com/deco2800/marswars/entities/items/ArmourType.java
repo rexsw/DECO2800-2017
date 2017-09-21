@@ -20,7 +20,7 @@ public enum ArmourType implements ItemType {
 	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }), 
 	
 	//some OP movement speed boots (texture here is a placeholder)
-	BOOTS1("BootI", "defence_helmet", 0, 10, 99999, new int[] { 1000, 2000, 1000, 5000});
+	BOOTS1("BootI", "defence_helmet", 9999, 9999, 9999, new int[] { 1000, 2000, 1000, 5000});
 	
 	private String name;
 	private int baseArmour;

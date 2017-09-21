@@ -19,7 +19,7 @@ public enum WeaponType implements ItemType {
 	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }),
 
 	// sniper rifles
-	WEAPON2("W2", "power_gloves", 20, 5, 110, new int[] { 30, 30, 0, 0 });
+	WEAPON2("W2", "power_gloves", 999, 999, 999, new int[] { 30, 30, 0, 0 });
 
 	private String name;
 	private int baseDamage;
