@@ -6,14 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-//import com.badlogic.gdx.graphics.Texture;
-//import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-//import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
-//import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
@@ -49,7 +49,7 @@ public class MenuScreen{
 	private Skin skin; 
 	private LobbyButton lobby;
 	private HUDView hud;
-	//private Label backgroundTex;
+	private Texture backgroundTex;
 	private Button backButton; 
 	private Button nextButton; 
 	private int playerType; 
@@ -61,21 +61,22 @@ public class MenuScreen{
 	Button playButton;
 	Button quitButton;
 	
-	//private Window actionsWindow;    //window for the players actions
+
 	//Managers
-	//private TextureManager textureManager; //for loading in resource images
+	private TextureManager textureManager; //for loading in resource images
 
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
 		playerModeSelect(window, stage);
-		
+		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+
 		//add background image
-	    /**Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
+	    Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
 	    TextureRegion backgroundRegion = new TextureRegion(backgroundTex);
 	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
-	    actionsWindow.setBackground(backgroundRegionDraw);**/
+	    window.setBackground(backgroundRegionDraw);
 	}
 	
 	

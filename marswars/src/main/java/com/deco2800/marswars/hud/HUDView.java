@@ -1369,12 +1369,9 @@ public class HUDView extends ApplicationAdapter{
 				this.setChatActiveCheck(1);
 			}
 		}
-		
-		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			
-			//Will check all of the specified hotkeys to see if any have been pressed
-			hotkeys.checkKeys();
-		}
+		//Will check all of the specified hotkeys to see if any have been pressed
+		hotkeys.checkKeys();
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
