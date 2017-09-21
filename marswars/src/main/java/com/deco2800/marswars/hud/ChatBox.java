@@ -151,11 +151,8 @@ public class ChatBox extends Table {
     private void sendMessage() {
         String message = messageTextField.getText();
         if (!"".equals(message)) {
-            // Currently not implemented correctly, adds to chat box instead of sending to server.
-            MessageAction action = new MessageAction("wololo", message);
-            addNewMessage(action.toString());
+            MessageAction action = new MessageAction(message);
             netManager.getNetworkClient().sendObject(action);
-            // addNewMessage(message);
         }
         messageTextField.setText("");
     }

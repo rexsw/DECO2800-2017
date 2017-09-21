@@ -11,7 +11,7 @@ public class MessageAction extends ChatAction {
     private String username;
     private String message;
     private String time;
-    private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+
     public MessageAction() {
         // Blank constructor needed due to Kryonet
     }
@@ -21,7 +21,7 @@ public class MessageAction extends ChatAction {
      */
     public MessageAction(String msg) {
         this.message = msg;
-        time = "[" + formatTime(timeManager.getPlayHours()) + ":" + formatTime(timeManager.getPlayMinutes()) + "]";
+        this.time = this.getTimeString();
     }
 
     /**
@@ -30,7 +30,15 @@ public class MessageAction extends ChatAction {
     public MessageAction(String username, String msg) {
         this.username = username;
         this.message = msg;
-        time = "[" + formatTime(timeManager.getPlayHours()) + ":" + formatTime(timeManager.getPlayMinutes()) + "]";
+        this.time = this.getTimeString();
+    }
+
+    private String getTimeString() {
+        TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
+        return (
+                "[" + formatTime(timeManager.getPlayHours()) + ":"
+                    + formatTime(timeManager.getPlayMinutes()) + ":"
+                    + formatTime(timeManager.getPlaySeconds()) + "]");
     }
 
     public String getMessage() {
