@@ -20,7 +20,7 @@ public class Hacker extends Soldier {
 		this.setArmor(50);
 		this.setArmorDamage(0);
 		this.setAttackRange(5);
-		this.setAttackSpeed(10);
+		this.setAttackSpeed(20);
 	}
 
 	
