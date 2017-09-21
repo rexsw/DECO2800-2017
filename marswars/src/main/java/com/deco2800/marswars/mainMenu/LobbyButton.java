@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.NetManager;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.net.ClientConnectionManager;
 import com.deco2800.marswars.net.JoinLobbyAction;
 import com.deco2800.marswars.net.ServerConnectionManager;
@@ -30,11 +32,9 @@ public class LobbyButton{
 	private Stage stage; 
 	private Window mainmenu; 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
-	Dialog ipDiag;
-	
-	static final int SERVER_PORT = 8080;
-	SpacClient networkClient;
-	SpacServer networkServer;
+	private Dialog ipDiag;
+
+	private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
 	
 	public LobbyButton(Skin skin, Window mainmenu, Stage stage){
 		this.skin = skin;
@@ -58,7 +58,7 @@ public class LobbyButton{
 			public void changed(ChangeEvent event, Actor actor) {
 				menuScreen.setJoinedServer(); //set the game status to joined server
 				menuScreen.selectCharacter(LobbyButton.this.mainmenu, LobbyButton.this.stage);
-				
+
 				// Construct inside of dialog
 				Table inner = new Table(LobbyButton.this.skin);
 				Label ipLabel = new Label("IP", LobbyButton.this.skin); //$NON-NLS-1$
@@ -72,7 +72,7 @@ public class LobbyButton{
 				inner.add(usernameLabel);
 				inner.add(usernameInput);
 				inner.row();
-				
+
 				LobbyButton.this.ipDiag = new Dialog("IP", LobbyButton.this.skin, "dialog") { //$NON-NLS-1$ //$NON-NLS-2$
 					@Override
 					protected void result(Object o) {
@@ -80,16 +80,7 @@ public class LobbyButton{
 							String username = usernameInput.getText();
 							String ip = ipInput.getText();
 
-							ClientConnectionManager connectionManager = new ClientConnectionManager();
-							LobbyButton.this.networkClient = new SpacClient(connectionManager);
-
-							try {
-								LobbyButton.this.networkClient.connect(5000, ip, SERVER_PORT);
-							} catch (IOException e) {
-								LOGGER.error("Join server error", e); //$NON-NLS-1$
-							}
-							JoinLobbyAction action = new JoinLobbyAction(username);
-							LobbyButton.this.networkClient.sendObject(action);
+							netManager.startClient(ip, username);
 						}
 					}
 				};
@@ -98,7 +89,6 @@ public class LobbyButton{
 				LobbyButton.this.ipDiag.button("Join", true); //$NON-NLS-1$
 				LobbyButton.this.ipDiag.button("Cancel" , null); //$NON-NLS-1$
 				LobbyButton.this.ipDiag.show(LobbyButton.this.stage);
-				
 			}
 		});
 		
@@ -117,38 +107,17 @@ public class LobbyButton{
 		startServerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				
 				menuScreen.selectWorldMode(LobbyButton.this.mainmenu, LobbyButton.this.stage);
-				
+
 				Dialog ipDiag = new Dialog("Local IP", LobbyButton.this.skin, "dialog") {}; //$NON-NLS-1$ //$NON-NLS-2$
-				
+
 				try {
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					String ip = ipAddr.getHostAddress();
 					ipDiag.text("IP Address: " + ip); //$NON-NLS-1$
-
-					ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
-					LobbyButton.this.networkServer = new SpacServer(serverConnectionManager);
-
-					ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-					LobbyButton.this.networkClient = new SpacClient(clientConnectionManager);
-					//Initiate Server
-					try {
-						LobbyButton.this.networkServer.bind(SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when initiating server", e); //$NON-NLS-1$
-					}
-
-					//Join it as a Client
-					try {
-						LobbyButton.this.networkClient.connect(5000, ip, SERVER_PORT);
-					} catch (IOException e) {
-						LOGGER.error("Error when joinging as client", e); //$NON-NLS-1$
-					}
-					JoinLobbyAction action = new JoinLobbyAction("Host"); //$NON-NLS-1$
-					LobbyButton.this.networkClient.sendObject(action);
-
 					LOGGER.info(ip);
+
+					netManager.startServer();
 				} catch (UnknownHostException ex) {
 					ipDiag.text("Something went wrong"); //$NON-NLS-1$
 					LOGGER.error("Unknown Host", ex); //$NON-NLS-1$

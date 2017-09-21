@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -63,14 +64,14 @@ public class HUDView extends ApplicationAdapter{
 
 	//HUD elements 
 	private Table overheadRight; //contains all basic quit/help/chat buttons
-	private Table resourceTable; //contains table of resource images + count
-    private Table HUDManip;		 //contains buttons for toggling HUD + old menu
+	Table resourceTable; //contains table of resource images + count
+    Table HUDManip;		 //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message 
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
 	private Window messageWindow;//window for the chatbox 
-	private Window minimap;		 //window for containing the minimap
-	private Window actionsWindow;    //window for the players actions 
+	Window minimap;		 //window for containing the minimap
+	Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
 	private static Window entitiesPicker; //window that selects available entities
 	private CheatBox cheatbox;
@@ -89,6 +90,8 @@ public class HUDView extends ApplicationAdapter{
 	private Label crystalCount;
 	private Label biomassCount;
 	private Label waterCount;
+	private Label popCount;
+	private Label maxPopCount;
 
 	//Action buttons
 	private List<TextButton> buttonList;
@@ -101,8 +104,8 @@ public class HUDView extends ApplicationAdapter{
 	private boolean fogToggle = true; 
 	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD 
-	private ImageButton dispActions;//Button for displaying actions window 
-	private ImageButton removeActions; //button for removing actions window 
+	ImageButton dispActions;//Button for displaying actions window 
+	ImageButton removeActions; //button for removing actions window 
 
 	private TextureRegionDrawable plusRegionDraw;
 	private TextureRegionDrawable minusRegionDraw;
@@ -125,6 +128,7 @@ public class HUDView extends ApplicationAdapter{
 	private GameStats stats;
 	
 	HUDView hud = this;
+	Hotkeys hotkeys;
 	
 	int pauseCheck = 0;
 	int helpCheck = 0;
@@ -143,9 +147,7 @@ public class HUDView extends ApplicationAdapter{
 	 * of the HUD and is mostly for simply displaying components on screen.
 	 * @param stage the game stage
 	 * @param skin the look of the HUD, depending on the world/level the game is being played at
-	 * @param cheatbox
 	 * @param gameManager handles selectables
-	 * @param textureManager
 	 */
 	public HUDView(Stage stage, Skin skin, GameManager gameManager) {
 
@@ -181,6 +183,8 @@ public class HUDView extends ApplicationAdapter{
 		addMessages();
 		addBottomPanel();
 		Cheat();
+		
+		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
 	}
 
 	/**
@@ -434,7 +438,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
-				if (inventoryToggle) {
+				if (isInventoryToggle()) {
 					LOGGER.debug("Enable hud"); //$NON-NLS-1$
 					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
@@ -442,7 +446,7 @@ public class HUDView extends ApplicationAdapter{
 					//show (-) button to make resources invisible
 					dispActions.remove();
 					HUDManip.add(removeActions);
-					inventoryToggle = false;
+					setInventoryToggle(false);
 				}
 			}
 		});
@@ -458,7 +462,7 @@ public class HUDView extends ApplicationAdapter{
 				//show (+) to show resources again
 				removeActions.remove();
 				HUDManip.add(dispActions);
-				inventoryToggle = true;
+				setInventoryToggle(true);
 			}
 		});
 
@@ -537,6 +541,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount = new Label("Crystal: 0", skin); //$NON-NLS-1$
 		biomassCount = new Label("Biomass: 0", skin); //$NON-NLS-1$
 		waterCount = new Label("Water: 0", skin); //$NON-NLS-1$
+		popCount = new Label("0 ", skin);
+		maxPopCount = new Label(" / 10", skin);
 
 		//add rock image
 		Texture rockTex = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
@@ -558,7 +564,9 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(biomass).width(40).height(40).pad(10);
 		resourceTable.add(biomassCount).padRight(60);
 		resourceTable.add(water).width(40).height(40).pad(10);
-		resourceTable.add(waterCount).padRight(60);
+		resourceTable.add(waterCount).padRight(50);
+		resourceTable.add(popCount).padRight(10);
+		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
 
@@ -600,10 +608,20 @@ public class HUDView extends ApplicationAdapter{
 					Object current = currentActions.get(index);
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
+					} else if (currentActions.get(index) instanceof BuildingType) {
+						LOGGER.info("Is entity");
+						LOGGER.info("Try to build");
+						if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+							BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
+							cancelBuild.cancelBuild();
+							cancelBuild.doAction();
+						}
+						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
 					} else {
-						ActionSetter.setBuild(selectedEntity, (EntityID)current);
+						ActionSetter.setGenerate(selectedEntity, (EntityID) currentActions.get(index));
 					}
-				}
+					}
+
 			}
 		});
 	}
@@ -683,9 +701,12 @@ public class HUDView extends ApplicationAdapter{
 		
         selectedEntity = target;
 		currentActions = target.getValidActions();
-
-        enterActions();
-        
+		if (target instanceof Astronaut) {
+	        enterActions(false);
+		}
+		else {
+			enterActions(true);
+		}
 		if(target instanceof AttackableEntity) {
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
@@ -809,11 +830,10 @@ public class HUDView extends ApplicationAdapter{
         
         TextButton astronautButton = new TextButton("Astronaut",skin);
         astronautButton.addListener(new ChangeListener() {
-			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				GameManager.get().getWorld().addEntity( new Astronaut(0,0,0,1));
-			}
-		});
+			};
+        });
     
         TextButton carrierButton = new TextButton("Carrier",skin);
         TextButton healerButton = new TextButton("Healer",skin);
@@ -823,7 +843,7 @@ public class HUDView extends ApplicationAdapter{
         TextButton tankButton = new TextButton("Tank",skin);
 
         ScrollPane scrollPane = new ScrollPane(table, skin);
-        scrollPane.setScrollingDisabled(true,false);
+        scrollPane.setScrollingDisabled(true, false);
         scrollPane.setFadeScrollBars(false);
         table.add(astronautButton).width(buttonWidth).height(buttonHeight);
         table.add(carrierButton).width(buttonWidth).height(buttonHeight);
@@ -841,7 +861,7 @@ public class HUDView extends ApplicationAdapter{
      * Creates the sub menu that displays all available buildings
      * @param isPlaying allows to go back to menu options if true
      */
-    private void addBuildingsPickerMenu(boolean isPlaying){
+    private void addBuildingsPickerMenu(boolean addBack){
         entitiesPicker.clear();
         Table table = new Table();
 		table.align(Align.left);
@@ -859,7 +879,7 @@ public class HUDView extends ApplicationAdapter{
         ScrollPane scrollPane = new ScrollPane(table, skin);
         scrollPane.setScrollingDisabled(true,false);
         scrollPane.setFadeScrollBars(false);
-        if(!isPlaying) {
+        if(addBack) {
             table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
             columns = 1;
         }
@@ -877,7 +897,7 @@ public class HUDView extends ApplicationAdapter{
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
     		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
-        	addPane.addListener(new ChangeListener() {
+        	formatPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
                 		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
@@ -897,6 +917,7 @@ public class HUDView extends ApplicationAdapter{
 		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
 
     }
+
 
     /**
      * Creates the sub menu that displays all available resources
@@ -1130,8 +1151,10 @@ public class HUDView extends ApplicationAdapter{
      * @param isVisible whether to display the picker or hide it.
 	 * @param isPlaying whether a game is being played.
      */
-    public void showBuildMenu(Astronaut builder, boolean isVisible, boolean isPlaying){
+
+    public void showBuildMenu(Astronaut builder, boolean isVisible, boolean isPlaying) {
         entitiesPicker.setVisible(isVisible);
+        
         TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
         
         if(t.getActive().contains(t.getTech(1))){
@@ -1139,7 +1162,7 @@ public class HUDView extends ApplicationAdapter{
         	buildingsAvailable.add(BuildingType.HEROFACTORY);
         }
         // this call allows the menu to reset instead of using its latest state
-            addBuildingsPickerMenu(true);
+            addBuildingsPickerMenu(false);
         if(!isPlaying) {
 			entitiesPicker.setVisible(true);
 			toggleFog();
@@ -1152,11 +1175,22 @@ public class HUDView extends ApplicationAdapter{
      * the selected entity
      */
 
-	private void enterActions() {
+	private void enterActions(boolean display) {
 		if (currentActions == null) {
 			return;
 		}
+		
+		for (int i = 0; i < currentActions.size(); i++) {
+			enableButton(buttonList.get(i));
+		}
+		//Format Actions
+		formatActionButtons(0);
+		//Format Entities
+		formatUnitButtons(currentActions.getActions().size());
+		//Format Buildings
+		formatBuildingButtons(currentActions.getActions().size() + currentActions.getUnits().size());
 
+		actionsWindow.setVisible(display);
         for (int i = 0; i < currentActions.size(); i++) {
 				enableButton(buttonList.get(i));
 				if (currentActions.get(i) instanceof ActionType) { //If it is an action
@@ -1167,6 +1201,76 @@ public class HUDView extends ApplicationAdapter{
         }
     }
 
+	private void formatUnitButtons(int index) {
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
+		float buttonHeight = actionsWindow.getHeight();
+		for (EntityID e : currentActions.getUnits()) {
+			buttonList.get(index).setVisible(true);
+			buttonList.get(index).clearChildren();
+			buttonList.get(index).setWidth(buttonWidth);
+			buttonList.get(index).setHeight(buttonHeight);
+			Texture entity = textureManager.getTexture((textureManager.loadUnitSprite(e)));
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			buttonList.get(index).row().padBottom(20);
+			buttonList.get(index).add(new Label(e.name(), skin)).align(Align.left).padLeft(10);
+			buttonList.get(index).add(new Label(String.valueOf(0),skin)).align(Align.left);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			index++;
+		}
+
+	}
+
+	private void formatActionButtons(int index) {
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
+		float buttonHeight = actionsWindow.getHeight();
+		for (ActionType a : currentActions.getActions()) {
+			buttonList.get(index).setVisible(true);
+			buttonList.get(index).clearChildren();
+			buttonList.get(index).setWidth(buttonWidth);
+			buttonList.get(index).setHeight(buttonHeight);
+			Texture entity = textureManager.getTexture("PLACEHOLDER");
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			buttonList.get(index).row().padBottom(20);
+			buttonList.get(index).add(new Label(a.name(), skin)).align(Align.left).padLeft(10);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			rock.setVisible(false);
+			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			index++;
+		}
+	}
+
+
+	private void formatBuildingButtons(int index){
+		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
+		float buttonHeight = actionsWindow.getHeight();
+		for (BuildingType b : currentActions.getBuildings()) {
+			buttonList.get(index).setVisible(true);
+			buttonList.get(index).clearChildren();
+			buttonList.get(index).setWidth(buttonWidth);
+			buttonList.get(index).setHeight(buttonHeight);
+			Texture entity = textureManager.getTexture(b.getBuildTexture());
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			buttonList.get(index).row().padBottom(20);
+			buttonList.get(index).add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
+			buttonList.get(index).add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			index++;
+		}
+	}
 
 	/**
 	 * Disables the given button
@@ -1232,6 +1336,8 @@ public class HUDView extends ApplicationAdapter{
 		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
 		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
 		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
+		popCount.setText("" + resourceManager.getPopulation(-1)); //$NON-NLS-1$
+		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1)); //$NON-NLS-1$
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
@@ -1254,23 +1360,9 @@ public class HUDView extends ApplicationAdapter{
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 		
-		//keyboard listeners for hotkeys		
-		if(pauseCheck == 0) {
-			//chat listener
-			if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C) 
-						&& messageToggle) {
-					messageWindow.setVisible(false);
-					messageToggle = false; 
-					this.setChatActiveCheck(0);
-				} else if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !messageToggle) {
-					messageWindow.setVisible(true);
-					messageToggle = true;
-					this.setChatActiveCheck(1);
-				}
-		}
-
+		
 		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.C) && cheatActiveCheck ==0) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
 
@@ -1281,19 +1373,6 @@ public class HUDView extends ApplicationAdapter{
 				messageWindow.setVisible(true);
 				messageToggle = true;
 				this.setChatActiveCheck(1);
-			}
-		}
-			
-		if(chatActiveCheck == 0) {
-			//pause menu listener
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-				if (pauseCheck == 0){
-					pause = new PauseMenu("Pause Menu", skin, stage, stats, this).show(stage);
-				} else {
-					timeManager.unPause();
-					this.setPauseCheck(0);
-					pause.hide();
-				}
 			}
 		}
 		
@@ -1365,6 +1444,8 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 		}
+		//Will check all of the specified hotkeys to see if any have been pressed
+		hotkeys.checkKeys();
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
@@ -1472,6 +1553,10 @@ public class HUDView extends ApplicationAdapter{
 		pauseCheck = i;	
 	}
 	
+	public int getPauseCheck() {
+		return pauseCheck;
+	}
+	
 	/** 
 	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
 	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
@@ -1479,6 +1564,10 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
+	}
+	
+	public int getChatActiveCheck() {
+		return chatActiveCheck;
 	}
 	
 	/** 
@@ -1489,12 +1578,20 @@ public class HUDView extends ApplicationAdapter{
 		exitCheck = i;
 	}
 	
+	public int getExitCheck() {
+		return exitCheck;
+	}
+	
 	/**
 	 * When used in the code will set the techCheck integer to 1 when the tech
 	 * tree is visible and 0 otherwise
 	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
+	}
+	
+	public int getTechCheck() {
+		return techCheck;
 	}
 
 	/**
@@ -1504,5 +1601,17 @@ public class HUDView extends ApplicationAdapter{
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
+	}
+	
+	public int getHelpCheck() {
+		return helpCheck;
+	}
+
+	public boolean isInventoryToggle() {
+		return inventoryToggle;
+	}
+
+	public void setInventoryToggle(boolean inventoryToggle) {
+		this.inventoryToggle = inventoryToggle;
 	}
 }

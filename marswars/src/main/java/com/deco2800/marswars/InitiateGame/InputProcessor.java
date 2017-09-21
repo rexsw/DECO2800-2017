@@ -256,7 +256,6 @@ public class InputProcessor {
 					float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight",
 							Integer.class);
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-					MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, 0, false);
 					float projX = worldCoords.x / tileWidth;
 					float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
@@ -294,6 +293,10 @@ public class InputProcessor {
 				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT) {
 					multiSelectionFlag = true;
 					MultiSelection.resetSelectedTiles();
+					mouseHandler.multiSelect(true);
+				}
+				if (keyCode == Input.Keys.CONTROL_LEFT || keyCode == Input.Keys.CONTROL_RIGHT) {
+					mouseHandler.multiSelect(true);
 				}
 
 				InputProcessor.this.downKeys.add(keyCode);
@@ -305,8 +308,13 @@ public class InputProcessor {
 			public boolean keyUp(int keyCode) {
 
 				// disable multiSelection through touch and drag
-				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT)
+				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT) {
 					multiSelectionFlag = false;
+					mouseHandler.multiSelect(false);
+				}
+				if (keyCode == Input.Keys.CONTROL_LEFT || keyCode == Input.Keys.CONTROL_RIGHT) {
+					mouseHandler.multiSelect(false);
+				}
 
 				InputProcessor.this.downKeys.remove(keyCode);
 

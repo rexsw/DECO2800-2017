@@ -17,6 +17,7 @@ import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
@@ -29,9 +30,6 @@ import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages the features for the game 
@@ -218,6 +216,7 @@ public class Game{
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
+		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
@@ -227,9 +226,10 @@ public class Game{
 		Carrier carrier = new Carrier(x, y, 0, teamid);
 		Commander commander = new Commander(x,y,0,teamid);
 		Medic medic = new Medic(x, y, 0, teamid);
+		Hacker hacker = new Hacker(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(medic);
 		GameManager.get().getWorld().addEntity(commander);
-		
+		GameManager.get().getWorld().addEntity(hacker);
 		GameManager.get().getWorld().addEntity(carrier);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
@@ -249,7 +249,7 @@ public class Game{
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 100000) {
+						if(TimeUtils.nanoTime() - lastGameTick > 10000000) { //initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);

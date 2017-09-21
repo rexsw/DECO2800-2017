@@ -9,8 +9,8 @@ public class Medic extends Soldier {
 
 	public Medic(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		this.setMaxHealth(200);
-		this.setHealth(200);
+		this.setMaxHealth(20000);
+		this.setHealth(20000);
 		this.setDamage(-25);
 		this.setArmor(50);
 		this.setArmorDamage(0);

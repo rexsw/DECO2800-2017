@@ -114,13 +114,16 @@ public class ChatTest {
 		Connection alice = createConnection(aliceManager);
 
 		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
-		MessageAction aliceMessage = new MessageAction("new phone who dis");
+		MessageAction aliceMessage = new MessageAction("Alice", "new phone who dis");
 
 		servManager.received(alice, aliceJoin);
 		servManager.received(alice, aliceMessage);
 
-		String log = "*Alice* joined the lobby.\nAlice: new phone who dis";
+		String log = "*Alice* joined the lobby.\n" + aliceMessage.toString();
 
+		System.out.println(log);
+		System.out.println(servManager.getLog());
+		System.out.println(aliceManager.getLog());
 		assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
