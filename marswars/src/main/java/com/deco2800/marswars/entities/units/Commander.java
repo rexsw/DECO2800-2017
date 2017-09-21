@@ -158,4 +158,9 @@ public class Commander extends Soldier {
 		return this.name;
 	}
 	
+	@Override
+	public void setLoyalty(int loyalty) {
+		return;
+	}
+	
 }

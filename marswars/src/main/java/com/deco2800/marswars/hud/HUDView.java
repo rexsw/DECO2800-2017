@@ -136,11 +136,7 @@ public class HUDView extends ApplicationAdapter{
 	int chatActiveCheck = 0;
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
-	
-	Dialog pause;
-	Dialog help;
-	Dialog techTree;
-	Dialog quit;
+
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -287,7 +283,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", skin, hud).show(stage);
+				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}});
 
 		//Creates the message button listener
@@ -429,7 +425,7 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispTech).pad(BUTTONPAD);
 		HUDManip.add(dispFog).pad(BUTTONPAD);
-		HUDManip.add(dispShop).padRight(BUTTONPAD);
+		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
 		HUDManip.add(removeActions).pad(BUTTONPAD);
 
 		stage.addActor(HUDManip);
@@ -1374,8 +1370,11 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		
-		//Will check all of the specified hotkeys to see if any have been pressed
-		hotkeys.checkKeys();
+		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
+			
+			//Will check all of the specified hotkeys to see if any have been pressed
+			hotkeys.checkKeys();
+		}
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);

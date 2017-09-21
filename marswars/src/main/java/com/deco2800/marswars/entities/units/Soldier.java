@@ -17,6 +17,7 @@ import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
@@ -107,6 +108,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		setAttributes();
 		setStance(2); // Default stance for soldier is aggressive
 	}
+
 
 	//sets all attack attributes
 	public void setAttributes(){
@@ -210,6 +212,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
+		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
+			Turret turret = (Turret) entities.get(0);
+			turret.numOfSolider += 1;
+			turret.powerUpTurret();
+			this.setHealth(0);
+			LOGGER.error("solider in the tower now");
 		}else {
 			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 				// we cant assign different owner yet
@@ -244,9 +252,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
-			if (this.getOwner() == -1)  {
+			if (this.getOwner() == -1 && getHealth()>0)  {
 				modifyFogOfWarMap(true,3);
 			}
+			if(getHealth()<=0)modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();

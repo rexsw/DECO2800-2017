@@ -19,7 +19,7 @@ public enum WeaponType implements ItemType {
 	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }),
 
 	// sniper rifles
-	WEAPON2("W2", "power_gloves", 20, 5, 110, new int[] { 30, 30, 0, 0 });
+	WEAPON2("W2", "power_gloves", 999, 999, 999, new int[] { 30, 30, 0, 0 });
 
 	private String name;
 	private int baseDamage;
@@ -86,7 +86,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of damage that the item will add on.
 	 */
-	int getWeaponDamage() {
+	public int getWeaponDamage() {
 		return this.baseDamage;
 	}
 
@@ -95,7 +95,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of attack range that the item will add on.
 	 */
-	int getWeaponRange() {
+	public int getWeaponRange() {
 		return this.baseRange;
 	}
 
@@ -104,7 +104,7 @@ public enum WeaponType implements ItemType {
 	 * 
 	 * @return the amount of Attack speed that the item will add on.
 	 */
-	int getWeaponSpeed() {
+	public int getWeaponSpeed() {
 		return this.baseSpeed;
 	}
 

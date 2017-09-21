@@ -369,7 +369,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param add
 	 * @param scale
 	 */
-	protected void modifyFogOfWarMap(boolean add,int scale) {
+	public void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());

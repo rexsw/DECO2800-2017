@@ -17,12 +17,13 @@ import com.deco2800.marswars.worlds.BaseWorld;
 @Ignore
 public class InventoryTest {
 	//Necessary instances to be made/defined.
-	BaseWorld baseWorld;
-	ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
-	Commander entity; //Commander to test with and chack stats.
-	Inventory bag; //Instance of Inventory class to test with
+	private static BaseWorld baseWorld;
+	private static ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+	private static Commander entity; //Commander to test with and chack stats.
+	private static Inventory bag; //Instance of Inventory class to test with
 	// making all the items to test with.
 	Weapon wep1 = new Weapon(WeaponType.WEAPON1);
+	Weapon wep1b = new Weapon(WeaponType.WEAPON1);
 	Weapon wep2 = new Weapon(WeaponType.WEAPON2);
 	Armour arm1 = new Armour(ArmourType.ARMOUR1);
 	Armour arm2 = new Armour(ArmourType.BOOTS1);
@@ -32,20 +33,20 @@ public class InventoryTest {
 	Special bomb = new Special(SpecialType.BOMB);
 	Special nuke = new Special(SpecialType.NUKE);
 	//The base stats of the Commander before item's change the stats.
-	int baseArm;
-	int baseHP;
-	int baseMaxHP;
-	int baseMaxArmour;
-	int baseAttackRange;
-	int baseArmDMG;
-	int baseDMG;
-	int baseAttackSPD;
+	private static int baseArm;
+	private static int baseHP;
+	private static int baseMaxHP;
+	private static int baseMaxArmour;
+	private static 	int baseAttackRange;
+	private static 	int baseArmDMG;
+	private static int baseDMG;
+	private static int baseAttackSPD;
 	
 	/**
 	 * Setting up the Commander with Inventory to test Inventory class capabilities
 	 */
 	@BeforeClass
-	public void setup() {
+	public static void setup() {
 		baseWorld = new BaseWorld(100 ,150);
     	GameManager.get().setWorld(new BaseWorld(100, 150));
     	GameManager.get().setMiniMap(new MiniMap());
@@ -72,12 +73,49 @@ public class InventoryTest {
 		assertTrue(bag.getSpecials().size() == 0);
 	}
 
+	/**
+	 * Private helper method to check the changes in the commander's offensive stats after equipping the item is changed
+	 * according to the stat changes defined in the WeaponType enumerate class
+	 * @param wep  The WeaponType anumerate value of the item that was added to the Commander to check over.
+	 */
+	private void checkOffense(WeaponType wep) {
+		assertTrue(baseDMG + wep.getWeaponDamage() == entity.getDamageDeal());
+		assertTrue((int) (baseArmDMG  + wep.getWeaponDamage() * 0.25) == entity.getArmorDamage());
+		assertTrue(baseAttackSPD + wep.getWeaponSpeed() == entity.getAttackSpeed());
+		assertTrue(baseAttackRange + wep.getWeaponRange() == entity.getAttackRange());
+	}
 	
+	/**
+	 * Test to check if it is possible to add a weapon to the Commadner's inventory the stat changes of the weapon are 
+	 * correct. Then checks if adding the same weapon (same instance then a different instance) would replace the weapon
+	 * in the Commander's inventory and would check that its stats don't change. Test then further checks that the stats
+	 * are appropriately changed when the item(s) are removed.
+	 */
 	@Test
-	public void testAddToInventory() {
-		bag.addToInventory(wep1);
+	public void testAddSameWeaponToInventory() {
+		//adding 1 item
+		assertTrue(bag.addToInventory(wep1));
 		assertTrue(bag.getWeapon().equals(wep1));
-		
+		assertTrue(!bag.getWeapon().equals(wep1b));
+		checkOffense(WeaponType.WEAPON1);
+		//adding same instance of last item.
+		assertTrue(bag.addToInventory(wep1));
+		assertTrue(bag.getWeapon().equals(wep1));
+		checkOffense(WeaponType.WEAPON1);
+		//adding new instance of same item.
+		assertTrue(bag.addToInventory(wep1b));
+		assertTrue(bag.getWeapon().equals(wep1b));
+		assertTrue(!bag.getWeapon().equals(wep1));
+		checkOffense(WeaponType.WEAPON1);
+		//removing non-existing weapon from inventory
+		assertFalse(bag.removeFromInventory(wep1));
+		assertTrue(bag.getWeapon() == null);
+		assertTrue(!bag.getWeapon().equals(wep1));
+		checkOffense(WeaponType.WEAPON1);
+		//removing existing weapon from inventory
+		assertTrue(bag.getWeapon().equals(wep1b));
+		assertTrue(!bag.getWeapon().equals(wep1));
+		checkOffense(WeaponType.WEAPON1);
 	}
 
 	@Test

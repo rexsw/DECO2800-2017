@@ -20,4 +20,10 @@ public class Turret extends BuildingEntity{
 	public Turret(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.TURRET, owner);
 	}
+	
+	@Override
+	public void powerUpTurret(){
+		this.setDamage(this.getAreaDamage()*2);
+	}
+	
 }
