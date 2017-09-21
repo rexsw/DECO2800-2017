@@ -697,12 +697,7 @@ public class HUDView extends ApplicationAdapter{
 		
         selectedEntity = target;
 		currentActions = target.getValidActions();
-		if (target instanceof Astronaut) {
-	        enterActions(false);
-		}
-		else {
-			enterActions(true);
-		}
+
 		if(target instanceof AttackableEntity) {
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
