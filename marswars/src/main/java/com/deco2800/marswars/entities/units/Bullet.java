@@ -116,7 +116,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 	    	LOGGER.info("Enemy health " + target.getHealth());
     	} else {
     		target.setLoyalty(target.getLoyalty() - damage);
-    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());
+    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());	
     		LOGGER.info("Enemy loyalty " + target.getLoyalty());
     	}
     }
