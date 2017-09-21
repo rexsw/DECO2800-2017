@@ -3,7 +3,9 @@ package com.deco2800.marswars.entities.units;
 
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -34,7 +36,8 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
-		this.addNewAction(ActionType.BUILD);
+		this.addNewAction(BuildingType.BASE);
+		this.addNewAction(BuildingType.BARRACKS);
 		setAttributes();
 	}
 	

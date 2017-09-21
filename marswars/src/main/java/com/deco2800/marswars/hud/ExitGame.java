@@ -10,16 +10,20 @@ public class ExitGame extends Dialog{
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	HUDView hud;
+	boolean started;
 
-	public ExitGame(String title, Skin skin, HUDView hud) {
+	public ExitGame(String title, Skin skin, HUDView hud, boolean started) {
 		super(title, skin);
 		this.hud = hud;
+		this.started = started;
 		
 			{
 				text("Are you sure you want to quit? ");
 				button("Yes", 1);
 				button("No, keep playing", 2);
-				timeManager.pause();
+				if(started) {
+					timeManager.pause();
+				}
 			}
 	}
 			@Override
@@ -28,7 +32,9 @@ public class ExitGame extends Dialog{
 					System.exit(0);
 				} else {
 					this.hud.setExitCheck(0);
-					timeManager.unPause();
+					if(started) {
+						timeManager.unPause();
+					}
 				}
 			}	
 }

@@ -344,7 +344,8 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        EntityID random = EntityID.values()[r.nextInt(EntityID.values().length)];
+        EntityID random = EntityID.SPACMAN;
+        //please add consturtors for the other enities to this methoad before useing their IDs
         LOGGER.info("chosen entity type: " + random);
         BaseEntity newEntity;
         int x = r.nextInt(width-1);
