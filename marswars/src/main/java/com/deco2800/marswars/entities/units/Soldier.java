@@ -17,6 +17,7 @@ import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
@@ -210,6 +211,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
+		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
+			Turret turret = (Turret) entities.get(0);
+			turret.numOfSolider += 1;
+			turret.powerUpTurret();
+			this.setHealth(0);
+			LOGGER.error("solider in the tower now");
 		}else {
 			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 				// we cant assign different owner yet
