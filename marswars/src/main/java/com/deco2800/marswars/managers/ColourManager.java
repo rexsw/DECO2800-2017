@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * 
  * Saves a mapping of colours to teams in a safe way ensuring that it can be used to
@@ -13,7 +15,7 @@ import java.util.Map;
  *
  */
 public class ColourManager extends Manager {
-	private Map<Integer, String> colours = new HashMap<Integer, String>();
+	private Map<Integer, Colours> colours = new HashMap<Integer, Colours>();
 	private ArrayList<Colours> colour = setColour();
 	private int index = 0;
 	
@@ -26,7 +28,7 @@ public class ColourManager extends Manager {
 		Colours teamcolour = colour.get(index);
 		index++;
 		index %= 5;
-		colours.put(teamid, teamcolour.toString());
+		colours.put(teamid, teamcolour);
 	}
 	
 	/**
@@ -38,7 +40,24 @@ public class ColourManager extends Manager {
 	 * @return String the colour a team is mapped to
 	 */
 	public String getColour(int teamid) {
-		return colours.get(teamid);
+		return colours.get(teamid).toString();
+	}
+	
+	public Color getLibColour(int teamid) {
+		Colours teamcolour = colours.get(teamid);
+		switch(teamcolour){
+			case BLUE:
+				return Color.BLUE;
+			case YELLOW:
+				return Color.YELLOW;
+			case PINK:
+				return Color.PINK;
+			case PURPLE:
+				return Color.PURPLE;
+			case GREEN:
+				return Color.GREEN;
+		}
+		return null;
 	}
 	
 	/**

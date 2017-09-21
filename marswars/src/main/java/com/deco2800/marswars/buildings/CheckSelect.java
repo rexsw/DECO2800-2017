@@ -32,7 +32,7 @@ public class CheckSelect extends BaseEntity{
 	public void setGreen() {
 		switch(buildingType) {
 		case TURRET:
-			validSelect = "greenSelect1";
+			validSelect = "greenSelect4";
 			break;
 		case BASE:
 			validSelect = "greenSelect2";
@@ -44,10 +44,8 @@ public class CheckSelect extends BaseEntity{
 			validSelect = "greenSelect1";
 			break;
 		case HEROFACTORY:
-			validSelect = "greenSelect1";
 			break;
 		default:
-			validSelect = "greenSelect1";
 			break;
 		}
 		this.setTexture(validSelect);
@@ -59,7 +57,7 @@ public class CheckSelect extends BaseEntity{
 	public void setRed() {
 		switch(buildingType) {
 		case TURRET:
-			invalidSelect = "redSelect1";
+			invalidSelect = "redSelect4";
 			break;
 		case BASE:
 			invalidSelect = "redSelect2";
@@ -71,10 +69,8 @@ public class CheckSelect extends BaseEntity{
 			invalidSelect = "redSelect1";
 			break;
 		case HEROFACTORY:
-			invalidSelect = "redSelect1";
 			break;
 		default:
-			validSelect = "greenSelect1";
 			break;
 		}
 		this.setTexture(invalidSelect);
