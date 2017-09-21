@@ -879,15 +879,14 @@ public class HUDView extends ApplicationAdapter{
     		TextureRegion entityRegion = new TextureRegion(entity);
     		TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
     		ImageButton addPane = new ImageButton(buildPreview);
-    		table.center();
-    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f).padTop(30);
-    		formatPane.row().padBottom(25);
+    		formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+    		formatPane.row().padBottom(20);
     		formatPane.add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
     		formatPane.add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
     		Texture rockTex = textureManager.getTexture("rock_HUD");
     		Image rock = new Image(rockTex);
-    		formatPane.add(rock).width(40).height(40).align(Align.left).padBottom(30);
-        	addPane.addListener(new ChangeListener() {
+    		formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
+        	formatPane.addListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                 	if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
                 		BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
