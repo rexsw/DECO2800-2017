@@ -79,7 +79,7 @@ public class Hotkeys {
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (hud.getExitCheck() == 0) {
 					hud.setExitCheck(1);
-					quit = new ExitGame("Quit Game", skin, hud).show(stage); //$NON-NLS-1$
+					quit = new ExitGame("Quit Game", skin, hud, true).show(stage); //$NON-NLS-1$
 				}
 			}
 

@@ -287,7 +287,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", skin, hud).show(stage);
+				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}});
 
 		//Creates the message button listener
@@ -1376,6 +1376,74 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		
+		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
+			//help listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+				if (exitCheck == 0) {
+					this.setExitCheck(1);
+					quit = new ExitGame("Quit Game", skin, this, true).show(stage); //$NON-NLS-1$
+				}
+			}
+			
+			if (exitCheck == 1) {
+				if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+					System.exit(0);
+				} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+					this.setExitCheck(0);
+					quit.hide();
+					timeManager.unPause();
+					
+				}
+			}
+			
+			//tech tree listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+				if(techCheck == 0) {
+					this.setTechCheck(1);
+					techTree = new TechTreeView("TechTree", skin, this).show(stage); //$NON-NLS-1$
+				} else {
+					this.setTechCheck(0);
+					techTree.hide();
+					timeManager.unPause();
+				}
+			}
+			
+			//HUD toggle listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+
+				if (inventoryToggle) {
+					LOGGER.debug("Enable hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(true);
+					minimap.setVisible(true);
+					resourceTable.setVisible(true);
+					//show (-) button to make resources invisible
+					dispActions.remove();
+					HUDManip.add(removeActions);
+					inventoryToggle = false;
+				} else {
+					LOGGER.debug("Disable Hud"); //$NON-NLS-1$
+					actionsWindow.setVisible(false);
+					minimap.setVisible(false);
+					resourceTable.setVisible(false);
+					//show (+) to show resources again
+					removeActions.remove();
+					HUDManip.add(dispActions);
+					inventoryToggle = true;
+				}
+			}
+			
+			//help button listener
+			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+				if (helpCheck == 0) {
+					this.setHelpCheck(1);
+					help = new WorkInProgress("Help  Menu", skin, this).show(stage); //$NON-NLS-1$
+				} else {
+					this.setHelpCheck(0);
+					help.hide();
+					timeManager.unPause();
+				}
+			}
+		}
 		//Will check all of the specified hotkeys to see if any have been pressed
 		hotkeys.checkKeys();
 		
