@@ -7,6 +7,8 @@ import java.util.Optional;
 import com.deco2800.marswars.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.Clickable;
@@ -32,8 +34,10 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	// Size of this building (must be isometric, 2x2, 3x3 etc)
 	private float buildSize;
 	private String building;
+	//The number of solider in the building
+	public int numOfSolider = 0;
 	// Current action of this building
-	private Optional<DecoAction> currentAction = Optional.empty();
+	protected Optional<DecoAction> currentAction = Optional.empty();
 	//owner of this building
 	private MouseHandler currentHandler;
 	//Current mousehandler manager
@@ -43,7 +47,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	//Colour for this building
 	protected int fogRange;
 	//distance building can see in fog
-	private boolean built = true;
+	protected boolean built = true;
 	//building has functionality if built is true
 	/**
 	 * Constructor for the BuildingEntity
@@ -107,7 +111,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		}
 		//this.setCost(building.getCost());
-		this.setCost(0);
+		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 	}
 	
@@ -200,13 +204,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
 				LOGGER.info("clicked on base");
-				sound.playSound("closed.wav");
-				LOGGER.info("info"+ String.valueOf(super.getHealth()));
+				Sound loadedSound = sound.loadSound("closed.wav");
+				sound.playSound(loadedSound);
 			}
 		} else {
 			this.makeSelected();
 			LOGGER.info("clicked on ai base");
-			sound.playSound("endturn.wav");
+			Sound loadedSound = sound.loadSound("endturn.wav");
+			sound.playSound(loadedSound);
+			
 		}
 	}
 
@@ -217,7 +223,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 */
 	public void onRightClick(float x, float y) {
 		//base has no action on right click for now
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		this.deselect();
 	}
 
@@ -244,6 +249,14 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 */
 	public String getbuilding() {
 		return building;
+	}
+	
+	/**
+	 * Returns the 'built' state of building
+	 * @return returns true if building is completed
+	 */
+	public boolean getBuilt() {
+		return built;
 	}
 	
 	/**
@@ -282,6 +295,13 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		if (this.getHealth() < this.getMaxHealth()/3 && built) {
 			this.setTexture(graphics.get(3));
 		}
+	}
+	
+	/**
+	 * Power up the turret when solider enter it
+	 */
+	
+	public void powerUpTurret(){
 	}
 	
 	/**

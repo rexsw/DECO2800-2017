@@ -27,7 +27,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private EntityType entityType = EntityType.NOT_SET;
 	private ActionList validActions;
 	private boolean selected = false;
-	private int owner = 0;
+	protected int owner = 0;
 	private boolean fixPos = false;
 	protected float speed = 0.05f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
@@ -369,7 +369,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param add
 	 * @param scale
 	 */
-	protected void modifyFogOfWarMap(boolean add,int scale) {
+	public void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());

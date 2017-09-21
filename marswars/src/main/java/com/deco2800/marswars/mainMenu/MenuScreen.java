@@ -422,7 +422,7 @@ public class MenuScreen{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", MenuScreen.this.skin, hud).show(stage);	 //$NON-NLS-1$
+				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);	 //$NON-NLS-1$
 		}});
 		
 		mainmenu.row();

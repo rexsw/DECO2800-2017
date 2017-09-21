@@ -14,6 +14,7 @@ import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Box3D;
 
 /**
@@ -24,15 +25,15 @@ import com.deco2800.marswars.util.Box3D;
 
 public class AttackableEntity extends BaseEntity implements AttackAttributes, HasOwner, HasProgress, HasAction{
 	private int maxHealth; // maximum health of the entity
-	private int health; // current health of the entity
+	protected int health; // current health of the entity
 	private int maxArmor; // maximum armor of the entity
 	private int armor; // current armor of the entity
 	private int armorDamage; // armorDamage of the entity
 	private int attackRange; // attackrange of the entity
 	private int damage; // the damage of the entity
-	private int loyalty; // the loyalty of the entity
+	private int loyalty = 100; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
-	private int maxLoyalty; // the max loyalty of the entity
+	private int maxLoyalty = 100; // the max loyalty of the entity
 	private float speed; // the movement speed of the entity
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
@@ -40,6 +41,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private boolean gotHit; // if the unit get hitted, it will be true;
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
+	private int loyaltyRegenInterval = 1000;
+	private int enemyHackerOwner; // the owner of the last enemy who deal loyalty damage to it	]
+	private boolean ownerChanged = false;
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	private int stance = 0; // the behavior of the unit responding to enemies
 	
@@ -172,8 +176,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		if (health <= 0) {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
+			modifyFogOfWarMap(false,3);
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
+
 		}
 		if (health >= this.getMaxHealth()) {
 			this.health = this.getMaxHealth();
@@ -260,7 +266,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	@Override
 	public void setLoyalty(int loyalty) {
 		if (loyalty < 0) {
-			this.loyalty = 0;
+			this.loyalty = this.getMaxLoyalty();
+			this.setOwner(this.getEnemyHackerOwner());
+			this.ownerChanged = true;
 		} else if (loyalty > getMaxLoyalty()) {
 			this.loyalty = getMaxLoyalty();
 		} else {
@@ -447,6 +455,18 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		}
 	}
 	
+	public int getLoyaltyRegenInterval() {
+		return this.loyaltyRegenInterval;
+	}
+	
+	public void setLoyaltyRegenInterval(int interval) {
+		this.loyaltyRegenInterval = interval;
+	}
+	
+	public void resetLoyaltyRegenInterval() {
+		this.loyaltyRegenInterval = 1000;
+	}
+	
 	/**
 	 * This method returns a value denoting the stance of the unit.
 	 * 0 = Passive - Default unit behavior no reaction to enemies.
@@ -471,4 +491,21 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public void setStance(int stance) {
 		this.stance = stance;
 	}
+	
+	public int getEnemyHackerOwner() {
+		return this.enemyHackerOwner;
+	}
+	
+	public void setEnemyHackerOwner(int owner) {
+		this.enemyHackerOwner = owner;
+	}
+	
+	public boolean getOwnerChangedStatus() {
+		return this.ownerChanged;
+	}
+	
+	public void setOwnerChangedStatus(boolean status) {
+		this.ownerChanged = status;
+	}
+	
 }
