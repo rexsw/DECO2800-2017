@@ -28,6 +28,8 @@ public class MouseHandler extends Manager {
 	private boolean ignoreLeftClick = false;
 	
 	private BaseEntity unitSelected = null;
+	
+	private boolean multiselect = false;
 
 	/**
 	 * Currently only handles objects on height 0
@@ -42,6 +44,10 @@ public class MouseHandler extends Manager {
 			float projX;
 			float projY;
 			if (button == 0 && !ignoreLeftClick) {
+				// Left click
+				if (!multiselect) {
+					listeners.clear();
+				}
 				if (unitSelected != null && unitSelected instanceof BuildingEntity) {
 					unregisterForRightClickNotification((Clickable) unitSelected);
 					unitSelected.deselect();
@@ -60,7 +66,6 @@ public class MouseHandler extends Manager {
 					}
 
 				}
-				// Left click
 				AbstractWorld world = GameManager.get().getWorld();
 
 				// If we get another left click ignore the previous listeners
@@ -138,7 +143,6 @@ public class MouseHandler extends Manager {
 				for (Clickable c : listeners) {
 					c.onRightClick(projX, projY);
 				}
-				listeners.clear();
 				AbstractWorld world = GameManager.get().getWorld();
 				((CustomizedWorld)world).deSelectAll();
 			}
@@ -160,4 +164,13 @@ public class MouseHandler extends Manager {
 	public void ignoreLeftClicks(boolean ignore) {
 		ignoreLeftClick = ignore;
 	}
+	
+	/**
+	 * Control if multiple units can be selected
+	 * @param true to enable, false to disable
+	 */
+	public void multiSelect(boolean enable) {
+		this.multiselect = enable;
+	}
+
 }

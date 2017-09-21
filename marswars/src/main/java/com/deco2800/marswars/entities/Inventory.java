@@ -123,7 +123,7 @@ public class Inventory {
      * @param item  The item to apply the effect of.
      * @param target  The target to apply the effects to.
      */
-    public void applyEffect(Item item, AttackableEntity target) {
+    private void applyEffect(Item item, AttackableEntity target) {
     	for (Effect e: item.getEffect()) {
         	e.applyEffect(target);
         }
@@ -136,7 +136,7 @@ public class Inventory {
      * @param item  The item to remove the effect of.
      * @param target  The target to apply the effects to.
      */
-    public void removeEffect(Item item, AttackableEntity target) {
+    private void removeEffect(Item item, AttackableEntity target) {
     	for (Effect e: item.getEffect()) {
         	e.removeEffect(target);
         }

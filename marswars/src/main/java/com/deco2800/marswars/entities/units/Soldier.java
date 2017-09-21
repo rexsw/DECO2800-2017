@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -16,6 +17,7 @@ import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.EntityStats;
@@ -209,6 +211,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
+		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
+			Turret turret = (Turret) entities.get(0);
+			turret.numOfSolider += 1;
+			turret.powerUpTurret();
+			this.setHealth(0);
+			LOGGER.error("solider in the tower now");
 		}else {
 			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 				// we cant assign different owner yet
@@ -297,16 +305,28 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
 			// Stances are considered after this point
-			switch (getStance()) {
-				case 0:	
-					break;
-				case 1:
-					break;
-				case 2:
-					break;
-				case 3:
-					break;
+			
+			//Enemies within attack range are found
+			List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+			List<AttackableEntity> enemy = new ArrayList<AttackableEntity>();
+			//For each entity in the world
+			for (BaseEntity e: entityList) {
+				//If an attackable entity
+				if (e instanceof AttackableEntity) {
+					//Not owned by the same player
+					AttackableEntity attackable = ((AttackableEntity) e);
+					if (!this.sameOwner(attackable)) {
+						//Within attacking distance
+						float diffX = attackable.getPosX() - this.getPosX();
+						float diffY = attackable.getPosY() - this.getPosY();
+						if (Math.abs(diffX) + Math.abs(diffY) <= this.getAttackRange()) {
+							enemy.add((AttackableEntity) e);
+						}
+					}
+				}
 			}
+			
+			getStances(enemy);
 			
 			return;
 		}
@@ -319,6 +339,47 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 
 		
+	}
+	
+	/**
+	 * Get the stance of the entity and react.
+	 * @param enemy
+	 */
+	public void getStances(List<AttackableEntity> enemy) {
+		switch (getStance()) {
+			//Passive
+			case 0:	
+				break;
+			//Defensive
+			case 1:
+				break;
+			//Aggressive
+			case 2:
+				if (!enemy.isEmpty()) {
+					aggresiveBehaviour(enemy);
+				}
+				break;
+			case 3:
+			//Skirmishing
+				break;
+		}
+	}
+	
+	/**
+	 * Will attack any enemy in its attackrange.
+	 * @param enemy
+	 */
+	public void aggresiveBehaviour(List<AttackableEntity> enemy) {
+		//Attack closest enemy
+		for (int i=1; i<=getAttackRange(); i++) {
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					attack(a);
+				}
+			}
+		}
 	}
 	
 	@Override

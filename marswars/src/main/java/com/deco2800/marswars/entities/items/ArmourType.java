@@ -20,7 +20,7 @@ public enum ArmourType implements ItemType {
 	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }), 
 	
 	//some OP movement speed boots (texture here is a placeholder)
-	BOOTS1("BootI", "defence_helmet", 0, 10, 99999, new int[] { 1000, 2000, 1000, 5000});
+	BOOTS1("BootI", "defence_helmet", 9999, 9999, 9999, new int[] { 1000, 2000, 1000, 5000});
 	
 	private String name;
 	private int baseArmour;
@@ -53,25 +53,8 @@ public enum ArmourType implements ItemType {
 		this.baseHealth = baseHealth;
 		this.baseSpeed = baseSpeed;
 		this.baseCost = baseCost;
-		// this.ratio = ratio;
 		this.texture = texture;
 	}
-
-	// /**
-	// * Helper method to calculate the rounded integer stat changes or upgrade
-	// costs based on the item's current level
-	// * and the item's ratio field. Result is calculated by multiplying the
-	// stat change or cost by the ratio
-	// * level - 1 times.
-	// *
-	// * @param change The stat change or the cost to be
-	// * @param lvl the current level of the item.
-	// * @return rounded integer of the stat change or cost after applying the
-	// multiplier
-	// */
-	// private int applyUpgrateRatio(int change, int lvl) {
-	// return (int) Math.round(change * Math.pow(ratio, (lvl - 1)));
-	// }
 
 	/**
 	 * Gets the item name

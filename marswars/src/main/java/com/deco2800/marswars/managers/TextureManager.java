@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.units.Soldier;
 
 import org.slf4j.Logger;
@@ -139,7 +140,7 @@ public class TextureManager extends Manager {
         this.saveTexture("arrow_button", "resources/HUDAssets/arrowbutton.png");
         //Footer Buttons:
         this.saveTexture("tech_button", "resources/HUDAssets/techtreebutton.png");
-        this.saveTexture("shop_button", "resources/HUDAssets/arrowbutton.png");
+        this.saveTexture("shop_button", "resources/shopAssets/items/shop_button.png");
         this.saveTexture("menu_button", "resources/HUDAssets/menubutton.png");
         //Other Assets
         this.saveTexture("map", "resources/HUDAssets/map.png");
@@ -189,6 +190,14 @@ public class TextureManager extends Manager {
         this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
         this.saveTexture("locked_inventory", "resources/TechtreeAsset/Lock.PNG");
         
+        
+        // stats icon
+        this.saveTexture("armour_stats", "resources/statsAssets/armor_stats.png");
+        this.saveTexture("health_stats", "resources/statsAssets/health_stats.png");
+        this.saveTexture("attack_speed_stats", "resources/statsAssets/attack_speed_stats.png");
+        this.saveTexture("range_stats", "resources/statsAssets/range_stats.png");
+        this.saveTexture("move_speed_stats", "resources/statsAssets/move_speed_stats.png");
+        this.saveTexture("attack_stats", "resources/statsAssets/attack_stats.png");
     }
     /*
      *
@@ -231,6 +240,27 @@ public class TextureManager extends Manager {
         	return null;
         }
         
+    }
+
+    /**
+     * This method takes an EntityId and returns the default sprite in the players colour
+     * @param unit the unit to get sprite of
+     * @return
+     */
+    public String loadUnitSprite(EntityID unit){//use soldier as the base class
+        String textureType = "default";
+        String path;
+        //Determine the unit type
+        String unitType = unit.name();
+        unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
+        //find the team colour of the owner:
+        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
+        path = String.format("resources/UnitAssets/%s/Yellow/%s.png",
+                unitType,textureType);
+        //try to load the texture into the textureMap
+        String retVal = textureType + teamColour + unitType;
+        saveTexture(retVal,path);
+        return retVal;
     }
     
     /**

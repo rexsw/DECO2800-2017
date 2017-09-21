@@ -33,7 +33,6 @@ public class Armour extends Item {
 	public Armour(ArmourType type) {
 		this.effects = new ArrayList<>();
 		this.type = type;
-		//this.lvl = lvl;
 		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
 	}
 
@@ -66,15 +65,6 @@ public class Armour extends Item {
 	public float getMoveSpeed() {
 		return type.getMoveSpeed();
 	}
-
-//	/**
-//	 * Gets the current level of the Armour item.
-//	 * 
-//	 * @return the current level of the Armour item.
-//	 */
-//	public int getLevel() {
-//		return this.lvl;
-//	}
 
 	/**
 	 * Gets a list of all the effects the Armour item has.

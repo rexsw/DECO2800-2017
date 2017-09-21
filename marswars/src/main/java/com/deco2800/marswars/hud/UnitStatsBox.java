@@ -78,9 +78,18 @@ public class UnitStatsBox extends Table{
 		healthLabel = new Label("Health", skin); 
 		armourLabel = new Label("Armour", skin);
 		
+		Image armourStats = new Image(textureManager.getTexture("armour_stats"));
+		Image healthStats = new Image(textureManager.getTexture("health_stats"));
+		Image attackStats = new Image(textureManager.getTexture("attack_stats"));
+		Image attackSpeedStats = new Image(textureManager.getTexture("attack_speed_stats"));
+		Image rangeStats = new Image(textureManager.getTexture("range_stats"));
+		Image moveSpeedStats = new Image(textureManager.getTexture("move_speed_stats"));
+		
+		barTable.add(healthStats).height(30).width(30);
 		barTable.add(healthBar).height(30).width(150);
 		barTable.add(healthLabel).right().height(30).expandX();
 		barTable.row();
+		barTable.add(armourStats).height(30).width(30);
 		barTable.add(armourBar).height(30).width(150);
 		barTable.add(armourLabel).right().height(30).expandX();
 		
@@ -92,13 +101,17 @@ public class UnitStatsBox extends Table{
 		this.atkRngLabel = new Label("Attack Range", skin);
 		this.atkSpeedLabel = new Label("Attack Speed", skin);
 		this.moveSpeedLabel = new Label("Move Speed", skin);
-		textTable.add(this.atkDmgLabel).left().expandX().height(30);
-		textTable.add(this.atkSpeedLabel).left().expandX().height(30);
+		textTable.add(attackStats).height(30).width(30);
+		textTable.add(this.atkDmgLabel).expandX().height(30);
+		textTable.add(attackSpeedStats).height(30).width(30);
+		textTable.add(this.atkSpeedLabel).expandX().height(30);
 		textTable.row();
-		textTable.add(this.atkRngLabel).left();
-		textTable.add(this.moveSpeedLabel).left();
+		textTable.add(rangeStats).height(30).width(30);
+		textTable.add(this.atkRngLabel);
+		textTable.add(moveSpeedStats).height(30).width(30);
+		textTable.add(this.moveSpeedLabel);
 		
-		statsTable.add(textTable).width(220);
+		statsTable.add(textTable).width(250);
 		
 		this.add(statsTable);
 		this.row();
@@ -139,18 +152,9 @@ public class UnitStatsBox extends Table{
 		Weapon weapon = inventory.getWeapon();
 		Armour armour = inventory.getArmour();
 		List<Special> specials = inventory.getSpecials();
-		//heroInventory.debugAll();
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
+			// will add handler later
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -159,14 +163,6 @@ public class UnitStatsBox extends Table{
 		if(armour != null) {
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -176,14 +172,12 @@ public class UnitStatsBox extends Table{
 		for(Special s : specials) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
-			// handler here
+			// handler button click here
 		}
 		for(int i = 0; i < 4-size; i++) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
-		
-		//heroInventory.setVisible(false);
 		
 	}
 	
@@ -244,7 +238,7 @@ public class UnitStatsBox extends Table{
     		LOGGER.debug("GOT zero MaxHealth, ERROR!");
     		return;
     	}
-    	int healthPercent = (int)((float)target.getHealth() / (float)target.getMaxHealth() * 100);
+    	int healthPercent = (int)((float)target.getHealth() * 100 / (float)target.getMaxHealth());
 		healthBar.setValue(healthPercent);
 		// update health label
 		healthLabel.setText(target.getHealth() + "/" + target.getMaxHealth());
@@ -256,7 +250,7 @@ public class UnitStatsBox extends Table{
 		nameLabel.setText(target.toString());
 		// update armour bar and label
 		if (target.getMaxArmor() != 0) {
-			armourBar.setValue(target.getArmor()/target.getMaxArmor()*100);
+			armourBar.setValue(target.getArmor()*100/target.getMaxArmor());
 			armourLabel.setText(target.getArmor() +"/" + target.getMaxArmor());
 		} else {
 			armourBar.setValue(0);
@@ -278,10 +272,10 @@ public class UnitStatsBox extends Table{
 			pixmap.dispose();
 		}
 		
-		this.atkDmgLabel.setText("Atk: "+ target.getDamageDeal());
-		this.atkRngLabel.setText("Range: " + target.getAttackRange());
-		this.atkSpeedLabel.setText("Atk Speed: "+ target.getAttackSpeed());
-		this.moveSpeedLabel.setText("Move Speed: " + target.getSpeed());
+		this.atkDmgLabel.setText("" + target.getDamageDeal());
+		this.atkRngLabel.setText("" + target.getAttackRange());
+		this.atkSpeedLabel.setText(""+ target.getAttackSpeed());
+		this.moveSpeedLabel.setText("" + target.getSpeed());
 	}
 
     /**

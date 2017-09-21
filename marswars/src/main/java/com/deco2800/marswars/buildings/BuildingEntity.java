@@ -34,6 +34,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	// Size of this building (must be isometric, 2x2, 3x3 etc)
 	private float buildSize;
 	private String building;
+	//The number of solider in the building
+	public int numOfSolider = 0;
 	// Current action of this building
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	//owner of this building
@@ -58,7 +60,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 				0f, building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
-		this.addNewAction(ActionType.GENERATE);
+		this.addNewAction(EntityID.ASTRONAUT);
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		//colour = cm.getColour(owner); TEXTURES NOT READY
@@ -293,6 +295,13 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		if (this.getHealth() < this.getMaxHealth()/3 && built) {
 			this.setTexture(graphics.get(3));
 		}
+	}
+	
+	/**
+	 * Power up the turret when solider enter it
+	 */
+	
+	public void powerUpTurret(){
 	}
 	
 	/**

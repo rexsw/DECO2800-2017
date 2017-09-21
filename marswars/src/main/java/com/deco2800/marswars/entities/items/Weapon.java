@@ -20,7 +20,6 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  */
 public class Weapon extends Item {
     private WeaponType type;
-//    private int lvl;
     private List<Effect> effects;
 
     /**
@@ -32,7 +31,6 @@ public class Weapon extends Item {
     public Weapon(WeaponType type) {
     	this.effects = new ArrayList<>();
         this.type = type;
-//        this.lvl = lvl;
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
     }
 
@@ -62,15 +60,6 @@ public class Weapon extends Item {
     public int getWeaponSpeed() {
     	return type.getWeaponSpeed();
     }
-
-//    /**
-//	 * Gets the current level of the Weapon item.
-//	 * 
-//	 * @return the current level of the Weapon item.
-//	 */
-//    public int getLevel() {
-//    	return this.lvl;
-//    }
     
     /**
 	 * Gets a list of all the effects the Weapon item has.
