@@ -65,6 +65,7 @@ public class ShortCut {
 	private boolean soldier = false;
 	private boolean spacmanSelect = false;
 	private boolean moveToEntity = false;
+	private boolean delete = false;
 	
 	public void process(GameManager g,OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.UP) || inputKeys.contains(Input.Keys.W)) {
@@ -88,11 +89,13 @@ public class ShortCut {
 		storeCameraPosition(camera);
 		cameraGoToTheStoredPosition(camera);
 		cameraBackToLastPosition(camera);
+		cameraDeleteLastPosition();
 		//entityOnClick();
 		//moveToOneOfTheEntity(camera);
 		addExtraSpacMan();
 		addExtraAiSpacMan();
 		addExtraTank();
+		addExtraSoldier();
 
 		moveCameraToBase(g,camera);
 		quitGame();
@@ -107,7 +110,7 @@ public class ShortCut {
 	}
 	
 	public void storeCameraPosition(OrthographicCamera camera) {
-		if ((inputKeys.contains(Input.Keys.C))){
+		if (inputKeys.contains(Input.Keys.C) && !inputKeys.contains(Input.Keys.CONTROL_LEFT)){
 			if(c == false){
 				ArrayList<Float> XYPosition = new ArrayList<Float>();
 				XYPosition.add(camera.position.x);
@@ -173,6 +176,26 @@ public class ShortCut {
 			}
 		}else{
 			b = false;
+		}
+	}
+	
+	public void cameraDeleteLastPosition() {
+		if((inputKeys.contains(Input.Keys.C)) && inputKeys.contains(Input.Keys.CONTROL_LEFT)){
+			if(!cameraPosition.isEmpty()){
+				if(delete == false){
+					delete = true;
+					cameraPosition.remove(cameraPointer);
+					cameraPointer--;
+					if (cameraPointer < 0 && cameraPosition.size() > 0) {
+						cameraPointer = cameraPosition.size() - 1;
+						cameraPointer = cameraPointer % cameraPosition.size();
+					} else if (cameraPointer < 0) {
+						cameraPointer = 0;
+					}
+				}	
+			}
+		}else{
+			delete = false;
 		}
 	}
 	
