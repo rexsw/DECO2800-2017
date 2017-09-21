@@ -95,9 +95,10 @@ public class TechnologyManager extends Manager{
     public void attackSoldierUpgrade(){
             unitAttributes.get("Soldier")[2] *= 1.5;
             //also need to set all existing solider to have this much
+            System.out.println("soldier damage upgraded ");
         }
     public void unlockHeroFactory() {
-        System.out.println("\n Hero Factory unloicked \n");
+        System.out.println("\n Hero Factory unlocked \n");
     }
     public void unlockArmourLevelOne() {
 
@@ -142,7 +143,8 @@ public class TechnologyManager extends Manager{
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-
+        resourceManager.setBiomass(80, teamid);
+        resourceManager.setWater(80, teamid);
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
                 return "You have not researched the required Technology for this upgrade";
@@ -173,7 +175,7 @@ public class TechnologyManager extends Manager{
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
         if(techID == 1){
-            //unlockHeroFactory();
+            unlockHeroFactory();
             attackSoldierUpgrade();
         }
         if(techID == 2){
