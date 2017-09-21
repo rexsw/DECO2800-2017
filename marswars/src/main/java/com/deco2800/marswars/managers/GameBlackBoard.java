@@ -65,6 +65,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 */
 	public void set() {
 		values = new HashMap<Integer,Map<Field, List<Integer>>>();
+		index = 0;
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
