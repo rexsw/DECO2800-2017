@@ -26,7 +26,6 @@ public enum WeaponType implements ItemType {
 	private int[] baseCost;
 	private int baseRange;
 	private int baseSpeed;
-	// private float ratio;
 	private String texture;
 
 	/**
@@ -51,25 +50,8 @@ public enum WeaponType implements ItemType {
 		this.baseRange = baseRange;
 		this.baseSpeed = baseSpeed;
 		this.baseCost = baseCost;
-		// this.ratio = ratio;
 		this.texture = texture;
 	}
-
-	// /**
-	// * Helper method to calculate the rounded integer stat changes or upgrade
-	// costs based on the item's current level
-	// * and the item's ratio field. Result is calculated by multiplying the
-	// stat change or cost by the ratio
-	// * level - 1 times.
-	// *
-	// * @param change The stat change or the cost to be
-	// * @param lvl the current level of the item.
-	// * @return rounded integer of the stat change or cost after applying the
-	// multiplier
-	// */
-	// private int applyUpgrateRatio(int change, int lvl) {
-	// return (int) Math.round(change * Math.pow(ratio, (lvl - 1)));
-	// }
 
 	/**
 	 * Gets the item name

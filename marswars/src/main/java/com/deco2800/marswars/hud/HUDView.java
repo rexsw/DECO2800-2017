@@ -330,20 +330,16 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds the player Icon, health for a single spacman, and name to the huD (goes into top left).
 	 * Also inventory for the hero character
 	 * Does this by creating a nested table. The basic parent table layout is shown below:
-	 * +---------------------------+
-	 * |    :)    |______________  |
-	 * |  Player  |______________| |
-	 * |   img    |           100  |
-	 * |__________|----------------+
-	 * | p. Name  | x x x x x x    |
-	 * |-----+----|----------------+
-	 * |     |    |
-	 * | >:( | 12 |
-	 * |-----|----|
-	 * |  :) | 10 |
-	 * |     |    |
-	 * |     |    |
-	 * +----------+
+	 * +----------------------------------+
+	 * |    :)    |______________         |
+	 * |  Player  |______________|100/100 |
+	 * |   img    |______________         |
+	 * |          |______________|100/100 |
+	 * |__________|_______________________|
+	 * |          | atk |xx|atk.speed | x |
+	 * | p. Name  |range|xx| mv.speed | x |
+	 * |-----+----|-----------------------+
+	 * 
 	 *
 	 */
 	private void addPlayerDetails(){
@@ -708,6 +704,7 @@ public class HUDView extends ApplicationAdapter{
 			enterActions(true);
 		}
 		if(target instanceof AttackableEntity) {
+			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
@@ -715,6 +712,7 @@ public class HUDView extends ApplicationAdapter{
 	        this.statsTable.hideInventory();
 	        heroSelected = null;
 	        if(target instanceof Commander) {
+	        	// display the inventory once a commander been selected
 	        	heroSelected = (Commander) target;
 	        	this.statsTable.showInventory();
 	        	this.statsTable.updateHeroInventory((Commander)target);
@@ -1348,7 +1346,7 @@ public class HUDView extends ApplicationAdapter{
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
 					/*
-					 * only add your own commander as option in shop to buy items for. May need to cheng condition when
+					 * only add your own commander as option in shop to buy items for. May need to change condition when
 					 * multiplayer gets implemented
 					 */
 					if (!e.isAi()) {

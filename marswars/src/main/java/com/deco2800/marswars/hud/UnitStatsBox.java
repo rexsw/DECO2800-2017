@@ -152,18 +152,9 @@ public class UnitStatsBox extends Table{
 		Weapon weapon = inventory.getWeapon();
 		Armour armour = inventory.getArmour();
 		List<Special> specials = inventory.getSpecials();
-		//heroInventory.debugAll();
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
+			// will add handler later
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -172,14 +163,6 @@ public class UnitStatsBox extends Table{
 		if(armour != null) {
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -189,14 +172,12 @@ public class UnitStatsBox extends Table{
 		for(Special s : specials) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
-			// handler here
+			// handler button click here
 		}
 		for(int i = 0; i < 4-size; i++) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
-		
-		//heroInventory.setVisible(false);
 		
 	}
 	
