@@ -178,6 +178,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
+			modifyFogOfWarMap(false,3);
 		}
 		if (health >= this.getMaxHealth()) {
 			this.health = this.getMaxHealth();
