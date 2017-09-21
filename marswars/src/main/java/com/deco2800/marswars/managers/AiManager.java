@@ -72,7 +72,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 						break;
 					}
 				} else if(e instanceof AmbientAnimal){
-					ambientController((AmbientAnimal)e);
+					animalController((AmbientAnimal)e);
 				}
 			}
 		}
@@ -83,25 +83,45 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * A controller which control the ambient animal's actions
 	 * @param ambient
 	 */
-	public void ambientController(AmbientAnimal ambient){
-		AmbientState as = ambient.getState();
+	public void animalController(AmbientAnimal animal){
+		AmbientState as = animal.getState();
 		switch(as){
 		case DEFAULT:
+			animalDefaultState(animal);
 			break;
 		case TRAVEL:
+			animalTravelState(animal);
 			break;
 		case ATTACKBACK:
 			break;
 		}
 	}
 	
-	public void ambientTravel(AmbientAnimal ambient){
-		if (ambient.getTravelTime() < ambient.getMaxTravelTime()) {
-			//add moveAction() here
-			ambient.setTravelTime(ambient.getTravelTime() + 1);
+	public void animalDefaultState(AmbientAnimal animal){
+		if (animal.gotHit()) {
+			animal.setState(AmbientState.ATTACKBACK);
+		}
+		if (animal.getWaitingTime() < 60*60) {
+			animal.setWaitingTime(animal.getWaitingTime() + 1);
 		} else {
-			ambient.setTravelTime(0);
-			ambient.setState(AmbientState.DEFAULT);
+			animal.setWaitingTime(0);
+			animal.setState(AmbientState.TRAVEL);
+		}
+	}
+	
+	public void animalTravelState(AmbientAnimal animal){
+		if (animal.gotHit()) {
+			animal.setState(AmbientState.ATTACKBACK);
+			return;
+		}
+		if (animal.showProgress())
+			return;
+		if (animal.getTravelTime() < animal.getMaxTravelTime()) {
+			animal.move();
+			animal.setTravelTime(animal.getTravelTime() + 1);
+		} else {
+			animal.setTravelTime(0);
+			animal.setState(AmbientState.DEFAULT);
 		}
 	}
 	

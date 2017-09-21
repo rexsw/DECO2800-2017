@@ -73,7 +73,9 @@ public class AmbientAnimal extends AttackableEntity{
 		Random r = new Random();
 		Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
 		/* Ensure new position is on the map */
-		if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
+		if (p.getX() < 0 || p.getY() < 0 
+				|| p.getX() >= world.getWidth() 
+				|| p.getY() >= world.getLength()) {
 			return;
 		}
 		/* Check that the new position is free
@@ -88,12 +90,11 @@ public class AmbientAnimal extends AttackableEntity{
 		LOGGER.info("Aniaml is on a tile with another entity, move out of the way");
 		/* Finally move to that position using a move action */
 		currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+		this.setAction(new MoveAction((int)p.getX(), (int)p.getY(), this));
 	
 	}
 	
-	public void setState(AmbientState newState){
-		state = newState;
-	}
+	
 	
 	public AmbientState getState(){
 		return state;
@@ -110,6 +111,9 @@ public class AmbientAnimal extends AttackableEntity{
 		return waitingTime;
 	}
 	
+	public void setState(AmbientState newState){
+		state = newState;
+	}
 	public void setWaitingTime(int time){
 		waitingTime = time;
 	}
