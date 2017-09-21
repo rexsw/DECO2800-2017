@@ -1,22 +1,51 @@
 package com.deco2800.marswars.managers;
 
-import java.util.concurrent.TimeUnit;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * A TimeManager class for SpacWars. Provides methods for tracking InGameTime,
+ * GameLengthTime and GlobalTime, as well as methods for pausing and unpausing
+ * the game and it's entities.
+ *
+ * @author Isaac Doidge
+ */
 public class TimeManager extends Manager implements TickableManager {
 	
 	private static final int DAYBREAK = 6; //daybreak at 6am
 	private static final int NIGHT = 18; //night at 6pm
 	private boolean isNight = true;
-	private boolean isPaused = false;
-	private long time = 0;
+	private boolean isGamePaused = false;
+	private boolean isProductionPaused = false;
+	private static long time = 0;
 	private long gameStartTime = 0;
+
+	private static final Logger LOGGER =
+			LoggerFactory.getLogger(TimeManager.class);
+
+	/**
+	 * Calculate the number of passed in-game days
+	 * @return the in-game hour of the day
+	 */
+	public long getGameDays() {
+		int days = 0;
+		if (getHours() == 0) {
+			days++;
+		}
+		return days;
+	}
 
 	/**
 	 * Calculate the current in-game hour
 	 * @return the in-game hour of the day
 	 */
 	public long getHours() {
-		return TimeUnit.HOURS.convert(getInGameTime(), TimeUnit.SECONDS) % 24;
+		return TimeUnit.HOURS.convert(getGameSeconds(), TimeUnit.SECONDS) % 24;
 	}
 
 	/**
@@ -25,7 +54,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * and 59 inclusive)
 	 */
 	public long getMinutes() {
-		return TimeUnit.MINUTES.convert(getInGameTime(), TimeUnit.SECONDS) % 60;
+		return TimeUnit.MINUTES.convert(getGameSeconds(), TimeUnit.SECONDS) % 60;
 	}
 
 	/**
@@ -33,7 +62,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return the time in the game in seconds. Counting starts at 0 when the
 	 * game is initialised
 	 */
-	public long getInGameTime() {
+	public long getGameSeconds() {
 		return time;
 	}
 	
@@ -69,19 +98,113 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return true if the timer is paused
 	 */
 	public boolean isPaused() {
-		return isPaused;
+		return isGamePaused;
 	}
+
 	/**
-	 * Set the game to be paused
+	 * Check if production is paused
+	 */
+	public boolean isProductionPaused() {
+		return isProductionPaused;
+	}
+
+	/**
+	 * Pauses the game by stopping all actions currently being undertaken
+	 * by entities and ceasing the incrementation of the in-game timer.
 	 */
 	public void pause() {
-		isPaused = true;
+		isGamePaused = true;
+		LOGGER.info("PAUSINGGGGGGGGGGGGG %%%%%%%%%%%%%%%%%%%%");
+		List<BaseEntity> entities =
+				GameManager.get().getWorld().getEntities();
+		LOGGER.info("ENTITIES PRESENT %%%%%%%%%%%%%%%%%%%%");
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().pauseAction();
+				}
+			}
+		}
 	}
+
 	/**
-	 * Set the game to stop being paused
+	 * Pauses the actions of the given entity.
+	 * @param entity the entity to pause
+	 */
+	public void pause(BaseEntity entity) {
+		if (entity instanceof HasAction) {
+			if (((HasAction) entity).getCurrentAction().isPresent()) {
+				((HasAction) entity).getCurrentAction().get().pauseAction();
+			}
+		}
+	}
+
+	/**
+	 * Pauses the actions of all entities in the passed list.
+	 * @param entities - the list of entities to be paused
+	 */
+	public void pause(List<BaseEntity> entities) {
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().pauseAction();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set building production to be paused
+	 */
+	public void pauseProduction() {
+		isProductionPaused = true;
+	}
+
+	/**
+	 * Set the building production to resume
+	 */
+	public void resumeProduction() {
+		isProductionPaused = false;
+	}
+
+	/**
+	 * Resumes all paused entity actions and the in-game timer.
 	 */
 	public void unPause() {
-		isPaused = false;
+		isGamePaused = false;
+		List<BaseEntity> entities =
+				GameManager.get().getWorld().getEntities();
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().resumeAction();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Resumes all paused entity actions for the entities in the given list.
+	 */
+	public void unPause(List<BaseEntity> entities) {
+		for (BaseEntity e: entities) {
+			if (e instanceof HasAction) {
+				if (((HasAction) e).getCurrentAction().isPresent()) {
+					((HasAction) e).getCurrentAction().get().resumeAction();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Resumes all paused entity actions for the entities in the given list.
+	 */
+	public void unPause(BaseEntity entity) {
+		if (entity instanceof HasAction) {
+			if (((HasAction) entity).getCurrentAction().isPresent()) {
+				((HasAction) entity).getCurrentAction().get().resumeAction();
+			}
+		}
 	}
 
 	/**
@@ -212,8 +335,8 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	@Override
 	public void onTick(long i) {
-		if (!isPaused) {
-			time += 5;
+		if (!isGamePaused) {
+			time += 2;
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {

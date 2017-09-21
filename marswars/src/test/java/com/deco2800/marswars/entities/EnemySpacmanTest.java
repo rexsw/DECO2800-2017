@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.EnemySpacman;
-import com.deco2800.marswars.entities.Resource;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.managers.Manager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,8 +22,8 @@ public class EnemySpacmanTest {
     @Test
     public void constructorTest() {
         Assert.assertTrue(man != null);
-        assertEquals(man.getOwner(), null);
-        assertFalse(man.isWorking());
+        assertEquals(man.getOwner(),-1);
+        assertFalse(man.showProgress());
     }
 
     @Test
@@ -31,17 +31,12 @@ public class EnemySpacmanTest {
         EnemySpacman man = new EnemySpacman(1,1,1);
         EnemySpacman man2 = new EnemySpacman(1,1,1);
         EnemySpacman man3 = new EnemySpacman(1,1,1);
-        Resource mockResource = Mockito.mock(Resource.class);
-        Manager mockManager = Mockito.mock(Manager.class);
-        Manager mockManager2 = Mockito.mock(Manager.class);
-        man.setOwner(mockManager);
-        man2.setOwner(mockManager2);
-        man3.setOwner(mockManager);
-
-        assertEquals(man.getOwner(), mockManager);
+        man.setOwner(1);
+        man2.setOwner(3);
+        man3.setOwner(3);
+        assertEquals(man.getOwner(), 1);
         assertFalse(man.sameOwner(man2));
-        assertTrue(man.sameOwner(man3));
-        assertFalse(man.sameOwner(mockResource));
+        assertTrue(man2.sameOwner(man3));
     }
 
     @Test
@@ -50,7 +45,7 @@ public class EnemySpacmanTest {
         DecoAction action = Mockito.mock(DecoAction.class);
         man.setAction(action);
 
-        assertTrue(man.isWorking());
+        assertTrue(man.showProgress());
         assertEquals(action.hashCode(), man.getCurrentAction().hashCode());
     }
 }

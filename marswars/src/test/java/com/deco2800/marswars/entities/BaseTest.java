@@ -1,7 +1,7 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.Manager;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,15 +22,15 @@ public class BaseTest {
     @Before
     public void setup(){
         world = new BaseWorld(10, 15);
-        b = new Base(world, 0, 0, 0);
+        b = new Base(world, 0, 0, 0, -1);
     }
 
     @Test
     public void constructorTest(){
         Assert.assertTrue(b != null);
-        Assert.assertEquals("homeBase", b.getTexture());
-        Assert.assertEquals(250, b.getCost());
-        Assert.assertFalse(b.isWorking());
+        Assert.assertEquals("base3", b.getTexture());
+        //Assert.assertEquals(350, b.getCost());
+        Assert.assertFalse(b.showProgress());
 
     }
 
@@ -39,25 +39,17 @@ public class BaseTest {
     public void testActions(){
         DecoAction action = Mockito.mock(DecoAction.class);
         b.setAction(action);
-        Assert.assertTrue(b.isWorking());
+        Assert.assertTrue(b.showProgress());
     }
 
     @Test
     public void checkOwner() {
-        Base b = new Base(world, 1,1,1);
-        Base b2 = new Base(world, 1,1,1);
-        Base b3 = new Base(world, 1,1,1);
-        Resource mockResource = Mockito.mock(Resource.class);
-        Manager mockManager = Mockito.mock(Manager.class);
-        Manager mockManager2 = Mockito.mock(Manager.class);
-        b.setOwner(mockManager);
-        b2.setOwner(mockManager2);
-        b3.setOwner(mockManager);
-
-        assertEquals(b.getOwner(), mockManager);
+        Base b = new Base(world, 1,1,1, 0);
+        Base b2 = new Base(world, 1,1,1, 1);
+        Base b3 = new Base(world, 1,1,1, 1);
+        assertEquals(b.getOwner(), 0);
         assertFalse(b.sameOwner(b2));
-        assertTrue(b.sameOwner(b3));
-        assertFalse(b.sameOwner(mockResource));
+        assertTrue(b2.sameOwner(b3));
     }
 
     @Test

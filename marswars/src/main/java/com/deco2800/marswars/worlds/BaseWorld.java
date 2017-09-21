@@ -1,8 +1,13 @@
 package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
 
@@ -58,7 +63,22 @@ public class BaseWorld extends AbstractWorld {
 		}
 	}
 
-
+	/**
+	 * Makes an int array of coordinates (left, right, bottom top) which would be used for updating the collision map 
+	 * from a provided entity.
+	 * 
+	 * @param entity  the entity to get the collision coordinates for
+	 * @return int array of the coordinates. would be in order of left, right, bottom top.
+	 */
+	public int[] makeCollisionCoords(BaseEntity entity) {
+		int[] result = new int[4];
+		result[0] = (int)entity.getPosX();
+		result[1] = (int)Math.ceil(entity.getPosX() + entity.getXLength());
+		result[2] = (int)entity.getPosY();
+		result[3] = (int)Math.ceil(entity.getPosY() + entity.getYLength());
+		return result;
+	}
+	
 	/**
 	 * Adds an entity to this world.
 	 *
@@ -70,16 +90,52 @@ public class BaseWorld extends AbstractWorld {
 		if (!entity.isCollidable())
 			return;
 
+		if (entity instanceof Soldier) {
+			// put things that can be attacked on the minimap
+			GameManager.get().getMiniMap().addEntity(entity);
+		}
+
 		//Add to the collision map
-		int left = (int)entity.getPosX();
-		int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
-		int bottom = (int)entity.getPosY();
-		int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
-		for (int x = left; x < right; x++) {
-			for (int y = bottom; y < top; y++) {
+		int[] collisionCoords = makeCollisionCoords(entity);
+		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
+			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
 				collisionMap.get(x, y).add(entity);
 			}
 		}
+		//Fixes the collision models to better match rendered image
+		if (entity.getFix()) {
+			BuildingEntity ent = (BuildingEntity) entity;
+			if (ent.getbuilding() == "Base") {
+				ent.fixPosition((int)(entity.getPosX()), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 1, 0);
+			}
+			else {
+				ent.fixPosition((int)(entity.getPosX() + ((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 0, 0);
+			}
+		}
+
+	}
+	
+	/**
+	 * removes an entity from the BaseWorld. Removes in terms of removing from the list of entities that are in the 
+	 * world and removes it from the collision map.
+	 * 
+	 * @param entity  The BaseEntity that is to be removed from the BaseWorld.  
+	 */
+	@Override
+	public void removeEntity(BaseEntity entity) {
+		super.removeEntity(entity);
+		if (entity instanceof Soldier) {
+			// remove entity from the minimap when they are removed from the world
+			//GameManager.get().getMiniMap().removeEntity(entity);
+		}
+		if (!entity.isCollidable())
+			return;
+		int[] collisionCoords = makeCollisionCoords(entity);
+		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
+			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
+				collisionMap.get(x, y).remove(entity);
+			}
+		}	
 	}
 
 	/**
@@ -119,6 +175,15 @@ public class BaseWorld extends AbstractWorld {
 	}
 
 	/**
+	 * Gets the entities currently in the game.
+	 *
+	 * @return a list of all entities currently in the game.
+	 */
+	public List<BaseEntity> getEntities() {
+		return super.getEntities();
+	}
+
+	/**
 	 * Deselects all entities
 	 */
 	public void deSelectAll() {
@@ -127,5 +192,40 @@ public class BaseWorld extends AbstractWorld {
 				((Selectable) r).deselect();
 			}
 		}
+	}
+	
+	/**
+	 * Checks if location is valid to build at on map
+	 * 
+	 * @param xPos a tile x coordinate
+	 * @param yPos a tile y coordinate
+	 * @param objectSize Size of the building
+	 * @param fixPos float which fixes the position of building to line up with tile
+	 * @return true if valid location
+	 */
+	public boolean checkValidPlace(BuildingType build, float xPos, float yPos, float objectSize, float fixPos) {
+		int checkX = 0;
+		int checkY = 1;
+		int left = (int) (xPos + fixPos);
+		int right = (int) ((xPos + fixPos) + (objectSize));
+		int bottom = (int) (yPos + fixPos);
+		int top = (int) ((yPos + fixPos) + (objectSize));
+		if (build == BuildingType.BARRACKS) {
+			checkX = 1;
+		}
+		for (int x = left+checkX; x < right+checkX; x++) {
+			for (int y = bottom-checkY; y < top-checkY; y++) {
+				if (x >= 0 && y >= 0  && x < this.getWidth() && y < this.getLength()){
+					if (hasEntity(x, y)) {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+				
+			}
+		}
+		return true;
 	}
 }

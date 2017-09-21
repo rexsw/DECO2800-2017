@@ -1,7 +1,7 @@
 package com.deco2800.marswars.util;
 
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.*;
 
@@ -129,8 +129,18 @@ public class Pathfinder {
 	 */
 	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld) {
 		List<Point> adjacencies = new ArrayList<>();
+		
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j<= 1; j++) {
+				if (!(i == 0 && j == 0)) {
+					if (p.getX() + i >= 0 && p.getX() + i < baseWorld.getWidth() && p.getY() + j >= 0 && p.getY() + j < baseWorld.getLength()) {
+						adjacencies.add(new Point(p.getX() + i, p.getY() + j));
+					}
+				}
+			}
+		}
 
-		// Up
+		/*// Up
 		if (p.getX() >= 0 && p.getX() < baseWorld.getWidth() && p.getY() - 1 >= 0 && p.getY() - 1 < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX(), p.getY() - 1));
 		}
@@ -148,10 +158,14 @@ public class Pathfinder {
 		// Right
 		if (p.getX() + 1 >= 0 && p.getX() + 1 < baseWorld.getWidth() && p.getY() >= 0 && p.getY() < baseWorld.getLength()) {
 			adjacencies.add(new Point(p.getX() + 1, p.getY()));
-		}
+		}*/
 
 		return adjacencies;
 	}
+	
+	
+	
+	
 
 	/**
 	 * Reconstructs a path from point to point

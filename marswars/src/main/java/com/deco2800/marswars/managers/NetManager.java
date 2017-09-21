@@ -39,8 +39,7 @@ public class NetManager extends Manager {
 //        return clientConnectionManager;
 //    }
 
-    public void startServer(String ip) {
-
+    public void startServer() {
         //Initiate Server
         try {
             networkServer.bind(SERVER_PORT);
@@ -50,15 +49,12 @@ public class NetManager extends Manager {
 
         //Join it as a Client
         try {
-            networkClient.connect(5000, ip, SERVER_PORT);
+            networkClient.connect(5000, "localhost", SERVER_PORT);
         } catch (IOException e) {
             LOGGER.error("Error when joining as client", e);
         }
         JoinLobbyAction action = new JoinLobbyAction("Host");
         networkClient.sendObject(action);
-
-        LOGGER.info(ip);
-
     }
 
     public void startClient(String ip, String username){

@@ -1,25 +1,33 @@
 package com.deco2800.marswars.hud;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.technology.*;
 
 
 public class TechTreeView extends Dialog{
 	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	HUDView hud;
 
-	public TechTreeView(String title, Skin skin) {
+	public TechTreeView(String title, Skin skin, HUDView hud) {
 		super(title, skin);
+		this.hud = hud;
 		{
 			//text("This will display the technology tree");
-			button("Upgrade Spacman Cost", 1);
-			button("Upgrade Attack", 2);
-			button("Upgrade Defense", 3);
-			button("OK", 0);
+			// note that object numbers must correspond with tech tree tech ids
+			button("Unlock Hero Factory", 1); //$NON-NLS-1$
+			button("Unlock Armour Level 1", 2); //$NON-NLS-1$
+			button("Unlock Armour Level 2", 3); //$NON-NLS-1$
+			button("Unlock Armour Level 3", 4); //$NON-NLS-1$
+
+			button("OK", 0); //$NON-NLS-1$
+			
+			timeManager.pause();
 		}
 	}
 
@@ -31,11 +39,13 @@ public class TechTreeView extends Dialog{
 	 */
 	@Override
 	protected void result(final Object object){
+		timeManager.unPause();
+		this.hud.setTechCheck(0);
 		int techID = (int) object;
 		if (techID == 0) {return;}
-		Technology tech = techMan.getTech(techID);
-		String message = techMan.checkPrereqs(techMan, tech, techID);
+		Technology tech = this.techMan.getTech(techID);
+		String message = this.techMan.checkPrereqs(this.techMan, tech, techID, -1);
 		//Need to find a way to print this to the dialogue box
-		//System.out.println(message);
+		System.out.println(message);
 	}
 }

@@ -1,7 +1,7 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.entities.BuildingEntity;
-import com.deco2800.marswars.entities.BuildingType;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import org.junit.Assert;
@@ -23,7 +23,7 @@ public class CustomizedWorldTest extends BaseTest{
 		CustomizedWorld world = new CustomizedWorld(mapContainer);
 		Assert.assertTrue("Map shouldn't contain entities at this point",
 				world.getEntities().size() == 0);
-		mapContainer.setStructure(new BuildingEntity(0f,0f,0f,BuildingType.BASE));
+		mapContainer.setStructure(new BuildingEntity(0f,0f,0f,BuildingType.BASE, -1));
 		Assert.assertTrue("Map shouldn't contain entities at this point",
 				world.getEntities().size() == 0);
 	}

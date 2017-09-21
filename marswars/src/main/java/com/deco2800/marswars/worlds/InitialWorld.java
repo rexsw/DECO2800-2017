@@ -1,6 +1,9 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
@@ -64,7 +67,7 @@ public class InitialWorld extends BaseWorld {
 		if(x-1 < 0 || y-1 < 0 || y +1 >= this.getLength() || x + 1 >= this.getWidth()){
 			return;
 		}
-		this.addEntity(new EnemySpacman(x, y, 0));
+		this.addEntity(new Soldier(x, y, 0, 2)); //Changed to Soldier
 
 	}
 
@@ -75,7 +78,7 @@ public class InitialWorld extends BaseWorld {
 		Random r = new Random();
 		int x = r.nextInt(this.getLength()-1);
 		int y = r.nextInt(this.getWidth()-1);
-		this.addEntity(new HeroSpacman(this, x, y, 0));
+		//this.addEntity(new HeroSpacman(this, x, y, 0)); // NEED TO FIX THIS TO MAKE IT WORK
 	}
 
 

@@ -7,15 +7,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable.EntityType;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.entities.Resource;
-import com.deco2800.marswars.entities.ResourceType;
-
+import com.deco2800.marswars.entities.BaseEntity;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
