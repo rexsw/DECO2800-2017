@@ -283,7 +283,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", skin, hud).show(stage);
+				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}});
 
 		//Creates the message button listener
@@ -1302,7 +1302,7 @@ public class HUDView extends ApplicationAdapter{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (exitCheck == 0) {
 					this.setExitCheck(1);
-					quit = new ExitGame("Quit Game", skin, this).show(stage); //$NON-NLS-1$
+					quit = new ExitGame("Quit Game", skin, this, true).show(stage); //$NON-NLS-1$
 				}
 			}
 			
