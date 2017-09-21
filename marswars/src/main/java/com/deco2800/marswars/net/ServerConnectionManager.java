@@ -49,7 +49,6 @@ public class ServerConnectionManager extends ConnectionManager {
 		User from = this.idToUser.get(id);
 		this.idToUser.remove(id);
 		LeaveLobbyAction action = new LeaveLobbyAction(from.getUsername());
-		this.logAction(action);
 		this.broadcastAction(action);
 	}
 
@@ -64,7 +63,6 @@ public class ServerConnectionManager extends ConnectionManager {
 
 			JoinLobbyAction action = (JoinLobbyAction) o;
 			String username = action.getUsername();
-			this.logAction(action);
 			this.idToUser.put(connection.getID(), new User(username, connection));
 
 			this.broadcastAction(action);
@@ -77,7 +75,6 @@ public class ServerConnectionManager extends ConnectionManager {
 			}
 
 			MessageAction newAction = new MessageAction(from.getUsername(), action.getMessage());
-			this.logAction(newAction);
 
 			this.broadcastAction(newAction);
 		}

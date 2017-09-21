@@ -13,6 +13,9 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Class that mocks Kryonet's Connection class for testing
@@ -55,9 +58,46 @@ class MockConnection extends Connection {
  * Test chat functionality
  */
 public class ChatTest {
+	// SpacServer server;
+
+	// class MockedSpacServer extends SpacServer {
+	// 	Set<Listener> listeners = new HashSet<>();
+
+	// 	// We don't want to create a Kryonet Server
+	// 	public MockedSpacServer() {}
+
+	// 	public void bind(int port) {
+	// 		// Set active server to this one.
+	// 		server = this;
+	// 	}
+
+	// 	// We don't have a Kryonet server, so we can't stop it
+	// 	public void stop() {}
+
+	// 	public void addConnectionManager(Listener listener) {
+	// 		this.listeners.add(listener)
+	// 	}
+	// }
+
+	// class MockedSpacClient extends SpacClient {
+	// 	Set<Listener> listeners = new HashSet<>();
+
+	// 	// We don't want to create a Kryonet Client
+	// 	public MockedSpacClient() {}
+
+	// 	// We don't really 'connect'
+	// 	public void connect(int timeout, String host, int port) throws IOException {}
+
+	// 	// Don't have a client, can't stop it
+	// 	public void stop() {}
+
+	// 	public void addConnectionManager(Listener listener) {
+	// 		this.listeners.add(listener)
+	// 	}
+	// }
 	ServerConnectionManager servManager;
-	ClientConnectionManager aliceManager;
-	ClientConnectionManager bobManager;
+	LoggingConnectionManager aliceManager;
+	LoggingConnectionManager bobManager;
 
 	public Connection createConnection(Listener listener) {
 		MockConnection connection = new MockConnection();
@@ -68,8 +108,8 @@ public class ChatTest {
 	@Before
 	public void setup() {
 		servManager = new ServerConnectionManager();
-		aliceManager = new ClientConnectionManager();
-		bobManager = new ClientConnectionManager();
+		aliceManager = new LoggingConnectionManager();
+		bobManager = new LoggingConnectionManager();
 	}
 
 	@Test
@@ -80,7 +120,7 @@ public class ChatTest {
 		servManager.received(alice, aliceJoin);
 
 		String log = "*Alice* joined the lobby.";
-		assertEquals(servManager.getLog(), log);
+		// assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
 
@@ -95,10 +135,10 @@ public class ChatTest {
 		servManager.received(alice, aliceJoin);
 		servManager.received(bob, bobJoin);
 
-		assertEquals(
-				servManager.getLog(),
-				"*Alice* joined the lobby.\n*Bob* joined the lobby."
-		);
+		// assertEquals(
+		// 		servManager.getLog(),
+		// 		"*Alice* joined the lobby.\n*Bob* joined the lobby."
+		// );
 		assertEquals(
 				aliceManager.getLog(),
 				"*Alice* joined the lobby.\n*Bob* joined the lobby."
@@ -121,10 +161,7 @@ public class ChatTest {
 
 		String log = "*Alice* joined the lobby.\n" + aliceMessage.toString();
 
-		System.out.println(log);
-		System.out.println(servManager.getLog());
-		System.out.println(aliceManager.getLog());
-		assertEquals(servManager.getLog(), log);
+		// assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
 
@@ -140,12 +177,12 @@ public class ChatTest {
 		servManager.received(bob, bobJoin);
 		servManager.disconnected(alice);
 
-		assertEquals(
-				servManager.getLog(),
-				"*Alice* joined the lobby.\n" +
-						"*Bob* joined the lobby.\n" +
-						"*Alice* left the lobby."
-				);
+		// assertEquals(
+		// 		servManager.getLog(),
+		// 		"*Alice* joined the lobby.\n" +
+		// 				"*Bob* joined the lobby.\n" +
+		// 				"*Alice* left the lobby."
+		// 		);
 
 		assertEquals(
 				aliceManager.getLog(),
@@ -169,10 +206,10 @@ public class ChatTest {
 		servManager.received(alice, aliceJoin);
 		aliceManager.disconnected(null);
 
-		assertEquals(
-				servManager.getLog(),
-				"*Alice* joined the lobby."
-		);
+		// assertEquals(
+		// 		servManager.getLog(),
+		// 		"*Alice* joined the lobby."
+		// );
 
 		assertEquals(
 				aliceManager.getLog(),
@@ -190,10 +227,10 @@ public class ChatTest {
 		servManager.received(alice, aliceJoin);
 		servManager.received(alice, aliceJoin);
 
-		assertEquals(
-				servManager.getLog(),
-				"*Alice* joined the lobby."
-		);
+		// assertEquals(
+		// 		servManager.getLog(),
+		// 		"*Alice* joined the lobby."
+		// );
 
 		assertEquals(
 				aliceManager.getLog(),
@@ -213,7 +250,7 @@ public class ChatTest {
 
 		String log = "*Alice* joined the lobby.";
 
-		assertEquals(servManager.getLog(), log);
+		// assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
 }

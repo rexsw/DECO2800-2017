@@ -109,6 +109,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		setStance(2); // Default stance for soldier is aggressive
 	}
 
+
 	//sets all attack attributes
 	public void setAttributes(){
 		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
@@ -251,9 +252,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
-			if (this.getOwner() == -1)  {
+			if (this.getOwner() == -1 && getHealth()>0)  {
 				modifyFogOfWarMap(true,3);
 			}
+			if(getHealth()<=0)modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
