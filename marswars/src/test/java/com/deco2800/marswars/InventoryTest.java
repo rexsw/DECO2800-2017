@@ -2,6 +2,7 @@ package com.deco2800.marswars;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,6 +54,7 @@ public class InventoryTest {
 		cm.setColour(1);
         entity = new Commander(0, 0, 0, 1);
         bag = entity.getInventory();
+        // get the starting base stats of the Commander
         baseArm = entity.getArmor();
         baseHP = entity.getHealth();
         baseMaxHP = entity.getMaxHealth();
@@ -60,7 +62,7 @@ public class InventoryTest {
         baseAttackRange = entity.getAttackRange();
         baseArmDMG = entity.getArmorDamage();
         baseDMG = entity.getDamageDeal();
-        baseAttackSPD = entity.getAttackSpeed();
+        baseAttackSPD = entity.getAttackSpeed(); 
 	}
 
 	/**
@@ -71,6 +73,8 @@ public class InventoryTest {
 		assertTrue(bag.getArmour() == null);
 		assertTrue(bag.getWeapon() == null);
 		assertTrue(bag.getSpecials().size() == 0);
+		assertFalse(bag.removeFromInventory(wep1));
+		assertFalse(bag.removeFromInventory(arm1));
 	}
 
 	/**
@@ -87,12 +91,13 @@ public class InventoryTest {
 	
 	/**
 	 * Test to check if it is possible to add a weapon to the Commadner's inventory the stat changes of the weapon are 
-	 * correct. Then checks if adding the same weapon (same instance then a different instance) would replace the weapon
-	 * in the Commander's inventory and would check that its stats don't change. Test then further checks that the stats
-	 * are appropriately changed when the item(s) are removed.
+	 * correct. Then checks if adding different weapons to an Inventory already with a weapon replaces the weapon
+	 * in the Commander's inventory and would check that its stats change accordingly. Test then further checks that the
+	 * stats are appropriately changed when the item(s) are removed.
 	 */
 	@Test
-	public void testAddSameWeaponToInventory() {
+	public void testAddDiffWeaponToInventory() {
+		
 		//adding 1 item
 		assertTrue(bag.addToInventory(wep1));
 		assertTrue(bag.getWeapon().equals(wep1));
@@ -102,56 +107,25 @@ public class InventoryTest {
 		assertTrue(bag.addToInventory(wep1));
 		assertTrue(bag.getWeapon().equals(wep1));
 		checkOffense(WeaponType.WEAPON1);
-		//adding new instance of same item.
-		assertTrue(bag.addToInventory(wep1b));
-		assertTrue(bag.getWeapon().equals(wep1b));
+		//adding new different of same item.
+		assertTrue(bag.addToInventory(wep2));
+		assertTrue(bag.getWeapon().equals(wep2));
 		assertTrue(!bag.getWeapon().equals(wep1));
-		checkOffense(WeaponType.WEAPON1);
-		//removing non-existing weapon from inventory
-		assertFalse(bag.removeFromInventory(wep1));
+		checkOffense(WeaponType.WEAPON2);
+		//remove item from bag so other tests start off with empty bag also test removal independence from parameter
+		assertTrue(bag.removeFromInventory(wep1));
 		assertTrue(bag.getWeapon() == null);
-		assertTrue(!bag.getWeapon().equals(wep1));
-		checkOffense(WeaponType.WEAPON1);
-		//removing existing weapon from inventory
-		assertTrue(bag.getWeapon().equals(wep1b));
-		assertTrue(!bag.getWeapon().equals(wep1));
-		checkOffense(WeaponType.WEAPON1);
 	}
 
-	@Test
-	public void testRemoveFromInventory() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testApplyEffect() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRemoveEffect() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetWeapon() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetArmour() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetSpecials() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUseItem() {
-		fail("Not yet implemented");
-	}
-
+/******
+ * TEST DEFENSIVE STATS VERSION OF ABOVE TEST FUNCTION.
+ * TEST ADDING MORE THAN 4 SPECIAL ITEMS (CHECK IF OVERFLOW OR SOMETHING)
+ * TEST ADDING ITEM ALREADY EXISTING IN INVENTORY WOULD PUT THE NEW ITEM INTO A ANOTHER SLOT.
+ * TEST ARMOUR REDUCED DAMAGE CALCULATION IF POSSIBLE
+ * TEST HOW ARMOUR AND HP WOULD REDUCE UPON REMOVING ARMOUR ITEMS (i.e. if not at full hp and armour and you remove your
+ * Armour item, should be a straight minus of values from both the max and current stats).
+ * TEST "UNDERFLOW" OF STATS WHEN TAKING OFF ITEMS i.e. we've made it so that removeEffect for AttackEffect won't make
+ * the unit's damage stat be below 1 (same for the other offensive stats and many other things).   
+ */
 	
 }
