@@ -41,6 +41,9 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.setOwnerEntity(ownerEntity);
         this.addNewAction(ActionType.MOVE);
         currentAction = Optional.of(new MoveAction((int) target.getPosX(), (int) target.getPosY(), this));
+        if (ownerEntity instanceof Hacker) {
+        	this.setDamage(ownerEntity.getLoyaltyDamage());
+        }
     }
 
     @Override
@@ -84,7 +87,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 	    	causeDamage(this.getTarget(), this.getDamageDeal(), this.getArmorDamage());
     	} else {
     		ArrayList<AttackableEntity> listOfEntity = new ArrayList<AttackableEntity>();
-    		
     		addEnemyEntity(this.getareaDamage(), listOfEntity);
     		for (AttackableEntity entity : listOfEntity) {
     			causeDamage(entity, this.getDamageDeal(), this.getArmorDamage());
@@ -104,13 +106,19 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * 			Armor damage
      */
     public void causeDamage(AttackableEntity target, int damage, int armorDamage) {
+    	if (!(this.getOwnerEntity() instanceof Hacker)) {
 	    	if (target.getArmor() > 0 && damage >= 0) {
 	    		target.setHealth(target.getHealth() - damage/2);
 	    		target.setArmor(target.getArmor() - armorDamage);
 	    	} else {
 	    		target.setHealth(target.getHealth() - damage);
 	    	}
-    	LOGGER.info("Enemy health " + target.getHealth());
+	    	LOGGER.info("Enemy health " + target.getHealth());
+    	} else {
+    		target.setLoyalty(target.getLoyalty() - damage);
+    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());
+    		LOGGER.info("Enemy loyalty " + target.getLoyalty());
+    	}
     }
 
     /**

@@ -1,9 +1,13 @@
 package com.deco2800.marswars.buildings;
 
+import java.util.Optional;
+
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
@@ -13,7 +17,7 @@ import com.deco2800.marswars.worlds.AbstractWorld;
  */
 
 public class Bunker extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
-
+	private int popAdd = 5;
 	/**
 	 * Constructor for the bunker.
 	 * @param world The world that will hold the bunker.
@@ -24,4 +28,13 @@ public class Bunker extends BuildingEntity implements Clickable, Tickable, HasPr
 	public Bunker(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BUNKER, owner);
 	}
+	
+	/**
+	 * Get the population add value of this bunker
+	 * @return int
+	 */
+	public int getPop() {
+		return popAdd;
+	}
+	
 }

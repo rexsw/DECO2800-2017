@@ -14,9 +14,9 @@ public class Tank extends Soldier {
 		//this.movementSound = "tankMovementSound";
 		
 		// set all the attack attributes
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(75);
+		this.setMaxHealth(10000);
+		this.setHealth(10000);
+		this.setDamage(1);
 		this.setArmor(500);
 		this.setArmorDamage(150);
 		this.setAttackRange(10);
