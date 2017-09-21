@@ -89,7 +89,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return the affect radius of this item when used
 	 */
-	int getRadius() {
+	public int getRadius() {
 		return this.radius;
 	}
 
@@ -98,7 +98,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return duration of the item effects
 	 */
-	int getDuration() {
+	public int getDuration() {
 		return this.duration;
 	}
 
@@ -107,7 +107,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return the original amount of use limit of this item
 	 */
-	int getUseLimit() {
+	public int getUseLimit() {
 		return this.useLimit;
 	}
 

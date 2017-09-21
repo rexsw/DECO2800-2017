@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.net.ClientConnectionManager;
 import com.deco2800.marswars.net.JoinLobbyAction;
 import com.deco2800.marswars.net.ServerConnectionManager;
 import com.deco2800.marswars.net.SpacClient;
