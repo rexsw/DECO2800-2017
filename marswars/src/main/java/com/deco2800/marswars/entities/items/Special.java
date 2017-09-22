@@ -112,21 +112,4 @@ public class Special extends Item {
 	public String getTexture() {
 		return type.getTextureString();
 	}
-	
-	/**
-	 * Override equals method so that equality is based on the SpecialType enumerate value that was used to make the
-	 * armour item.
-	 * @param object  The object to be compared.
-	 * @return true if the SpecialType enumerate values are the same, false otherwise.
-	 */
-	@Override
-	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		}
-		if ((getClass() != object.getClass()) || (object == null)) {
-			return false;
-		}
-		return ((Special) object).type == this.type;
-	}
 }

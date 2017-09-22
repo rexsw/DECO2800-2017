@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.deco2800.marswars.entities.Inventory;
@@ -15,13 +14,6 @@ import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
-
-//@Ignore
-
-/**********************************************************************************************************************
- * TEST ARMOUR REDUCED DAMAGE CALCULATION IF POSSIBLE
- *********************************************************************************************************************/
-
 
 public class InventoryTest {
 	//Necessary instances to be made/defined.
