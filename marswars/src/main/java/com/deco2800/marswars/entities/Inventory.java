@@ -98,14 +98,14 @@ public class Inventory {
     public boolean removeFromInventory(Item item) {
         switch (item.getItemType()) {
             case WEAPON:
-                if (weapon != null) {
+                if ((weapon != null) && (weapon.equals(item))) {
                 	this.removeEffect(this.weapon, owner);
                     this.weapon = null;
                     return true;
                 }
                 return false;
             case ARMOUR:
-                if (armour != null) {
+                if ((armour != null) && (armour.equals(item))) {
                 	this.removeEffect(this.armour, owner);
                     this.armour = null;
                     return true;

@@ -115,14 +115,19 @@ public class Weapon extends Item {
 	
 	/**
 	 * Override equals method so that equality is based on the WeaponType enumerate value that was used to make the
-	 * weapon item.
+	 * weapon item. Class cast exceptions not caught so that it would be easier to debug.
 	 * @param object  The object to be compared.
-	 * @return true if the WeaponType enumerate values is
+	 * @return true if the WeaponType enumerate values are the same, false otherwise
 	 */
 	@Override
 	public boolean equals(Object object) {
-		Weapon wep = (Weapon) object;
-		return wep.type == this.type;
+		if (this == object) {
+			return true;
+		}
+		if ((getClass() != object.getClass()) || (object == null)) {
+			return false;
+		}
+		return ((Weapon) object).type == this.type;
 	}
 }
 
