@@ -20,6 +20,5 @@ public class Base extends BuildingEntity {
 
 	public Base(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BASE, owner);
-		this.addNewAction(EntityID.TANK);
 	}
 }

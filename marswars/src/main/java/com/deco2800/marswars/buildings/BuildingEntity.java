@@ -11,9 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -312,5 +309,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public String toString(){
 		return building;
 	}
+
 	
 }
