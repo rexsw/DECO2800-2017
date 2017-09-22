@@ -36,10 +36,6 @@ public class InputProcessor {
 	OrthographicCamera camera;
 	private Stage stage;
 	private Skin skin;
-	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
-	private int switcher = 0;
-	private int cSwitcher = 0;
-	private int cameraPointer = 0;
 	Set<Integer> downKeys = new HashSet<>();
 	ShortCut shortCut = new ShortCut();
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);

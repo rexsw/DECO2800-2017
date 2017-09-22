@@ -50,7 +50,7 @@ public class ShortCut {
 	
 	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
 	
-	private ArrayList<Spacman> spacmanList = new ArrayList<Spacman>();
+	private ArrayList<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
 	
 	private int cameraPointer = 0;
 	
@@ -213,19 +213,19 @@ public class ShortCut {
 	}
 	
 	public void moveToOneOfTheEntity(OrthographicCamera camera) {
-		if (inputKeys.contains(Input.Keys.Z) && spacmanList.size() > 0) {
+		if (inputKeys.contains(Input.Keys.Z) && baseEntityList.size() > 0) {
 			if (moveToEntity == false) {
 				int length = GameManager.get().getWorld().getLength();
 				int width = GameManager.get().getWorld().getWidth();
-				float X= ((camera.position.x / 32) - (spacmanList.get(0).getPosX()) * width / length) ;
-				float Y = camera.position.y - spacmanList.get(0).getPosY();
+				float X= ((camera.position.x / 32) - (baseEntityList.get(0).getPosX()) * width / length) ;
+				float Y = camera.position.y - baseEntityList.get(0).getPosY();
 				X *= -1;
 				Y *= -1;
 				camera.translate(X, Y, 0);
 				moveToEntity = true;
 				LOGGER.error("GWL " + Float.toString(length) + " GWW " + Float.toString(width));
 				LOGGER.error("cameraX " + Float.toString(camera.position.x) + " cameraY " + Float.toString(camera.position.y));
-				LOGGER.error("SX " + Float.toString(spacmanList.get(0).getPosX()) + " SY " + Float.toString(spacmanList.get(0).getPosY()));
+				LOGGER.error("SX " + Float.toString(baseEntityList.get(0).getPosX()) + " SY " + Float.toString(baseEntityList.get(0).getPosY()));
 			}
 		} else {
 			moveToEntity = false;
@@ -283,14 +283,9 @@ public class ShortCut {
 		if (inputKeys.contains(Input.Keys.V)){
 			if (spacmanSelect == false) {
 				for (Renderable e : GameManager.get().getWorld().getEntities()) {
-					
-					if ((e instanceof BaseEntity)) {
-						LOGGER.error("it is an spacman");
-						LOGGER.error("it is an spacman " +((BaseEntity)e).isSelected() );
-					}
-					if ((e instanceof Spacman) && ((Spacman) e).isSelected()) {
-						spacmanList.add((Spacman) e);
-						LOGGER.error("stored a spacman");
+					if ((e instanceof BaseEntity) && ((BaseEntity) e).isSelected()) {
+						baseEntityList.add((BaseEntity) e);
+						LOGGER.error("stored a BaseEntity");
 					}
 				}
 				spacmanSelect = true;
