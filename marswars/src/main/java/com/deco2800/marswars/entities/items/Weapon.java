@@ -112,5 +112,17 @@ public class Weapon extends Item {
 	public String getTexture() {
 		return type.getTextureString();
 	}
+	
+	/**
+	 * Override equals method so that equality is based on the WeaponType enumerate value that was used to make the
+	 * weapon item.
+	 * @param object  The object to be compared.
+	 * @return true if the WeaponType enumerate values is
+	 */
+	@Override
+	public boolean equals(Object object) {
+		Weapon wep = (Weapon) object;
+		return wep.type == this.type;
+	}
 }
 

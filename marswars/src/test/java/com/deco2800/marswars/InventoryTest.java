@@ -42,6 +42,7 @@ public class InventoryTest {
 	private static 	int baseArmDMG;
 	private static int baseDMG;
 	private static int baseAttackSPD;
+	private static float baseSPD;
 	
 	/**
 	 * Setting up the Commander with Inventory to test Inventory class capabilities
@@ -62,7 +63,8 @@ public class InventoryTest {
         baseAttackRange = entity.getAttackRange();
         baseArmDMG = entity.getArmorDamage();
         baseDMG = entity.getDamageDeal();
-        baseAttackSPD = entity.getAttackSpeed(); 
+        baseAttackSPD = entity.getAttackSpeed();
+        baseSPD = entity.getSpeed();
 	}
 
 	/**
@@ -117,6 +119,44 @@ public class InventoryTest {
 		assertTrue(bag.getWeapon() == null);
 	}
 
+	/**
+	 * Private helper method to check that the Commander has the provided defense stats.
+	 * @param arm  the expected current armour.
+	 * @param maxArm  the expected max armour stat
+	 * @param hp  the expected health stat
+	 * @param maxHP  the expected max health stat
+	 * @param spd  the expected speed stat
+	 */
+	private void checkDefenceStats(int arm, int maxArm, int hp, int maxHP, float spd) {
+		assertTrue(arm == entity.getArmor());
+		assertTrue(maxArm == entity.getMaxArmor());
+		assertTrue(hp == entity.getHealth());
+		assertTrue(maxHP == entity.getMaxHealth());
+		assertTrue(spd == entity.getSpeed());
+	}
+	
+	/**
+	 * Test to check armour items get replaced if there already is an armour item in the inventory. Also checks if the 
+	 * stats are applied properly for items when the Commander is at max health and max armour.
+	 */
+	@Test
+	public void testAddDiffArmourToInventory() {
+		//adding 1 item
+		assertTrue(bag.addToInventory(arm1));
+		assertTrue(bag.getArmour().equals(arm1));
+		assertTrue(!bag.getArmour().equals(arm2));
+		checkDefenceStats(baseArm + arm1.getArmourValue(), baseMaxArmour + arm1.getArmourValue(), 
+				baseHP + arm1.getArmourHealth(), baseMaxHP + arm1.getArmourHealth(), baseSPD + arm1.getMoveSpeed());
+		//adding same instance of last item.
+		assertTrue(bag.addToInventory(arm2));
+		assertTrue(bag.getArmour().equals(arm2));
+		checkDefenceStats(baseArm + arm1.getArmourValue(), baseMaxArmour + arm1.getArmourValue(), 
+				baseHP + arm1.getArmourHealth(), baseMaxHP + arm1.getArmourHealth(), baseSPD + arm1.getMoveSpeed());
+
+		//remove item from bag so other tests start off with empty bag also test removal independence from parameter
+		assertTrue(bag.removeFromInventory(wep1));
+		assertTrue(bag.getWeapon() == null);
+	}
 /******
  * TEST DEFENSIVE STATS VERSION OF ABOVE TEST FUNCTION.
  * TEST ADDING MORE THAN 4 SPECIAL ITEMS (CHECK IF OVERFLOW OR SOMETHING)
