@@ -58,22 +58,7 @@ public class MapContainer {
      */
     public MapContainer(){
         mapPath = RandomMapWriter.FILENAME;//getRandomMap();
-
-        //add the tiles we want the map to contain - IN ORDER
-        List tilesToAdd= new ArrayList<Integer>();
-        tilesToAdd.add(new Integer(11));
-        tilesToAdd.add(new Integer(16));
-        tilesToAdd.add(new Integer(12));
-        tilesToAdd.add(new Integer(18));
-        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100));
-        randomTiles.addTile(1,1,10);
-        try{
-            randomTiles.writeMap();
-        }catch(Exception e){
-            //oh no what do we do? (file IO error)
-            //we should probably throw some error and crash the game if this fails :[] ?
-        }
-        TiledMap mockMap = new TmxMapLoader().load(randomTiles.FILENAME);
+        TiledMap mockMap = new TmxMapLoader().load(mapPath);
         width = mockMap.getProperties().get("width", Integer.class);
         length = mockMap.getProperties().get("height", Integer.class);
         LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
@@ -432,7 +417,10 @@ public class MapContainer {
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
         String newPath = "resources/mapAssets/";
-        int size = 100;
+
+        //add the tiles we want the map to contain - IN ORDER
+        List tilesToAdd= new ArrayList<Integer>();
+        int size;
         switch (randomSize){
             case TINY:
                 size = 40;
@@ -450,21 +438,44 @@ public class MapContainer {
                 size = 250;
                 break;
             default:
-                LOGGER.error("Unknown Map Size type");
+                size=100;
         }
         switch (randomType){
             case MARS:
-                newPath+="Mars.tmx";
+                tilesToAdd.add(new Integer(10));
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(13));
+                tilesToAdd.add(new Integer(14));
+                tilesToAdd.add(new Integer(15));
                 break;
             case MOON:
-                newPath+="Moon.tmx";
+                tilesToAdd.add(new Integer(29));
+                tilesToAdd.add(new Integer(30));
+                tilesToAdd.add(new Integer(31));
+                tilesToAdd.add(new Integer(32));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(35));
+                tilesToAdd.add(new Integer(36));
                 break;
             case SUN:
-                newPath+="Sun.tmx";
+                //UPDATE THESE TILES
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(18));
                 break;
             default:
                 LOGGER.error("Unknown Map type");
         }
-        return newPath;
+        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(size,size, 18));
+        try{
+            randomTiles.writeMap();
+        }catch(Exception e){
+            //oh no what do we do? (file IO error)
+            //we should probably throw some error and crash the game if this fails :[] ?
+        }
+        return randomTiles.FILENAME;
     }
 }
