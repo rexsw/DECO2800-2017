@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.deco2800.marswars.functionKeys.ShortCut;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.TimeManager;
@@ -40,6 +41,7 @@ public class InputProcessor {
 	private int cSwitcher = 0;
 	private int cameraPointer = 0;
 	Set<Integer> downKeys = new HashSet<>();
+	ShortCut shortCut = new ShortCut();
 	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	private boolean multiSelectionFlag = false;
@@ -83,59 +85,7 @@ public class InputProcessor {
 			return;
 		}
 
-		// move the map in the chosen direction
-		if (this.downKeys.contains(Input.Keys.UP) || this.downKeys.contains(Input.Keys.W)) {
-			this.camera.translate(0, 1 * speed * this.camera.zoom, 0);
-		}
-		if (this.downKeys.contains(Input.Keys.DOWN) || this.downKeys.contains(Input.Keys.S)) {
-			this.camera.translate(0, -1 * speed * this.camera.zoom, 0);
-		}
-		if (this.downKeys.contains(Input.Keys.LEFT) || this.downKeys.contains(Input.Keys.A)) {
-			this.camera.translate(-1 * speed * this.camera.zoom, 0, 0);
-		}
-		if (this.downKeys.contains(Input.Keys.RIGHT) || this.downKeys.contains(Input.Keys.D)) {
-			this.camera.translate(1 * speed * this.camera.zoom, 0, 0);
-		}
-		if ((this.downKeys.contains(Input.Keys.EQUALS)) && (this.camera.zoom > 0.5)) {
-			this.camera.zoom /= 1.05;
-		}
-		if ((this.downKeys.contains(Input.Keys.MINUS)) && (this.camera.zoom < 10)) {
-			this.camera.zoom *= 1.05;
-		}
-
-		if (this.downKeys.contains(Input.Keys.C)) {
-			if (this.cSwitcher == 0) {
-				ArrayList<Float> xyPosition = new ArrayList<Float>();
-				xyPosition.add(this.camera.position.x);
-				xyPosition.add(this.camera.position.y);
-				this.cameraPosition.add(xyPosition);
-				this.cSwitcher++;
-			}
-		} else {
-			this.cSwitcher = 0;
-		}
-
-		if (this.downKeys.contains(Input.Keys.N) && !this.cameraPosition.isEmpty()) {
-			ArrayList<Float> nextPosition = this.cameraPosition.get(this.cameraPointer);
-			if (this.switcher == 0) {
-				float x = this.camera.position.x - nextPosition.get(0);
-				float y = this.camera.position.y - nextPosition.get(1);
-				x *= -1;
-				y *= -1;
-				if (this.camera.position.x > nextPosition.get(0)
-						|| (this.camera.position.x <= nextPosition.get(0) && this.camera.position.x > 0)) {
-					this.camera.translate(x, 0);
-				}
-				if (this.camera.position.y > nextPosition.get(1) || (this.camera.position.y <= nextPosition.get(1))) {
-					this.camera.translate(0, y);
-				}
-				this.switcher++;
-				this.cameraPointer++;
-				this.cameraPointer = this.cameraPointer % this.cameraPosition.size();
-			}
-		} else {
-			this.switcher = 0;
-		}
+		shortCut.process(camera);
 
 		// Move the map dependent on the cursor position
 		if ((cursorX > pxTolerance && cursorX + pxTolerance <= windowWidth)
@@ -300,6 +250,7 @@ public class InputProcessor {
 				}
 
 				InputProcessor.this.downKeys.add(keyCode);
+				shortCut.addKey(keyCode);
 				keyPressed(keyCode);
 				return true;
 			}
@@ -317,7 +268,7 @@ public class InputProcessor {
 				}
 
 				InputProcessor.this.downKeys.remove(keyCode);
-
+				shortCut.removeKey(keyCode);
 				return true;
 			}
 
