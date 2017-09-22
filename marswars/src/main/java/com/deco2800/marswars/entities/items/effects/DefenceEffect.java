@@ -58,9 +58,9 @@ public class DefenceEffect implements Effect{
 		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
 			
-			hero.setMaxArmor(hero.getMaxArmor() - this.armour);
+			hero.setMaxArmor(hero.getMaxArmor() > this.armour ? hero.getMaxArmor() - this.armour : 1);
 			hero.setArmor(hero.getArmor() > this.armour ? hero.getArmor() - this.armour : 1);
-			hero.setMaxHealth(hero.getMaxHealth() - this.health);
+			hero.setMaxHealth(hero.getMaxHealth() > this.health ? hero.getMaxHealth() - this.health : 1);
 			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
 			hero.setSpeed(hero.getSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
 			
