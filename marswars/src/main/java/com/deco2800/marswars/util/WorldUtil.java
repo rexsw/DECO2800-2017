@@ -62,7 +62,7 @@ public class WorldUtil {
 	 * @param c
 	 * @return
 	 */
-	public static List getEntitiesOfClass(List<BaseEntity> entities, Class<?> c) {
+	public static List<BaseEntity> getEntitiesOfClass(List<BaseEntity> entities, Class<?> c) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
 			if (w.getClass() == c) {

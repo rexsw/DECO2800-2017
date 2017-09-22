@@ -14,7 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.ChatAction;
+import com.deco2800.marswars.net.ConnectionManager;
+import com.deco2800.marswars.net.MessageAction;
+import com.esotericsoftware.kryonet.Connection;
 
 
 /**
@@ -36,7 +42,9 @@ import com.deco2800.marswars.managers.TextureManager;
  * @author James McCall
  */
 public class ChatBox extends Table {
-    
+    NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+
+
     // Size variables for the chat Pane to keep it at a fixed size
     private static final float CHAT_WIDTH = 300;
     private static final float CHAT_HEIGHT = 150;
@@ -53,28 +61,43 @@ public class ChatBox extends Table {
     private Skin skin;
     
     private TextureManager textureManager;
-    
+    private HUDView hud;
+
     /**
      * Creates a new instance of a ChatBox.
      * 
      * @param skin The UI skin to be applied to all elements of the ChatBox.
      */
-    public ChatBox(Skin skin, TextureManager textureManager) {
+    public ChatBox(Skin skin, TextureManager textureManager, HUDView hud) {
         this.skin = skin;
+        this.hud = hud;
         // Create the elements of chat box
         
-        this.textureManager = textureManager;
-        messageTextField = new TextField("", this.skin) ;
+        this.setTextureManager(textureManager);
+        this.messageTextField = new TextField("", this.skin) ; //$NON-NLS-1$
         
 		//add dispActions button + image for it 
-		Texture arrowImage = textureManager.getTexture("arrow_button");
+		Texture arrowImage = textureManager.getTexture("arrow_button"); //$NON-NLS-1$
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
-		sendButton = new ImageButton(arrowRegionDraw);
+		this.sendButton = new ImageButton(arrowRegionDraw);
 
-        chatMessages = new Table(this.skin);
-        chatPane = new ScrollPane(chatMessages, this.skin);
-        
+        this.chatMessages = new Table(this.skin);
+        this.chatPane = new ScrollPane(this.chatMessages, this.skin);
+
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ChatAction) {
+                            ChatAction action = (ChatAction) o;
+                            // TODO - reimplement logging? maybe logging manager?
+//                            this.logAction(action);
+                            addNewMessage(action.toString());
+                        }
+                    }
+                }
+        );
         // Set up properties of the elements then set layout
         setUpInputElements();
         setUpChatMessages();        
@@ -92,7 +115,7 @@ public class ChatBox extends Table {
             sendMessage();
         }
         
-        chatPane.act(delta);
+        this.chatPane.act(delta);
     }
     
     /**
@@ -107,13 +130,13 @@ public class ChatBox extends Table {
         message.setAlignment(Align.left);
         
         // Add message to table
-        chatMessages.row();
-        chatMessages.add(message).growX().bottom().left();
+        this.chatMessages.row();
+        this.chatMessages.add(message).growX().bottom().left();
         
         // Update Chat Pane, so it scrolls to bottom
-        chatPane.layout();
-        chatPane.setScrollY(chatPane.getMaxY());
-        chatPane.updateVisualScroll();
+        this.chatPane.layout();
+        this.chatPane.setScrollY(this.chatPane.getMaxY());
+        this.chatPane.updateVisualScroll();
     }
     
     /**
@@ -122,15 +145,12 @@ public class ChatBox extends Table {
      * empty.
      * 
      * A valid string is not empty.
-     * 
-     * Note: This method is currently implemented to just add message to 
-     * chat box for testing purposes.Does not send to server.
      */
     private void sendMessage() {
-        String message = messageTextField.getText();
+        String message = this.messageTextField.getText();
         if (!"".equals(message)) {
-            // Currently not implemented correctly, adds to chat box instead of sending to server.
-            addNewMessage(message);
+            MessageAction action = new MessageAction(message);
+            netManager.getNetworkClient().sendObject(action);
         }
         messageTextField.setText("");
     }
@@ -140,7 +160,7 @@ public class ChatBox extends Table {
      * 
      */
     public void clearMessages() {
-        chatMessages.clearChildren();
+        this.chatMessages.clearChildren();
     }
     
     /**
@@ -149,9 +169,9 @@ public class ChatBox extends Table {
      * button so when it is clicked the message from the text field is sent.
      */
     private void setUpInputElements() {
-        sendButton.pad(5);
+        this.sendButton.pad(5);
         
-        sendButton.addListener(new ChangeListener() {
+        this.sendButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 sendMessage();
@@ -164,7 +184,7 @@ public class ChatBox extends Table {
      * appropriate initial properties. 
      */
     private void setUpChatMessages() {
-        chatMessages.bottom();
+        this.chatMessages.bottom();
         
     }
     
@@ -173,12 +193,20 @@ public class ChatBox extends Table {
      * table.
      */
     private void setUpLayout(){
-        this.add(chatPane).colspan(2).maxSize(CHAT_WIDTH, CHAT_HEIGHT).minSize(CHAT_WIDTH, CHAT_HEIGHT);
+        this.add(this.chatPane).colspan(2).maxSize(CHAT_WIDTH, CHAT_HEIGHT).minSize(CHAT_WIDTH, CHAT_HEIGHT);
         this.row();     
-        this.add(messageTextField).expandX().fillX();
-        this.add(sendButton).pad(5).height(30).width(30);
+        this.add(this.messageTextField).expandX().fillX();
+        this.add(this.sendButton).pad(5).height(30).width(30);
         
         this.setWidth(200);
-    }    
+    }
+
+	public TextureManager getTextureManager() {
+		return this.textureManager;
+	}
+
+	public void setTextureManager(TextureManager textureManager) {
+		this.textureManager = textureManager;
+	}
     
 }

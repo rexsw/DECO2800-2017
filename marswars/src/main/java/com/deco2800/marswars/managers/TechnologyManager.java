@@ -3,9 +3,7 @@ package com.deco2800.marswars.managers;
 
 import java.util.*;
 
-
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.technology.*;
 
 public class TechnologyManager extends Manager{
@@ -20,24 +18,24 @@ public class TechnologyManager extends Manager{
 
     // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
     public HashMap<String, int[]> unitAttributes = new HashMap<>();
-
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
     private Technology heroFactory;
-    private ArrayList<Technology> armourL1Parents;
+    private ArrayList<Technology> armourL1Parents = new ArrayList<Technology>();
     private Technology armourLevelOne;
-    private ArrayList<Technology> armourL2Parents;
+    private ArrayList<Technology> armourL2Parents = new ArrayList<Technology>();
     private Technology armourLevelTwo;
-    private ArrayList<Technology> armourL3Parents;
+    private ArrayList<Technology> armourL3Parents = new ArrayList<Technology>();
     private Technology armourLevelThree;
-    private ArrayList<Technology> weaponL1Parents;
+    private ArrayList<Technology> weaponL1Parents = new ArrayList<Technology>();
     private Technology weaponLevelOne;
-    private ArrayList<Technology> weaponL2Parents;
+    private ArrayList<Technology> weaponL2Parents = new ArrayList<Technology>();
     private Technology weaponLevelTwo;
-    private ArrayList<Technology> weaponL3Parents;
+    private ArrayList<Technology> weaponL3Parents = new ArrayList<Technology>();
     private Technology weaponLevelThree;
-    private ArrayList<Technology> specialParents;
+    private ArrayList<Technology> specialParents = new ArrayList<Technology>();
     private Technology special;
+    private ArrayList<BuildingType> buildingsAvailable;
 
     public TechnologyManager() {
         techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Upgrade Cost", new ArrayList<Technology>(),
@@ -47,10 +45,15 @@ public class TechnologyManager extends Manager{
         techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
                 "An expensive technology"));
 
-
-        unitAttributes.put("Soldier", new int[]{10, 500, 50, 250, 50, 8, 30});
+ // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
+        unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
+        unitAttributes.put("Soldier", new int[]{10, 1000, 100, 250, 50, 8, 30});
+        unitAttributes.put("Tank", new int[]{10, 1000, 100, 500, 150, 10, 20});
         unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
-        unitAttributes.put("Healer", new int[]{10, 500, -25, 200, 150, 10, 20});
+        unitAttributes.put("Medic", new int[]{10, 250, -25, 200, 150, 10, 20});
+        unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
+        unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
+        unitAttributes.put("Ambient", new int[]{10,1000*1000,100,50,0,30});
 
         //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
 //        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});
@@ -58,7 +61,7 @@ public class TechnologyManager extends Manager{
 //        unitAttributes.put("Tank", new int[]{10, 500, 50, 250, 50, 8, 30});
 
 
-       // setUpHeroTechs();
+       setUpHeroTechs();
         setUpTechMap();
     }
 
@@ -94,7 +97,7 @@ public class TechnologyManager extends Manager{
             //also need to set all existing solider to have this much
         }
     public void unlockHeroFactory() {
-
+        System.out.println("\n Hero Factory unloicked \n");
     }
     public void unlockArmourLevelOne() {
 
@@ -140,10 +143,12 @@ public class TechnologyManager extends Manager{
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 
-        if(!(getActive().contains(tech.getParents()))){
-            return "You have not researched the required Technology for this upgrade";
+        for (Technology techX : tech.getParents()) {
+            if (!(getActive().contains(techX))) {
+                return "You have not researched the required Technology for this upgrade";
+            }
         }
-        if(!techMan.getActive().contains(tech)) {
+        if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
         if (!(resourceManager.getRocks(teamid) > tech.getCost()[0])) {
@@ -168,7 +173,8 @@ public class TechnologyManager extends Manager{
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
         if(techID == 1){
-            unlockHeroFactory();
+            //unlockHeroFactory();
+            attackSoldierUpgrade();
         }
         if(techID == 2){
             attackSoldierUpgrade();
@@ -251,5 +257,16 @@ public class TechnologyManager extends Manager{
         techMap.put(6, weaponLevelTwo);
         techMap.put(7, weaponLevelThree);
         techMap.put(8, special);
+    }
+    
+    /**
+     * Gets the buildings available for specified team 
+     * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
+     */
+    public ArrayList<BuildingType> getAvailableBuildings() {
+    	buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+    		            BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+    	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
+    	return buildingsAvailable;
     }
 }

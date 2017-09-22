@@ -1,7 +1,7 @@
 package com.deco2800.marswars.util;
 
-import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.*;
 
@@ -59,7 +59,7 @@ public class Pathfinder {
 			closedSet.add(current);
 
 			for (Point p : getAdjacentNodes(current, baseWorld)) {
-				List<BaseEntity> entities = baseWorld.getEntities((int)p.getX(), (int)p.getY());
+				List<BaseEntity> entities = new ArrayList<BaseEntity>(baseWorld.getEntities((int)p.getX(), (int)p.getY()));
 
 				int cost = 0;
 				for (BaseEntity e : entities) {

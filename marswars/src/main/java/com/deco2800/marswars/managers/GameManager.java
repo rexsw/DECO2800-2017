@@ -1,8 +1,13 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +32,9 @@ public class GameManager implements TickableManager {
 
 	private BaseWorld gameWorld;
 
-
-
+	private Skin gameskin;
+	
+	private Stage gamestage;
 
 	private BaseWorld mapWorld;
 	
@@ -39,6 +45,12 @@ public class GameManager implements TickableManager {
 	private int activeView = 0; // 0 is gameWorld, 1 is mapWorld
 
 	private MiniMap miniMap;
+
+	private HUDView gui;
+	
+	private MainMenu menu;
+	
+	private TextureManager gameTexture;
 
 	/**
 	 * Returns an instance of the GM
@@ -118,6 +130,22 @@ public class GameManager implements TickableManager {
 	public void setMapWorld(BaseWorld world) {
 		this.mapWorld = world;
 	}
+	
+	/**
+	 * Sets the current main menu display
+	 * @param menu
+	 */
+	public void setMainMenu(MainMenu menu){
+		this.menu = menu;
+	}
+	
+	/**
+	 * Returns the current main menu
+	 * @return menu
+	 */
+	public MainMenu getMainMenu(){
+		return menu;
+	}
 
 	/**
 	 * Gets the current game world
@@ -144,7 +172,21 @@ public class GameManager implements TickableManager {
 	public void setMiniMap(MiniMap map) {
 		miniMap = map;
 	}
-	
+
+	/**
+	 * Sets the used GUI to easy access
+	 * @param gui the gui the game is using
+	 */
+	public void setGui(HUDView gui){
+		this.gui = gui;
+	}
+
+	/**
+	 * @return returns the gui the game is using
+	 */
+	public HUDView getGui(){
+		return this.gui;
+	}
 
 	/**
 	 * Gets the current map world.
@@ -160,6 +202,16 @@ public class GameManager implements TickableManager {
 	 */
 	public int getActiveView() {
 		return activeView;
+	}
+	
+	public void resetGame(){
+		gamestage.clear();
+		this.mapWorld = null;
+		this.gameWorld = null;
+		this.gui = null;
+		this.miniMap = null;
+		this.menu = new MainMenu(this.gameskin, this.gamestage);
+		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**
@@ -195,7 +247,47 @@ public class GameManager implements TickableManager {
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
+	
+	/**
+	 * sets the currently used game skin
+	 * 
+	 * @param skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setSkin(Skin skin) {
+		gameskin = skin;
+	}
+	
+	/**
+	 * gets the currently used game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getSkin() {
+		return gameskin;
+	}
 
+	/**
+	 * sets the currently used game stage
+	 * 
+	 * @param setsstage the stage used to display the
+	 * games gui
+	 */
+	public void setStage(Stage stage) {
+		gamestage = stage;
+	}
+	
+	/**
+	 * gets the currently used game stage
+	 * 
+	 * @return stage the skin used to display the
+	 * games gui 
+	 */
+	public Stage getStage() {
+		return gamestage;
+	}	
+	
 	/**
 	 * On tick method for ticking managers with the TickableManager interface
 	 * @param i

@@ -1,31 +1,32 @@
 package com.deco2800.marswars.hud;
 
 
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+
+import java.awt.*;
 
 public class MiniMapEntity {
-    private int team; // 0, player's team, 1 allied, 2 enemy
-    public float x; // x coordinate of the entity in pixels: 0 <= x < width
-    public float y; // y coordinate of the entity in pixels: window height - height <= y < window height
-    public int rendered = 0; // set to 1 once it has been rendered
+    private int x; // x coordinate of the entity in pixels: 0 <= x < minimap width
+    private int y; // y coordinate of the entity in pixels: 0 <= y < minimap height
+    public AttackableEntity entity;
+
 
     /**
      * Constructor for MiniMapEntity
-     * @param team  0: friendly, 1: allied, 2: enemy.
-     * @param x x position on screen. 0 < x < minimap width
-     * @param y y position on screen.
+     * @param entity the game world entity this object represents
+     * @param x x position of the entity in mimimap coordinates
+     * @param y y position
      */
-    public MiniMapEntity(int team, float x, float y) {
-        this.team = team;
+    public MiniMapEntity(AttackableEntity entity, int x, int y) {
         this.x = x;
         this.y = y;
+        this.entity = entity;
     }
 
-    /**
-     * An int representing which team it is on
-     * @return  0: friendly, 1: allied, 2: enmy
-     */
-    public int getTeam() {
-        return team;
+    public boolean samePosition(int x, int y) {
+        return x == this.x && y == this.y;
     }
 
     /**
@@ -34,13 +35,11 @@ public class MiniMapEntity {
      * @return The texture to be rendered onto the screen
      */
     public String getTexture() {
-        if (team == 0) {
+        //TODO this needs updating when the AI is more finalised
+        if (entity.getOwner() < 0) {
             return "friendly_unit";
-        } else if (team == 1) {
-
-        } else if (team == 2) {
-
+        } else {
+            return "AI_unit";
         }
-        return "this shouldnt happen ever";
     }
 }

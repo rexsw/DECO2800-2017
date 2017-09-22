@@ -4,11 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 
 import java.util.ArrayList;
@@ -19,13 +24,17 @@ import java.util.Optional;
 /**
  * Created by timhadwen on 2/8/17.
  */
-public class BaseEntity extends AbstractEntity implements Selectable {
+public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private int cost = 0;
 	private float buildSpeed = 1;
 	private EntityType entityType = EntityType.NOT_SET;
-	private  List<ActionType> validActions;
+	private ActionList validActions;
 	private boolean selected = false;
+	protected int owner = 0;
+	private boolean fixPos = false;
 	protected float speed = 0.05f;
+	protected Optional<DecoAction> currentAction = Optional.empty();
+	protected ActionType nextAction;
 
 	/**
 	 * Constructor for the base entity
@@ -129,16 +138,20 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @param yPos
 	 * @param zPos
 	 */
-	public void fixPosition(int xPos, int yPos, int zPos) {
-		modifyCollisionMap(false);
-		if (GameManager.get().getWorld() instanceof BaseWorld) {
+	public void fixPosition(int xPos, int yPos, int zPos, int addxWidth, int addYLength) {
+		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
 			int right = (int) Math.ceil(xPos + getXLength());
+			right = right < baseWorld.getWidth() ? right : baseWorld.getWidth() - 1;
 			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
-			for (int x = left; x < right; x++) {
-				for (int y = bottom; y < top; y++) {
+			if (left < 0 || right+addxWidth > baseWorld.getWidth() || bottom > baseWorld.getLength() || top+addYLength <0) {
+				return;
+			}
+			modifyCollisionMap(false);
+			for (int x = left; x < right+addxWidth; x++) {
+				for (int y = bottom; y < top+addYLength; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
 				}
 			}	
@@ -204,7 +217,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return the list of actions the entity is allowed to take
 	 */
 	@Override
-	public List<ActionType> getValidActions() {
+	public ActionList getValidActions() {
 		return this.validActions;
 	}
 
@@ -214,7 +227,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 	@Deprecated
 	public void initActions() {
-		this.validActions = new ArrayList<ActionType>();
+		this.validActions = new ActionList();
 	}
 
 	/**
@@ -224,11 +237,11 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 */
 
 	@Override
-	public boolean addNewAction(ActionType newAction) {
+	public boolean addNewAction(Object newAction) {
 		if (this.validActions == null) {
-			this.validActions = new ArrayList<ActionType>();
+			this.validActions = new ActionList();
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == newAction) {
 				return false;
 			}
@@ -236,18 +249,29 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		this.validActions.add(newAction);
 		return true;
 	}
-
+	
+    /**
+     * Adds all available building actions to the list
+     */
+    public void giveAllBuilding() {
+    	TechnologyManager a = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    	ArrayList<BuildingType> b = a.getAvailableBuildings();
+    	for (BuildingType c : b) {
+    		addNewAction(c);
+    	}
+    }
+    
 	/**
 	 *Removes a valid action from the entity
 	 * @param actionToRemove The new action that is valid for the unit to perform
 	 * @return True if successful, false if the action failed to remove or did not exist in the list
 	 */
 	@Override
-	public boolean removeActions(ActionType actionToRemove) {
+	public boolean removeActions(Object actionToRemove) {
 		if (this.validActions == null){
 			return false;
 		}
-		for (ActionType d: this.validActions) {
+		for (Object d: this.validActions) {
 			if (d == actionToRemove) {
 				this.validActions.remove(d);
 				return true;
@@ -354,7 +378,12 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 		}
 	}
 
-	protected void modifyFogOfWarMap(boolean add,int scale) {
+	/**
+	 * this function modify the fog of war map
+	 * @param add
+	 * @param scale
+	 */
+	public void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
@@ -376,15 +405,7 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("UNNAMED",0, null, Optional.empty(), this);
-	}
-
-	/**
-	 * Forces the unit to only try the chosen action on the next rightclick
-	 * @param nextAction the action to be forced
-	 */
-	public void setNextAction(ActionType nextAction) {
-		return;
+		return new EntityStats("UNNAMED",0,0, null, Optional.empty(), this);
 	}
 
 	/**
@@ -392,7 +413,60 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 	 * @param action the action to perform
 	 */
 	public void setAction(DecoAction action) {
-		return;
+		currentAction = Optional.of(action);
+	}
+	
+	/**
+	 * get the current action of the base entity
+	 * @return returns current action (can be empty)
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
+	}
+
+	/**
+	 * Set the owner of this Entity
+	 * @param owner
+	 */
+	@Override
+	public void setOwner(int owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Get the owner of this Entity
+	 * @return owner
+	 */
+	@Override
+	public int getOwner() {
+		return this.owner;
+	}
+
+	/**
+	 * Check if this Entity has the same owner as the other Abstract Entity
+	 * @param entity
+	 * @return true if they do have the same owner, false if not
+	 */
+	@Override
+	public boolean sameOwner(AbstractEntity entity) {
+		boolean isInstance = entity instanceof HasOwner;
+		return isInstance && this.owner == ((HasOwner) entity).getOwner();
+	}
+	
+	/**
+	 * Sets boolean fixPosition
+	 * @param fix
+	 */
+	public void setFix(boolean fix) {
+		fixPos = fix;
+	}
+	
+	/**
+	 * returns boolean fixPosition
+	 * @return true if entity must be fixed
+	 */
+	public boolean getFix() {
+		return fixPos;
 	}
 
 	public float getMoveSpeed() {
@@ -401,5 +475,47 @@ public class BaseEntity extends AbstractEntity implements Selectable {
 
 	public void setMoveSpeed(float speed) {
 		this.speed = speed;
+	}
+
+	public void setBuildSpeed(float speed) {
+		this.buildSpeed = speed;
+	}
+	
+	public float getBuildSpeed() {
+		return buildSpeed;
+	}
+	/**
+	 * checks if this entity is AI
+	 * @return true if entity is owned by AI
+	 */
+	@Override
+	public boolean isAi() {
+		return owner >= 0;
+	}
+
+	/**
+	 * Tells the entity if it needs to move from the given tile; i.e. is it
+	 * sharing the tile with entities other than special terrain entities.
+	 * @param entities
+	 * @return
+	 */
+	public boolean moveAway (List<BaseEntity> entities) {
+		int entitiesSize = entities.size();
+		boolean waterPresent = false;
+		for (BaseEntity e : entities) {
+			if (e instanceof Water) {
+				waterPresent = true;
+			}
+		}
+		return (entitiesSize > 1 && !waterPresent) ||
+				(entitiesSize > 2 && waterPresent);
+	}
+
+	/**
+	 * Sets the action using the actionsetter class
+	 * @param current ActionType to be set
+	 */
+	public void setNextAction(ActionType current) {
+		nextAction = current;
 	}
 }

@@ -1,6 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.managers.AbstractPlayerManager;
+import com.deco2800.marswars.entities.EntityStats;
 
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
@@ -14,16 +14,27 @@ public class Tank extends Soldier {
 		//this.movementSound = "tankMovementSound";
 		
 		// set all the attack attributes
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(75);
+		this.setMaxHealth(10000);
+		this.setHealth(10000);
+		this.setDamage(1);
 		this.setArmor(500);
 		this.setArmorDamage(150);
 		this.setAttackRange(10);
 		this.setAttackSpeed(20);
+		//setAttributes();
+		this.setAreaDamage(1);
+		
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the
 	 * attacking unit instead (if possible), will run away if it can't reach it.
 	 */
+	
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	public EntityStats getStats() {
+		return new EntityStats("Tank", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+	}
 }

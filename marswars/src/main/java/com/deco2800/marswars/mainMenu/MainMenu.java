@@ -1,36 +1,40 @@
 package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.MarsWars;
-import com.deco2800.marswars.net.LobbyButton;
+import com.deco2800.marswars.InitiateGame.Game;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 
 /**
- * Creates the Main Menu stage 
- * @author Toby
+ * Creates a main menu window, which adds in a table depending on the 
+ * state of the main menu progression.
+ * 
+ * E.g choosing between player and multiplayer will load up a table, 
+ * then progressing to multiplayer and picking between starting a 
+ * server and joining a server is another new table.
+ * 
+ * FLOW DIAGRAM: 
+ * TODO add in flow diagram of the main menu
+ *  
+ * @author Toby Guinea
  *
  */
 public class MainMenu {
+	private static final int MENUHEIGHT = 350; 
+	private static final int MENUWIDTH = 500;
 	private Skin skin;
-	private MarsWars marswars;
-	private LobbyButton lobby; 
+	private Stage stage; 
 	
-	TextButton newGameButton; //starts the new game
-	TextButton exitButton;  //exits the game when pressed
-	TextButton startServer; 
-	TextButton joinServer; // will allow the player to join a multiplayer game
-	TextButton playButton; 
-	
-	Window mainmenu; 
-	Label title;
+	private Window mainmenu; 
+	boolean gameStarted = false;
+	private Game game;
 	boolean status = true;
 
 	/**
@@ -39,67 +43,52 @@ public class MainMenu {
 	 * @param stage
 	 * @param window
 	 * @param marswars
+	 * @param camera 
 	 */
-	public MainMenu(Skin skin, Stage stage, Window window, MarsWars marswars) {
+	public MainMenu(Skin skin, Stage stage) {
 		this.skin = skin;
-		this.marswars = marswars;
-		mainmenu = window; 
-        lobby = new LobbyButton(skin, stage);
+		this.stage = stage; 
+		this.mainmenu = new Window("Its a start", skin); 
+		GameManager.get().setMainMenu(this);
 		createMenu();
-    }
+	}
 
 	/**
+	 * Set the main menu size and adds in the table
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
-		mainmenu.setSize(300, 300);
-		mainmenu.setPosition(Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth()/2, Align.center);
-				
-		title = new Label("SpacWars", skin);
-	    title.setPosition(600, 600);
-	    
-	    newGameButton = new TextButton("New game", skin);
-	    newGameButton.setPosition(600, 400);
-	    
-	    playButton = new TextButton("Play!", skin);
-	    
-	    exitButton = new TextButton("Exit", skin);
-	    exitButton.setPosition(600, 100);
-	    	    
-	    mainmenu.add(title);
-	    mainmenu.add(newGameButton);
-	    mainmenu.add(playButton);
-	    mainmenu.add(exitButton);
-	    mainmenu.add(lobby.addStartServerButton());
-	    mainmenu.add(lobby.addJoinServerButton());
-	    mainmenu.pack();
-	    
-	    newGameButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				status = true;
-			}
-		});
-	    
-	    exitButton.addListener(new ChangeListener() {
-	    	@Override
-	    	public void changed(ChangeEvent event, Actor actor) {
-	    		status = false;
-	    		System.exit(0);
-	    	}
-	    });   
+		/*Creates the screens for the menu that walk the player 
+		 * through setting up their customized game */
+		//GameManager.get().getGui().disableHUD();
+		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		this.stage.addActor(mainmenu);
+	}
+		
+	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize){
+		gameStarted = start;
+		if (gameStarted){
+			game = new Game(mapType, mapSize); //Start up a new game
+			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		}
 	}
 	
-	/**
-	 * Adds in the chat server buttons to the main menu
-	 */
-	public void addLobbyButton(){
-	    mainmenu.add(lobby.addStartServerButton());
-	    mainmenu.add(lobby.addJoinServerButton());
-	    mainmenu.pack();
+	public boolean gameStarted(){
+		boolean started = gameStarted;
+		return started; 
 	}
 	
-	public Window buildMenu(){
-		return mainmenu;
-	}    
+	public void resize(int width, int height) {
+		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		if(gameStarted){
+			game.resize(width, height);
+		}
+	}
+	
+	public void renderGame(SpriteBatch batch, OrthographicCamera camera){
+		if(gameStarted){
+			game.render(batch, camera);
+		}
+	}
 }

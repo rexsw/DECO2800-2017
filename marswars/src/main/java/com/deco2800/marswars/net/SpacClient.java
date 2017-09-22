@@ -17,9 +17,8 @@ public class SpacClient {
      * Create a new SpacClient with the specified connection manager (listener)
      * see: ClientConnectionManager
      */
-    public SpacClient(Listener connectionManager) {
+    public SpacClient() {
         this.client = new Client();
-        this.client.addListener(connectionManager);
     }
 
     /**
@@ -42,7 +41,15 @@ public class SpacClient {
      * Send object to host
      */
     public void sendObject(Object o) {
-        // TODO check this.client.isConnected()
-        this.client.sendTCP(o);
+        if (this.client.getID() >= 0) {
+            this.client.sendTCP(o);
+        }
+    }
+
+    /**
+     * Adds connection manager
+     */
+    public void addConnectionManager(ConnectionManager manager) {
+        this.client.addListener(manager);
     }
 }
