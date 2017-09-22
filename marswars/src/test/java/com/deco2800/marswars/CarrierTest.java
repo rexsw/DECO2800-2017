@@ -1,11 +1,6 @@
 package com.deco2800.marswars;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.actions.ActionType;
 
 import org.junit.Test;
