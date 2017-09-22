@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 
 public class ActionList extends ArrayList<Object> {
 
-    private ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-            BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
-
     public ActionList() {
         super();
     }
@@ -52,7 +49,6 @@ public class ActionList extends ArrayList<Object> {
     }
 
 
-
     public ArrayList<ActionType> getActions() {
         ArrayList<ActionType> a = this.stream().filter(o -> o instanceof ActionType).map(o -> (ActionType) o).collect(Collectors.toCollection(ArrayList::new));
         return a;
@@ -66,5 +62,9 @@ public class ActionList extends ArrayList<Object> {
     public ArrayList<EntityID> getUnits() {
         ArrayList<EntityID> a = this.stream().filter(o -> (o instanceof EntityID)).map(o -> (EntityID) o).collect(Collectors.toCollection(ArrayList::new));
         return a;
+    }
+    
+    public ArrayList<Object> getallActions() {
+    	return this;
     }
 }
