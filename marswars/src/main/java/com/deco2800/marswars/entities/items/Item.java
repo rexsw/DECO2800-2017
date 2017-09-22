@@ -23,7 +23,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  *
  */
 public abstract class Item {
-	/*
+	/**
 	 * Enumerate for the item type. See above for summary of their meanings and what each can do.
 	 */
 	public enum Type {

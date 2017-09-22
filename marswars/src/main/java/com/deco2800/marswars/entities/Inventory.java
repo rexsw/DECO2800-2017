@@ -48,14 +48,11 @@ public class Inventory {
     /**
      * Adds an item to the Inventory. Depending on the item type, the methods would add different stats when applied. 
      * Would immediately activate Weapon and Armour items upon equipping. Returns a boolean being true when the addition
-     * to the Inventoru state is successful, false otherwise.
+     * to the Inventory state is successful, false otherwise.
      * @param item  The item that is to be added to the inventory.
      * @return  Boolean indicating whether the basic items passed theough the first test.
      */
     public boolean addToInventory(Item item) {
-    	//  design choice need to make here. 
-    	// can weapon and armour be replaced OR only success add on null object
-    	// currently implementation is replaced straight way
         switch (item.getItemType()) {
             case WEAPON:
                 if (this.weapon != null) {
@@ -77,14 +74,12 @@ public class Inventory {
                 // apply effect
                 this.applyEffect(this.armour, owner);
                 return true;
-            case SPECIAL:
+            default: //which should be SPECIAL, just fix code smell
             	if (this.specials.size() < 4) {
             		this.specials.add((Special)item);
             		return true;
             	}
                 return false;
-            default:
-            	return false;
         }
     }
 
@@ -111,10 +106,8 @@ public class Inventory {
                     return true;
                 }
                 return false;
-            case SPECIAL:
+            default: //which should be SPECIAL, just fix code smell
                 return this.specials.remove(item);
-            default: 
-            	return false;
         }
     }
     
@@ -171,10 +164,12 @@ public class Inventory {
     }
 
     /**
+     *  **** THIS FUNCTION HAS NOT BEEN IMPLEMENTED YET, THIS IS A PLACEHOLDER
      * Method to handle functionality of Special items when they are used via are clicked on in the inventory bar in HUD
      *  to Activate the item (i.e. actually use it).
      */
     public void useItem() {
+    	return;
     }
 
 }

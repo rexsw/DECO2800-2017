@@ -81,7 +81,7 @@ public class DefenceEffect implements Effect{
 		if (health != 0) {
 			string.append("Max Health: " + health + "\n");
 		}
-		if (moveSpeed != 0) {
+		if (Math.abs(moveSpeed) < 0.000001) {
 			string.append("Movement Speed: " + moveSpeed + "\n");
 		}
 		return string.toString();

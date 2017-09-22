@@ -43,22 +43,41 @@ public class Commander extends Soldier {
 		this.inventory = new Inventory(this);
 	}
 
+	/**
+	 * Add an item to the commander's inventory
+	 * 
+	 * @param item to be added
+	 * @return true if added successful, else false
+	 */
 	public boolean addItemToInventory(Item item) {
 		return inventory.addToInventory(item);
 	}
 
+	/**
+	 * Remove an item from the commander's inventory
+	 * 
+	 * @param item to be removed
+	 * @return true if removed successful, else false
+	 */
 	public boolean removeItemFromInventory(Item item) {
 		return inventory.removeFromInventory(item);
 	}
 
-	/** not a to string, returns the inventory object itself
-	 *
+	/** 
+	 *	This method returns the inventory object or the items bag of this commander
 	 * @return inventory
 	 */
 	public Inventory getInventory() {
 		return inventory;
 	}
 
+	/**
+	 * Equals method of this class, at the moment, it only checks 3 things
+	 * 1. is other object an instance of Commander, if no return false
+	 * 2. is other object has the same toString result as this commander, if no return false
+	 * 3. are these two object has the same owner, if no return false
+	 * @return boolean whether they are the same commander
+	 */
 	@Override
 	public boolean equals(Object other) { 
 		if (other instanceof Commander) {
@@ -67,6 +86,13 @@ public class Commander extends Soldier {
 		return false;
 	}
 	
+	/**
+	 * Hashcode method of commander class
+	 * Currently, it only checks if two commander got the same owner.
+	 * and because there should be only one commander for each player
+	 * so this hash code should works fine
+	 * @return int hash code of this commander object
+	 */
 	@Override
 	public int hashCode() { // need more hash later
 	    final int prime = 31;
@@ -76,17 +102,25 @@ public class Commander extends Soldier {
 	}
 	
 	/**
-	 * @return The stats of the entity
+	 * Gets the stats of this commander
+	 * @return The stats of the entity follow the parent class soldier
 	 */
 	public EntityStats getStats() {
 		return new EntityStats("Commander", this.getHealth(), this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
+	/**
+	 * Gets the name of this commander, should be 'Commander'
+	 * @return The name of commander
+	 */
 	@Override
 	public String toString(){
 		return this.name;
 	}
 	
+	/**
+	 * The purpose of this method is to avoid hero character gets hacked by hacker
+	 */
 	@Override
 	public void setLoyalty(int loyalty) {
 		return;
