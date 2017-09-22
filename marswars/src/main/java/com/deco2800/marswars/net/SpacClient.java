@@ -41,8 +41,9 @@ public class SpacClient {
      * Send object to host
      */
     public void sendObject(Object o) {
-        // TODO check this.client.isConnected()
-        this.client.sendTCP(o);
+        if (this.client.getID() >= 0) {
+            this.client.sendTCP(o);
+        }
     }
 
     /**

@@ -22,7 +22,9 @@ public class LoggingConnectionManager extends ConnectionManager {
     protected List<Action> actionLog = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
-
+    // Correct line separator for executing machine 
+    private final static String LINE_SEPARATOR = System.getProperty(
+            "line.separator");
     /**
      * Instatiate a connection manager to log all actions.
      * @param prefix String to prefix all logs with
@@ -52,7 +54,7 @@ public class LoggingConnectionManager extends ConnectionManager {
     public String getLog() {
         return this.actionLog.stream()
                 .map(Action::toString)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(LINE_SEPARATOR));
     }
 
 	@Override
