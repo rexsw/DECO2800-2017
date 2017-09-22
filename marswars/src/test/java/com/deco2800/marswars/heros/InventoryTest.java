@@ -1,4 +1,4 @@
-package com.deco2800.marswars;
+package com.deco2800.marswars.heros;
 
 import static org.junit.Assert.*;
 

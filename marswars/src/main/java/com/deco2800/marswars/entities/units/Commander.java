@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.entities.items.*;
 
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class Commander extends Soldier {
 		super(posX, posY, posZ, owner);
 		LOGGER.debug("Create a commander for team: " + owner);
 		this.name = "Commander";
+		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
 	}
