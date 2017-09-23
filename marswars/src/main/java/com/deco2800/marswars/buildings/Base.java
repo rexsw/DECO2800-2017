@@ -1,6 +1,5 @@
 package com.deco2800.marswars.buildings;
 
-import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**

@@ -1,8 +1,5 @@
 package com.deco2800.marswars.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Special;
@@ -10,6 +7,9 @@ import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class that defines the Inventory for a Commander. Each Commander will have their own instance of Inventory and only 

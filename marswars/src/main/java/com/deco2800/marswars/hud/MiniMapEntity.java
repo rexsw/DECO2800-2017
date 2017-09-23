@@ -1,11 +1,7 @@
 package com.deco2800.marswars.hud;
 
 
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-
-import java.awt.*;
 
 public class MiniMapEntity {
     private int x; // x coordinate of the entity in pixels: 0 <= x < minimap width

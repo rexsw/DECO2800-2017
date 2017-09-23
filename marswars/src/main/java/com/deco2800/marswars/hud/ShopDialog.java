@@ -1,32 +1,21 @@
 package com.deco2800.marswars.hud;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.entities.items.Armour;
-import com.deco2800.marswars.entities.items.ArmourType;
-import com.deco2800.marswars.entities.items.ItemType;
-import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.entities.items.SpecialType;
-import com.deco2800.marswars.entities.items.Weapon;
-import com.deco2800.marswars.entities.items.WeaponType;
+import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class that defines the layout of the shop window. Overall, the design should be a window with 2 scrollable tables, 

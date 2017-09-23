@@ -1,35 +1,20 @@
 package com.deco2800.marswars.functionKeys;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import java.util.Scanner;
-
-import java.util.List;
-
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
-
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
-
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 
 /**

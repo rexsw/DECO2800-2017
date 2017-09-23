@@ -79,7 +79,7 @@ public class Hotkeys {
 			if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 				if (hud.getExitCheck() == 0) {
 					hud.setExitCheck(1);
-					quit = new ExitGame("Quit Game", skin, hud, true).show(stage); //$NON-NLS-1$
+					quit = new ExitGame("Quit Game", skin, hud, true).show(stage);
 				}
 			}
 
@@ -87,7 +87,7 @@ public class Hotkeys {
 			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 				if(this.hud.getTechCheck() == 0) {
 					this.hud.setTechCheck(1);
-					this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage); //$NON-NLS-1$
+					this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage);
 				} else {
 					this.hud.setTechCheck(0);
 					this.techTree.hide();
@@ -121,7 +121,7 @@ public class Hotkeys {
 			if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
 				if (hud.getHelpCheck() == 0) {
 					hud.setHelpCheck(1);
-					help = new WorkInProgress("Help  Menu", skin, hud).show(stage); //$NON-NLS-1$
+					help = new WorkInProgress("Help  Menu", skin, hud).show(stage);
 				} else {
 					hud.setHelpCheck(0);
 					help.hide();

@@ -1,10 +1,10 @@
 package com.deco2800.marswars.managers;
 
 
-import java.util.*;
-
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.technology.*;
+import com.deco2800.marswars.technology.Technology;
+
+import java.util.*;
 
 public class TechnologyManager extends Manager{
     //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)

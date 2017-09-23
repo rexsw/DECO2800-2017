@@ -1,7 +1,8 @@
 package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Point;
