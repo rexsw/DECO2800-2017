@@ -164,12 +164,12 @@ public class CodeInterpreter {
         long add = 0;
         if ((tm.getHours()) < 6)
         {
-            add = 21600 - tm.getHours()*60*60;
+            add = 21600 - tm.getHours()*60*60-tm.getMinutes()*60;
 
         }
-        else if ((tm.getHours()) > 6)
+        else if ((tm.getHours()) >= 6)
         {
-            add = 24*60*60 - tm.getHours()*60*60 + 21600;
+            add = 24*60*60 - tm.getHours()*60*60 + 21600-tm.getMinutes()*60;
 
         }
         tm.addTime(add);
@@ -187,12 +187,12 @@ public class CodeInterpreter {
         long add = 0;
         if ((tm.getHours()) < 21)
         {
-            add = 75600 - tm.getHours()*60*60;
+            add = 75600 - tm.getHours()*60*60-tm.getMinutes()*60;
 
         }
-        else if ((tm.getHours()) > 21)
+        else if ((tm.getHours()) >= 21)
         {
-            add = 24*60*60 - tm.getHours()*60*60 + 75600;
+            add = 24*60*60 - tm.getHours()*60*60 + 75600-tm.getMinutes()*60;
 
         }
         tm.addTime(add);
