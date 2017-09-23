@@ -237,6 +237,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	@Override
 	public void onTick(int tick) {
+		if (this.getOwner() == -1)  {
+			modifyFogOfWarMap(true,3);
+		}
 		loyalty_regeneration();
 		checkOwnerChange();
 		if (!currentAction.isPresent()) {
@@ -244,9 +247,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
-			if (this.getOwner() == -1)  {
-				modifyFogOfWarMap(true,3);
-			}
+
 			if(getHealth()<=0)modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
@@ -326,13 +327,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		if (!currentAction.get().completed()) {
 			//LOGGER.info("DO action");
-			currentAction.get().doAction(); 
+			currentAction.get().doAction();
+			if (this.getOwner() == -1)  {
+				modifyFogOfWarMap(true,3);
+			}
+
+
 		} else {
 			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
+			if (this.getOwner() == -1)  {
+				modifyFogOfWarMap(true,3);
+			}
 		}
 
-		
+
 	}
 	
 	/**

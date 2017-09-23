@@ -16,7 +16,6 @@ import com.deco2800.marswars.renderers.Renderer;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
-import com.deco2800.marswars.worlds.SelectedTiles;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
@@ -64,7 +63,6 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
-		this.selectedTiles();
 		//this.weatherManager.setWeatherEvent();
 	}
 	
@@ -99,15 +97,9 @@ public class Game{
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}
-
-	/*
- * Initializes fog of war
- */
-	private void selectedTiles() {
 		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
 		multiSelection.resetSelectedTiles();
-		SelectedTiles.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 
 	/**
