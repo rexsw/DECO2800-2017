@@ -90,8 +90,6 @@ public class Render3D implements Renderer {
         //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
 
-
-
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 

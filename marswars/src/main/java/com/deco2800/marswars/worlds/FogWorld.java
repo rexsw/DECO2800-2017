@@ -14,6 +14,8 @@ public class FogWorld {
 
     protected static ArrayList<AbstractEntity> fogMap = new ArrayList<AbstractEntity>();
     protected static ArrayList<AbstractEntity> blackFogMap = new ArrayList<AbstractEntity>();
+
+    //the selected tiles are integrated into the fog world
     protected static ArrayList<AbstractEntity> selectedTileMap = new ArrayList<AbstractEntity>();
 
     /**
@@ -34,7 +36,7 @@ public class FogWorld {
     }
 
     /**
-     * this function initialize this class by putting the tile everywhere throughout the array
+     * this function initialize selected tiles by putting the tile everywhere throughout the array
      * @param width
      * @param length
      */
@@ -70,7 +72,7 @@ public class FogWorld {
 
 
     /**
-     * add FogEntity entity to the fog world
+     * add FogEntity entity to the maps
      * @param entity
      */
     public static void addEntity(AbstractEntity entity, ArrayList<AbstractEntity> map) {
