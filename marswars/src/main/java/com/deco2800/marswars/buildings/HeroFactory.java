@@ -23,10 +23,7 @@ import java.util.Optional;
 
 public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
         HasProgress, HasOwner, HasAction {
-
-    /* A single action for this building */
-    Optional<DecoAction> currentAction = Optional.empty();
-
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(HeroFactory.class);
 
     private int owner;
@@ -185,14 +182,6 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     }
 
     /**
-     * Returns the current action (used in WeatherManager)
-     * @return
-     */
-    public Optional<DecoAction> getAction() {
-        return currentAction;
-    }
-
-    /**
      * Create the 'Create Hero' button object
      * @return Button
      */
@@ -228,14 +217,4 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
-
-    /**
-     * Returns the current action of the entity
-     * @return current action
-     */
-    @Override
-    public Optional<DecoAction> getCurrentAction() {
-        return currentAction;
-    }
-
 }

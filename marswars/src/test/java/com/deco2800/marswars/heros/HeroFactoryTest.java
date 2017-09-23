@@ -49,22 +49,11 @@ public class HeroFactoryTest {
         assertTrue(heroFactory.getbuilding() == "Hero Factory");
     }
 
-//    @Test
-    // test fails because giveaction method doesnt work properly (after use
-    // the current action is still empty). but i didn't override giveaction
-    // and dont want to mess with the method in BuildingEntity in case the
-    // problem is with this code
-
-//    public void actionTest() {
-//        System.out.println("Action is " + action);
-//        //System.out.println("get action gives me " + heroFactory.getAction());
-//        System.out.println("current action is " + heroFactory.getAction().isPresent());
-//        heroFactory.giveAction(action);
-//        System.out.println("current action now gives me " + heroFactory
-//                .getAction
-//                ().isPresent());
-//        assertTrue(heroFactory.getAction().equals(action));
-//    }
+    @Test
+    public void actionTest() {
+        heroFactory.giveAction(action);
+        assertTrue(heroFactory.getAction().get().equals(action));
+    }
 
     @Test
     public void builtTest() {
