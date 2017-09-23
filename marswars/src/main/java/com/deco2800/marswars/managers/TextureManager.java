@@ -260,11 +260,11 @@ public class TextureManager extends Manager {
         String unitType = unit.name();
         unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
         //find the team colour of the owner:
-        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
+       // String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
         path = String.format("resources/UnitAssets/%s/Yellow/%s.png",
                 unitType,textureType);
         //try to load the texture into the textureMap
-        String retVal = textureType + teamColour + unitType;
+        String retVal = textureType + unitType;
         saveTexture(retVal,path);
         return retVal;
     }

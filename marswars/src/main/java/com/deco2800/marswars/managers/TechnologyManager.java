@@ -3,9 +3,7 @@ package com.deco2800.marswars.managers;
 
 import java.util.*;
 
-
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.technology.*;
 
 public class TechnologyManager extends Manager{
@@ -37,6 +35,7 @@ public class TechnologyManager extends Manager{
     private Technology weaponLevelThree;
     private ArrayList<Technology> specialParents = new ArrayList<Technology>();
     private Technology special;
+    private ArrayList<BuildingType> buildingsAvailable;
 
     public TechnologyManager() {
         techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Upgrade Cost", new ArrayList<Technology>(),
@@ -258,5 +257,16 @@ public class TechnologyManager extends Manager{
         techMap.put(6, weaponLevelTwo);
         techMap.put(7, weaponLevelThree);
         techMap.put(8, special);
+    }
+    
+    /**
+     * Gets the buildings available for specified team 
+     * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
+     */
+    public ArrayList<BuildingType> getAvailableBuildings() {
+    	buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+    		            BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+    	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
+    	return buildingsAvailable;
     }
 }

@@ -36,8 +36,6 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
-		this.addNewAction(BuildingType.BASE);
-		this.addNewAction(BuildingType.BARRACKS);
 		setAttributes();
 	}
 	
@@ -106,23 +104,6 @@ public class Astronaut extends Soldier {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);
 		sound.playSound(loadedSound);
-	}
-
-
-	@Override
-	public void makeSelected() {
-		super.makeSelected();
-		if (!this.isAi()) {
-			GameManager.get().getGui().showBuildMenu(this, true, true);
-		}
-	}
-
-	@Override
-	public void deselect() {
-		super.deselect();
-		if (!this.isAi()) {
-			GameManager.get().getGui().showBuildMenu(this, false, true);
-		}
 	}
 
 	/**

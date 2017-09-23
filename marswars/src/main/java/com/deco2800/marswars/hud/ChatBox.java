@@ -145,9 +145,6 @@ public class ChatBox extends Table {
      * empty.
      * 
      * A valid string is not empty.
-     * 
-     * Note: This method is currently implemented to just add message to 
-     * chat box for testing purposes.Does not send to server.
      */
     private void sendMessage() {
         String message = this.messageTextField.getText();

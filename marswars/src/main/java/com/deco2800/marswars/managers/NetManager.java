@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NetManager extends Manager {
-    static final int SERVER_PORT = 8080;
+    static final int SERVER_PORT = 8081;
     private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 

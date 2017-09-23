@@ -51,10 +51,6 @@ public class Game{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private BackgroundManager bgManager = (BackgroundManager)
-			GameManager.get().getManager(BackgroundManager.class);
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -74,7 +70,6 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		this.selectedTiles();
-		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**
@@ -168,7 +163,9 @@ public class Game{
 	 */
 	private void setPlayer(int length, int width, int aiteams,
 			int playerteams) {
-		int x, y, playerid;
+		int x;
+		int y;
+		int playerid;
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()

@@ -23,6 +23,7 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
@@ -448,7 +449,7 @@ public class HUDView extends ApplicationAdapter{
 			/*displays the (+) button for setting the hud to visible*/
 			public void changed(ChangeEvent event, Actor actor) {
 				LOGGER.debug("Disable Hud"); //$NON-NLS-1$
-				actionsWindow.setVisible(false);
+				actionsWindow.setVisible(true);
 				minimap.setVisible(false);
 				resourceTable.setVisible(false);
 				//show (+) to show resources again
@@ -569,7 +570,7 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.add(helpText);
 		actionsWindow.setMovable(false);
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-700);
+		actionsWindow.setWidth(stage.getWidth()-500);
 		actionsWindow.setHeight(150);
 		actionsWindow.setPosition(220, 0);
 
@@ -692,13 +693,12 @@ public class HUDView extends ApplicationAdapter{
         }
 		
         selectedEntity = target;
+        if (selectedEntity instanceof Astronaut) {
+        	selectedEntity.giveAllBuilding();
+        }
 		currentActions = target.getValidActions();
-		if (target instanceof Astronaut) {
-	        enterActions(false);
-		}
-		else {
-			enterActions(true);
-		}
+	    enterActions(true);
+
 		if(target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
@@ -1177,93 +1177,65 @@ public class HUDView extends ApplicationAdapter{
 		for (int i = 0; i < currentActions.size(); i++) {
 			enableButton(buttonList.get(i));
 		}
-		//Format Actions
-		formatActionButtons(0);
-		//Format Entities
-		formatUnitButtons(currentActions.getActions().size());
-		//Format Buildings
-		formatBuildingButtons(currentActions.getActions().size() + currentActions.getUnits().size());
+		//Format all actions
+		ActionButtons();
 
 		actionsWindow.setVisible(display);
+		// Sets text of button if display doesn't show
         for (int i = 0; i < currentActions.size(); i++) {
 				enableButton(buttonList.get(i));
 				if (currentActions.get(i) instanceof ActionType) { //If it is an action
 					buttonList.get(i).setText(ActionSetter.getActionName((ActionType)currentActions.get(i)));
 				} else { //If it isnt an action it is something to build
-					buttonList.get(i).setText("Build " + (EntityID)currentActions.get(i)); //$NON-NLS-1$
+					buttonList.get(i).setText("Build " + currentActions.get(i).toString());
 				}
         }
     }
-
-	private void formatUnitButtons(int index) {
-		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
+    /**
+     * Sets up all buttons for available actions
+     */
+	private void ActionButtons() {
+		float buttonWidth = actionsWindow.getWidth()/ currentActions.size();
 		float buttonHeight = actionsWindow.getHeight();
-		for (EntityID e : currentActions.getUnits()) {
-			buttonList.get(index).setVisible(true);
-			buttonList.get(index).clearChildren();
-			buttonList.get(index).setWidth(buttonWidth);
-			buttonList.get(index).setHeight(buttonHeight);
-			Texture entity = textureManager.getTexture((textureManager.loadUnitSprite(e)));
-			TextureRegion entityRegion = new TextureRegion(entity);
-			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
-			ImageButton addPane = new ImageButton(buildPreview);
-			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
-			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(new Label(e.name(), skin)).align(Align.left).padLeft(10);
-			buttonList.get(index).add(new Label(String.valueOf(0),skin)).align(Align.left);
-			Texture rockTex = textureManager.getTexture("rock_HUD");
-			Image rock = new Image(rockTex);
-			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
-			index++;
+		if (buttonWidth >= (actionsWindow.getWidth()/4)){
+			buttonWidth = (actionsWindow.getWidth()/4);
 		}
-
-	}
-
-	private void formatActionButtons(int index) {
-		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
-		float buttonHeight = actionsWindow.getHeight();
-		for (ActionType a : currentActions.getActions()) {
+		int index = 0;
+		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
 			buttonList.get(index).clearChildren();
-			buttonList.get(index).setWidth(buttonWidth);
-			buttonList.get(index).setHeight(buttonHeight);
+			Label name = new Label("", skin);
+			Label cost = new Label("", skin);
+			Image rock = null;
 			Texture entity = textureManager.getTexture("PLACEHOLDER");
+			if (e instanceof BuildingType) {
+				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
+				name = new Label(e.toString(), skin);
+				cost = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
+				Texture rockTex = textureManager.getTexture("rock_HUD");
+				rock = new Image(rockTex);
+			} else if (e instanceof EntityID) {
+				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e)));
+				name = new Label(((EntityID) e).name(), skin);
+				cost = new Label(String.valueOf(0), skin);
+			} else if (e instanceof ActionType) {
+				entity = textureManager.getTexture("PLACEHOLDER");
+				name = new Label(e.toString(), skin);
+			}
+			name.setFontScale(.9f);
+			cost.setFontScale(.9f);
 			TextureRegion entityRegion = new TextureRegion(entity);
 			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
 			ImageButton addPane = new ImageButton(buildPreview);
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(new Label(a.name(), skin)).align(Align.left).padLeft(10);
-			Texture rockTex = textureManager.getTexture("rock_HUD");
-			Image rock = new Image(rockTex);
-			rock.setVisible(false);
-			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			buttonList.get(index).add(rock).width(buttonWidth * .2f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
+			buttonList.get(index).add(cost).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
+			buttonList.get(index).add(name).width(buttonWidth * .7f).align(Align.right).height(buttonHeight * .2f)
+			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
 			index++;
 		}
-	}
 
-
-	private void formatBuildingButtons(int index){
-		float buttonWidth = actionsWindow.getWidth()/currentActions.size();
-		float buttonHeight = actionsWindow.getHeight();
-		for (BuildingType b : currentActions.getBuildings()) {
-			buttonList.get(index).setVisible(true);
-			buttonList.get(index).clearChildren();
-			buttonList.get(index).setWidth(buttonWidth);
-			buttonList.get(index).setHeight(buttonHeight);
-			Texture entity = textureManager.getTexture(b.getBuildTexture());
-			TextureRegion entityRegion = new TextureRegion(entity);
-			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
-			ImageButton addPane = new ImageButton(buildPreview);
-			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
-			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(new Label(b.toString(),skin)).align(Align.left).padLeft(10);
-			buttonList.get(index).add(new Label(String.valueOf(b.getCost()),skin)).align(Align.left);
-			Texture rockTex = textureManager.getTexture("rock_HUD");
-			Image rock = new Image(rockTex);
-			buttonList.get(index).add(rock).width(40).height(40).padBottom(30).align(Align.left);
-			index++;
-		}
 	}
 
 	/**
@@ -1457,7 +1429,7 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setSize(220, 220);
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-700);
+		actionsWindow.setWidth(stage.getWidth()-500);
 		actionsWindow.setHeight(150);
 		actionsWindow.setPosition(220, 0);
 		//Resources
