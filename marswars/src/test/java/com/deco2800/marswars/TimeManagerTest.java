@@ -158,8 +158,8 @@ public class TimeManagerTest {
 
 	@Test
 	public void testGetGlobalTimeString() {
-		assertTrue(timeManager.getGlobalTimeString().length() > 5
-				&& timeManager.getGlobalTimeString().length() < 9);
+		assertTrue(timeManager.getGlobalTimeString().length() >= 5
+				&& timeManager.getGlobalTimeString().length() <= 9);
 	}
 	
 	@Test
