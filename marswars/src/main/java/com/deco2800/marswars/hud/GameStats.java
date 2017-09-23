@@ -1,32 +1,19 @@
 package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Interpolation.Bounce;
-import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameBlackBoard;
+import com.deco2800.marswars.managers.GameBlackBoard.Field;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.managers.GameBlackBoard.Field;
 
 /**
  * Displays the game stats in a separate window during the 
@@ -60,7 +47,7 @@ public class GameStats{
 		this.skin = skin;
 		this.hud = hud; 
 		this.textureManager = textureManager; 
-		this.window = new Window("SPACWARS STATS", skin); //$NON-NLS-1$
+		this.window = new Window("SPACWARS STATS", skin);
 		window.setMovable(false);
 		window.setVisible(false);
 		gameGraph = new GameGraph(null); 
@@ -114,7 +101,7 @@ public class GameStats{
 	 */
 	private Table setGraph(){
 		Table graphTable = new Table();
-		Label graphInfo = new Label("-Graph goes here-", skin);  //$NON-NLS-1$
+		Label graphInfo = new Label("-Graph goes here-", skin);
 		graphTable.add(graphInfo).align(Align.center);
 		
 		return graphTable; 
@@ -125,49 +112,49 @@ public class GameStats{
 		pStatsTable.setDebug(true);
 
 		//Water image button
-		Texture waterImage = textureManager.getTexture("water_HUD"); //$NON-NLS-1$
+		Texture waterImage = textureManager.getTexture("water_HUD");
 		TextureRegion waterRegion = new TextureRegion(waterImage);
 		TextureRegionDrawable waterRegionDraw = new TextureRegionDrawable(waterRegion);
 		ImageButton waterButton = new ImageButton(waterRegionDraw);
 		
 		//Rock image button
-		Texture rockImage = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
+		Texture rockImage = textureManager.getTexture("rock_HUD");
 		TextureRegion rockRegion = new TextureRegion(rockImage);
 		TextureRegionDrawable rockRegionDraw = new TextureRegionDrawable(rockRegion);
 		ImageButton rockButton = new ImageButton(rockRegionDraw);
 		
 		//Biomass image button
-		Texture bioImage = textureManager.getTexture("biomass_HUD"); //$NON-NLS-1$
+		Texture bioImage = textureManager.getTexture("biomass_HUD");
 		TextureRegion bioRegion = new TextureRegion(bioImage);
 		TextureRegionDrawable bioRegionDraw = new TextureRegionDrawable(bioRegion);
 		ImageButton bioButton = new ImageButton(bioRegionDraw);
 		
 		//Crystal image button
-		Texture crystalImage = textureManager.getTexture("crystal_HUD"); //$NON-NLS-1$
+		Texture crystalImage = textureManager.getTexture("crystal_HUD");
 		TextureRegion crystalRegion = new TextureRegion(crystalImage);
 		TextureRegionDrawable crystalRegionDraw = new TextureRegionDrawable(crystalRegion);
 		ImageButton crystalButton = new ImageButton(crystalRegionDraw);
 		
 		//Buildings button 
-		Texture baseImage = textureManager.getTexture("base3"); //$NON-NLS-1$
+		Texture baseImage = textureManager.getTexture("base3");
 		TextureRegion baseRegion = new TextureRegion(baseImage);
 		TextureRegionDrawable baseRegionDraw = new TextureRegionDrawable(baseRegion);
 		ImageButton baseButton = new ImageButton(baseRegionDraw);
 		
 		//Units Lost
-		Texture unitImage = textureManager.getTexture("soldier"); //$NON-NLS-1$
+		Texture unitImage = textureManager.getTexture("soldier");
 		TextureRegion unitRegion = new TextureRegion(unitImage);
 		TextureRegionDrawable unitRegionDraw = new TextureRegionDrawable(unitRegion);
 		ImageButton unitButton = new ImageButton(unitRegionDraw);
 		
 		//Combat Units
-		Texture combatImage = textureManager.getTexture("tank"); //$NON-NLS-1$
+		Texture combatImage = textureManager.getTexture("tank");
 		TextureRegion combatRegion = new TextureRegion(combatImage);
 		TextureRegionDrawable combatRegionDraw = new TextureRegionDrawable(combatRegion);
 		ImageButton combatButton = new ImageButton(combatRegionDraw);
 		
 		//Technology
-		Texture techImage = textureManager.getTexture("power_gloves"); //$NON-NLS-1$
+		Texture techImage = textureManager.getTexture("power_gloves");
 		TextureRegion techRegion = new TextureRegion(techImage);
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton techButton = new ImageButton(techRegionDraw);
@@ -238,7 +225,7 @@ public class GameStats{
 	 * @return exit button
 	 */
 	private Button getExitButton(){
-		Button exitStats = new TextButton("Back to game", skin); //$NON-NLS-1$
+		Button exitStats = new TextButton("Back to game", skin);
 		exitStats.setPosition(STATSWIDTH- exitStats.getWidth(), 0);
 		
 		/*Closes the stats and goes back to the game*/
@@ -261,7 +248,7 @@ public class GameStats{
 		window.setPosition((Gdx.graphics.getWidth()-STATSWIDTH)/2, (Gdx.graphics.getHeight()-STATSHEIGHT)/2);
 		window.align(Align.center);
 
-		Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin); //$NON-NLS-1$
+		Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin);
 		window.add(statsText).align(Align.left | Align.top).row();
 				
 		setLayout();

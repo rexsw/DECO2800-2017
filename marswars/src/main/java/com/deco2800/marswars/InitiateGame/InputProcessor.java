@@ -1,13 +1,5 @@
 package com.deco2800.marswars.InitiateGame;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.deco2800.marswars.managers.MultiSelection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -22,10 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.deco2800.marswars.functionKeys.ShortCut;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.net.MessageAction;
 import com.deco2800.marswars.net.SpacClient;
 import com.deco2800.marswars.net.SpacServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class InputProcessor {
 
@@ -73,7 +71,7 @@ public class InputProcessor {
 		if (this.downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			this.downKeys.remove(Input.Keys.M);
-			LOGGER.info("pos: " + this.camera.position.toString()); //$NON-NLS-1$
+			LOGGER.info("pos: " + this.camera.position.toString());
 			GameManager.get().toggleActiveView();
 		}
 		if (GameManager.get().getActiveView() == 1) {
@@ -318,11 +316,11 @@ public class InputProcessor {
 	public void keyPressed(int keycode) {
 		if ((keycode == Input.Keys.ENTER) && (this.networkClient != null)) {
 			Table inner = new Table(this.skin);
-			TextField msgInput = new TextField("", this.skin); //$NON-NLS-1$
+			TextField msgInput = new TextField("", this.skin);
 
 			inner.add(msgInput);
 
-			Dialog ipDiag = new Dialog("Message", this.skin, "dialog") { //$NON-NLS-1$ //$NON-NLS-2$
+			Dialog ipDiag = new Dialog("Message", this.skin, "dialog") {
 				@Override
 				protected void result(Object o) {
 					if (o != null) {
@@ -335,8 +333,8 @@ public class InputProcessor {
 			};
 
 			ipDiag.getContentTable().add(inner);
-			ipDiag.button("Send", true); //$NON-NLS-1$
-			ipDiag.button("Cancel", null); //$NON-NLS-1$
+			ipDiag.button("Send", true);
+			ipDiag.button("Cancel", null);
 			ipDiag.key(Input.Keys.ENTER, true);
 
 			ipDiag.show(this.stage);

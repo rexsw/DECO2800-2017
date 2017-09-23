@@ -1,7 +1,5 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.actions.AttackAction;
-
 /**
  * A combat unit that deal loyalty damage to enemy and convert enemy
  * to its own side. 

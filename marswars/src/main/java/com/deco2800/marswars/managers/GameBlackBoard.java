@@ -1,18 +1,17 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 
 /**
  * A class to track various things in the game and to keep a history of them

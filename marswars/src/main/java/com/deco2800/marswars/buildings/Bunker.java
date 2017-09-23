@@ -1,13 +1,9 @@
 package com.deco2800.marswars.buildings;
 
-import java.util.Optional;
-
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.HasProgress;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**

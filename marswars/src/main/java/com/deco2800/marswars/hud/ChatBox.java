@@ -5,12 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -77,10 +72,10 @@ public class ChatBox extends Table {
         // Create the elements of chat box
         
         this.setTextureManager(textureManager);
-        this.messageTextField = new TextField("", this.skin) ; //$NON-NLS-1$
+        this.messageTextField = new TextField("", this.skin);
         
 		//add dispActions button + image for it 
-		Texture arrowImage = textureManager.getTexture("arrow_button"); //$NON-NLS-1$
+		Texture arrowImage = textureManager.getTexture("arrow_button");
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
 		this.sendButton = new ImageButton(arrowRegionDraw);

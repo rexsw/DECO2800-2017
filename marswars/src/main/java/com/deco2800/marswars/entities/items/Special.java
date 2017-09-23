@@ -1,9 +1,9 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.Effect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.deco2800.marswars.entities.items.effects.Effect;
 
 /**
  * Class for Special items. These items would be activated by the player at any time and are limited in use (i.e. how 

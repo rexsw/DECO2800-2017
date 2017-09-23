@@ -1,10 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.deco2800.marswars.entities.items.effects.AttackEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for Attack items. Attack items would be passive items that have offensive passive effects. These effect are not
