@@ -7,13 +7,16 @@ import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.technology.Technology;
 
-
+/**
+ * Creates the tech tree dialog view to be used by the player
+ *
+ */
 public class TechTreeView extends Dialog{
 	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	HUDView hud;
-
+	
 	public TechTreeView(String title, Skin skin, HUDView hud) {
 		super(title, skin);
 		this.hud = hud;

@@ -27,6 +27,11 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -673,9 +678,48 @@ public class HUDView extends ApplicationAdapter{
 		}	
     }
 
+		
+	
+
+	/**
+	 * Handler for the size buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapSize the new map size
+	 */
+	private void sizeButtonHandler(TextButton button, MapSizeTypes mapSize){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(oldWorld.getMapType(), mapSize);
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
+
+	/**
+	 * Handler for the map types buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapType the new map type
+	 */
+	private void typesButtonHandler(TextButton button, MapTypes mapType){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(mapType, oldWorld.getMapSizeType());
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
 
 
-    
     /**
      * Enables action button based on the actions avaliable to 
      * the selected entity
@@ -685,7 +729,6 @@ public class HUDView extends ApplicationAdapter{
 		if (currentActions == null) {
 			return;
 		}
-		
 		for (int i = 0; i < currentActions.size(); i++) {
 			enableButton(buttonList.get(i));
 		}
@@ -853,12 +896,9 @@ public class HUDView extends ApplicationAdapter{
 				this.setChatActiveCheck(1);
 			}
 		}
-		
-		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			
-			//Will check all of the specified hotkeys to see if any have been pressed
-			hotkeys.checkKeys();
-		}
+		//Will check all of the specified hotkeys to see if any have been pressed
+		hotkeys.checkKeys();
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
@@ -957,39 +997,53 @@ public class HUDView extends ApplicationAdapter{
 
     }
 	
-	/** 
-	 * When used in the code will set the pauseCheck integer to 1 when there
+	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
 	 */
 	public void setPauseCheck(int i) {
 		pauseCheck = i;	
 	}
 	
+	/**
+	 * returns the integer value curently assigned to the pauseCheck variable
+	 * @return int 
+	 */
+	
 	public int getPauseCheck() {
 		return pauseCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
 	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
 	 * stop the other hotkeys from being used while the chatbox is visible
+	 * @param i
 	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
 	}
 	
+	/**
+	 * returns the value stored in the ChatActiveCheck variable
+	 * @return int
+	 */
 	public int getChatActiveCheck() {
 		return chatActiveCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the exitCheck integer to 1 when there
 	 * is an active dialog asking the user if they wish to quit, and 0 otherwise
+	 * @param i
 	 */
 	public void setExitCheck(int i) {
 		exitCheck = i;
 	}
 	
+	/** 
+	 * returns the value in the exitCheck variable
+	 * @return int
+	 */
 	public int getExitCheck() {
 		return exitCheck;
 	}
@@ -997,32 +1051,51 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * When used in the code will set the techCheck integer to 1 when the tech
 	 * tree is visible and 0 otherwise
+	 * @param i
 	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
 	}
 	
+	/**
+	 *  returns the value stored in the techCheck variable
+	 * @return int
+	 */
 	public int getTechCheck() {
 		return techCheck;
 	}
 
 	/**
-	 *  When used in the code will set the helpCheck integer to 1 when there
+	 * When used in the code will set the helpCheck integer to 1 when there
 	 * is an active Help window and 0 otherwise
+	 * @param i
 	 */
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
 	}
 	
+	/**
+	 *  returns the value stored in the helpCheck variable
+	 * @return int
+	 */
 	public int getHelpCheck() {
 		return helpCheck;
 	}
+	
+	/**
+	 * returns the boolean stored in the inventoryToggle variable for testing purposes
+	 * @return boolean
+	 */
 
 	public boolean isInventoryToggle() {
 		return inventoryToggle;
 	}
-
+	
+	/**
+	 * sets the inventoryToggle variable
+	 * @param inventoryToggle
+	 */
 	public void setInventoryToggle(boolean inventoryToggle) {
 		this.inventoryToggle = inventoryToggle;
 	}

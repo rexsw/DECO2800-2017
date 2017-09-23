@@ -244,7 +244,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
-			if (this.getOwner() == -1 && getHealth()>0)  {
+			if (this.getOwner() == -1)  {
 				modifyFogOfWarMap(true,3);
 			}
 			if(getHealth()<=0)modifyFogOfWarMap(false,3);

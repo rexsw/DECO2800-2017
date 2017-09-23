@@ -192,7 +192,7 @@ public class Render3D implements Renderer {
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
             if (entity instanceof BaseEntity && FogManager.getToggleFog()) {
                 BaseEntity baseEntity = (BaseEntity) entity;
-                if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT) {
+                if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT || baseEntity.getEntityType() == BaseEntity.EntityType.HERO) {
                     if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
                 }
             }
@@ -215,6 +215,10 @@ public class Render3D implements Renderer {
 
             if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
                     && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                if(entity instanceof BlackTile || entity instanceof GrayTile || entity instanceof MultiSelectionTile){
+                    batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength()*1.05f,
+                            (tex.getHeight() / aspect) * entity.getYRenderLength()*1.05f);
+                }
                 batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
                         (tex.getHeight() / aspect) * entity.getYRenderLength());
             }

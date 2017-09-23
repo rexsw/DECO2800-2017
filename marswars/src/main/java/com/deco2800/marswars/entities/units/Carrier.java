@@ -23,7 +23,7 @@ import java.util.Random;
  */
 
 public class Carrier extends Soldier {
-	private static final float MOVING_SPEED=0.03f;
+	private static final float MOVING_SPEED=0.1f;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 

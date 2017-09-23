@@ -111,7 +111,6 @@ public class BaseWorld extends AbstractWorld {
 				ent.fixPosition((int)(entity.getPosX() + ((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 0, 0);
 			}
 		}
-
 	}
 	
 	/**
@@ -122,13 +121,11 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	@Override
 	public void removeEntity(BaseEntity entity) {
+		super.removeEntity(entity);
 		if (entity instanceof Soldier) {
-			((Soldier)entity).modifyFogOfWarMap(false,3);
 			// remove entity from the minimap when they are removed from the world
 			//GameManager.get().getMiniMap().removeEntity(entity);
 		}
-		super.removeEntity(entity);
-
 		if (!entity.isCollidable())
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
