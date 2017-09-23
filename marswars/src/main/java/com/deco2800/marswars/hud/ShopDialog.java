@@ -170,7 +170,7 @@ public class ShopDialog extends Dialog{
 	
 	/**
 	 * Private helper method to make image buttons for the items with the provided texture (the item icon image).
-	 * @param image  Texture that is the desired item icon for the button
+	 * @param image  Texture that is the desired item icon for the button.
 	 * @return ImageButton object that has the provided image for the item icon
 	 */
 	private ImageButton generateItemButton(Texture image) {
