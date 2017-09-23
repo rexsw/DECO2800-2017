@@ -3,12 +3,11 @@
  */
 package com.deco2800.marswars.entities.TerrainElements;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.managers.GameManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is for the resource on the map only, player's resource should use GatheredResouce class instead.

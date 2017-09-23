@@ -1,7 +1,8 @@
 package com.deco2800.marswars.entities.items.effects;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;;
+import com.deco2800.marswars.entities.units.Commander;
+
 
 /**
  * Class that defines an effect that increases the offensive stats of a unit i.e. damage, armour damage, attack speed

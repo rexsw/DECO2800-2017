@@ -1,20 +1,19 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A missile.

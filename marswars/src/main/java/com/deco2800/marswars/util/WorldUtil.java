@@ -3,7 +3,6 @@ package com.deco2800.marswars.util;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;

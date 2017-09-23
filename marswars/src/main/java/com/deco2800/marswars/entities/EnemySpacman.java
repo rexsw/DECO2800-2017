@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.Manager;
 
 import java.util.Optional;
 

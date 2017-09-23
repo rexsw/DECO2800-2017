@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.technology.*;
+import com.deco2800.marswars.technology.Technology;
 
 /**
  * Creates the tech tree dialog view to be used by the player
@@ -23,12 +23,12 @@ public class TechTreeView extends Dialog{
 		{
 			//text("This will display the technology tree");
 			// note that object numbers must correspond with tech tree tech ids
-			button("Unlock Hero Factory", 1); //$NON-NLS-1$
-			button("Unlock Armour Level 1", 2); //$NON-NLS-1$
-			button("Unlock Armour Level 2", 3); //$NON-NLS-1$
-			button("Unlock Armour Level 3", 4); //$NON-NLS-1$
+			button("Unlock Hero Factory", 1);
+			button("Unlock Armour Level 1", 2);
+			button("Unlock Armour Level 2", 3);
+			button("Unlock Armour Level 3", 4);
 
-			button("OK", 0); //$NON-NLS-1$
+			button("OK", 0);
 			
 			timeManager.pause();
 		}

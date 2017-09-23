@@ -2,10 +2,11 @@ package com.deco2800.marswars.hud;
 
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EnemySpacman;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
 
 import java.util.List;
 
@@ -13,9 +14,7 @@ import java.util.List;
  * This class is to interprete and excute the cheatcode catched in cheatbox
  */
 public class CodeInterpreter {
-
-
-
+    
 
     /**
      * call different methods when receiving different codes
@@ -76,7 +75,7 @@ public class CodeInterpreter {
         List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
         for(BaseEntity e:entitylist)
         {
-            if(e.getOwner() != -1)
+            if(e.getOwner() != -1 && e instanceof Soldier)
             {
                 GameManager.get().getWorld().removeEntity(e);
                 System.out.println( GameManager.get().getWorld().getEntities().size());
@@ -93,7 +92,7 @@ public class CodeInterpreter {
         List<BaseEntity> entitylist = GameManager.get().getWorld().getEntities();
         for(BaseEntity e:entitylist)
         {
-            if(e.getOwner() != -1)
+            if(e.getOwner() != -1 && e instanceof Soldier)
             {
                 GameManager.get().getWorld().removeEntity(e);
                 System.out.println( GameManager.get().getWorld().getEntities().size());
