@@ -102,12 +102,18 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			//Update this
+			// placeholder graphics value while HF texture is created
+			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
+			this.setBuildSpeed(.5f);
+			this.setMaxHealth(3000);
+			this.setHealth(3000);
+			this.building = "Hero Factory";
+			fogRange = 3;
 			break;
 		default:
 			break;
 		}
-		//this.setCost(building.getCost());
 		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 	}
@@ -184,7 +190,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (currentAction.isPresent() == false) {
 			currentAction = Optional.of(action);
 		}
 	}
@@ -310,5 +316,4 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		return building;
 	}
 
-	
 }
