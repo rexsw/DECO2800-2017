@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class LoadAction implements DecoAction {
 
 	//this speeds up the carrier unit
-	private static final float MOVING_SPEED=0.03f;
+	private static final float MOVING_SPEED=0.1f;
 
     enum State {
 	START_STATE, MOVE_STATE, LOAD_STATE
@@ -27,7 +27,8 @@ public class LoadAction implements DecoAction {
     private Soldier carrier;
     private Soldier target;
     private int ticksLoad = 50;
-    private boolean actionPaused = false;
+	private boolean actionPaused = false;
+
 
     /**
      * Constructor for the LoadAction
