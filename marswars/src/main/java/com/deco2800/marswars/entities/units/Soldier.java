@@ -328,17 +328,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (!currentAction.get().completed()) {
 			//LOGGER.info("DO action");
 			currentAction.get().doAction();
-			if (this.getOwner() == -1)  {
-				modifyFogOfWarMap(true,3);
-			}
-
-
 		} else {
 			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
-			if (this.getOwner() == -1)  {
-				modifyFogOfWarMap(true,3);
-			}
+
 		}
 
 
