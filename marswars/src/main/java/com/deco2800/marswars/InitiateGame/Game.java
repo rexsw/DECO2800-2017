@@ -51,6 +51,8 @@ public class Game{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -70,6 +72,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		this.selectedTiles();
+		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**

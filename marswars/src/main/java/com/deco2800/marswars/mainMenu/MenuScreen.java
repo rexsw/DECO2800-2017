@@ -122,7 +122,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize);
-				GameManager.get().getGui().showEntitiesPicker(true, false);
+				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
 		});
