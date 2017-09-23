@@ -18,8 +18,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class InventoryTest {
 	//Necessary instances to be made/defined.
 	private static BaseWorld baseWorld;
-	private static ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
-	private static Commander entity; //Commander to test with and chack stats.
+	private static Commander entity; //Commander to test with and check stats.
 	private static Inventory bag; //Instance of Inventory class to test with
 	// making all the items to test with.
 	Weapon wep1 = new Weapon(WeaponType.WEAPON1);
@@ -98,8 +97,6 @@ public class InventoryTest {
 	public static void setup() {
 		baseWorld = new BaseWorld(100 ,150);
     	GameManager.get().setWorld(new BaseWorld(100, 150));
-    	GameManager.get().setMiniMap(new MiniMap());
-		cm.setColour(1);
         // get the starting base stats of the Commander
 		entity = new Commander(0, 0, 0, 1);
         bag = entity.getInventory();
