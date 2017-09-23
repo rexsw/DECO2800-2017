@@ -1,19 +1,17 @@
 package com.deco2800.marswars.managers;
+
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.net.*;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class NetManager extends Manager {
-    static final int SERVER_PORT = 8080;
+    static final int SERVER_PORT = 8081;
     private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 
-//    private ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
     private ServerConnectionManager serverConnectionManager = new ServerConnectionManager();
 
     private SpacServer networkServer = new SpacServer();
@@ -21,6 +19,9 @@ public class NetManager extends Manager {
 
     public NetManager() {
         networkServer.addConnectionManager(serverConnectionManager);
+        networkServer.addConnectionManager(new LoggingConnectionManager("| "));
+
+        networkClient.addConnectionManager(new LoggingConnectionManager());
     }
 
     public SpacServer getNetworkServer(){
@@ -30,14 +31,6 @@ public class NetManager extends Manager {
     public SpacClient getNetworkClient(){
         return networkClient;
     }
-//
-//    public ServerConnectionManager getServerConnectionManager(){
-//        return serverConnectionManager;
-//    }
-//
-//    public ClientConnectionManager getClientConnectionManager(){
-//        return clientConnectionManager;
-//    }
 
     public void startServer() {
         //Initiate Server

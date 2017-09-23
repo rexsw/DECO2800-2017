@@ -48,5 +48,38 @@ public class EnemySpacmanTest {
         assertTrue(man.showProgress());
         assertEquals(action.hashCode(), man.getCurrentAction().hashCode());
     }
+
+    @Test
+    public void actionTestTick() {
+        EnemySpacman man = new EnemySpacman(1,1,1);
+        DecoAction action = Mockito.mock(DecoAction.class);
+        man.setAction(action);
+        man.onTick(1);
+
+        assertTrue(man.showProgress());
+        assertEquals(action.hashCode(), man.getCurrentAction().hashCode());
+    }
+
+    @Test
+    public void setActionTest() {
+        EnemySpacman man = new EnemySpacman(1,1,1);
+        DecoAction action = Mockito.mock(DecoAction.class);
+        man.setCurrentAction(action);
+        assertTrue(man.showProgress());
+        assertEquals(action.hashCode(), man.getCurrentAction().hashCode());
+    }
+    @Test
+    public void getProgressTest() {
+        EnemySpacman man = new EnemySpacman(1,1,1);
+        DecoAction action = Mockito.mock(DecoAction.class);
+        man.setCurrentAction(action);
+        assertEquals(0, man.getProgress());
+    }
+    @Test
+    public void getNoProgressTest() {
+        EnemySpacman man = new EnemySpacman(1,1,1);
+        DecoAction action = Mockito.mock(DecoAction.class);
+        assertEquals(0,man.getProgress());
+    }
 }
 

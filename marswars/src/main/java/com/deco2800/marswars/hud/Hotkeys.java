@@ -93,6 +93,7 @@ public class Hotkeys {
 			}
 		}
 		
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if (this.noActive()) {
 				hud.setExitCheck(1);
@@ -144,12 +145,9 @@ public class Hotkeys {
 				help.hide();
 				timeManager.unPause();
 			}
-		}	
-		
-			
-
+		}
 	}
-	
+
 	/**
 	 * will check all of the truth values instantiated in HUDView and use them to determine
 	 * whether any of the menus that the hud can create are active.  

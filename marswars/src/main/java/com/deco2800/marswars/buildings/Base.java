@@ -1,6 +1,5 @@
 package com.deco2800.marswars.buildings;
 
-import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
@@ -20,6 +19,5 @@ public class Base extends BuildingEntity {
 
 	public Base(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.BASE, owner);
-		this.addNewAction(EntityID.TANK);
 	}
 }

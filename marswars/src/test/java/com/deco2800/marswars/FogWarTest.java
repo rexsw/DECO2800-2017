@@ -4,15 +4,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.entities.GrayTile;
-import com.deco2800.marswars.entities.BlackTile;
-import com.deco2800.marswars.entities.FogEntity;
 import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.entities.FogEntity;
 
 /**
  * test for all affiliations of fog of war:
@@ -81,6 +78,11 @@ public class FogWarTest {
 		FogWorld.initializeFogWorld(5, 5);
 		FogWorld.getFogMap();
 		FogWorld.getBlackFogMap();
+		FogEntity fogEntity = new FogEntity(0, 0, 0, 1, 1, 1);
+		fogEntity.setPosX(1);
+		fogEntity.setPosY(1);
+		fogEntity.setPosZ(1);
+		fogEntity.setPosition(0, 0, 0);
 	}
 	
 	

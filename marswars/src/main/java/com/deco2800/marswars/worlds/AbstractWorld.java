@@ -3,7 +3,6 @@ package com.deco2800.marswars.worlds;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.ArrayList;

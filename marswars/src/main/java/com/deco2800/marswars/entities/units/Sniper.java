@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 
 /*
  * A Sniper unit, does longer range and more armour than a soldier 

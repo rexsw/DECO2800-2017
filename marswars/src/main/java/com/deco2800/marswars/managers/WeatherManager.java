@@ -1,8 +1,8 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Point;
@@ -26,7 +26,10 @@ public class WeatherManager extends Manager implements Tickable {
     private long currentTime = 0;
     private boolean eventStarted = false;
     private boolean damaged = false;
+    private boolean iteratorSet = false;
+    private boolean floodWatersExist = false;
 
+    private Iterator<BaseEntity> iterator;
 
     private static final org.slf4j.Logger LOGGER =
             LoggerFactory.getLogger(WeatherManager.class);
@@ -34,12 +37,14 @@ public class WeatherManager extends Manager implements Tickable {
     /**
      * Sets the relevant weather even according to the current in game time.
      */
-    public void setWeatherEvent() {
+    public boolean setWeatherEvent() {
         //LOGGER.info("WEATHER MAN TICKING");
+        boolean status = false;
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            //if (timeManager.getHours() <= 2) {//this.isRaining()) {
+            if (timeManager.getHours() < 1) {//this.isRaining()) {
+                status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
                     this.generateFlood();
@@ -47,17 +52,21 @@ public class WeatherManager extends Manager implements Tickable {
                     this.setInterval();
                     //LOGGER.info("WEATHER MAN TICKING");
                 }
-            //}
-            //if (timeManager.getHours() > 2) {
-                // While water still exists, continue to apply effects
-            //    if (this.retreatWaters()) {
-            //        this.applyEffects();
-             //   }
-            //}
+            }
+            if (timeManager.getHours() >= 1 && floodWatersExist) {
+                if (currentTime > interval + 10) {
+                    world = GameManager.get().getWorld();
+                    // While water still exists, continue to apply effects
+                    if (this.retreatWaters()) {
+                        //this.applyEffects();
+                    }
+                }
+            }
 
         } else {
             eventStarted = false;
         }
+        return status;
     }
 
     /**
@@ -269,9 +278,10 @@ public class WeatherManager extends Manager implements Tickable {
             }
             // Previous check should cover this, but to confirm
             if (position.getX() != -1 && position.getY() != -1) {
-                Water floodDrop = new Water(world, position.getX(),
+                Water floodDrop = new Water(position.getX(),
                         position.getY(), 0);
                 world.addEntity(floodDrop);
+                floodWatersExist = true;
             } else {
                 // No free position found, so return with no change
                 return;
@@ -323,9 +333,10 @@ public class WeatherManager extends Manager implements Tickable {
         // Ensure position valid (should be trivially true)
         if (! checkPosition(p)) {
             //LOGGER.info("POSITION CHECKED");
-            Water firstDrop = new Water(world, p.getX(),
+            Water firstDrop = new Water(p.getX(),
                     p.getY(), 0);
             world.addEntity(firstDrop);
+            floodWatersExist = true;
            // LOGGER.info("WATER FINE");
             this.generateWater(firstDrop);
             //LOGGER.info("DROP GENERATED");
@@ -343,20 +354,31 @@ public class WeatherManager extends Manager implements Tickable {
     private boolean retreatWaters() {
         //LOGGER.info("GENERATING FLOOD");
         List<BaseEntity> entities = world.getEntities();
+        System.out.println(entities.size() + "SIZEEEEEEE");
         Boolean waterFound = false;
-        Iterator<BaseEntity> iterator = entities.iterator();
+        //int count = 10;
+        if (! iteratorSet) {
+            iterator = entities.iterator();
+            iteratorSet = true;
+        }
         // Find existing water entities
-        while (iterator.hasNext()) {
+        //while (iterator.hasNext() && count > 0) {
+        if (iterator.hasNext()) {
             LOGGER.info("REMOVING");
             BaseEntity entity = iterator.next();
             if (entity instanceof Water) {
-                LOGGER.info("WATER FOUND");
+                //LOGGER.info("WATER FOUND");
                 waterFound = true;
                 // Remove Water with 10% chance every call
                 //if (random.nextInt(100) > 90) {
-                    iterator.remove();
+                ((Water) entity).setHealth(0);
+                GameManager.get().getWorld().removeEntity(entity);
+                //count--;
                 //}
             }
+        } else {
+            // WILL CURRENTLY REMOVE ALL WATER ON MAP
+            floodWatersExist = false;
         }
         return waterFound;
     }
