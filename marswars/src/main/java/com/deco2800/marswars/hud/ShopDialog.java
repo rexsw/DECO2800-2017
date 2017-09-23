@@ -24,6 +24,8 @@ import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.WeaponType;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TextureManager;
 
 /**
@@ -31,6 +33,9 @@ import com.deco2800.marswars.managers.TextureManager;
  * left table with rows of clickable item icons with their descriptions to their right of each icon. The right table
  * would have all the player's Commanders' icons. A Commander needs to be selected (by clicking on their icon) before an
  * item can be bought (by click on the item icon). To escape the window, simple click outside of the window. 
+ * 
+ * NOTE: CURRENTLY THE SHOP DOES NOT CONSIDER TECH TREE UNLOCK CONSIDERATIONS NOR RESOURCE REQUIREMENTS.
+ * NOTE2: DESIGN OF THE SHOP IS TO BE RE-DONE BASED ON USER FEEDBACK.
  * @author Mason
  *
  */
@@ -90,7 +95,8 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
-	                if (selectedHero != null) {
+	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item);
 		                	selectedHero.addItemToInventory(weapon);
@@ -104,8 +110,12 @@ public class ShopDialog extends Dialog{
 	                		selectedHero.addItemToInventory(special);
 	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
 	                	}
+	                	transact(selectedHero.getOwner(), item);
 	                } else {
-	                	status.setText("unsuccessful shopping, please select a hero");
+	                	String mes = selectedHero == null ? "unsuccessful shopping, please select a hero." : 
+	                		(selectedHero.getHealth() > 0 ? "Not enough resources." : 
+	    	                		"Your Commander is dead. Can't buy anything.");
+	                	status.setText(mes);
 	                }
 	                }
 	        });
@@ -129,6 +139,45 @@ public class ShopDialog extends Dialog{
         
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
+	}
+	
+	/**
+	 * Private method to check if the owner of the Commander has enough resources to buy the item.
+	 * @param owner  The team id of the owner of the Commander to buy the item for.
+	 * @param item  The item type enumerate value to get the cost from.
+	 * @return true if transaction was successful. false if not enough resources.
+	 */
+	private boolean checkCost(int owner, ItemType item) {
+		int[] cost = item.getCost();
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if (rm.getRocks(owner) < cost[0]) {
+			return false;
+		}
+		if (rm.getCrystal(owner) < cost[1]) {
+			return false;
+		}
+		if (rm.getWater(owner) < cost[2]) {
+			return false;
+		}
+		if (rm.getBiomass(owner) < cost[3]) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Private method to handle the resource transaction to buy an item.
+	 * @param owner  The team id of the owner of the Commander to buy the item for.
+	 * @param item  The item type enumerate value to get the cost from.
+	 */
+	private void transact(int owner, ItemType item) {
+		int[] cost = item.getCost();
+		System.out.println(cost);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rm.setBiomass(rm.getRocks(owner) - cost[0], owner);
+		rm.setBiomass(rm.getCrystal(owner) - cost[1], owner);
+		rm.setBiomass(rm.getWater(owner) - cost[2], owner);
+		rm.setBiomass(rm.getBiomass(owner) - cost[3], owner);
 	}
 	
 	/**
@@ -177,11 +226,11 @@ public class ShopDialog extends Dialog{
         	public void clicked(InputEvent event, float x, float y){
                 if(heroButton.isChecked()) {
                 	heroButton.setChecked(true);
-                	status.setText("Select " + hero.toString());
+                	status.setText("Selected " + hero.toString());
                 	selectedHero = hero;
                 } else {
                 	heroButton.setChecked(false);
-                	status.setText("Unselect "+ hero.toString());
+                	status.setText("Unselected "+ hero.toString());
                 	selectedHero = null;
                 }
                 }
