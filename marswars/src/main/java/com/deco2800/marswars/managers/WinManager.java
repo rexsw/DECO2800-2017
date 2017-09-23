@@ -1,11 +1,10 @@
 package com.deco2800.marswars.managers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.GameStats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class the handles winning the game

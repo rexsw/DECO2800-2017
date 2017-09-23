@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;

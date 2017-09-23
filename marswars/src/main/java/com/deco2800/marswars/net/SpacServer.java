@@ -2,7 +2,6 @@ package com.deco2800.marswars.net;
 
 
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
 

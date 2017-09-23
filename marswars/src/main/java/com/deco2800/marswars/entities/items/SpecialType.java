@@ -1,9 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.HealthEffect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.deco2800.marswars.entities.items.effects.*;
 
 /**
  * Enumerate class to store the meta data for all the Special items. Since Special items can have any sort of effect, 

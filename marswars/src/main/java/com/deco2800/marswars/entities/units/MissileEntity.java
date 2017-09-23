@@ -1,14 +1,12 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.util.Box3D;
+import java.util.Optional;
 
 /**
  * @author Vinson Yeung on 25/8/17

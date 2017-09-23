@@ -7,7 +7,6 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.Manager;
 import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
 
 import java.util.List;
 

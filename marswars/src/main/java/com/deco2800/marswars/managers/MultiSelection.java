@@ -1,12 +1,7 @@
 package com.deco2800.marswars.managers;
 
-import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.AbstractWorld;
-
-import java.util.List;
 
 /**this class will contain info for multi selection
  * Created by Treenhan on 9/19/17.

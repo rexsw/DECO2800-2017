@@ -1,15 +1,13 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
-import com.deco2800.marswars.entities.Selectable.EntityType;
-import com.deco2800.marswars.entities.items.*;
-
-import java.util.Optional;
-
+import com.deco2800.marswars.entities.items.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * A hero for the game previously called as HeroSpacman.

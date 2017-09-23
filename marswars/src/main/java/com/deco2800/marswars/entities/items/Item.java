@@ -1,8 +1,8 @@
 package com.deco2800.marswars.entities.items;
 
-import java.util.List;
-
 import com.deco2800.marswars.entities.items.effects.Effect;
+
+import java.util.List;
 
 /**
  * Abstract class for items in the game. Items are to be only equippable/usable on Commander (i.e. the hero units).
