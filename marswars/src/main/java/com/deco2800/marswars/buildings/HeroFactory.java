@@ -40,26 +40,16 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
      * @param posY its y position on the world.
      * @param posZ its z position on the world.
      */
-    public HeroFactory(AbstractWorld world, float posX, float posY, float posZ, int owner) {
-        super(posX, posY, posZ, BuildingType.BUNKER, owner);
+    public HeroFactory(AbstractWorld world, float posX, float posY, float
+            posZ, int owner) {
+        super(posX, posY, posZ, BuildingType.HEROFACTORY, owner);
         this.setTexture("bunker");  // temporary texture
         this.setEntityType(EntityType.BUILDING);
         this.world = world;
         this.setCost(200);
         this.setSpeed(1.5f);
         this.addNewAction(ActionType.GENERATE);
-        this.addNewAction(ActionType.CREATEITEM);
         world.deSelectAll();
-    }
-
-    /**
-     * Give an action to the hero factory
-     * @param action
-     */
-    public void giveAction(DecoAction action) {
-        if (!currentAction.isPresent()) {
-            currentAction = Optional.of(action);
-        }
     }
 
     /**
