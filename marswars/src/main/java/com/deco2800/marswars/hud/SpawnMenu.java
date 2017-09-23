@@ -82,7 +82,7 @@ public class SpawnMenu {
         buildingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addBuildingsPickerMenu(false);
+                addBuildingsPickerMenu(true);
             }
         });
         TextButton resourcesButton = new TextButton("Resources",skin);
