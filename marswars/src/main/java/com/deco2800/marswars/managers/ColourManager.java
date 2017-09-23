@@ -1,10 +1,10 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.badlogic.gdx.graphics.Color;
 
 /**
  * 

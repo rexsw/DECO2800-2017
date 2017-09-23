@@ -1,55 +1,126 @@
 package com.deco2800.marswars.entities.items;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.BaseWorld;
+
 /**
+ * Class to test the Special items class general methods. Also tests the effects of  the BOMB item. 
+ * Only testing on Commander because the applyEffect methods so far are only enabled for Commander for testing purposes.
+ * When the limitation is taken out, this test would still work because AttackableEntity encapsulates Commander.
  * Created by Nick on 22/9/17.
  */
 public class SpecialTest {
+	private static BaseWorld baseWorld;
+	private Commander com; //Tank to test HealthEffect.
+	private int baseHP; //store the starting health of the commander each time.
+	Special bomb;
+	
+	/**
+	 * Set up the base world.
+	 */
+	@BeforeClass
+	public static void setup() {
+		baseWorld = new BaseWorld(1000 ,1500);
+    	GameManager.get().setWorld(new BaseWorld(1000, 1500));
+	}
+	
+	/**
+	 * Make new bomb items and commanders for each test. 
+	 */
+	@Before
+	public void prepare() {
+		bomb = new Special(SpecialType.BOMB);
+		com = new Commander(0, 0, 0, 1);
+		baseHP = com.getHealth();
+	}
+	
+	/**
+	 * Test the constructor
+	 */
     @Test
     public void constructorTest () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertTrue(bomb != null);
     }
+    
+    /**
+     * test the get method for the duration of the Bomb item's effect
+     */
     @Test
     public void getDuration () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertEquals(0, bomb.getDuration());
     }
+    
+    /**
+     * test the get method for the texture of the item.
+     */
     @Test
     public void getTexture () {
-        Special bomb = new Special(SpecialType.BOMB);
-        Assert.assertEquals("heal_needle", bomb.getTexture());
+        Assert.assertEquals("boot", bomb.getTexture());
     }
+    
+    /**
+     * test the get method for the aoe radius
+     */
     @Test
     public void getRadius () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertEquals(5, bomb.getRadius());
     }
 
+    /**
+     * test the get method for determining the last use of the item for both when the item is up to it's last use and 
+     * when it isn't
+     */
     @Test
     public void getUse () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertEquals(false, bomb.useItem());
+        Special aoeHeal = new Special(SpecialType.AOEHEAL1);
+        Assert.assertEquals(true, aoeHeal.useItem());
     }
+    
+    /**
+     * test the get method for the name of the bomb.
+     */
     @Test
     public void getName () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertEquals("Bomb", bomb.getName());
     }
 
+    /**
+     * test the get method for the Item type enumerate value of the item (not the one to make it).
+     */
     @Test
     public void getItemType () {
-        Special bomb = new Special(SpecialType.BOMB);
         Assert.assertEquals("SPECIAL", bomb.getItemType().name());
     }
+    
+    /**
+     * test the get method for the description of the bomb
+     */
     @Test
     public void getDescription () {
-        Special bomb = new Special(SpecialType.BOMB);
         //System.out.println(bomb.getDescription());
         String testString = "Bomb\n" +
                 "Damage: 100\n";
         Assert.assertEquals(testString, bomb.getDescription());
+    }
+    
+    /**
+     * Tests whether HealthEffect can change the Commander's health when used. Also checks the typical damage case and 
+     * the over heal (heal more than max HP) case.
+     */
+    @Test
+    public void useEffect() {
+    	//should normally run useItem method, but for testing it is not needed here.
+    	bomb.getEffect().get(0).applyEffect(com);
+    	Assert.assertTrue(com.getHealth() == baseHP - 100);
+    	Special heal = new Special(SpecialType.MASS1HEAL);
+    	heal.getEffect().get(0).applyEffect(com);
+    	Assert.assertTrue(com.getHealth() == baseHP);
     }
 }

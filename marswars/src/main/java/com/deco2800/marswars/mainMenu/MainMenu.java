@@ -74,6 +74,10 @@ public class MainMenu {
 		}
 	}
 	
+	public void endGame(){
+		gameStarted = false;
+	}
+	
 	public boolean gameStarted(){
 		boolean started = gameStarted;
 		return started; 

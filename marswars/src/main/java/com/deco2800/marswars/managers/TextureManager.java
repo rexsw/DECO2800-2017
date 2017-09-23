@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.units.Soldier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,7 +189,13 @@ public class TextureManager extends Manager {
         this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
         this.saveTexture("heal_needle", "resources/shopAssets/items/heal_needle.png");
         this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
-        this.saveTexture("locked_inventory", "resources/TechtreeAsset/Lock.PNG");
+        this.saveTexture("boot", "resources/shopAssets/items/boot.png");
+        this.saveTexture("bullets", "resources/shopAssets/items/bullet.png");
+        this.saveTexture("goggle", "resources/shopAssets/items/goggle.png");
+        this.saveTexture("hand_gun", "resources/shopAssets/items/hand_gun.png");
+        this.saveTexture("health_boost", "resources/shopAssets/items/health_boost.png");
+        this.saveTexture("scope", "resources/shopAssets/items/scope.png");
+        this.saveTexture("locked_inventory", "resources/shopAssets/items/lock.png");
         
         
         // stats icon

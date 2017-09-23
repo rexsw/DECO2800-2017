@@ -1,18 +1,17 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 
 /**
  * A class to track various things in the game and to keep a history of them
@@ -65,6 +64,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 */
 	public void set() {
 		values = new HashMap<Integer,Map<Field, List<Integer>>>();
+		index = 0;
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {

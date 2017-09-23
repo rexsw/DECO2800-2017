@@ -1,9 +1,8 @@
 package com.deco2800.marswars.entities.items;
 
-import java.util.List;
-
-import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.items.effects.Effect;
+
+import java.util.List;
 
 /**
  * Abstract class for items in the game. Items are to be only equippable/usable on Commander (i.e. the hero units).
@@ -24,7 +23,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  *
  */
 public abstract class Item {
-	/*
+	/**
 	 * Enumerate for the item type. See above for summary of their meanings and what each can do.
 	 */
 	public enum Type {

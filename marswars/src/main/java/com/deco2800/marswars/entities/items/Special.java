@@ -1,9 +1,9 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.Effect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.deco2800.marswars.entities.items.effects.Effect;
 
 /**
  * Class for Special items. These items would be activated by the player at any time and are limited in use (i.e. how 
@@ -56,7 +56,7 @@ public class Special extends Item {
 	 * @return true if the item still have more than one usage, false if this is the last usage
 	 */
 	public boolean useItem() {
-		if (--useLimit > 1) {
+		if (--useLimit >= 1) {
 			return true;
 		}
 		return false;

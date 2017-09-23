@@ -1,14 +1,8 @@
 package com.deco2800.marswars.hud;
 
-import org.apache.log4j.BasicConfigurator;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -45,17 +39,19 @@ public class PauseMenu extends Dialog{
 		
 		{
 			hud.setPauseCheck(1);
-			text("Game Paused");  //$NON-NLS-1$
+			text("Game Paused");
 			
-			button("Resume", 0); //$NON-NLS-1$
-			button("Statistics", 1); //$NON-NLS-1$
-			button("Settings", 2); //$NON-NLS-1$
-			button("Quit to Main Menu", 3); //$NON-NLS-1$
-			button("Exit Game", 4); //$NON-NLS-1$
+			button("Resume", 0);
+			button("Statistics", 1);
+			button("Settings", 2);
+			button("Quit to Main Menu", 3);
+			button("Exit Game", 4);
 			this.timeManager.pause();
 		}	
 	}
-	
+		/**
+		 * interprets the button press chosen by the player
+		 */
 		protected void result(final Object object) {
 			if (object == (Object) 1) {
 				this.stats.showStats();

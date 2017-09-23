@@ -27,6 +27,11 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +71,7 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		 //window for containing the minimap
 	Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
-	private CheatBox cheatbox;
-	private Window cheatWindow;//window for the cheatbox
+
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -146,7 +150,7 @@ public class HUDView extends ApplicationAdapter{
 		//create chatbox
 
 		this.chatbox = new ChatBox(skin, textureManager, this);
-		this.cheatbox = new CheatBox(skin,textureManager);
+
 		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
@@ -166,7 +170,7 @@ public class HUDView extends ApplicationAdapter{
 		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
-		Cheat();
+
 		
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
 	}
@@ -182,10 +186,10 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.align(Align.right | Align.top);
 		overheadRight.setPosition(0, Gdx.graphics.getHeight());
 
-		LOGGER.debug("Add help, quit and message buttons"); //$NON-NLS-1$
+		LOGGER.debug("Add help, quit and message buttons");
 
 		//add dispMainMenu image
-		Texture menuImage = textureManager.getTexture("menu_button"); //$NON-NLS-1$
+		Texture menuImage = textureManager.getTexture("menu_button");
 		HUDManip = new Table(); //adding buttons into a table
 		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion menuRegion = new TextureRegion(menuImage);
@@ -194,33 +198,28 @@ public class HUDView extends ApplicationAdapter{
 
 
 		//create help button + image for it
-		Texture helpImage = textureManager.getTexture("help_button"); //$NON-NLS-1$
+		Texture helpImage = textureManager.getTexture("help_button");
 		TextureRegion helpRegion = new TextureRegion(helpImage);
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
 
 		//create message button + image for it
-		Texture messageImage = textureManager.getTexture("chat_button"); //$NON-NLS-1$
+		Texture messageImage = textureManager.getTexture("chat_button");
 		TextureRegion messageRegion = new TextureRegion(messageImage);
 		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		messageButton = new ImageButton(messageRegionDraw);
 
-		//create cheat button + image for it
-		messageImage = textureManager.getTexture("chat_button");
-		messageRegion = new TextureRegion(messageImage);
-		messageRegionDraw = new TextureRegionDrawable(messageRegion);
-		cheatButton = new ImageButton(messageRegionDraw);
 
 		//add quit button + image for it
-		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
+		Texture quitImage = textureManager.getTexture("quit_button");
 		TextureRegion quitRegion = new TextureRegion(quitImage);
 		TextureRegionDrawable quitRegionDraw = new TextureRegionDrawable(quitRegion);
 		quitButton = new ImageButton(quitRegionDraw);
 
 		//Create + align time displays 
-		LOGGER.debug("Creating time labels"); //$NON-NLS-1$
-		gameTimeDisp = new Label("0:00", skin); //$NON-NLS-1$
-		gameLengthDisp = new Label("00:00:00", skin); //$NON-NLS-1$
+		LOGGER.debug("Creating time labels");
+		gameTimeDisp = new Label("0:00", skin);
+		gameLengthDisp = new Label("00:00:00", skin);
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
 		
@@ -239,7 +238,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
@@ -250,23 +248,23 @@ public class HUDView extends ApplicationAdapter{
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
 		//Image clockbgImage1 = new Image(textureManager.getTexture("logo"));
-		Label welcomeText = new Label("Welcome to Spacwars!", skin); //$NON-NLS-1$
+		Label welcomeText = new Label("Welcome to Spacwars!", skin);
 		welcomeMsg.add(welcomeText);
 
 		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
 
 		//Creates the help button listener
-		LOGGER.debug("Creating help button listener"); //$NON-NLS-1$
+		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin, hud).show(stage); //$NON-NLS-1$
+				new WorkInProgress("Help  Menu", skin, hud).show(stage);
 			}
 		});
 
 		//Creates the quit button listener
-		LOGGER.debug("Creating quit button listener"); //$NON-NLS-1$
+		LOGGER.debug("Creating quit button listener");
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			//could abstract this into another class
@@ -275,7 +273,7 @@ public class HUDView extends ApplicationAdapter{
 			}});
 
 		//Creates the message button listener
-		LOGGER.debug("Creating message button listener"); //$NON-NLS-1$
+		LOGGER.debug("Creating message button listener");
 		messageButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
@@ -293,20 +291,7 @@ public class HUDView extends ApplicationAdapter{
 
 			}
 		});
-		cheatButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				if (cheatActiveCheck==1){
-					cheatWindow.setVisible(false);
-					cheatActiveCheck = 0;
-				} else {
-					cheatWindow.setVisible(true);
-					cheatbox.setVisible(true);
-					cheatActiveCheck = 1;
-				}
 
-			}
-		});
 	}
 
 
@@ -314,20 +299,16 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds the player Icon, health for a single spacman, and name to the huD (goes into top left).
 	 * Also inventory for the hero character
 	 * Does this by creating a nested table. The basic parent table layout is shown below:
-	 * +---------------------------+
-	 * |    :)    |______________  |
-	 * |  Player  |______________| |
-	 * |   img    |           100  |
-	 * |__________|----------------+
-	 * | p. Name  | x x x x x x    |
-	 * |-----+----|----------------+
-	 * |     |    |
-	 * | >:( | 12 |
-	 * |-----|----|
-	 * |  :) | 10 |
-	 * |     |    |
-	 * |     |    |
-	 * +----------+
+	 * +----------------------------------+
+	 * |    :)    |______________         |
+	 * |  Player  |______________|100/100 |
+	 * |   img    |______________         |
+	 * |          |______________|100/100 |
+	 * |__________|_______________________|
+	 * |          | atk |xx|atk.speed | x |
+	 * | p. Name  |range|xx| mv.speed | x |
+	 * |-----+----|-----------------------+
+	 * 
 	 *
 	 */
 	private void addPlayerDetails(){
@@ -343,8 +324,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Implements a collapsible tab for the chat lobby
 	 */
 	private void addMessages(){
-		LOGGER.debug("Creating chat lobby box"); //$NON-NLS-1$
-		messageWindow = new Window("Chat Lobby", skin); //$NON-NLS-1$
+		LOGGER.debug("Creating chat lobby box");
+		messageWindow = new Window("Chat Lobby", skin);
 		messageWindow.setMovable(false);
 		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
 				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
@@ -355,18 +336,7 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(messageWindow);
 	}
 
-	private void Cheat(){
-		LOGGER.debug("cheatbox"); //$NON-NLS-1$
-		cheatWindow = new Window("Cheat", skin); //$NON-NLS-1$
-		cheatWindow.setMovable(false);
-		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-50,
-				Math.round(stage.getHeight()-cheatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
-		cheatWindow.add(cheatbox);
-		cheatWindow.setVisible(false);
-		cheatWindow.pack();
 
-		stage.addActor(cheatWindow);
-	}
 
 	/**
 	 * Adds in the bottom panel of the HUD
@@ -376,24 +346,24 @@ public class HUDView extends ApplicationAdapter{
 		addInventoryMenu();
 
 
-		LOGGER.debug("Creating HUD manipulation buttons"); //$NON-NLS-1$
+		LOGGER.debug("Creating HUD manipulation buttons");
 		
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
 		//remove dispActions button + image for it 
 
-		Texture minusImage = textureManager.getTexture("minus_button"); //$NON-NLS-1$
+		Texture minusImage = textureManager.getTexture("minus_button");
 		TextureRegion minusRegion = new TextureRegion(minusImage);
 		minusRegionDraw = new TextureRegionDrawable(minusRegion);
 		removeActions = new ImageButton(minusRegionDraw);
 
 		//add dispActions image
-		Texture plusImage = textureManager.getTexture("plus_button"); //$NON-NLS-1$
+		Texture plusImage = textureManager.getTexture("plus_button");
 		TextureRegion plusRegion = new TextureRegion(plusImage);
 		plusRegionDraw = new TextureRegionDrawable(plusRegion);
 		dispActions = new ImageButton(plusRegionDraw);
 
 		//add dispTech image
-		Texture techImage = textureManager.getTexture("tech_button"); //$NON-NLS-1$
+		Texture techImage = textureManager.getTexture("tech_button");
 		TextureRegion techRegion = new TextureRegion(techImage);
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
@@ -423,7 +393,7 @@ public class HUDView extends ApplicationAdapter{
 			/*displays the (-) button for setting the hud to invisible*/
 			public void changed(ChangeEvent event, Actor actor) {
 				if (isInventoryToggle()) {
-					LOGGER.debug("Enable hud"); //$NON-NLS-1$
+					LOGGER.debug("Enable hud");
 					actionsWindow.setVisible(true);
 					minimap.setVisible(true);
 					resourceTable.setVisible(true);
@@ -439,7 +409,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			/*displays the (+) button for setting the hud to visible*/
 			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.debug("Disable Hud"); //$NON-NLS-1$
+				LOGGER.debug("Disable Hud");
 				actionsWindow.setVisible(true);
 				minimap.setVisible(false);
 				resourceTable.setVisible(false);
@@ -453,7 +423,7 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				new TechTreeView("TechTree", skin, hud).show(stage);
 			}
 
 		});
@@ -501,11 +471,11 @@ public class HUDView extends ApplicationAdapter{
 	private void toggleFog(){
 		//disable fog
 		if (fogToggle) {
-			LOGGER.debug("fog of war is now off"); //$NON-NLS-1$
+			LOGGER.debug("fog of war is now off");
 			FogManager.toggleFog(false);
 			fogToggle = false;
 		}else {
-			LOGGER.debug("fog of war is now on"); //$NON-NLS-1$
+			LOGGER.debug("fog of war is now on");
 			FogManager.toggleFog(true);
 			fogToggle = true;
 		}
@@ -514,32 +484,32 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the selectable menu for the inventory for resources
 	 */
 	private void addInventoryMenu(){
-		LOGGER.debug("Create inventory"); //$NON-NLS-1$
-		actionsWindow = new Window("Actions", skin); //$NON-NLS-1$
+		LOGGER.debug("Create inventory");
+		actionsWindow = new Window("Actions", skin);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 
-		LOGGER.debug("Creating resource labels"); //$NON-NLS-1$
-		rockCount = new Label("Rock: 0", skin); //$NON-NLS-1$
-		crystalCount = new Label("Crystal: 0", skin); //$NON-NLS-1$
-		biomassCount = new Label("Biomass: 0", skin); //$NON-NLS-1$
-		waterCount = new Label("Water: 0", skin); //$NON-NLS-1$
+		LOGGER.debug("Creating resource labels");
+		rockCount = new Label("Rock: 0", skin);
+		crystalCount = new Label("Crystal: 0", skin);
+		biomassCount = new Label("Biomass: 0", skin);
+		waterCount = new Label("Water: 0", skin);
 		popCount = new Label("0 ", skin);
 		maxPopCount = new Label(" / 10", skin);
 
 		//add rock image
-		Texture rockTex = textureManager.getTexture("rock_HUD"); //$NON-NLS-1$
+		Texture rockTex = textureManager.getTexture("rock_HUD");
 		Image rock = new Image(rockTex);
 		//add water image
-		Texture waterTex = textureManager.getTexture("water_HUD"); //$NON-NLS-1$
+		Texture waterTex = textureManager.getTexture("water_HUD");
 		Image water = new Image(waterTex);
 		//add biomass image
-		Texture biomassTex = textureManager.getTexture("biomass_HUD"); //$NON-NLS-1$
+		Texture biomassTex = textureManager.getTexture("biomass_HUD");
 		Image biomass = new Image(biomassTex);
 		//add crystal image
-		Texture crystalTex = textureManager.getTexture("crystal_HUD"); //$NON-NLS-1$
+		Texture crystalTex = textureManager.getTexture("crystal_HUD");
 		Image crystal = new Image(crystalTex);
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
@@ -555,8 +525,8 @@ public class HUDView extends ApplicationAdapter{
 
 		stage.addActor(resourceTable);
 
-		peonButton = new TextButton("Select a Unit", skin); //$NON-NLS-1$
-		helpText = new Label("Welcome to SpacWars!", skin); //$NON-NLS-1$
+		peonButton = new TextButton("Select a Unit", skin);
+		helpText = new Label("Welcome to SpacWars!", skin);
 
 		actionsWindow.add(peonButton);
 		actionsWindow.add(helpText);
@@ -575,7 +545,7 @@ public class HUDView extends ApplicationAdapter{
 	private void addButtonArray() {
 		buttonList = new ArrayList<>();
 		for (int i = 0; i != NUMBER_ACTION_BUTTONS; i++) {
-			TextButton newButton = new TextButton(" ", skin); //$NON-NLS-1$
+			TextButton newButton = new TextButton(" ", skin);
 			addButtonListener(newButton);
 			buttonList.add(newButton);
 			actionsWindow.add(newButton);
@@ -692,6 +662,7 @@ public class HUDView extends ApplicationAdapter{
 	    enterActions(true);
 
 		if(target instanceof AttackableEntity) {
+			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
@@ -699,6 +670,7 @@ public class HUDView extends ApplicationAdapter{
 	        this.statsTable.hideInventory();
 	        heroSelected = null;
 	        if(target instanceof Commander) {
+	        	// display the inventory once a commander been selected
 	        	heroSelected = (Commander) target;
 	        	this.statsTable.showInventory();
 	        	this.statsTable.updateHeroInventory((Commander)target);
@@ -706,9 +678,48 @@ public class HUDView extends ApplicationAdapter{
 		}	
     }
 
+		
+	
+
+	/**
+	 * Handler for the size buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapSize the new map size
+	 */
+	private void sizeButtonHandler(TextButton button, MapSizeTypes mapSize){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(oldWorld.getMapType(), mapSize);
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
+
+	/**
+	 * Handler for the map types buttons of the customization menu
+	 *
+	 * @param button the button that will use the handler
+	 * @param mapType the new map type
+	 */
+	private void typesButtonHandler(TextButton button, MapTypes mapType){
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				CustomizedWorld oldWorld = (CustomizedWorld) GameManager.get().getWorld();
+				MapContainer map = new MapContainer(mapType, oldWorld.getMapSizeType());
+				CustomizedWorld world = new CustomizedWorld(map);
+				GameManager.get().setWorld(world);
+				world.loadMapContainer(map);
+			}
+		});
+	}
 
 
-    
     /**
      * Enables action button based on the actions avaliable to 
      * the selected entity
@@ -718,7 +729,6 @@ public class HUDView extends ApplicationAdapter{
 		if (currentActions == null) {
 			return;
 		}
-		
 		for (int i = 0; i < currentActions.size(); i++) {
 			enableButton(buttonList.get(i));
 		}
@@ -825,7 +835,7 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void render(long lastMenuTick){
 		/* Update time & set color depending if night/day */
-		gameTimeDisp.setText(timeManager.toString()); //$NON-NLS-1$
+		gameTimeDisp.setText(timeManager.toString());
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		/*Update Minimap*/
@@ -843,12 +853,12 @@ public class HUDView extends ApplicationAdapter{
 
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rockCount.setText("" + resourceManager.getRocks(-1)); //$NON-NLS-1$
-		crystalCount.setText("" + resourceManager.getCrystal(-1));  //$NON-NLS-1$
-		waterCount.setText("" + resourceManager.getWater(-1)); //$NON-NLS-1$
-		biomassCount.setText("" + resourceManager.getBiomass(-1)); //$NON-NLS-1$
-		popCount.setText("" + resourceManager.getPopulation(-1)); //$NON-NLS-1$
-		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1)); //$NON-NLS-1$
+		rockCount.setText("" + resourceManager.getRocks(-1));
+		crystalCount.setText("" + resourceManager.getCrystal(-1));
+		waterCount.setText("" + resourceManager.getWater(-1));
+		biomassCount.setText("" + resourceManager.getBiomass(-1));
+		popCount.setText("" + resourceManager.getPopulation(-1));
+		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1));
 		//Get the selected entity
 		selectedEntity = null;
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
@@ -859,7 +869,7 @@ public class HUDView extends ApplicationAdapter{
 				if (!heroMap.contains((Commander)e)) {
 					heroMap.add((Commander) e);
 					/*
-					 * only add your own commander as option in shop to buy items for. May need to cheng condition when
+					 * only add your own commander as option in shop to buy items for. May need to change condition when
 					 * multiplayer gets implemented
 					 */
 					if (!e.isAi()) {
@@ -886,12 +896,9 @@ public class HUDView extends ApplicationAdapter{
 				this.setChatActiveCheck(1);
 			}
 		}
-		
-		if(chatActiveCheck == 0 && cheatActiveCheck ==0) {
 			
-			//Will check all of the specified hotkeys to see if any have been pressed
-			hotkeys.checkKeys();
-		}
+		//Will check all of the specified hotkeys to see if any have been pressed
+		hotkeys.checkKeys();
 		
 		if(TimeUtils.nanoTime() - lastMenuTick > 100000) {
 			getActionWindow().removeActor(peonButton);
@@ -926,8 +933,7 @@ public class HUDView extends ApplicationAdapter{
 		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
-		cheatbox.setVisible(false);
-		cheatWindow.setVisible(false);
+
 	}
 
 	/**
@@ -951,7 +957,7 @@ public class HUDView extends ApplicationAdapter{
 	public void resize(int width, int height) {
 
         //Top Left
-        LOGGER.debug("Window resized, rescaling hud"); //$NON-NLS-1$
+        LOGGER.debug("Window resized, rescaling hud");
 		statsTable.setWidth(100);
 		statsTable.align(Align.left | Align.top);
 		statsTable.setPosition(0, stage.getHeight());
@@ -991,39 +997,53 @@ public class HUDView extends ApplicationAdapter{
 
     }
 	
-	/** 
-	 * When used in the code will set the pauseCheck integer to 1 when there
+	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
 	 */
 	public void setPauseCheck(int i) {
 		pauseCheck = i;	
 	}
 	
+	/**
+	 * returns the integer value curently assigned to the pauseCheck variable
+	 * @return int 
+	 */
+	
 	public int getPauseCheck() {
 		return pauseCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
 	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
 	 * stop the other hotkeys from being used while the chatbox is visible
+	 * @param i
 	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
 	}
 	
+	/**
+	 * returns the value stored in the ChatActiveCheck variable
+	 * @return int
+	 */
 	public int getChatActiveCheck() {
 		return chatActiveCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the exitCheck integer to 1 when there
 	 * is an active dialog asking the user if they wish to quit, and 0 otherwise
+	 * @param i
 	 */
 	public void setExitCheck(int i) {
 		exitCheck = i;
 	}
 	
+	/** 
+	 * returns the value in the exitCheck variable
+	 * @return int
+	 */
 	public int getExitCheck() {
 		return exitCheck;
 	}
@@ -1031,32 +1051,51 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * When used in the code will set the techCheck integer to 1 when the tech
 	 * tree is visible and 0 otherwise
+	 * @param i
 	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
 	}
 	
+	/**
+	 *  returns the value stored in the techCheck variable
+	 * @return int
+	 */
 	public int getTechCheck() {
 		return techCheck;
 	}
 
 	/**
-	 *  When used in the code will set the helpCheck integer to 1 when there
+	 * When used in the code will set the helpCheck integer to 1 when there
 	 * is an active Help window and 0 otherwise
+	 * @param i
 	 */
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
 	}
 	
+	/**
+	 *  returns the value stored in the helpCheck variable
+	 * @return int
+	 */
 	public int getHelpCheck() {
 		return helpCheck;
 	}
+	
+	/**
+	 * returns the boolean stored in the inventoryToggle variable for testing purposes
+	 * @return boolean
+	 */
 
 	public boolean isInventoryToggle() {
 		return inventoryToggle;
 	}
-
+	
+	/**
+	 * sets the inventoryToggle variable
+	 * @param inventoryToggle
+	 */
 	public void setInventoryToggle(boolean inventoryToggle) {
 		this.inventoryToggle = inventoryToggle;
 	}

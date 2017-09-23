@@ -1,8 +1,6 @@
 package com.deco2800.marswars.worlds;
 
-import com.deco2800.marswars.entities.BlackTile;
-import com.deco2800.marswars.entities.FogEntity;
-import com.deco2800.marswars.entities.GrayTile;
+import com.deco2800.marswars.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,24 +10,50 @@ import java.util.List;
  * Created by Treenhan on 8/24/17.
  */
 public class FogWorld {
+    private FogWorld(){super();}
 
 
-    protected static ArrayList<FogEntity> fogMap = new ArrayList<FogEntity>();
-    protected static ArrayList<FogEntity> blackFogMap = new ArrayList<FogEntity>();
+    protected static ArrayList<AbstractEntity> fogMap = new ArrayList<AbstractEntity>();
+    protected static ArrayList<AbstractEntity> blackFogMap = new ArrayList<AbstractEntity>();
+
+    //the selected tiles are integrated into the fog world
+    protected static ArrayList<AbstractEntity> selectedTileMap = new ArrayList<AbstractEntity>();
 
     /**
      * this returns the fog map
      * @return
      */
-    public static List<FogEntity> getFogMap() {
+    public static List<AbstractEntity> getFogMap() {
         return fogMap;
     }
 
+
+    /**
+     * this return the selected tiles grid
+     * @return
+     */
+    public static List<AbstractEntity> getMultiSelectionTile() {
+        return selectedTileMap;
+    }
+
+    /**
+     * this function initialize selected tiles by putting the tile everywhere throughout the array
+     * @param width
+     * @param length
+     */
+    public static void initializeSelectedTiles(int width, int length){
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < length; y++) {
+                addEntity(new MultiSelectionTile(x,y,1,1f,1f),selectedTileMap);
+
+            }
+        }
+    }
     /**
      * this return the black fog map
      * @return
      */
-    public static List<FogEntity> getBlackFogMap() {
+    public static List<AbstractEntity> getBlackFogMap() {
         return blackFogMap;
     }
 
@@ -49,10 +73,10 @@ public class FogWorld {
 
 
     /**
-     * add FogEntity entity to the fog world
+     * add FogEntity entity to the maps
      * @param entity
      */
-    public static void addEntity(FogEntity entity, ArrayList<FogEntity> fogMap) {
+    public static void addEntity(AbstractEntity entity, List<AbstractEntity> map) {
         //Add to the fog map
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
@@ -60,7 +84,7 @@ public class FogWorld {
         int top = (int)Math.ceil(entity.getPosY() + entity.getYLength());
         for (int x = left; x < right; x++) {
             for (int y = bottom; y < top; y++) {
-                fogMap.add(entity);
+                map.add(entity);
             }
         }
     }
