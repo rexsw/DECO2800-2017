@@ -2,10 +2,11 @@ package com.deco2800.marswars.entities.units;
 
 
 import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.*;
-import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.GatherAction;
+import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -176,7 +177,7 @@ public class Astronaut extends Soldier {
 	/**
 	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
 	 * This method overrides the basic method to also remove building if astronaut is killed durin build process
-	 * @param the health of the entity
+	 * @param health the health of the entity
 	 */
 	@Override
 	public void setHealth(int health) {
