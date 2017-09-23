@@ -172,11 +172,10 @@ public class ShopDialog extends Dialog{
 	 */
 	private void transact(int owner, ItemType item) {
 		int[] cost = item.getCost();
-		System.out.println(cost);
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		rm.setBiomass(rm.getRocks(owner) - cost[0], owner);
-		rm.setBiomass(rm.getCrystal(owner) - cost[1], owner);
-		rm.setBiomass(rm.getWater(owner) - cost[2], owner);
+		rm.setRocks(rm.getRocks(owner) - cost[0], owner);
+		rm.setCrystal(rm.getCrystal(owner) - cost[1], owner);
+		rm.setWater(rm.getWater(owner) - cost[2], owner);
 		rm.setBiomass(rm.getBiomass(owner) - cost[3], owner);
 	}
 	
