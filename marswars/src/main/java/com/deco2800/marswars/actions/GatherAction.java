@@ -1,7 +1,10 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.GatheredResource;
+import com.deco2800.marswars.entities.HasHealth;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.units.Astronaut;

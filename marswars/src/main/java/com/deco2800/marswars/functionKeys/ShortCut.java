@@ -1,5 +1,4 @@
 package com.deco2800.marswars.functionKeys;
-
 import java.util.ArrayList;
 
 import java.util.HashSet;
@@ -16,21 +15,21 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
-
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.renderers.Renderable;
-
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 
 /**
@@ -52,6 +51,15 @@ public class ShortCut {
 	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
 	
 	private ArrayList<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList1 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList2 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList3 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList4 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList5 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList6 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList7 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList8 = new ArrayList<BaseEntity>();
+	private ArrayList<BaseEntity> baseEntityList9 = new ArrayList<BaseEntity>();
 	
 	private int cameraPointer = 0;
 	
@@ -63,9 +71,12 @@ public class ShortCut {
 	private boolean aiSpac = false;
 	private boolean tank = false;
 	private boolean soldier = false;
-	private boolean spacmanSelect = false;
+	private boolean select = false;
 	private boolean moveToEntity = false;
 	private boolean delete = false;
+	private boolean team1 = false;
+	private boolean numberKey = false;
+	
 	
 	public void process(OrthographicCamera camera) {
 		moveCamera(camera);
@@ -73,12 +84,12 @@ public class ShortCut {
 		cameraGoToTheStoredPosition(camera);
 		cameraBackToLastPosition(camera);
 		cameraDeleteLastPosition();
-		entityOnClick();
-		//moveToOneOfTheEntity(camera);
 		addExtraSpacMan();
 		addExtraAiSpacMan();
 		addExtraTank();
 		addExtraSoldier();
+		storeTeam();
+		teamOnClick();
 		//moveCameraToBase(camera);
 		quitGame();
 	}
@@ -272,29 +283,79 @@ public class ShortCut {
 
 	}
 	
-	public void storeEntityPosition() {
-		
+	public void storeTeam() {
+		if (select == false) {
+			if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_1)){
+				entityOnClick(baseEntityList);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_2)){
+				entityOnClick(baseEntityList1);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_3)){
+				entityOnClick(baseEntityList2);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_4)){
+				entityOnClick(baseEntityList3);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_5)){
+				entityOnClick(baseEntityList4);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_6)){
+				entityOnClick(baseEntityList5);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_7)){
+				entityOnClick(baseEntityList6);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_8)){
+				entityOnClick(baseEntityList7);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_9)){
+				entityOnClick(baseEntityList8);
+			} else if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_0)){
+				entityOnClick(baseEntityList9);
+			} 
+			select = true;
+		} else {
+			select = false;
+		}
+	}
+	
+	public void teamOnClick() {
+		if (numberKey == false && !inputKeys.isEmpty()) {
+			if (inputKeys.contains(Input.Keys.NUM_1) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList);
+			} else if (inputKeys.contains(Input.Keys.NUM_2) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList1);
+			} else if (inputKeys.contains(Input.Keys.NUM_3) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList2);
+			} else if (inputKeys.contains(Input.Keys.NUM_4) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList3);
+			} else if (inputKeys.contains(Input.Keys.NUM_5) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList4);
+			} else if (inputKeys.contains(Input.Keys.NUM_6) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList5);
+			} else if (inputKeys.contains(Input.Keys.NUM_7) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList6);
+			} else if (inputKeys.contains(Input.Keys.NUM_8) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList7);
+			} else if (inputKeys.contains(Input.Keys.NUM_9) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList8);
+			} else if (inputKeys.contains(Input.Keys.NUM_0) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
+				setOnClick(baseEntityList9);
+			} 
+			numberKey = true;
+		} else {
+			numberKey = false;
+		}
 		
 	}
 	
-	public void entityOnClick() {
-		if (inputKeys.contains(Input.Keys.V)){
-			if (spacmanSelect == false) {
-				for (Renderable e : GameManager.get().getWorld().getEntities()) {
-					if ((e instanceof BaseEntity) && ((BaseEntity) e).isSelected()) {
-						baseEntityList.add((BaseEntity) e);
-						LOGGER.error("stored a BaseEntity");
-					}
-				}
-				spacmanSelect = true;
-			}
-		} else {
-			spacmanSelect = false;
-			for (Renderable e : GameManager.get().getWorld().getEntities()) {
-				if ((e instanceof BaseEntity) && !((BaseEntity) e).isSelected() && baseEntityList.contains((BaseEntity) e)) {
-					baseEntityList.remove((BaseEntity) e);
-					LOGGER.error("remove a BaseEntity from the list");
-				}
+	public void setOnClick(ArrayList<BaseEntity> list) {
+		MouseHandler  mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+		for (BaseEntity entity: list) {
+			entity.makeSelected();
+			Clickable c = ((Clickable) entity);
+			c.onClick(mouseHandler);
+		}
+	}
+	
+	public void entityOnClick(ArrayList<BaseEntity> list) {
+		for (Renderable e : GameManager.get().getWorld().getEntities()) {
+			if ((e instanceof Clickable) && (e instanceof BaseEntity) && ((BaseEntity) e).isSelected() && !list.contains((BaseEntity) e)) {
+				list.add((BaseEntity) e);
+				LOGGER.error("stored a BaseEntity");
 			}
 		}
 	}
@@ -347,11 +408,6 @@ public class ShortCut {
 		} else {
 			soldier = false;
 		}
-	}
-	
-	public void addResource() {
-		
-		
 	}
 	
 	public void quitGame() {

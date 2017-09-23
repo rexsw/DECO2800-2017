@@ -353,6 +353,7 @@ public class MapContainer {
         if(!checkForEntity(x, y)){
             return;
         }
+        random=EntityID.SPACMAN;
         if(random == EntityID.SPACMAN){
             newEntity = new Spacman(x, y, 0);
             newEntity.setOwner(0);

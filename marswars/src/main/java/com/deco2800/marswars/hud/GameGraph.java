@@ -1,12 +1,8 @@
 package com.deco2800.marswars.hud;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameBlackBoard;

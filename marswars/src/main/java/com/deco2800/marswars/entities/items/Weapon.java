@@ -1,10 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.deco2800.marswars.entities.items.effects.AttackEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for Attack items. Attack items would be passive items that have offensive passive effects. These effect are not
@@ -20,7 +20,6 @@ import com.deco2800.marswars.entities.items.effects.Effect;
  */
 public class Weapon extends Item {
     private WeaponType type;
-//    private int lvl;
     private List<Effect> effects;
 
     /**
@@ -32,7 +31,6 @@ public class Weapon extends Item {
     public Weapon(WeaponType type) {
     	this.effects = new ArrayList<>();
         this.type = type;
-//        this.lvl = lvl;
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
     }
 
@@ -62,15 +60,6 @@ public class Weapon extends Item {
     public int getWeaponSpeed() {
     	return type.getWeaponSpeed();
     }
-
-//    /**
-//	 * Gets the current level of the Weapon item.
-//	 * 
-//	 * @return the current level of the Weapon item.
-//	 */
-//    public int getLevel() {
-//    	return this.lvl;
-//    }
     
     /**
 	 * Gets a list of all the effects the Weapon item has.
@@ -122,6 +111,23 @@ public class Weapon extends Item {
 	@Override
 	public String getTexture() {
 		return type.getTextureString();
+	}
+	
+	/**
+	 * Override equals method so that equality is based on the WeaponType enumerate value that was used to make the
+	 * weapon item. Class cast exceptions not caught so that it would be easier to debug.
+	 * @param object  The object to be compared.
+	 * @return true if the WeaponType enumerate values are the same, false otherwise
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if ((getClass() != object.getClass()) || (object == null)) {
+			return false;
+		}
+		return ((Weapon) object).type == this.type;
 	}
 }
 

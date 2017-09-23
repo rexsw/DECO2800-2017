@@ -1,35 +1,19 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.LoadAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.actions.UnloadAction;
-import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A carrier unit that is able to load up to 3 other units, extends Soldier
@@ -39,7 +23,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 
 public class Carrier extends Soldier {
-	private static final float MOVING_SPEED=0.03f;
+	private static final float MOVING_SPEED=0.1f;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
