@@ -38,17 +38,27 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
         this.setHealth(10);
     }
 
+    /**
+     * Sets the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     */
     public void setSurrounded() {
         this.surrounded = true;
     }
 
+    /**
+     * Returns the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     * @return boolean indicating whether or not this Water is surrounded on all
+     *         sides.
+     */
     public boolean isSurrounded() {
         return this.surrounded;
     }
 
     /**
      * Gets the current health of an entity
-     * @return
+     * @return current health of this Water entity
      */
     @Override
     public int getHealth() {

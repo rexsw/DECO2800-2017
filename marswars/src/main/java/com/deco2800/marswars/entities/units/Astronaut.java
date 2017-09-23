@@ -175,13 +175,11 @@ public class Astronaut extends Soldier {
 	}
 	
 	/**
-	 * Set the health of the entity. When the health is dropped, the entity gotHit status is set to true
-	 * This method overrides the basic method to also remove building if astronaut is killed durin build process
-<<<<<<< HEAD
-	 * @param health of the entity
-=======
+	 * Set the health of the entity. When the health is dropped, the entity
+	 * gotHit status is set to true. This method overrides the basic method to
+	 * also remove building if astronaut is killed during build process
+	 *
 	 * @param health the health of the entity
->>>>>>> bcbc0d14de7878da961499de0fa6f29d8647b23d
 	 */
 	@Override
 	public void setHealth(int health) {
