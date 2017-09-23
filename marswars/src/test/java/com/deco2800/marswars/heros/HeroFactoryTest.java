@@ -51,15 +51,8 @@ public class HeroFactoryTest {
 
     @Test
     public void actionTest() {
-    	 System.out.println("Action is " + action);
-    	 System.out.println("get action gives me " + heroFactory.getAction());
-    	 System.out.println("current action is " + heroFactory.getAction().isPresent());
     	 heroFactory.giveAction(action);
-    	System.out.println("current action now gives me " + heroFactory.getAction().isPresent());
-    	System.out.println("TESTING");
-    	System.out.println(action.equals(Optional.of(action)));
-    	System.out.println("END TESTING");
-        assertTrue(heroFactory.getAction().get().equals(action));
+         assertTrue(heroFactory.getAction().get().equals(action));
     }
 
     @Test
