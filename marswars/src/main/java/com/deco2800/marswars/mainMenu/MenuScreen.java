@@ -52,7 +52,7 @@ public class MenuScreen{
 	//private Label backgroundTex;
 	private Button backButton; 
 	private Button nextButton; 
-	private int playerType; 
+	public static int playerType;
 	private boolean joinedServer; 
 	private MainMenu menu;
 	MapTypes mapType;

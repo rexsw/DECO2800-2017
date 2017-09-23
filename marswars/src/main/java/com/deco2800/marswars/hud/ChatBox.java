@@ -22,6 +22,9 @@ import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.MessageAction;
 import com.esotericsoftware.kryonet.Connection;
 
+import static com.deco2800.marswars.mainMenu.MenuScreen.playerType;
+import static sun.audio.AudioPlayer.player;
+
 
 /**
  * A class representing a chat box in the game. This class provides the general
@@ -112,6 +115,7 @@ public class ChatBox extends Table {
         super.act(delta);
         
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+
             sendMessage();
         }
         
@@ -149,8 +153,18 @@ public class ChatBox extends Table {
     private void sendMessage() {
         String message = this.messageTextField.getText();
         if (!"".equals(message)) {
-            MessageAction action = new MessageAction(message);
-            netManager.getNetworkClient().sendObject(action);
+            if(playerType==1) {
+                MessageAction action = new MessageAction(message);
+                netManager.getNetworkClient().sendObject(action);
+
+            }
+            else
+            {
+                CodeInterpreter ci = new CodeInterpreter();
+                ci.executeCode(message);
+
+            }
+
         }
         messageTextField.setText("");
     }

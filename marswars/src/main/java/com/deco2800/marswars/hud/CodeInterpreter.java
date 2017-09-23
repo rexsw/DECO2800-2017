@@ -13,9 +13,7 @@ import java.util.List;
  * This class is to interprete and excute the cheatcode catched in cheatbox
  */
 public class CodeInterpreter {
-
-
-
+    
 
     /**
      * call different methods when receiving different codes

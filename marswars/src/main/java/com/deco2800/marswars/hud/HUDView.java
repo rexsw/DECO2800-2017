@@ -66,8 +66,7 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		 //window for containing the minimap
 	Window actionsWindow;    //window for the players actions 
 	private ShopDialog shopDialog; // Dialog for shop page
-	private CheatBox cheatbox;
-	private Window cheatWindow;//window for the cheatbox
+
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -146,7 +145,7 @@ public class HUDView extends ApplicationAdapter{
 		//create chatbox
 
 		this.chatbox = new ChatBox(skin, textureManager, this);
-		this.cheatbox = new CheatBox(skin,textureManager);
+
 		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
@@ -166,7 +165,7 @@ public class HUDView extends ApplicationAdapter{
 		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
-		Cheat();
+
 		
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
 	}
@@ -205,11 +204,6 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
 		messageButton = new ImageButton(messageRegionDraw);
 
-		//create cheat button + image for it
-		messageImage = textureManager.getTexture("chat_button");
-		messageRegion = new TextureRegion(messageImage);
-		messageRegionDraw = new TextureRegionDrawable(messageRegion);
-		cheatButton = new ImageButton(messageRegionDraw);
 
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button"); //$NON-NLS-1$
@@ -239,7 +233,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		overheadRight.add(cheatButton).padRight(BUTTONPAD);
 		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
@@ -293,20 +286,7 @@ public class HUDView extends ApplicationAdapter{
 
 			}
 		});
-		cheatButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				if (cheatActiveCheck==1){
-					cheatWindow.setVisible(false);
-					cheatActiveCheck = 0;
-				} else {
-					cheatWindow.setVisible(true);
-					cheatbox.setVisible(true);
-					cheatActiveCheck = 1;
-				}
 
-			}
-		});
 	}
 
 
@@ -351,18 +331,7 @@ public class HUDView extends ApplicationAdapter{
 		stage.addActor(messageWindow);
 	}
 
-	private void Cheat(){
-		LOGGER.debug("cheatbox"); //$NON-NLS-1$
-		cheatWindow = new Window("Cheat", skin); //$NON-NLS-1$
-		cheatWindow.setMovable(false);
-		cheatWindow.setPosition(stage.getWidth()-cheatbox.getWidth()-50,
-				Math.round(stage.getHeight()-cheatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
-		cheatWindow.add(cheatbox);
-		cheatWindow.setVisible(false);
-		cheatWindow.pack();
 
-		stage.addActor(cheatWindow);
-	}
 
 	/**
 	 * Adds in the bottom panel of the HUD
@@ -924,8 +893,7 @@ public class HUDView extends ApplicationAdapter{
 		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
-		cheatbox.setVisible(false);
-		cheatWindow.setVisible(false);
+
 	}
 
 	/**
