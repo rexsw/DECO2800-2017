@@ -1471,39 +1471,53 @@ public class HUDView extends ApplicationAdapter{
 
     }
 	
-	/** 
-	 * When used in the code will set the pauseCheck integer to 1 when there
+	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
 	 */
 	public void setPauseCheck(int i) {
 		pauseCheck = i;	
 	}
 	
+	/**
+	 * returns the integer value curently assigned to the pauseCheck variable
+	 * @return int 
+	 */
+	
 	public int getPauseCheck() {
 		return pauseCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the chatActiveCheck integer to 1 when the chat window
 	 * toggle is true and 0 otherwise.  Instead of stopping a new instance being created, will be used to
 	 * stop the other hotkeys from being used while the chatbox is visible
+	 * @param i
 	 */
 	public void setChatActiveCheck(int i) {
 		chatActiveCheck = i;
 	}
 	
+	/**
+	 * returns the value stored in the ChatActiveCheck variable
+	 * @return int
+	 */
 	public int getChatActiveCheck() {
 		return chatActiveCheck;
 	}
 	
-	/** 
+	/**
 	 * When used in the code will set the exitCheck integer to 1 when there
 	 * is an active dialog asking the user if they wish to quit, and 0 otherwise
+	 * @param i
 	 */
 	public void setExitCheck(int i) {
 		exitCheck = i;
 	}
 	
+	/** 
+	 * returns the value in the exitCheck variable
+	 * @return int
+	 */
 	public int getExitCheck() {
 		return exitCheck;
 	}
@@ -1511,32 +1525,51 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * When used in the code will set the techCheck integer to 1 when the tech
 	 * tree is visible and 0 otherwise
+	 * @param i
 	 */
 	public void setTechCheck(int i) {
 		techCheck = i;
 	}
 	
+	/**
+	 *  returns the value stored in the techCheck variable
+	 * @return int
+	 */
 	public int getTechCheck() {
 		return techCheck;
 	}
 
 	/**
-	 *  When used in the code will set the helpCheck integer to 1 when there
+	 * When used in the code will set the helpCheck integer to 1 when there
 	 * is an active Help window and 0 otherwise
+	 * @param i
 	 */
 	public void setHelpCheck(int i) {
 		helpCheck = i;
 		
 	}
 	
+	/**
+	 *  returns the value stored in the helpCheck variable
+	 * @return int
+	 */
 	public int getHelpCheck() {
 		return helpCheck;
 	}
+	
+	/**
+	 * returns the boolean stored in the inventoryToggle variable for testing purposes
+	 * @return boolean
+	 */
 
 	public boolean isInventoryToggle() {
 		return inventoryToggle;
 	}
-
+	
+	/**
+	 * sets the inventoryToggle variable
+	 * @param inventoryToggle
+	 */
 	public void setInventoryToggle(boolean inventoryToggle) {
 		this.inventoryToggle = inventoryToggle;
 	}

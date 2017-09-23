@@ -55,7 +55,9 @@ public class PauseMenu extends Dialog{
 			this.timeManager.pause();
 		}	
 	}
-	
+		/**
+		 * interprets the button press chosen by the player
+		 */
 		protected void result(final Object object) {
 			if (object == (Object) 1) {
 				this.stats.showStats();

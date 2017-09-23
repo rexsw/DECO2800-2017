@@ -9,6 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
+/**
+ * 
+ * @author Toby Guinea
+ *
+ * Allows for the HUDView class to check if any of the assigned hotkeys have been pressed recently.  Does this
+ * by running the checkKeys() function which runs the checks against each of the hotkeys.  By calling this in the HUD's 
+ * render method the method is always polling the keyboard for input
+ * 
+ */
 public class Hotkeys {
 	
 	private TimeManager timeManager = (TimeManager)
@@ -27,7 +36,15 @@ public class Hotkeys {
 	private Dialog quit;
 	
 	private Window messageWindow;//window for the chatbox
-	
+	/**
+	 * Calls a new instance of the hotkeys class
+	 * 
+	 * @param stage
+	 * @param skin
+	 * @param hud
+	 * @param stats
+	 * @param messageWindow
+	 */
 	public Hotkeys(Stage stage, Skin skin, HUDView hud, GameStats stats, Window messageWindow) {
 		this.stage = stage;
 		this.skin = skin;
@@ -36,6 +53,11 @@ public class Hotkeys {
 		this.messageWindow = messageWindow;
 	}
 	
+	/** 
+	 * Runs all of the checks against the keys assigned to the various functions of the HUD
+	 * 
+	 * When called in the render method of HUDView will effectively poll the keyboard for the appropriate input
+	 */
 	public void checkKeys() {
 		
 		if (hud.getExitCheck() == 1) {
@@ -128,6 +150,14 @@ public class Hotkeys {
 
 	}
 	
+	/**
+	 * will check all of the truth values instantiated in HUDView and use them to determine
+	 * whether any of the menus that the hud can create are active.  
+	 * If noActive() == true: checkKeys() will allow the hotkey to perform its desired function
+	 * If noActive() == false: will supress the action 
+	 * 
+	 * @return boolean
+	 */
 	private boolean noActive() {
 		boolean retBool = false;
 		
