@@ -11,14 +11,14 @@ import com.deco2800.marswars.managers.ResourceManager;
 import java.util.List;
 
 /**
- * This class is to interprete and excute the cheatcode catched in cheatbox
+ * This class is to interprete and excute the cheatcode catched in chatbox
  */
 public class CodeInterpreter {
     
 
     /**
      * call different methods when receiving different codes
-     * @param String the code catched in cheatbox
+     * @param String the code catched in chatbox
      */
     public void executeCode(String a){
         if (a.equals("killOne"))
@@ -68,7 +68,7 @@ public class CodeInterpreter {
 
 
     /**
-     * If the code is equal to "killOne", reduce one enemy
+     * If the code is equal to "killOne", reduce one enemy soldier
      */
     public void reduceOneEnemy()
     {
@@ -85,7 +85,7 @@ public class CodeInterpreter {
     }
 
     /**
-     * If the code is equal to "killAll", reduce all enemy
+     * If the code is equal to "killAll", reduce all enemy soldier
      */
     public void reduceAllEnemy()
     {
@@ -177,6 +177,7 @@ public class CodeInterpreter {
      */
     public void invincible(){
         MarsWars.invincible = 1;
+
     }
 
 
