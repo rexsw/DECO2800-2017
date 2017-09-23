@@ -25,7 +25,7 @@ import com.deco2800.marswars.entities.items.effects.*;
 public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), affect range (0 means self use), use
 	// limit, cost, effects)
-	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 1, new int[] { 0, 10, 30, 30 },
+	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
 			new HealthEffect(100, false)),
 	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
 			new HealthEffect(100, true)),

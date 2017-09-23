@@ -11,20 +11,28 @@ import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * Class to test the Special items class general methods. Also tests the effects of  the BOMB item. 
+ * Only testing on Commander because the applyEffect methods so far are only enabled for Commander for testing purposes.
+ * When the limitation is taken out, this test would still work because AttackableEntity encapsulates Commander.
  * Created by Nick on 22/9/17.
  */
 public class SpecialTest {
 	private static BaseWorld baseWorld;
 	private Commander com; //Tank to test HealthEffect.
-	private int baseHP;
+	private int baseHP; //store the starting health of the commander each time.
 	Special bomb;
 	
+	/**
+	 * Set up the base world.
+	 */
 	@BeforeClass
 	public static void setup() {
 		baseWorld = new BaseWorld(1000 ,1500);
     	GameManager.get().setWorld(new BaseWorld(1000, 1500));
 	}
 	
+	/**
+	 * Make new bomb items and commanders for each test. 
+	 */
 	@Before
 	public void prepare() {
 		bomb = new Special(SpecialType.BOMB);
@@ -32,36 +40,68 @@ public class SpecialTest {
 		baseHP = com.getHealth();
 	}
 	
+	/**
+	 * Test the constructor
+	 */
     @Test
     public void constructorTest () {
         Assert.assertTrue(bomb != null);
     }
+    
+    /**
+     * test the get method for the duration of the Bomb item's effect
+     */
     @Test
     public void getDuration () {
         Assert.assertEquals(0, bomb.getDuration());
     }
+    
+    /**
+     * test the get method for the texture of the item.
+     */
     @Test
     public void getTexture () {
         Assert.assertEquals("boot", bomb.getTexture());
     }
+    
+    /**
+     * test the get method for the aoe radius
+     */
     @Test
     public void getRadius () {
         Assert.assertEquals(5, bomb.getRadius());
     }
 
+    /**
+     * test the get method for determining the last use of the item for both when the item is up to it's last use and 
+     * when it isn't
+     */
     @Test
     public void getUse () {
         Assert.assertEquals(false, bomb.useItem());
+        Special aoeHeal = new Special(SpecialType.AOEHEAL1);
+        Assert.assertEquals(true, aoeHeal.useItem());
     }
+    
+    /**
+     * test the get method for the name of the bomb.
+     */
     @Test
     public void getName () {
         Assert.assertEquals("Bomb", bomb.getName());
     }
 
+    /**
+     * test the get method for the Item type enumerate value of the item (not the one to make it).
+     */
     @Test
     public void getItemType () {
         Assert.assertEquals("SPECIAL", bomb.getItemType().name());
     }
+    
+    /**
+     * test the get method for the description of the bomb
+     */
     @Test
     public void getDescription () {
         //System.out.println(bomb.getDescription());
