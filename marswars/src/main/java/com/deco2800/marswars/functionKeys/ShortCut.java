@@ -1,6 +1,7 @@
 package com.deco2800.marswars.functionKeys;
 
 import java.util.ArrayList;
+
 import java.util.HashSet;
 
 import java.util.Scanner;
@@ -223,9 +224,6 @@ public class ShortCut {
 				Y *= -1;
 				camera.translate(X, Y, 0);
 				moveToEntity = true;
-				LOGGER.error("GWL " + Float.toString(length) + " GWW " + Float.toString(width));
-				LOGGER.error("cameraX " + Float.toString(camera.position.x) + " cameraY " + Float.toString(camera.position.y));
-				LOGGER.error("SX " + Float.toString(baseEntityList.get(0).getPosX()) + " SY " + Float.toString(baseEntityList.get(0).getPosY()));
 			}
 		} else {
 			moveToEntity = false;
@@ -292,6 +290,12 @@ public class ShortCut {
 			}
 		} else {
 			spacmanSelect = false;
+			for (Renderable e : GameManager.get().getWorld().getEntities()) {
+				if ((e instanceof BaseEntity) && !((BaseEntity) e).isSelected() && baseEntityList.contains((BaseEntity) e)) {
+					baseEntityList.remove((BaseEntity) e);
+					LOGGER.error("remove a BaseEntity from the list");
+				}
+			}
 		}
 	}
 	
