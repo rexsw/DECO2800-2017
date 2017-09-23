@@ -1,12 +1,12 @@
 package com.deco2800.marswars.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
+import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 30/7/17.
@@ -63,7 +63,7 @@ public class AttackAction implements DecoAction {
 
 	private void setUpMissile() {
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
-				enemy, entity.getDamageDeal(), entity.getArmorDamage(), "bullet", entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
+				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}
 	
 	@Override
@@ -92,6 +92,12 @@ public class AttackAction implements DecoAction {
 	}
 	
 	private void attack() {
+		if (entity instanceof Hacker) {
+			if (entity.sameOwner(enemy)) {
+				completed = true;
+				return;
+			}
+		}
 	    float distance;
 		if (GameManager.get().getWorld().getEntities().contains(enemy)) {
 			attackInterval -= attackSpeed;

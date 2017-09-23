@@ -4,14 +4,18 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.entities.FogEntity;
 
 /**
- * test for the fog world
+ * test for all affiliations of fog of war:
+ * 		managers.fogManager
+ * 		entities.GrayTile
+ * 		entities.BlackTile
  *
  * @Author Treenhan, jdtran21
  * Created by Treenhan on 8/26/17.
@@ -23,6 +27,7 @@ public class FogWarTest {
 //    public void checkArrayNotNull(){
 //         assertNotNull(world.getFogMap());
 //     }
+	//Tests for fogManager
 	FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -65,4 +70,20 @@ public class FogWarTest {
 		assertThat(FogManager.getFog(9, 9), is(equalTo(0)));
 		assertThat(FogManager.getBlackFog(9, 9), is(equalTo(1)));
 	}
+	
+	//Coverage for GrayTile, BlackTile, fogWorld
+	@Test
+	public void fogWorld() {
+		FogWorld world = new FogWorld();
+		FogWorld.initializeFogWorld(5, 5);
+		FogWorld.getFogMap();
+		FogWorld.getBlackFogMap();
+		FogEntity fogEntity = new FogEntity(0, 0, 0, 1, 1, 1);
+		fogEntity.setPosX(1);
+		fogEntity.setPosY(1);
+		fogEntity.setPosZ(1);
+		fogEntity.setPosition(0, 0, 0);
+	}
+	
+	
 }

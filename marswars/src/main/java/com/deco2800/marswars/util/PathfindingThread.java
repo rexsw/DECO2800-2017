@@ -1,5 +1,6 @@
 package com.deco2800.marswars.util;
 
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.List;
@@ -32,7 +33,12 @@ public class PathfindingThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		this.path = Pathfinder.aStar(position, goal, world);
+		if (GameManager.get().getMainMenu().gameStarted()){
+			//System.out.println("I RUN");
+			this.path = Pathfinder.aStar(position, goal, world);
+		} else{
+			//System.out.println("no run");
+		}
 	}
 
 	/**

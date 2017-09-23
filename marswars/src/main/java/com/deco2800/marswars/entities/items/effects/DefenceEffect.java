@@ -43,7 +43,7 @@ public class DefenceEffect implements Effect{
 			hero.setMaxHealth(hero.getMaxHealth() + this.health);
 			hero.setHealth(hero.getHealth() + this.health);
 			//only allows the resulting movement speed to be positive.
-			hero.setSpeed(hero.getSpeed() + this.moveSpeed > 0 ? hero.getSpeed() + this.moveSpeed : 1); 
+			hero.setSpeed(hero.getSpeed() + this.moveSpeed > 0 ? hero.getSpeed() + this.moveSpeed : 0.0001f);
 		}
 		
 	}
@@ -58,11 +58,12 @@ public class DefenceEffect implements Effect{
 		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
 			Commander hero = (Commander) entity;
 			
-			hero.setMaxArmor(hero.getMaxArmor() - this.armour);
+			hero.setMaxArmor(hero.getMaxArmor() > this.armour ? hero.getMaxArmor() - this.armour : 1);
 			hero.setArmor(hero.getArmor() > this.armour ? hero.getArmor() - this.armour : 1);
-			hero.setMaxHealth(hero.getMaxHealth() - this.health);
+			hero.setMaxHealth(hero.getMaxHealth() > this.health ? hero.getMaxHealth() - this.health : 1);
 			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
-			hero.setSpeed(hero.getMoveSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 1);
+			hero.setSpeed(hero.getSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
+			
 		}
 	}
 	
@@ -80,7 +81,7 @@ public class DefenceEffect implements Effect{
 		if (health != 0) {
 			string.append("Max Health: " + health + "\n");
 		}
-		if (moveSpeed != 0) {
+		if (Math.abs(moveSpeed) < 0.000001) {
 			string.append("Movement Speed: " + moveSpeed + "\n");
 		}
 		return string.toString();

@@ -2,6 +2,8 @@ package com.deco2800.marswars.net;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import java.util.ArrayList;
+
 /**
  * This is a class of static utility functions for network actions.
  */
@@ -17,5 +19,9 @@ public class ActionUtils {
         kryo.register(JoinLobbyAction.class);
         kryo.register(MessageAction.class);
         kryo.register(LeaveLobbyAction.class);
+        kryo.register(ReadyAction.class);
+        kryo.register(LobbyAction.class);
+        kryo.register(ArrayList.class);
+        kryo.register(LobbyUser.class);
     }
 }

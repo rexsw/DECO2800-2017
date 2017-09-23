@@ -5,7 +5,7 @@ import com.deco2800.marswars.entities.units.Commander;
 
 /**
  * Class that defines an effect that increases or decreases health of a target instantly for purposes of healing or 
- * damage (for item effects that instantly heal or instantly do damage).
+ * damage (for item effects that instantly heal or instantly do damage). Damage here bypasses armour.
  * 
  * health = amount of health to heal or damage to deal
  * isDamage = boolean indicating whether if the effect would be a heal or damage (true if it is damage)
@@ -62,7 +62,7 @@ public class HealthEffect implements Effect{
 	@Override
 	public String generateDescription() {
 		StringBuilder string = new StringBuilder("");
-		if (isDamage) {
+		if (!isDamage) {
 			string.append("Heal: " + health + "\n");
 		} else {
 			string.append("Damage: " + health + "\n");

@@ -1,20 +1,19 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A missile.
@@ -41,6 +40,9 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.setOwnerEntity(ownerEntity);
         this.addNewAction(ActionType.MOVE);
         currentAction = Optional.of(new MoveAction((int) target.getPosX(), (int) target.getPosY(), this));
+        if (ownerEntity instanceof Hacker) {
+        	this.setDamage(ownerEntity.getLoyaltyDamage());
+        }
     }
 
     @Override
@@ -84,7 +86,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 	    	causeDamage(this.getTarget(), this.getDamageDeal(), this.getArmorDamage());
     	} else {
     		ArrayList<AttackableEntity> listOfEntity = new ArrayList<AttackableEntity>();
-    		
     		addEnemyEntity(this.getareaDamage(), listOfEntity);
     		for (AttackableEntity entity : listOfEntity) {
     			causeDamage(entity, this.getDamageDeal(), this.getArmorDamage());
@@ -104,14 +105,19 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * 			Armor damage
      */
     public void causeDamage(AttackableEntity target, int damage, int armorDamage) {
-    	if (target.getArmor() > 0) {
-    		
-    		target.setHealth(target.getHealth() - damage/2);
-    		target.setArmor(target.getArmor() - armorDamage);
+    	if (!(this.getOwnerEntity() instanceof Hacker)) {
+	    	if (target.getArmor() > 0 && damage >= 0) {
+	    		target.setHealth(target.getHealth() - damage/2);
+	    		target.setArmor(target.getArmor() - armorDamage);
+	    	} else {
+	    		target.setHealth(target.getHealth() - damage);
+	    	}
+	    	LOGGER.info("Enemy health " + target.getHealth());
     	} else {
-    		target.setHealth(target.getHealth() - damage);
+    		target.setLoyalty(target.getLoyalty() - damage);
+    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());	
+    		LOGGER.info("Enemy loyalty " + target.getLoyalty());
     	}
-    	LOGGER.info("Enemy health " + target.getHealth());
     }
 
     /**

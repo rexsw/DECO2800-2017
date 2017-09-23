@@ -1,17 +1,17 @@
 package com.deco2800.marswars.managers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A class to track various things in the game and to keep a history of them
@@ -22,28 +22,36 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 public class GameBlackBoard extends Manager implements TickableManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameBlackBoard.class);
 	private List<Integer> teams = new ArrayList<Integer>();
-	private Map<Integer,Map<String, List<Integer>>> values = new HashMap<Integer,Map<String, List<Integer>>>();
+	private Map<Integer,Map<Field, List<Integer>>> values = new HashMap<Integer,Map<Field, List<Integer>>>();
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	private int alive;
 	private int timer;
 	private int index = 0;
+	
+	/**
+	 * acceptable fields for use in the blackboard used for type safety 
+	 */
+	public enum Field {
+		BIOMASS, CRYSTAL, ROCKS, WATER, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY
+	}
 	
 
 	@Override
 	public void onTick(long i) {
 		//adds to the history of each field every few ticks
 		timer++;
-		if(timer % 50 == 0) {
+		if(timer % 10 == 0) {
 			//LOGGER.info("tick");
 			for(int teamid: teams) {
-				values.get(teamid).get("Biomass").add(rm.getBiomass(teamid));
-				values.get(teamid).get("Crystal").add(rm.getCrystal(teamid));
-				values.get(teamid).get("Rocks").add(rm.getRocks(teamid));
-				values.get(teamid).get("Rocks").add(rm.getWater(teamid));
-				values.get(teamid).get("Units").add(this.count(teamid, "Units"));
-				values.get(teamid).get("Units Lost").add(this.count(teamid, "Units Lost"));
-				values.get(teamid).get("Combat Units").add(this.count(teamid, "Combat Units"));
-				values.get(teamid).get("Buildings").add(this.count(teamid, "Buildings"));
+				values.get(teamid).get(Field.BIOMASS).add(rm.getBiomass(teamid));
+				values.get(teamid).get(Field.CRYSTAL).add(rm.getCrystal(teamid));
+				values.get(teamid).get(Field.ROCKS).add(rm.getRocks(teamid));
+				values.get(teamid).get(Field.WATER).add(rm.getWater(teamid));
+				values.get(teamid).get(Field.UNITS).add(this.count(teamid, Field.UNITS));
+				values.get(teamid).get(Field.UNITS_LOST).add(this.count(teamid, Field.UNITS_LOST));
+				values.get(teamid).get(Field.COMBAT_UNITS).add(this.count(teamid, Field.COMBAT_UNITS));
+				values.get(teamid).get(Field.BUILDINGS).add(this.count(teamid, Field.BUILDINGS));
+				values.get(teamid).get(Field.TECHNOLOGY).add(ThreadLocalRandom.current().nextInt(1, 50));
 			}
 			index++;
 		}
@@ -55,7 +63,8 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @ensure called after the game world has been set up and is only called once
 	 */
 	public void set() {
-		values = new HashMap<Integer,Map<String, List<Integer>>>();
+		values = new HashMap<Integer,Map<Field, List<Integer>>>();
+		index = 0;
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
@@ -65,7 +74,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				}
 				else {
 					if(teamid != 0) {
-						HashMap<String, List<Integer>> teammap = new HashMap<String, List<Integer>>();
+						HashMap<Field, List<Integer>> teammap = new HashMap<Field, List<Integer>>();
 						Set(teammap, teamid);
 						updateunit(e);
 					}
@@ -80,17 +89,18 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @param setmap map the map to be set up
 	 * @param teamid int the teamid to map to
 	 */
-	private void Set(HashMap<String, List<Integer>> setmap, int teamid) {
+	private void Set(HashMap<Field, List<Integer>> setmap, int teamid) {
 		ArrayList<Integer> base = new ArrayList<Integer>();
 		base.add(0);
-		setmap.put("Biomass", new ArrayList<Integer>(base));
-		setmap.put("Crystal",  new ArrayList<Integer>(base));
-		setmap.put("Rocks",  new ArrayList<Integer>(base));
-		setmap.put("Water",  new ArrayList<Integer>(base));
-		setmap.put("Units",  new ArrayList<Integer>(base));
-		setmap.put("Units Lost",  new ArrayList<Integer>(base));
-		setmap.put("Combat Units",  new ArrayList<Integer>(base));
-		setmap.put("Buildings",  new ArrayList<Integer>(base));
+		setmap.put(Field.BIOMASS, new ArrayList<Integer>(base));
+		setmap.put(Field.CRYSTAL,  new ArrayList<Integer>(base));
+		setmap.put(Field.ROCKS,  new ArrayList<Integer>(base));
+		setmap.put(Field.WATER,  new ArrayList<Integer>(base));
+		setmap.put(Field.UNITS,  new ArrayList<Integer>(base));
+		setmap.put(Field.UNITS_LOST,  new ArrayList<Integer>(base));
+		setmap.put(Field.COMBAT_UNITS,  new ArrayList<Integer>(base));
+		setmap.put(Field.BUILDINGS,  new ArrayList<Integer>(base));
+		setmap.put(Field.TECHNOLOGY,  new ArrayList<Integer>(base));
 		values.put(teamid, setmap);
 		teams.add(teamid);
 	}
@@ -114,19 +124,19 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		if(!values.containsKey(teamid)) {
 			return;
 		}
-		int count = values.get(teamid).get("Units").get(index);
+		int count = values.get(teamid).get(Field.UNITS).get(index);
 		LOGGER.info("unit count " + count + " teamid " + teamid);
 		count++;
-		values.get(teamid).get("Units").set(index, count);
-		if(enity instanceof AttackableEntity) {
-			count = values.get(teamid).get("Combat Units").get(index);
+		values.get(teamid).get(Field.UNITS).set(index, count);
+		if(enity instanceof AttackableEntity && !(enity instanceof BuildingEntity)) {
+			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count++;
-			values.get(teamid).get("Combat Units").set(index, count);
+			values.get(teamid).get(Field.COMBAT_UNITS).set(index, count);
 		}
 		else if(enity instanceof BuildingEntity) {
-			count = values.get(teamid).get("Buildings").get(index);
+			count = values.get(teamid).get(Field.BUILDINGS).get(index);
 			count++;
-			values.get(teamid).get("Buildings").set(index, count);
+			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 		}
 	}
 	
@@ -140,21 +150,21 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		if(!values.containsKey(teamid)) {
 			return;
 		}
-		int count = values.get(teamid).get("Units").get(index);
-		int dead = values.get(teamid).get("Units Lost").get(index);
+		int count = values.get(teamid).get(Field.UNITS).get(index);
+		int dead = values.get(teamid).get(Field.UNITS_LOST).get(index);
 		count--;
 		dead++;
-		values.get(teamid).get("Units").set(index, count);
-		values.get(teamid).get("Units Lost").set(index, dead);
-		if(enity instanceof AttackableEntity) {
-			count = values.get(teamid).get("Combat Units").get(index);
+		values.get(teamid).get(Field.UNITS).set(index, count);
+		values.get(teamid).get(Field.UNITS_LOST).set(index, dead);
+		if(enity instanceof AttackableEntity && !(enity instanceof BuildingEntity)) {
+			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count--;
-			values.get(teamid).get("Combat Units").set(index, count);
+			values.get(teamid).get(Field.COMBAT_UNITS).set(index, count);
 		}
 		else if(enity instanceof BuildingEntity) {
-			count = values.get(teamid).get("Buildings").get(index);
+			count = values.get(teamid).get(Field.BUILDINGS).get(index);
 			count--;
-			values.get(teamid).get("Buildings").set(index, count);
+			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 		}
 	}
 	
@@ -166,7 +176,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	public int teamsAlive() {
 		int count = 0;
 		for(int t: values.keySet()) {
-			if(values.get(t).get("Units").get(index) != 0) {
+			if(values.get(t).get(Field.UNITS).get(index) != 0) {
 				alive = t;
 				count++;
 				
@@ -193,10 +203,13 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @param history String the type of history to return i.e biomass
 	 * @return float[] an array of the history of this field 
 	 */
-	public float[] getHistory(int teamid, String history){
-		float[] returnv = new float[index+1];
-		for(int i = 0; i < index+1; i++) {
-			returnv[i] = this.values.get(teamid).get(history).get(i);
+	public float[] getHistory(int teamid, Field history){
+		float[] returnv = new float[(index+2)*2];
+		returnv[0] = 0;
+		returnv[1] = 0;
+		for(int i = 0; i < index; i+=2) {
+			returnv[i + 2] = this.values.get(teamid).get(history).get(i-i);
+			returnv[i + 3] = this.values.get(teamid).get(history).get(i-i);
 		}
 		return returnv;
 	}
@@ -209,7 +222,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @param field string the field being counted
 	 * @return int the count of this field
 	 */
-	public int count(int teamid, String field) {
+	public int count(int teamid, Field field) {
 		return values.get(teamid).get(field).get(index);
 	}
 	

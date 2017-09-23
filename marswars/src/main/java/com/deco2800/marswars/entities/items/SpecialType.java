@@ -1,9 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.HealthEffect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.deco2800.marswars.entities.items.effects.*;
 
 /**
  * Enumerate class to store the meta data for all the Special items. Since Special items can have any sort of effect, 
@@ -25,8 +26,16 @@ import com.deco2800.marswars.entities.items.effects.*;
 public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), affect range (0 means self use), use
 	// limit, cost, effects)
-	AOEHEAL("Heal 1", "heal_needle", 0, 2, 1, new int[] { 0, 10, 30, 30 },
-			new HealthEffect(100, false));
+	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
+			new HealthEffect(100, false)),
+	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
+			new HealthEffect(100, true)),
+	AOEHEAL2("Heal Bomb", "scope", 0, 5, 1, new int[] { 50, 100, 100, 100 },
+			new HealthEffect(100, false)),
+	NUKE("Nuke", "bullets", 0, 15, 1, new int[] { 500, 900, 50, 50 },
+			new HealthEffect(1000, true)),
+	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300, 500 },
+			new HealthEffect(9000, false));
 	private String name;
 	private String texture;
 	private int duration;
@@ -55,7 +64,7 @@ public enum SpecialType implements ItemType {
 	 */
 	SpecialType(String name, String texture, int duration, int radius,
 			int useLimit, int[] cost, Effect... effects) {
-		this.effects = new ArrayList<>();
+		this.effects = new ArrayList<Effect>();
 		this.name = name;
 		this.texture = texture;
 		this.radius = radius;
@@ -81,7 +90,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return the affect radius of this item when used
 	 */
-	int getRadius() {
+	public int getRadius() {
 		return this.radius;
 	}
 
@@ -90,7 +99,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return duration of the item effects
 	 */
-	int getDuration() {
+	public int getDuration() {
 		return this.duration;
 	}
 
@@ -99,7 +108,7 @@ public enum SpecialType implements ItemType {
 	 * 
 	 * @return the original amount of use limit of this item
 	 */
-	int getUseLimit() {
+	public int getUseLimit() {
 		return this.useLimit;
 	}
 

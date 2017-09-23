@@ -8,12 +8,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.worlds.SelectedTiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +72,13 @@ public class Render3D implements Renderer {
             blackFogs.add(e);
         }
 
+        // Tutor approved workaround to avoid changing whole structure of game
+        List<MultiSelectionTile> multiSelection_temp = SelectedTiles.getMultiSelectionTile();
+        List<AbstractEntity> multiSelection = new ArrayList<>();
+        for (MultiSelectionTile e : multiSelection_temp) {
+            multiSelection.add(e);
+        }
+
         /* Sort entities into walkables and entities */
         for (AbstractEntity r : renderables) {
             if (r.canWalOver()) {
@@ -80,6 +90,9 @@ public class Render3D implements Renderer {
 
         batch.begin();
 
+        //render multiselection
+        renderEntities(multiSelection,batch,camera,0);
+
         //render the entities
         renderEntities(walkables, batch, camera,0);
         renderEntities(entities, batch, camera,0);
@@ -89,6 +102,8 @@ public class Render3D implements Renderer {
 
         //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
+
+
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
@@ -149,6 +164,12 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
+            //multi selection entities
+            if(entity instanceof MultiSelectionTile){
+                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
+                continue;
+            }
+
             //carrier unit: if the entity is loaded, don't render him
             if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) continue;
 
@@ -171,7 +192,7 @@ public class Render3D implements Renderer {
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
             if (entity instanceof BaseEntity && FogManager.getToggleFog()) {
                 BaseEntity baseEntity = (BaseEntity) entity;
-                if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT) {
+                if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT || baseEntity.getEntityType() == BaseEntity.EntityType.HERO) {
                     if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
                 }
             }
@@ -194,6 +215,10 @@ public class Render3D implements Renderer {
 
             if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
                     && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                if(entity instanceof BlackTile || entity instanceof GrayTile || entity instanceof MultiSelectionTile){
+                    batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength()*1.05f,
+                            (tex.getHeight() / aspect) * entity.getYRenderLength()*1.05f);
+                }
                 batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength(),
                         (tex.getHeight() / aspect) * entity.getYRenderLength());
             }

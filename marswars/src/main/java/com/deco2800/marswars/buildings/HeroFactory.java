@@ -9,10 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -24,10 +21,7 @@ import java.util.Optional;
 
 public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
         HasProgress, HasOwner, HasAction {
-
-    /* A single action for this building */
-    Optional<DecoAction> currentAction = Optional.empty();
-
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(HeroFactory.class);
 
     private int owner;
@@ -41,26 +35,16 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
      * @param posY its y position on the world.
      * @param posZ its z position on the world.
      */
-    public HeroFactory(AbstractWorld world, float posX, float posY, float posZ, int owner) {
-        super(posX, posY, posZ, BuildingType.BUNKER, owner);
+    public HeroFactory(AbstractWorld world, float posX, float posY, float
+            posZ, int owner) {
+        super(posX, posY, posZ, BuildingType.HEROFACTORY, owner);
         this.setTexture("bunker");  // temporary texture
         this.setEntityType(EntityType.BUILDING);
         this.world = world;
         this.setCost(200);
         this.setSpeed(1.5f);
         this.addNewAction(ActionType.GENERATE);
-        this.addNewAction(ActionType.CREATEITEM);
         world.deSelectAll();
-    }
-
-    /**
-     * Give an action to the hero factory
-     * @param action
-     */
-    public void giveAction(DecoAction action) {
-        if (!currentAction.isPresent()) {
-            currentAction = Optional.of(action);
-        }
     }
 
     /**
@@ -117,6 +101,13 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     @Override
     public void deselect() {
         selected = false;
+    }
+
+   /**
+    * Select the hero factory
+    */
+    public void select() {
+        selected = true;
     }
 
     /**
@@ -196,14 +187,6 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     }
 
     /**
-     * Returns the current action (used in WeatherManager)
-     * @return
-     */
-    public Optional<DecoAction> getAction() {
-        return currentAction;
-    }
-
-    /**
      * Create the 'Create Hero' button object
      * @return Button
      */
@@ -239,14 +222,4 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
-
-    /**
-     * Returns the current action of the entity
-     * @return current action
-     */
-    @Override
-    public Optional<DecoAction> getCurrentAction() {
-        return currentAction;
-    }
-
 }

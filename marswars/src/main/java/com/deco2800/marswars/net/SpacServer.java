@@ -2,7 +2,6 @@ package com.deco2800.marswars.net;
 
 
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
 
@@ -16,9 +15,8 @@ public class SpacServer {
      * Creates a SpacServer with the specified connection manager (listener)
      * see: ServerConnectionManager
      */
-    public SpacServer(Listener connectionManager) {
+    public SpacServer() {
         this.server = new Server();
-        this.server.addListener(connectionManager);
     }
 
     /**
@@ -35,5 +33,12 @@ public class SpacServer {
      */
     public void stop() {
         this.server.stop();
+    }
+
+    /**
+     * Adds connection manager
+     */
+    public void addConnectionManager(ConnectionManager manager) {
+        this.server.addListener(manager);
     }
 }

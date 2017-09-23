@@ -1,24 +1,21 @@
 package com.deco2800.marswars.entities.units;
 
+import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.util.Point;
+import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.entities.HasAction;
-import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.util.Point;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * A combat unit.
@@ -28,8 +25,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 public class Soldier extends AttackableEntity implements Tickable, Clickable, HasAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Soldier.class); 
-	
-	private Optional<DecoAction> currentAction = Optional.empty();
+
 	
 	protected String selectedTextureName;
 	protected String defaultTextureName;
@@ -102,7 +98,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
+		setStance(2); // Default stance for soldier is aggressive
 	}
+
 
 	//sets all attack attributes
 	public void setAttributes(){
@@ -111,6 +109,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setHealth(t.getUnitAttribute(this.name, 1));
 		this.setDamage(t.getUnitAttribute(this.name, 2));
 		this.setArmor(t.getUnitAttribute(this.name, 3));
+		this.setMaxArmor(t.getUnitAttribute(this.name, 3));
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
@@ -118,24 +117,33 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
-		this.setSpeed(0.01f); 
-		this.setAreaDamage(0);
+		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
 	
 	public void attack(AttackableEntity target){
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
-		if (!this.sameOwner(target)&&//(belongs to another player, currently always true)`
-				 this!= target //prevent soldier suicide when owner is not set
-				) {
-						currentAction = Optional.of(new AttackAction(this, target));
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new AttackAction(this, target));
 			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			LOGGER.info("Same owner");
+			//LOGGER.info("Same owner");
 		}
+	}
+	
+	/**
+	 * Helper function for attack. Override if the entity has different types of target.
+	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
+	 */
+	public boolean setTargetType(AttackableEntity target) {
+		if (!this.sameOwner(target) //(belongs to another player, currently always true)
+				&& this!= target) { //prevent soldier suicide when owner is not set
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -156,6 +164,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			   this.makeSelected();
 		} else {
 			LOGGER.info("Clicked on ai soldier");
+			this.makeSelected();
 		}
 	}
 
@@ -192,10 +201,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setTexture(defaultTextureName);
 			return;
 		}
-
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
+		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
+			Turret turret = (Turret) entities.get(0);
+			turret.numOfSolider += 1;
+			turret.powerUpTurret();
+			this.setHealth(0);
+			LOGGER.error("solider in the tower now");
 		}else {
 			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
 				// we cant assign different owner yet
@@ -207,19 +221,24 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			}
 			this.setTexture(defaultTextureName);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			sound.playSound(movementSound);
+			Sound loadedSound = sound.loadSound(movementSound);
+			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound(movementSound);
+		Sound loadedSound = sound.loadSound(movementSound);
+		sound.playSound(loadedSound);
 	}
+	
 
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}
 
+	
 	@Override
 	public void onTick(int tick) {
-
+		loyalty_regeneration();
+		checkOwnerChange();
 		if (!currentAction.isPresent()) {
 			
 			//this will disable collision check for the entities inside the carrier
@@ -228,11 +247,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			if (this.getOwner() == -1)  {
 				modifyFogOfWarMap(true,3);
 			}
+			if(getHealth()<=0)modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
 			List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
 			int entitiesSize = entities.size();
+			boolean waterPresent = false;
 			for (BaseEntity e: entities) {
 				if (e instanceof Soldier) {
 					if(((Soldier)e).getLoadStatus()==1){
@@ -243,8 +264,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
 				}
+				if (e instanceof Water) {
+					waterPresent = true;
+				}
+				if (e instanceof BuildingEntity) {
+					entitiesSize++;
+				}
 			}
-			boolean moveAway = entitiesSize > 1;
+			boolean moveAway = (entitiesSize > 1 && ! waterPresent) ||
+					(entitiesSize > 2 && waterPresent);
 			if (moveAway && !isTheEntityLoaded) {
 					BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
@@ -257,16 +285,43 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
 					return;
 				}
-				/* Check that the new position is free */
-				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+				/* Check that the new position is free
+				with the exception of Water entities */
+				List<BaseEntity> tileEntities =
+						world.getEntities((int)p.getX(), (int)p.getY());
+
+				if (this.moveAway(tileEntities)) {
 					// No good
 					return;
 				}
-				LOGGER.info("Soldier is on a tile with another entity, move out of the way");
-			    //List<BaseEntity> entities = GameManager.get().getWorld().getEntities(xPosition, yPosition);
+				//LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
+			// Stances are considered after this point
+			
+			//Enemies within attack range are found
+			List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+			List<AttackableEntity> enemy = new ArrayList<AttackableEntity>();
+			//For each entity in the world
+			for (BaseEntity e: entityList) {
+				//If an attackable entity
+				if (e instanceof AttackableEntity) {
+					//Not owned by the same player
+					AttackableEntity attackable = ((AttackableEntity) e);
+					if (!this.sameOwner(attackable)) {
+						//Within attacking distance
+						float diffX = attackable.getPosX() - this.getPosX();
+						float diffY = attackable.getPosY() - this.getPosY();
+						if (Math.abs(diffX) + Math.abs(diffY) <= this.getAttackRange()) {
+							enemy.add((AttackableEntity) e);
+						}
+					}
+				}
+			}
+			
+			getStances(enemy);
+			
 			return;
 		}
 		if (!currentAction.get().completed()) {
@@ -278,6 +333,47 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 
 		
+	}
+	
+	/**
+	 * Get the stance of the entity and react.
+	 * @param enemy
+	 */
+	public void getStances(List<AttackableEntity> enemy) {
+		switch (getStance()) {
+			//Passive
+			case 0:	
+				break;
+			//Defensive
+			case 1:
+				break;
+			//Aggressive
+			case 2:
+				if (!enemy.isEmpty()) {
+					aggresiveBehaviour(enemy);
+				}
+				break;
+			case 3:
+			//Skirmishing
+				break;
+		}
+	}
+	
+	/**
+	 * Will attack any enemy in its attackrange.
+	 * @param enemy
+	 */
+	public void aggresiveBehaviour(List<AttackableEntity> enemy) {
+		//Attack closest enemy
+		for (int i=1; i<=getAttackRange(); i++) {
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					attack(a);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -302,6 +398,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
 			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
 			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){
@@ -322,16 +419,41 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Soldier", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Soldier", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 
 	@Override
-	public void setNextAction(ActionType a) {
-		this.nextAction = a;
+	public void setNextAction(ActionType action) {
+		this.nextAction = action;
 	}
 
 	public String getMissileTexture() {
 		return defaultMissileName;
+	}
+	
+	/**
+	 * Increase the loyalty of the entity in a certain period. Please include this to your unit if you override ontick
+	 */
+	public void loyalty_regeneration() {
+		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
+		if ((this.getLoyaltyRegenInterval()) <= 0) {
+			//LOGGER.info("Regen loyalty");
+			this.setLoyalty(this.getLoyalty() + 0);
+			this.resetLoyaltyRegenInterval();
+			return;
+		}
+	}
+	
+	/**
+	 * If the owner status change, the texture should be reloaded.
+	 * Please include this to your unit if you override ontick
+	 */
+	public void checkOwnerChange() {
+		if (this.getOwnerChangedStatus()) {
+			this.setAllTextture();
+			this.setOwnerChangedStatus(false);
+			this.setTexture(defaultTextureName);
+		}
 	}
 	
 }

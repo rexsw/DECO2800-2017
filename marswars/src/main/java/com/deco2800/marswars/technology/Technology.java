@@ -1,7 +1,5 @@
 package com.deco2800.marswars.technology;
 
-import com.deco2800.marswars.entities.Spacman;
-
 import java.util.Arrays;
 import java.util.List;
 

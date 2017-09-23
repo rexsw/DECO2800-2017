@@ -55,7 +55,9 @@ public abstract class AbstractWorld {
      * @param entity the entity to be removed.
      */
     public void removeEntity(BaseEntity entity) {
+
         entities.remove(entity);
+
     }
 
     /**
