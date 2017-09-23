@@ -103,6 +103,13 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
         selected = false;
     }
 
+   /**
+    * Select the hero factory
+    */
+    public void select() {
+        selected = true;
+    }
+
     /**
      * Get the help text label of this hero factory
      * @return Label
