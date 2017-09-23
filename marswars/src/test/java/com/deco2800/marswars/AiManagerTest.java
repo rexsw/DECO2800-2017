@@ -90,7 +90,7 @@ public class AiManagerTest {
 	}
 
 	
-	@Test @Ignore
+	@Test
 	public void stateChangeTest(){
 		am = new AiManager();
 		am.addTeam(1);
