@@ -27,7 +27,8 @@ public class LoadAction implements DecoAction {
     private Soldier carrier;
     private Soldier target;
     private int ticksLoad = 50;
-    private boolean actionPaused = false;
+	private boolean actionPaused = false;
+
 
     /**
      * Constructor for the LoadAction

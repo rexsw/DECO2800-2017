@@ -74,7 +74,7 @@ public class FogWarTest {
 	//Coverage for GrayTile, BlackTile, fogWorld
 	@Test
 	public void fogWorld() {
-		FogWorld world = new FogWorld();
+
 		FogWorld.initializeFogWorld(5, 5);
 		FogWorld.getFogMap();
 		FogWorld.getBlackFogMap();

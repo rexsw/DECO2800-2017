@@ -10,6 +10,7 @@ import java.util.List;
  * Created by Treenhan on 8/24/17.
  */
 public class FogWorld {
+    private FogWorld(){super();}
 
 
     protected static ArrayList<AbstractEntity> fogMap = new ArrayList<AbstractEntity>();
@@ -75,7 +76,7 @@ public class FogWorld {
      * add FogEntity entity to the maps
      * @param entity
      */
-    public static void addEntity(AbstractEntity entity, ArrayList<AbstractEntity> map) {
+    public static void addEntity(AbstractEntity entity, List<AbstractEntity> map) {
         //Add to the fog map
         int left = (int)entity.getPosX();
         int right = (int)Math.ceil(entity.getPosX() + entity.getXLength());
