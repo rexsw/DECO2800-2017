@@ -179,6 +179,8 @@ public class TextureManager extends Manager {
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
+        this.saveTexture("water_final", "resources/tileAssets/water_final.png");
+        this.saveTexture("lava_final", "resources/tileAssets/lava_final.png");
         this.saveTexture("multi_selection", "resources/placeholderassets/multiselection.png");
 
 
