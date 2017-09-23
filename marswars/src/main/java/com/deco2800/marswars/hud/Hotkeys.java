@@ -87,10 +87,11 @@ public class Hotkeys {
 			if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 				if(this.hud.getTechCheck() == 0) {
 					this.hud.setTechCheck(1);
-					this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage); //$NON-NLS-1$
+					this.hud.addTechnologyPickerMenu(true);
+					//this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage); //$NON-NLS-1$
 				} else {
 					this.hud.setTechCheck(0);
-					this.techTree.hide();
+					//this.techTree.hide();
 					this.timeManager.unPause();
 				}
 			}

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -32,12 +33,11 @@ import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import com.deco2800.marswars.technology.Technology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -470,6 +470,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				addTechnologyPickerMenu(false);
 			}
 
 		});
@@ -859,7 +860,7 @@ public class HUDView extends ApplicationAdapter{
 
     /**
      * Creates the sub menu that displays all available buildings
-     * @param isPlaying allows to go back to menu options if true
+     *  isPlaying allows to go back to menu options if true
      */
     private void addBuildingsPickerMenu(boolean addBack){
         entitiesPicker.clear();
@@ -917,6 +918,70 @@ public class HUDView extends ApplicationAdapter{
 		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
 
     }
+
+	/**
+	 * Add technology thingo to the bottom
+	 * @param addBack
+	 */
+	public void addTechnologyPickerMenu(boolean addBack){
+		System.out.println("\n ok ok \n ok \n");
+		entitiesPicker.clear();
+		Table table = new Table();
+		table.align(Align.left);
+		TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+		entitiesButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				addEntitiesPickerMenu();
+				entitiesPicker.setVisible(true);
+			}
+		});
+		float buttonWidth = entitiesPicker.getWidth()/NUMBER_OF_MENU_OPTIONS;
+		float buttonHeight = entitiesPicker.getHeight();
+		int columns = 0;
+		ScrollPane scrollPane = new ScrollPane(table, skin);
+		scrollPane.setScrollingDisabled(true,false);
+		scrollPane.setFadeScrollBars(false);
+		if(addBack) {
+			table.add(entitiesButton).width(buttonWidth).height(buttonHeight);
+			columns = 1;
+		}
+		// Adds all tech buttons and listeners for each available tech
+
+		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		Set<Technology> techSet = new HashSet<Technology>();
+		techSet = t.getAllTech();
+		for (Technology tx : techSet) {
+			Button formatPane = new Button(skin);
+			Texture entity = textureManager.getTexture("tech_button");
+			TextureRegion entityRegion = new TextureRegion(entity);
+			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
+			ImageButton addPane = new ImageButton(buildPreview);
+			formatPane.add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
+			formatPane.row().padBottom(20);
+			formatPane.add(new Label(tx.toString(),skin)).align(Align.left).padLeft(10);
+			formatPane.add(new Label(String.valueOf(tx.getCost()),skin)).align(Align.left);
+			Texture rockTex = textureManager.getTexture("rock_HUD");
+			Image rock = new Image(rockTex);
+			formatPane.add(rock).width(40).height(40).padBottom(30).align(Align.left);
+			formatPane.addListener(new ChangeListener() {
+				public void changed(ChangeEvent event, Actor actor) {
+					if (!t.getActive().contains(tx)) {
+						String message = t.checkPrereqs(t, tx, t.getID(tx), -1);
+						System.out.println(message);
+					}
+				}
+			});
+			table.add(formatPane).width(buttonWidth).height(buttonHeight).align(Align.center);
+			columns++;
+			if(columns % NUMBER_OF_MENU_OPTIONS == 0){
+				table.row();
+			}
+
+		}
+		entitiesPicker.add(scrollPane).width(entitiesPicker.getWidth()).height(entitiesPicker.getHeight());
+
+	}
 
 
     /**
