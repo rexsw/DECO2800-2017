@@ -276,8 +276,9 @@ public class TimeManager extends Manager implements TickableManager {
 	/**
 	 * Sets the In-Game Time to be 0 (Resets current clock)
 	 */
-	public static void resetInGameTime() {
+	public void resetInGameTime() {
 		time = 0;
+		days = 0;
 	}
 
 	/**
