@@ -7,12 +7,17 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.GameInfoAction;
-import com.deco2800.marswars.net.LobbyRequestAction;
 import com.deco2800.marswars.net.RequestGameInfoAction;
 import com.deco2800.marswars.util.NewGameInformation;
 import com.deco2800.marswars.util.ServerGameInformation;
 import com.esotericsoftware.kryonet.Connection;
 
+/**
+ * A UI element that displays the currently selected options for a multiplayer game.
+ * 
+ * @author James McCall
+ *
+ */
 public class SelectedOptions extends Table {
     // The Net Manager so you can communicate with the server
     private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
@@ -21,7 +26,7 @@ public class SelectedOptions extends Table {
     private Label selectedMap;
     // Label size selected
     private Label selectedSize;
-    // The skin used to stylke elements
+    // The skin used to style elements
     private Skin skin;
     
     // Information about the game.
@@ -43,7 +48,6 @@ public class SelectedOptions extends Table {
         setupCommunicationHandler();
         getInitialGameInformation();
         setupLayout();
-        
     }
     
     /**
@@ -54,16 +58,28 @@ public class SelectedOptions extends Table {
         netManager.getNetworkClient().sendObject(getInfo);
     }
 
+    /**
+     * Updates the internally stored state of the game information to the provided information.
+     * 
+     * @param newInfo The new information to be stored.
+     */
     private void updateGameInfo(ServerGameInformation newInfo) {
         gameInfo.setMapSize(newInfo.getMapSize());
         gameInfo.setMapType(newInfo.getMapType());
     }
     
+    /**
+     * Update the UI to display the currently stored game information.
+     */
     private void updateUI() {
         selectedMap.setText(getMapText());
         selectedSize.setText(getSizeText());
     }
     
+    /**
+     * 
+     * @return A string in the format that is suitable to be displayed on the UI.
+     */
     private String getMapText() {
         String mapName;
         if (gameInfo.getMapType() == null) {
@@ -74,6 +90,10 @@ public class SelectedOptions extends Table {
         return MAP_SELECT_TEXT + mapName;
     }
 
+    /**
+     * 
+     * @return A string in the format that is suitable to be displayed on the UI.
+     */
     private String getSizeText() {
         String mapSize;
         if (gameInfo.getMapSize() == null) {
@@ -84,6 +104,9 @@ public class SelectedOptions extends Table {
         return SIZE_SELECT_TEXT + mapSize;
     }
     
+    /**
+     * Sets up a handler that updates the UI when ever new game information is received from the server.
+     */
     private void setupCommunicationHandler() {
         netManager.getNetworkClient().addConnectionManager(
                 new ConnectionManager() {
@@ -98,6 +121,9 @@ public class SelectedOptions extends Table {
                 });
     }
     
+    /**
+     * Helper mehtod for setting up the layout of the UI element.
+     */
     private void setupLayout() {
         this.add(selectedMap).pad(10);
         this.row();

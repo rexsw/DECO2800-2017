@@ -102,22 +102,13 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
-	 * Check if production is paused
-	 */
-	public boolean isProductionPaused() {
-		return isProductionPaused;
-	}
-
-	/**
 	 * Pauses the game by stopping all actions currently being undertaken
 	 * by entities and ceasing the incrementation of the in-game timer.
 	 */
 	public void pause() {
 		isGamePaused = true;
-		LOGGER.info("PAUSINGGGGGGGGGGGGG %%%%%%%%%%%%%%%%%%%%");
 		List<BaseEntity> entities =
 				GameManager.get().getWorld().getEntities();
-		LOGGER.info("ENTITIES PRESENT %%%%%%%%%%%%%%%%%%%%");
 		for (BaseEntity e: entities) {
 			if (e instanceof HasAction) {
 				if (((HasAction) e).getCurrentAction().isPresent()) {
@@ -151,20 +142,6 @@ public class TimeManager extends Manager implements TickableManager {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Set building production to be paused
-	 */
-	public void pauseProduction() {
-		isProductionPaused = true;
-	}
-
-	/**
-	 * Set the building production to resume
-	 */
-	public void resumeProduction() {
-		isProductionPaused = false;
 	}
 
 	/**

@@ -17,7 +17,7 @@ import com.deco2800.marswars.util.NewGameInformation;
 import com.esotericsoftware.kryonet.Connection;
 
 /**
- * A the multiplayer lobby UI.
+ * The UI for the multiplayer lobby.
  * 
  * @author James McCall
  *
@@ -75,6 +75,10 @@ public class MultiplayerLobby extends Table {
         setupStartGameHandler();
     }
     
+    /**
+     * Helper method to set up a handler that will initiate the start of a new game when it receives the
+     * signal to from the server.  
+     */
     private void setupStartGameHandler() {
         netManager.getNetworkClient().addConnectionManager(
                 new ConnectionManager() {
@@ -91,6 +95,11 @@ public class MultiplayerLobby extends Table {
         );
     }
        
+    /**
+     * Helper mehtod for setting up the layout of the leftPanel. This layout changes dependign if the player is
+     * the host or client. If the player is the host they have access to changing the game options. Whereas if 
+     * the player is a client they can only see the currently selected game options. 
+     */
     private void setupLeftPanel() {
         if (host) {
             options = new OptionSelectionPanel(this.skin); 

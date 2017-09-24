@@ -2,14 +2,20 @@ package com.deco2800.marswars.net;
 
 import com.deco2800.marswars.util.ServerGameInformation;
 
+/**
+ * An action that is sent to clients notifying them if a new game should be commenced, if true 
+ * clients should launch the game with the specified actions.
+ * 
+ * @author James McCall
+ *
+ */
 public class StartGameAction implements Action {
     private boolean canStart;
     private ServerGameInformation gameInfo;
 
-    /**
-     * Blank constructor for kryonet
-     */
-    public StartGameAction() {}
+    public StartGameAction() {
+        // Blank constructor for kryonet
+    }
     
     /**
      * Action sent when a new game should be initiated.
@@ -21,10 +27,18 @@ public class StartGameAction implements Action {
         this.gameInfo = gameInfo;
     }
     
+    /**
+     * 
+     * @return true if game can start, false otherwise.
+     */
     public boolean canGameStart() {
         return canStart;
     }
     
+    /**
+     * 
+     * @return the game information required to launch the game.
+     */
     public ServerGameInformation getGameInformation() {
         return gameInfo;
     }

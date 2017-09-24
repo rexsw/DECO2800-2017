@@ -43,6 +43,7 @@ public class Game{
 	private OrthographicCamera camera;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+	// Please don't delete
 	private WeatherManager weatherManager = (WeatherManager)
 			GameManager.get().getManager(WeatherManager.class);
 
@@ -70,6 +71,7 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
+		// Please don't delete
 		//this.weatherManager.setWeatherEvent();
 	}
 	
