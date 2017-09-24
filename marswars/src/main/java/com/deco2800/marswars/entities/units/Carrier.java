@@ -27,7 +27,7 @@ public class Carrier extends Soldier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
-    private static final int capacity = 3;
+    private static final int capacity = 4;
 
     private Optional<DecoAction> currentAction = Optional.empty();
 
