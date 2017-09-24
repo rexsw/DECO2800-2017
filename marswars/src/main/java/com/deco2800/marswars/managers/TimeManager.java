@@ -301,7 +301,6 @@ public class TimeManager extends Manager implements TickableManager {
 			int dayLength = 24;
 			int window = 1;
 			this.addTime(2);
-			System.out.println(this.getGameSeconds() % dayLength);
 			if ((this.getHours() % dayLength > dayLength ||
 					this.getHours() % dayLength < window) &&
 					! this.daysIncremented) {
