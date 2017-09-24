@@ -59,7 +59,7 @@ public class Pathfinder {
 			closedSet.add(current);
 
 			for (Point p : getAdjacentNodes(current, baseWorld)) {
-				List<BaseEntity> entities = baseWorld.getEntities((int)p.getX(), (int)p.getY());
+				List<BaseEntity> entities = new ArrayList<BaseEntity>(baseWorld.getEntities((int)p.getX(), (int)p.getY()));
 
 				int cost = 0;
 				for (BaseEntity e : entities) {

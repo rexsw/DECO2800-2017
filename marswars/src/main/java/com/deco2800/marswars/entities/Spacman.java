@@ -1,22 +1,22 @@
 package com.deco2800.marswars.entities;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.units.MissileEntity;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.MouseHandler;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -35,6 +35,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	private Optional<DecoAction> currentAction = Optional.empty();
 
 	private int health = 100;
+	
+	private int maxHealth = 100;
 
 	private int spacManCost = 10;
 	
@@ -120,20 +122,27 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 			
 		 */
 		if (!currentAction.isPresent()) {
-			if (GameManager.get().getWorld().getEntities((int)this.getPosX(), (int)this.getPosY()).size() > 1) {
+			// Fix move away condition to allow for Water entity
+			List<BaseEntity> entities = GameManager.get().getWorld().
+					getEntities((int)this.getPosX(), (int)this.getPosY());
+			boolean moveAway = this.moveAway(entities);
+			if (moveAway) {
 				BaseWorld world = GameManager.get().getWorld();
 				/* We are stuck on a tile with another entity
 				 * therefore randomize a close by position and see if its a good
 				 * place to move to
 				 */
 				Random r = new Random();
-				Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
+				Point p = new Point(this.getPosX() + r.nextInt(2) - 1,
+						this.getPosY() + r.nextInt(2) - 1);
 				/* Ensure new position is on the map */
-				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth() || p.getY() >= world.getLength()) {
+				if (p.getX() < 0 || p.getY() < 0 || p.getX() >= world.getWidth()
+						|| p.getY() >= world.getLength()) {
 					return;
 				}
 				/* Check that the new position is free */
-				if (world.getEntities((int)p.getX(), (int)p.getY()).size() > 1) {
+				entities = world.getEntities((int)p.getX(), (int)p.getY());
+				if (this.moveAway(entities)) {
 					// No good
 					return;
 				}
@@ -218,7 +227,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		}
 		this.setTexture("spacman_green");
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		sound.playSound("endturn.wav");
+		Sound loadedSound = sound.loadSound("endturn.wav");
+		sound.playSound(loadedSound);
 		this.deselect();
 		this.nextAction = null;
 	}
@@ -321,7 +331,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param nextAction the action to be forced
 	 */
-	@Override
 	public void setNextAction(ActionType nextAction) {
 		this.nextAction = nextAction;
 		LOGGER.info("Next action set as " + ActionSetter.getActionName(nextAction));
@@ -331,7 +340,6 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 * Forces the spacman to only try the chosen action on the next rightclick
 	 * @param toBuild unit to build
 	 */
-	@Override
 	public void setNextAction(BaseEntity toBuild, ActionType nextAction) {
 		this.nextAction = nextAction;
 		this.nextBuild = toBuild;
@@ -339,7 +347,7 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	}
 
 	public EntityStats getStats() {
-		return new EntityStats("Spacman",this.health, this.gatheredResource, this.currentAction, this);
+		return new EntityStats("Spacman",this.health, this.maxHealth, this.gatheredResource, this.currentAction, this);
 	}
 	
 	@Override

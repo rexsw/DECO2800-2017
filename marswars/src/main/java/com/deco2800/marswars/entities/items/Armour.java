@@ -1,10 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.deco2800.marswars.entities.items.effects.DefenceEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for Armour items. Armour items would be passive items that have defensive passive effects. These effect are not
@@ -21,7 +21,6 @@ import com.deco2800.marswars.entities.items.effects.Effect;
 public class Armour extends Item {
 
 	private ArmourType type; //Enumerate of the specific Armour item that has its meta data
-	//private int lvl; //level of the item
 	private List<Effect> effects; //List of effects the Armour item has.
 
 	/**
@@ -33,7 +32,6 @@ public class Armour extends Item {
 	public Armour(ArmourType type) {
 		this.effects = new ArrayList<>();
 		this.type = type;
-		//this.lvl = lvl;
 		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
 	}
 
@@ -63,18 +61,9 @@ public class Armour extends Item {
 	 * @return the amount of movement speed the item will add on. Negative numbers will mean Movement Speed stat will 
 	 * decrease when applied.
 	 */
-	public int getMoveSpeed() {
+	public float getMoveSpeed() {
 		return type.getMoveSpeed();
 	}
-
-//	/**
-//	 * Gets the current level of the Armour item.
-//	 * 
-//	 * @return the current level of the Armour item.
-//	 */
-//	public int getLevel() {
-//		return this.lvl;
-//	}
 
 	/**
 	 * Gets a list of all the effects the Armour item has.
@@ -125,5 +114,22 @@ public class Armour extends Item {
 	@Override
 	public String getTexture() {
 		return type.getTextureString();
+	}
+	
+	/**
+	 * Override equals method so that equality is based on the ArmourType enumerate value that was used to make the
+	 * armour item.
+	 * @param object  The object to be compared.
+	 * @return true if the ArmourType enumerate values are the same, false otherwise.
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if ((getClass() != object.getClass()) || (object == null)) {
+			return false;
+		}
+		return ((Armour) object).type == this.type;
 	}
 }

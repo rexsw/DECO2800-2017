@@ -4,7 +4,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
@@ -15,6 +17,7 @@ import com.deco2800.marswars.worlds.MapSizeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
 import java.util.Random;
 
 
@@ -30,6 +33,12 @@ public class MapContainer {
    
     // path of the .tmx map file
     private String mapPath = "";
+
+    // default map type
+    private MapTypes mapType = MapTypes.MARS;
+
+    // default map size
+    private MapSizeTypes mapSizeType = MapSizeTypes.MEDIUM;
     
     // width of the map loaded
     private int width;
@@ -52,6 +61,19 @@ public class MapContainer {
         //Not yet implemented
     }
 
+    /**
+     * Creates a new Map container from a given map with random elements.
+     *
+     * @param type the type of the map.
+     * @param size the size of the map.
+     */
+    public MapContainer(MapTypes type, MapSizeTypes size){
+        mapPath = getFixedMap(type, size);
+        TiledMap mockMap = new TmxMapLoader().load(mapPath);
+        width = mockMap.getProperties().get("width", Integer.class);
+        length = mockMap.getProperties().get("height", Integer.class);
+        LOGGER.info("Random Map: " + mapPath + " width: " + width + " length: " + length);
+    }
 
     /**
      * Creates a new Map container from a given map.
@@ -66,7 +88,7 @@ public class MapContainer {
      * Creates a Map container from a random map with random elements.
      */
     public MapContainer(){
-        mapPath = getRandomMap();
+        mapPath = RandomMapWriter.FILENAME;//getRandomMap();
         TiledMap mockMap = new TmxMapLoader().load(mapPath);
         width = mockMap.getProperties().get("width", Integer.class);
         length = mockMap.getProperties().get("height", Integer.class);
@@ -93,8 +115,9 @@ public class MapContainer {
         if(random) {
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
-               this.getRandomBuilding();
-               this.getRandomEntity();
+            	//I removed random entities and buildings for now, don't think they make sense in a strategy game
+              // this.getRandomBuilding();
+              // this.getRandomEntity();
                this.getRandomResource();
             }
         }
@@ -208,19 +231,35 @@ public class MapContainer {
      * Places an entity on the map in a random location.
      *
      * @param entity the entity to be placed.
-     * @param random whether its position should be random or not.
      */
-    public void setEntity(BaseEntity entity, boolean random){
+    public void setRandomEntity(BaseEntity entity){
         //Can't implement as entity requires x/y before being passed if random
+    }
+
+    /**
+     * Place an entity on the map in a fixed location.
+     *
+     * @param entityType the type of the new entity to be placed
+     * @param x its x coordinate
+     * @param y its y coordinate
+     * @param z its z coordinate
+     */
+    public void setEntity(EntityID entityType, float x, float y, float z){
+        BaseEntity entity = null;
+        switch (entityType){
+
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
+        }
+        this.world.addEntity(entity);
     }
 
     /**
      * Places a set of entities on the map in a random position.
      *
      * @param entities the set of entities to be placed.
-     * @param random whether their position should be random or not.
      */
-    public void setEntities(BaseEntity[] entities, boolean random){
+    public void setRandomEntities(BaseEntity[] entities){
         //Can't implement as entity requires x/y before being passed if random
     }
 
@@ -267,13 +306,13 @@ public class MapContainer {
         BuildingEntity newBuilding;
         int x = r.nextInt(width-3);
         int y = r.nextInt(length-3);
-        if(random == BuildingType.BASE && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        if(random == BuildingType.BASE && world.checkValidPlace(BuildingType.BASE, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BASE, 0);
-        } else if(random == BuildingType.TURRET && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.TURRET && world.checkValidPlace(BuildingType.TURRET, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.TURRET, 0);
-        } else if(random == BuildingType.BUNKER && world.checkValidPlace(x, y, random.getBuildSize(), .5f)){
+        } else if(random == BuildingType.BUNKER && world.checkValidPlace(BuildingType.BUNKER, x, y, random.getBuildSize(), .5f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BUNKER, 0);
-        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(x, y, random.getBuildSize(), 0f)){
+        } else if(random == BuildingType.BARRACKS && world.checkValidPlace(BuildingType.BARRACKS, x, y, random.getBuildSize(), 0f)){
             newBuilding = new BuildingEntity(x,y,0,BuildingType.BARRACKS, 0);
         }
         else {
@@ -298,7 +337,7 @@ public class MapContainer {
      * Creates random pattern of resources
      */
     protected void generateResourcePattern(){
-        int xLength = this.length;
+        int xLength = this.length ;
         int yWidth = this.width;
         int featureSize = 5;
         int scale = 2;
@@ -321,23 +360,40 @@ public class MapContainer {
      * Creates a random entity.
      */
     protected void getRandomEntity(){
-        EntityID random = EntityID.values()[r.nextInt(EntityID.values().length)];
+        EntityID random = EntityID.SPACMAN;
+        //please add consturtors for the other enities to this methoad before useing their IDs
         LOGGER.info("chosen entity type: " + random);
-        BaseEntity newEntity;
+        BaseEntity entity = null;
         int x = r.nextInt(width-1);
         int y = r.nextInt(length-1);
         if(!checkForEntity(x, y)){
             return;
         }
+//<<<<<<< HEAD
+        switch (random){
+//            case ASTRONAUT:
+//                entity = new Astronaut(x,y,0, 0);
+//                break;
+//            case TANK:
+//                entity = new Tank(x,y,0, 0);
+//                break;
+            case SPACMAN:
+                entity = new Spacman(x, y, 0);
+            default:
+                LOGGER.error("Unhandled Case, Entity not supported");
+/*=======
+        random=EntityID.SPACMAN;
         if(random == EntityID.SPACMAN){
             newEntity = new Spacman(x, y, 0);
             newEntity.setOwner(0);
         }
         else {
             return;
+>>>>>>> refs/heads/master*/
         }
 
-        world.addEntity(newEntity);
+        world.addEntity(entity);
+        System.out.println(random + " " + entity.toString());
     }
 
     /**
@@ -403,39 +459,163 @@ public class MapContainer {
         MapSizeTypes randomSize = MapSizeTypes.values()[r.nextInt(MapSizeTypes.values().length)];
         MapTypes randomType = MapTypes.values()[r.nextInt(MapTypes.values().length)];
         LOGGER.info("chosen map type: " + randomType + " map size: " + randomSize);
-        String newPath = "resources/mapAssets/";
+
+        //add the tiles we want the map to contain - IN ORDER
+        List tilesToAdd= new ArrayList<Integer>();
+        int size;
         switch (randomSize){
             case TINY:
-                newPath+="tiny";
+                size = 40;
+                mapSizeType = MapSizeTypes.TINY;
                 break;
             case SMALL:
-                newPath+="small";
+                size = 60;
+
+                mapSizeType = MapSizeTypes.SMALL;
                 break;
             case MEDIUM:
-                newPath+="medium";
+                size = 100;
+                mapSizeType = MapSizeTypes.MEDIUM;
                 break;
             case LARGE:
-                newPath+="large";
+                size = 150;
+                mapSizeType = MapSizeTypes.LARGE;
                 break;
             case VERY_LARGE:
-                newPath+="veryLarge";
+                size = 250;
+                mapSizeType = MapSizeTypes.VERY_LARGE;
                 break;
             default:
-                LOGGER.error("Unknown Map Size type");
+                size=100;
         }
         switch (randomType){
             case MARS:
-                newPath+="Mars.tmx";
+                tilesToAdd.add(new Integer(10));
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(13));
+                tilesToAdd.add(new Integer(14));
+                tilesToAdd.add(new Integer(15));
+                mapType = MapTypes.MARS;
                 break;
             case MOON:
-                newPath+="Moon.tmx";
+                tilesToAdd.add(new Integer(29));
+                tilesToAdd.add(new Integer(30));
+                tilesToAdd.add(new Integer(31));
+                tilesToAdd.add(new Integer(32));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(35));
+                tilesToAdd.add(new Integer(36));
+                mapType = MapTypes.MOON;
                 break;
             case SUN:
-                newPath+="Sun.tmx";
+                //UPDATE THESE TILES
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(18));
+                mapType = MapTypes.SUN;
                 break;
             default:
                 LOGGER.error("Unknown Map type");
         }
-        return newPath;
+        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(size,size, 18));
+        try{
+            randomTiles.writeMap();
+        }catch(Exception e){
+            //oh no what do we do? (file IO error)
+            //we should probably throw some error and crash the game if this fails :[] ?
+        }
+        return randomTiles.FILENAME;
+    }
+
+    /**
+     * Chooses a fixed map (.tmx file) of a fixed size
+     *
+     * @return the new map file path.
+     */
+    protected String getFixedMap(MapTypes type, MapSizeTypes size){
+        //add the tiles we want the map to contain - IN ORDER
+        List tilesToAdd= new ArrayList<Integer>();
+        int mapSize;
+        switch (size){
+            case TINY:
+                mapSize = 40;
+                mapSizeType = MapSizeTypes.TINY;
+                break;
+            case SMALL:
+                mapSize = 60;
+
+                mapSizeType = MapSizeTypes.SMALL;
+                break;
+            case MEDIUM:
+                mapSize = 100;
+                mapSizeType = MapSizeTypes.MEDIUM;
+                break;
+            case LARGE:
+                mapSize = 150;
+                mapSizeType = MapSizeTypes.LARGE;
+                break;
+            case VERY_LARGE:
+                mapSize = 250;
+                mapSizeType = MapSizeTypes.VERY_LARGE;
+                break;
+            default:
+                mapSize = 100;
+        }
+        switch (type){
+            case MARS:
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(13));
+                tilesToAdd.add(new Integer(14));
+                tilesToAdd.add(new Integer(15));
+                mapType = MapTypes.MARS;
+                break;
+            case MOON:
+                tilesToAdd.add(new Integer(29));
+                tilesToAdd.add(new Integer(30));
+                tilesToAdd.add(new Integer(31));
+                tilesToAdd.add(new Integer(32));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(35));
+                tilesToAdd.add(new Integer(36));
+                mapType = MapTypes.MOON;
+                break;
+            case SUN:
+                //UPDATE THESE TILES
+                tilesToAdd.add(new Integer(11));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(12));
+                tilesToAdd.add(new Integer(18));
+                mapType = MapTypes.SUN;
+                break;
+            default:
+                LOGGER.error("Unknown Map type");
+        }
+        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(mapSize,mapSize, 18));
+        try{
+            randomTiles.writeMap();
+        }catch(Exception e){
+            //oh no what do we do? (file IO error)
+            //we should probably throw some error and crash the game if this fails :[] ?
+        }
+        return randomTiles.FILENAME;
+    }
+
+    /**
+     * @return returns the current map type
+     */
+    public MapTypes getMapType() {
+        return mapType;
+    }
+
+    /**
+     * @return returns the current map size
+     */
+    public MapSizeTypes getMapSizeType() {
+        return mapSizeType;
     }
 }

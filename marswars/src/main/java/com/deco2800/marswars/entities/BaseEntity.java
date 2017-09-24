@@ -1,17 +1,31 @@
 package com.deco2800.marswars.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TechnologyManager;
+import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.util.Box3D;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,9 +38,13 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private EntityType entityType = EntityType.NOT_SET;
 	private ActionList validActions;
 	private boolean selected = false;
-	private int owner = 0;
+	protected int owner = 0;
 	private boolean fixPos = false;
+	private ProgressBar healthBar;
 	protected float speed = 0.05f;
+	protected Optional<DecoAction> currentAction = Optional.empty();
+	protected ActionType nextAction;
+	OrthographicCamera camera = GameManager.get().getCamera();
 
 	/**
 	 * Constructor for the base entity
@@ -40,6 +58,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
 		this.modifyCollisionMap(true);
+
 	}
 
 	/**
@@ -86,7 +105,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
-	
+
 	/**
 	 * Gets the build speed modifier for this entity
 	 * @return
@@ -123,15 +142,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		super.setPosition(x, y, z);
 		modifyCollisionMap(true);
 	}
-	
+
 	/**
 	 * Workaround for making position line up with rendered object rendered over multiple tiles
 	 * @param xPos
 	 * @param yPos
 	 * @param zPos
 	 */
-	public void fixPosition(int xPos, int yPos, int zPos) {
-		modifyCollisionMap(false);
+	public void fixPosition(int xPos, int yPos, int zPos, int addxWidth, int addYLength) {
 		if (GameManager.get().getWorld() instanceof BaseWorld || GameManager.get().getWorld() instanceof CustomizedWorld) {
 			BaseWorld baseWorld = (BaseWorld) GameManager.get().getWorld();
 			int left = xPos;
@@ -139,12 +157,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			right = right < baseWorld.getWidth() ? right : baseWorld.getWidth() - 1;
 			int bottom = yPos;
 			int top = (int) Math.ceil(yPos + getYLength());
-			top = top < baseWorld.getLength() ? top : baseWorld.getLength()- 1;
-			for (int x = left; x < right; x++) {
-				for (int y = bottom; y < top; y++) {
+			if (left < 0 || right+addxWidth > baseWorld.getWidth() || bottom > baseWorld.getLength() || top+addYLength <0) {
+				return;
+			}
+			modifyCollisionMap(false);
+			for (int x = left; x < right+addxWidth; x++) {
+				for (int y = bottom; y < top+addYLength; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
 				}
-			}	
+			}
 		}
 	}
 
@@ -155,8 +176,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosX(x);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -166,8 +191,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosY(y);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -177,8 +206,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosZ(z);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -200,6 +233,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void deselect() {
 		this.selected = false;
+		if (this.healthBar != null) this.healthBar.setVisible(false);
 	}
 
 	/**
@@ -239,6 +273,17 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		this.validActions.add(newAction);
 		return true;
 	}
+
+    /**
+     * Adds all available building actions to the list
+     */
+    public void giveAllBuilding() {
+    	TechnologyManager a = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    	ArrayList<BuildingType> b = a.getAvailableBuildings();
+    	for (BuildingType c : b) {
+    		addNewAction(c);
+    	}
+    }
 
 	/**
 	 *Removes a valid action from the entity
@@ -295,9 +340,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	@Override
 	public void buttonWasPressed() {return;}
-	
+
 	/**
-	 * Returns a label to display into 'Actions' of the HUD 
+	 * Returns a label to display into 'Actions' of the HUD
 	 */
 	@Override
 	public Label getHelpText() {
@@ -362,7 +407,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param add
 	 * @param scale
 	 */
-	protected void modifyFogOfWarMap(boolean add,int scale) {
+	public void modifyFogOfWarMap(boolean add,int scale) {
 
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
@@ -384,24 +429,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("UNNAMED",0, null, Optional.empty(), this);
-	}
-
-	/**
-	 * Forces the unit to only try the chosen action on the next rightclick
-	 * @param nextAction the action to be forced
-	 */
-	public void setNextAction(ActionType nextAction) {
-		return;
-	}
-
-	/**
-	 * Forces the unit to only try the chosen action on the next rightclick
-	 * this variant is for building
-	 * @param toBuild the unit to be built
-	 */
-	public void setNextAction(BaseEntity toBuild, ActionType action) {
-		return;
+		return new EntityStats("UNNAMED",0,0, null, Optional.empty(), this);
 	}
 
 	/**
@@ -409,7 +437,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param action the action to perform
 	 */
 	public void setAction(DecoAction action) {
-		return;
+		currentAction = Optional.of(action);
+	}
+
+	/**
+	 * get the current action of the base entity
+	 * @return returns current action (can be empty)
+	 */
+	public Optional<DecoAction> getAction() {
+		return currentAction;
 	}
 
 	/**
@@ -440,7 +476,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
-	
+
 	/**
 	 * Sets boolean fixPosition
 	 * @param fix
@@ -448,7 +484,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setFix(boolean fix) {
 		fixPos = fix;
 	}
-	
+
 	/**
 	 * returns boolean fixPosition
 	 * @return true if entity must be fixed
@@ -464,7 +500,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setMoveSpeed(float speed) {
 		this.speed = speed;
 	}
-	
+
+	public void setBuildSpeed(float speed) {
+		this.buildSpeed = speed;
+	}
+
+	public float getBuildSpeed() {
+		return buildSpeed;
+	}
 	/**
 	 * checks if this entity is AI
 	 * @return true if entity is owned by AI
@@ -472,5 +515,103 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	@Override
 	public boolean isAi() {
 		return owner >= 0;
+	}
+
+	/**
+	 * Tells the entity if it needs to move from the given tile; i.e. is it
+	 * sharing the tile with entities other than special terrain entities.
+	 * @param entities
+	 * @return
+	 */
+	public boolean moveAway (List<BaseEntity> entities) {
+		int entitiesSize = entities.size();
+		boolean waterPresent = false;
+		for (BaseEntity e : entities) {
+			if (e instanceof Water) {
+				waterPresent = true;
+			}
+		}
+		return (entitiesSize > 1 && !waterPresent) ||
+				(entitiesSize > 2 && waterPresent);
+	}
+
+	/**
+	 * Sets the action using the actionsetter class
+	 * @param current ActionType to be set
+	 */
+	public void setNextAction(ActionType current) {
+		nextAction = current;
+	}
+
+	/**
+	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the unit as long as you are zoomed in
+	 * @param s The stage that the UI is on
+	 * @return the progressbar if the entity is a building, unit or hero, null otherwise
+	 */
+	public ProgressBar getHealthBar(Stage s) {
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO )) return null; //Check if is valid type
+		if (healthBar != null) {//If there is a health bar
+			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
+				healthBar.setVisible(false);
+				return healthBar;
+			}
+			healthBar.setVisible(true);
+			healthBar.setValue(this.getStats().getHealth());
+
+			float worldX = this.getPosX();
+			float worldY = this.getPosY();
+			float pixelX;
+			float pixelY;
+			float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+			float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
+			//Calculate the position of unit on camera in pixels
+			worldX = (worldY + worldX)/2f;
+			pixelY = tileHeight * (-worldY - 1/2 + worldX);
+			pixelX = tileWidth * worldX;
+			pixelY -= camera.position.y - camera.viewportHeight/2;
+			pixelX -= camera.position.x - camera.viewportWidth/2;
+			healthBar.setWidth(100/ camera.zoom);
+			healthBar.setHeight(50/ camera.zoom);
+			healthBar.setPosition(pixelX - healthBar.getWidth()/4* camera.zoom, pixelY+50);
+		} else {
+			makeHealthBar(s);
+		}
+		return healthBar;
+	}
+
+	/**
+	 * This function creates a new progressbar to use as a health bar
+	 * @param s the stage to put the health bar on
+	 */
+	private void makeHealthBar(Stage s) {
+		ProgressBar.ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
+
+		Pixmap pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GRAY);
+		pixmap.fill();
+		healthBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		pixmap = new Pixmap(0, 5, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GREEN);
+		pixmap.fill();
+		healthBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.GREEN);
+		pixmap.fill();
+		healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+
+		pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.BLUE);
+		pixmap.fill();
+		pixmap.dispose();
+
+		healthBar = new ProgressBar(0,this.getStats().getMaxHealth(), 1, false, healthBarStyle);
+		healthBar.setValue(100);
+		s.addActor(healthBar);
+		healthBar.setVisible(true);
 	}
 }

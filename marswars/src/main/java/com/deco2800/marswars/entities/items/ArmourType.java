@@ -1,7 +1,5 @@
 package com.deco2800.marswars.entities.items;
 
-import com.badlogic.gdx.graphics.Texture;
-
 /**
  * Enumerate to store the meta data for all the specific Armour type items.
  * 
@@ -19,14 +17,16 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }); 
-
+	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }), 
+	
+	//some OP movement speed boots (texture here is a placeholder)
+	BOOTS1("BootI", "goggle", 9999, 9999, 9999, new int[] { 1000, 2000, 1000, 5000});
+	
 	private String name;
 	private int baseArmour;
 	private int[] baseCost;
 	private int baseHealth;
-	private int baseSpeed;
-	// private float ratio;
+	private float baseSpeed;
 	private String texture;
 
 	/**
@@ -46,31 +46,14 @@ public enum ArmourType implements ItemType {
 	 *            cost for building it
 	 */
 	ArmourType(String name, String texture, int baseArmour, int baseHealth,
-			int baseSpeed, int[] baseCost) {
+			float baseSpeed, int[] baseCost) {
 		this.name = name;
 		this.baseArmour = baseArmour;
 		this.baseHealth = baseHealth;
 		this.baseSpeed = baseSpeed;
 		this.baseCost = baseCost;
-		// this.ratio = ratio;
 		this.texture = texture;
 	}
-
-	// /**
-	// * Helper method to calculate the rounded integer stat changes or upgrade
-	// costs based on the item's current level
-	// * and the item's ratio field. Result is calculated by multiplying the
-	// stat change or cost by the ratio
-	// * level - 1 times.
-	// *
-	// * @param change The stat change or the cost to be
-	// * @param lvl the current level of the item.
-	// * @return rounded integer of the stat change or cost after applying the
-	// multiplier
-	// */
-	// private int applyUpgrateRatio(int change, int lvl) {
-	// return (int) Math.round(change * Math.pow(ratio, (lvl - 1)));
-	// }
 
 	/**
 	 * Gets the item name
@@ -86,7 +69,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Armour (max and current) that the item will add on.
 	 */
-	int getArmourValue() {
+	public int getArmourValue() {
 		return this.baseArmour;
 	}
 
@@ -95,7 +78,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Health (max and current) that the item will add on.
 	 */
-	int getArmourHealth() {
+	public int getArmourHealth() {
 		return this.baseHealth;
 	}
 
@@ -104,7 +87,7 @@ public enum ArmourType implements ItemType {
 	 * 
 	 * @return the amount of Movement Speed that the item will add on.
 	 */
-	int getMoveSpeed() {
+	public float getMoveSpeed() {
 		return this.baseSpeed;
 	}
 

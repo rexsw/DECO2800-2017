@@ -1,0 +1,32 @@
+package com.deco2800.marswars.entities;
+
+import com.deco2800.marswars.entities.units.Sniper;
+import com.deco2800.marswars.entities.units.Sniper;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
+ * 
+ * @author xhy6006 on 23/09/17
+ *
+ */
+
+public class SniperTest {
+	@Test
+	public void constructorTest() {
+		Sniper sniper = new Sniper(2, 1, 1, 1);
+		Assert.assertTrue(sniper != null);
+	}
+	
+	@Test
+	public void getStatTest() {
+		Sniper sniper = new Sniper(2, 1, 1, 1);
+		Assert.assertTrue(sniper.getStats() != null);
+		Assert.assertEquals(1000, sniper.getStats().getHealth());
+		Assert.assertEquals(1000, sniper.getStats().getMaxHealth());
+		Assert.assertEquals("Sniper", sniper.getStats().getName());
+	}
+
+
+}

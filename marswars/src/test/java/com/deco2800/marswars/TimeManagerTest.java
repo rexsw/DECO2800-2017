@@ -2,6 +2,7 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -10,6 +11,11 @@ import static org.junit.Assert.*;
 public class TimeManagerTest {
 	private TimeManager timeManager = (TimeManager) GameManager.get()
 			.getManager(TimeManager.class);
+
+	@Before
+	public void setup(){
+		timeManager.resetInGameTime();
+	}
 
 	@Test @Ignore
 	public void testOnTick() {
@@ -158,8 +164,8 @@ public class TimeManagerTest {
 
 	@Test
 	public void testGetGlobalTimeString() {
-		assertTrue(timeManager.getGlobalTimeString().length() > 5
-				&& timeManager.getGlobalTimeString().length() < 9);
+		assertTrue(timeManager.getGlobalTimeString().length() >= 5
+				&& timeManager.getGlobalTimeString().length() <= 9);
 	}
 	
 	@Test

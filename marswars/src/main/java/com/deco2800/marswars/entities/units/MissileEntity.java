@@ -1,14 +1,12 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.util.Box3D;
+import java.util.Optional;
 
 /**
  * @author Vinson Yeung on 25/8/17
@@ -23,11 +21,12 @@ public class MissileEntity extends BaseEntity implements HasAction{
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
     private String missileTexture;
     private int areaDamage;
+    private AttackableEntity ownerEntity;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(MissileEntity.class);
 
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
-                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner) {
+                         AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner, AttackableEntity ownerEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
         this.modifyCollisionMap(true);
     }
@@ -123,5 +122,12 @@ public class MissileEntity extends BaseEntity implements HasAction{
     	this.speed = speed; 
     }
     
+    public void setOwnerEntity(AttackableEntity ownerEntity) {
+    	this.ownerEntity = ownerEntity;
+    }
+    
+    public AttackableEntity getOwnerEntity() {
+    	return  ownerEntity;
+    }
 
 }

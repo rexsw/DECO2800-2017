@@ -1,11 +1,13 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,12 @@ public class GameManager implements TickableManager {
 	private MiniMap miniMap;
 
 	private HUDView gui;
+	
+	private MainMenu menu;
+	
+	private TextureManager gameTexture;
+	
+	private boolean gameStarted = false;
 
 	/**
 	 * Returns an instance of the GM
@@ -124,6 +132,22 @@ public class GameManager implements TickableManager {
 	public void setMapWorld(BaseWorld world) {
 		this.mapWorld = world;
 	}
+	
+	/**
+	 * Sets the current main menu display
+	 * @param menu
+	 */
+	public void setMainMenu(MainMenu menu){
+		this.menu = menu;
+	}
+	
+	/**
+	 * Returns the current main menu
+	 * @return menu
+	 */
+	public MainMenu getMainMenu(){
+		return menu;
+	}
 
 	/**
 	 * Gets the current game world
@@ -181,6 +205,17 @@ public class GameManager implements TickableManager {
 	public int getActiveView() {
 		return activeView;
 	}
+	
+	public void resetGame(){
+		gamestage.clear();
+		this.gameWorld.getEntities().clear();
+		this.gameWorld = null;
+		this.gui = null;
+		this.miniMap = null;
+		this.menu.endGame();
+		this.menu = new MainMenu(this.gameskin, this.gamestage);
+		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
 
 	/**
 	 * Toggles activeView.
@@ -219,11 +254,11 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game skin
 	 * 
-	 * @param Skin setskin the skin used to display the
+	 * @param skin setskin the skin used to display the
 	 * games gui
 	 */
-	public void setSkin(Skin setskin) {
-		gameskin = setskin;
+	public void setSkin(Skin skin) {
+		gameskin = skin;
 	}
 	
 	/**
@@ -239,11 +274,11 @@ public class GameManager implements TickableManager {
 	/**
 	 * sets the currently used game stage
 	 * 
-	 * @param stage setsstage the stage used to display the
+	 * @param setsstage the stage used to display the
 	 * games gui
 	 */
-	public void setStage(Stage setsstage) {
-		gamestage = setsstage;
+	public void setStage(Stage stage) {
+		gamestage = stage;
 	}
 	
 	/**

@@ -1,13 +1,13 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
-import com.deco2800.marswars.entities.items.*;
-import java.util.Optional;
-
+import com.deco2800.marswars.entities.items.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * A hero for the game previously called as HeroSpacman.
@@ -17,14 +17,12 @@ import org.slf4j.LoggerFactory;
  * inventory = instance of the Inventory class to store items that the Commander has equipped.
  * currentAction = the Commander's action that it is currently taking.
  * 
- * Created by timhadwen on 19/7/17.
- * Edited by Zeid Ismail on 8/09
+ * 
  */
 public class Commander extends Soldier {
 
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
-	//master merging testing
 	Optional<DecoAction> currentAction = Optional.empty();
 
 	/**
@@ -37,104 +35,63 @@ public class Commander extends Soldier {
 	 */
 	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		
+		LOGGER.debug("Create a commander for team: " + owner);
 		this.name = "Commander";
+		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
 	}
 
-//	/**
-//	 * Method to check, execute and update the Commander's actions for the Commander to actually do and appear to do 
-//	 * the assigned current action.
-//	 * @param i  The current game tick.
-//	 */
-//	@Override
-//	public void onTick(int i) {
-//		if (!currentAction.isPresent()) { //no need to update or do anything if there already is no assigned action
-//			return;
-//		}
-//		//Do the assigned action if it's not completed already.
-//		if (!currentAction.get().completed()) {
-//			currentAction.get().doAction();
-//		}
-//	}
-
-
-//	@Override
-//	public void onTick(int i) {
-//		if (!currentAction.isPresent()) {
-//			return;
-//		}
-//
-//		if (!currentAction.get().completed()) {
-//			currentAction.get().doAction();
-//		}
-//	}
-//
-
-
-//	@Override
-//	public void onRightClick(float x, float y) {
-//		List<BaseEntity> entities;
-//		try {
-//			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
-//
-//		} catch (IndexOutOfBoundsException e) {
-//			// if the right click occurs outside of the game world, nothing will happen
-//			LOGGER.info("Right click occurred outside game world.");
-//			this.setTexture(defaultTextureName);
-//			return;
-//		}
-//		
-//		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
-//				
-//		if (attack) {
-//			// we cant assign different owner yet
-//			AttackableEntity target = (AttackableEntity) entities.get(0);
-//			attack(target);
-//			
-//		} else {
-//			this.setCurrentAction(Optional.of(new MoveAction((int) x, (int) y, this)));
-//			LOGGER.error("Assigned action move to" + x + " " + y);
-//		}
-//		this.setTexture(defaultTextureName);
-//		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-//		sound.playSound(movementSound);
-//	}
-//
-//	@Override
-//	public boolean isSelected() {
-//		return false;
-//	}
-//
-//	@Override
-//	public void deselect() {
-//	}
-
+	/**
+	 * Add an item to the commander's inventory
+	 * 
+	 * @param item to be added
+	 * @return true if added successful, else false
+	 */
 	public boolean addItemToInventory(Item item) {
 		return inventory.addToInventory(item);
 	}
 
+	/**
+	 * Remove an item from the commander's inventory
+	 * 
+	 * @param item to be removed
+	 * @return true if removed successful, else false
+	 */
 	public boolean removeItemFromInventory(Item item) {
 		return inventory.removeFromInventory(item);
 	}
 
-	/** not a to string, returns the inventory object itself
-	 *
+	/** 
+	 *	This method returns the inventory object or the items bag of this commander
 	 * @return inventory
 	 */
 	public Inventory getInventory() {
 		return inventory;
 	}
 
-//	@Override
-//	public boolean equals(Object other) { // need more compare later
-//		if (other instanceof Commander) {
-//			return this.toString().equals(((Commander)other).toString());
-//		}
-//		return false;
-//	}
+	/**
+	 * Equals method of this class, at the moment, it only checks 3 things
+	 * 1. is other object an instance of Commander, if no return false
+	 * 2. is other object has the same toString result as this commander, if no return false
+	 * 3. are these two object has the same owner, if no return false
+	 * @return boolean whether they are the same commander
+	 */
+	@Override
+	public boolean equals(Object other) { 
+		if (other instanceof Commander) {
+			return this.toString().equals(((Commander)other).toString()) && this.owner == ((Commander)other).owner;
+		}
+		return false;
+	}
 	
+	/**
+	 * Hashcode method of commander class
+	 * Currently, it only checks if two commander got the same owner.
+	 * and because there should be only one commander for each player
+	 * so this hash code should works fine
+	 * @return int hash code of this commander object
+	 */
 	@Override
 	public int hashCode() { // need more hash later
 	    final int prime = 31;
@@ -144,15 +101,28 @@ public class Commander extends Soldier {
 	}
 	
 	/**
-	 * @return The stats of the entity
+	 * Gets the stats of this commander
+	 * @return The stats of the entity follow the parent class soldier
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Commander", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("Commander", this.getHealth(), this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
+	/**
+	 * Gets the name of this commander, should be 'Commander'
+	 * @return The name of commander
+	 */
 	@Override
 	public String toString(){
 		return this.name;
+	}
+	
+	/**
+	 * The purpose of this method is to avoid hero character gets hacked by hacker
+	 */
+	@Override
+	public void setLoyalty(int loyalty) {
+		return;
 	}
 	
 }

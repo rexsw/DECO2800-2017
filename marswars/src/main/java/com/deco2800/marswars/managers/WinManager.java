@@ -1,11 +1,10 @@
 package com.deco2800.marswars.managers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.hud.ExitGame;
+import com.deco2800.marswars.hud.GameStats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class the handles winning the game
@@ -20,24 +19,32 @@ public class WinManager extends Manager implements TickableManager {
 			.getManager(GameBlackBoard.class);
 	private int teams;
 	private String winner;
-	private Dialog winnermsn = null;
+	private Dialog winnermsn;
+	private boolean gamewin = false;
 
 	@Override
 	public void onTick(long i) {
+		//on tick checks in someone has won
 		teams = black.teamsAlive();
 		if (teams == 1) {
 			//combat win for a team
 			LOGGER.info("tick winner " + teams);
-			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
-			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
-			winnermsn.show(GameManager.get().getStage());
+			gamewin = true;
+			if(GameManager.get().getSkin() != null) {
+				winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(black.getAlive());
+				winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Military");
+				winnermsn.show(GameManager.get().getStage());
+			}
 		}
 		teams = ((ResourceManager) GameManager.get().getManager(ResourceManager.class)).CappedTeam();
 		if(teams != 0) {
 			//economic win for a team
-			winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(teams);
-			winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Economic");
-			winnermsn.show(GameManager.get().getStage());
+			gamewin = true;
+			if(GameManager.get().getSkin() != null) {
+				winner = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(teams);
+				winnermsn = new HandleWinner("Game Over", GameManager.get().getSkin(), winner, "Economic");
+				winnermsn.show(GameManager.get().getStage());
+			}
 		}
 	}
 	
@@ -47,7 +54,7 @@ public class WinManager extends Manager implements TickableManager {
 	 * @return true iif a winner has been picked
 	 */
 	public boolean isWinner() {
-		return winnermsn != null;
+		return gamewin;
 	}
 	
 	/**
@@ -75,8 +82,8 @@ public class WinManager extends Manager implements TickableManager {
 			if (object == (Object) 1) {
 				System.exit(0);
 			} else {
-				// later add viewing of game stats here
-				System.exit(0);
+				GameStats stats = new GameStats(GameManager.get().getStage(), GameManager.get().getSkin(),GameManager.get().getGui(),(TextureManager) GameManager.get().getManager(TextureManager.class));
+				stats.showStats();
 			}
 		}
 	}

@@ -1,58 +1,37 @@
 package com.deco2800.marswars.InitiateGame;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.AiManager;
-import com.deco2800.marswars.managers.BackgroundManager;
-import com.deco2800.marswars.managers.ColourManager;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameBlackBoard;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.managers.WinManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
-
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapContainer;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Manages the features for the game 
- * @author cherr
- *
+ * Manages the features for the game. An abstraction of the original marswars.java. 
+ * @author Naziah Siddique
  */
 public class Game{	
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+	private OrthographicCamera camera; 
 	
 	/**
 	 * Set the renderer.
@@ -62,40 +41,89 @@ public class Game{
 	 */
 	Renderer renderer = new Render3D();
 
-	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);	
-	BackgroundManager bgManager = (BackgroundManager) GameManager.get().getManager(BackgroundManager.class);
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
+	
+	private HUDView view; 
 
-	public Game(){
-		startGame();
+	public Game(MapTypes mapType, MapSizeTypes mapSize){
+		this.camera = GameManager.get().getCamera();
+		startGame(mapType, mapSize);
 	}
 	
-	private void startGame(){
-		timeManager.setGameStartTime();
-		timeManager.unPause();
+	private void startGame(MapTypes mapType, MapSizeTypes mapSize){
+		this.createMap(mapType, mapSize);
+		this.view = new HUDView(GameManager.get().getStage(), GameManager.get().getSkin(), GameManager.get());
+		this.timeManager.setGameStartTime();
+		this.timeManager.unPause();
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
+		//this.weatherManager.setWeatherEvent();
 	}
+	
+	/**
+	 * Creates game map
+	 * @param mapSize 
+	 * @param mapType 
+	 */
+	private void createMap(MapTypes mapType, MapSizeTypes mapSize) {
+		if (mapType == null || mapSize == null){
+			MapContainer map = new MapContainer();
+			CustomizedWorld world = new CustomizedWorld(map);
+			GameManager.get().setWorld(world);
+			world.loadMapContainer(map);
+		}else{
+			MapContainer map = new MapContainer(mapType, mapSize);
+			CustomizedWorld world = new CustomizedWorld(map);
+			GameManager.get().setWorld(world);
+			world.loadMapContainer(map);
+		}
 		
+		/* Move camera to the center of the world */
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32, 0);
+		GameManager.get().setCamera(this.camera);
+		GameManager.get().toggleActiveView();
+	}
+
 	/*
 	 * Initializes fog of war
+	 * Multiseleciton tiles are also initialized here
 	 */
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}	
 
+		//these are initialization for multiselection tiles
+		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
+		multiSelection.resetSelectedTiles();
+		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+	}
 
 	/**
 	 * Can assume that since this class has been instantiated
 	 * that the game is in full play
 	 * @param batch 
+	 * @param camera2 
 	 */
-	public void render(OrthographicCamera camera, SpriteBatch batch){
-		this.renderer.render(batch, camera);			
+	public void render(SpriteBatch batch, OrthographicCamera camera2){
+		/* Render the tiles second */
+		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
+		tileRenderer.setView(camera2);
+		tileRenderer.render();
+		
+		this.renderer.render(batch, camera2);
+		GameManager.get().getGui().render(this.lastMenuTick);
+	}
+	
+	public void resize(int width, int height){
+		view.resize(width, height);
+		LOGGER.error("resizp lis");
 	}
 	
 	/*
@@ -115,7 +143,7 @@ public class Game{
 	 * co-ord
 	 * 
 	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
-	 * @param lenght
+	 * @param length
 	 *            int length of the map
 	 * @param width
 	 *            int width of the map
@@ -126,26 +154,36 @@ public class Game{
 	 */
 	private void setPlayer(int length, int width, int aiteams,
 			int playerteams) {
-		int x, y, playerid;
+		int x;
+		int y;
+		int playerid;
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
+			setUnit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
 		}
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
-			x = ThreadLocalRandom.current().nextInt(1, length - 1);
-			y = ThreadLocalRandom.current().nextInt(1, width - 1);
+			int avoidInfinite = 0;
+			do {
+				x = ThreadLocalRandom.current().nextInt(1, length - 1);
+				y = ThreadLocalRandom.current().nextInt(1, width - 1);
+				avoidInfinite ++;
+			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
+			setUnit(playerid, x, y, rm);
 		}
 	}
 
@@ -161,11 +199,12 @@ public class Game{
 	 * @param rm
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
+	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
+		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
@@ -174,8 +213,11 @@ public class Game{
 		Tank tank = new Tank(x, y, 0, teamid);
 		Carrier carrier = new Carrier(x, y, 0, teamid);
 		Commander commander = new Commander(x,y,0,teamid);
+		Medic medic = new Medic(x, y, 0, teamid);
+		Hacker hacker = new Hacker(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(medic);
 		GameManager.get().getWorld().addEntity(commander);
-		
+		GameManager.get().getWorld().addEntity(hacker);
 		GameManager.get().getWorld().addEntity(carrier);
 		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
@@ -191,11 +233,11 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused()) {
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 100000) {
+						//initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
@@ -203,13 +245,13 @@ public class Game{
 							}
 							GameManager.get().onTick(0);
 							lastGameTick = TimeUtils.nanoTime();
-						}
+
 					}
-						//MarsWars.this.lastGameTick = TimeUtils.nanoTime();
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
+
 					}
 				}
 			}

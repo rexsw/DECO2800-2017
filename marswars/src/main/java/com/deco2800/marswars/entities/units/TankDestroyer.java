@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 
 /*
  * A heavier combat unit, does longer range and more armour than a soldier 
@@ -36,6 +35,6 @@ public class TankDestroyer extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("TankDestroyer", this.getHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats("TankDestroyer", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 }

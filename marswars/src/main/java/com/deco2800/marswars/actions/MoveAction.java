@@ -2,10 +2,9 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.PathfindingThread;
@@ -93,9 +92,9 @@ public class MoveAction implements DecoAction {
 				path = pathfinder.getPath();
 			}
 
-			if (entity instanceof AttackableEntity) {
+			if (path != null && entity instanceof AttackableEntity) {
 				// remove the entity from the minimap
-				GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
+				//GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
 			}
 
 			/* If the path is null its probably completed */

@@ -1,8 +1,13 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.EntityID;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is so that there can be a list of actions that can
@@ -24,11 +29,38 @@ public class ActionList extends ArrayList<Object> {
      */
     @Override
     public boolean add(Object o) {
-        if (o instanceof ActionType || o instanceof EntityID) {
-            return super.add(o);
+        if (o instanceof ActionType || o instanceof EntityID || o instanceof BuildingType) {
+            super.add(o);
+            Collections.sort(this, (Comparator<Object>) (lhs, rhs) -> {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                if (lhs instanceof ActionType && !(rhs instanceof ActionType)) return -1;
+                else if (lhs instanceof ActionType && (rhs instanceof ActionType)) return 0;
+                else if (!(lhs instanceof ActionType) && (rhs instanceof ActionType)) return 1;
+                else if ((lhs instanceof EntityID) && !(rhs instanceof EntityID)) return -1;
+                else if ((lhs instanceof EntityID) && (rhs instanceof EntityID)) return 0;
+                else if ((lhs instanceof BuildingType) && (rhs instanceof EntityID)) return 1;
+                else if ((lhs instanceof BuildingType) && (rhs instanceof BuildingType)) return 0;
+                else return 0;
+            });
+            return true;
         }
         return false;
     }
 
 
+    public List<ActionType> getActions() {
+        return this.stream().filter(o -> o instanceof ActionType).map(o -> (ActionType) o).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<BuildingType> getBuildings() {
+        return this.stream().filter(o -> o instanceof BuildingType).map(o -> (BuildingType) o).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<EntityID> getUnits() {
+        return this.stream().filter(o -> o instanceof EntityID).map(o -> (EntityID) o).collect(Collectors.toCollection(ArrayList::new));
+    }
+    
+    public List<Object> getallActions() {
+    	return this;
+    }
 }

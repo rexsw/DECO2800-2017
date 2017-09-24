@@ -3,36 +3,39 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
+import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.WorldUtil;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import com.deco2800.marswars.managers.TimeManager;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * Created by Scott Whittington on 22/08
  * control the current ai, every tick the ai looks at it's units and 
  * ensures they're doing something useful
- * warning spicy i hope you like meat balls 
+ * States added by  Ross Webster
+ * Ambient Animal AI added by Michelle Mo
  */
 public class AiManager extends AbstractPlayerManager implements TickableManager {
 	private List<Integer> teamid = new LinkedList<Integer>();
-	private int numAIPlayers;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
-	private Map<Integer, Integer> alive = new HashMap<Integer, Integer>();
-	private State state = State.DEFAULT;
+	private List<State> state = new LinkedList<State>();
 	private long timeAtStateChange;
 	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
+	private Random rand = new Random();
+	private int tickNumber = 0;
 	
 	public static enum State {
 		DEFAULT, AGGRESSIVE, DEFENSIVE
@@ -40,6 +43,12 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 
 	@Override
 	public void onTick(long l) {
+		//Increase the current tick count
+		tickNumber++;
+		//Check for state change every 10 ticks
+		if (tickLock(10,5)) {
+			decideChangeState();
+		}
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
 				if(e instanceof Astronaut) {
@@ -51,16 +60,78 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 				} else if(e instanceof Soldier) {
 					Soldier x = (Soldier)e;
 					//Action depends on current state
-					switch (state) {
+					switch (getState(e.getOwner())) {
 					case AGGRESSIVE:
-						useEnemy(x);
+						soldierAttack(x);
 						break;
-					case DEFAULT:
+					case DEFENSIVE:
+						break;
+					default:
 						soldierDefend(x);
 						break;
 					}
+				} else if(e instanceof AmbientAnimal){
+					animalController((AmbientAnimal)e);
 				}
 			}
+		}
+	}
+	
+	
+	/**
+	 * A controller which control the ambient animal's actions
+	 * @param ambient
+	 */
+	public void animalController(AmbientAnimal animal){
+		AmbientState as = animal.getState();
+		switch(as){
+		case TRAVEL:
+			animalTravelState(animal);
+			break;
+		case ATTACKBACK:
+			break;
+		default:
+			animalDefaultState(animal);
+			break;
+		}
+	}
+	
+	/**
+	 * Sets an animals Ai state based if it's been attacked or waiting for long enough
+	 * 
+	 * @param animal the animals state to change
+	 */
+	public void animalDefaultState(AmbientAnimal animal){
+		if (animal.gotHit()) {
+			animal.setState(AmbientState.ATTACKBACK);
+		}
+		if (animal.getWaitingTime() < 60*60) {
+			animal.setWaitingTime(animal.getWaitingTime() + 1);
+		} else {
+			animal.setWaitingTime(0);
+			animal.setState(AmbientState.TRAVEL);
+		}
+	}
+	
+	/**
+	 *  Sets an animals Ai state based if it's been attacked or waiting for long enough
+	 *  for the travel state
+	 * 
+	 * @param animal the animals state to change
+	 */
+	public void animalTravelState(AmbientAnimal animal){
+		if (animal.gotHit()) {
+			animal.setState(AmbientState.ATTACKBACK);
+			return;
+		}
+		if (animal.showProgress())
+			return;
+		if (animal.getTravelTime() < animal.getMaxTravelTime()) {
+			animal.move();
+			animal.setTravelTime(animal.getTravelTime() + 1);
+		} else {
+			animal.setTravelTime(0);
+			animal.setState(AmbientState.DEFAULT);
 		}
 	}
 	
@@ -77,15 +148,19 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			x.setAction(new GenerateAction(r));
 		}
 	}
-			
-	private void useEnemy(Soldier x) {
+	
+	/**
+	 * Orders a soldier to attack an enemy
+	 * @param x
+	 */
+	public void soldierAttack(Soldier x) {
 		//lets the ai target player spacman with it's enemyspacmen
 		if(x.showProgress()) {
 			return;
 		}
 		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-			if(r instanceof AttackableEntity && !x.sameOwner(r)) {
-				//LOGGER.error("ai - setting unit to attack " + r.toString());
+			if(r instanceof AttackableEntity && !x.sameOwner(r) && ((AttackableEntity) r).getLoadStatus()!=1) {
+				LOGGER.error("ai - setting unit to attack " + r.toString());
 				AttackableEntity y = (AttackableEntity) r;
 				x.attack(y);
 				return;
@@ -97,82 +172,174 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Tasks all soldiers to move back to base
 	 * @param x
 	 */
-	private void soldierDefend(Soldier soldier) {
+	public void soldierDefend(Soldier soldier) {
 		//lets the ai target player spacman with it's enemyspacmen
 		if(soldier.showProgress()) {
 			return;
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
-				LOGGER.info("ai - setting unit to move to base" + base.toString());
-				Base y = (Base) base;
+
+
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
-						(AbstractEntity)soldier));
+						(AttackableEntity)soldier));
 				return;
 			}
 		}
 	}
-
-private void useSpacman(Astronaut x) {
-	if(!(x.showProgress())) {
-		//allow spacmans to collect the closest resources
-		//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
-		Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
-		x.setAction(new GatherAction(x, (Resource) resource.get()));
-		//LOGGER.info(resource.get().getTexture() + "");
-		LOGGER.error("ai - set spacman to grather");
-	}
-}
-			
-			
+	
 	/**
-	 * if the ai has no more spacman under it's control, removes it's units
-	 * and sets it to "dead" so it won't tick anymore 
+	 * Orders an Astronaut to gather resources
+	 * @param x
 	 */
-	public boolean isKill(int key) {
-		//in this case "dead" is an Ai with no spacman
-		if(((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).count(key, "Units") == 0) {
-		LOGGER.info("ai - is kill");
-		alive.put(key, 0);
-		return true;
-		}
-		else {
-			return false;
+	public void useSpacman(Astronaut x) {
+		if(!(x.showProgress())) {
+			//allow spacmans to collect the closest resources
+			Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
+			x.setAction(new GatherAction(x, (Resource) resource.get()));
+			LOGGER.info("ai - set spacman to gather");
 		}
 	}
 	
 	/**
-	 * @return true iff Ai is alive else false 
+	 * Adds an Ai team to the AiManager
+	 * @param id
 	 */
-	public boolean alive(int key) {
-		return alive.get(key)==1;
-	}
-	
-	public void addTeam(int id) {
+	public void addTeam(Integer id) {
 		teamid.add(id);
-		alive.put(id, 1);
+		state.add(State.DEFAULT);
 	}
 	
+	/**
+	 * A list of integers of Ai team ids
+	 * @return List<Integer> 
+	 */
 	public List<Integer> getAiTeam(){
 		return teamid;
+	}
+	
+	/**
+	 * Removes a team from the list of Ai players
+	 * @param id int the team's id to kill 
+	 */
+	public void kill(Integer id) {
+		if(teamid.contains(id)) {
+			state.remove(getStateIndex(id));
+			teamid.remove(id);
+		}
+	}
+	
+	/**
+	 * Sets a restriction boolean to only run every nth tick
+	 * Returns true if on the specified tick number
+	 * @param modulus
+	 * @param offset
+	 * @return
+	 */
+	public boolean tickLock(int modulus, int offset){
+		if (((this.tickNumber + offset) % modulus) == 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns the specified team's strength (number of units + buildings)
+	 * @param teamID
+	 * @return
+	 */
+	private int teamStrengthCount(Integer teamID) {
+		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
+				getManager(GameBlackBoard.class);
+		// test if GameBlackBoard exists
+		if (blackboard != null) {
+			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
+					+ blackboard.count(teamID, GameBlackBoard.Field.BUILDINGS);
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the highest team's strength (number of units + buildings)
+	 * Used to consider hostility
+	 * @return
+	 */
+	private int highestStrengthCount() {
+		int strength;
+		//Assumed 1 player
+		strength = teamStrengthCount(-1);
+		for (int i = 1; i <= teamid.size(); i++) {
+			strength = Math.max(teamStrengthCount(i) , strength);
+		}
+		return strength;
+	}
+	
+	/**
+	 * Determines Ai team state depending on their strength compared to the leader's
+	 * @param teamID
+	 * @return
+	 */
+	private State hostility(Integer teamID) {
+		double ratio = 0.0;
+		if (teamStrengthCount(teamID) > 0) {
+			// Compares team strength to global strength
+			ratio = (double)highestStrengthCount() / (double)teamStrengthCount(teamID);
+		}
+		if (ratio >= 0.80) {
+			// If strong, then attack
+			return State.AGGRESSIVE;
+		} else if (ratio >= 0.50) {
+			// If moderate, then default stance
+			return State.DEFAULT;
+		} else {
+			// If weak, then defend
+			return State.DEFENSIVE;
+		}
+	}
+	
+	/**
+	 * Decides whether or not to change state
+	 * Will check every (in-game) hour
+	 */
+	public void decideChangeState() {
+		for (Integer teamID = 1; teamID <= teamid.size(); teamID++) {
+			if (getTimeSinceStateChange() > 60*60) {
+				setState(teamID, hostility(teamID));
+				LOGGER.info("AI [" + teamID + "] State updated to " + state);
+			}
+		}
+	}
+	
+	/**
+	 * Gets the state index in its Linked List that corresponds to the TeamID
+	 * @param teamID
+	 * @return
+	 */
+	public int getStateIndex(Integer teamID) {
+		int position = teamid.indexOf(teamID);
+		if (position == -1) {
+			LOGGER.error("Invalid Team Id");
+		}
+		return position;
 	}
 	
 	/**
 	 * Sets the current state of the AI Manager
 	 * @param newState
 	 */
-	public void setState(State newState) {
-		state = newState;
-		timeAtStateChange = tm.getGameSeconds();
+	public void setState(Integer teamID, State newState) {
+		state.set(getStateIndex(teamID), newState);
+		timeAtStateChange = tm.getGameSeconds();	//  note that timeAtStateChange is
+														// one variable for all states
 	}
 	
 	/**
-	 * Get the current state of the AI Manager
+	 * Get the current state of the team id of the AI Manager
 	 * @return
 	 */
-	public State getState() {
-		return state;
+	public State getState(Integer teamID) {
+		return state.get(getStateIndex(teamID));
 	}
 
 	/**

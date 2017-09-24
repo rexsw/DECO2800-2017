@@ -1,10 +1,11 @@
 package com.deco2800.marswars.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An UnloadAction for UNloading units from a carrier unit
@@ -23,6 +24,9 @@ public class UnloadAction implements DecoAction {
     private State state = State.START_STATE;
     private Soldier carrier;
     private int ticksLoad = 50;
+    // Variables for pause
+    private TimeManager timeManager = (TimeManager)
+            GameManager.get().getManager(TimeManager.class);
     private boolean actionPaused = false;
 
     /**
@@ -41,14 +45,16 @@ public class UnloadAction implements DecoAction {
      */
     @Override
     public void doAction() {
-	switch (state) {
-	case UNLOAD_STATE:
-	    unloadAction();
-	    break;
-	default:
-	    state = State.UNLOAD_STATE;
-	    return;
-	}
+        if (! timeManager.isPaused() && ! actionPaused) {
+            switch (state) {
+                case UNLOAD_STATE:
+                    unloadAction();
+                    break;
+                default:
+                    state = State.UNLOAD_STATE;
+                    return;
+            }
+        }
     }
 
     /**

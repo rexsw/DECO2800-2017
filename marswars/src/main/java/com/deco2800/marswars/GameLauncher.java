@@ -23,8 +23,7 @@ public class GameLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		config.title = "DECO2800 2017: MarsWars"; //$NON-NLS-1$
-		// LwjglApplication game =
+		config.title = "DECO2800 2017: MarsWars";
 		new LwjglApplication(new MarsWars(), config);
 	}
 }
