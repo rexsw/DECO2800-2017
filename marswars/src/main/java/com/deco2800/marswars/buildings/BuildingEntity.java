@@ -33,8 +33,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public int numOfSolider = 0;
 	// Current action of this building
 	protected Optional<DecoAction> currentAction = Optional.empty();
-	//owner of this building
-	private MouseHandler currentHandler;
 	//Current mousehandler manager
 	// bool for weather event tracking
 	boolean isFlooded = false;
@@ -56,9 +54,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
 		this.addNewAction(EntityID.ASTRONAUT);
-		ColourManager cm = (ColourManager) GameManager.get()
-				.getManager(ColourManager.class);
-		//colour = cm.getColour(owner); TEXTURES NOT READY
 		colour = "";
 		switch(building) {
 		case TURRET:
@@ -188,7 +183,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (currentAction.isPresent() == false) {
+		if (!currentAction.isPresent()) {
 			currentAction = Optional.of(action);
 		}
 	}

@@ -25,10 +25,11 @@ public class WeatherManagerTest {
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
     private Water testDrop;
-    private BaseWorld world = new BaseWorld(5, 5);
+    private BaseWorld world;
 
     @Before
     public void initalise() {
+        world = new BaseWorld(5, 5);
         GameManager.get().setWorld(world);
         testDrop = new Water(2, 3, 0);
         GameManager.get().getWorld().addEntity(testDrop);

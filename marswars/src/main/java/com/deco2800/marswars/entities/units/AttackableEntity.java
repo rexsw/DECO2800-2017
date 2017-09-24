@@ -174,7 +174,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		if (health <= 0) {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
-			modifyFogOfWarMap(false,3);
+			if(this.owner == -1) {
+				modifyFogOfWarMap(false,3);
+			}
 			GameManager.get().getWorld().removeEntity(this);
 			LOGGER.info("DEAD");
 
@@ -470,7 +472,8 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * 0 = Passive - Default unit behavior no reaction to enemies.
 	 * 1 = Defensive - Unit will attack enemies within their range but not move.
 	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
-	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * 3 = Skirmishing - Unit will run to the edge of their range and attack.
+	 * 4 = Timid - Unit will move away if attacked.
 	 * @return the entity stance
 	 */
 	public int getStance() {
@@ -483,7 +486,8 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * 0 = Passive - Default unit behavior no reaction to enemies. Possible building behavior.
 	 * 1 = Defensive - Unit will attack enemies within their range but not move. Possible building behavior.
 	 * 2 = Aggressive - Unit will attack enemies within range and follow if they move away.
-	 * 3 = Skirmishing - Unit will move away if attacked.
+	 * 3 = Skirmishing - Unit will run to the edge of their range and attack.
+	 * 4 = Timid - Unit will move away if attacked.
 	 * @param the integer corresponding with the stance
 	 */
 	public void setStance(int stance) {
