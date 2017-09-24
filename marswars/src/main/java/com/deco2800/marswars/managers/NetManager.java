@@ -1,12 +1,11 @@
 package com.deco2800.marswars.managers;
+
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.net.*;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class NetManager extends Manager {
     static final int SERVER_PORT = 8081;

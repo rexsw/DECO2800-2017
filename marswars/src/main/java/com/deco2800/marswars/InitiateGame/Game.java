@@ -1,12 +1,5 @@
 package com.deco2800.marswars.InitiateGame;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.deco2800.marswars.managers.*;
-import com.deco2800.marswars.worlds.SelectedTiles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
@@ -14,14 +7,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Hacker;
-import com.deco2800.marswars.entities.units.Medic;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -30,9 +18,13 @@ import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Manages the features for the game 
+ * Manages the features for the game. An abstraction of the original marswars.java. 
  * @author Naziah Siddique
  */
 public class Game{	
@@ -51,8 +43,6 @@ public class Game{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private BackgroundManager bgManager = (BackgroundManager)
-			GameManager.get().getManager(BackgroundManager.class);
 	private WeatherManager weatherManager = (WeatherManager)
 			GameManager.get().getManager(WeatherManager.class);
 
@@ -73,7 +63,6 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
-		this.selectedTiles();
 		//this.weatherManager.setWeatherEvent();
 	}
 	
@@ -103,20 +92,17 @@ public class Game{
 
 	/*
 	 * Initializes fog of war
+	 * Multiseleciton tiles are also initialized here
 	 */
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}
 
-	/*
- * Initializes fog of war
- */
-	private void selectedTiles() {
+		//these are initialization for multiselection tiles
 		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
 		multiSelection.resetSelectedTiles();
-		SelectedTiles.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
 	}
 
 	/**
@@ -137,7 +123,7 @@ public class Game{
 	
 	public void resize(int width, int height){
 		view.resize(width, height);
-		System.out.println("resizp lis");
+		LOGGER.error("resizp lis");
 	}
 	
 	/*
@@ -168,7 +154,9 @@ public class Game{
 	 */
 	private void setPlayer(int length, int width, int aiteams,
 			int playerteams) {
-		int x, y, playerid;
+		int x;
+		int y;
+		int playerid;
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()
@@ -181,7 +169,7 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
+			setUnit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
@@ -195,7 +183,7 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
+			setUnit(playerid, x, y, rm);
 		}
 	}
 
@@ -211,7 +199,7 @@ public class Game{
 	 * @param rm
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
+	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
@@ -245,11 +233,11 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused()) {
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) { //initial value 100000
+						//initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
@@ -257,12 +245,13 @@ public class Game{
 							}
 							GameManager.get().onTick(0);
 							lastGameTick = TimeUtils.nanoTime();
-						}
+
 					}
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
+
 					}
 				}
 			}

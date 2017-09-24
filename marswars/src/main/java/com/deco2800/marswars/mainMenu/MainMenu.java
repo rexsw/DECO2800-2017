@@ -27,8 +27,8 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
  *
  */
 public class MainMenu {
-	private static final int MENUHEIGHT = 500; 
-	private static final int MENUWIDTH = 800;
+	private static final int MENUHEIGHT = 700; 
+	private static final int MENUWIDTH = 1300;
 	private Skin skin;
 	private Stage stage; 
 	
@@ -72,6 +72,10 @@ public class MainMenu {
 			game = new Game(mapType, mapSize); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
+	}
+	
+	public void endGame(){
+		gameStarted = false;
 	}
 	
 	public boolean gameStarted(){

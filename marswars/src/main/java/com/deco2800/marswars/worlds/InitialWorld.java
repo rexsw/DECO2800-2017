@@ -1,15 +1,12 @@
 package com.deco2800.marswars.worlds;
 
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 19/7/17.

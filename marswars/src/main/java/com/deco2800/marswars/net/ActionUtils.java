@@ -7,6 +7,8 @@ import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import com.esotericsoftware.kryo.Kryo;
 
+import java.util.ArrayList;
+
 /**
  * This is a class of static utility functions for network actions.
  */

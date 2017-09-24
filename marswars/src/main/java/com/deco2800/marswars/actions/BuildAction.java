@@ -1,27 +1,17 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.worlds.AbstractWorld;
-
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.buildings.Barracks;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.buildings.Bunker;
-import com.deco2800.marswars.buildings.CheckSelect;
-import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -82,7 +72,7 @@ public class BuildAction implements DecoAction{
 	 * When called on, switches state to move builder and begin building
 	 */
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused && completed == false) {
+		if (! timeManager.isPaused() && ! actionPaused && !completed) {
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);

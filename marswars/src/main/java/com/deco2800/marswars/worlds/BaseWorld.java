@@ -5,8 +5,8 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
@@ -112,7 +112,6 @@ public class BaseWorld extends AbstractWorld {
 				ent.fixPosition((int)(entity.getPosX() + ((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 0, 0);
 			}
 		}
-
 	}
 	
 	/**
@@ -123,14 +122,13 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	@Override
 	public void removeEntity(BaseEntity entity) {
+		super.removeEntity(entity);
 		if (entity instanceof Soldier) {
-			((Soldier)entity).modifyFogOfWarMap(false,3);
 			// remove entity from the minimap when they are removed from the world
 			//GameManager.get().getMiniMap().removeEntity(entity);
 		}
-		super.removeEntity(entity);
-
-		if (!entity.isCollidable())
+		// Ensure water is also removed from Collision map upon deletion
+		if (! entity.isCollidable() && ! (entity instanceof Water))
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
 		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {

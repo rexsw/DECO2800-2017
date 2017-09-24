@@ -6,6 +6,12 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
+/**
+ * A generic class for tile entities - to be utilised in future dynamic weather
+ * effects.
+ *
+ * @author Isaac Doidge
+ */
 public class SpecialTileEntity extends BaseEntity implements Tickable {
 
     private WeatherManager weatherManager = (WeatherManager)
@@ -13,14 +19,13 @@ public class SpecialTileEntity extends BaseEntity implements Tickable {
     private SpecialTileEntityType entityType;
 
     /**
-     * Constructor for the Water
-     * @param parent
+     * Constructor for the SpecialTileEntitiy
      * @param posX
      * @param posY
      * @param posZ
      */
-    public SpecialTileEntity(AbstractWorld parent, float posX, float posY,
-                             float posZ, SpecialTileEntityType type) {
+    public SpecialTileEntity(float posX, float posY, float posZ,
+                             SpecialTileEntityType type) {
         super(posX, posY, posZ, 1, 1, 1f);
         this.entityType = type;
         this.canWalkOver = true;

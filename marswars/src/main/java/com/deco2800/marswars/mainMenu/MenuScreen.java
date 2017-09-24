@@ -7,17 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-//import com.badlogic.gdx.graphics.Texture;
-//import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-//import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.ServerShutdownAction;
-//import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
@@ -54,10 +54,10 @@ public class MenuScreen{
 	private Skin skin; 
 	private LobbyButton lobby;
 	private HUDView hud;
-	//private Label backgroundTex;
+	private Texture backgroundTex;
 	private Button backButton; 
 	private Button nextButton; 
-	private int playerType; 
+	public static int playerType;
 	private boolean joinedServer; 
 	private MainMenu menu;
 	MapTypes mapType;
@@ -67,22 +67,23 @@ public class MenuScreen{
 	Button quitButton;
 
 	
-	//private Window actionsWindow;    //window for the players actions
+
 	//Managers
-	//private TextureManager textureManager; //for loading in resource images
     // The Net Manager so you can communicate with the server
     private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+	private TextureManager textureManager; //for loading in resource images
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
 		playerModeSelect(window, stage);
-		
+		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+
 		//add background image
-	    /**Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
+	    Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
 	    TextureRegion backgroundRegion = new TextureRegion(backgroundTex);
 	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
-	    actionsWindow.setBackground(backgroundRegionDraw);**/
+	    window.setBackground(backgroundRegionDraw);
 	}
 	
 	
@@ -91,14 +92,14 @@ public class MenuScreen{
 		
 		Table playerMode = new Table();
 		playerMode.setDebug(true);		
-		Label modeInfo = new Label("SELECT A MODE", this.skin); //$NON-NLS-1$
+		Label modeInfo = new Label("SELECT A MODE", this.skin);
 		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin); //$NON-NLS-1$
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin); //$NON-NLS-1$
+		Button singlePlayerButton = new TextButton("Single Player", this.skin);
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin);
 		Button customizeButton = new TextButton("Customize", this.skin);
 
-		Label menuInfo = new Label("Click 'select world' to fast forward to playing", this.skin); //$NON-NLS-1$
-		Button playGame = new TextButton("Select world", this.skin); //$NON-NLS-1$
+		Label menuInfo = new Label("Click 'select world' to fast forward to playing", this.skin);
+		Button playGame = new TextButton("Select world", this.skin);
 		
 		playerMode.add(modeInfo).align(Align.center).row();
 		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -129,7 +130,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize);
-				GameManager.get().getGui().showEntitiesPicker(true, false);
+				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
 		});
@@ -147,7 +148,7 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("Pick your character!", this.skin); //$NON-NLS-1$
+		Label playerInfo = new Label("Pick your character!", this.skin);
 		
 		playerTable.add(playerInfo).row();
 		
@@ -176,7 +177,7 @@ public class MenuScreen{
 		Table worldTable = new Table();
 		worldTable.setDebug(true);
 		worldTable.align(Align.topLeft);
-		Label worldInfo = new Label("Select a world to play in!", this.skin); //$NON-NLS-1$
+		Label worldInfo = new Label("Select a world to play in!", this.skin);
 		Label worldSelected = new Label("You current selection:", skin);
 		Label currentWorldSelection = new Label("No type selected, ", skin);
 		Label currentSizeSelection = new Label("no map size selected.", skin);
@@ -299,7 +300,7 @@ public class MenuScreen{
 		mainmenu.clear();
 
 		Table gameTable = new Table();		
-		Label combatInfo = new Label("Select a combat mode", this.skin); //$NON-NLS-1$
+		Label combatInfo = new Label("Select a combat mode", this.skin);
 
 		gameTable.add(combatInfo).row();
 		mainmenu.add(gameTable);
@@ -313,7 +314,7 @@ public class MenuScreen{
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", this.skin); //$NON-NLS-1$
+		Label serverInfo = new Label("Join a server or start your own!", this.skin);
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -329,8 +330,8 @@ public class MenuScreen{
 	 * @param stage
 	 */
 	public Table addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
-		this.backButton = new TextButton("<", this.skin); //$NON-NLS-1$
-		this.nextButton = new TextButton(">", this.skin); //$NON-NLS-1$
+		this.backButton = new TextButton("<", this.skin);
+		this.nextButton = new TextButton(">", this.skin);
 		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
@@ -432,12 +433,12 @@ public class MenuScreen{
 			}
 		});
 		
-		quitButton = new TextButton("Exit", this.skin); //$NON-NLS-1$
+		quitButton = new TextButton("Exit", this.skin);
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
-				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);	 //$NON-NLS-1$
+				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);
 		}});
 		
 		mainmenu.row();

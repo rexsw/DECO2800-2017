@@ -321,7 +321,7 @@ public class MapContainer {
      * Creates random pattern of resources
      */
     protected void generateResourcePattern(){
-        int xLength = this.length;
+        int xLength = this.length ;
         int yWidth = this.width;
         int featureSize = 5;
         int scale = 2;
@@ -353,6 +353,7 @@ public class MapContainer {
         if(!checkForEntity(x, y)){
             return;
         }
+        random=EntityID.SPACMAN;
         if(random == EntityID.SPACMAN){
             newEntity = new Spacman(x, y, 0);
             newEntity.setOwner(0);

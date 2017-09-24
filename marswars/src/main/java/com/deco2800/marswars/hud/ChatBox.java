@@ -5,12 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -21,6 +16,9 @@ import com.deco2800.marswars.net.ChatAction;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.MessageAction;
 import com.esotericsoftware.kryonet.Connection;
+
+import static com.deco2800.marswars.mainMenu.MenuScreen.playerType;
+import static sun.audio.AudioPlayer.player;
 
 
 /**
@@ -72,9 +70,8 @@ public class ChatBox extends Table {
         this.messageTextField = new TextField("", this.skin) ; //$NON-NLS-1$
         this.chatMessages = new Table(this.skin);
         this.chatPane = new ScrollPane(this.chatMessages, this.skin);
-
 		//add dispActions button + image for it 
-		Texture arrowImage = textureManager.getTexture("arrow_button"); //$NON-NLS-1$
+		Texture arrowImage = textureManager.getTexture("arrow_button");
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
 		this.sendButton = new ImageButton(arrowRegionDraw);
@@ -96,6 +93,7 @@ public class ChatBox extends Table {
         super.act(delta);
         
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+
             sendMessage();
         }
         
@@ -133,8 +131,18 @@ public class ChatBox extends Table {
     protected void sendMessage() {
         String message = this.messageTextField.getText();
         if (!"".equals(message)) {
-            MessageAction action = new MessageAction(message);
-            netManager.getNetworkClient().sendObject(action);
+            if(playerType==1) {
+                MessageAction action = new MessageAction(message);
+                netManager.getNetworkClient().sendObject(action);
+
+            }
+            else
+            {
+                CodeInterpreter ci = new CodeInterpreter();
+                ci.executeCode(message);
+
+            }
+
         }
         messageTextField.setText("");
     }
