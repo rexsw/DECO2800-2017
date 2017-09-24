@@ -37,11 +37,14 @@ public class GameStats{
 	private TextureManager textureManager; 
 	private Window window; 
 	private GameGraph gameGraph;
+	
+	/* Managers */
 	private TimeManager timeManager = (TimeManager) 
 			GameManager.get().getManager(TimeManager.class);
 	private GameBlackBoard black = (GameBlackBoard) 
 			GameManager.get().getManager(GameBlackBoard.class);
 	
+	/* Stats window layouts */
 	private Table statsButtons;
 	private Table graphTable;
 	

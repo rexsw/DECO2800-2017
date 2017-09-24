@@ -4,8 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -43,10 +46,17 @@ public class PauseMenu extends Dialog{
 			text("Game Paused");
 			
 			button("Resume", 0);
+			this.getButtonTable();
+			this.getButtonTable().row();
 			button("Statistics", 1);
+			this.getButtonTable().row();
 			button("Settings", 2);
+			this.getButtonTable().row();
 			button("Quit to Main Menu", 3);
+			this.getButtonTable().row();
+
 			button("Exit Game", 4);
+			
 			this.timeManager.pause();
 		}	
 	}

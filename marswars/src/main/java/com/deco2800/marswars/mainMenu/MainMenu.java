@@ -2,12 +2,17 @@ package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
@@ -36,6 +41,10 @@ public class MainMenu {
 	boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
+	
+	/* Managers */
+	private TextureManager textureManager; //for loading in resource images
+
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -49,6 +58,8 @@ public class MainMenu {
 		this.skin = skin;
 		this.stage = stage; 
 		this.mainmenu = new Window("Its a start", skin); 
+		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+
 		GameManager.get().setMainMenu(this);
 		createMenu();
 	}
@@ -63,6 +74,15 @@ public class MainMenu {
 		//GameManager.get().getGui().disableHUD();
 		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		
+		//add background image
+	    Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
+	    TextureRegion backgroundRegion = new TextureRegion(backgroundTex);
+	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
+	    mainmenu.setBackground(backgroundRegionDraw);
+	    
+		mainmenu.align(Align.left | Align.center).padLeft(50);
+	    
 		this.stage.addActor(mainmenu);
 	}
 		
@@ -85,6 +105,7 @@ public class MainMenu {
 	
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
+		this.mainmenu.setSize(width, height);
 		if(gameStarted){
 			game.resize(width, height);
 		}

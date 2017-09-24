@@ -6,9 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
@@ -37,34 +34,49 @@ import com.esotericsoftware.kryonet.Connection;
  * 		start server > select world > select character > select combat 
  */
 public class MenuScreen{
+	/* Constructors*/
+	private Skin skin; 
+	private LobbyButton lobby;
+	private HUDView hud;
+	private MainMenu menu;
+
+	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
 	static final int BUTTONHEIGHT = 40;
 	static final int BUTTONPAD = 5; 
-	
 	static final int NAVBUTTONSIZE = 40;
 	
+	/* Navigation buttons + layout */
+	private Table navigationButtons;
+	private Button playButton;
+	private Button quitButton;
+	private Button backButton; 
+	private Button nextButton; 
+	
+	/* Multiplayer toggles */
+	public static int playerType;   // checks if multiplayer 
+	private boolean joinedServer;   // checks if joined server 
+	
+	/* For recording which map to play in*/
+	MapTypes mapType;
+	MapSizeTypes mapSize;	
+	
+	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
 		COMBATMODE,     // chose combat, go back to select character 
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
 		CHARACTERMODE;  // choosing character, goes back to select world
 	}
-	
-	private Skin skin; 
-	private LobbyButton lobby;
-	private HUDView hud;
-	private Texture backgroundTex;
-	private Button backButton; 
-	private Button nextButton; 
-	public static int playerType;
-	private boolean joinedServer; 
-	private MainMenu menu;
-	MapTypes mapType;
-	MapSizeTypes mapSize;
-	Table navigationButtons;
-	Button playButton;
-	Button quitButton;
 
+	/**
+	 * Creates a menu screen instance. Responsible for loading up 
+	 * layouts to set into the Main Menu window.
+	 * @param skin
+	 * @param window
+	 * @param stage
+	 * @param mainMenu menu
+	 */
 	
 
 	//Managers
@@ -76,19 +88,14 @@ public class MenuScreen{
 		this.skin = skin;
 		this.menu = mainMenu;
 		playerModeSelect(window, stage);
-		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
-
-		//add background image
-	    Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
-	    TextureRegion backgroundRegion = new TextureRegion(backgroundTex);
-	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
-	    window.setBackground(backgroundRegionDraw);
 	}
 	
-	
-	public void playerModeSelect(Window mainmenu, Stage stage) {
-		mainmenu.align(Align.center);
-		
+	/**
+	 * Loads up the layout for the player selection stage of the main menu
+	 * @param mainmenu window
+	 * @param stage
+	 */
+	public void playerModeSelect(Window mainmenu, Stage stage) {		
 		Table playerMode = new Table();
 		playerMode.setDebug(true);		
 		Label modeInfo = new Label("SELECT A MODE", this.skin);
@@ -97,22 +104,26 @@ public class MenuScreen{
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin);
 		Button customizeButton = new TextButton("Customize", this.skin);
 
+		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'select world' to fast forward to playing", this.skin);
 		Button playGame = new TextButton("Select world", this.skin);
 		
+		/* Add in the player mode buttons to the table*/
 		playerMode.add(modeInfo).align(Align.center).row();
 		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(multiplayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(customizeButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
-		mainmenu.add(playerMode).row();
 
+		/* Add in tables to window*/
+		mainmenu.add(playerMode).row();
 		mainmenu.add(menuInfo).row();
 		mainmenu.add(playGame);
 		
+		/* Button listeners */
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				MenuScreen.this.playerType = 0; 
+				MenuScreen.playerType = 0; 
 				selectWorldMode(mainmenu, stage);
 			}
 		});
@@ -142,6 +153,12 @@ public class MenuScreen{
 		});
 	}
 	
+	/**
+	 * Creates a 'Select Character' layout for the main menu and 
+	 * adds it to the menu.
+	 * @param mainmenu
+	 * @param stage
+	 */
 	public void selectCharacter(Window mainmenu, Stage stage) {
 		mainmenu.clear(); 
 		
@@ -159,7 +176,6 @@ public class MenuScreen{
 		}
 	}
 	
-	
 	public void multiplayerLobby(Window mainmenu, Stage stage, String hostIP, boolean host){
 	    mainmenu.clear();
 	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
@@ -168,10 +184,16 @@ public class MenuScreen{
 	    mainmenu.add(setupExitLobbyButton(mainmenu, stage)).left();
 	}
 	
+	/**
+	 * Creates a 'Select world' layout for the main menu and adds it to the
+	 * menu.
+	 * 
+	 * @param mainmenu
+	 * @param stage
+	 */
 	public void selectWorldMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
 		mainmenu.setDebug(true);
-		mainmenu.align(Align.center);
 		
 		Table worldTable = new Table();
 		worldTable.setDebug(true);
@@ -191,6 +213,7 @@ public class MenuScreen{
 		
 		worldTypeButtons.add(moon, mars, desert);
 		
+		/* Button listeners*/
 		moon.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -224,7 +247,8 @@ public class MenuScreen{
 		
 		Table worldSizeButtons = new Table();
 		worldSizeButtons.add(tiny, smol, medium, large, veryLarge);
-
+		
+		/* Map size listeners */
 		tiny.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -267,11 +291,11 @@ public class MenuScreen{
 		
 		Button playGame = new TextButton("Play!", skin);
 
-		//FOR DEBUGGING 
+		//FOR DEBUGGING TODO remove this once a functional menu
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if(!(mapSize == null|| mapType == null)){
+				if(!(mapSize == null || mapType == null)){
 					MapContainer map = new MapContainer(mapType, mapSize);
 					CustomizedWorld world = new CustomizedWorld(map);
 					GameManager.get().setWorld(world);
@@ -295,6 +319,12 @@ public class MenuScreen{
 		addNavigationButton(ScreenMode.WORLDMODE, mainmenu, stage);
 	}
 	
+	/**
+	 * Creates a 'select combat' layout for the main menu and 
+	 * adds it to the menu.
+	 * @param mainmenu window
+	 * @param stage
+	 */
 	public void selectCombat(Window mainmenu, Stage stage) {
 		mainmenu.clear();
 
@@ -307,6 +337,12 @@ public class MenuScreen{
 		nav.removeActor(nextButton); //remove the next button since there is no next
 	}
 	
+	/**
+	 * Creates a select server layout for the main menu and adds 
+	 * it in to the menu
+	 * @param mainmenu window
+	 * @param stage
+	 */
 	public void selectServerMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
         this.lobby = new LobbyButton(this.skin, mainmenu, stage);
@@ -325,7 +361,7 @@ public class MenuScreen{
 	/**
 	 * Creates a button to navigate one step back in the main menu
 	 * @param status
-	 * @param mainmenu
+	 * @param mainmenu window
 	 * @param stage
 	 */
 	public Table addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
@@ -403,15 +439,12 @@ public class MenuScreen{
 					default:
 						break;
 					}
-				}
-				
-				/* If multiplayer mode
+				} else if(MenuScreen.this.playerType == 1) {
+					/* If multiplayer mode
 					 * 		join server > select character 
 					 * 		start server > select world > select character > select combat 
-				*/				
-				else if(MenuScreen.this.playerType == 1) {
+					 */				
 					switch(status) {
-					//go to next page 
 					case WORLDMODE:
 						mainmenu.clear(); 
 						selectCombat(mainmenu, stage); 
@@ -451,6 +484,13 @@ public class MenuScreen{
 		return navigationButtons; 
 	}
 	
+	/*
+	 * Adds in a play button to the select world mode
+	 * FOR DEBUGGING ONLY  
+	 * //TODO remove this once menu is fully functional 
+	 * @param nav
+	 * @param mainmenu
+	 */
 	private void addPlayButton(Table nav, Window mainmenu){
 		Button playButton = new TextButton("Play!", this.skin);
 		playButton.setSize(NAVBUTTONSIZE, NAVBUTTONSIZE);
@@ -465,7 +505,11 @@ public class MenuScreen{
 	}
 	
 	/**
+<<<<<<< HEAD
+	 * Sets the joined server toggle to true
+=======
 	 * Sets the players joined status to a server to be true.
+>>>>>>> master
 	 */
 	public void setJoinedServer(){
 		this.joinedServer = true; 
