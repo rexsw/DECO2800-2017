@@ -165,8 +165,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosX(x);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -176,8 +180,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosY(y);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -187,8 +195,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosZ(z);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 

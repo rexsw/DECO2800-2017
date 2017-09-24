@@ -155,7 +155,6 @@ public class InputProcessor {
 					}
 
 				} else {
-					// TODO add button 0 and call the function to handle mouse
 					// click
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
 					multiSelection.addStartTile(worldCoords.x, worldCoords.y);
@@ -166,18 +165,8 @@ public class InputProcessor {
 			}
 
 			@Override
-			public boolean touchUp(int screenX, int screenY, int pointer, int button) {// TODO
-																						// add
-																						// button
-																						// 0
-																						// and
-																						// call
-																						// the
-																						// function
-																						// to
-																						// handle
-																						// mouse
-																						// click
+			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
 				// this is used for multiselection
 				if (multiSelectionFlag) {
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
@@ -193,6 +182,7 @@ public class InputProcessor {
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				//if shift is held, multiselect things instead of moving the map
 				if (multiSelectionFlag) {
 					MultiSelection.resetSelectedTiles();
 					float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth",
@@ -233,9 +223,11 @@ public class InputProcessor {
 			@Override
 			public boolean keyDown(int keyCode) {
 
-				// enable multiSelection through touch and drag
+				// enable multiSelection through touch and drag if Shift is held
 				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT) {
 					multiSelectionFlag = true;
+
+					//reset the selected tiles grid
 					MultiSelection.resetSelectedTiles();
 					mouseHandler.multiSelect(true);
 				}
@@ -252,7 +244,7 @@ public class InputProcessor {
 			@Override
 			public boolean keyUp(int keyCode) {
 
-				// disable multiSelection through touch and drag
+				// disable multiSelection through touch and drag if Shift is not held
 				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT) {
 					multiSelectionFlag = false;
 					mouseHandler.multiSelect(false);

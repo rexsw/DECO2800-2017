@@ -190,7 +190,11 @@ public class MultiSelection extends Manager {
         }
     }
 
-    //this function will call the mouse handler at a specific position
+    /**
+     * this function will call the mouse handler at a specific position
+     * @param x
+     * @param y
+     */
     public void callMouseHandler(int x, int y){
         MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
         mouseHandler.handleMouseClick(x, y, 0,true);

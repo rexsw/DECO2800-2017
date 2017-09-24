@@ -36,49 +36,46 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
-	protected float tempx;
-	protected float tempy;
 	private ActionType nextAction;
 
 	/**
+	 * This function is overiden to allow modification of Fog of war
 	 * Sets the position X
 	 * @param x
 	 */
 	@Override
 	public void setPosX(float x) {
-//		if(!this.isAi()) {
+		//remove the old line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
-//		}
 
 		super.setPosX(x);
-		//lineOfSight.setPosX(x);
-//		if(!this.isAi()) {1
+
+		//set the new line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
-//		}
 	}
 
 	/**
+	 * This function is overiden to allow modification of Fog of war
 	 * Sets the position Y
 	 * @param y
 	 */
 	@Override
 	public void setPosY(float y) {
-
-//		if(!this.isAi()) {
+		//remove the old line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
-//		}
+
 
 		super.setPosY(y);
-		//lineOfSight.setPosY(y);
-//		if(!this.isAi()) {
+
+		//set the new line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
-//		}
+
 
 	}
 
@@ -237,9 +234,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	@Override
 	public void onTick(int tick) {
+		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
 			modifyFogOfWarMap(true,3);
 		}
+
 		loyalty_regeneration();
 		checkOwnerChange();
 		if (!currentAction.isPresent()) {
@@ -452,6 +451,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
+			//turn of the fog of war for this entity when it switches side
+			modifyFogOfWarMap(false,3);
+
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);
 			this.setTexture(defaultTextureName);
