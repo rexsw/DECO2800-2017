@@ -303,6 +303,13 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	}
 	
 	/**
+	 * Release all solider in the turret
+	 */
+	
+	public void releaseTurret(){
+	}
+	
+	/**
 	 * Returns buildings name
 	 * @return String name of building
 	 */
