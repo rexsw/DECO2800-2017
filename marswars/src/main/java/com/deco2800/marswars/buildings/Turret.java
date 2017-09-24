@@ -26,4 +26,10 @@ public class Turret extends BuildingEntity{
 		this.setDamage(this.getDamageDeal()*2);
 	}
 	
+	@Override
+	public void releaseTurret(){
+		if(this.numOfSolider > 0){
+			this.numOfSolider = this.numOfSolider - 1;
+		}		
+	}
 }

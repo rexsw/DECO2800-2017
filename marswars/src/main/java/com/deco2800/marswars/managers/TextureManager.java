@@ -70,6 +70,12 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
+	        
+	        //TechBuilding Stages
+	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
+	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
+	        textureMap.put("tech3",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech3.png"));
+	        textureMap.put("tech4",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech4.png"));
         
 	        textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
 	        
