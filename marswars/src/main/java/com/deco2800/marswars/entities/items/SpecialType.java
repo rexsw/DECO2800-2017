@@ -1,9 +1,10 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.HealthEffect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.deco2800.marswars.entities.items.effects.*;
 
 /**
  * Enumerate class to store the meta data for all the Special items. Since Special items can have any sort of effect, 
@@ -25,15 +26,15 @@ import com.deco2800.marswars.entities.items.effects.*;
 public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), affect range (0 means self use), use
 	// limit, cost, effects)
-	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 1, new int[] { 0, 10, 30, 30 },
+	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
 			new HealthEffect(100, false)),
-	BOMB("Bomb", "heal_needle", 0, 5, 1, new int[] { 200, 50, 50, 0 },
+	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
 			new HealthEffect(100, true)),
-	AOEHEAL2("Heal Bomb", "heal_needle", 0, 5, 1, new int[] { 50, 100, 100, 100 },
+	AOEHEAL2("Heal Bomb", "scope", 0, 5, 1, new int[] { 50, 100, 100, 100 },
 			new HealthEffect(100, false)),
-	NUKE("Nuke", "heal_needle", 0, 15, 1, new int[] { 500, 900, 50, 50 },
+	NUKE("Nuke", "bullets", 0, 15, 1, new int[] { 500, 900, 50, 50 },
 			new HealthEffect(1000, true)),
-	MASS1HEAL("Mass Heal1", "heal_needle", 0, 1, 1, new int[] { 200, 500, 300, 500 },
+	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300, 500 },
 			new HealthEffect(9000, false));
 	private String name;
 	private String texture;

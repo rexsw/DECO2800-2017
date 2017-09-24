@@ -1,29 +1,21 @@
 package com.deco2800.marswars.entities.units;
 
+import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.util.Point;
+import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
-import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.entities.HasAction;
-import com.deco2800.marswars.entities.weatherEntities.Water;
-import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.Turret;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.util.Point;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 /**
  * A combat unit.
@@ -44,49 +36,46 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
-	protected float tempx;
-	protected float tempy;
 	private ActionType nextAction;
 
 	/**
+	 * This function is overiden to allow modification of Fog of war
 	 * Sets the position X
 	 * @param x
 	 */
 	@Override
 	public void setPosX(float x) {
-//		if(!this.isAi()) {
+		//remove the old line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
-//		}
 
 		super.setPosX(x);
-		//lineOfSight.setPosX(x);
-//		if(!this.isAi()) {1
+
+		//set the new line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
-//		}
 	}
 
 	/**
+	 * This function is overiden to allow modification of Fog of war
 	 * Sets the position Y
 	 * @param y
 	 */
 	@Override
 	public void setPosY(float y) {
-
-//		if(!this.isAi()) {
+		//remove the old line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(false,3);
-//		}
+
 
 		super.setPosY(y);
-		//lineOfSight.setPosY(y);
-//		if(!this.isAi()) {
+
+		//set the new line of sight
 		if(this.getOwner()==-1)
 			modifyFogOfWarMap(true,3);
 
-//		}
+
 
 	}
 
@@ -245,6 +234,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	@Override
 	public void onTick(int tick) {
+		//update fog of war for owner's entity on every tick
+		if (this.getOwner() == -1)  {
+			modifyFogOfWarMap(true,3);
+		}
+
 		loyalty_regeneration();
 		checkOwnerChange();
 		if (!currentAction.isPresent()) {
@@ -252,9 +246,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			//this will disable collision check for the entities inside the carrier
 			boolean isTheEntityLoaded=false;
 
-			if (this.getOwner() == -1 && getHealth()>0)  {
-				modifyFogOfWarMap(true,3);
-			}
+
 			if(getHealth()<=0)modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
@@ -334,13 +326,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		if (!currentAction.get().completed()) {
 			//LOGGER.info("DO action");
-			currentAction.get().doAction(); 
+			currentAction.get().doAction();
 		} else {
 			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
+
 		}
 
-		
+
 	}
 	
 	/**
@@ -458,6 +451,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
+			//turn of the fog of war for this entity when it switches side
+			modifyFogOfWarMap(false,3);
+
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);
 			this.setTexture(defaultTextureName);

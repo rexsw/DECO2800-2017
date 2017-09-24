@@ -1,24 +1,19 @@
 package com.deco2800.marswars.buildings;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by grumpygandalf on 27/8/17.
@@ -105,12 +100,18 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			//Update this
+			// placeholder graphics value while HF texture is created
+			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
+			this.setBuildSpeed(.5f);
+			this.setMaxHealth(3000);
+			this.setHealth(3000);
+			this.building = "Hero Factory";
+			fogRange = 3;
 			break;
 		default:
 			break;
 		}
-		//this.setCost(building.getCost());
 		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 	}
@@ -187,7 +188,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (currentAction.isPresent() == false) {
 			currentAction = Optional.of(action);
 		}
 	}
@@ -312,5 +313,5 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public String toString(){
 		return building;
 	}
-	
+
 }

@@ -6,14 +6,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TechnologyManager;
+import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.util.Box3D;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,8 +165,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosX(x);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -173,8 +180,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosY(y);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -184,8 +195,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosZ(z);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -246,7 +261,18 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		this.validActions.add(newAction);
 		return true;
 	}
-
+	
+    /**
+     * Adds all available building actions to the list
+     */
+    public void giveAllBuilding() {
+    	TechnologyManager a = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    	ArrayList<BuildingType> b = a.getAvailableBuildings();
+    	for (BuildingType c : b) {
+    		addNewAction(c);
+    	}
+    }
+    
 	/**
 	 *Removes a valid action from the entity
 	 * @param actionToRemove The new action that is valid for the unit to perform

@@ -1,20 +1,10 @@
 package com.deco2800.marswars.hud;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Armour;
@@ -23,6 +13,10 @@ import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.TextureManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class UnitStatsBox extends Table{
 	private TextureManager tm;
@@ -152,18 +146,9 @@ public class UnitStatsBox extends Table{
 		Weapon weapon = inventory.getWeapon();
 		Armour armour = inventory.getArmour();
 		List<Special> specials = inventory.getSpecials();
-		//heroInventory.debugAll();
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
+			// will add handler later
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -172,14 +157,6 @@ public class UnitStatsBox extends Table{
 		if(armour != null) {
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -189,14 +166,12 @@ public class UnitStatsBox extends Table{
 		for(Special s : specials) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
-			// handler here
+			// handler button click here
 		}
 		for(int i = 0; i < 4-size; i++) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
-		
-		//heroInventory.setVisible(false);
 		
 	}
 	

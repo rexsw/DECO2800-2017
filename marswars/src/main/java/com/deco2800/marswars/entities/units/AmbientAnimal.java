@@ -1,13 +1,5 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -16,6 +8,12 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 
 

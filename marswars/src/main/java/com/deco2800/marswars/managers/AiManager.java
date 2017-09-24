@@ -3,25 +3,23 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.WorldUtil;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import com.deco2800.marswars.managers.TimeManager;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
-import java.lang.Math;
 
 /**
  * Created by Scott Whittington on 22/08

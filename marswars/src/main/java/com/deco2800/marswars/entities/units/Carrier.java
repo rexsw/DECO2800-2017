@@ -1,35 +1,19 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.LoadAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.actions.UnloadAction;
-import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A carrier unit that is able to load up to 3 other units, extends Soldier
@@ -39,7 +23,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 
 public class Carrier extends Soldier {
-	private static final float MOVING_SPEED=0.03f;
+	private static final float MOVING_SPEED=0.1f;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
@@ -87,7 +71,7 @@ public class Carrier extends Soldier {
 	} catch (IndexOutOfBoundsException e) {
 	    // if the right click occurs outside of the game world, nothing will
 	    // happen
-	    LOGGER.info("Right click occurred outside game world.");
+	    LOGGER.info("Right click occurred outside game world."+e);
 	    this.setTexture(defaultTextureName);
 	    return;
 	}
@@ -173,12 +157,6 @@ public class Carrier extends Soldier {
 		    return;
 		}
 
-		// LOGGER.info("Spacman is on a tile with another entity, move
-		// out of the way");
-
-		// List<BaseEntity> entities =
-		// GameManager.get().getWorld().getEntities(xPosition,
-		// yPosition);
 		/* Finally move to that position using a move action */
 		currentAction = Optional.of(
 			new MoveAction((int) p.getX(), (int) p.getY(), this,MOVING_SPEED));
@@ -189,7 +167,6 @@ public class Carrier extends Soldier {
 	if (!currentAction.get().completed()) {
 	    currentAction.get().doAction();
 	} else {
-	    // LOGGER.info("Action is completed. Deleting");
 	    currentAction = Optional.empty();
 	}
 
@@ -255,6 +232,7 @@ public class Carrier extends Soldier {
 		sound.playSound(loadedSound);
 	LOGGER.info("Everyone off!");
 	int empty = 0;
+		boolean flag;
 	for (int i = 0; i < capacity; i++) {
 	    if (!(loadedUnits[i] == null)) {
 		loadedUnits[i].setUnloaded();
@@ -264,10 +242,11 @@ public class Carrier extends Soldier {
 	    }
 	}
 	if (empty == 0) {
-	    return false;
+	    flag=false;
 	} else {
-	    return true;
+	    flag=true;
 	}
+	return flag;
     }
 
     /**

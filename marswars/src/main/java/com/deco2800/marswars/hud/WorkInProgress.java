@@ -25,8 +25,8 @@ public class WorkInProgress extends Dialog{
 		super(title, skin);		
 		this.hud = hud;
 		{
-			text("Sorry, this feature is currently a work in progress, we promise it'll be finished soon!"); //$NON-NLS-1$
-			button("OK", 0); //$NON-NLS-1$
+			text("Sorry, this feature is currently a work in progress, we promise it'll be finished soon!");
+			button("OK", 0);
 			timeManager.pause();
 		}
 	}

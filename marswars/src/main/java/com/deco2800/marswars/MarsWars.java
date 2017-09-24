@@ -12,19 +12,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.units.*;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.BackgroundManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Moos
@@ -60,7 +63,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible;
+	public static int invincible = 0;
 	
 	private MainMenu menu;
 	private Skin skin;
@@ -77,7 +80,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
-		this.skin = new Skin(Gdx.files.internal("uiskin.json")); //$NON-NLS-1$
+		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 
@@ -133,24 +136,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 
-		if(invincible == 1)
-		{
-			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
-			for(BaseEntity e:entityl)
-			{
-				if(e.getOwner() == -1 && e instanceof AttackableEntity)
-				{
-					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
-				}
-			}
-		}
+		setInvincible();
+
 	}
+
 
 	/**
 	 * Resizes the viewport.
@@ -175,4 +170,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void dispose () {
 		// Don't need this at the moment
 	}
+
+	/**
+	 * If the invincible value is 1, make the enemy's attack to be of no effect
+	 */
+	public void setInvincible(){
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() > 0 && e instanceof  MissileEntity )
+				{
+					((MissileEntity) e) .setDamage(0);
+				}
+			}
+		}
+	}
+
+
+
+
 }

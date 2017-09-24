@@ -2,11 +2,11 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A TimeManager class for SpacWars. Provides methods for tracking InGameTime,
