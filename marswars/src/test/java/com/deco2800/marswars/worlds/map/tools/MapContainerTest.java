@@ -53,7 +53,7 @@ public class MapContainerTest extends BaseTest{
         Assert.assertFalse(map.checkForEntity(0, 0));
     }
 
-    @Test
+    @Test @Ignore
     public void generateResourcePattern() throws Exception {
         map.generateResourcePattern();
         Assert.assertFalse(world.getEntities().isEmpty());
