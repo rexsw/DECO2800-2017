@@ -160,27 +160,24 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
 			if(r instanceof AttackableEntity && !x.sameOwner(r)) {
-				LOGGER.error("ai - setting unit to attack " + r.toString());
+				LOGGER.info("ai - setting unit to attack " + r.toString());
 				AttackableEntity y = (AttackableEntity) r;
 				x.attack(y);
 				return;
 			}
 		}
-}
-		
+	}
+	
 	/**
 	 * Tasks all soldiers to move back to base
 	 * @param x
 	 */
 	public void soldierDefend(Soldier soldier) {
-		//lets the ai target player spacman with it's enemyspacmen
 		if(soldier.showProgress()) {
 			return;
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
-
-
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
 						(AttackableEntity)soldier));
@@ -221,7 +218,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	
 	/**
 	 * Removes a team from the list of Ai players
-	 * @param id int the team's id to kill 
+	 * @param id int the team's id to kill
 	 */
 	public void kill(Integer id) {
 		if(teamid.contains(id)) {
@@ -235,7 +232,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Returns true if on the specified tick number
 	 * @param modulus
 	 * @param offset
-	 * @return
+	 * @return if open (true) or locked (false)
 	 */
 	public boolean tickLock(int modulus, int offset){
 		if (((this.tickNumber + offset) % modulus) == 0) {
@@ -247,7 +244,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Returns the specified team's strength (number of units + buildings)
 	 * @param teamID
-	 * @return
+	 * @return team's strength rating
 	 */
 	private int teamStrengthCount(Integer teamID) {
 		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
@@ -257,13 +254,14 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
 					+ blackboard.count(teamID, GameBlackBoard.Field.BUILDINGS);
 		}
+		// if blackboard does not exist, return -1
 		return -1;
 	}
 	
 	/**
 	 * Returns the highest team's strength (number of units + buildings)
 	 * Used to consider hostility
-	 * @return
+	 * @return max strength value
 	 */
 	private int highestStrengthCount() {
 		int strength;
@@ -278,14 +276,15 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Determines Ai team state depending on their strength compared to the leader's
 	 * @param teamID
-	 * @return
+	 * @return State
 	 */
 	private State hostility(Integer teamID) {
 		double ratio = 0.0;
 		if (teamStrengthCount(teamID) > 0) {
 			// Compares team strength to global strength
-			ratio = (double)highestStrengthCount() / (double)teamStrengthCount(teamID);
+			ratio = (double)teamStrengthCount(teamID) / (double)highestStrengthCount();
 		}
+		LOGGER.info("AI [" + teamID + "] strength ratio is [" + ratio + "]");
 		if (ratio >= 0.80) {
 			// If strong, then attack
 			return State.AGGRESSIVE;
@@ -314,7 +313,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Gets the state index in its Linked List that corresponds to the TeamID
 	 * @param teamID
-	 * @return
+	 * @return state index position
 	 */
 	public int getStateIndex(Integer teamID) {
 		int position = teamid.indexOf(teamID);
