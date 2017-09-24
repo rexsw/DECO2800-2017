@@ -65,7 +65,7 @@ public class InputProcessor {
 
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-
+		
 		if (this.downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			this.downKeys.remove(Input.Keys.M);
@@ -76,7 +76,7 @@ public class InputProcessor {
 			// Don't process any inputs if in map view mode
 			return;
 		}
-
+		
 		shortCut.process(camera);
 
 		// Move the map dependent on the cursor position
