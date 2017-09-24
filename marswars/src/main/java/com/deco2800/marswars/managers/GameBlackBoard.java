@@ -1,5 +1,6 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.utils.reflect.Field;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,12 +76,10 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				if(values.containsKey(teamid)) {
 					updateunit(e);
 				}
-				else {
-					if(teamid != 0) {
-						HashMap<Field, List<Integer>> teammap = new HashMap<Field, List<Integer>>();
-						Set(teammap, teamid);
-						updateunit(e);
-					}
+				else if(teamid != 0) {
+					EnumMap<Field, List<Integer>> teammap = new EnumMap<Field, List<Integer>>(Field.class);
+					setMaps(teammap, teamid);
+					updateunit(e);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @param setmap map the map to be set up
 	 * @param teamid int the teamid to map to
 	 */
-	private void Set(HashMap<Field, List<Integer>> setmap, int teamid) {
+	private void setMaps(EnumMap<Field, List<Integer>> setmap, int teamid) {
 		ArrayList<Integer> base = new ArrayList<Integer>();
 		base.add(0);
 		setmap.put(Field.BIOMASS, new ArrayList<Integer>(base));
@@ -218,12 +218,14 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return float[] an array of the history of this field 
 	 */
 	public float[] getHistory(int teamid, Field history){
+		//note this methoad is werid because it's used to graph the data in a lidbgx
+		//polyline which needs the data in a werid way 
 		float[] returnv = new float[(index+2)*2];
 		returnv[0] = 0;
 		returnv[1] = 0;
 		for(int i = 0; i < index; i+=2) {
-			returnv[i + 2] = this.values.get(teamid).get(history).get(i-i);
-			returnv[i + 3] = this.values.get(teamid).get(history).get(i-i);
+			returnv[i + 2] = this.values.get(teamid).get(history).get(i);
+			returnv[i + 3] = this.values.get(teamid).get(history).get(i+1);
 		}
 		return returnv;
 	}
