@@ -39,7 +39,7 @@ public class LobbyButton{
 		this.skin = skin;
 		this.stage = stage;
 		this.mainmenu = mainmenu;
-		System.out.println("Lobby instantiated"); //$NON-NLS-1$
+		LOGGER.info("Lobby instantiated"); 
 	}
 	
 	/**
@@ -48,50 +48,38 @@ public class LobbyButton{
 	 * @param menuScreen 
 	 * @return Join Server button
 	 */
-	public Button addJoinServerButton(MenuScreen menuScreen){
+	public Table addJoinServerButton(MenuScreen menuScreen){
 		LOGGER.debug("attempt to add join lobby button"); //$NON-NLS-1$
+        // Construct inside of dialog
+        Table inner = new Table(LobbyButton.this.skin);
+        Label ipLabel = new Label("IP", LobbyButton.this.skin); //$NON-NLS-1$
+        TextField ipInput = new TextField("localhost", LobbyButton.this.skin); //$NON-NLS-1$
+        Label usernameLabel = new Label("Username", LobbyButton.this.skin); //$NON-NLS-1$
+        TextField usernameInput = new TextField("The Spacinator", LobbyButton.this.skin); //$NON-NLS-1$
+
+        inner.add(ipLabel);
+        inner.add(ipInput);
+        inner.row();
+        inner.add(usernameLabel);
+        inner.add(usernameInput);
+        inner.row();
 		/* Join server button */
 		Button joinServerButton = new TextButton("Join Server", this.skin); //$NON-NLS-1$
+		inner.add(joinServerButton).right();
+		
 		joinServerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menuScreen.setJoinedServer(); //set the game status to joined server
-				menuScreen.selectCharacter(LobbyButton.this.mainmenu, LobbyButton.this.stage);
+			    String username = usernameInput.getText();
+		        String ip = ipInput.getText();
 
-				// Construct inside of dialog
-				Table inner = new Table(LobbyButton.this.skin);
-				Label ipLabel = new Label("IP", LobbyButton.this.skin); //$NON-NLS-1$
-				TextField ipInput = new TextField("localhost", LobbyButton.this.skin); //$NON-NLS-1$
-				Label usernameLabel = new Label("Username", LobbyButton.this.skin); //$NON-NLS-1$
-				TextField usernameInput = new TextField("wololo", LobbyButton.this.skin); //$NON-NLS-1$
-
-				inner.add(ipLabel);
-				inner.add(ipInput);
-				inner.row();
-				inner.add(usernameLabel);
-				inner.add(usernameInput);
-				inner.row();
-
-				LobbyButton.this.ipDiag = new Dialog("IP", LobbyButton.this.skin, "dialog") { //$NON-NLS-1$ //$NON-NLS-2$
-					@Override
-					protected void result(Object o) {
-						if(o != null) {
-							String username = usernameInput.getText();
-							String ip = ipInput.getText();
-
-							netManager.startClient(ip, username);
-						}
-					}
-				};
-
-				LobbyButton.this.ipDiag.getContentTable().add(inner);
-				LobbyButton.this.ipDiag.button("Join", true); //$NON-NLS-1$
-				LobbyButton.this.ipDiag.button("Cancel" , null); //$NON-NLS-1$
-				LobbyButton.this.ipDiag.show(LobbyButton.this.stage);
+		        netManager.startClient(ip, username);
+		        menuScreen.setJoinedServer(); //set the game status to joined server 
+		        menuScreen.multiplayerLobby(mainmenu, stage, ip, false);
 			}
 		});
-		
-		return joinServerButton;
+
+		return inner;
 	}
 	
 	/**
@@ -106,14 +94,10 @@ public class LobbyButton{
 		startServerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menuScreen.selectWorldMode(LobbyButton.this.mainmenu, LobbyButton.this.stage);
-
-				Dialog ipDiag = new Dialog("Local IP", LobbyButton.this.skin, "dialog") {}; //$NON-NLS-1$ //$NON-NLS-2$
-
+			    String ip = "";
 				try {
 					InetAddress ipAddr = InetAddress.getLocalHost();
-					String ip = ipAddr.getHostAddress();
-					ipDiag.text("IP Address: " + ip); //$NON-NLS-1$
+					ip = ipAddr.getHostAddress();
 					LOGGER.info(ip);
 
 					netManager.startServer();
@@ -121,15 +105,10 @@ public class LobbyButton{
 					ipDiag.text("Something went wrong"); //$NON-NLS-1$
 					LOGGER.error("Unknown Host", ex); //$NON-NLS-1$
 				}
-				ipDiag.button("Close", null); //$NON-NLS-1$
-				ipDiag.show(LobbyButton.this.stage);
+				menuScreen.multiplayerLobby(mainmenu, stage, ip, true);
 			}
 
 		});
 		return startServerButton; 
 	}		
-	
-	public void check(){
-		System.out.println("just let me die"); //$NON-NLS-1$
-	}
 }

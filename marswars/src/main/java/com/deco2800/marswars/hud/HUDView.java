@@ -158,7 +158,7 @@ public class HUDView extends ApplicationAdapter{
 		this.stats = new GameStats(stage, skin, this, textureManager);
 		//create chatbox
 
-		this.chatbox = new ChatBox(skin, textureManager, this);
+		this.chatbox = new ChatBox(skin);
 		this.cheatbox = new CheatBox(skin,textureManager);
 		
 		//initialise the minimap and set the image
