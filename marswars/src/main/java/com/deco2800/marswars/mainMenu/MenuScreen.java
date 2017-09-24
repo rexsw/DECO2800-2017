@@ -4,16 +4,22 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.NetManager;
+import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.ConnectionManager;
+import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import com.esotericsoftware.kryonet.Connection;
 
 /**
  * @author Naziah Siddique
@@ -63,7 +69,6 @@ public class MenuScreen{
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
 		CHARACTERMODE;  // choosing character, goes back to select world
 	}
-			
 
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
@@ -73,6 +78,13 @@ public class MenuScreen{
 	 * @param stage
 	 * @param mainMenu menu
 	 */
+	
+
+	//Managers
+    // The Net Manager so you can communicate with the server
+    private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+	private TextureManager textureManager; //for loading in resource images
+	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
@@ -165,9 +177,18 @@ public class MenuScreen{
 		}
 	}
 	
+	public void multiplayerLobby(Window mainmenu, Stage stage, String hostIP, boolean host){
+	    mainmenu.clear();
+	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
+	    mainmenu.add(lobby).expand().align(Align.topLeft);
+	    mainmenu.row();
+	    mainmenu.add(setupExitLobbyButton(mainmenu, stage)).left();
+	}
+	
 	/**
-	 * Creates a 'Select world' layout for the main menu and 
-	 * adds it to the menu.
+	 * Creates a 'Select world' layout for the main menu and adds it to the
+	 * menu.
+	 * 
 	 * @param mainmenu
 	 * @param stage
 	 */
@@ -275,7 +296,7 @@ public class MenuScreen{
 		playGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if(!(mapSize == null|| mapType == null)){
+				if(!(mapSize == null || mapType == null)){
 					MapContainer map = new MapContainer(mapType, mapSize);
 					CustomizedWorld world = new CustomizedWorld(map);
 					GameManager.get().setWorld(world);
@@ -333,7 +354,7 @@ public class MenuScreen{
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
-		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).row();
 		mainmenu.add(serverTable);
 		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
 	}
@@ -491,4 +512,33 @@ public class MenuScreen{
 		this.joinedServer = true; 
 	}
 	
+	public void unSetJoinedServer() {
+	    this.joinedServer = false;
+	}
+	
+	private Button setupExitLobbyButton(Window mainmenu, Stage stage) {
+	    TextButton exitButton = new TextButton("Exit Lobby", skin);
+	    // Add BAck button 
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                netManager.getNetworkClient().stop();
+                selectServerMode(mainmenu, stage);
+            }
+        });
+        
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ServerShutdownAction) {
+                            netManager.getNetworkClient().stop();
+                            selectServerMode(mainmenu, stage);
+                        }
+                    }
+                }
+        );
+        
+        return exitButton;
+    }
 }

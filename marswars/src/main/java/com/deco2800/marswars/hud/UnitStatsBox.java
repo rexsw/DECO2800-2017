@@ -18,6 +18,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * This class defines the layout of unit stats display. It will consists of four tables
+ * 1. unit image and name 
+ * 2. unit health and armour bar
+ * 3. unit attack, attack range, attack speed and move speed
+ * 4. inventory display (if the unit is hero)
+ * @author Mason
+ *
+ */
 public class UnitStatsBox extends Table{
 	private TextureManager tm;
 	private Image unitImage;
@@ -90,6 +99,7 @@ public class UnitStatsBox extends Table{
 		statsTable.add(barTable);
 		statsTable.row();
 		
+		// table for other stats
 		Table textTable = new Table();
 		this.atkDmgLabel = new Label("Attack", skin);
 		this.atkRngLabel = new Label("Attack Range", skin);
@@ -115,6 +125,7 @@ public class UnitStatsBox extends Table{
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
 		this.add(heroInventory).colspan(2);
+		this.setVisible(false);
     }
     
     /**
@@ -132,6 +143,7 @@ public class UnitStatsBox extends Table{
 	/**
 	 * This method will gets called when user select a hero character, this method then 
 	 * display this hero's items on the HUD
+	 * @param hero defined which hero's inventory shall we display
 	 */
 	public void updateHeroInventory(Commander hero) {	
 		ImageButton weaponBtn;
@@ -175,15 +187,26 @@ public class UnitStatsBox extends Table{
 		
 	}
 	
+	/**
+	 * This method hides the inventory display. 
+	 * Should gets called when the selected unit is not hero
+	 */
 	public void hideInventory() {
 		this.heroInventory.setVisible(false);
 	}
 	
-
+	/**
+	 * This method display the inventory
+	 * Should gets called when the selected unit is hero
+	 */
 	public void showInventory() {
 		this.heroInventory.setVisible(true);
 	}
 
+	/**
+	 * This method initiate the health bar and armour bar
+	 * they will have a grey background and green foreground for health and blue for armour
+	 */
 	private void initiateProgressBar(){
 		ProgressBar.ProgressBarStyle armourBarStyle;
 		healthBarStyle = new ProgressBar.ProgressBarStyle();

@@ -16,7 +16,7 @@ public class LobbyUser {
     
     /**
      * Constructor that assumes that a lobbyPlayer will not be ready, ie. used when 
-     * intialising a lobby player.
+     * initializing a lobby player.
      * @param username The player's username.
      */
     public LobbyUser(String username) {

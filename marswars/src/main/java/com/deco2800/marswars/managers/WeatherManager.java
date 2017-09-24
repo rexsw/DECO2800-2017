@@ -9,6 +9,10 @@ import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.lwjgl.Sys;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.*;
 
@@ -398,5 +402,20 @@ public class WeatherManager extends Manager implements Tickable {
     public void onTick(int tick) {
         //this.setWeatherEvent();
     }
+//    //Add Rain Particle effect
+//    private SpriteBatch batch;    //is already within MarsWars
+//    private ParticleEffect effect;    
+//    public void show(){
+//    	batch = new SpriteBatch;
+//    	effect = new particleEffect();
+//    	effect.load(Gdx.files.internal("resources/WeatherAssets/rainParticle"),
+//    			(Gdx.files.internal("resources/WeatherAssets")));
+//    	effect.setPosition(Gdx.graphics.getWidth() / 2,
+//    			Gdx.graphics.getHeight());
+//      effect.start();
+//    }
+    
+//		Within MarsWars just need to draw this particle effect using effect.draw();    
+    	
 }
 
