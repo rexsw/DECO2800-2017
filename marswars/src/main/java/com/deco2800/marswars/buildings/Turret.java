@@ -30,8 +30,6 @@ public class Turret extends BuildingEntity{
 	public void releaseTurret(){
 		if(this.numOfSolider > 0){
 			this.numOfSolider = this.numOfSolider - 1;
-		}
-		
-		
+		}		
 	}
 }

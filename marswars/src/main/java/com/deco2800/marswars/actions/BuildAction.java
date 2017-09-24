@@ -17,6 +17,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.buildings.Bunker;
 import com.deco2800.marswars.buildings.CheckSelect;
+import com.deco2800.marswars.buildings.TechBuilding;
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
@@ -251,6 +252,10 @@ public class BuildAction implements DecoAction{
 			break;
 		case HEROFACTORY:
 			//Update this
+			break;
+		case TECHBUILDING:
+			base = new TechBuilding(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
 			break;
 		default:
 			break;

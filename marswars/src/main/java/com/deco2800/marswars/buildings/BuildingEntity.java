@@ -105,6 +105,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		case HEROFACTORY:
 			//Update this
 			break;
+		case TECHBUILDING:
+			graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
+			this.setBuildSpeed(.5f);
+			this.setMaxHealth(800);
+			this.setHealth(800);
+			this.building = "TechBuilding";
+			fogRange = 2;
+			break;
 		default:
 			break;
 		}
