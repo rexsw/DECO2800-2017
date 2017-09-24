@@ -2,10 +2,9 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Spacman;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.PathfindingThread;
@@ -116,6 +115,11 @@ public class MoveAction implements DecoAction {
 			if(entity instanceof Soldier) {
 				Soldier soldier = (Soldier) entity;
 				soldier.faceTowards(tmpgoalX,tmpgoalY);
+			}
+			//set missile to face towards the moving direction
+			if(entity instanceof MissileEntity) {
+				MissileEntity missile = (MissileEntity) entity;
+				missile.faceTowards(tmpgoalX,tmpgoalY);
 			}
 			/* If we have arrived (or close enough to) then remove this point from the path and continue */
 			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {

@@ -2,11 +2,11 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A TimeManager class for SpacWars. Provides methods for tracking InGameTime,
@@ -21,12 +21,9 @@ public class TimeManager extends Manager implements TickableManager {
 	private static final int NIGHT = 18; //night at 6pm
 	private boolean isNight = true;
 	private boolean isGamePaused = false;
-	private boolean isProductionPaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
 
-	private static final Logger LOGGER =
-			LoggerFactory.getLogger(TimeManager.class);
 
 	/**
 	 * Calculate the number of passed in-game days
@@ -102,27 +99,17 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
-	 * Check if production is paused
-	 */
-	public boolean isProductionPaused() {
-		return isProductionPaused;
-	}
-
-	/**
 	 * Pauses the game by stopping all actions currently being undertaken
 	 * by entities and ceasing the incrementation of the in-game timer.
 	 */
 	public void pause() {
 		isGamePaused = true;
-		LOGGER.info("PAUSINGGGGGGGGGGGGG %%%%%%%%%%%%%%%%%%%%");
 		List<BaseEntity> entities =
 				GameManager.get().getWorld().getEntities();
-		LOGGER.info("ENTITIES PRESENT %%%%%%%%%%%%%%%%%%%%");
 		for (BaseEntity e: entities) {
-			if (e instanceof HasAction) {
-				if (((HasAction) e).getCurrentAction().isPresent()) {
+			if (e instanceof HasAction &&
+					((HasAction) e).getCurrentAction().isPresent()) {
 					((HasAction) e).getCurrentAction().get().pauseAction();
-				}
 			}
 		}
 	}
@@ -145,26 +132,11 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public void pause(List<BaseEntity> entities) {
 		for (BaseEntity e: entities) {
-			if (e instanceof HasAction) {
-				if (((HasAction) e).getCurrentAction().isPresent()) {
+			if (e instanceof HasAction &&
+					((HasAction) e).getCurrentAction().isPresent()) {
 					((HasAction) e).getCurrentAction().get().pauseAction();
-				}
 			}
 		}
-	}
-
-	/**
-	 * Set building production to be paused
-	 */
-	public void pauseProduction() {
-		isProductionPaused = true;
-	}
-
-	/**
-	 * Set the building production to resume
-	 */
-	public void resumeProduction() {
-		isProductionPaused = false;
 	}
 
 	/**
@@ -175,10 +147,9 @@ public class TimeManager extends Manager implements TickableManager {
 		List<BaseEntity> entities =
 				GameManager.get().getWorld().getEntities();
 		for (BaseEntity e: entities) {
-			if (e instanceof HasAction) {
-				if (((HasAction) e).getCurrentAction().isPresent()) {
+			if (e instanceof HasAction &&
+					((HasAction) e).getCurrentAction().isPresent()) {
 					((HasAction) e).getCurrentAction().get().resumeAction();
-				}
 			}
 		}
 	}
@@ -188,10 +159,9 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public void unPause(List<BaseEntity> entities) {
 		for (BaseEntity e: entities) {
-			if (e instanceof HasAction) {
-				if (((HasAction) e).getCurrentAction().isPresent()) {
+			if (e instanceof HasAction &&
+					((HasAction) e).getCurrentAction().isPresent()) {
 					((HasAction) e).getCurrentAction().get().resumeAction();
-				}
 			}
 		}
 	}
@@ -299,14 +269,14 @@ public class TimeManager extends Manager implements TickableManager {
 	 * absolute value.
 	 * @param seconds The magnitude of seconds to be added
 	 */
-	public void addTime(long seconds) {
+	public static void addTime(long seconds) {
 		time += Math.abs(seconds);
 	}
 
 	/**
 	 * Sets the In-Game Time to be 0 (Resets current clock)
 	 */
-	public void resetInGameTime() {
+	public static void resetInGameTime() {
 		time = 0;
 	}
 
@@ -336,7 +306,7 @@ public class TimeManager extends Manager implements TickableManager {
 	@Override
 	public void onTick(long i) {
 		if (!isGamePaused) {
-			time += 2;
+			this.addTime(2);
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {

@@ -12,19 +12,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.units.*;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.BackgroundManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Moos
@@ -34,7 +36,6 @@ import java.util.List;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -55,14 +56,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
-	long lastGameTick = 0;
-	long lastMenuTick = 0;
+	//long lastGameTick = 0;
+	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible;
+	public static int invincible = 0;
 	
-	private MainMenu menu;
 	private Skin skin;
 
 	Set<Integer> downKeys = new HashSet<>();
@@ -77,7 +79,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
-		this.skin = new Skin(Gdx.files.internal("uiskin.json")); //$NON-NLS-1$
+		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 
@@ -90,7 +92,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
-		this.menu = new MainMenu(this.skin, this.stage);
+		new MainMenu(this.skin, this.stage);
 	}
 
 	/**
@@ -107,7 +109,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Update the input managers
          */
-		this.inputP.handleInput(this.pauseTime);
+		this.inputP.handleInput();
         /*
          * Update the camera
          */
@@ -132,25 +134,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
+		// Render the rain effect if raining PLEASE DO NOT DELETE
+		//weatherManager.addRainVisuals(batch);
+
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond()); //$NON-NLS-1$ //$NON-NLS-2$
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 
-		if(invincible == 1)
-		{
-			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
-			for(BaseEntity e:entityl)
-			{
-				if(e.getOwner() == -1 && e instanceof AttackableEntity)
-				{
-					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
-				}
-			}
-		}
+		setInvincible();
+
 	}
+
 
 	/**
 	 * Resizes the viewport.
@@ -175,4 +172,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void dispose () {
 		// Don't need this at the moment
 	}
+
+	/**
+	 * If the invincible value is 1, make the enemy's attack to be of no effect
+	 */
+	public void setInvincible(){
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() > 0 && e instanceof  MissileEntity )
+				{
+					((MissileEntity) e) .setDamage(0);
+				}
+			}
+		}
+	}
+
+
+
+
 }

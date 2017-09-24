@@ -1,10 +1,11 @@
 package com.deco2800.marswars.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A LoadAction for loading units into a carrier unit
@@ -14,7 +15,7 @@ import com.deco2800.marswars.entities.units.Soldier;
 public class LoadAction implements DecoAction {
 
 	//this speeds up the carrier unit
-	private static final float MOVING_SPEED=0.03f;
+	private static final float MOVING_SPEED=0.1f;
 
     enum State {
 	START_STATE, MOVE_STATE, LOAD_STATE
@@ -28,7 +29,11 @@ public class LoadAction implements DecoAction {
     private Soldier carrier;
     private Soldier target;
     private int ticksLoad = 50;
-    private boolean actionPaused = false;
+	// Variables for pause
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	private boolean actionPaused = false;
+
 
     /**
      * Constructor for the LoadAction
@@ -50,19 +55,21 @@ public class LoadAction implements DecoAction {
      */
     @Override
     public void doAction() {
-	switch (state) {
-	case MOVE_STATE:
-	    moveTowardsAction();
-	    return;
-	case LOAD_STATE:
-	    loadAction();
-	    break;
-	default:
-	    action = new MoveAction(target.getPosX(), target.getPosY(),
-		    carrier,MOVING_SPEED);
-	    state = State.MOVE_STATE;
-	    return;
-	}
+		if (! timeManager.isPaused() && ! actionPaused) {
+			switch (state) {
+				case MOVE_STATE:
+					moveTowardsAction();
+					return;
+				case LOAD_STATE:
+					loadAction();
+					break;
+				default:
+					action = new MoveAction(target.getPosX(), target.getPosY(),
+							carrier, MOVING_SPEED);
+					state = State.MOVE_STATE;
+					return;
+			}
+		}
     }
 
     /**

@@ -1,12 +1,5 @@
 package com.deco2800.marswars.InitiateGame;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.deco2800.marswars.managers.*;
-import com.deco2800.marswars.worlds.SelectedTiles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
@@ -14,14 +7,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Carrier;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Hacker;
-import com.deco2800.marswars.entities.units.Medic;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -30,16 +18,19 @@ import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Manages the features for the game 
+ * Initialises the features for the game. An abstraction of the original marswars.java. 
  * @author Naziah Siddique
  */
 public class Game{	
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
-	private OrthographicCamera camera; 
 	
 	/**
 	 * Set the renderer.
@@ -49,10 +40,10 @@ public class Game{
 	 */
 	Renderer renderer = new Render3D();
 
+	private OrthographicCamera camera;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private BackgroundManager bgManager = (BackgroundManager)
-			GameManager.get().getManager(BackgroundManager.class);
+	// Please don't delete
 	private WeatherManager weatherManager = (WeatherManager)
 			GameManager.get().getManager(WeatherManager.class);
 
@@ -60,35 +51,48 @@ public class Game{
 	
 	private HUDView view; 
 
+	/**
+	 * Creates a Game instance and starts off the game
+	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize){
-		this.camera = GameManager.get().getCamera();
 		startGame(mapType, mapSize);
 	}
 	
+	/* The method that really starts off the game after Game instantiation. 
+	 * Loads in other game components and initialises Game private variables.
+	 */
 	private void startGame(MapTypes mapType, MapSizeTypes mapSize){
 		this.createMap(mapType, mapSize);
-		this.view = new HUDView(GameManager.get().getStage(), GameManager.get().getSkin(), GameManager.get());
+		this.view = new HUDView(GameManager.get().getStage(), 
+				GameManager.get().getSkin(), GameManager.get());
+		this.camera = GameManager.get().getCamera();
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
-		this.selectedTiles();
+		// Please don't delete
 		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**
-	 * Creates game map
+	 * Creates game map based off user input in the main menu. 
+	 * A map type may be selected, or a map may be randomised 
+	 * after clicking 'Customise'.
 	 * @param mapSize 
 	 * @param mapType 
 	 */
 	private void createMap(MapTypes mapType, MapSizeTypes mapSize) {
+		/* this is only for the 'Customise' option in the main menu*/
 		if (mapType == null || mapSize == null){
+			LOGGER.debug("Customisation feature selected, loading random map");
 			MapContainer map = new MapContainer();
 			CustomizedWorld world = new CustomizedWorld(map);
 			GameManager.get().setWorld(world);
 			world.loadMapContainer(map);
-		}else{
+		} else {
+			/*for all other game cases*/ 
+			LOGGER.debug(String.format("Picked a %s type of %s size map,loading map", mapType.toString(), mapSize.toString()));
 			MapContainer map = new MapContainer(mapType, mapSize);
 			CustomizedWorld world = new CustomizedWorld(map);
 			GameManager.get().setWorld(world);
@@ -96,64 +100,70 @@ public class Game{
 		}
 		
 		/* Move camera to the center of the world */
-		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32, 0);
-		GameManager.get().setCamera(this.camera);
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
+		GameManager.get().setCamera(GameManager.get().getCamera());
+		LOGGER.debug("Game just started, map is now loaded, bring up active view");
 		GameManager.get().toggleActiveView();
 	}
 
 	/*
 	 * Initializes fog of war
+	 * Multiseleciton tiles are also initialized here
 	 */
 	private void fogOfWar() {
+		LOGGER.debug("Creating fog of war");
+
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
-	}
 
-	/*
- * Initializes fog of war
- */
-	private void selectedTiles() {
+		//these are initialization for multiselection tiles
 		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
 		multiSelection.resetSelectedTiles();
-		SelectedTiles.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+
+		LOGGER.debug("Creation of fog of war complete");
+
 	}
 
 	/**
 	 * Can assume that since this class has been instantiated
 	 * that the game is in full play
 	 * @param batch 
-	 * @param camera2 
+	 * @param renderCamera 
 	 */
-	public void render(SpriteBatch batch, OrthographicCamera camera2){
+	public void render(SpriteBatch batch, OrthographicCamera renderCamera){
 		/* Render the tiles second */
 		BatchTiledMapRenderer tileRenderer = this.renderer.getTileRenderer(batch);
-		tileRenderer.setView(camera2);
+		tileRenderer.setView(renderCamera);
 		tileRenderer.render();
-		
-		this.renderer.render(batch, camera2);
+		this.renderer.render(batch, renderCamera);
 		GameManager.get().getGui().render(this.lastMenuTick);
 	}
 	
 	public void resize(int width, int height){
 		view.resize(width, height);
-		System.out.println("resizp lis");
+		LOGGER.info("Resized the HUD contents");
 	}
 	
 	/*
 	 * adds entities for the ai and set then to be ai owned
 	 */
 	private void addAIEntities() {
+		LOGGER.info("Adding entitires for the AI");
+		
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
 		setPlayer(length, width, 1, 1);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
+		
+		LOGGER.info("Entities for the AI successfully added");
 	}
 	
 	/**
-	 * generates a number of player and ai teams with basic unit at a give x-y
+	 * Generates a number of player and ai teams with basic unit at a give x-y
 	 * co-ord
 	 * 
 	 * @ensure the x,y pair are within the game map & playerteams+aiteams < 6
@@ -168,7 +178,9 @@ public class Game{
 	 */
 	private void setPlayer(int length, int width, int aiteams,
 			int playerteams) {
-		int x, y, playerid;
+		int x;
+		int y;
+		int playerid;
 		ColourManager cm = (ColourManager) GameManager.get()
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()
@@ -181,7 +193,7 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
+			setUnit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
@@ -195,8 +207,10 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
+			setUnit(playerid, x, y, rm);
 		}
+		
+		LOGGER.debug("Players successfully set to game map");
 	}
 
 	/**
@@ -211,7 +225,7 @@ public class Game{
 	 * @param rm
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
+	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
@@ -235,6 +249,8 @@ public class Game{
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(aibase);
+		
+		LOGGER.info("Team units successfully set");
 	}
 	
 	private void setThread() {
@@ -245,11 +261,11 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused()) {
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) { //initial value 100000
+						//initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
@@ -257,12 +273,13 @@ public class Game{
 							}
 							GameManager.get().onTick(0);
 							lastGameTick = TimeUtils.nanoTime();
-						}
+
 					}
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
+
 					}
 				}
 			}

@@ -1,12 +1,8 @@
 package com.deco2800.marswars.hud;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameBlackBoard;
@@ -19,9 +15,8 @@ import com.deco2800.marswars.managers.GameManager;
  *
  */
 public class GameGraph{
-	private float graphSize = 400; 
+	private static float GRAPHSIZE = 400; 
 	
-	private Skin skin;
 	private ShapeRenderer renderer;
 	private Field Graphtype;
 	private float[] vertices;
@@ -31,6 +26,9 @@ public class GameGraph{
 		Graphtype = graphtype;
 	}
 	
+	/**
+	 * Renders the game graph
+	 */
 	public void render(){
 		//renderer.setProjectionMatrix((new OrthographicCamera(1920, 1080)).combined);
 		renderer.begin(ShapeType.Line);
@@ -40,16 +38,19 @@ public class GameGraph{
 		else {
 			for(int i: ((AiManager) GameManager.get().getManager(AiManager.class)).getAiTeam()) {
 				vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(i, Graphtype);
-				renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(i));
+				//renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(i));
 				renderer.polyline(vertices);
 			}
 			vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(-1, Graphtype);
-			renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(-1));
+			//renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(-1));
 			renderer.polyline(vertices);
 		}
 		renderer.end();
 	}
 	
+	/**
+	 * Not yet implelemented- should resize the graph
+	 */
 	public void resize(){
 		;
 	}

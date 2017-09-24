@@ -9,10 +9,8 @@ import org.junit.Test;
 
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.entities.GrayTile;
-import com.deco2800.marswars.entities.BlackTile;
-import com.deco2800.marswars.entities.FogEntity;
 import com.deco2800.marswars.worlds.FogWorld;
+import com.deco2800.marswars.entities.FogEntity;
 
 /**
  * test for all affiliations of fog of war:
@@ -31,8 +29,13 @@ public class FogWarTest {
 //         assertNotNull(world.getFogMap());
 //     }
 	//Tests for fogManager
-	FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-	
+	FogManager fogOfWar;
+
+	@Before
+	public void setup() {
+		fogOfWar = new FogManager();
+	}
+
 	@Test (expected = IllegalArgumentException.class)
 	public void invalidWidth() {
 		FogManager.initialFog(-1, 1);
@@ -52,6 +55,7 @@ public class FogWarTest {
 	
 	@Test
 	public void toggleFog() {
+		FogManager.toggleFog(true);
 		assertThat("ToggleFog is not true", FogManager.getToggleFog(), is(equalTo(true)));
 		FogManager.toggleFog(false);
 		assertThat("ToggleFog did not toggle", FogManager.getToggleFog(), is(equalTo(false)));
@@ -77,10 +81,15 @@ public class FogWarTest {
 	//Coverage for GrayTile, BlackTile, fogWorld
 	@Test
 	public void fogWorld() {
-		FogWorld world = new FogWorld();
+
 		FogWorld.initializeFogWorld(5, 5);
 		FogWorld.getFogMap();
 		FogWorld.getBlackFogMap();
+		FogEntity fogEntity = new FogEntity(0, 0, 0, 1, 1, 1);
+		fogEntity.setPosX(1);
+		fogEntity.setPosY(1);
+		fogEntity.setPosZ(1);
+		fogEntity.setPosition(0, 0, 0);
 	}
 	
 	

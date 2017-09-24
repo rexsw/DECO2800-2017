@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.badlogic.gdx.graphics.Color;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.Colours;
 
@@ -19,6 +20,14 @@ public class ColourTest {
 		assertEquals(Colours.PINK.toString(), "Pink");
 		assertEquals(Colours.PURPLE.toString(), "Purple");
 		assertEquals(Colours.GREEN.toString(), "Green");
+	}
+	
+	@Test
+	public void colourTolidgxTest() {
+		ColourManager test = new ColourManager();
+		int testid = 1;
+		test.setColour(testid);
+		assertTrue(test.getLibColour(testid) instanceof Color);
 	}
 	
 	@Test
@@ -39,5 +48,6 @@ public class ColourTest {
 		assertTrue(test.getColour(testid) instanceof String);
 		assertTrue(test.getColour(testid2) instanceof String);
 		assertFalse(test.getColour(testid) == test.getColour(testid2));
+		assertFalse(test.getColour(testid2) == test.getColour(testid));
 	}
 }

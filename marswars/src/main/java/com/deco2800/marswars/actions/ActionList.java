@@ -2,12 +2,11 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.net.Action;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -49,22 +48,19 @@ public class ActionList extends ArrayList<Object> {
     }
 
 
-    public ArrayList<ActionType> getActions() {
-        ArrayList<ActionType> a = this.stream().filter(o -> o instanceof ActionType).map(o -> (ActionType) o).collect(Collectors.toCollection(ArrayList::new));
-        return a;
+    public List<ActionType> getActions() {
+        return this.stream().filter(o -> o instanceof ActionType).map(o -> (ActionType) o).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<BuildingType> getBuildings() {
-        ArrayList<BuildingType> a = this.stream().filter(o -> o instanceof BuildingType).map(o -> (BuildingType) o).collect(Collectors.toCollection(ArrayList::new));
-        return a;
+    public List<BuildingType> getBuildings() {
+        return this.stream().filter(o -> o instanceof BuildingType).map(o -> (BuildingType) o).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<EntityID> getUnits() {
-        ArrayList<EntityID> a = this.stream().filter(o -> (o instanceof EntityID)).map(o -> (EntityID) o).collect(Collectors.toCollection(ArrayList::new));
-        return a;
+    public List<EntityID> getUnits() {
+        return this.stream().filter(o -> o instanceof EntityID).map(o -> (EntityID) o).collect(Collectors.toCollection(ArrayList::new));
     }
     
-    public ArrayList<Object> getallActions() {
+    public List<Object> getallActions() {
     	return this;
     }
 }
