@@ -57,13 +57,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
 
-	long lastGameTick = 0;
-	long lastMenuTick = 0;
+	//long lastGameTick = 0;
+	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
 	public static int invincible;
 	
-	private MainMenu menu;
 	private Skin skin;
 
 	Set<Integer> downKeys = new HashSet<>();
@@ -91,7 +90,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
-		this.menu = new MainMenu(this.skin, this.stage);
+		new MainMenu(this.skin, this.stage);
 	}
 
 	/**

@@ -271,40 +271,37 @@ public class InputProcessor {
 			 */
 			@Override
 			public boolean scrolled(int amount) {
-				if (GameManager.get().getActiveView() == 1) {
-					// if we are currently on the megamap, cancel scroll
-					return false;
+				// if there is no world loaded, or we are currently on the megamap, cancel scroll
+				if (GameManager.get().getWorld() != null || GameManager.get().getActiveView() == 1){
+					int cursorX = Gdx.input.getX();
+					int cursorY = Gdx.input.getY();
+
+					int windowWidth = Gdx.graphics.getWidth();
+					int windowHeight = Gdx.graphics.getHeight();
+
+					if (InputProcessor.this.camera.zoom > 0.5 && amount == -1) { // zoom
+																					// in
+						// xMag/yMag is how is the mouse far from centre-screen
+						// on each axis
+						double xMag = (double) cursorX - (windowWidth / 2);
+						double yMag = (double) (windowHeight / 2) - cursorY;
+
+						InputProcessor.this.camera.zoom /= 1.2;
+						// shift by mouse offset
+						InputProcessor.this.camera.translate((float) xMag, (float) yMag);
+					} else if (InputProcessor.this.camera.zoom < 10 && amount == 1) { // zoom
+																						// out
+						InputProcessor.this.camera.zoom *= 1.2;
+					}
+					forceMapLimits(); // has the user reached the edge?
+					return true;
 				}
-
-				int cursorX = Gdx.input.getX();
-				int cursorY = Gdx.input.getY();
-
-				int windowWidth = Gdx.graphics.getWidth();
-				int windowHeight = Gdx.graphics.getHeight();
-
-				if (InputProcessor.this.camera.zoom > 0.5 && amount == -1) { // zoom
-																				// in
-					// xMag/yMag is how is the mouse far from centre-screen
-					// on each axis
-					double xMag = (double) cursorX - (windowWidth / 2);
-					double yMag = (double) (windowHeight / 2) - cursorY;
-
-					InputProcessor.this.camera.zoom /= 1.2;
-					// shift by mouse offset
-					InputProcessor.this.camera.translate((float) xMag, (float) yMag);
-				} else if (InputProcessor.this.camera.zoom < 10 && amount == 1) { // zoom
-																					// out
-					InputProcessor.this.camera.zoom *= 1.2;
-				}
-				forceMapLimits(); // has the user reached the edge?
-				return true;
+				//no world loaded, or on megamap
+				return false;
 			}
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		if (GameManager.get().getWorld() != null) {
-			GameManager.get().toggleActiveView();
-		}
 	}
 
 	/**

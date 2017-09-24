@@ -685,8 +685,8 @@ public class HUDView extends ApplicationAdapter{
 		}
     }
 
-
-
+		
+	
 	/**
 	 * Handler for the size buttons of the customization menu
 	 *
@@ -887,12 +887,11 @@ public class HUDView extends ApplicationAdapter{
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 
-
+		
 		//chat listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
 			if (messageToggle){
 				messageWindow.setVisible(false);
-
 				messageToggle = false;
 				this.setChatActiveCheck(0);
 
@@ -913,16 +912,16 @@ public class HUDView extends ApplicationAdapter{
 			boolean somethingSelected = false;
 			for (Renderable e : GameManager.get().getWorld().getEntities()) {
 				if ((e instanceof Selectable) && ((Selectable) e).isSelected()) {
-					//peonButton = ((Selectable) e).getButton();
-					//helpText = ((Selectable) e).getHelpText();
 					somethingSelected = true;
 				}
 			}
-			if (!somethingSelected) {
-
-			}
 			lastMenuTick = TimeUtils.nanoTime();
 
+		}
+			
+		if (!gameStarted){
+			GameManager.get().toggleActiveView();
+			gameStarted = true;
 		}
 
 	}
@@ -1000,7 +999,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//resize stats
 		stats.resizeStats(width, height);
-
     }
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
