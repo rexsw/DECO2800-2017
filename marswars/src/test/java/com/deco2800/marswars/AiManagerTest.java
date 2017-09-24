@@ -35,8 +35,9 @@ public class AiManagerTest {
 		GameManager.get().setMiniMap(m);
 		GameManager.get().setWorld(baseWorld);
 		GameManager.get().setSkin(null);
-		am = (AiManager)GameManager.get().getManager(AiManager.class);
+		am = new AiManager();
 		tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
+		tm.resetInGameTime();
 		rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
     }
@@ -48,14 +49,11 @@ public class AiManagerTest {
 		GameManager.get().getWorld().addEntity(entity);
 		rm.setRocks(500, 1);
 		assertFalse(entity.showProgress());
-	
+
+		// Should create a Spacman (costs 30 rocks)
 		am.onTick(0);
 		assertTrue(entity.showProgress());
 		assertEquals(500-30, rm.getRocks(1));
-	
-
-		
-		
 	}
 	
 	@Test
@@ -78,7 +76,6 @@ public class AiManagerTest {
 	
 	@Test
 	public void getStateIndexTest(){
-		am = new AiManager();
 		am.addTeam(1);
 		assertEquals(0,am.getStateIndex(1));
 		
@@ -88,7 +85,6 @@ public class AiManagerTest {
 	
 	@Test
 	public void tickLockTest(){
-		am = new AiManager();
 		assertTrue(am.tickLock(5,10));
 		assertTrue(!am.tickLock(6, 10));
 	}
@@ -96,7 +92,6 @@ public class AiManagerTest {
 	
 	@Test
 	public void stateChangeTest(){
-		am = new AiManager();
 		am.addTeam(1);
 		assertEquals(State.DEFAULT, am.getState(1));
 		assertEquals(0,am.getTimeAtStateChange());
@@ -109,9 +104,8 @@ public class AiManagerTest {
 		
 	}
 
-	
+
 	public void decideChangeSateTest(){
-		am = new AiManager();
 		am.addTeam(1);
 		Base b = new Base(baseWorld, 1, 1, 0, 1);
 		AttackableEntity r = new AttackableEntity(2,1,0,1, 1, 1);
@@ -126,5 +120,5 @@ public class AiManagerTest {
 		am.decideChangeState();
 		assertEquals(State.AGGRESSIVE, am.getState(1));
 	}
-	
+
 }
