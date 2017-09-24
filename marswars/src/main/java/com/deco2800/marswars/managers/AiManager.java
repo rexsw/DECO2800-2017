@@ -25,7 +25,8 @@ import java.util.Random;
  * Created by Scott Whittington on 22/08
  * control the current ai, every tick the ai looks at it's units and 
  * ensures they're doing something useful
- * warning spicy i hope you like meat balls 
+ * States added by  Ross Webster
+ * Ambient Animal AI added by Michelle Mo
  */
 public class AiManager extends AbstractPlayerManager implements TickableManager {
 	private List<Integer> teamid = new LinkedList<Integer>();
@@ -95,6 +96,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 	}
 	
+	/**
+	 * Sets an animals Ai state based if it's been attacked or waiting for long enough
+	 * 
+	 * @param animal the animals state to change
+	 */
 	public void animalDefaultState(AmbientAnimal animal){
 		if (animal.gotHit()) {
 			animal.setState(AmbientState.ATTACKBACK);
@@ -107,6 +113,12 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 	}
 	
+	/**
+	 *  Sets an animals Ai state based if it's been attacked or waiting for long enough
+	 *  for the travel state
+	 * 
+	 * @param animal the animals state to change
+	 */
 	public void animalTravelState(AmbientAnimal animal){
 		if (animal.gotHit()) {
 			animal.setState(AmbientState.ATTACKBACK);

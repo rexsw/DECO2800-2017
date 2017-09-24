@@ -220,6 +220,7 @@ private static final String CLOSED = "closed.wav";
 
 	/**
 	 * This will update number of units belonging to each team
+	 * this should use the balckboard it'd be more effective i'll swtich it over later
 	 * @param i
 	 */
 	@Override

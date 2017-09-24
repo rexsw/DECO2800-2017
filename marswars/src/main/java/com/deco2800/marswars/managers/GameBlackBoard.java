@@ -41,7 +41,6 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		//adds to the history of each field every few ticks
 		timer++;
 		if(timer % 10 == 0) {
-			//LOGGER.info("tick");
 			for(int teamid: teams) {
 				values.get(teamid).get(Field.BIOMASS).add(rm.getBiomass(teamid));
 				values.get(teamid).get(Field.CRYSTAL).add(rm.getCrystal(teamid));
@@ -51,6 +50,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get(Field.UNITS_LOST).add(this.count(teamid, Field.UNITS_LOST));
 				values.get(teamid).get(Field.COMBAT_UNITS).add(this.count(teamid, Field.COMBAT_UNITS));
 				values.get(teamid).get(Field.BUILDINGS).add(this.count(teamid, Field.BUILDINGS));
+				//currentlly not counting techology so this is for graph testing on ui
 				values.get(teamid).get(Field.TECHNOLOGY).add(ThreadLocalRandom.current().nextInt(1, 50));
 			}
 			index++;
