@@ -4,9 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Bullet;
-import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.managers.GameManager;
 
 /**
@@ -20,8 +17,6 @@ public class AttackAction implements DecoAction {
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
 	boolean completed = false;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AttackAction.class);
 	
 	enum State {
 		SETUP_MOVE,

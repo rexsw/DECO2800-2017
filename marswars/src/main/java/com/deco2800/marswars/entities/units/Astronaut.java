@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
-//import com.deco2800.marswars.entities.Resource;
 
 /**
  * A combat unit that can gather resources
@@ -49,10 +48,8 @@ public class Astronaut extends Soldier {
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if (this.getCurrentAction().isPresent()) {
-			if(this.getCurrentAction().get() instanceof BuildAction) {
-					return;
-			}
+		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
+			return;
 		}
 		if(!this.isAi() & this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
@@ -73,18 +70,18 @@ public class Astronaut extends Soldier {
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
-			LOGGER.info("Right click occurred outside game world.");
+			LOGGER.info("Right click occurred outside game world.",e);
 			this.setTexture(defaultTextureName);
 			this.deselect();
 			return;
 		}
-		if (this.getCurrentAction().isPresent()) {
-			if(this.getCurrentAction().get() instanceof BuildAction) {
+		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
+
 				build.finaliseBuild();
 				this.setTexture(defaultTextureName);
 				this.deselect();
 				return;
-			}
+
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
 		boolean gatherResource = !entities.isEmpty() && entities.get(0) instanceof Resource;
@@ -113,7 +110,7 @@ public class Astronaut extends Soldier {
 	 */
 	public void addGatheredResource(GatheredResource resource) {
 		this.gatheredResource = resource;
-		//LOGGER.error("Gathered "+ resource.getAmount() + " units of "+ resource.getType());
+
 	}
 	
 	/**
@@ -130,7 +127,6 @@ public class Astronaut extends Soldier {
 	 */
 	public GatheredResource removeGatheredResource() {
 		GatheredResource resource = new GatheredResource (gatheredResource.getType(), gatheredResource.getAmount());
-		//LOGGER.error("Removed "+ resource.getAmount() + " units of "+ resource.getType());
 		gatheredResource = null;
 		return resource;
 	}
@@ -141,7 +137,7 @@ public class Astronaut extends Soldier {
 	 */
 	@Override
 	public String toString(){
-		return "Astronaut";
+		return this.name;
 	}
 	
 	/**
@@ -171,7 +167,7 @@ public class Astronaut extends Soldier {
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Astronaut", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats(this.name, this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
 	/**
@@ -188,13 +184,13 @@ public class Astronaut extends Soldier {
 			this.setGotHit(true);
 		}
 		if (health <= 0) {
-			if (this.getAction().isPresent()) {
-				if (this.getAction().get() instanceof BuildAction) {
+			if (this.getAction().isPresent() && this.getAction().get() instanceof BuildAction) {
+
 					LOGGER.info("TRIED AT LEAST");
 					BuildAction destroyBuild = (BuildAction)this.getAction().get();
 					destroyBuild.cancelBuild();
 					destroyBuild.doAction();
-				}
+
 			}
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);

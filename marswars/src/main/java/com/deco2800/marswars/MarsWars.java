@@ -13,9 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -37,7 +35,6 @@ import java.util.Set;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -110,7 +107,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Update the input managers
          */
-		this.inputP.handleInput(this.pauseTime);
+		this.inputP.handleInput();
         /*
          * Update the camera
          */
