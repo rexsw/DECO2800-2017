@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
@@ -23,6 +24,7 @@ import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -613,5 +615,17 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		healthBar.setValue(100);
 		s.addActor(healthBar);
 		healthBar.setVisible(true);
+	}
+
+	/**
+	 * Whether or not this entity is concealed by the fog of war
+	 * @return true if concealed, false otherwise
+	 */
+	public boolean concealedByFog() {
+		if (getOwner() < 0) {
+			// friendly units are never concealed by the fog
+			return false;
+		}
+		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 }
