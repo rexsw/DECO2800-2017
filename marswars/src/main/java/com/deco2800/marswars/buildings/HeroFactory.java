@@ -11,7 +11,6 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 import org.slf4j.Logger;
@@ -19,14 +18,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
-        HasProgress, HasOwner, HasAction {
+/**
+ * 
+ * This class creates a hero factory building that used to create hero characters
+ * It may also act as a shop for hero in the later stage
+ * NOTE: currently it does not affect the game
+ *
+ */
+public class HeroFactory extends BuildingEntity {
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(HeroFactory.class);
 
     private int owner;
     private AbstractWorld world;
-    boolean selected = false;
+    private boolean selected = false;
 
     /**
      * Constructor for the hero factory.
@@ -45,45 +50,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
         this.setSpeed(1.5f);
         this.addNewAction(ActionType.GENERATE);
         world.deSelectAll();
-    }
-
-    /**
-     * On click handler
-     */
-    @Override
-    public void onClick(MouseHandler handler) {
-        if(!this.isAi()) {
-            if (!selected) {
-                selected = true;
-                LOGGER.error("clicked on hero factory");
-            }
-        } else {
-            LOGGER.error("clicked on AI hero factory");
-
-        }
-    }
-
-    /**
-     * On right click handler
-     */
-    @Override
-    public void onRightClick(float x, float y) {
-    }
-
-    /**
-     * On Tick handler
-     * @param i time since last tick
-     */
-    @Override
-    public void onTick(int i) {
-
-        if (currentAction.isPresent()) {
-            currentAction.get().doAction();
-
-            if (currentAction.get().completed()) {
-                currentAction = Optional.empty();
-            }
-        }
+        LOGGER.debug("Create a hero factory");
     }
 
     /**
@@ -96,7 +63,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     }
 
     /**
-     * Deselect the hero factory
+     * Deselect the hero factory, change the selected state
      */
     @Override
     public void deselect() {
@@ -112,7 +79,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
 
     /**
      * Get the help text label of this hero factory
-     * @return Label
+     * @return Label that used to displayed in the HUD
      */
     @Override
     public Label getHelpText() {
@@ -122,28 +89,8 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     }
 
     /**
-     * Get the progress of current action
-     * @return int
-     */
-    @Override
-    public int getProgress() {
-        if (currentAction.isPresent()) {
-            return currentAction.get().actionProgress();
-        }
-        return 0;
-    }
-
-    /**
-     * Check if there is an action currently assigned to the base
-     * @return boolean
-     */
-    @Override
-    public boolean showProgress() {
-        return currentAction.isPresent();
-    }
-    /**
      * Set the owner of this hero factory
-     * @param owner
+     * @param owner to be set to
      */
     @Override
     public void setOwner(int owner) {
@@ -152,7 +99,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
 
     /**
      * Get the owner of this hero factory
-     * @return owner
+     * @return owner of this factory
      */
     @Override
     public int getOwner() {
@@ -161,7 +108,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
 
     /**
      * Check if the AbstractEntity passed in and this entity has the same owner
-     * @return boolean
+     * @return true if these two entity has the same owner, false otherwise
      */
     @Override
     public boolean sameOwner(AbstractEntity entity) {
@@ -172,7 +119,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     /**
      * This method is a duplication of the showProgress method, consider delete one of them
      * sadly two different interfaces
-     * @return boolean
+     * @return true if this factory currently has an action, false otherwise
      */
     public boolean isWorking() {
         return currentAction.isPresent();
@@ -180,7 +127,7 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
 
     /**
      * Set the action of this hero factory
-     * @param action
+     * @param action to be set to this factory
      */
     public void setAction(DecoAction action) {
         currentAction = Optional.of(action);
@@ -188,8 +135,10 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
 
     /**
      * Create the 'Create Hero' button object
-     * @return Button
+     * handle relative click event as well
+     * @return Button that used to create hero
      */
+    @Override
     public Button getButton() {
         Button button = new TextButton("Create Hero", new Skin(Gdx.files
                 .internal
@@ -206,8 +155,8 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
     /**
      * Handler for button pressed action
      * Builds hero unit if button was pressed. Note that there are a maximum of
-     * three hero units in
-     * game
+     * three hero units in game
+     * 
      */
     public void buttonWasPressed() {
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
@@ -222,4 +171,5 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
+
 }

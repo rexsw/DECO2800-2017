@@ -17,8 +17,7 @@ import java.util.Optional;
  * inventory = instance of the Inventory class to store items that the Commander has equipped.
  * currentAction = the Commander's action that it is currently taking.
  * 
- * Created by timhadwen on 19/7/17.
- * Edited by Zeid Ismail on 8/09
+ * 
  */
 public class Commander extends Soldier {
 

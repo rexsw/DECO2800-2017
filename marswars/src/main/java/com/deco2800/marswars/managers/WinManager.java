@@ -24,6 +24,7 @@ public class WinManager extends Manager implements TickableManager {
 
 	@Override
 	public void onTick(long i) {
+		//on tick checks in someone has won
 		teams = black.teamsAlive();
 		if (teams == 1) {
 			//combat win for a team

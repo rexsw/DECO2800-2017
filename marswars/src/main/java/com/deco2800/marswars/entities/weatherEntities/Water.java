@@ -34,21 +34,31 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
     public Water(float posX, float posY, float posZ) {
         super(posX, posY, posZ, 1, 1, 1f);
         this.setTexture("water_final");
-        this.canWalkOver = true;
         this.setHealth(10);
+        this.canWalkOver = true;
     }
 
+    /**
+     * Sets the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     */
     public void setSurrounded() {
         this.surrounded = true;
     }
 
+    /**
+     * Returns the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     * @return boolean indicating whether or not this Water is surrounded on all
+     *         sides.
+     */
     public boolean isSurrounded() {
         return this.surrounded;
     }
 
     /**
      * Gets the current health of an entity
-     * @return
+     * @return current health of this Water entity
      */
     @Override
     public int getHealth() {

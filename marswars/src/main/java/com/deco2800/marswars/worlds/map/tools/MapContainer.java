@@ -337,7 +337,7 @@ public class MapContainer {
      * Creates random pattern of resources
      */
     protected void generateResourcePattern(){
-        int xLength = this.length;
+        int xLength = this.length ;
         int yWidth = this.width;
         int featureSize = 5;
         int scale = 2;

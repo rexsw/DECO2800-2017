@@ -16,7 +16,6 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.FogWorld;
-import com.deco2800.marswars.worlds.SelectedTiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +45,7 @@ public class Render3D implements Renderer {
      */
     @Override
     public void render(SpriteBatch batch, Camera camera) {
+
         List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
 
         // Tutor approved workaround to avoid changing whole structure of game
@@ -54,30 +54,17 @@ public class Render3D implements Renderer {
             renderables.add(e);
         }
 
+
         List<AbstractEntity> entities = new ArrayList<>();
 
         List<AbstractEntity> walkables = new ArrayList<>();
 
-        // Tutor approved workaround to avoid changing whole structure of game
-        List<FogEntity> fogs_temp = FogWorld.getFogMap();
-        List<AbstractEntity> fogs = new ArrayList<>();
-        for (FogEntity e : fogs_temp) {
-            fogs.add(e);
-        }
+        List<AbstractEntity> fogs = FogWorld.getFogMap();
 
-        // Tutor approved workaround to avoid changing whole structure of game
-        List<FogEntity> blackFogs_temp = FogWorld.getBlackFogMap();
-        List<AbstractEntity> blackFogs = new ArrayList<>();
-        for (FogEntity e : blackFogs_temp) {
-            blackFogs.add(e);
-        }
+        List<AbstractEntity> blackFogs = FogWorld.getBlackFogMap();
 
-        // Tutor approved workaround to avoid changing whole structure of game
-        List<MultiSelectionTile> multiSelection_temp = SelectedTiles.getMultiSelectionTile();
-        List<AbstractEntity> multiSelection = new ArrayList<>();
-        for (MultiSelectionTile e : multiSelection_temp) {
-            multiSelection.add(e);
-        }
+        List<AbstractEntity> multiSelection = FogWorld.getMultiSelectionTile();
+
 
         /* Sort entities into walkables and entities */
         for (AbstractEntity r : renderables) {
@@ -102,8 +89,6 @@ public class Render3D implements Renderer {
 
         //render the black fog of war later
         renderEntities(blackFogs,batch,camera,0);
-
-
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
@@ -215,6 +200,7 @@ public class Render3D implements Renderer {
 
             if (isoX < pos.x + camera.viewportWidth*cam.zoom*autoRenderValue && isoX > pos.x - camera.viewportWidth*cam.zoom*autoRenderValue
                     && isoY < pos.y + camera.viewportHeight*cam.zoom*autoRenderValue && isoY > pos.y - camera.viewportHeight*cam.zoom*autoRenderValue) {
+                //this will make the fog of war and multiselection looks better without lines between each tile
                 if(entity instanceof BlackTile || entity instanceof GrayTile || entity instanceof MultiSelectionTile){
                     batch.draw(tex, isoX, isoY, tileWidth * entity.getXRenderLength()*1.05f,
                             (tex.getHeight() / aspect) * entity.getYRenderLength()*1.05f);

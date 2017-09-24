@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,16 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.net.ConnectionManager;
+import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
-
-//import com.badlogic.gdx.graphics.Texture;
-//import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-//import com.badlogic.gdx.graphics.g2d.TextureRegion;
-//import com.deco2800.marswars.managers.TextureManager;
+import com.esotericsoftware.kryonet.Connection;
 
 /**
  * @author Naziah Siddique
@@ -65,11 +65,13 @@ public class MenuScreen{
 	Table navigationButtons;
 	Button playButton;
 	Button quitButton;
+
 	
 
 	//Managers
+    // The Net Manager so you can communicate with the server
+    private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
 	private TextureManager textureManager; //for loading in resource images
-
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
@@ -156,6 +158,15 @@ public class MenuScreen{
 		if (this.joinedServer){
 			this.addPlayButton(nav, mainmenu);
 		}
+	}
+	
+	
+	public void multiplayerLobby(Window mainmenu, Stage stage, String hostIP, boolean host){
+	    mainmenu.clear();
+	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
+	    mainmenu.add(lobby).expand().align(Align.topLeft);
+	    mainmenu.row();
+	    mainmenu.add(setupExitLobbyButton(mainmenu, stage)).left();
 	}
 	
 	public void selectWorldMode(Window mainmenu, Stage stage) {
@@ -307,7 +318,7 @@ public class MenuScreen{
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
-		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).row();
 		mainmenu.add(serverTable);
 		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
 	}
@@ -457,4 +468,34 @@ public class MenuScreen{
 	public void setJoinedServer(){
 		this.joinedServer = true; 
 	}
+	
+	public void unSetJoinedServer() {
+	    this.joinedServer = false;
+	}
+	
+	private Button setupExitLobbyButton(Window mainmenu, Stage stage) {
+	    TextButton exitButton = new TextButton("Exit Lobby", skin);
+	    // Add BAck button 
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                netManager.getNetworkClient().stop();
+                selectServerMode(mainmenu, stage);
+            }
+        });
+        
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ServerShutdownAction) {
+                            netManager.getNetworkClient().stop();
+                            selectServerMode(mainmenu, stage);
+                        }
+                    }
+                }
+        );
+        
+        return exitButton;
+    }
 }

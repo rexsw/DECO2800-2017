@@ -1,5 +1,6 @@
 package com.deco2800.marswars.net;
 
+import com.deco2800.marswars.util.ServerGameInformation;
 import com.esotericsoftware.kryonet.Connection;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.Map;
 public class ServerConnectionManager extends ConnectionManager {
 	// Lookup of connection id to User
 	private Map<Integer, ServerUser> idToUser = new HashMap<>();
+	// Game information to start a new game
+	private ServerGameInformation gameInfo = new ServerGameInformation();
 
 	
 	/**
@@ -67,16 +70,24 @@ public class ServerConnectionManager extends ConnectionManager {
 	 * @param connection The connection the action was received from.
      * @param action The MessageAction that was received.
 	 */
-	private void handleMessageAction(Connection connection, MessageAction action) {
+	private void handleChatAction(Connection connection, ChatAction action) {
         ServerUser from = this.idToUser.get(connection.getID());
 
         if (from == null) {
             return; // We don't know them
         }
-
-        MessageAction newAction = new MessageAction(from.getUsername(), action.getMessage());
-
-        this.broadcastAction(newAction);
+        
+        if (action instanceof MessageAction) {
+            // Cast from ChatAction to MessageAction so message can be extracted.
+            MessageAction msg = (MessageAction) action;
+            // Send message with username
+            MessageAction newAction = new MessageAction(from.getUsername(), msg.getMessage());
+            this.broadcastAction(newAction);
+        } else if (action instanceof LobbyMessageAction) {
+            LobbyMessageAction msg = (LobbyMessageAction) action;
+            LobbyMessageAction lobbyAction = new LobbyMessageAction(from.getUsername(), msg.getMessage());
+            this.broadcastAction(lobbyAction);
+        }
 	}
 	
 	/**
@@ -96,10 +107,50 @@ public class ServerConnectionManager extends ConnectionManager {
         }
         
         idToUser.get(connectionID).setReady(readyStatus);
-        ReadyAction updatedUser = new ReadyAction(readyStatus);
-        broadcastAction(updatedUser);
+        LobbyAction lobbyAction = new LobbyAction(getUserList());
+        this.broadcastAction(lobbyAction);
     } 
 	
+	private void handleLobbyRequestAction(Connection connection) {
+	    LobbyAction lobby = new LobbyAction(getUserList());
+	    this.broadcastAction(lobby);
+	}
+	
+	private void handleStartRequestAction() {
+	    StartGameAction action;
+	    if (arePlayersReady() && gameInfo.isNewGameValid()) {
+	        action = new StartGameAction(true, gameInfo);
+	    } else {
+	        action = new StartGameAction(false, gameInfo);
+	    }
+	    this.broadcastAction(action);
+	}
+	
+	private void handleMapSizeAction(MapSizeAction action) {
+	    gameInfo.setMapSize(action.getMapSize());
+	    GameInfoAction toSend = new GameInfoAction(gameInfo);
+	    this.broadcastAction(toSend);
+	}
+	
+	private void handleMapTypeAction(MapTypeAction action) {
+	    gameInfo.setMapType(action.getMapType());
+	    GameInfoAction toSend = new GameInfoAction(gameInfo);
+	    this.broadcastAction(toSend);
+	}
+	
+	private void handleGameInfoRequest() {
+	    GameInfoAction toSend = new GameInfoAction(gameInfo);
+	    this.broadcastAction(toSend);
+	}
+	
+	private boolean arePlayersReady() {
+	    for (ServerUser user : idToUser.values()) {
+	        if (!user.isReady()) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 	@Override
 	public void disconnected(Connection connection) {
 		int id = connection.getID();
@@ -118,13 +169,31 @@ public class ServerConnectionManager extends ConnectionManager {
 		    JoinLobbyAction action = (JoinLobbyAction) o;
 		    handleJoinLobbyAction(connection, action);
 		    
-		} else if (o instanceof MessageAction) {
-			MessageAction action = (MessageAction) o;
-			handleMessageAction(connection, action);
+		} else if (o instanceof ChatAction) {
+		    ChatAction action = (ChatAction) o;
+		    handleChatAction(connection, action);
 
 		} else if (o instanceof ReadyAction) {
 		    ReadyAction action = (ReadyAction) o;
 		    handleReadyAction(connection, action);
+		    
+		} else if (o instanceof LobbyRequestAction) {
+		    handleLobbyRequestAction(connection);
+		    
+		} else if (o instanceof StartRequestAction) {
+		    handleStartRequestAction();
+		    
+		} else if (o instanceof MapSizeAction) {
+		    MapSizeAction action = (MapSizeAction) o;
+		    handleMapSizeAction(action);
+		    
+		} else if (o instanceof MapTypeAction) {
+		    MapTypeAction action = (MapTypeAction) o;
+		    handleMapTypeAction(action);
+		    
+		} else if (o instanceof RequestGameInfoAction) {
+		    handleGameInfoRequest();
+		    
 		}
 	}
 }
