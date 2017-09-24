@@ -269,7 +269,7 @@ public class GameStats{
 	 * @return the window the stats were added to
 	 */
 	private Window buildStats(){
-		window.setDebug(true);
+		//window.setDebug(true);
 		window.setSize(STATSWIDTH, STATSHEIGHT);
 		window.setPosition((Gdx.graphics.getWidth()-STATSWIDTH)/2, (Gdx.graphics.getHeight()-STATSHEIGHT)/2);
 		window.align(Align.center);

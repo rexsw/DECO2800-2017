@@ -25,8 +25,7 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
  * then progressing to multiplayer and picking between starting a 
  * server and joining a server is another new table.
  * 
- * FLOW DIAGRAM: 
- * TODO add in flow diagram of the main menu
+ * See MenuScreen.java for breakdowm of the main menu stages 
  *  
  * @author Toby Guinea
  *
@@ -57,8 +56,8 @@ public class MainMenu {
 	public MainMenu(Skin skin, Stage stage) {
 		this.skin = skin;
 		this.stage = stage; 
-		this.mainmenu = new Window("Its a start", skin); 
-		this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		this.mainmenu = new Window("", skin); 
+		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		GameManager.get().setMainMenu(this);
 		createMenu();
@@ -85,24 +84,44 @@ public class MainMenu {
 	    
 		this.stage.addActor(mainmenu);
 	}
-		
-	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize){
+	
+	/**
+	 * Method called by MenuScreen to start off the game with the given parameters 
+	 * @param start
+	 * @param mapType
+	 * @param mapSize
+	 * @param aITeams
+	 * @param playerTeams
+	 */
+	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
 		gameStarted = start;
 		if (gameStarted){
-			game = new Game(mapType, mapSize); //Start up a new game
+			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 	}
 	
+	/**
+	 * Flags the game as ended
+	 */
 	public void endGame(){
 		gameStarted = false;
 	}
 	
+	/**
+	 * Flags the game as started
+	 * @return
+	 */
 	public boolean gameStarted(){
 		boolean started = gameStarted;
 		return started; 
 	}
 	
+	/**
+	 * Resizes the main menu according to the stage dimensions
+	 * @param width
+	 * @param height
+	 */
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
 		this.mainmenu.setSize(width, height);
@@ -111,6 +130,12 @@ public class MainMenu {
 		}
 	}
 	
+	/**
+	 * Renders the main menu. 
+	 * If the game has started, it ensures the game is rendered too
+	 * @param batch
+	 * @param camera
+	 */
 	public void renderGame(SpriteBatch batch, OrthographicCamera camera){
 		if(gameStarted){
 			game.render(batch, camera);
