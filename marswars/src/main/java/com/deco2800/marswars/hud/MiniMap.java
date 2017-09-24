@@ -108,7 +108,7 @@ public class MiniMap {
         try {
             entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y].remove();
         } catch (NullPointerException e) {
-            //something went wronga
+            //actor was already removed
         }
         entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
 
