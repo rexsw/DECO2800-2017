@@ -1,5 +1,8 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
@@ -9,10 +12,6 @@ import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.lwjgl.Sys;
 import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.*;
 
@@ -33,8 +32,6 @@ public class WeatherManager extends Manager implements Tickable {
     private boolean damaged = false;
     private boolean iteratorSet = false;
     private boolean floodWatersExist = false;
-
-    private Iterator<BaseEntity> iterator;
     // Set as a class variable so that buildings can be unpaused properly
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
 
@@ -135,8 +132,12 @@ public class WeatherManager extends Manager implements Tickable {
         // assuming that the function will not always be called 5 seconds apart
         if (timeManager.getPlaySeconds() % timeBetween > condition && ! damaged) {
             for (BaseEntity e: damagedUnits) {
+                //if (((Soldier) e).getHealth() <
+                //        ((Soldier) e).getMaxHealth() / 10) {
+                    // Check for existing action and complete before deletion
+                //}
                 ((Soldier) e).setHealth(((Soldier) e).getHealth() -
-                        (((Soldier) e)).getHealth() / 10);
+                        (((Soldier) e)).getMaxHealth() / 10);
             }
             damaged = true;
         } else if (timeManager.getPlaySeconds() % timeBetween <= condition) {
@@ -151,9 +152,9 @@ public class WeatherManager extends Manager implements Tickable {
      */
     private void resumeProduction(List<BaseEntity> pausedBuildings,
                                   List<float []> areaOfEffect) {
-        Iterator buildingIterator = pausedBuildings.iterator();
+        Iterator<BaseEntity> buildingIterator = pausedBuildings.iterator();
         while (buildingIterator.hasNext()) {
-            BaseEntity e = (BaseEntity) buildingIterator.next();
+            BaseEntity e = buildingIterator.next();
             boolean stillFlooded = false;
             for (float [] tile: areaOfEffect) {
                 if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
@@ -335,7 +336,6 @@ public class WeatherManager extends Manager implements Tickable {
      * none currently exist.
      */
     private void generateFirstDrop() {
-        //LOGGER.info("GENERATING DROP");
         Random r = new Random();
         int width = world.getWidth();
         int length = world.getLength();
@@ -367,39 +367,52 @@ public class WeatherManager extends Manager implements Tickable {
         world = GameManager.get().getWorld();
         List<BaseEntity> entities = world.getEntities();
         Boolean waterFound = false;
-        //int count = 10;
-        if (! iteratorSet) {
-            iterator = entities.iterator();
-            iteratorSet = true;
-        }
-        // Find existing water entities
-        if (iterator.hasNext()) {
-            BaseEntity entity = iterator.next();
-            if (entity instanceof Water) {
+        int waterCount = 0;
+
+        List<BaseEntity> removeEntities = new ArrayList<>();
+        for (BaseEntity e: entities) {
+            if (e instanceof Water) {
                 waterFound = true;
-                // Remove Water with 10% chance every call
-                //if (random.nextInt(100) > 90) {
-                ((Water) entity).setHealth(0);
-                GameManager.get().getWorld().removeEntity(entity);
-                //count--;
-                //}
+                removeEntities.add(e);
+                waterCount++;
+                if (waterCount == 10) {
+                    break;
+                }
+            }
+        }
+        if (waterFound) {
+            for (BaseEntity water: removeEntities) {
+                world.removeEntity(water);
             }
         } else {
-            // WILL CURRENTLY REMOVE ALL WATER ON MAP
             floodWatersExist = false;
         }
+        removeEntities.clear();
         return floodWatersExist;
+    }
+
+    public void addRainVisuals(SpriteBatch batch) {
+        if (this.isRaining()) {
+            // Particle for rain visuals
+            ParticleEffect effect = new ParticleEffect();
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain.p"),
+                    Gdx.files.internal("resources/WeatherAssets"));
+            effect.setPosition(Gdx.graphics.getWidth() / 2,
+                    Gdx.graphics.getHeight());
+            effect.start();
+            effect.draw(batch);
+        }
     }
 
     //POSSIBLY ADD FUNCTION FOR PERIODICALLY ADDING MORE WATER IN NEW PLACES,
     // OR ADD LOOP IN FIRST DROP TO GENERATE 3 to 5 pools
-
     /**
      * Causes effects to come into play each game tick.
      * @param tick Current game tick
      */
     @Override
     public void onTick(int tick) {
+
         //this.setWeatherEvent();
     }
 //    //Add Rain Particle effect

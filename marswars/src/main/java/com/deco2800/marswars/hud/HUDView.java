@@ -920,7 +920,8 @@ public class HUDView extends ApplicationAdapter{
 		}
 			
 		if (!gameStarted){
-			GameManager.get().toggleActiveView();
+			LOGGER.debug("Game just started, toggle activew view");
+			//GameManager.get().toggleActiveView();
 			gameStarted = true;
 		}
 
