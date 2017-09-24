@@ -53,22 +53,24 @@ public class Game{
 
 	/**
 	 * Creates a Game instance and starts off the game
+	 * @param playerTeams 
+	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize){
-		startGame(mapType, mapSize);
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
+		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 	
 	/* The method that really starts off the game after Game instantiation. 
 	 * Loads in other game components and initialises Game private variables.
 	 */
-	private void startGame(MapTypes mapType, MapSizeTypes mapSize){
+	private void startGame(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
 		this.createMap(mapType, mapSize);
 		this.view = new HUDView(GameManager.get().getStage(), 
 				GameManager.get().getSkin(), GameManager.get());
 		this.camera = GameManager.get().getCamera();
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
-		this.addAIEntities();
+		this.addAIEntities(aITeams, playerTeams);
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
@@ -149,12 +151,12 @@ public class Game{
 	/*
 	 * adds entities for the ai and set then to be ai owned
 	 */
-	private void addAIEntities() {
+	private void addAIEntities(int aITeams, int playerTeams) {
 		LOGGER.info("Adding entitires for the AI");
 		
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
-		setPlayer(length, width, 1, 1);
+		setPlayer(length, width, aITeams, playerTeams);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
