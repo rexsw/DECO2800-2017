@@ -92,11 +92,14 @@ public class Game{
 
 	/*
 	 * Initializes fog of war
+	 * Multiseleciton tiles are also initialized here
 	 */
 	private void fogOfWar() {
 		FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
 		fogOfWar.initialFog(GameManager.get().getWorld().getWidth(), GameManager.get().getWorld().getLength());
 		FogWorld.initializeFogWorld(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+
+		//these are initialization for multiselection tiles
 		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
 		multiSelection.resetSelectedTiles();
 		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
