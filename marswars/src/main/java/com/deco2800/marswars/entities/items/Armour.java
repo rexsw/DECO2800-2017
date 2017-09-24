@@ -21,7 +21,6 @@ import java.util.List;
 public class Armour extends Item {
 
 	private ArmourType type; //Enumerate of the specific Armour item that has its meta data
-	//private int lvl; //level of the item
 	private List<Effect> effects; //List of effects the Armour item has.
 
 	/**

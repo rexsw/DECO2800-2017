@@ -37,13 +37,109 @@ public class TechnologyManager extends Manager{
     private Technology special;
     private ArrayList<BuildingType> buildingsAvailable;
 
+    private ArrayList<Technology> armourTech2Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> armourTech3Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> armourTech4Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> attackTech2Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> attackTech3Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> attackTech4Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> speedTech2Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> speedTech3Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> speedTech4Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> healthTech2Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> healthTech3Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> healthTech4Parents = new ArrayList<Technology>();
+    private ArrayList<Technology> cowTechParents = new ArrayList<Technology>();
+    private ArrayList<Technology> steroidsParents = new ArrayList<Technology>();
+    private ArrayList<Technology> vampireParents = new ArrayList<Technology>();
+
+
+
     public TechnologyManager() {
-        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Upgrade Cost", new ArrayList<Technology>(),
+
+        //Armour tech set up
+        techMap.put(1, new Technology(new int[]{10, 0, 0, 0}, "Armour 1", new ArrayList<>(),
                 "A cheap technology"));
-        techMap.put(2, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Attack", new ArrayList<Technology>(),
+        this.armourTech2Parents = new ArrayList<>();
+        armourTech2Parents.add(techMap.get(1));
+        techMap.put(2, new Technology(new int[]{10, 10, 0, 0}, "Armour 2", armourTech2Parents,
                 "An expensive technology"));
-        techMap.put(3, new Technology(new int[]{30, 0, 0, 0}, "Upgrade Defense", new ArrayList<Technology>(),
+        this.armourTech3Parents = new ArrayList<>();
+        armourTech3Parents.add(techMap.get(2));
+        techMap.put(3, new Technology(new int[]{10, 10, 10, 0}, "Armour 3", armourTech3Parents,
                 "An expensive technology"));
+        this.armourTech4Parents = new ArrayList<>();
+        armourTech4Parents.add(techMap.get(3));
+        techMap.put(4, new Technology(new int[]{10, 10, 10, 10}, "Armour 4", armourTech4Parents,
+                "An expensive technology"));
+
+        //Damage tech set up
+        techMap.put(5, new Technology(new int[]{0, 20, 0, 0}, "Damage 1", new ArrayList<>(),
+                "An expensive technology"));
+        this.attackTech2Parents = new ArrayList<>();
+        attackTech2Parents.add(techMap.get(5));
+        techMap.put(6, new Technology(new int[]{5, 25, 0, 0}, "Damage 2", attackTech2Parents,
+                "An expensive technology"));
+        this.attackTech3Parents = new ArrayList<>();
+        attackTech3Parents.add(techMap.get(6));
+        techMap.put(7, new Technology(new int[]{10, 30, 5, 0}, "Damage 3", attackTech3Parents,
+                "An expensive technology"));
+        this.attackTech4Parents = new ArrayList<>();
+        attackTech4Parents.add(techMap.get(7));
+        techMap.put(8, new Technology(new int[]{30, 30, 10, 5}, "Damage 4", attackTech4Parents,
+                "An expensive technology"));
+
+
+        //Speed tech Set up
+        techMap.put(9, new Technology(new int[]{0, 0, 5, 5}, "Speed 1", new ArrayList<Technology>(),
+                "An expensive technology"));
+        this.speedTech2Parents = new ArrayList<>();
+        speedTech2Parents.add(techMap.get(9));
+        techMap.put(10, new Technology(new int[]{10, 10, 10, 10}, "Speed 2", speedTech2Parents,
+                "An expensive technology"));
+        this.speedTech3Parents = new ArrayList<>();
+        speedTech3Parents.add(techMap.get(10));
+        techMap.put(11, new Technology(new int[]{15, 15, 15, 15}, "Speed 3", speedTech3Parents,
+                "An expensive technology"));
+        this.speedTech4Parents = new ArrayList<>();
+        speedTech4Parents.add(techMap.get(11));
+        techMap.put(12, new Technology(new int[]{20, 20, 20, 25}, "Speed 4", speedTech4Parents,
+                "An expensive technology"));
+
+
+        //Health Tech Set up
+        techMap.put(13, new Technology(new int[]{0, 0, 0, 20}, "Health 1", new ArrayList<Technology>(),
+                "An expensive technology"));
+        this.healthTech2Parents = new ArrayList<>();
+        healthTech2Parents.add(techMap.get(13));
+        techMap.put(14, new Technology(new int[]{0, 0, 0, 35}, "Health 2", healthTech2Parents,
+                "An expensive technology"));
+        this.healthTech3Parents = new ArrayList<>();
+        healthTech3Parents.add(techMap.get(14));
+        techMap.put(15, new Technology(new int[]{0, 0, 20, 40}, "Health 3", healthTech3Parents,
+                "An expensive technology"));
+        this.healthTech4Parents = new ArrayList<>();
+        healthTech4Parents.add(techMap.get(15));
+        techMap.put(16, new Technology(new int[]{30, 15, 10, 50}, "Health 4", healthTech4Parents,
+                "An expensive technology"));
+
+
+        //Special tech Set up
+        this.steroidsParents = new ArrayList<>();
+        steroidsParents.add(techMap.get(4));
+        steroidsParents.add(techMap.get(8));
+        steroidsParents.add(techMap.get(16));
+        techMap.put(18, new Technology(new int[]{30, 30, 30, 30}, "Steroids", steroidsParents,
+                "An expensive technology"));
+        this.armourTech3Parents = new ArrayList<>();
+        armourTech3Parents.add(techMap.get(2));
+        techMap.put(19, new Technology(new int[]{100, 100, 100, 100}, "Cow Level", new ArrayList<Technology>(),
+                "An expensive technology"));
+        this.armourTech3Parents = new ArrayList<>();
+        armourTech3Parents.add(techMap.get(2));
+        techMap.put(20, new Technology(new int[]{99999, 9999, 999, 0}, "Vampirism", new ArrayList<Technology>(),
+                "An expensive technology"));
+
 
  // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
@@ -92,16 +188,44 @@ public class TechnologyManager extends Manager{
             //iterate through map and reduce all unit costs
         }
     }
-    public void attackSoldierUpgrade(){
-            unitAttributes.get("Soldier")[2] *= 1.5;
-            //also need to set all existing solider to have this much
+    public void attackUpgrade(){
+        unitAttributes.get("Soldier")[2] *= 2;
+        unitAttributes.get("Soldier")[4] *= 2;
         }
-    public void unlockHeroFactory() {
-        System.out.println("\n Hero Factory unloicked \n");
+    public void armourUpgrade(){
+        unitAttributes.get("Soldier")[3] *= 2;
     }
-    public void unlockArmourLevelOne() {
+    public void unlockHeroFactory() {
+        System.out.println("\n Hero Factory unlocked \n");
+    }
+
+    public void speedUpgrade() {
+        unitAttributes.get("Soldier")[6] *= 2;
+        unitAttributes.get("Soldier")[5] *= 1.4f;
+    }
+    public void healthUpgrade() {
+        unitAttributes.get("Soldier")[1] *= 2;
+    }
+    public void cowLevelUpgrade() {
 
     }
+    public void steroidsUpgrade() {
+        unitAttributes.get("Soldier")[1] *= .5;
+        unitAttributes.get("Soldier")[2] *= 3;
+        unitAttributes.get("Soldier")[3] *= 3;
+        unitAttributes.get("Soldier")[4] *= 3;
+        unitAttributes.get("Soldier")[5] *= 3;
+        unitAttributes.get("Soldier")[6] *= 3;
+    }
+    public void vampirismUpgrade() {
+        unitAttributes.get("Soldier")[1] *= 9999;
+        unitAttributes.get("Soldier")[2] *= 9999;
+        unitAttributes.get("Soldier")[3] *= 9999;
+        unitAttributes.get("Soldier")[4] *= 9999;
+        unitAttributes.get("Soldier")[5] *= 9999;
+        unitAttributes.get("Soldier")[6] *= 9999;
+    }
+
     public void unlockArmourLevelTwo() {
 
     }
@@ -157,10 +281,10 @@ public class TechnologyManager extends Manager{
         if (!(resourceManager.getCrystal(teamid) > tech.getCost()[1])) {
             return "Insufficient Crystals";
         }
-        if (!(resourceManager.getWater(teamid) > tech.getCost()[1])) {
+        if (!(resourceManager.getWater(teamid) > tech.getCost()[2])) {
             return "Insufficient Water levels";
         }
-        if (!(resourceManager.getBiomass(teamid) > tech.getCost()[1])) {
+        if (!(resourceManager.getBiomass(teamid) > tech.getCost()[3])) {
             return "Insufficient Biomass";
         }
         return activateTech(techMan, tech, resourceManager, techID, teamid);
@@ -172,32 +296,31 @@ public class TechnologyManager extends Manager{
         resourceManager.setWater(resourceManager.getWater(teamid) - tech.getCost()[2], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
-        if(techID == 1){
-            //unlockHeroFactory();
-            attackSoldierUpgrade();
+        if(techID == 1 || techID == 2 || techID == 3 || techID == 4){
+            armourUpgrade();
         }
-        if(techID == 2){
-            attackSoldierUpgrade();
-            unlockArmourLevelOne();
+        if(techID == 5 || techID == 6 || techID == 7 || techID == 8){
+            attackUpgrade();
         }
-        if(techID == 3){
-            unlockArmourLevelTwo();
+        if(techID == 9 || techID == 10 || techID == 11 || techID == 12){
+            speedUpgrade();
         }
-        if(techID == 4){
-            unlockArmourLevelThree();
+        if(techID == 13 || techID == 14 || techID == 15 || techID == 16){
+            healthUpgrade();
         }
-        if(techID == 5){
-            unlockWeaponLevelOne();
+        if(techID == 17){
+            unlockHeroFactory();
         }
-        if(techID == 6){
-            unlockWeaponLevelTwo();
+        if(techID == 18){
+            steroidsUpgrade();
         }
-        if(techID == 7){
-            unlockWeaponLevelThree();
+        if(techID == 19){
+            cowLevelUpgrade();
         }
-        if(techID == 8){
-            unlockSpecial();
+        if(techID == 20){
+            vampirismUpgrade();
         }
+        System.out.println("######################################");
         return "Technology successfully researched";
     }
     private void setUpHeroTechs() {
@@ -249,14 +372,14 @@ public class TechnologyManager extends Manager{
     }
 
     private void setUpTechMap() {
-        techMap.put(1, heroFactory);
-        techMap.put(2, armourLevelOne);
-        techMap.put(3, armourLevelTwo);
-        techMap.put(4, armourLevelThree);
-        techMap.put(5, weaponLevelOne);
-        techMap.put(6, weaponLevelTwo);
-        techMap.put(7, weaponLevelThree);
-        techMap.put(8, special);
+        techMap.put(17, heroFactory);
+        techMap.put(21, armourLevelOne);
+        techMap.put(22, armourLevelTwo);
+        techMap.put(23, armourLevelThree);
+        techMap.put(24, weaponLevelOne);
+        techMap.put(25, weaponLevelTwo);
+        techMap.put(26, weaponLevelThree);
+        techMap.put(27, special);
     }
     
     /**

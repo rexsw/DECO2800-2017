@@ -172,6 +172,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			this.setGotHit(true);
 		}
 		if (health <= 0) {
+			if (this instanceof Carrier) {
+				((Carrier)this).unloadPassenger();
+			}
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			if(this.owner == -1) {
@@ -185,7 +188,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			this.health = this.getMaxHealth();
 			return;
 		}
-		this.health  = health;
+		if(this instanceof Soldier && ((Soldier)this).getLoadStatus()!=1) {
+			this.health = health;
+		}
 	}
 
 	/**
@@ -266,12 +271,14 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	@Override
 	public void setLoyalty(int loyalty) {
 		if (loyalty < 0) {
+			if(this instanceof Carrier) ((Carrier)this).unloadPassenger();
 			this.loyalty = this.getMaxLoyalty();
 			this.setOwner(this.getEnemyHackerOwner());
 			this.ownerChanged = true;
 		} else if (loyalty > getMaxLoyalty()) {
 			this.loyalty = getMaxLoyalty();
 		} else {
+			if(((Soldier)this).getLoadStatus()!=1)
 			this.loyalty = loyalty;
 		}
 	}
