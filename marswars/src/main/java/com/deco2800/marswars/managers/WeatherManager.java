@@ -39,6 +39,9 @@ public class WeatherManager extends Manager implements Tickable {
      * Returns true if a weather event is currently in progress.
      */
     public boolean setWeatherEvent() {
+        /* Get world state each call to ensure no changes have occurred
+         (allows for dynamic switching between worlds) */
+        world = GameManager.get().getWorld();
         boolean status = false;
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
@@ -364,7 +367,9 @@ public class WeatherManager extends Manager implements Tickable {
      * testing).
      */
     public boolean retreatWaters() {
-        //LOGGER.info("GENERATING FLOOD");
+        /* Get world state each call to ensure no changes have occurred
+         (allows for dynamic switching between worlds) */
+        world = GameManager.get().getWorld();
         List<BaseEntity> entities = world.getEntities();
         Boolean waterFound = false;
         //int count = 10;
