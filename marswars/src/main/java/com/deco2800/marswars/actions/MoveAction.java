@@ -119,7 +119,7 @@ public class MoveAction implements DecoAction {
 			//set missile to face towards the moving direction
 			if(entity instanceof MissileEntity) {
 				MissileEntity missile = (MissileEntity) entity;
-				missile.missileFaceTowards(tmpgoalX,tmpgoalY);
+				missile.faceTowards(tmpgoalX,tmpgoalY);
 			}
 			/* If we have arrived (or close enough to) then remove this point from the path and continue */
 			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {

@@ -136,7 +136,7 @@ public class MissileEntity extends BaseEntity implements HasAction{
     	return  ownerEntity;
     }
     
-    public void missileFaceTowards(float x, float y) {
+    public void faceTowards(float x, float y) {
 		if(this.getPosX()>=x && this.getPosY()>=y) {
 			this.setMissileTexture(downleftMissileTexture);
 		}
