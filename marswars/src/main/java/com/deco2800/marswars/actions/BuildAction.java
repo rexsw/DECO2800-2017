@@ -72,7 +72,7 @@ public class BuildAction implements DecoAction{
 	 * When called on, switches state to move builder and begin building
 	 */
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused && completed == false) {
+		if (! timeManager.isPaused() && ! actionPaused && !completed) {
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);

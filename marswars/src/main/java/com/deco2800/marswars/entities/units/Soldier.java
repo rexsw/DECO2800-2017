@@ -123,11 +123,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		int y = (int) target.getPosY();
 		if (setTargetType(target)) {
 			currentAction = Optional.of(new AttackAction(this, target));
-			//LOGGER.info("Assigned action attack target at " + x + " " + y);
 		} 
 		else {
 			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			//LOGGER.info("Same owner");
 		}
 	}
 	
@@ -161,7 +159,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		//check if this belongs to a* player (need to change for multiplayer):
 		if(!this.isAi() && this.getLoadStatus() != 1) {
 			handler.registerForRightClickNotification(this);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			this.setTexture(selectedTextureName);
 			LOGGER.info("Clicked on soldier");
 			   this.makeSelected();
@@ -200,7 +197,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 		} catch (IndexOutOfBoundsException e) {
 			// if the right click occurs outside of the game world, nothing will happen
-			//LOGGER.info("Right click occurred outside game world.");
+			LOGGER.info("Right click occurred outside game world.",e);
 			this.setTexture(defaultTextureName);
 			return;
 		}
@@ -253,7 +250,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			boolean isTheEntityLoaded=false;
 
 
-			if(getHealth()<=0)modifyFogOfWarMap(false,3);
+			if(getHealth()<=0)
+				modifyFogOfWarMap(false,3);
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -300,7 +298,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					// No good
 					return;
 				}
-				//LOGGER.info("Soldier is on a tile with another entity, move out of the way");
 				/* Finally move to that position using a move action */
 				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
 			}
@@ -314,7 +311,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				//If an attackable entity
 				if (e instanceof AttackableEntity) {
 					//Not owned by the same player
-					AttackableEntity attackable = ((AttackableEntity) e);
+					AttackableEntity attackable = (AttackableEntity) e;
 					if (!this.sameOwner(attackable)) {
 						//Within attacking distance
 						float diffX = attackable.getPosX() - this.getPosX();
@@ -331,10 +328,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			return;
 		}
 		if (!currentAction.get().completed()) {
-			//LOGGER.info("DO action");
 			currentAction.get().doAction();
 		} else {
-			//LOGGER.info("Action is completed. Deleting");
 			currentAction = Optional.empty();
 
 		}
@@ -374,6 +369,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (!enemy.isEmpty()) {
 					timidBehaviour(enemy);
 				}
+				break;
+			default:
 				break;
 		}
 	}
@@ -489,7 +486,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	
 	@Override
 	public String toString(){
-		return "Soldier";
+		return this.name;
 	}
 	
 	/**
@@ -530,7 +527,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @return The stats of the entity
 	 */
 	public EntityStats getStats() {
-		return new EntityStats("Soldier", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+		return new EntityStats(this.name, this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 
 	@Override

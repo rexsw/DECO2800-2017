@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
-import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 
@@ -22,8 +21,7 @@ public class ShootAction implements DecoAction{
 	boolean completed = false;
 	private int attackInterval = 1000;
 	private int attackSpeed;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShootAction.class);
+
 	
 	enum State {
 		COOLDOWN,
@@ -49,6 +47,8 @@ public class ShootAction implements DecoAction{
 					state = State.COOLDOWN;
 					break;
 				}
+				break;
+			default:
 				break;
 		}
 	}
