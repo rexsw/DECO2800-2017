@@ -73,7 +73,7 @@ public class RandomMapWriter {
                 "renderorder=\"right-down\" width=\""+width+"\" height=\""+height+"\" tilewidth=\""+tileWidth+"\" " +
                 "tileheight=\""+tileHeight+"\" nextobjectid=\"1\">\n" +
                 " <tileset firstgid=\"1\" source=\"tileset1.tsx\"/>\n" +
-                " <layer name=\"Tile Layer 1\" width=\"100\" height=\"100\">\n" +
+                " <layer name=\"Tile Layer 1\" width=\""+width+"\" height=\""+width+"\">\n" +
                 "  <data encoding=\"csv\">");
 
         //fill from noisemap
