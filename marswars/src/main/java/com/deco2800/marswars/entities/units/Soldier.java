@@ -342,36 +342,38 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @param enemy
 	 */
 	public void getStances(List<AttackableEntity> enemy) {
-		switch (getStance()) {
-			//Passive
-			case 0:	
-				break;
-			//Defensive
-			case 1:
-				if (!enemy.isEmpty()) {
-					defensiveBehaviour(enemy);
-				}
-				break;
-			//Aggressive
-			case 2:
-				if (!enemy.isEmpty()) {
-					aggressiveBehaviour(enemy);
-				}
-				break;
-			//Skirmishing
-			case 3:
-				if (!enemy.isEmpty()) {
-					skirmishingBehaviour(enemy);
-				}
-				break;
-			//Timid
-			case 4:
-				if (!enemy.isEmpty()) {
-					timidBehaviour(enemy);
-				}
-				break;
-			default:
-				break;
+		if(this.getLoadStatus()!=1) {
+			switch (getStance()) {
+				//Passive
+				case 0:
+					break;
+				//Defensive
+				case 1:
+					if (!enemy.isEmpty()) {
+						defensiveBehaviour(enemy);
+					}
+					break;
+				//Aggressive
+				case 2:
+					if (!enemy.isEmpty()) {
+						aggressiveBehaviour(enemy);
+					}
+					break;
+				//Skirmishing
+				case 3:
+					if (!enemy.isEmpty()) {
+						skirmishingBehaviour(enemy);
+					}
+					break;
+				//Timid
+				case 4:
+					if (!enemy.isEmpty()) {
+						timidBehaviour(enemy);
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	

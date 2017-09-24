@@ -25,8 +25,14 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Initially a part of marswars.java, this class takes care of all the 
+ * in-game input.
+ */
 public class InputProcessor {
-
+	/*DECLARING VARIABLES*/
+	
+	/*Multiplayer chat*/
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
@@ -34,18 +40,34 @@ public class InputProcessor {
 	OrthographicCamera camera;
 	private Stage stage;
 	private Skin skin;
-	Set<Integer> downKeys = new HashSet<>();
-	ShortCut shortCut = new ShortCut();
-	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-
+	
+	/*Keyboard inputs*/
+	private Set<Integer> downKeys;
+	private ShortCut shortCut;
+	
+	/*Mixed input types*/
+	private MultiSelection multiSelection; 
+	
+	/*Toggles*/
 	private boolean multiSelectionFlag = false;
-	private MultiSelection multiSelection = new MultiSelection();
 
+
+	/*Initialising through GameManager*/
 	MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InputProcessor.class);
 
+	/**
+	 * Creates and sets the game's input processors
+	 * @param camera
+	 * @param stage
+	 * @param skin
+	 */
 	public InputProcessor(OrthographicCamera camera, Stage stage, Skin skin) {
+		this.shortCut = new ShortCut();
+		this.multiSelection = new MultiSelection();
+		this.downKeys = new HashSet<>();
 		this.camera = camera;
 		this.stage = stage;
 		this.skin = skin;
@@ -65,7 +87,7 @@ public class InputProcessor {
 
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-
+		
 		if (this.downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
 			this.downKeys.remove(Input.Keys.M);
@@ -76,7 +98,7 @@ public class InputProcessor {
 			// Don't process any inputs if in map view mode
 			return;
 		}
-
+		
 		shortCut.process(camera);
 
 		// Move the map dependent on the cursor position
@@ -111,10 +133,10 @@ public class InputProcessor {
 		GameManager.get().setCamera(this.camera);
 	}
 
+	/**
+	 * Setup inputs for the buttons and the game itself
+	 */
 	public void setInputProcessor() {
-		/*
-		 * Setup inputs for the buttons and the game itself
-		 */
 		/*
 		 * Setup an Input Multiplexer so that input can be handled by both the
 		 * UI and the game
@@ -261,40 +283,37 @@ public class InputProcessor {
 			 */
 			@Override
 			public boolean scrolled(int amount) {
-				if (GameManager.get().getActiveView() == 1) {
-					// if we are currently on the megamap, cancel scroll
-					return false;
+				// if there is no world loaded, or we are currently on the megamap, cancel scroll
+				if (GameManager.get().getWorld() != null || GameManager.get().getActiveView() == 1){
+					int cursorX = Gdx.input.getX();
+					int cursorY = Gdx.input.getY();
+
+					int windowWidth = Gdx.graphics.getWidth();
+					int windowHeight = Gdx.graphics.getHeight();
+
+					if (InputProcessor.this.camera.zoom > 0.5 && amount == -1) { // zoom
+																					// in
+						// xMag/yMag is how is the mouse far from centre-screen
+						// on each axis
+						double xMag = (double) cursorX - (windowWidth / 2);
+						double yMag = (double) (windowHeight / 2) - cursorY;
+
+						InputProcessor.this.camera.zoom /= 1.2;
+						// shift by mouse offset
+						InputProcessor.this.camera.translate((float) xMag, (float) yMag);
+					} else if (InputProcessor.this.camera.zoom < 10 && amount == 1) { // zoom
+																						// out
+						InputProcessor.this.camera.zoom *= 1.2;
+					}
+					forceMapLimits(); // has the user reached the edge?
+					return true;
 				}
-
-				int cursorX = Gdx.input.getX();
-				int cursorY = Gdx.input.getY();
-
-				int windowWidth = Gdx.graphics.getWidth();
-				int windowHeight = Gdx.graphics.getHeight();
-
-				if (InputProcessor.this.camera.zoom > 0.5 && amount == -1) { // zoom
-																				// in
-					// xMag/yMag is how is the mouse far from centre-screen
-					// on each axis
-					double xMag = (double) cursorX - (windowWidth / 2);
-					double yMag = (double) (windowHeight / 2) - cursorY;
-
-					InputProcessor.this.camera.zoom /= 1.2;
-					// shift by mouse offset
-					InputProcessor.this.camera.translate((float) xMag, (float) yMag);
-				} else if (InputProcessor.this.camera.zoom < 10 && amount == 1) { // zoom
-																					// out
-					InputProcessor.this.camera.zoom *= 1.2;
-				}
-				forceMapLimits(); // has the user reached the edge?
-				return true;
+				//no world loaded, or on megamap
+				return false;
 			}
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		if (GameManager.get().getWorld() != null) {
-			GameManager.get().toggleActiveView();
-		}
 	}
 
 	/**

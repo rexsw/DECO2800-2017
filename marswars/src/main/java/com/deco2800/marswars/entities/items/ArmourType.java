@@ -27,7 +27,6 @@ public enum ArmourType implements ItemType {
 	private int[] baseCost;
 	private int baseHealth;
 	private float baseSpeed;
-	// private float ratio;
 	private String texture;
 
 	/**

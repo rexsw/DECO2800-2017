@@ -159,7 +159,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			return;
 		}
 		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-			if(r instanceof AttackableEntity && !x.sameOwner(r)) {
+			if(r instanceof AttackableEntity && !x.sameOwner(r) && ((AttackableEntity) r).getLoadStatus()!=1) {
 				LOGGER.info("ai - setting unit to attack " + r.toString());
 				AttackableEntity y = (AttackableEntity) r;
 				x.attack(y);

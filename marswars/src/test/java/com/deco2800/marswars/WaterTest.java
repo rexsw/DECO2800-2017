@@ -8,6 +8,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class for the Water entity.
+ *
+ * @author Isaac Doidge
+ */
 public class WaterTest {
 
     private Water testDrop;
