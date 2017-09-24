@@ -452,6 +452,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
+			modifyFogOfWarMap(false,3);
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);
 			this.setTexture(defaultTextureName);
