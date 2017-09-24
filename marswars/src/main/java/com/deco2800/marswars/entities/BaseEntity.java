@@ -44,8 +44,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected float speed = 0.05f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
-	final static float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-	final static float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera = GameManager.get().getCamera();
 
 	/**
@@ -564,6 +562,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			float worldY = this.getPosY();
 			float pixelX;
 			float pixelY;
+			float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
+			float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 			//Calculate the position of unit on camera in pixels
 			worldX = (worldY + worldX)/2f;
 			pixelY = tileHeight * (-worldY - 1/2 + worldX);
