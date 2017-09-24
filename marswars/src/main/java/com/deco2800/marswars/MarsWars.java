@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -35,7 +35,6 @@ import java.util.Set;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -61,7 +60,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible;
+	public static int invincible = 0;
 	
 	private Skin skin;
 
@@ -107,7 +106,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Update the input managers
          */
-		this.inputP.handleInput(this.pauseTime);
+		this.inputP.handleInput();
         /*
          * Update the camera
          */
@@ -139,18 +138,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 		batch.dispose();
 
-		if(invincible == 1)
-		{
-			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
-			for(BaseEntity e:entityl)
-			{
-				if(e.getOwner() == -1 && e instanceof AttackableEntity)
-				{
-					((AttackableEntity) e).setHealth(((AttackableEntity) e).getMaxHealth());
-				}
-			}
-		}
+		setInvincible();
+
 	}
+
 
 	/**
 	 * Resizes the viewport.
@@ -175,4 +166,25 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void dispose () {
 		// Don't need this at the moment
 	}
+
+	/**
+	 * If the invincible value is 1, make the enemy's attack to be of no effect
+	 */
+	public void setInvincible(){
+		if(invincible == 1)
+		{
+			List<BaseEntity> entityl = GameManager.get().getWorld().getEntities();
+			for(BaseEntity e:entityl)
+			{
+				if(e.getOwner() > 0 && e instanceof  MissileEntity )
+				{
+					((MissileEntity) e) .setDamage(0);
+				}
+			}
+		}
+	}
+
+
+
+
 }

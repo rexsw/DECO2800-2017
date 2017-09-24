@@ -54,21 +54,22 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     	/* If the action is completed, remove it otherwise keep doing that action */
     	try {
     		// check if the target still exists in the world
-    		float posX = this.getPosX(); float posY = this.getPosY();
+    		float posX = this.getPosX();
+			float posY = this.getPosY();
     		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 			if (find && currentAction.get().completed()) {
 				// check for the positions
 				if (this.getTarget().getPosX() == posX && this.getTarget().getPosY() == posY) {
 					impact();
 					GameManager.get().getWorld().removeEntity(this);
-					//LOGGER.info("target health " + this.getTarget().getHealth());
+
 				} else {
 					GameManager.get().getWorld().removeEntity(this);
 				}
-			} else if (find == true) { // if target is still existing then continue the action
+			} else if (find) { // if target is still existing then continue the action
 				currentAction.get().doAction();
 			} else { // either the target is not existing anymore or the action is completed
-				//LOGGER.info("Action is completed. Deleting");
+
 				currentAction = Optional.empty();
 				GameManager.get().getWorld().removeEntity(this);
 			}
@@ -127,7 +128,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * @param listOfEntity
      * 			the list to add enemy entity
      */
-    public void addEnemyEntity(int areaDamage, ArrayList<AttackableEntity> listOfEntity) {
+    public void addEnemyEntity(int areaDamage, List<AttackableEntity> listOfEntity) {
     	int length = 1 + 2 * areaDamage;
     	BaseWorld world = GameManager.get().getWorld();
     	int posX = (int) this.getTarget().getPosX();
@@ -139,13 +140,13 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 				int currentX = x + posX + areaDamage;
 				int currentY = y + posY + areaDamage;
 				// invalid position
-				//LOGGER.info("Checking valid position");
+
 				if (currentX < 0 || currentX > world.getWidth() || currentY > world.getLength()) {
 					continue;
 				}
 				// check for attackablentity enemy and add them to listOfEntity
 				List<BaseEntity> entitiesList = GameManager.get().getWorld().getEntities(currentX, currentY);
-				if (entitiesList.size() > 0) {
+				if (!entitiesList.isEmpty()) {
 					for (BaseEntity entity: entitiesList) {
 						// need to change the condition at some point
 						if (entity instanceof AttackableEntity && !this.sameOwner(entity)) {
