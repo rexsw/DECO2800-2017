@@ -15,9 +15,9 @@ public class ReadyButton extends TextButton {
     // The Net Manager so you can communicate with the server
     NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
     // Ready Up string
-    private final static String READY_UP = "Ready Up";
+    private static final String READY_UP = "Ready Up";
     // Cancel ready string
-    private final static String CANCEL_READY = "Cancel Ready";
+    private static final String CANCEL_READY = "Cancel Ready";
     
     public ReadyButton(Skin skin) {
         super(READY_UP, skin);

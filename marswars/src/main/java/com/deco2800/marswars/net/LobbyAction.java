@@ -2,6 +2,12 @@ package com.deco2800.marswars.net;
 
 import java.util.ArrayList;
 
+/**
+ * Action for communicating the state of the server and clients lobby.
+ * 
+ * @author James McCall
+ *
+ */
 public class LobbyAction implements Action {
     // A list of users connected to the server
     private ArrayList<LobbyUser> userList;
@@ -21,6 +27,10 @@ public class LobbyAction implements Action {
         this.userList = userList;
     }
     
+    /**
+     * 
+     * @return the list of users in the lobby.
+     */
     public ArrayList<LobbyUser> getUserList() {
         return this.userList;
     }

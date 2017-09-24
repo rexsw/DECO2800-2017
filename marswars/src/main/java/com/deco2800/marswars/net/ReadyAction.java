@@ -5,9 +5,10 @@ public class ReadyAction implements Action {
     private boolean ready;
     private LobbyUser user;
     
-    public ReadyAction() {
-        // Blank constructor needed due to Kryonet
-    }
+    /**
+     * Blank constructor needed due to kryonet.
+     */
+    public ReadyAction() {}
     
     /**
      * Constructor for sending client information to the server.

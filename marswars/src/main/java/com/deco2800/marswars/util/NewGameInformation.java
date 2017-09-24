@@ -32,7 +32,6 @@ public class NewGameInformation {
     }
 
     /**
-     * 
      * @return The currently selected map type, returns null if no map is selected. 
      */
     public MapTypes getMapType() {
@@ -49,7 +48,6 @@ public class NewGameInformation {
     }
 
     /**
-     * 
      * @return The currently selected map size, returns null if no map size is selected.
      */
     public MapSizeTypes getMapSize() {
@@ -82,7 +80,7 @@ public class NewGameInformation {
 
     @Override
     public String toString() {
-        // TODO Implement Proper to string method.
-        return "NewGameInformation";
+        return "NewGameInformation, Map: " + mapType.toString() + " Size: " + mapSize.toString() + " Valid "
+                + String.valueOf(isNewGameValid());
     }
 }

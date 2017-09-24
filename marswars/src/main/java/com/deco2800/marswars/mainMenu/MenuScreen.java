@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.graphics.Texture;
@@ -465,14 +464,29 @@ public class MenuScreen{
 		nav.addActorAt(2, playButton);
 	}
 	
+	/**
+	 * Sets the players joined status to a server to be true.
+	 */
 	public void setJoinedServer(){
 		this.joinedServer = true; 
 	}
 	
+	/**
+	 * Sets the players joined status to a server to be false.
+	 */
 	public void unSetJoinedServer() {
 	    this.joinedServer = false;
 	}
 	
+	/**
+	 * Creates an exit button to leave a multiplayer lobby when clicked. Also sets up a handler that backs teh player
+	 * out of the lobby if they lose connection with the host. 
+	 * 
+	 * @param mainmenu the window the mainmenu is contained in
+	 * @param stage the stage to display on
+	 * @return A button that takes them back from the lobby screen to the server selection screen, also disconnects
+	 *     the user when they do.
+	 */
 	private Button setupExitLobbyButton(Window mainmenu, Stage stage) {
 	    TextButton exitButton = new TextButton("Exit Lobby", skin);
 	    // Add BAck button 
@@ -480,6 +494,7 @@ public class MenuScreen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 netManager.getNetworkClient().stop();
+                unSetJoinedServer();
                 selectServerMode(mainmenu, stage);
             }
         });
@@ -490,6 +505,7 @@ public class MenuScreen{
                     public void received(Connection connection, Object o) {
                         if (o instanceof ServerShutdownAction) {
                             netManager.getNetworkClient().stop();
+                            unSetJoinedServer();
                             selectServerMode(mainmenu, stage);
                         }
                     }

@@ -14,6 +14,12 @@ import com.deco2800.marswars.net.LobbyRequestAction;
 import com.deco2800.marswars.net.LobbyUser;
 import com.esotericsoftware.kryonet.Connection;
 
+/**
+ * A UI element that displays all the current players connected to a multiplayer lobby and their ready status.
+ *  
+ * @author James McCall
+ *
+ */
 public class LobbyPlayerList extends Table {
     // The Net Manager so you can communicate with the server
     private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);

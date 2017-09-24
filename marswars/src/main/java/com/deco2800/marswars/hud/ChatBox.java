@@ -18,7 +18,6 @@ import com.deco2800.marswars.net.MessageAction;
 import com.esotericsoftware.kryonet.Connection;
 
 import static com.deco2800.marswars.mainMenu.MenuScreen.playerType;
-import static sun.audio.AudioPlayer.player;
 
 
 /**

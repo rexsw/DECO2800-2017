@@ -1,18 +1,27 @@
 package com.deco2800.marswars.net;
 
-import com.deco2800.marswars.util.ServerGameInformation;;
+import com.deco2800.marswars.util.ServerGameInformation;
+
+/**
+ * An action that sends the current servers game information to clients.
+ * @author James McCall
+ *
+ */
 public class GameInfoAction implements Action {
     private ServerGameInformation gameInfo;
-    
-    /**
-     * Blank Constructor for Kryonet
-     */
-    public GameInfoAction() {}
+
+    public GameInfoAction() {
+        // Blank constructor for kryonet
+    }
 
     public GameInfoAction(ServerGameInformation gameInfo) {
         this.gameInfo = gameInfo;
     }
-    
+
+    /**
+     * 
+     * @return the game information sent by the server.
+     */
     public ServerGameInformation getGameInfo() {
         return gameInfo;
     }
