@@ -1,9 +1,5 @@
 package com.deco2800.marswars;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL20;
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.weatherEntities.Water;
@@ -14,7 +10,6 @@ import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -25,36 +20,23 @@ import static org.junit.Assert.assertTrue;
  * @author Isaac Doidge
  */
 public class WeatherManagerTest {
-/*
 
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
     private Water testDrop;
+    private BaseWorld world = new BaseWorld(5, 5);
 
     @Before
     public void initalise() {
-        MarsWars mockWar = Mockito.mock(MarsWars.class);
-        HeadlessApplicationConfiguration conf =
-                new HeadlessApplicationConfiguration();
-        new HeadlessApplication(mockWar, conf);
-        Gdx.gl20 = Mockito.mock(GL20.class);
-        Gdx.gl = Gdx.gl20;
+        GameManager.get().setWorld(world);
         testDrop = new Water(1, 1, 0);
     }
 
 
     @Test
     public void testSetWeatherEvent() {
-        */
-/* Set world in here as testCheckPosition requires world to be same as
-        set in WeatherManager *//*
-
-        BaseWorld world = new BaseWorld(5, 5);
-        GameManager.get().setWorld(world);
-        */
-/* Set weatherManager in each class in case unforseen changes occur to
-        class variables in WeatherManager (prevent build errors) *//*
-
+        /* Set weatherManager in each class in case unforseen changes occur to
+        class variables in WeatherManager (prevent build errors) */
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
         // check flood is in effect
@@ -71,11 +53,10 @@ public class WeatherManagerTest {
             Astronaut affectedUnit = new Astronaut(i, i, 0, 0);
             affectedUnit.setMaxHealth(10000);
         }
-        */
-/* Generate multiple water entities in order to test efficacy of private
+        /* Generate multiple water entities in order to test efficacy of private
         methods and their various conditions: Covers checking for existing water
         and bad water placement.
-        World size is 25, so fill world to affect all entities present. *//*
+        World size is 25, so fill world to affect all entities present. */
 
         while (GameManager.get().getWorld().getEntities().size() < 16) {
             // Filling world currently causes loop to continue endlessly for
@@ -100,10 +81,8 @@ public class WeatherManagerTest {
 
         // Remove all floodwater from map
         while (weatherManager.setWeatherEvent()) {
-            */
-/* Wait for system time to advance sufficiently for interval between
-            retreatWaters() calls to be satisfied *//*
-
+        /*Wait for system time to advance sufficiently for interval between
+        retreatWaters() calls to be satisfied */
             try {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
@@ -157,6 +136,5 @@ public class WeatherManagerTest {
         weatherManager.onTick(0);
         assertTrue(true);
     }
-*/
 
 }
