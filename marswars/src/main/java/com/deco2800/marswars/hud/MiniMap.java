@@ -99,17 +99,20 @@ public class MiniMap {
      * remove an entity from the minimap display
      * @param entity the entity to be removed
      */
-/*    public void removeEntity(BaseEntity entity) {
+    public void removeEntity(BaseEntity entity) {
         entitiesOnMap.remove(entity);
         Vector2 coordinates = convertCoordinates(entity);
         if (miniMapDisplay[(int) coordinates.x][(int) coordinates.y] > 0) {
-            miniMapDisplay[(int) coordinates.x][(int) coordinates.y] -= 1;
+            miniMapDisplay[(int) coordinates.x][(int) coordinates.y] = 0;
         }
-        if (entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] != null) {
+        try {
             entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y].remove();
-            entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
+        } catch (NullPointerException e) {
+            //something went wronga
         }
-    }*/
+        entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
+
+    }
 
     /**
      * Convert the given entity's game world coordinates to the minimap corrdinates and rotates them to the correct

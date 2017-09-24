@@ -125,7 +125,7 @@ public class BaseWorld extends AbstractWorld {
 		super.removeEntity(entity);
 		if (entity instanceof Soldier) {
 			// remove entity from the minimap when they are removed from the world
-			//GameManager.get().getMiniMap().removeEntity(entity);
+			GameManager.get().getMiniMap().removeEntity(entity);
 		}
 		// Ensure water is also removed from Collision map upon deletion
 		if (! entity.isCollidable() && ! (entity instanceof Water))
