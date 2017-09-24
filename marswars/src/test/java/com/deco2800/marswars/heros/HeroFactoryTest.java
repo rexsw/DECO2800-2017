@@ -5,17 +5,20 @@ import static org.junit.Assert.*;
 
 import com.deco2800.marswars.buildings.HeroFactory;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.deco2800.marswars.BaseTest;
 import com.deco2800.marswars.actions.*;
 
-/**
- * Created by  Zeid Ismail on 23/09/17
- */
-public class HeroFactoryTest {
+public class HeroFactoryTest extends BaseTest{
 
     HeroFactory heroFactory;
     DecoAction action;
@@ -57,8 +60,9 @@ public class HeroFactoryTest {
      */
     @Test
     public void actionTest() {
-    	 heroFactory.giveAction(action);
+    	 heroFactory.setAction(action);
          assertTrue(heroFactory.getAction().get().equals(action));
+         assertTrue(heroFactory.isWorking());
     }
 
     /**
@@ -89,6 +93,8 @@ public class HeroFactoryTest {
         assertFalse(heroFactory.isSelected());
         heroFactory.select();
         assertTrue(heroFactory.isSelected());
+        heroFactory.deselect();
+        assertFalse(heroFactory.isSelected());
     }
 
     /**
@@ -104,5 +110,33 @@ public class HeroFactoryTest {
         assertFalse(heroFactory1.sameOwner(heroFactory2));
         assertTrue(heroFactory2.sameOwner(heroFactory3));
     }
+    
+    /**
+     * Test the create hero button of hero factory
+     * also, fire up the pressed method, check if the resource has decreased accordingly
+     */
+    @Test
+    public void buttonTest() {
+    	TextButton button = (TextButton) heroFactory.getButton();
+    	
+    	assertEquals("Create Hero", button.getText().toString());
+    	
+    	ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+    	rm.setBiomass(25, heroFactory.getOwner());
+    	heroFactory.buttonWasPressed();
+    	assertFalse(rm.getBiomass(heroFactory.getOwner()) == -5);
+    	
+    	rm.setBiomass(100, heroFactory.getOwner());
+    	heroFactory.buttonWasPressed();
+    	assertEquals(70, rm.getBiomass(heroFactory.getOwner()));
+    }
 
+    /**
+     * Test if the help message is what we expect
+     */
+    @Test
+    public void helperTest() {
+    	Label actual = heroFactory.getHelpText();
+    	assertEquals("You have clicked on a hero factory.", actual.getText().toString());
+    }
 }

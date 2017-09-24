@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Manages the features for the game 
+ * Manages the features for the game. An abstraction of the original marswars.java. 
  * @author Naziah Siddique
  */
 public class Game{	

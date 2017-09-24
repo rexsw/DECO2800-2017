@@ -102,7 +102,6 @@ public class ShortCut {
 		storeTeam();
 		teamOnClick();
 		//moveCameraToBase(camera);
-		quitGame();
 	}
 	
 	/**
@@ -501,16 +500,5 @@ public class ShortCut {
 		} else {
 			soldier = false;
 		}
-	}
-	
-	/**
-	 * This method will stop the game and exit if user press ESC.
-	 * 
-	 */
-	public void quitGame() {
-		if(inputKeys.contains(Input.Keys.ESCAPE)) {
-			System.exit(0);
-		}
-		
 	}
 }

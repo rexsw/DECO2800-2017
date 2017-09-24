@@ -17,7 +17,7 @@ public class LeaveLobbyAction extends ChatAction {
     public String getUsername() {
         return this.username;
     }
-
+    
     @Override
     public String toString() {
         return "*" + this.username + "* left the lobby.";

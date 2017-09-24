@@ -35,7 +35,7 @@ public class WinManagerTest {
 		GameManager.get().setSkin(null);
     }	
 	
-	@Test
+	@Test @Ignore
 	public void combatWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
@@ -49,7 +49,7 @@ public class WinManagerTest {
 		assertTrue(test.isWinner());
 	}
 	
-	@Test
+	@Test @Ignore
 	public void resourceWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();

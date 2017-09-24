@@ -18,7 +18,6 @@ import com.deco2800.marswars.net.MessageAction;
 import com.esotericsoftware.kryonet.Connection;
 
 import static com.deco2800.marswars.mainMenu.MenuScreen.playerType;
-import static sun.audio.AudioPlayer.player;
 
 
 /**
@@ -40,15 +39,16 @@ import static sun.audio.AudioPlayer.player;
  * @author James McCall
  */
 public class ChatBox extends Table {
-    NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
-
+    // Managers sending information to the server and retrieve textures for the various assets. 
+    protected NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
+    private TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
 
     // Size variables for the chat Pane to keep it at a fixed size
     private static final float CHAT_WIDTH = 300;
     private static final float CHAT_HEIGHT = 150;
     
     // This is the text input field for entering messages
-    private TextField messageTextField;
+    protected TextField messageTextField;
     // This is the send button for messages
     private ImageButton sendButton;
     // This is the allows messages to be scrolled 
@@ -57,45 +57,27 @@ public class ChatBox extends Table {
     private Table chatMessages;
     // The skin used to style the table
     private Skin skin;
-    
-    private TextureManager textureManager;
-    private HUDView hud;
 
     /**
      * Creates a new instance of a ChatBox.
      * 
      * @param skin The UI skin to be applied to all elements of the ChatBox.
      */
-    public ChatBox(Skin skin, TextureManager textureManager, HUDView hud) {
+    public ChatBox(Skin skin) {
         this.skin = skin;
-        this.hud = hud;
         // Create the elements of chat box
-        
-        this.setTextureManager(textureManager);
-        this.messageTextField = new TextField("", this.skin);
-        
+        this.messageTextField = new TextField("", this.skin) ; //$NON-NLS-1$
+        this.chatMessages = new Table(this.skin);
+        this.chatPane = new ScrollPane(this.chatMessages, this.skin);
 		//add dispActions button + image for it 
 		Texture arrowImage = textureManager.getTexture("arrow_button");
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);
 		TextureRegionDrawable arrowRegionDraw = new TextureRegionDrawable(arrowRegion);
 		this.sendButton = new ImageButton(arrowRegionDraw);
+		
+		// Setup connection handler so messages can be received form server
+		setUpConnectionHandler();
 
-        this.chatMessages = new Table(this.skin);
-        this.chatPane = new ScrollPane(this.chatMessages, this.skin);
-
-        netManager.getNetworkClient().addConnectionManager(
-                new ConnectionManager() {
-                    @Override
-                    public void received(Connection connection, Object o) {
-                        if (o instanceof ChatAction) {
-                            ChatAction action = (ChatAction) o;
-                            // TODO - reimplement logging? maybe logging manager?
-//                            this.logAction(action);
-                            addNewMessage(action.toString());
-                        }
-                    }
-                }
-        );
         // Set up properties of the elements then set layout
         setUpInputElements();
         setUpChatMessages();        
@@ -145,7 +127,7 @@ public class ChatBox extends Table {
      * 
      * A valid string is not empty.
      */
-    private void sendMessage() {
+    protected void sendMessage() {
         String message = this.messageTextField.getText();
         if (!"".equals(message)) {
             if(playerType==1) {
@@ -198,6 +180,25 @@ public class ChatBox extends Table {
     }
     
     /**
+     * Helper method used to setup connection handler for when a new message to display is recieved.
+     */
+    private void setUpConnectionHandler() {
+        netManager.getNetworkClient().addConnectionManager(
+                new ConnectionManager() {
+                    @Override
+                    public void received(Connection connection, Object o) {
+                        if (o instanceof ChatAction) {
+                            ChatAction action = (ChatAction) o;
+                            // TODO - reimplement logging? maybe logging manager?
+//                            this.logAction(action);
+                            addNewMessage(action.toString());
+                        }
+                    }
+                }
+        );
+    }
+    
+    /**
      * Helper method that sets up the layout of all the elements within the 
      * table.
      */
@@ -208,14 +209,5 @@ public class ChatBox extends Table {
         this.add(this.sendButton).pad(5).height(30).width(30);
         
         this.setWidth(200);
-    }
-
-	public TextureManager getTextureManager() {
-		return this.textureManager;
-	}
-
-	public void setTextureManager(TextureManager textureManager) {
-		this.textureManager = textureManager;
-	}
-    
+    }   
 }
