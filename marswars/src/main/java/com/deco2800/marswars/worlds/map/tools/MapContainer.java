@@ -546,7 +546,6 @@ public class MapContainer {
                 break;
             case SMALL:
                 mapSize = 60;
-
                 mapSizeType = MapSizeTypes.SMALL;
                 break;
             case MEDIUM:
@@ -595,7 +594,8 @@ public class MapContainer {
             default:
                 LOGGER.error("Unknown Map type");
         }
-        RandomMapWriter randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(mapSize,mapSize, 18));
+        RandomMapWriter randomTiles = new RandomMapWriter(mapSize, mapSize, tilesToAdd, new NoiseMap(mapSize ,mapSize,
+                8+mapSize/10));
         try{
             randomTiles.writeMap();
         }catch(Exception e){
