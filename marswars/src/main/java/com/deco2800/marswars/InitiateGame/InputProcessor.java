@@ -25,8 +25,14 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Initially a part of marswars.java, this class takes care of all the 
+ * in-game input.
+ */
 public class InputProcessor {
-
+	/*DECLARING VARIABLES*/
+	
+	/*Multiplayer chat*/
 	static final int SERVER_PORT = 8080;
 	SpacClient networkClient;
 	SpacServer networkServer;
@@ -34,18 +40,34 @@ public class InputProcessor {
 	OrthographicCamera camera;
 	private Stage stage;
 	private Skin skin;
-	Set<Integer> downKeys = new HashSet<>();
-	ShortCut shortCut = new ShortCut();
-	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
-
+	
+	/*Keyboard inputs*/
+	private Set<Integer> downKeys;
+	private ShortCut shortCut;
+	
+	/*Mixed input types*/
+	private MultiSelection multiSelection; 
+	
+	/*Toggles*/
 	private boolean multiSelectionFlag = false;
-	private MultiSelection multiSelection = new MultiSelection();
 
+
+	/*Initialising through GameManager*/
 	MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+	TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InputProcessor.class);
 
+	/**
+	 * Creates and sets the game's input processors
+	 * @param camera
+	 * @param stage
+	 * @param skin
+	 */
 	public InputProcessor(OrthographicCamera camera, Stage stage, Skin skin) {
+		this.shortCut = new ShortCut();
+		this.multiSelection = new MultiSelection();
+		this.downKeys = new HashSet<>();
 		this.camera = camera;
 		this.stage = stage;
 		this.skin = skin;
@@ -111,10 +133,10 @@ public class InputProcessor {
 		GameManager.get().setCamera(this.camera);
 	}
 
+	/**
+	 * Setup inputs for the buttons and the game itself
+	 */
 	public void setInputProcessor() {
-		/*
-		 * Setup inputs for the buttons and the game itself
-		 */
 		/*
 		 * Setup an Input Multiplexer so that input can be handled by both the
 		 * UI and the game

@@ -17,7 +17,6 @@ import com.deco2800.marswars.managers.GameManager;
 public class GameGraph{
 	private static float GRAPHSIZE = 400; 
 	
-	private Skin skin;
 	private ShapeRenderer renderer;
 	private Field Graphtype;
 	private float[] vertices;
@@ -27,6 +26,9 @@ public class GameGraph{
 		Graphtype = graphtype;
 	}
 	
+	/**
+	 * Renders the game graph
+	 */
 	public void render(){
 		//renderer.setProjectionMatrix((new OrthographicCamera(1920, 1080)).combined);
 		renderer.begin(ShapeType.Line);
@@ -46,6 +48,9 @@ public class GameGraph{
 		renderer.end();
 	}
 	
+	/**
+	 * Not yet implelemented- should resize the graph
+	 */
 	public void resize(){
 		;
 	}
