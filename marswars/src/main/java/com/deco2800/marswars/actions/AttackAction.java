@@ -1,10 +1,10 @@
 package com.deco2800.marswars.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 30/7/17.
@@ -17,6 +17,14 @@ public class AttackAction implements DecoAction {
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
 	boolean completed = false;
+
+	// Variables for pause
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AttackAction.class);
+
 	
 	enum State {
 		SETUP_MOVE,
@@ -32,24 +40,26 @@ public class AttackAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		switch (state) {
-			case MOVE_TOWARDS:
-				moveTowardsAction();
-				return;
-			case ATTACK:
-				shoot = new ShootAction(entity, enemy);
-				state = State.ATTACKING;
-				return;
-			case ATTACKING:
-				attackingAction();
-				return;
-			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
-				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
-				state = State.MOVE_TOWARDS;
-				return;
+		if (!timeManager.isPaused() && !actionPaused) {
+			switch (state) {
+				case MOVE_TOWARDS:
+					moveTowardsAction();
+					return;
+				case ATTACK:
+					shoot = new ShootAction(entity, enemy);
+					state = State.ATTACKING;
+					return;
+				case ATTACKING:
+					attackingAction();
+					return;
+				default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here.
+					action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
+					state = State.MOVE_TOWARDS;
+					return;
+			}
+
 		}
 	}
-	
 	/**
 	 * Gets the absolute distance from the current entity to the current entity
 	 * @return the absolute distance from the 

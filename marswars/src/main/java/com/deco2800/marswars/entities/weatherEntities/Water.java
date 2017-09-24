@@ -34,8 +34,8 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
     public Water(float posX, float posY, float posZ) {
         super(posX, posY, posZ, 1, 1, 1f);
         this.setTexture("water_final");
-        this.canWalkOver = true;
         this.setHealth(10);
+        this.canWalkOver = true;
     }
 
     /**
