@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
+import com.deco2800.marswars.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,11 @@ public class MissileEntity extends BaseEntity implements HasAction{
     private float speed;
     private Optional<DecoAction> currentAction = Optional.empty();
     private AttackableEntity target; //Missile should only be created once target is confirmed viable target
-    private String missileTexture;
+    protected String missileTexture;
+    protected String upleftMissileTexture;
+    protected String uprightMissileTexture;
+    protected String downleftMissileTexture;
+    protected String downrightMissileTexture;
     private int areaDamage;
     private AttackableEntity ownerEntity;
     
@@ -28,6 +33,7 @@ public class MissileEntity extends BaseEntity implements HasAction{
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
                          AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner, AttackableEntity ownerEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
+        this.setAllMissileTextture();
         this.modifyCollisionMap(true);
     }
 
@@ -129,5 +135,39 @@ public class MissileEntity extends BaseEntity implements HasAction{
     public AttackableEntity getOwnerEntity() {
     	return  ownerEntity;
     }
+    
+    public void missileFaceTowards(float x, float y) {
+		if(this.getPosX()>=x && this.getPosY()>=y) {
+			this.setMissileTexture(downleftMissileTexture);
+		}
+		else if(this.getPosX()>=x && this.getPosY()<y) {
+			this.setMissileTexture(downrightMissileTexture);
+		}
+		else if(this.getPosX()<x && this.getPosY()>=y) {
+			this.setMissileTexture(upleftMissileTexture);
+		}
+		else if(this.getPosX()<x && this.getPosY()<y) {
+			this.setMissileTexture(uprightMissileTexture);
+		}
+		else {
+			this.setMissileTexture(missileTexture);
+		}
+	}
+    
+    public void setAllMissileTextture() {
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		try {
+					
+			this.upleftMissileTexture =tm.loadUnitSprite(this, "upleft") ;
+			this.uprightMissileTexture =tm.loadUnitSprite(this, "upright") ;
+			this.downleftMissileTexture =tm.loadUnitSprite(this, "downleft") ;
+			this.downrightMissileTexture =tm.loadUnitSprite(this, "downright") ;
+			this.missileTexture = tm.loadUnitSprite(this, "missile");
+			
+		}
+		catch(NullPointerException n){
+			return;
+		}
+	}
 
 }
