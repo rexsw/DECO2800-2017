@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
-        HasProgress, HasOwner, HasAction {
+        HasProgress, HasOwner, HasAction, Floodable {
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(HeroFactory.class);
 
@@ -222,4 +222,5 @@ public class HeroFactory extends BuildingEntity implements Clickable, Tickable,
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
+
 }

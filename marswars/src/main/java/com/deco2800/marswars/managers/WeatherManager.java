@@ -7,6 +7,7 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.lwjgl.Sys;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -30,6 +31,9 @@ public class WeatherManager extends Manager implements Tickable {
     private boolean floodWatersExist = false;
 
     private Iterator<BaseEntity> iterator;
+    // Set as a class variable so that buildings can be unpaused properly
+    private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
+
 
     private static final org.slf4j.Logger LOGGER =
             LoggerFactory.getLogger(WeatherManager.class);
@@ -62,12 +66,10 @@ public class WeatherManager extends Manager implements Tickable {
                     world = GameManager.get().getWorld();
                     this.setInterval();
                     // While water still exists, continue to apply effects
-                    if (this.retreatWaters()) {
-                        this.applyEffects();
-                    }
+                    this.retreatWaters();
+                    this.applyEffects();
                 }
             }
-
         }
         return status;
     }
@@ -92,7 +94,8 @@ public class WeatherManager extends Manager implements Tickable {
      */
     private void applyEffects() {
         ArrayList<float []> areaOfEffect = getAffectedTiles();
-        ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
+        if (areaOfEffect.size() == 0) {
+        }
         ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
         for (float [] tile: areaOfEffect) {
             List<BaseEntity> entities =
@@ -105,7 +108,6 @@ public class WeatherManager extends Manager implements Tickable {
                     if (e instanceof Soldier) {
                         damagedUnits.add(e);
                     } else if (e instanceof BuildingEntity) {
-                        //LOGGER.info("BUILDING PAUSED");
                         pausedBuildings.add(e);
                         timeManager.pause(e);
                         ((BuildingEntity) e).setFlooded(true);
@@ -116,6 +118,7 @@ public class WeatherManager extends Manager implements Tickable {
         applyContinuousDamage(damagedUnits);
         timeManager.pause(pausedBuildings);
         resumeProduction(pausedBuildings, areaOfEffect);
+        areaOfEffect.clear();
     }
 
     /**
@@ -139,27 +142,14 @@ public class WeatherManager extends Manager implements Tickable {
     }
 
     /**
-     * Halts the production or build progression of the passed building
-     * @param e - the building to be affected
-     */
-   /* private void haltProduction(BuildingEntity e) {
-        if (e instanceof Barracks) {
-            ((Barracks) e).getCurrentAction().get().pauseAction();
-        } else  if (e instanceof Bunker) {
-            ((Bunker) e).getCurrentAction().get().pauseAction();
-        } else  if (e instanceof Base) {
-            ((Base) e).getAction().get().pauseAction();
-        }
-    }
-    */
-
-    /**
      * Returns any building caught in the weather events area of effect to its
      * normal state.
      */
     private void resumeProduction(List<BaseEntity> pausedBuildings,
                                   List<float []> areaOfEffect) {
-        for (BaseEntity e: pausedBuildings) {
+        Iterator buildingIterator = pausedBuildings.iterator();
+        while (buildingIterator.hasNext()) {
+            BaseEntity e = (BaseEntity) buildingIterator.next();
             boolean stillFlooded = false;
             for (float [] tile: areaOfEffect) {
                 if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
@@ -170,6 +160,8 @@ public class WeatherManager extends Manager implements Tickable {
             if (! stillFlooded) {
                 timeManager.unPause(e);
                 ((BuildingEntity) e).setFlooded(false);
+                // Remove unpaused building from list
+                buildingIterator.remove();
             }
         }
     }
@@ -343,7 +335,6 @@ public class WeatherManager extends Manager implements Tickable {
         Random r = new Random();
         int width = world.getWidth();
         int length = world.getLength();
-        System.out.println(width + " WIDTH");
         Point p = new Point(width - r.nextInt(width/4)
                 - 1, length - r.nextInt(length/4) - 1);
         // Ensure position valid (should be trivially true)

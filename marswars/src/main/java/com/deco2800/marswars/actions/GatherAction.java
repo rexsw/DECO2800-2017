@@ -37,6 +37,7 @@ public class GatherAction implements DecoAction {
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
 	private boolean completed = false;
+	// Variables for pause
 	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);

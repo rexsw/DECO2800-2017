@@ -5,6 +5,7 @@ import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.entities.units.Hacker;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,10 @@ public class AttackAction implements DecoAction {
 	boolean completed = false;
 	private int attackInterval = 1000;
 	private int attackSpeed;
+	// Variables for pause
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttackAction.class);
 	
@@ -37,17 +42,19 @@ public class AttackAction implements DecoAction {
 
 	@Override
 	public void doAction() {
-		switch (state) {
-			case MOVE_TOWARDS:
-				moveTowardsAction();
-				return;
-			case ATTACK:
-				attack();
-				break;
-			default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here. 
-				action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
-				state = State.MOVE_TOWARDS;
-				return;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			switch (state) {
+				case MOVE_TOWARDS:
+					moveTowardsAction();
+					return;
+				case ATTACK:
+					attack();
+					break;
+				default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here.
+					action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
+					state = State.MOVE_TOWARDS;
+					return;
+			}
 		}
 	}
 	
