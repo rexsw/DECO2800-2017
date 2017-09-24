@@ -4,11 +4,10 @@ package com.deco2800.marswars.net;
 public class ReadyAction implements Action {
     private boolean ready;
     private LobbyUser user;
-    
-    /**
-     * Blank constructor needed due to kryonet.
-     */
-    public ReadyAction() {}
+
+    public ReadyAction() {
+        //Blank Constructor required for kryonet
+    }
     
     /**
      * Constructor for sending client information to the server.

@@ -48,7 +48,6 @@ public class SelectedOptions extends Table {
         setupCommunicationHandler();
         getInitialGameInformation();
         setupLayout();
-        
     }
     
     /**

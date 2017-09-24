@@ -80,7 +80,15 @@ public class NewGameInformation {
 
     @Override
     public String toString() {
-        return "NewGameInformation, Map: " + mapType.toString() + " Size: " + mapSize.toString() + " Valid "
-                + String.valueOf(isNewGameValid());
+        String map = "null";
+        String size = "null";
+        String bool = String.valueOf(isNewGameValid());
+        if (mapSize != null) {
+            size = mapSize.toString();
+        }
+        if (mapType != null) {
+            map = mapType.toString();
+        }
+        return "NewGameInformation, Map: " + map + " Size: " + size + " Valid " + bool;
     }
 }

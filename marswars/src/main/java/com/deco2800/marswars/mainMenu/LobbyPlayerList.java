@@ -1,6 +1,7 @@
 package com.deco2800.marswars.mainMenu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -28,16 +29,16 @@ public class LobbyPlayerList extends Table {
     // Label of connected players out of max
     private Label playerInfo;
     // A list of the connected players
-    private ArrayList<LobbyUser> playerList;
+    private List<LobbyUser> playerList;
     // A table to display the connected players and their ready Status
     private Table lobbyList;
     // skin used to style the various elements of the HUD
     private Skin skin;
        
     // Indicator if player is ready
-    private String READY = "R";
+    private static final String READY = "R";
     // Indicator if player is not ready
-    private String NOT_READY = "N";
+    private static final String NOT_READY = "N";
     
     // Width of the players column
     private static final int PLAYERS_WIDTH = 200;
@@ -61,7 +62,7 @@ public class LobbyPlayerList extends Table {
      * Updates the internal playerList to the given playerList.
      * @param playerList The new list of players to store. 
      */
-    public void updatePlayerList(ArrayList<LobbyUser> playerList) {
+    public void updatePlayerList(List<LobbyUser> playerList) {
         this.playerList = playerList;
         this.numConnectedPlayers = playerList.size();
         updateLobbyList();
@@ -163,7 +164,7 @@ public class LobbyPlayerList extends Table {
      * @return The player info in the format to be displayed on screen.
      */
     private String getPlayerInfoString() {
-        return "" + numConnectedPlayers + " connected to Lobby.";
+        return "" + Integer.toString(numConnectedPlayers) + " connected to Lobby.";
     }
     
     /**

@@ -33,7 +33,6 @@ public class ServerGameInformation extends NewGameInformation {
     
     @Override
     public String toString() {
-        //TODO implement a proper to string
-        return "ServerGameInformation";
+        return super.toString();
     }
 }
