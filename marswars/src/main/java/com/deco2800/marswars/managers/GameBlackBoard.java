@@ -21,8 +21,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class GameBlackBoard extends Manager implements TickableManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameBlackBoard.class);
-	private List<Integer> teams = new ArrayList<Integer>();
-	private Map<Integer,Map<Field, List<Integer>>> values = new HashMap<Integer,Map<Field, List<Integer>>>();
+	private List<Integer> teams;
+	private Map<Integer,Map<Field, List<Integer>>> values;
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	private int alive;
 	private int timer;
@@ -42,7 +42,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		timer++;
 		if(timer % 10 == 0) {
 			for(int teamid: teams) {
-				values.get(teamid).get(Field.BIOMASS).add(rm.getBiomass(teamid));
+				values.get(teamid).get(Field.BIOMASS).add(rm.getRocks(teamid));
 				values.get(teamid).get(Field.CRYSTAL).add(rm.getCrystal(teamid));
 				values.get(teamid).get(Field.ROCKS).add(rm.getRocks(teamid));
 				values.get(teamid).get(Field.WATER).add(rm.getWater(teamid));
@@ -52,6 +52,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get(Field.BUILDINGS).add(this.count(teamid, Field.BUILDINGS));
 				//currentlly not counting techology so this is for graph testing on ui
 				values.get(teamid).get(Field.TECHNOLOGY).add(ThreadLocalRandom.current().nextInt(1, 50));
+				
 			}
 			index++;
 		}
@@ -64,6 +65,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 */
 	public void set() {
 		values = new HashMap<Integer,Map<Field, List<Integer>>>();
+		teams = new ArrayList<Integer>();
 		index = 0;
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
@@ -111,7 +113,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return true iff the map has been set correctly 
 	 */
 	public boolean isSet() {
-		return values.size() != 0;
+		return values != null;
 	}
 	
 	/**

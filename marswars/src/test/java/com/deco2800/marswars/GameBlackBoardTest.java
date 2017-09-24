@@ -13,6 +13,7 @@ import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameBlackBoard.Field;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 
@@ -104,6 +105,7 @@ public class GameBlackBoardTest {
 		GameBlackBoard test = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		test.set();
 		Assert.assertEquals(0,test.getIndex());
+		Assert.assertEquals(true,test.isSet());
 		test.onTick(0);
 		test.onTick(0);
 		test.onTick(0);
