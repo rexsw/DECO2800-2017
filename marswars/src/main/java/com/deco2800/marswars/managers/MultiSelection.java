@@ -53,16 +53,16 @@ public class MultiSelection extends Manager {
         int endY=y;
         //this check the boundaries
         AbstractWorld world = GameManager.get().getWorld();
-        if (endX < 0){
+        if (endX <= 0){
             endX=0;
-        }else if( endX > world.getWidth()){
-            endX=world.getWidth();
+        }else if( endX >= world.getWidth()){
+            endX=world.getWidth()-1;
         }
 
-        if (endY < 0){
+        if (endY <= 0){
             endY=0;
-        }else if( endY > world.getLength()){
-            endY=world.getLength();
+        }else if( endY >= world.getLength()){
+            endY=world.getLength()-1;
         }
 
         //assign the ending points
@@ -127,6 +127,19 @@ public class MultiSelection extends Manager {
             projX -= projY - projX;
 
 
+            //this check the boundaries
+            AbstractWorld world = GameManager.get().getWorld();
+            if (projX < 0){
+                projX=0;
+            }else if( projX >= world.getWidth()){
+                projX=world.getWidth()-1;
+            }
+
+            if (projY < 0){
+                projY=0;
+            }else if( projY >= world.getLength()){
+                projY=world.getLength()-1;
+            }
             //adding the starting tile
             tiles[0]=(int)projX;
             tiles[1]=(int)projY;
@@ -148,6 +161,18 @@ public class MultiSelection extends Manager {
         projY = -(y - tileHeight / 2f) / tileHeight + projX;
         projX -= projY - projX;
 
+        AbstractWorld world = GameManager.get().getWorld();
+        if (projX < 0){
+            projX=0;
+        }else if( projX >= world.getWidth()){
+            projX=world.getWidth()-1;
+        }
+
+        if (projY < 0){
+            projY=0;
+        }else if( projY >= world.getLength()){
+            projY=world.getLength()-1;
+        }
         //add the ending tile
         tiles[2]=(int)projX;
         tiles[3]=(int)projY;
@@ -190,7 +215,11 @@ public class MultiSelection extends Manager {
         }
     }
 
-    //this function will call the mouse handler at a specific position
+    /**
+     * this function will call the mouse handler at a specific position
+     * @param x
+     * @param y
+     */
     public void callMouseHandler(int x, int y){
         MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
         mouseHandler.handleMouseClick(x, y, 0,true);

@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.deco2800.marswars.managers.FogManager;
@@ -28,8 +29,13 @@ public class FogWarTest {
 //         assertNotNull(world.getFogMap());
 //     }
 	//Tests for fogManager
-	FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-	
+	FogManager fogOfWar;
+
+	@Before
+	public void setup() {
+		fogOfWar = new FogManager();
+	}
+
 	@Test (expected = IllegalArgumentException.class)
 	public void invalidWidth() {
 		FogManager.initialFog(-1, 1);
@@ -49,6 +55,7 @@ public class FogWarTest {
 	
 	@Test
 	public void toggleFog() {
+		FogManager.toggleFog(true);
 		assertThat("ToggleFog is not true", FogManager.getToggleFog(), is(equalTo(true)));
 		FogManager.toggleFog(false);
 		assertThat("ToggleFog did not toggle", FogManager.getToggleFog(), is(equalTo(false)));
