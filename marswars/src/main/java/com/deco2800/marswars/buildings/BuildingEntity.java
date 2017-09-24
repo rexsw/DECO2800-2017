@@ -62,6 +62,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setBuildSpeed(1f);
 			this.setMaxHealth(1850);
 			this.setHealth(1850);
+			this.setDamage(10);
 			this.building = "Turret";
 			fogRange = 7;
 			break;
@@ -103,6 +104,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(3000);
 			this.building = "Hero Factory";
 			fogRange = 3;
+			break;
+		case TECHBUILDING:
+			graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
+			this.setBuildSpeed(.5f);
+			this.setMaxHealth(800);
+			this.setHealth(800);
+			this.building = "TechBuilding";
+			fogRange = 2;
 			break;
 		default:
 			break;
@@ -298,6 +308,13 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 */
 	
 	public void powerUpTurret(){
+	}
+	
+	/**
+	 * Release all solider in the turret
+	 */
+	
+	public void releaseTurret(){
 	}
 	
 	/**

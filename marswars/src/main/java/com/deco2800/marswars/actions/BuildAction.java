@@ -242,6 +242,10 @@ public class BuildAction implements DecoAction{
 		case HEROFACTORY:
 			//Update this
 			break;
+		case TECHBUILDING:
+			base = new TechBuilding(GameManager.get().getWorld(), 
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+			break;
 		default:
 			break;
 		}

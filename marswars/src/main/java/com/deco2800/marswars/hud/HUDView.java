@@ -665,7 +665,6 @@ public class HUDView extends ApplicationAdapter{
         }
 		currentActions = target.getValidActions();
 	    enterActions(true); //Set up the buttons
-
 		if(target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
