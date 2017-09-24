@@ -1,12 +1,13 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.GameManager;
@@ -45,6 +46,11 @@ public class MenuScreen{
 	static final int BUTTONHEIGHT = 40;
 	static final int BUTTONPAD = 5; 
 	static final int NAVBUTTONSIZE = 40;
+	static final int MAPBUTTONSIZE = 90;
+	
+	/*Character icon sizing*/
+	static final int ASTROWIDTH = 150;
+	static final int ASTROLENGTH = 150;
 	
 	/* Navigation buttons + layout */
 	private Table navigationButtons;
@@ -58,8 +64,11 @@ public class MenuScreen{
 	private boolean joinedServer;   // checks if joined server 
 	
 	/* For recording which map to play in*/
-	MapTypes mapType;
-	MapSizeTypes mapSize;	
+	private MapTypes mapType;
+	private MapSizeTypes mapSize;	
+	
+	private int AITeams; 
+	private int playerTeams;
 	
 	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
@@ -68,6 +77,9 @@ public class MenuScreen{
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
 		CHARACTERMODE;  // choosing character, goes back to select world
 	}
+	
+	private boolean 
+	enabled = false; //FOR DEBUGGING
 
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
@@ -87,6 +99,8 @@ public class MenuScreen{
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
+		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		window.align(Align.left | Align.center);
 		playerModeSelect(window, stage);
 	}
 	
@@ -97,7 +111,7 @@ public class MenuScreen{
 	 */
 	public void playerModeSelect(Window mainmenu, Stage stage) {		
 		Table playerMode = new Table();
-		playerMode.setDebug(true);		
+		//playerMode.setDebug(enabled);		
 		Label modeInfo = new Label("SELECT A MODE", this.skin);
 		
 		Button singlePlayerButton = new TextButton("Single Player", this.skin);
@@ -105,11 +119,14 @@ public class MenuScreen{
 		Button customizeButton = new TextButton("Customize", this.skin);
 
 		/*TODO: Remove later since this is only for debugging*/
-		Label menuInfo = new Label("Click 'select world' to fast forward to playing", this.skin);
-		Button playGame = new TextButton("Select world", this.skin);
-		
+		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
+				+ "to playing a set map of a mars type, medium sized \n"
+				+ "map with 1 of each AI and player team \n (for quicker debugging)", this.skin);
+		menuInfo.setWrap(true);
+		Button quickGame = new TextButton("Quick Select", this.skin);
+				
 		/* Add in the player mode buttons to the table*/
-		playerMode.add(modeInfo).align(Align.center).row();
+		playerMode.add(modeInfo).align(Align.left).row();
 		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(multiplayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(customizeButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -117,7 +134,7 @@ public class MenuScreen{
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).row();
 		mainmenu.add(menuInfo).row();
-		mainmenu.add(playGame);
+		mainmenu.add(quickGame);
 		
 		/* Button listeners */
 		singlePlayerButton.addListener(new ChangeListener() {
@@ -139,16 +156,18 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menu.startGame(true, mapType, mapSize);
+				menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
 		});
 		
-		playGame.addListener(new ChangeListener() {
+		//TODO: remove this around week 12
+		quickGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				selectWorldMode(mainmenu, stage);
+				mainmenu.setVisible(false);
+				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
 		});
 	}
@@ -164,11 +183,39 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("Pick your character!", this.skin);
+		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin);
+		Label moreInfo = new Label("click '>' since this feautre has not "
+				+ "yet been implemented)", skin);
 		
-		playerTable.add(playerInfo).row();
+		//TODO talk to the team looking into this 
+		/*Just some solider colours, has no actual functionality just yet*/
+		Texture blueTex =  this.textureManager.getTexture("astro_blue");
+		Image blueAstro = new Image(blueTex);
 		
+		Texture yellowTex =  this.textureManager.getTexture("astro_yellow");
+		Image yellowAstro = new Image(yellowTex);
 		
+		Texture pinkTex =  this.textureManager.getTexture("astro_pink");
+		Image pinkAstro = new Image(pinkTex);
+		
+		Texture greenTex =  this.textureManager.getTexture("astro_green");
+		Image greenAstro = new Image(greenTex);
+		
+		Texture redTex =  this.textureManager.getTexture("astro_red");
+		Image redAstro = new Image(redTex);
+		
+		Texture purpleTex =  this.textureManager.getTexture("astro_purple");
+		Image purpleAstro = new Image(purpleTex);
+		
+		playerTable.add(greenAstro).pad(BUTTONPAD).size(ASTROWIDTH);
+		playerTable.add(yellowAstro).pad(BUTTONPAD).size(ASTROWIDTH);
+		playerTable.add(redAstro).pad(BUTTONPAD).size(ASTROWIDTH).row();
+		playerTable.add(pinkAstro).pad(BUTTONPAD).size(ASTROWIDTH);
+		playerTable.add(purpleAstro).pad(BUTTONPAD).size(ASTROWIDTH);
+		playerTable.add(blueAstro).pad(BUTTONPAD).size(ASTROWIDTH);
+		
+		mainmenu.add(playerInfo).row();
+		mainmenu.add(moreInfo).row();
 		mainmenu.add(playerTable);
 		Table nav = addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
 		if (this.joinedServer){
@@ -193,12 +240,13 @@ public class MenuScreen{
 	 */
 	public void selectWorldMode(Window mainmenu, Stage stage) {
 		mainmenu.clear();
-		mainmenu.setDebug(true);
+		mainmenu.setDebug(enabled);
 		
 		Table worldTable = new Table();
-		worldTable.setDebug(true);
+		worldTable.align(Align.left | Align.center);
+		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
-		Label worldInfo = new Label("Select a world to play in!", this.skin);
+		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin);
 		Label worldSelected = new Label("You current selection:", skin);
 		Label currentWorldSelection = new Label("No type selected, ", skin);
 		Label currentSizeSelection = new Label("no map size selected.", skin);
@@ -206,13 +254,31 @@ public class MenuScreen{
 		worldInfoTable.add(currentWorldSelection, currentSizeSelection);
 		
 		/*BUTTONS FOR SELECTING MAP TYPE*/
-		Table worldTypeButtons = new Table();
-		Button moon = new TextButton("moon", skin);
-		Button mars = new TextButton("mars", skin);
-		Button desert = new TextButton("desert", skin);		
+		Table worldTypeButtons = new Table();		
+		worldTypeButtons.setDebug(enabled);
+		//Mars tile button
+		Texture marsImage =  this.textureManager.getTexture("mars_map");
+		TextureRegion marsRegion = new TextureRegion(marsImage);
+		TextureRegionDrawable marsRegionDraw = new TextureRegionDrawable(marsRegion);
+		ImageButton mars = new ImageButton(marsRegionDraw);
 		
-		worldTypeButtons.add(moon, mars, desert);
+		//Moon tile button
+		Texture moonImage =  this.textureManager.getTexture("moon_map");
+		TextureRegion moonRegion = new TextureRegion(moonImage);
+		TextureRegionDrawable moonRegionDraw = new TextureRegionDrawable(moonRegion);
+		ImageButton moon = new ImageButton(moonRegionDraw);
+		moon.background(moonRegionDraw);
 		
+		//Desert tile button
+		Texture desertImage =  this.textureManager.getTexture("desert_map");
+		TextureRegion desertRegion = new TextureRegion(desertImage);
+		TextureRegionDrawable desertRegionDraw = new TextureRegionDrawable(desertRegion);
+		ImageButton desert = new ImageButton(desertRegionDraw);
+		
+		worldTypeButtons.add(moon).pad(BUTTONPAD).size(MAPBUTTONSIZE);
+		worldTypeButtons.add(mars).pad(BUTTONPAD).size(MAPBUTTONSIZE);
+		worldTypeButtons.add(desert).pad(BUTTONPAD).size(MAPBUTTONSIZE);
+				
 		/* Button listeners*/
 		moon.addListener(new ChangeListener() {
 			@Override
@@ -239,14 +305,18 @@ public class MenuScreen{
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
-		Button tiny = new TextButton("tiny", skin);
-		Button smol = new TextButton("smol", skin);
-		Button medium = new TextButton("medium", skin);
-		Button large = new TextButton("large", skin);
-		Button veryLarge = new TextButton("very large", skin);
+		Button tiny = new TextButton("XS", skin);
+		Button smol = new TextButton("S", skin);
+		Button medium = new TextButton("M", skin);
+		Button large = new TextButton("L", skin);
+		Button veryLarge = new TextButton("XL", skin);
 		
 		Table worldSizeButtons = new Table();
-		worldSizeButtons.add(tiny, smol, medium, large, veryLarge);
+		worldSizeButtons.add(tiny).size(NAVBUTTONSIZE).pad(BUTTONPAD);
+		worldSizeButtons.add(smol).size(NAVBUTTONSIZE).pad(BUTTONPAD);
+		worldSizeButtons.add(medium).size(NAVBUTTONSIZE).pad(BUTTONPAD);
+		worldSizeButtons.add(large).size(NAVBUTTONSIZE).pad(BUTTONPAD);
+		worldSizeButtons.add(veryLarge).size(NAVBUTTONSIZE).pad(BUTTONPAD);	
 		
 		/* Map size listeners */
 		tiny.addListener(new ChangeListener() {
@@ -289,25 +359,6 @@ public class MenuScreen{
 			}
 		});
 		
-		Button playGame = new TextButton("Play!", skin);
-
-		//FOR DEBUGGING TODO remove this once a functional menu
-		playGame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				if(!(mapSize == null || mapType == null)){
-					MapContainer map = new MapContainer(mapType, mapSize);
-					CustomizedWorld world = new CustomizedWorld(map);
-					GameManager.get().setWorld(world);
-					world.loadMapContainer(map);
-					GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()*32,0);
-					
-					menu.startGame(true, mapType, mapSize);
-					mainmenu.setVisible(false);
-				}
-			}
-		});
-
 		mainmenu.add(worldInfo).align(Align.left | Align.top).row();		
 		worldTable.add(worldTypeButtons).row();
 		worldTable.add(worldSizeButtons).row();						
@@ -315,7 +366,6 @@ public class MenuScreen{
 		worldTable.add(worldInfoTable).align(Align.left);
 		mainmenu.add(worldTable).align(Align.left | Align.center);
 		mainmenu.row();
-		mainmenu.add(playGame).row();
 		addNavigationButton(ScreenMode.WORLDMODE, mainmenu, stage);
 	}
 	
@@ -329,12 +379,74 @@ public class MenuScreen{
 		mainmenu.clear();
 
 		Table gameTable = new Table();		
-		Label combatInfo = new Label("Select a combat mode", this.skin);
+		gameTable.align(Align.left | Align.center);
+		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin);
+		
+		//int ai teams, int player teams
+		
+		Label aiSelect = new Label("Pick the number of AI teams", skin);
+		Label playerSelect = new Label("Pick the number of player teams", skin);
+		Label selected = new Label(String.format("Selected %d AI teams and %d "
+				+ "player teams", AITeams, playerTeams), skin);
+		
+		Button AI1 = new TextButton("1", skin);
+		Button AI2 = new TextButton("2", skin);
+		Button P1 = new TextButton("1", skin);
+		Button P2 = new TextButton("2", skin);
+		
+		AI1.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 1;
+				selected.setText(String.format("Selected 1 AI team and %d player "
+						+ "team(s)", playerTeams));
+			}
+		});
+		
+		AI2.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 2;
+				selected.setText(String.format("Selected 2 AI teams and %d player "
+						+ "team(s)", playerTeams));
+			}
+		});
+		
+		P1.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				playerTeams = 1;
+				selected.setText(String.format("Selected %s AI team(s) and 1 player "
+						+ "team", playerTeams));
+			}
+		});
+		
+		P2.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				playerTeams = 2;
+				selected.setText(String.format("Selected %s AI team(s) and 2 player "
+						+ "teams", playerTeams));
+			}
+		});
 
-		gameTable.add(combatInfo).row();
-		mainmenu.add(gameTable);
+		Table AIButtons = new Table();
+		Table playerButtons = new Table();
+		
+		AIButtons.add(AI1).pad(BUTTONPAD).size(NAVBUTTONSIZE);
+		AIButtons.add(AI2).pad(BUTTONPAD).size(NAVBUTTONSIZE);
+		playerButtons.add(P1).pad(BUTTONPAD).size(NAVBUTTONSIZE);
+		playerButtons.add(P2).pad(BUTTONPAD).size(NAVBUTTONSIZE);
+
+		mainmenu.add(combatInfo).row();
+		mainmenu.add(aiSelect).row();
+		mainmenu.add(AIButtons).row();
+		mainmenu.add(playerSelect).row();
+		mainmenu.add(playerButtons).row();
+		mainmenu.add(gameTable).row();
+		mainmenu.add(selected).row();
 		Table nav = addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
-		nav.removeActor(nextButton); //remove the next button since there is no next
+		this.addPlayButton(nav, mainmenu);
 	}
 	
 	/**
@@ -478,7 +590,7 @@ public class MenuScreen{
 		mainmenu.add(navigationButtons);
 		navigationButtons.add(this.backButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
 		navigationButtons.add(this.nextButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
-		navigationButtons.add(quitButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
+		navigationButtons.add(this.quitButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
 		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
 		
 		return navigationButtons; 
@@ -493,23 +605,29 @@ public class MenuScreen{
 	 */
 	private void addPlayButton(Table nav, Window mainmenu){
 		Button playButton = new TextButton("Play!", this.skin);
-		playButton.setSize(NAVBUTTONSIZE, NAVBUTTONSIZE);
 		playButton.pad(BUTTONPAD);
 		playButton.addListener(new ChangeListener() {
-			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mainmenu.setVisible(false);
-				menu.startGame(true, mapType, mapSize);
+				/* If a certain feature if not selected*/
+				if(! (mapType == null || mapSize == null || 
+						AITeams == 0 || playerTeams == 0 )){
+					mainmenu.setVisible(false);
+					menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
+				}
+				//TODO talk to AI team and see if at least one of each must be selected
+				//TODO come up with a better user notif of an unselected option
+				else new Dialog("You must select a map and pick at "
+						+ "least one AI team and "
+						+ "player team", skin).show(GameManager.get().getStage());
 		}});
-		nav.addActorAt(2, playButton);
+		nav.removeActor(nextButton);
+		nav.add(playButton).size(NAVBUTTONSIZE);
+		nav.swapActor(playButton, quitButton); //TODO figure out why this doesn't work 
+		
 	}
 	
 	/**
-<<<<<<< HEAD
-	 * Sets the joined server toggle to true
-=======
 	 * Sets the players joined status to a server to be true.
->>>>>>> master
 	 */
 	public void setJoinedServer(){
 		this.joinedServer = true; 
