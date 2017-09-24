@@ -105,6 +105,7 @@ public class AiManagerTest {
 	}
 
 
+	@Test
 	public void decideChangeSateTest(){
 		am.addTeam(1);
 		Base b = new Base(baseWorld, 1, 1, 0, 1);

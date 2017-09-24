@@ -61,13 +61,13 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 					Soldier x = (Soldier)e;
 					//Action depends on current state
 					switch (getState(e.getOwner())) {
-					case DEFAULT:
-						soldierDefend(x);
-						break;
 					case AGGRESSIVE:
 						soldierAttack(x);
 						break;
 					case DEFENSIVE:
+						break;
+					default:
+						soldierDefend(x);
 						break;
 					}
 				} else if(e instanceof AmbientAnimal){
@@ -85,13 +85,13 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public void animalController(AmbientAnimal animal){
 		AmbientState as = animal.getState();
 		switch(as){
-		case DEFAULT:
-			animalDefaultState(animal);
-			break;
 		case TRAVEL:
 			animalTravelState(animal);
 			break;
 		case ATTACKBACK:
+			break;
+		default:
+			animalDefaultState(animal);
 			break;
 		}
 	}
@@ -142,7 +142,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if(!x.showProgress() && rm.getRocks(x.getOwner()) > 30) {
 			//sets the ai base to make more spacman if possible
-			//LOGGER.info("ai - set base to make spacman");
+			LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
 			x.setAction(new GenerateAction(r));
@@ -180,7 +180,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
 
-				Base y = (Base) base;
+
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
 						(AttackableEntity)soldier));
@@ -196,7 +196,6 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public void useSpacman(Astronaut x) {
 		if(!(x.showProgress())) {
 			//allow spacmans to collect the closest resources
-			//LOGGER.info("ticking on " + x.toString() + ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(x.getOwner()));
 			Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 			x.setAction(new GatherAction(x, (Resource) resource.get()));
 			LOGGER.info("ai - set spacman to gather");
@@ -267,7 +266,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * @return
 	 */
 	private int highestStrengthCount() {
-		int strength = 0;
+		int strength;
 		//Assumed 1 player
 		strength = teamStrengthCount(-1);
 		for (int i = 1; i <= teamid.size(); i++) {
@@ -285,7 +284,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		double ratio = 0.0;
 		if (teamStrengthCount(teamID) > 0) {
 			// Compares team strength to global strength
-			ratio = highestStrengthCount() / teamStrengthCount(teamID);
+			ratio = (double)highestStrengthCount() / (double)teamStrengthCount(teamID);
 		}
 		if (ratio >= 0.80) {
 			// If strong, then attack
@@ -320,7 +319,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public int getStateIndex(Integer teamID) {
 		int position = teamid.indexOf(teamID);
 		if (position == -1) {
-			//LOGGER.error("Invalid Team Id");
+			LOGGER.error("Invalid Team Id");
 		}
 		return position;
 	}
