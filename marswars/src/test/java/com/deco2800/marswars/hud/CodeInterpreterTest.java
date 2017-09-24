@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.technology.Technology;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +23,10 @@ import static org.junit.Assert.*;
  * This test is used to test the CodeInterpreter class.
  */
 public class CodeInterpreterTest {
-    private static TimeManager tm;
-    private static ResourceManager rm;
+    private static TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
+    private static ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
+    private static TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private static FogManager fm = (FogManager)GameManager.get().getManager(FogManager.class);
     private static HeadlessApplication game;
     private CodeInterpreter a;
     BaseWorld baseWorld;
@@ -47,20 +50,16 @@ public class CodeInterpreterTest {
         GameManager.get().getWorld().addEntity(entity2);
         GameManager.get().getWorld().addEntity(entity3);
         GameManager.get().getWorld().addEntity(entity4);
-        FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-        FogManager.initialFog(2, 2);
+        fm.initialFog(2, 2);
         a = new CodeInterpreter();
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        rm = (ResourceManager)manager;
-        Manager manager2 = GameManager.get().getManager(TimeManager.class);
-        tm = (TimeManager)manager2;
+
     }
 
     /**
      * to test if reduceOneEnemy() can delete one enemy soldier successfully;
      */
     @Test
-    public void reduceOneEnemyTest() throws Exception {
+    public void reduceOneEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
         a.reduceOneEnemy();
         int num2 = GameManager.get().getWorld().getEntities().size();
@@ -71,7 +70,7 @@ public class CodeInterpreterTest {
      * to test if reduceAllEnemy() can delete all enemy soldiers successfully;
      */
     @Test
-    public void reduceAllEnemyTest() throws Exception {
+    public void reduceAllEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num1,4);
         a.reduceAllEnemy();
@@ -87,6 +86,12 @@ public class CodeInterpreterTest {
         int or = rm.getRocks(-1);
         a.addRock(100);
         assertEquals(or+100,rm.getRocks(-1));
+
+
+
+
+
+
     }
 
     /**
@@ -137,5 +142,33 @@ public class CodeInterpreterTest {
         a.switchNight();
         assertEquals(tm.getHours(),21);
     }
+
+    /**
+     * to test if the soldier attributes has been modified after addAllTech();
+     */
+    @Test
+    public void addAllTech() throws Exception {
+        int num1 = tem.getUnitAttribute("Soldier",1);
+        int num2 = tem.getUnitAttribute("Soldier",2);
+        int num3 = tem.getUnitAttribute("Soldier",3);
+        int num4 = tem.getUnitAttribute("Soldier",4);
+        int num5 = tem.getUnitAttribute("Soldier",5);
+        int num6 = tem.getUnitAttribute("Soldier",6);
+        a.addAllTech();
+        int n1 = tem.getUnitAttribute("Soldier",1);
+        int n2 = tem.getUnitAttribute("Soldier",2);
+        int n3 = tem.getUnitAttribute("Soldier",3);
+        int n4 = tem.getUnitAttribute("Soldier",4);
+        int n5 = tem.getUnitAttribute("Soldier",5);
+        int n6 = tem.getUnitAttribute("Soldier",6);
+        assertTrue(num1<n1);
+        assertTrue(num2<n2);
+        assertTrue(num3<n3);
+        assertTrue(num4<n4);
+        assertTrue(num5<n5);
+        assertTrue(num6<n6);
+
+    }
+
 
 }
