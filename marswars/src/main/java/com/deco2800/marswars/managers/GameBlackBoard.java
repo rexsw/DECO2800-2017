@@ -115,6 +115,15 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	}
 	
 	/**
+	 * gets the current index of the history
+	 * 
+	 * @return the index in list of where the blackboard is up to in the history
+	 */
+	public int getIndex() {
+		return index;
+	}
+	
+	/**
 	 * Updates the information about a teams units when an enity is added
 	 * 
 	 * @param enity BaseEntity the entity to be updated added to the world
@@ -128,16 +137,18 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		LOGGER.info("unit count " + count + " teamid " + teamid);
 		count++;
 		values.get(teamid).get(Field.UNITS).set(index, count);
-		if(enity instanceof AttackableEntity && !(enity instanceof BuildingEntity)) {
+		if(enity instanceof BuildingEntity) {
+			count = values.get(teamid).get(Field.BUILDINGS).get(index);
+			count++;
+			values.get(teamid).get(Field.BUILDINGS).set(index, count);
+			return;
+		}
+		else if(enity instanceof AttackableEntity) {
 			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count++;
 			values.get(teamid).get(Field.COMBAT_UNITS).set(index, count);
 		}
-		else if(enity instanceof BuildingEntity) {
-			count = values.get(teamid).get(Field.BUILDINGS).get(index);
-			count++;
-			values.get(teamid).get(Field.BUILDINGS).set(index, count);
-		}
+		
 	}
 	
 	/**
@@ -156,15 +167,16 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		dead++;
 		values.get(teamid).get(Field.UNITS).set(index, count);
 		values.get(teamid).get(Field.UNITS_LOST).set(index, dead);
-		if(enity instanceof AttackableEntity && !(enity instanceof BuildingEntity)) {
-			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
-			count--;
-			values.get(teamid).get(Field.COMBAT_UNITS).set(index, count);
-		}
-		else if(enity instanceof BuildingEntity) {
+		if(enity instanceof BuildingEntity) {
 			count = values.get(teamid).get(Field.BUILDINGS).get(index);
 			count--;
 			values.get(teamid).get(Field.BUILDINGS).set(index, count);
+			return;
+		}
+		else if(enity instanceof AttackableEntity) {
+			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
+			count--;
+			values.get(teamid).get(Field.COMBAT_UNITS).set(index, count);
 		}
 	}
 	

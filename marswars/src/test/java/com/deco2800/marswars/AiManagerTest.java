@@ -109,7 +109,7 @@ public class AiManagerTest {
 		
 	}
 
-	
+	@Test
 	public void decideChangeSateTest(){
 		am = new AiManager();
 		am.addTeam(1);
