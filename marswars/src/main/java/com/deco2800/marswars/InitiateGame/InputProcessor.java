@@ -54,7 +54,7 @@ public class InputProcessor {
 	/**
 	 * Handles keyboard input.
 	 */
-	public void handleInput(long pauseTime) {
+	public void handleInput() {
 
 		final int speed = 10; // zoom speed
 		final int pxTolerance = 20; // modifies how close to the edge the cursor
@@ -65,8 +65,6 @@ public class InputProcessor {
 
 		int windowWidth = Gdx.graphics.getWidth();
 		int windowHeight = Gdx.graphics.getHeight();
-
-		long currentSeconds = this.timeManager.getGlobalTime();
 
 		if (this.downKeys.contains(Input.Keys.M)) {
 			// open or close mega map
@@ -150,7 +148,7 @@ public class InputProcessor {
 						}
 
 						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-						MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+						mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button, false);
 					}
 

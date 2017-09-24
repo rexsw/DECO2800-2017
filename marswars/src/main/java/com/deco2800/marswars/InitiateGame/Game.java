@@ -43,8 +43,6 @@ public class Game{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -63,7 +61,6 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
-		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**
@@ -123,7 +120,7 @@ public class Game{
 	
 	public void resize(int width, int height){
 		view.resize(width, height);
-		System.out.println("resizp lis");
+		LOGGER.error("resizp lis");
 	}
 	
 	/*
@@ -169,7 +166,7 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(teamid);
-			Setunit(teamid, x, y, rm);
+			setUnit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
@@ -183,7 +180,7 @@ public class Game{
 				avoidInfinite ++;
 			}  while(!GameManager.get().getWorld().checkValidPlace(null, x, y, 4, 0) && avoidInfinite < 20);
 			cm.setColour(playerid);
-			Setunit(playerid, x, y, rm);
+			setUnit(playerid, x, y, rm);
 		}
 	}
 
@@ -199,7 +196,7 @@ public class Game{
 	 * @param rm
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
-	private void Setunit(int teamid, int x, int y, ResourceManager rm) {
+	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
@@ -233,11 +230,11 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused()) {
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						if(TimeUtils.nanoTime() - lastGameTick > 10000000) { //initial value 100000
+						//initial value 100000
 							for (Renderable e : GameManager.get().getWorld().getEntities()) {
 								if (e instanceof Tickable) {
 									((Tickable) e).onTick(0);
@@ -245,12 +242,13 @@ public class Game{
 							}
 							GameManager.get().onTick(0);
 							lastGameTick = TimeUtils.nanoTime();
-						}
+
 					}
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
+
 					}
 				}
 			}
