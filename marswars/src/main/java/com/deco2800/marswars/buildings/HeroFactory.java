@@ -171,4 +171,5 @@ public class HeroFactory extends BuildingEntity {
              */ // NEED TO FIX THIS TO MAKE IT WORK
         }
     }
+
 }

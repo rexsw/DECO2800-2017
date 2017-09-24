@@ -27,8 +27,8 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
  *
  */
 public class MainMenu {
-	private static final int MENUHEIGHT = 350; 
-	private static final int MENUWIDTH = 500;
+	private static final int MENUHEIGHT = 700; 
+	private static final int MENUWIDTH = 1300;
 	private Skin skin;
 	private Stage stage; 
 	

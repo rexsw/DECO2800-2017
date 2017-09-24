@@ -6,6 +6,7 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
@@ -126,7 +127,8 @@ public class BaseWorld extends AbstractWorld {
 			// remove entity from the minimap when they are removed from the world
 			//GameManager.get().getMiniMap().removeEntity(entity);
 		}
-		if (!entity.isCollidable())
+		// Ensure water is also removed from Collision map upon deletion
+		if (! entity.isCollidable() && ! (entity instanceof Water))
 			return;
 		int[] collisionCoords = makeCollisionCoords(entity);
 		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {

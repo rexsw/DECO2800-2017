@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Manages the features for the game 
+ * Manages the features for the game. An abstraction of the original marswars.java. 
  * @author Naziah Siddique
  */
 public class Game{	
@@ -43,6 +43,8 @@ public class Game{
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -61,6 +63,7 @@ public class Game{
 		this.addAIEntities();
 		this.setThread();
 		this.fogOfWar();
+		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**
