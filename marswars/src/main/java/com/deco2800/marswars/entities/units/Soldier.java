@@ -131,6 +131,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 	}
 	
+	public void attackDefensively(AttackableEntity target){
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new ShootAction(this, target));
+		} 
+	}
+	
 	/**
 	 * Helper function for attack. Override if the entity has different types of target.
 	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
@@ -347,24 +353,54 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				break;
 			//Defensive
 			case 1:
+				if (!enemy.isEmpty()) {
+					defensiveBehaviour(enemy);
+				}
 				break;
 			//Aggressive
 			case 2:
 				if (!enemy.isEmpty()) {
-					aggresiveBehaviour(enemy);
+					aggressiveBehaviour(enemy);
 				}
 				break;
-			case 3:
 			//Skirmishing
+			case 3:
+				if (!enemy.isEmpty()) {
+					skirmishingBehaviour(enemy);
+				}
+				break;
+			//Timid
+			case 4:
+				if (!enemy.isEmpty()) {
+					timidBehaviour(enemy);
+				}
 				break;
 		}
 	}
 	
 	/**
-	 * Will attack any enemy in its attackrange.
+	 * Will attack any enemy in its attack range but not chase.
 	 * @param enemy
 	 */
-	public void aggresiveBehaviour(List<AttackableEntity> enemy) {
+	public void defensiveBehaviour(List<AttackableEntity> enemy) {
+		//Attack closest enemy
+		for (int i=1; i<=getAttackRange(); i++) {
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					attackDefensively(a);
+					return;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Will attack any enemy in its attack range.
+	 * @param enemy
+	 */
+	public void aggressiveBehaviour(List<AttackableEntity> enemy) {
 		//Attack closest enemy
 		for (int i=1; i<=getAttackRange(); i++) {
 			for (AttackableEntity a: enemy) {
@@ -372,6 +408,80 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				float yDistance = a.getPosY() - this.getPosY();
 				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
 					attack(a);
+					return;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Will move to just within attack range of enemy units and then attack.
+	 * @param enemy
+	 */
+	public void skirmishingBehaviour(List<AttackableEntity> enemy) {
+		//Run away from closest enemy until just within attack range
+		for (int i=1; i<getAttackRange(); i++) { 
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					float xLocation;
+					float yLocation;
+					//If xDistance and yDistance is the same increment one by random
+					if (xDistance == yDistance) {
+						Random random = new Random();
+						if (random.nextBoolean()) {
+							xDistance += 1;
+						} else {
+							yDistance += 1;
+						}
+					}
+					if (xDistance > yDistance) {
+						if (a.getPosX() - this.getPosX() > 0) {
+							xLocation = this.getPosX() - 1;
+						} else {
+							xLocation = this.getPosX() + 1;
+						} 
+						yLocation = this.getPosY();
+					} else {
+						if (a.getPosY() - this.getPosY() > 0) {
+							yLocation = this.getPosY() - 1;
+						} else {
+							yLocation = this.getPosY() + 1;
+						}
+						xLocation = this.getPosX();
+					}
+					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+					return;
+				}
+			}
+		}
+		//Consider attacking at maximum range
+		for (AttackableEntity a: enemy) {
+			float xDistance = a.getPosX() - this.getPosX();
+			float yDistance = a.getPosY() - this.getPosY();
+			if (Math.abs(yDistance) + Math.abs(xDistance) == this.getAttackRange()) {
+				attack(a);
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * Will run away from enemy units.
+	 * @param enemy
+	 */
+	public void timidBehaviour(List<AttackableEntity> enemy) {
+		//Run away from closest enemy
+		for (int i=1; i<=getAttackRange(); i++) { //Distance is based on attack range at the moment
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
+					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
+					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+					return;
 				}
 			}
 		}
