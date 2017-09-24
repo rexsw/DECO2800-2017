@@ -1,5 +1,6 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,10 @@ public class ShootAction implements DecoAction{
 	private int attackInterval = 1000;
 	private int attackSpeed;
 
+	private boolean actionPaused = false;
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
+
 	
 	enum State {
 		COOLDOWN,
@@ -36,20 +41,22 @@ public class ShootAction implements DecoAction{
 
 	@Override
 	public void doAction() {
-		switch (state) {
-			case COOLDOWN:
-				cooldown();
-				return;
-			case SHOOT:
-				if (attackInterval <= 0) {
-					shoot();
-				} else {
-					state = State.COOLDOWN;
+		if (! timeManager.isPaused() && ! actionPaused) {
+			switch (state) {
+				case COOLDOWN:
+					cooldown();
+					return;
+				case SHOOT:
+					if (attackInterval <= 0) {
+						shoot();
+					} else {
+						state = State.COOLDOWN;
+						break;
+					}
 					break;
-				}
-				break;
-			default:
-				break;
+				default:
+					break;
+			}
 		}
 	}
 	
@@ -101,16 +108,20 @@ public class ShootAction implements DecoAction{
 		return 0;
 	}
 
+	/**
+	 * Prevents the current action from progressing.
+	 */
 	@Override
 	public void pauseAction() {
-		// TODO Auto-generated method stub
-		
+		actionPaused = true;
 	}
 
+	/**
+	 * Resumes the current action
+	 */
 	@Override
 	public void resumeAction() {
-		// TODO Auto-generated method stub
-		
+		actionPaused = false;
 	}
 	
 }
