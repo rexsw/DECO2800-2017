@@ -2,9 +2,6 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,18 +20,15 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isGamePaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
-
+	private int days = 0;
+	private boolean daysIncremented = false;
 
 	/**
 	 * Calculate the number of passed in-game days
 	 * @return the in-game hour of the day
 	 */
 	public long getGameDays() {
-		int days = 0;
-		if (getHours() == 0) {
-			days++;
-		}
-		return days;
+		return this.days;
 	}
 
 	/**
@@ -119,10 +113,9 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @param entity the entity to pause
 	 */
 	public void pause(BaseEntity entity) {
-		if (entity instanceof HasAction) {
-			if (((HasAction) entity).getCurrentAction().isPresent()) {
+		if (entity instanceof HasAction &&
+				((HasAction) entity).getCurrentAction().isPresent()) {
 				((HasAction) entity).getCurrentAction().get().pauseAction();
-			}
 		}
 	}
 
@@ -170,10 +163,9 @@ public class TimeManager extends Manager implements TickableManager {
 	 * Resumes all paused entity actions for the entities in the given list.
 	 */
 	public void unPause(BaseEntity entity) {
-		if (entity instanceof HasAction) {
-			if (((HasAction) entity).getCurrentAction().isPresent()) {
+		if (entity instanceof HasAction &&
+				((HasAction) entity).getCurrentAction().isPresent()) {
 				((HasAction) entity).getCurrentAction().get().resumeAction();
-			}
 		}
 	}
 
@@ -306,7 +298,21 @@ public class TimeManager extends Manager implements TickableManager {
 	@Override
 	public void onTick(long i) {
 		if (!isGamePaused) {
+			int dayLength = 24;
+			int window = 1;
 			this.addTime(2);
+			System.out.println(this.getGameSeconds() % dayLength);
+			if ((this.getHours() % dayLength > dayLength ||
+					this.getHours() % dayLength < window) &&
+					! this.daysIncremented) {
+				this.days++;
+				this.daysIncremented = true;
+			}
+			if (this.getHours() % dayLength > window &&
+					this.getHours() % dayLength < dayLength &&
+					this.daysIncremented == true) {
+				this.daysIncremented = false;
+			}
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
