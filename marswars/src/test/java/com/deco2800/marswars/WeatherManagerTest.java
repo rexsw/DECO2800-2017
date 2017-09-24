@@ -24,12 +24,14 @@ public class WeatherManagerTest {
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
     private Water testDrop;
-    private BaseWorld world = new BaseWorld(5, 5);
+    private BaseWorld world;
 
     @Before
     public void initalise() {
+        world = new BaseWorld(5, 5);
         GameManager.get().setWorld(world);
         testDrop = new Water(1, 1, 0);
+        timeManager.resetInGameTime();
     }
 
 
@@ -37,8 +39,7 @@ public class WeatherManagerTest {
     public void testSetWeatherEvent() {
         /* Set weatherManager in each class in case unforseen changes occur to
         class variables in WeatherManager (prevent build errors) */
-        WeatherManager weatherManager = (WeatherManager)
-                GameManager.get().getManager(WeatherManager.class);
+        WeatherManager weatherManager = new WeatherManager();
         // check flood is in effect
         assertTrue(weatherManager.setWeatherEvent());
         // initalise building for testing
