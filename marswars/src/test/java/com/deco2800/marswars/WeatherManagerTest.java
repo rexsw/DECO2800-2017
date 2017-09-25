@@ -137,8 +137,7 @@ public class WeatherManagerTest {
         assertTrue(weatherManager.setWeatherEvent());
     }
 
-    //this test was faulty because the state of the time manager persisted through tests
-    @Test @Ignore
+    @Test
     public void testIsRaining() {
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);

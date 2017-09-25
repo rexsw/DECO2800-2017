@@ -78,8 +78,7 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public boolean isRaining() {
-        return timeManager.getGameDays() % 3 == 0
-                || timeManager.getGameDays() % 4 == 0;
+        return timeManager.getHours() > 10 && timeManager.getHours() < 15;
     }
 
     /**
