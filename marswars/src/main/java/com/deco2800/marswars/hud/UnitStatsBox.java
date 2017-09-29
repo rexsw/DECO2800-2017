@@ -88,16 +88,18 @@ public class UnitStatsBox extends Table{
 		Image rangeStats = new Image(textureManager.getTexture("range_stats"));
 		Image moveSpeedStats = new Image(textureManager.getTexture("move_speed_stats"));
 		
+		Table rightTable = new Table(); //table to store stats + bars formatted to they can be next to each other.
+		
 		barTable.add(healthStats).height(30).width(30);
-		barTable.add(healthBar).height(30).width(150);
+		barTable.add(healthBar).height(30).width(100);
 		barTable.add(healthLabel).right().height(30).expandX();
 		barTable.row();
 		barTable.add(armourStats).height(30).width(30);
-		barTable.add(armourBar).height(30).width(150);
+		barTable.add(armourBar).height(30).width(100);
 		barTable.add(armourLabel).right().height(30).expandX();
 		
-		statsTable.add(barTable);
-		statsTable.row();
+		statsTable.add(barTable).padRight(10);
+		
 		
 		// table for other stats
 		Table textTable = new Table();
@@ -105,26 +107,30 @@ public class UnitStatsBox extends Table{
 		this.atkRngLabel = new Label("Attack Range", skin);
 		this.atkSpeedLabel = new Label("Attack Speed", skin);
 		this.moveSpeedLabel = new Label("Move Speed", skin);
-		textTable.add(attackStats).height(30).width(30);
-		textTable.add(this.atkDmgLabel).expandX().height(30);
-		textTable.add(attackSpeedStats).height(30).width(30);
-		textTable.add(this.atkSpeedLabel).expandX().height(30);
+		textTable.add(attackStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkDmgLabel).expandX().height(30).padBottom(10);
+		textTable.add(attackSpeedStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkSpeedLabel).expandX().height(30).padBottom(10);
 		textTable.row();
-		textTable.add(rangeStats).height(30).width(30);
-		textTable.add(this.atkRngLabel);
-		textTable.add(moveSpeedStats).height(30).width(30);
-		textTable.add(this.moveSpeedLabel);
+		textTable.add(rangeStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkRngLabel).padBottom(10);
+		textTable.add(moveSpeedStats).height(30).width(30).padBottom(10);
+		textTable.add(this.moveSpeedLabel).padBottom(10);
+		statsTable.add(textTable).width(150).padBottom(10);
+		statsTable.row();
 		
-		statsTable.add(textTable).width(250);
-		
-		this.add(statsTable);
-		this.row();
 		
 		// add in the hero inventory display
 		heroInventory = new Table();
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
-		this.add(heroInventory).colspan(2);
+		
+		rightTable.add(statsTable);
+		rightTable.row();
+		rightTable.add(heroInventory);
+		
+		this.add(rightTable);
+		this.row();		
 		this.setVisible(false);
     }
     
