@@ -21,9 +21,22 @@ public class CheckSelect extends BaseEntity{
 	 * @param LengthZ
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ, BuildingType building) {
+		this(posX, posY, posZ, lengthX, lengthY, lengthZ);
+		buildingType = building;
+	}
+	
+	/**
+	 * Constructor for CheckSelect for features not limited to constructing buildings.
+	 * @param posX  X coordinate that the overlaying image would be located
+	 * @param posY  Y coordinate that the overlaying image would be located
+	 * @param posZ  Z coordinate that the overlaying image would be located
+	 * @param lengthX  The length of the overlaying image in the x coordinate direction
+	 * @param lengthY  The length of the overlaying image in the y coordinate direction
+	 * @param lengthZ  The length of the overlaying image in the z coordinate direction
+	 */
+	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ) {
 		super(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ, lengthX, lengthY, false);
 		super.canWalkOver = true;
-		buildingType = building;
 	}
 	
 	/**
@@ -46,6 +59,7 @@ public class CheckSelect extends BaseEntity{
 		case HEROFACTORY:
 			break;
 		default:
+			validSelect = "tileSelectGreen";
 			break;
 		}
 		this.setTexture(validSelect);
@@ -71,6 +85,7 @@ public class CheckSelect extends BaseEntity{
 		case HEROFACTORY:
 			break;
 		default:
+			validSelect = "tileSelectRed";
 			break;
 		}
 		this.setTexture(invalidSelect);

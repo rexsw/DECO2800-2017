@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.items.effects;
 
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 
@@ -9,6 +10,8 @@ import com.deco2800.marswars.entities.units.Commander;
  * armour = amount of to add to armour and max armour stats
  * health = amount to add to hp and max hp stats
  * movementSpeed = amount to add to movement speed stat
+ * target = Target enumerate value indicating the intended target of this effect (see Effect interface for more detail).
+ * 
  * @author Mason
  *
  */
@@ -16,6 +19,7 @@ public class DefenceEffect implements Effect{
 	private int armour;
 	private int health;
 	private float moveSpeed;
+	private Target target;
 	
 	/**
 	 * Constructor for the defence effect. Class fields would be set here.
@@ -23,10 +27,11 @@ public class DefenceEffect implements Effect{
 	 * @param health  amount to add to hp and max hp stats
 	 * @param moveSpeed  amount to add to movement speed stat
 	 */
-	public DefenceEffect(int armour, int health, float moveSpeed) {
+	public DefenceEffect(int armour, int health, float moveSpeed, Target target) {
 		this.armour = armour;
 		this.health = health;
 		this.moveSpeed = moveSpeed;
+		this.target = target;
 	}
 	
 	/**
@@ -65,6 +70,15 @@ public class DefenceEffect implements Effect{
 			hero.setSpeed(hero.getSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
 			
 		}
+	}
+	
+	/**
+	 * Returns the intended target of this effect as a Target enumerate value.
+	 * @return Target enumerate value corresponding to the intended target of this effect.
+	 */
+	@Override
+	public Target getTarget() {
+		return this.target;
 	}
 	
 	/**

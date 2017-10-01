@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.items.effects;
 
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 
 /**
@@ -7,17 +8,21 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
  * At the moment, this class doesn't do anything. However, there are stats about vision and loyalty in the game
  * and at the time when item class gets implemented, those stats are still under testing. 
  * This class will be implemented later, with relative effects affected!
+ * 
+ * target = Target enumerate value indicating the intended target of this effect (see Effect interface for more detail).
  * @author Mason
  *
  */
 public class otherEffect implements Effect{
 	private int loyalty;
 	//private int vision;  need further development
+	private Target target;
 	
 	// don't do anything to these two yet, need clarification
-	public otherEffect(int loyalty, int vision) {
+	public otherEffect(int loyalty, int vision, Target target) {
 		this.loyalty = loyalty; 
 		//this.vision = vision;
+		this.target = target;
 	}
 	
 	/**
@@ -42,6 +47,15 @@ public class otherEffect implements Effect{
 		return;
 	}
 	
+	/**
+	 * Returns the intended target of this effect as a Target enumerate value.
+	 * @return Target enumerate value corresponding to the intended target of this effect.
+	 */
+	@Override
+	public Target getTarget() {
+		return this.target;
+	}
+		
 	/**
 	 * NOT IMPLEMENTED YET. PLACEHOLDER
 	 * Method to generate a helpful string that describes what the effect does. 
