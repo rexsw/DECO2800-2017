@@ -1,11 +1,15 @@
 package com.deco2800.marswars.mainMenu;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
@@ -112,8 +116,7 @@ public class MenuScreen{
 	public void playerModeSelect(Window mainmenu, Stage stage) {		
 		Table playerMode = new Table();
 		//playerMode.setDebug(enabled);		
-		Label modeInfo = new Label("SELECT A MODE", this.skin);
-		
+		Label modeInfo = new Label("SELECT A MODE", skin, "title");		
 		Button singlePlayerButton = new TextButton("Single Player", this.skin);
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin);
 		Button customizeButton = new TextButton("Customize", this.skin);
@@ -130,6 +133,7 @@ public class MenuScreen{
 		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(multiplayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		playerMode.add(customizeButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+				
 
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).row();
