@@ -1,15 +1,11 @@
 package com.deco2800.marswars.mainMenu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
@@ -19,9 +15,7 @@ import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.ServerShutdownAction;
-import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
-import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -48,8 +42,8 @@ public class MenuScreen{
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
 	static final int BUTTONHEIGHT = 40;
-	static final int BUTTONPAD = 5; 
-	static final int NAVBUTTONSIZE = 40;
+	static final int BUTTONPAD = 15; 
+	static final int NAVBUTTONSIZE = 50;
 	static final int MAPBUTTONSIZE = 90;
 	
 	/*Character icon sizing*/
@@ -58,7 +52,6 @@ public class MenuScreen{
 	
 	/* Navigation buttons + layout */
 	private Table navigationButtons;
-	private Button playButton;
 	private Button quitButton;
 	private Button backButton; 
 	private Button nextButton; 
@@ -115,12 +108,14 @@ public class MenuScreen{
 	 */
 	public void playerModeSelect(Window mainmenu, Stage stage) {		
 		Table playerMode = new Table();
-		//playerMode.setDebug(enabled);		
-		Label modeInfo = new Label("SELECT A MODE", skin, "title");		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin);
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin);
-		Button customizeButton = new TextButton("Customize", this.skin);
-
+		playerMode.setDebug(enabled);		
+		Label modeInfo = new Label("MAIN MENU", skin, "title");
+		//modeInfo.setVisible(false);
+		
+		Button singlePlayerButton = new TextButton("Single Player", this.skin, "menubutton");
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "menubutton");
+		Button customizeButton = new TextButton("Customize", this.skin, "menubutton");
+		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
 				+ "to playing a set map of a mars type, medium sized \n"
@@ -129,14 +124,13 @@ public class MenuScreen{
 		Button quickGame = new TextButton("Quick Select", this.skin);
 				
 		/* Add in the player mode buttons to the table*/
-		playerMode.add(modeInfo).align(Align.left).row();
-		playerMode.add(singlePlayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
-		playerMode.add(multiplayerButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
-		playerMode.add(customizeButton).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
+		playerMode.add(modeInfo).align(Align.left).padBottom(BUTTONPAD*4).row();
+		playerMode.add(singlePlayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
+		playerMode.add(multiplayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
+		playerMode.add(customizeButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 				
-
 		/* Add in tables to window*/
-		mainmenu.add(playerMode).row();
+		mainmenu.add(playerMode).align(Align.left).row();
 		mainmenu.add(menuInfo).row();
 		mainmenu.add(quickGame);
 		
@@ -187,7 +181,7 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin);
+		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, "subtitle");
 		Label moreInfo = new Label("click '>' since this feautre has not "
 				+ "yet been implemented)", skin);
 		
@@ -218,7 +212,7 @@ public class MenuScreen{
 		playerTable.add(purpleAstro).pad(BUTTONPAD).size(ASTROWIDTH);
 		playerTable.add(blueAstro).pad(BUTTONPAD).size(ASTROWIDTH);
 		
-		mainmenu.add(playerInfo).row();
+		mainmenu.add(playerInfo).align(Align.left).row();
 		mainmenu.add(moreInfo).row();
 		mainmenu.add(playerTable);
 		Table nav = addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
@@ -250,8 +244,8 @@ public class MenuScreen{
 		worldTable.align(Align.left | Align.center);
 		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
-		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin);
-		Label worldSelected = new Label("You current selection:", skin);
+		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subtitle");
+		Label worldSelected = new Label("Your current selection:", skin);
 		Label currentWorldSelection = new Label("No type selected, ", skin);
 		Label currentSizeSelection = new Label("no map size selected.", skin);
 		Table worldInfoTable = new Table();
@@ -283,6 +277,7 @@ public class MenuScreen{
 		worldTypeButtons.add(mars).pad(BUTTONPAD).size(MAPBUTTONSIZE);
 		worldTypeButtons.add(desert).pad(BUTTONPAD).size(MAPBUTTONSIZE);
 				
+		
 		/* Button listeners*/
 		moon.addListener(new ChangeListener() {
 			@Override
@@ -309,11 +304,11 @@ public class MenuScreen{
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
-		Button tiny = new TextButton("XS", skin);
-		Button smol = new TextButton("S", skin);
-		Button medium = new TextButton("M", skin);
-		Button large = new TextButton("L", skin);
-		Button veryLarge = new TextButton("XL", skin);
+		Button tiny = new TextButton("XS", skin, "toggle");
+		Button smol = new TextButton("S", skin, "toggle");
+		Button medium = new TextButton("M", skin, "toggle");
+		Button large = new TextButton("L", skin, "toggle");
+		Button veryLarge = new TextButton("XL", skin, "toggle");
 		
 		Table worldSizeButtons = new Table();
 		worldSizeButtons.add(tiny).size(NAVBUTTONSIZE).pad(BUTTONPAD);
@@ -384,7 +379,7 @@ public class MenuScreen{
 
 		Table gameTable = new Table();		
 		gameTable.align(Align.left | Align.center);
-		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin);
+		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");
 		
 		//int ai teams, int player teams
 		
@@ -393,10 +388,10 @@ public class MenuScreen{
 		Label selected = new Label(String.format("Selected %d AI teams and %d "
 				+ "player teams", AITeams, playerTeams), skin);
 		
-		Button AI1 = new TextButton("1", skin);
-		Button AI2 = new TextButton("2", skin);
-		Button P1 = new TextButton("1", skin);
-		Button P2 = new TextButton("2", skin);
+		Button AI1 = new TextButton("1", skin, "menubutton");
+		Button AI2 = new TextButton("2", skin, "menubutton");
+		Button P1 = new TextButton("1", skin, "menubutton");
+		Button P2 = new TextButton("2", skin, "menubutton");
 		
 		AI1.addListener(new ChangeListener() {
 			@Override
@@ -437,19 +432,20 @@ public class MenuScreen{
 		Table AIButtons = new Table();
 		Table playerButtons = new Table();
 		
-		AIButtons.add(AI1).pad(BUTTONPAD).size(NAVBUTTONSIZE);
-		AIButtons.add(AI2).pad(BUTTONPAD).size(NAVBUTTONSIZE);
-		playerButtons.add(P1).pad(BUTTONPAD).size(NAVBUTTONSIZE);
-		playerButtons.add(P2).pad(BUTTONPAD).size(NAVBUTTONSIZE);
+		AIButtons.add(AI1).pad(BUTTONPAD);
+		AIButtons.add(AI2).pad(BUTTONPAD);
+		playerButtons.add(P1).pad(BUTTONPAD);
+		playerButtons.add(P2).pad(BUTTONPAD);
 
-		mainmenu.add(combatInfo).row();
-		mainmenu.add(aiSelect).row();
+		mainmenu.add(combatInfo).align(Align.left).row();
+		mainmenu.add(aiSelect).align(Align.left).row();
 		mainmenu.add(AIButtons).row();
-		mainmenu.add(playerSelect).row();
+		mainmenu.add(playerSelect).align(Align.left).row();
 		mainmenu.add(playerButtons).row();
 		mainmenu.add(gameTable).row();
-		mainmenu.add(selected).row();
+		mainmenu.add(selected).align(Align.left).row();
 		Table nav = addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
+		nav.align(Align.left);
 		this.addPlayButton(nav, mainmenu);
 	}
 	
@@ -465,7 +461,7 @@ public class MenuScreen{
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", this.skin);
+		Label serverInfo = new Label("Join a server or start your own!", this.skin, "subtitle");
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -481,8 +477,8 @@ public class MenuScreen{
 	 * @param stage
 	 */
 	public Table addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
-		this.backButton = new TextButton("<", this.skin);
-		this.nextButton = new TextButton(">", this.skin);
+		this.backButton = new TextButton("<", this.skin, "menubutton");
+		this.nextButton = new TextButton(">", this.skin, "menubutton");
 		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
@@ -591,13 +587,18 @@ public class MenuScreen{
 		
 		mainmenu.row();
 		navigationButtons = new Table();
+		
 		mainmenu.add(navigationButtons);
-		navigationButtons.add(this.backButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
-		navigationButtons.add(this.nextButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
-		navigationButtons.add(this.quitButton).height(NAVBUTTONSIZE).width(NAVBUTTONSIZE);
+		navigationButtons.add(this.backButton).pad(BUTTONPAD);
+		navigationButtons.add(this.nextButton).pad(BUTTONPAD);
+		navigationButtons.add(this.quitButton).pad(BUTTONPAD);
 		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
 		
 		return navigationButtons; 
+	}
+	
+	public void resizeMenu(Window mainmenu){
+		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
 	}
 	
 	/*

@@ -34,7 +34,9 @@ public class MainMenu {
 	private static final int MENUHEIGHT = 700; 
 	private static final int MENUWIDTH = 1300;
 	private Skin skin;
-	private Stage stage; 
+	private Stage stage;
+	
+	private MenuScreen menuScreen;
 	
 	private Window mainmenu; 
 	boolean gameStarted = false;
@@ -70,8 +72,7 @@ public class MainMenu {
 	private void createMenu(){
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		//GameManager.get().getGui().disableHUD();
-		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		MenuScreen menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		
 		//add background image
@@ -80,7 +81,7 @@ public class MainMenu {
 	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
 	    mainmenu.setBackground(backgroundRegionDraw);
 	    
-		mainmenu.align(Align.left | Align.center).padLeft(50);
+		mainmenu.align(Align.left | Align.center).padLeft(100);
 	    
 		this.stage.addActor(mainmenu);
 	}
@@ -125,6 +126,9 @@ public class MainMenu {
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
 		this.mainmenu.setSize(width, height);
+		if(menuScreen != null){
+			menuScreen.resizeMenu(this.mainmenu);
+		}
 		if(gameStarted){
 			game.resize(width, height);
 		}

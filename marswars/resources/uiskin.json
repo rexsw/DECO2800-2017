@@ -6,10 +6,11 @@ com.badlogic.gdx.graphics.Color: {
 	white: { r: 1, g: 1, b: 1, a: 1 },
 	spacMaroon: { r: 0.8, b: 0.2, a: 1 },
 	red: { r: 1, a: 1 },
-	grey: { r: 0.7, g: 0.7, b: 0.7, a: 1 },
-	black: { a: 1 }
+	black: { a: 1 },
+	grey: { r: 0.7, g: 0.7, b: 0.7, a: 1 }
 },
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	font_a_rialn_30pt_italic: { file: font_a_rialn_30pt_italic.fnt },
 	font_a_rialnb_42pt_italic: { file: font_a_rialnb_42pt_italic.fnt },
 	Arial_42_Italic: { file: Arial_42_Italic.fnt },
 	default-font: { file: default.fnt }
@@ -27,9 +28,27 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: default-font,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 },
-		disabledFontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		overFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		disabledFontColor: { a: 1, b: 0.2, r: 0.8 },
 		up: default-round,
 		down: default-round-down
+	},
+	pausemenubutton: {
+		font: font_a_rialn_30pt_italic,
+		fontColor: { a: 1, b: 1, g: 1, r: 1 },
+		downFontColor: { a: 1, b: 0.2, r: 0.8 },
+		overFontColor: { a: 1, b: 0.2, g: 1, r: 0.6 },
+		up: clear,
+		down: clear,
+		over: clear
+	},
+	menubutton: {
+		font: Arial_42_Italic,
+		fontColor: { a: 1, b: 1, g: 1, r: 1 },
+		downFontColor: { a: 1, b: 0.2, r: 0.8 },
+		overFontColor: { a: 1, b: 0.2, g: 1, r: 0.6 },
+		up: clear,
+		down: clear
 	},
 	toggle: {
 		font: default-font,
@@ -41,7 +60,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	default: { imageUp: paint_brush, up: default-round, down: default-round-down }
+	default: { imageUp: paint_brush, up: clear, down: default-round-down }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-vertical: { handle: default-splitpane-vertical },
@@ -51,14 +70,15 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: { background: default-pane, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { up: default-round, down: default-round-down },
+	default: { up: default-round-large, down: default-round-down, over: cursor },
 	toggle: { up: default-round, down: default-round-down, checked: default-round-down }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: default-window,
 		titleFont: default-font,
-		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		stageBackground: clear
 	},
 	dialog: {
 		background: default-window,
@@ -97,6 +117,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	error: {
 		font: default-font,
 		fontColor: { a: 1, b: 0.2, r: 0.8 }
+	},
+	info: { font: default-font },
+	subtitle: {
+		font: font_a_rialn_30pt_italic,
+		fontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	title: {
 		font: Arial_42_Italic,
