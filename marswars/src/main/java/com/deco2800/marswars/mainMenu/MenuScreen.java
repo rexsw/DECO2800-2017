@@ -54,7 +54,8 @@ public class MenuScreen{
 	private Table navigationButtons;
 	private Button quitButton;
 	private Button backButton; 
-	private Button nextButton; 
+	private Button nextButton;
+	private Label notSelected; 
 	
 	/* Multiplayer toggles */
 	public static int playerType;   // checks if multiplayer 
@@ -387,6 +388,9 @@ public class MenuScreen{
 		Label playerSelect = new Label("Pick the number of player teams", skin);
 		Label selected = new Label(String.format("Selected %d AI teams and %d "
 				+ "player teams", AITeams, playerTeams), skin);
+		notSelected = new Label("You need to select at least 1 AI team and 1 "
+				+ "player team!", this.skin, "error");
+		notSelected.setVisible(false);
 		
 		Button AI1 = new TextButton("1", skin, "menubutton");
 		Button AI2 = new TextButton("2", skin, "menubutton");
@@ -399,6 +403,7 @@ public class MenuScreen{
 				AITeams = 1;
 				selected.setText(String.format("Selected 1 AI team and %d player "
 						+ "team(s)", playerTeams));
+				notSelected.setVisible(false);
 			}
 		});
 		
@@ -408,6 +413,7 @@ public class MenuScreen{
 				AITeams = 2;
 				selected.setText(String.format("Selected 2 AI teams and %d player "
 						+ "team(s)", playerTeams));
+				notSelected.setVisible(false);
 			}
 		});
 		
@@ -444,6 +450,7 @@ public class MenuScreen{
 		mainmenu.add(playerButtons).row();
 		mainmenu.add(gameTable).row();
 		mainmenu.add(selected).align(Align.left).row();
+		mainmenu.add(notSelected).align(Align.left).row();
 		Table nav = addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
 		nav.align(Align.left);
 		this.addPlayButton(nav, mainmenu);
@@ -621,9 +628,13 @@ public class MenuScreen{
 				}
 				//TODO talk to AI team and see if at least one of each must be selected
 				//TODO come up with a better user notif of an unselected option
-				else new Dialog("You must select a map and pick at "
-						+ "least one AI team and "
-						+ "player team", skin).show(GameManager.get().getStage());
+				else if (mapType == null || mapSize == null){
+					notSelected.setText("Map not selected!");
+					notSelected.setVisible(true);
+				} else if (AITeams == 0 || playerTeams == 0){
+					notSelected.setText("You need to select at least 1 AI team and 1 player team!");
+					notSelected.setVisible(true);
+				}
 		}});
 		nav.removeActor(nextButton);
 		nav.add(playButton).size(NAVBUTTONSIZE);
