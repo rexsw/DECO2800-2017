@@ -1,0 +1,22 @@
+diff a/marswars/src/main/java/com/deco2800/marswars/managers/WeatherManager.java b/marswars/src/main/java/com/deco2800/marswars/managers/WeatherManager.java	(rejected hunks)
+@@ -398,20 +398,5 @@
+     public void onTick(int tick) {
+         //this.setWeatherEvent();
+     }
+-//    //Add Rain Particle effect
+-//    private SpriteBatch batch;    //is already within MarsWars
+-//    private ParticleEffect effect;    
+-//    public void show(){
+-//    	batch = new SpriteBatch;
+-//    	effect = new particleEffect();
+-//    	effect.load(Gdx.files.internal("resources/WeatherAssets/rainParticle"),
+-//    			(Gdx.files.internal("resources/WeatherAssets")));
+-//    	effect.setPosition(Gdx.graphics.getWidth() / 2,
+-//    			Gdx.graphics.getHeight());
+-//      effect.start();
+-//    }
+-    
+-//		Within MarsWars just need to draw this particle effect using effect.draw();    
+-    	
+ }
+ 

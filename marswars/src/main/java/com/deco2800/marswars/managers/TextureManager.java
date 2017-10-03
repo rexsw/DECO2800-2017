@@ -69,6 +69,12 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
+	        
+	        //TechBuilding Stages
+	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
+	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
+	        textureMap.put("tech3",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech3.png"));
+	        textureMap.put("tech4",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech4.png"));
         
 	        textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
 	        
@@ -148,7 +154,17 @@ public class TextureManager extends Manager {
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
         
         //----------- MainMenu Assets:
-        this.saveTexture("menubackground", "resources/Mainmenu/background.png");       
+        this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
+        this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
+        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon002.png");
+        this.saveTexture("desert_map", "resources/mapAssets/tileset/tile001.png");
+        this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
+        this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
+        this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
+        this.saveTexture("astro_purple", "resources/UnitAssets/Astronaut/Purple/default.png");
+        this.saveTexture("astro_red", "resources/UnitAssets/Astronaut/Red/default.png");
+        this.saveTexture("astro_yellow", "resources/UnitAssets/Astronaut/Yellow/default.png");
+        
         
         //----------Unit Assets:
         //Soldier:

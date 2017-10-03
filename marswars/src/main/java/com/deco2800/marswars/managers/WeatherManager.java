@@ -1,5 +1,8 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
@@ -7,7 +10,6 @@ import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -24,15 +26,10 @@ public class WeatherManager extends Manager implements Tickable {
     private Random random = new Random();
     private long interval = 0;
     private long currentTime = 0;
-    private boolean eventStarted = false;
     private boolean damaged = false;
-    private boolean iteratorSet = false;
     private boolean floodWatersExist = false;
-
-    private Iterator<BaseEntity> iterator;
-
-    private static final org.slf4j.Logger LOGGER =
-            LoggerFactory.getLogger(WeatherManager.class);
+    // Set as a class variable so that buildings can be unpaused properly
+    private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
 
     /**
      * Sets the relevant weather even according to the current in game time.
@@ -46,7 +43,7 @@ public class WeatherManager extends Manager implements Tickable {
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            if (timeManager.getHours() < 1) {//this.isRaining()) {
+            if (timeManager.getHours() < 1) {
                 status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
@@ -62,12 +59,10 @@ public class WeatherManager extends Manager implements Tickable {
                     world = GameManager.get().getWorld();
                     this.setInterval();
                     // While water still exists, continue to apply effects
-                    if (this.retreatWaters()) {
-                        this.applyEffects();
-                    }
+                    this.retreatWaters();
+                    this.applyEffects();
                 }
             }
-
         }
         return status;
     }
@@ -83,8 +78,7 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public boolean isRaining() {
-        return timeManager.getGameDays() % 3 == 0
-                || timeManager.getGameDays() % 4 == 0;
+        return timeManager.getHours() > 10 && timeManager.getHours() < 15;
     }
 
     /**
@@ -92,7 +86,6 @@ public class WeatherManager extends Manager implements Tickable {
      */
     private void applyEffects() {
         ArrayList<float []> areaOfEffect = getAffectedTiles();
-        ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
         ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
         for (float [] tile: areaOfEffect) {
             List<BaseEntity> entities =
@@ -105,7 +98,6 @@ public class WeatherManager extends Manager implements Tickable {
                     if (e instanceof Soldier) {
                         damagedUnits.add(e);
                     } else if (e instanceof BuildingEntity) {
-                        //LOGGER.info("BUILDING PAUSED");
                         pausedBuildings.add(e);
                         timeManager.pause(e);
                         ((BuildingEntity) e).setFlooded(true);
@@ -116,6 +108,7 @@ public class WeatherManager extends Manager implements Tickable {
         applyContinuousDamage(damagedUnits);
         timeManager.pause(pausedBuildings);
         resumeProduction(pausedBuildings, areaOfEffect);
+        areaOfEffect.clear();
     }
 
     /**
@@ -128,8 +121,12 @@ public class WeatherManager extends Manager implements Tickable {
         // assuming that the function will not always be called 5 seconds apart
         if (timeManager.getPlaySeconds() % timeBetween > condition && ! damaged) {
             for (BaseEntity e: damagedUnits) {
+                //if (((Soldier) e).getHealth() <
+                //        ((Soldier) e).getMaxHealth() / 10) {
+                    // Check for existing action and complete before deletion
+                //}
                 ((Soldier) e).setHealth(((Soldier) e).getHealth() -
-                        (((Soldier) e)).getHealth() / 10);
+                        (((Soldier) e)).getMaxHealth() / 10);
             }
             damaged = true;
         } else if (timeManager.getPlaySeconds() % timeBetween <= condition) {
@@ -139,27 +136,14 @@ public class WeatherManager extends Manager implements Tickable {
     }
 
     /**
-     * Halts the production or build progression of the passed building
-     * @param e - the building to be affected
-     */
-   /* private void haltProduction(BuildingEntity e) {
-        if (e instanceof Barracks) {
-            ((Barracks) e).getCurrentAction().get().pauseAction();
-        } else  if (e instanceof Bunker) {
-            ((Bunker) e).getCurrentAction().get().pauseAction();
-        } else  if (e instanceof Base) {
-            ((Base) e).getAction().get().pauseAction();
-        }
-    }
-    */
-
-    /**
      * Returns any building caught in the weather events area of effect to its
      * normal state.
      */
     private void resumeProduction(List<BaseEntity> pausedBuildings,
                                   List<float []> areaOfEffect) {
-        for (BaseEntity e: pausedBuildings) {
+        Iterator<BaseEntity> buildingIterator = pausedBuildings.iterator();
+        while (buildingIterator.hasNext()) {
+            BaseEntity e = buildingIterator.next();
             boolean stillFlooded = false;
             for (float [] tile: areaOfEffect) {
                 if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
@@ -170,6 +154,8 @@ public class WeatherManager extends Manager implements Tickable {
             if (! stillFlooded) {
                 timeManager.unPause(e);
                 ((BuildingEntity) e).setFlooded(false);
+                // Remove unpaused building from list
+                buildingIterator.remove();
             }
         }
     }
@@ -202,8 +188,8 @@ public class WeatherManager extends Manager implements Tickable {
     public boolean checkPosition(Point p) {
         /* Ensure new water position is on the map */
         // SHOULD THIS BE WIDTH AND LENGTH OR WIDTH-1, LENGTH-1?
-        return (p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth()
-                || p.getY() > world.getLength());
+        return p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth()
+                || p.getY() > world.getLength();
     }
 
     /**
@@ -284,12 +270,10 @@ public class WeatherManager extends Manager implements Tickable {
      * @param existingWater
      */
     private void generateWater(Water existingWater) {
-        //LOGGER.info("GENERATING WATER");
         if (random.nextInt(100) < 11) {
             // Point math needs fixing
             Point position = findFreePoint(existingWater);
             if (! this.checkPosition(position)) {
-                //LOGGER.info("FINDING NEW POS");
                 generateWater(existingWater);
             }
             // Previous check should cover this, but to confirm
@@ -311,7 +295,6 @@ public class WeatherManager extends Manager implements Tickable {
      * multiplied.
      */
     private void generateFlood() {
-        //LOGGER.info("GENERATING FLOOD");
         List<BaseEntity> entities = world.getEntities();
         Boolean waterFound = false;
         // Find existing water entities
@@ -324,10 +307,8 @@ public class WeatherManager extends Manager implements Tickable {
             }
         }
         if (waterFound) {
-            //LOGGER.info("WATER FOUND");
             return;
         } else {
-            //LOGGER.info("NO WATER YET");
             // No water found in map... Create some
             this.generateFirstDrop();
             return;
@@ -339,11 +320,9 @@ public class WeatherManager extends Manager implements Tickable {
      * none currently exist.
      */
     private void generateFirstDrop() {
-        //LOGGER.info("GENERATING DROP");
         Random r = new Random();
         int width = world.getWidth();
         int length = world.getLength();
-        System.out.println(width + " WIDTH");
         Point p = new Point(width - r.nextInt(width/4)
                 - 1, length - r.nextInt(length/4) - 1);
         // Ensure position valid (should be trivially true)
@@ -372,32 +351,42 @@ public class WeatherManager extends Manager implements Tickable {
         world = GameManager.get().getWorld();
         List<BaseEntity> entities = world.getEntities();
         Boolean waterFound = false;
-        //int count = 10;
-        if (! iteratorSet) {
-            iterator = entities.iterator();
-            iteratorSet = true;
-        }
-        // Find existing water entities
-        if (iterator.hasNext()) {
-            BaseEntity entity = iterator.next();
-            if (entity instanceof Water) {
+        int waterCount = 0;
+
+        List<BaseEntity> removeEntities = new ArrayList<>();
+        for (BaseEntity e: entities) {
+            if (e instanceof Water) {
                 waterFound = true;
-                // Remove Water with 10% chance every call
-                //if (random.nextInt(100) > 90) {
-                ((Water) entity).setHealth(0);
-                GameManager.get().getWorld().removeEntity(entity);
-                //count--;
-                //}
+                removeEntities.add(e);
+                waterCount++;
+                if (waterCount == 10) {
+                    break;
+                }
+            }
+        }
+        if (waterFound) {
+            for (BaseEntity water: removeEntities) {
+                world.removeEntity(water);
             }
         } else {
-            // WILL CURRENTLY REMOVE ALL WATER ON MAP
             floodWatersExist = false;
         }
+        removeEntities.clear();
         return floodWatersExist;
     }
 
-    //POSSIBLY ADD FUNCTION FOR PERIODICALLY ADDING MORE WATER IN NEW PLACES,
-    // OR ADD LOOP IN FIRST DROP TO GENERATE 3 to 5 pools
+    public void addRainVisuals(SpriteBatch batch) {
+        if (this.isRaining()) {
+            // Particle for rain visuals
+            ParticleEffect effect = new ParticleEffect();
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain.p"),
+                    Gdx.files.internal("resources/WeatherAssets"));
+            effect.setPosition(Gdx.graphics.getWidth() / 2,
+                    Gdx.graphics.getHeight());
+            effect.start();
+            effect.draw(batch);
+        }
+    }
 
     /**
      * Causes effects to come into play each game tick.
@@ -405,7 +394,23 @@ public class WeatherManager extends Manager implements Tickable {
      */
     @Override
     public void onTick(int tick) {
+
         //this.setWeatherEvent();
     }
+//    //Add Rain Particle effect
+//    private SpriteBatch batch;    //is already within MarsWars
+//    private ParticleEffect effect;    
+//    public void show(){
+//    	batch = new SpriteBatch;
+//    	effect = new particleEffect();
+//    	effect.load(Gdx.files.internal("resources/WeatherAssets/rainParticle"),
+//    			(Gdx.files.internal("resources/WeatherAssets")));
+//    	effect.setPosition(Gdx.graphics.getWidth() / 2,
+//    			Gdx.graphics.getHeight());
+//      effect.start();
+//    }
+    
+//		Within MarsWars just need to draw this particle effect using effect.draw();    
+    	
 }
 

@@ -8,7 +8,6 @@ import com.deco2800.marswars.managers.TimeManager;
 /**
  * Creates a dialog menu which is used to check whether the player wishes to exit the game
  */
-
 public class ExitGame extends Dialog{
 
 	private TimeManager timeManager = (TimeManager)
@@ -16,6 +15,13 @@ public class ExitGame extends Dialog{
 	HUDView hud;
 	boolean started;
 
+	/**
+	 * Creates an 'Exit Game' dialog
+	 * @param title
+	 * @param skin
+	 * @param hud
+	 * @param started
+	 */
 	public ExitGame(String title, Skin skin, HUDView hud, boolean started) {
 		super(title, skin);
 		this.hud = hud;

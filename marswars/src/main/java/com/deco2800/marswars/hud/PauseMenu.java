@@ -1,8 +1,16 @@
 package com.deco2800.marswars.hud;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -24,44 +32,53 @@ import com.deco2800.marswars.managers.TimeManager;
 public class PauseMenu extends Dialog{
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private Stage stage;
-	private Skin skin;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Hotkeys.class);
+	
 	private GameStats stats;
 	private HUDView hud;
-	private MainMenu menu;
-	
 	public PauseMenu(String title, Skin skin, Stage stage, GameStats stats, HUDView hud) {
 		super(title, skin);
-		this.skin = skin;
 		this.stats = stats;
 		this.hud = hud;
-		this.stage = stage;
+		LOGGER.info("Instantiating the Pause menu");
 		
 		{
 			hud.setPauseCheck(1);
 			text("Game Paused");
 			
 			button("Resume", 0);
-			button("Statistics", 1);
+			this.getButtonTable().row();
+			button("Statis;tics", 1);
+			this.getButtonTable().row();
 			button("Settings", 2);
+			this.getButtonTable().row();
 			button("Quit to Main Menu", 3);
+			this.getButtonTable().row();
+
 			button("Exit Game", 4);
+			
 			this.timeManager.pause();
-		}	
+			
+			}	
 	}
 		/**
 		 * interprets the button press chosen by the player
 		 */
 		protected void result(final Object object) {
 			if (object == (Object) 1) {
+				LOGGER.info("Opening Stats");
 				this.stats.showStats();
 			} else if (object == (Object) 2) {
+				LOGGER.info("Opening Settings");
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
 			} else if (object == (Object) 3) {
+				LOGGER.info("Quitting to main menu");
 				this.hud.setPauseCheck(0);
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
+				LOGGER.info("Quitting the application");
 				System.exit(0);
 			} else {
 				this.timeManager.unPause();

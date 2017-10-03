@@ -13,7 +13,12 @@ import java.util.concurrent.TimeUnit;
  * This class is to interprete and excute the cheatcode catched in chatbox
  */
 public class CodeInterpreter {
-    
+    private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
+    private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
+    private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+
+
+
 
     /**
      * call different methods when receiving different codes
@@ -60,7 +65,10 @@ public class CodeInterpreter {
         {
             invincible();
         }
-
+        else if (a.contains("tech"))
+        {
+            addAllTech();
+        }
 
 
     }
@@ -77,7 +85,6 @@ public class CodeInterpreter {
             if(e.getOwner() != -1 && e instanceof Soldier)
             {
                 GameManager.get().getWorld().removeEntity(e);
-                System.out.println( GameManager.get().getWorld().getEntities().size());
                 return;
             }
         }
@@ -94,10 +101,10 @@ public class CodeInterpreter {
             if(e.getOwner() != -1 && e instanceof Soldier)
             {
                 GameManager.get().getWorld().removeEntity(e);
-                System.out.println( GameManager.get().getWorld().getEntities().size());
+
             }
         }
-        System.out.println( GameManager.get().getWorld().getEntities().size());
+
         return;
     }
 
@@ -107,8 +114,6 @@ public class CodeInterpreter {
      * @param int the number indicated by the digits
      */
     public void addRock(int a){
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        ResourceManager rm = (ResourceManager)manager;
         int num = rm.getRocks(-1) + a;
         rm.setRocks(num,-1);
     }
@@ -120,8 +125,6 @@ public class CodeInterpreter {
      *  @param int the number indicated by the digits
      */
     public void addBiomass(int a){
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        ResourceManager rm = (ResourceManager)manager;
         int num = rm.getBiomass(-1) + a;
         rm.setBiomass(num,-1);
     }
@@ -133,8 +136,6 @@ public class CodeInterpreter {
      *  @param int the number indicated by the digits
      */
     public void addCrystal(int a){
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        ResourceManager rm = (ResourceManager)manager;
         int num = rm.getCrystal(-1) + a;
         rm.setCrystal(num,-1);
     }
@@ -146,8 +147,6 @@ public class CodeInterpreter {
      *  @param int the number indicated by the digits
      */
     public void addWater(int a){
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        ResourceManager rm = (ResourceManager)manager;
         int num = rm.getWater(-1) + a;
         rm.setWater(num,-1);
     }
@@ -158,9 +157,6 @@ public class CodeInterpreter {
      * If the code contains "day", add the game time, so it makes it 6 am in the game.
      */
     public void switchDay(){
-        Manager manager = GameManager.get().getManager(TimeManager.class);
-        TimeManager tm = (TimeManager)manager;
-
         long add = 0;
         if ((tm.getHours()) < 6)
         {
@@ -173,7 +169,6 @@ public class CodeInterpreter {
 
         }
         tm.addTime(add);
-
     }
 
 
@@ -181,9 +176,6 @@ public class CodeInterpreter {
      * If the code contains "night", add the game time, so it makes it 9 pm in the game.
      */
     public void switchNight(){
-        Manager manager = GameManager.get().getManager(TimeManager.class);
-        TimeManager tm = (TimeManager)manager;
-
         long add = 0;
         if ((tm.getHours()) < 21)
         {
@@ -208,8 +200,19 @@ public class CodeInterpreter {
     }
 
 
-
-
+    /**
+     * If the code is "tech", upgrade one level for every technology of the player
+     */
+    public void addAllTech() {
+        tem.armourUpgrade();
+        tem.attackUpgrade();
+        tem.speedUpgrade();
+        tem.healthUpgrade();
+        tem.unlockHeroFactory();
+        tem.cowLevelUpgrade();
+        tem.steroidsUpgrade();
+        tem.vampirismUpgrade();
+    }
 
 
 

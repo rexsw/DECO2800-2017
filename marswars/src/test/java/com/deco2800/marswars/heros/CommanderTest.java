@@ -21,6 +21,12 @@ public class CommanderTest {
 		c = new Commander(1,1,1,1);
 	}
 	
+	/**
+	 * This test checks following things:
+	 * 1. does this commander has an inventory
+	 * 2. does it has the right owner
+	 * 3. since it inherited from Soldier class, does the override method works
+	 */
 	@Test
 	public void constructorTest() {
 		assertTrue(c.getInventory() instanceof Inventory);
@@ -30,6 +36,11 @@ public class CommanderTest {
 		assertTrue(c.toString().equals("Commander"));
 	}
 	
+	/**
+	 * This test check some simple function on inventory
+	 * The detailed checking has been handled in the inventory test
+	 * This test just to make sure the right item gets passed through to the inventory object
+	 */
 	@Test
 	public void inventoryTest() {
 		// more detailed test should be handled in inventoryTest.java
@@ -49,6 +60,10 @@ public class CommanderTest {
 		assertFalse(c.removeItemFromInventory(item2));
 	}
 	
+	/**
+	 * Test the equals method of the Commander class
+	 * 
+	 */
 	@Test
 	public void equalTest() {
 		Commander c2 = new Commander(1,1,1,2);
@@ -60,6 +75,10 @@ public class CommanderTest {
 		assertFalse(c.equals(new Soldier(1,1,1,1)));
 	}
 	
+	/**
+	 * statsTest test the commander entityType, toString, action, current and max health
+	 * resourceCarried. Pretty much everything should be passed to EntityStats
+	 */
 	@Test
 	public void statsTest() {
 		EntityStats stats = c.getStats();
@@ -71,6 +90,10 @@ public class CommanderTest {
 		assertTrue(stats.getMaxHealth() == c.getMaxHealth());
 	}
 	
+	/**
+	 * The loyalty of Commander should be unaffected by the hacker's setLoyalty method
+	 * or any setLoytalty method
+	 */
 	@Test
 	public void loyaltyTest() {
 		int currentLoyalty = c.getLoyalty();

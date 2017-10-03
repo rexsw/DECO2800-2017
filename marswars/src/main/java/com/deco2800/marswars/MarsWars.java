@@ -18,6 +18,7 @@ import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 import org.slf4j.Logger;
@@ -55,14 +56,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
+	private WeatherManager weatherManager = (WeatherManager)
+			GameManager.get().getManager(WeatherManager.class);
 
-	long lastGameTick = 0;
-	long lastMenuTick = 0;
+	//long lastGameTick = 0;
+	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
 	public static int invincible = 0;
 	
-	private MainMenu menu;
 	private Skin skin;
 
 	Set<Integer> downKeys = new HashSet<>();
@@ -90,7 +92,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
-		this.menu = new MainMenu(this.skin, this.stage);
+		new MainMenu(this.skin, this.stage);
 	}
 
 	/**
@@ -131,6 +133,9 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);
+
+		// Render the rain effect if raining PLEASE DO NOT DELETE
+		//weatherManager.addRainVisuals(batch);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());

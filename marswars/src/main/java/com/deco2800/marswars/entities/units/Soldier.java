@@ -208,6 +208,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			Turret turret = (Turret) entities.get(0);
 			turret.numOfSolider += 1;
 			turret.powerUpTurret();
+			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
@@ -342,36 +343,38 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @param enemy
 	 */
 	public void getStances(List<AttackableEntity> enemy) {
-		switch (getStance()) {
-			//Passive
-			case 0:	
-				break;
-			//Defensive
-			case 1:
-				if (!enemy.isEmpty()) {
-					defensiveBehaviour(enemy);
-				}
-				break;
-			//Aggressive
-			case 2:
-				if (!enemy.isEmpty()) {
-					aggressiveBehaviour(enemy);
-				}
-				break;
-			//Skirmishing
-			case 3:
-				if (!enemy.isEmpty()) {
-					skirmishingBehaviour(enemy);
-				}
-				break;
-			//Timid
-			case 4:
-				if (!enemy.isEmpty()) {
-					timidBehaviour(enemy);
-				}
-				break;
-			default:
-				break;
+		if(this.getLoadStatus()!=1) {
+			switch (getStance()) {
+				//Passive
+				case 0:
+					break;
+				//Defensive
+				case 1:
+					if (!enemy.isEmpty()) {
+						defensiveBehaviour(enemy);
+					}
+					break;
+				//Aggressive
+				case 2:
+					if (!enemy.isEmpty()) {
+						aggressiveBehaviour(enemy);
+					}
+					break;
+				//Skirmishing
+				case 3:
+					if (!enemy.isEmpty()) {
+						skirmishingBehaviour(enemy);
+					}
+					break;
+				//Timid
+				case 4:
+					if (!enemy.isEmpty()) {
+						timidBehaviour(enemy);
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	

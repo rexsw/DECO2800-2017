@@ -1,9 +1,71 @@
 #!/bin/bash
-#renaming script for testing automated sprite selection for units
-for dir in ./*/
-do
-    cd $dir
-    mv ./*1.png default.png
-    cp ../../Neutral/Astronaut_1.png selected.png
-    cd ..
-done
+
+#
+#mv *Blue*.png Blue   
+#mv *Green*.png Green 
+#mv *Pink*.png Pink 
+#mv *Purple*.png Purple
+#mv *Red*.png Red
+#mv *Yellow*.png Yellow 
+#
+cd Blue
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+cd ../Green
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+cd ../Purple
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+cd ../Pink
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+cd ../Red
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+cd ../Yellow
+mv *1.png downleft.png
+mv *2.png downright.png
+mv *3.png upleft.png
+mv *4.png upright.png
+cp downleft.png default.png
+cp downright.png selected.png
+
+
+
+
+
+
+
+
+
+
+
+
+
+

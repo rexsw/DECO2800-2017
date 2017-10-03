@@ -33,7 +33,7 @@ import java.util.*;
 
 
 /**
- * This Class is used to deal with some of the keyboard inputs as
+ * This Class is used to deal with different keyboard inputs as
  * command of the game and it might have some special functions.
  * 
  * @author Matthew Lee
@@ -43,13 +43,15 @@ public class ShortCut {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShortCut.class);
 	
-
+	// inputKeys is used to stored the user input.
 	private Set<Integer> inputKeys = new HashSet<>();
 	
 	private final int speed = 10;
 	
+	// cameraPosition will store different list of positions of camera.
 	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
 	
+	// These ArrayList<BaseEntity> will be used to store a group of BaseEntity.
 	private ArrayList<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
 	private ArrayList<BaseEntity> baseEntityList1 = new ArrayList<BaseEntity>();
 	private ArrayList<BaseEntity> baseEntityList2 = new ArrayList<BaseEntity>();
@@ -61,9 +63,14 @@ public class ShortCut {
 	private ArrayList<BaseEntity> baseEntityList8 = new ArrayList<BaseEntity>();
 	private ArrayList<BaseEntity> baseEntityList9 = new ArrayList<BaseEntity>();
 	
+	// cameraPointer is a counter of the cameraPosition
 	private int cameraPointer = 0;
 	
 	private int pauseCount = 0;
+	
+	// These boolean variables are used to avoid user having a long press of the
+	// input keys and make the functions implement multiple times that affect
+	// the performance of different functions.
 	private boolean n = false;
 	private boolean c = false;
 	private boolean b =  false;
@@ -77,7 +84,11 @@ public class ShortCut {
 	private boolean team1 = false;
 	private boolean numberKey = false;
 	
-	
+	/**
+	 * This methods will implement different methods in ChortCut class.
+	 * 
+	 * @param OrthographicCamera camera.
+	 */
 	public void process(OrthographicCamera camera) {
 		moveCamera(camera);
 		storeCameraPosition(camera);
@@ -91,9 +102,13 @@ public class ShortCut {
 		storeTeam();
 		teamOnClick();
 		//moveCameraToBase(camera);
-		quitGame();
 	}
 	
+	/**
+	 * This methods will move the camera and change the zoom size.
+	 * 
+	 * @param OrthographicCamera camera.
+	 */
 	public void moveCamera(OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.UP) || inputKeys.contains(Input.Keys.W)) {
 			camera.translate(0, 1 * speed * camera.zoom, 0);
@@ -115,14 +130,31 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method adds a key that user type in to inputKeys.
+	 * 
+	 * @param int key
+	 */
 	public void addKey(int key) {
 		inputKeys.add(key);
 	}
 	
+	/**
+	 * This method removes a key that exists in inputKeys.
+	 * 
+	 * @param int key
+	 */
 	public void removeKey(int key) {
-		inputKeys.remove(key);
+		if (inputKeys.contains(key)) {
+			inputKeys.remove(key);
+		}
 	}
 	
+	/**
+	 * This method will store the current position of the camera into an ArrayList.
+	 * 
+	 * @param OrthographicCamera camera
+	 */
 	public void storeCameraPosition(OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.C) && !inputKeys.contains(Input.Keys.CONTROL_LEFT)){
 			if(c == false){
@@ -138,6 +170,14 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method calculate the distance of x position of the camera and y position of the camera 
+	 * between current position of the camera and the position that had been stored in the ArrayList.
+	 * Then move the camera using the result of x and y. After that if the player keep using this function
+	 * then the camera will move to the other position that had been stored in the ArrayList.
+	 * 
+	 * @param OrthographicCamera camera
+	 */
 	public void cameraGoToTheStoredPosition(OrthographicCamera camera) {
 		if((inputKeys.contains(Input.Keys.N))){
 			if(!cameraPosition.isEmpty()){
@@ -164,6 +204,15 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method calculate the distance of x position of the camera and y position of the camera 
+	 * between current position of the camera and the position that had been stored in the ArrayList.
+	 * Then move the camera using the result of x and y. After that if the player keep using this function
+	 * then the camera will move to the other position that had been stored in the ArrayList that in a
+	 * backward order.
+	 * 
+	 * @param OrthographicCamera camera
+	 */
 	public void cameraBackToLastPosition(OrthographicCamera camera) {
 		if((inputKeys.contains(Input.Keys.B))){
 			if(!cameraPosition.isEmpty()){
@@ -193,6 +242,11 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will delete one of the position that had been stored in the ArrayList.
+	 * 
+	 * @param OrthographicCamera camera
+	 */
 	public void cameraDeleteLastPosition() {
 		if((inputKeys.contains(Input.Keys.C)) && inputKeys.contains(Input.Keys.CONTROL_LEFT)){
 			if(!cameraPosition.isEmpty()){
@@ -213,6 +267,7 @@ public class ShortCut {
 		}
 	}
 	
+	// still working on it
 	public void pauseGame() {
 		if(inputKeys.contains(Input.Keys.P)) {
 			Scanner sc = new Scanner(System.in);
@@ -224,6 +279,7 @@ public class ShortCut {
 		}
 	}
 	
+	// still working on it
 	public void moveToOneOfTheEntity(OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.Z) && baseEntityList.size() > 0) {
 			if (moveToEntity == false) {
@@ -243,7 +299,7 @@ public class ShortCut {
 
 	/**
 	 * this method is to move the camera to the home base by clicking the backspace button
-	 *has not differentiated player's and ai's home base yet
+	 * has not differentiated player's and ai's home base yet
 	 * @param g the gamemanager.
 	 * @param camera the orthographicCamera.
 	 */
@@ -283,6 +339,10 @@ public class ShortCut {
 
 	}
 	
+	/**
+	 * This method is used to recognize user's inputs and call entityOnClick() method by
+	 * using different ArrayList as parameter.
+	 */
 	public void storeTeam() {
 		if (select == false) {
 			if (inputKeys.contains(Input.Keys.SHIFT_LEFT) && inputKeys.contains(Input.Keys.NUM_1)){
@@ -312,6 +372,10 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method is used to recognize user's inputs and call entityOnClick() method by
+	 * using different ArrayList as parameter.
+	 */
 	public void teamOnClick() {
 		if (numberKey == false && !inputKeys.isEmpty()) {
 			if (inputKeys.contains(Input.Keys.NUM_1) && !inputKeys.contains(Input.Keys.SHIFT_LEFT)) {
@@ -342,6 +406,12 @@ public class ShortCut {
 		
 	}
 	
+	/**
+	 * This method will take an ArrayList<BaseEntity> as parameter and iterate the entity in the list
+	 * and set them to be onClicked. 
+	 * 
+	 * @param ArrayList<BaseEntity> list
+	 */
 	public void setOnClick(ArrayList<BaseEntity> list) {
 		MouseHandler  mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 		for (BaseEntity entity: list) {
@@ -351,6 +421,12 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will take an ArrayList<BaseEntity> as parameter and iterate the entities that
+	 * exist in the game world. The entities which had been selected by users will be added to a list.
+	 * 
+	 * @param ArrayList<BaseEntity> list
+	 */
 	public void entityOnClick(ArrayList<BaseEntity> list) {
 		for (Renderable e : GameManager.get().getWorld().getEntities()) {
 			if ((e instanceof Clickable) && (e instanceof BaseEntity) && ((BaseEntity) e).isSelected() && !list.contains((BaseEntity) e)) {
@@ -360,6 +436,10 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will create a Spacman that owned by user into the game world.
+	 * 
+	 */
 	public void addExtraSpacMan() {
 		if (inputKeys.contains(Input.Keys.G) && !inputKeys.contains(Input.Keys.CONTROL_LEFT)) {
 			if(spac == false){
@@ -373,6 +453,10 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will create an Ai Spacman into the game world.
+	 * 
+	 */
 	public void addExtraAiSpacMan() {
 		if (inputKeys.contains(Input.Keys.G) && inputKeys.contains(Input.Keys.CONTROL_LEFT)) {
 			if(aiSpac == false){
@@ -386,6 +470,10 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will create a Tank that owned by user into the game world.
+	 * 
+	 */
 	public void addExtraTank() {
 		if (inputKeys.contains(Input.Keys.T)) {
 			if(tank == false){
@@ -398,6 +486,10 @@ public class ShortCut {
 		}
 	}
 	
+	/**
+	 * This method will create a Soldier that owned by user into the game world.
+	 * 
+	 */
 	public void addExtraSoldier() {
 		if (inputKeys.contains(Input.Keys.J)) {
 			if(soldier == false){
@@ -408,12 +500,5 @@ public class ShortCut {
 		} else {
 			soldier = false;
 		}
-	}
-	
-	public void quitGame() {
-		if(inputKeys.contains(Input.Keys.ESCAPE)) {
-			System.exit(0);
-		}
-		
 	}
 }
