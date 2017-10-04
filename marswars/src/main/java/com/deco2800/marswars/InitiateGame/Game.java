@@ -74,7 +74,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
-		//this.weatherManager.setWeatherEvent();
+//		this.weatherManager.setWeatherEvent();
 	}
 	
 	/**
@@ -264,24 +264,33 @@ public class Game{
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
 					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						if (TimeUtils.nanoTime() - lastGameTick > 10500000) {
+							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
+						}
+
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
 						//initial value 100000
-							for (Renderable e : GameManager.get().getWorld().getEntities()) {
-								if (e instanceof Tickable) {
-									((Tickable) e).onTick(0);
+						for (Renderable e : GameManager.get().getWorld().getEntities()) {
+							if (e instanceof Tickable) {
+								long startTime = TimeUtils.nanoTime();
+								((Tickable) e).onTick(0);
+								long endTime = TimeUtils.nanoTime();
+
+								if (endTime - startTime > 100000) { //0.01ms
+									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
 								}
 							}
-							GameManager.get().onTick(0);
-							lastGameTick = TimeUtils.nanoTime();
+						}
+						GameManager.get().onTick(0);
+						lastGameTick = TimeUtils.nanoTime();
 
 					}
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
-
 					}
 				}
 			}
