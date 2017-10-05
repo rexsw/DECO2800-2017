@@ -9,8 +9,10 @@ public enum BuildingType {
 	BARRACKS(3f, 300, "barracks3"), 
 	BUNKER(2f, 100, "bunker3"), 
 	TURRET(2f, 200, "turret3"),
-	HEROFACTORY(3f, 300, "barracks3"); // texture value is a placeholder
-	
+	HEROFACTORY(3f, 300, "barracks3"),
+	TECHBUILDING(2f, 100, "tech3");// texture value is a placeholder
+
+
 	private final float buildingSize;
 	private final int buildCost;
 	private final String buildTexture;

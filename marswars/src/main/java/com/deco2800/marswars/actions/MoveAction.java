@@ -94,7 +94,7 @@ public class MoveAction implements DecoAction {
 
 			if (path != null && entity instanceof AttackableEntity) {
 				// remove the entity from the minimap
-				//GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
+				GameManager.get().getMiniMap().removeEntity((BaseEntity) entity);
 			}
 
 			/* If the path is null its probably completed */
@@ -115,6 +115,11 @@ public class MoveAction implements DecoAction {
 			if(entity instanceof Soldier) {
 				Soldier soldier = (Soldier) entity;
 				soldier.faceTowards(tmpgoalX,tmpgoalY);
+			}
+			//set missile to face towards the moving direction
+			if(entity instanceof MissileEntity) {
+				MissileEntity missile = (MissileEntity) entity;
+				missile.faceTowards(tmpgoalX,tmpgoalY);
 			}
 			/* If we have arrived (or close enough to) then remove this point from the path and continue */
 			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {

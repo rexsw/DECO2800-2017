@@ -80,7 +80,7 @@ public class WinManager extends Manager implements TickableManager {
 		@Override
 		protected void result(final Object object) {
 			if (object == (Object) 1) {
-				System.exit(0);
+				GameManager.get().resetGame();
 			} else {
 				GameStats stats = new GameStats(GameManager.get().getStage(), GameManager.get().getSkin(),GameManager.get().getGui(),(TextureManager) GameManager.get().getManager(TextureManager.class));
 				stats.showStats();

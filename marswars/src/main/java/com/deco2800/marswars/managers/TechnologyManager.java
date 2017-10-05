@@ -20,6 +20,10 @@ public class TechnologyManager extends Manager{
     public HashMap<String, int[]> unitAttributes = new HashMap<>();
     public Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
+    /*
+     * item system integration into techtree not implemented yet, still in progress. So lines from here to 
+     * "private Technology special;" are placeholder at the moment.
+     */
     private Technology heroFactory;
     private ArrayList<Technology> armourL1Parents = new ArrayList<Technology>();
     private Technology armourLevelOne;
@@ -35,6 +39,7 @@ public class TechnologyManager extends Manager{
     private Technology weaponLevelThree;
     private ArrayList<Technology> specialParents = new ArrayList<Technology>();
     private Technology special;
+    
     private ArrayList<BuildingType> buildingsAvailable;
 
     private ArrayList<Technology> armourTech2Parents = new ArrayList<Technology>();
@@ -195,6 +200,9 @@ public class TechnologyManager extends Manager{
     public void armourUpgrade(){
         unitAttributes.get("Soldier")[3] *= 2;
     }
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER. IN PROGRESS.
+     */
     public void unlockHeroFactory() {
         System.out.println("\n Hero Factory unlocked \n");
     }
@@ -226,29 +234,53 @@ public class TechnologyManager extends Manager{
         unitAttributes.get("Soldier")[6] *= 9999;
     }
 
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockArmourLevelTwo() {
 
     }
+    
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockArmourLevelThree() {
 
     }
+    
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockWeaponLevelOne() {
 
     }
+    
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockWeaponLevelTwo() {
 
     }
+    
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockWeaponLevelThree() {
 
     }
+    
+    /**
+     * NOT IMPLEMENTED YET. PLACEHOLDER
+     */
     public void unlockSpecial() {
 
     }
 
+
     public void buildingArmorUpgrade(){
 
     }
-
+ 
     public void buildingConstructionTimeUpgrade(){
 
     }
@@ -323,6 +355,10 @@ public class TechnologyManager extends Manager{
         System.out.println("######################################");
         return "Technology successfully researched";
     }
+    
+    /**
+     * Sets up the dependencies of the items' levels (research)
+     */
     private void setUpHeroTechs() {
         heroFactory = new Technology(new int[]{0, 0, 20, 20}, "Hero " +
                 "Factory", new ArrayList<Technology>(), "Unlocks the ability" +
@@ -371,6 +407,9 @@ public class TechnologyManager extends Manager{
                 "ability to build Special items for Hero units..");
     }
 
+    /**
+     * Adds the item system technologies to the techmap.
+     */
     private void setUpTechMap() {
         techMap.put(17, heroFactory);
         techMap.put(21, armourLevelOne);
