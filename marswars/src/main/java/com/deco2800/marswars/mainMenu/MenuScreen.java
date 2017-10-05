@@ -110,12 +110,13 @@ public class MenuScreen{
 	public void playerModeSelect(Window mainmenu, Stage stage) {		
 		Table playerMode = new Table();
 		playerMode.setDebug(enabled);		
-		Label modeInfo = new Label("MAIN MENU", skin, "title");
+		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
 		//modeInfo.setVisible(false);
 		
 		Button singlePlayerButton = new TextButton("Single Player", this.skin, "menubutton");
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "menubutton");
 		Button customizeButton = new TextButton("Customize", this.skin, "menubutton");
+		Button loadGameButton = new TextButton("Load Game", this.skin, "menubutton");
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -129,7 +130,8 @@ public class MenuScreen{
 		playerMode.add(singlePlayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		playerMode.add(multiplayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		playerMode.add(customizeButton).align(Align.left).padBottom(BUTTONPAD*2).row();
-				
+		playerMode.add(loadGameButton).align(Align.left).padBottom(BUTTONPAD*2).row();
+		
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).align(Align.left).row();
 		mainmenu.add(menuInfo).row();
@@ -595,11 +597,12 @@ public class MenuScreen{
 		mainmenu.row();
 		navigationButtons = new Table();
 		
-		mainmenu.add(navigationButtons);
 		navigationButtons.add(this.backButton).pad(BUTTONPAD);
 		navigationButtons.add(this.nextButton).pad(BUTTONPAD);
 		navigationButtons.add(this.quitButton).pad(BUTTONPAD);
 		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
+		mainmenu.add(navigationButtons);
+
 		
 		return navigationButtons; 
 	}
