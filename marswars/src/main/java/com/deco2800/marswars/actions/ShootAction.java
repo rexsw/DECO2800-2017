@@ -1,13 +1,10 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.managers.TimeManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 
 
 /**
@@ -15,7 +12,7 @@ import com.deco2800.marswars.managers.GameManager;
  * Created by vinsonyeung on 23/9/17.
  */
 
-public class ShootAction implements DecoAction{
+public class ShootAction implements DecoAction {
 	private State state = State.COOLDOWN;
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
