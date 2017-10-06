@@ -21,8 +21,6 @@ import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -135,7 +133,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
-		//weatherManager.addRainVisuals(batch);
+		weatherManager.addRainVisuals(batch);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -189,8 +187,4 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 			}
 		}
 	}
-
-
-
-
 }

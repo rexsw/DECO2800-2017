@@ -788,7 +788,6 @@ public class HUDView extends ApplicationAdapter{
 			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
 			index++;
 		}
-
 	}
 
 	/**
