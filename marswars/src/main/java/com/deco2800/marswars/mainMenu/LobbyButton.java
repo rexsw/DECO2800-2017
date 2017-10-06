@@ -63,7 +63,7 @@ public class LobbyButton{
 
 		        netManager.startClient(ip, username);
 		        menuScreen.setJoinedServer(); //set the game status to joined server 
-		        menuScreen.multiplayerLobby(mainmenu, stage, ip, false);
+		        menuScreen.multiplayerLobby(ip, false);
 			}
 		});
 
@@ -94,10 +94,10 @@ public class LobbyButton{
 					LOGGER.error("Unknown Host", ex);
 				}
 				
-				menuScreen.multiplayerLobby(mainmenu, stage, ip, true);
+				menuScreen.multiplayerLobby(ip, true);
 			}
 
 		});
-		return startServerButton; 
+		return startServerButton;
 	}		
 }

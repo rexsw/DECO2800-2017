@@ -42,6 +42,7 @@ public class MainMenu {
 	boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
+	boolean enabled = false; 
 	
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
@@ -74,6 +75,7 @@ public class MainMenu {
 		 * through setting up their customized game */
 		MenuScreen menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
+		this.mainmenu.setDebug(enabled);
 		
 		//add background image
 	    Texture backgroundTex = textureManager.getTexture("menubackground"); //$NON-NLS-1$
@@ -81,8 +83,7 @@ public class MainMenu {
 	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
 	    mainmenu.setBackground(backgroundRegionDraw);
 	    
-		mainmenu.align(Align.left | Align.center).padLeft(100);
-	    
+		mainmenu.align(Align.left | Align.top).pad(100);
 		this.stage.addActor(mainmenu);
 	}
 	
@@ -126,9 +127,7 @@ public class MainMenu {
 	public void resize(int width, int height) {
 		this.mainmenu.setPosition(width/2-MENUWIDTH/2, height/2-MENUHEIGHT/2);
 		this.mainmenu.setSize(width, height);
-		if(menuScreen != null){
-			menuScreen.resizeMenu(this.mainmenu);
-		}
+		
 		if(gameStarted){
 			game.resize(width, height);
 		}
