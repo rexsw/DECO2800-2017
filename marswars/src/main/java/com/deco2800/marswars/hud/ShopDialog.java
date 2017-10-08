@@ -85,7 +85,8 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
-	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+//	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+	                boolean enoughResources = true;
 	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item);
@@ -100,6 +101,7 @@ public class ShopDialog extends Dialog{
 	                		selectedHero.addItemToInventory(special);
 	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
 	                	}
+	                	selectedHero.setStatsChange(true);
 	                	transact(selectedHero.getOwner(), item);
 	                } else {
 	                	String mes = selectedHero == null ? "unsuccessful shopping, please select a hero." : 

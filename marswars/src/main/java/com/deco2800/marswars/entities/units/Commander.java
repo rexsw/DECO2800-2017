@@ -24,6 +24,7 @@ public class Commander extends Soldier {
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
 	Optional<DecoAction> currentAction = Optional.empty();
+	private Boolean statsChange;
 
 	/**
 	 * Constructor for the Commander in the specified location and with the specified owner (i.e. who controls the 
@@ -40,6 +41,7 @@ public class Commander extends Soldier {
 		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
+		this.statsChange = false;
 	}
 
 	/**
@@ -123,6 +125,24 @@ public class Commander extends Soldier {
 	@Override
 	public void setLoyalty(int loyalty) {
 		return;
+	}
+	
+	/**
+	 * The purpose of this method is to track if hero has bought a new item
+	 * 
+	 * @return true if there is item change, else no
+	 */
+	public boolean getStatsChange() {
+		return statsChange;
+	}
+	
+	/**
+	 * The purpose of this method is update if hero has bought a new item
+	 * 
+	 * @param true if there is item change, else no
+	 */
+	public void setStatsChange(boolean bought) {
+		this.statsChange = bought;
 	}
 	
 }

@@ -1,10 +1,13 @@
 package com.deco2800.marswars.hud;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Armour;
@@ -152,6 +155,10 @@ public class UnitStatsBox extends Table{
 	 * @param hero defined which hero's inventory shall we display
 	 */
 	public void updateHeroInventory(Commander hero) {	
+		if(!hero.getStatsChange()) { // if there is no status change, do nothing
+			return;
+		}
+		hero.setStatsChange(false);
 		ImageButton weaponBtn;
 		ImageButton armourBtn;
 		heroInventory.clear();
@@ -167,6 +174,7 @@ public class UnitStatsBox extends Table{
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
 			// will add handler later
+			 
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
@@ -183,8 +191,21 @@ public class UnitStatsBox extends Table{
 		int size = specials.size();
 		for(Special s : specials) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
-			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 			// handler button click here
+			specialBtn.addListener( new ClickListener() {              
+			    @Override
+			    public void clicked(InputEvent event, float x, float y) {
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			       System.err.println("clicked");
+			    };
+			});
+			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		for(int i = 0; i < 4-size; i++) {
 			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
