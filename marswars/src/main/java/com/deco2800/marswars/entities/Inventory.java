@@ -11,6 +11,9 @@ import com.deco2800.marswars.entities.units.Commander;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class that defines the Inventory for a Commander. Each Commander will have their own instance of Inventory and only 
  * 1. The Inventory can only have at most 1 Weapon item, at most 1 Armour item and at most 4 special items. When the
@@ -32,6 +35,7 @@ public class Inventory {
     private Armour armour;
     private Weapon weapon;
     private List<Special> specials;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Inventory.class);
 
     /**
      * Constructor of the Inventory class to make a new instance of Inventory for the provided Commander class that has
@@ -164,12 +168,21 @@ public class Inventory {
     }
 
     /**
-     *  **** THIS FUNCTION HAS NOT BEEN IMPLEMENTED YET, THIS IS A PLACEHOLDER
      * Method to handle functionality of Special items when they are used via are clicked on in the inventory bar in HUD
      *  to Activate the item (i.e. actually use it).
+     *  
+     *  @param special to be used
      */
-    public void useItem() {
-    	return;
+    public void useItem(Special special) {
+    	if(this.specials.contains(special)) {
+    		if(!special.useItem()) {
+    			// no use limit left
+            	this.specials.remove(special);	
+            	this.owner.setStatsChange(true);
+    		}
+    	} else {
+    		LOGGER.error("***** Unrecognized " + special.getName());
+    	}
     }
 
 }

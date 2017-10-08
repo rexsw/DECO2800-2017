@@ -58,6 +58,7 @@ public class Special extends Item {
 	 * @return true if the item still have more than one usage, false if this is the last usage
 	 */
 	public boolean useItem() {
+		
 		if (--useLimit >= 1) {
 			return true;
 		}

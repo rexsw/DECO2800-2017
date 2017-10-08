@@ -195,14 +195,7 @@ public class UnitStatsBox extends Table{
 			specialBtn.addListener( new ClickListener() {              
 			    @Override
 			    public void clicked(InputEvent event, float x, float y) {
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
-			       System.err.println("clicked");
+			       hero.getInventory().useItem(s);
 			    };
 			});
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
