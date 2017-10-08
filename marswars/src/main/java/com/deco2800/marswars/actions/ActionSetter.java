@@ -110,7 +110,8 @@ public final class ActionSetter {
      */
     private static boolean doUnload(Soldier performer) {
         LOGGER.info("Try to unload");
-        performer.setAction(new UnloadAction(performer));
+        Carrier carrier =  (Carrier)performer;
+        carrier.unload();
         return true;
     }
     

@@ -72,7 +72,6 @@ public class HUDView extends ApplicationAdapter{
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
-	private Window messageWindow;//window for the chatbox
 	Window minimap;		 //window for containing the minimap
 	Window actionsWindow;    //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
@@ -178,7 +177,7 @@ public class HUDView extends ApplicationAdapter{
 		addBottomPanel();
 
 
-		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
+		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
 	}
 
 	/**
@@ -284,15 +283,10 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				if (messageToggle){
-					messageWindow.setVisible(false);
-
-					messageToggle = false;
-					hud.setChatActiveCheck(0);
+				    hideChatBox();
 
 				} else {
-					messageWindow.setVisible(true);
-					messageToggle = true;
-					hud.setChatActiveCheck(1);
+				    showChatBox();
 				}
 
 			}
@@ -331,15 +325,14 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box");
-		messageWindow = new Window("Chat Lobby", skin);
-		messageWindow.setMovable(false);
-		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
+		
+		chatbox.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
 				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
-		messageWindow.add(chatbox);
-		messageWindow.setVisible(false);
-		messageWindow.pack();
+		
+		chatbox.setVisible(false);
+		chatbox.pack();
 
-		stage.addActor(messageWindow);
+		stage.addActor(chatbox);
 	}
 
 
@@ -795,7 +788,6 @@ public class HUDView extends ApplicationAdapter{
 			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
 			index++;
 		}
-
 	}
 
 	/**
@@ -823,8 +815,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Returns the chat window
 	 * @return chat window
 	 */
-	public Window getChatWindow() {
-		return messageWindow;
+	public Table getChatWindow() {
+		return chatbox;
 	}
 
 	/**
@@ -890,14 +882,11 @@ public class HUDView extends ApplicationAdapter{
 		//chat listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
 			if (messageToggle){
-				messageWindow.setVisible(false);
-				messageToggle = false;
-				this.setChatActiveCheck(0);
+			    hideChatBox();
 
 			} else {
-				messageWindow.setVisible(true);
-				messageToggle = true;
-				this.setChatActiveCheck(1);
+			    showChatBox();
+				
 			}
 		}
 
@@ -935,7 +924,6 @@ public class HUDView extends ApplicationAdapter{
 	    HUDManip.setVisible(false);
 
 		chatbox.setVisible(false);
-		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
 
@@ -974,9 +962,8 @@ public class HUDView extends ApplicationAdapter{
 
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
-		messageWindow.align(Align.right | Align.top);
-		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
-				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*5-BUTTONSIZE));
+		chatbox.align(Align.right | Align.top);
+		chatbox.setPosition(2, 230);
 		//Bottom Panel
 		//Map
 		minimap.align(Align.topLeft);
@@ -1122,6 +1109,28 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public BaseEntity getSelectedEntity(){
 		return this.selectedEntity;
+	}
+	
+	/**
+	 * Makes the chat box visible on the screen and sets the appropriate flags.
+	 */
+	public void showChatBox() {
+	    chatbox.enableTextField();
+        chatbox.setVisible(true);
+        messageToggle = true;
+        hud.setChatActiveCheck(1);
+        stage.setKeyboardFocus(chatbox.getMessageField());
+    }
+	
+	/**
+	 * Makes the chat box not visible and sets the appropriate flags.
+	 */
+	public void hideChatBox() {
+	    chatbox.disableTextField();
+        chatbox.setVisible(false);
+        messageToggle = false;
+        hud.setChatActiveCheck(0);
+        stage.unfocusAll();
 	}
 
 }

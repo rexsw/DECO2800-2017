@@ -60,6 +60,7 @@ public class ShopDialog extends Dialog{
 		for (WeaponType wep : WeaponType.values()) {
 			itemList.add(wep);
 		}
+
 		//Adding all the defined armour in ArmourType enumerate class
 		for (ArmourType arm : ArmourType.values()) {
 			itemList.add(arm);
