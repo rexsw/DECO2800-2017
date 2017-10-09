@@ -178,7 +178,18 @@ public class Inventory implements HasAction, Tickable{
      *  @param special to be used
      */
     public void useItem(Special special) {
+    	System.out.println(special);////////////
+		System.out.println(special);////////////
+		System.out.println(special);////////////
+		System.out.println("CHECK REFERENCE!!!!!!!!!!!!!!!!!!!!!!1");////////////
+    	for (Special s : specials) {
+    		System.out.println(s); ////////////////
+    	}
+    	
     	if(this.specials.contains(special)) {
+    		System.out.println(special);////////////
+    		System.out.println(special);////////////
+    		System.out.println(special);////////////
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
 //    		if(!special.useItem()) {
 //    			// no use limit left
@@ -197,9 +208,18 @@ public class Inventory implements HasAction, Tickable{
 
 	@Override
 	public void onTick(int tick) {
+		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
+		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
+		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
 		if (!currentAction.get().completed()) {
+			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
+			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
+			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
 			currentAction.get().doAction();
 		} else {
+			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
+			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
+			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
 			currentAction = Optional.empty();
 		}
 	}
