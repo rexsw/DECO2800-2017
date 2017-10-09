@@ -9,6 +9,7 @@ import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.renderers.Renderable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Mason
  *
  */
-public class Inventory implements HasAction, Tickable{
+public class Inventory extends BaseEntity implements HasAction, Tickable, Renderable{
 	
 	private Commander owner;
     private Armour armour;
@@ -47,6 +48,7 @@ public class Inventory implements HasAction, Tickable{
      * @param owner  The Commander that would be the owner of this instance of Inventory
      */
     public Inventory(Commander owner) {
+    	super(0, 0,0, 1, 1, 1);
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;
