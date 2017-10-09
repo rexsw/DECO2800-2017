@@ -143,7 +143,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.dispose();
 
 		setInvincible();
-
 	}
 
 
