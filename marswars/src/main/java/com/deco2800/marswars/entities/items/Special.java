@@ -1,7 +1,6 @@
 package com.deco2800.marswars.entities.items;
 
 import com.deco2800.marswars.entities.items.effects.Effect;
-import com.deco2800.marswars.entities.units.AttackableEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ public class Special extends Item {
 	private SpecialType type;
 	private List<Effect> effects;
 	private int useLimit;
+	
 
 	/**
 	 * Constructor for Special items taking in enumerate that contains the meta data for specific items.
@@ -58,7 +58,6 @@ public class Special extends Item {
 	 * @return true if the item still have more than one usage, false if this is the last usage
 	 */
 	public boolean useItem() {
-		
 		if (--useLimit >= 1) {
 			return true;
 		}

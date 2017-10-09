@@ -76,6 +76,10 @@ public class UseSpecialAction implements DecoAction {
 	 */
 	@Override
 	public void doAction() {
+		System.err.println("doing something!!!!!!!!!!!!");
+		System.err.println("doing something!!!!!!!!!!!!");
+		System.err.println("doing something!!!!!!!!!!!!");
+		System.err.println("doing something!!!!!!!!!!!!");
 		if (timeManager.isPaused() || actionPaused || completed) { //check if paused or completed.
 			return;
 		}

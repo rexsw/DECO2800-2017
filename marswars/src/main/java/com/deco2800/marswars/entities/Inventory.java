@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Special;
@@ -10,6 +12,7 @@ import com.deco2800.marswars.entities.units.Commander;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +32,14 @@ import org.slf4j.LoggerFactory;
  * @author Mason
  *
  */
-public class Inventory {
+public class Inventory implements HasAction, Tickable{
 	
 	private Commander owner;
     private Armour armour;
     private Weapon weapon;
     private List<Special> specials;
     private static final Logger LOGGER = LoggerFactory.getLogger(Inventory.class);
+    private Optional<DecoAction> currentAction = Optional.empty();
 
     /**
      * Constructor of the Inventory class to make a new instance of Inventory for the provided Commander class that has
@@ -175,14 +179,29 @@ public class Inventory {
      */
     public void useItem(Special special) {
     	if(this.specials.contains(special)) {
-    		if(!special.useItem()) {
-    			// no use limit left
-            	this.specials.remove(special);	
-            	this.owner.setStatsChange(true);
-    		}
+    		currentAction = Optional.of(new UseSpecialAction(special, owner));
+//    		if(!special.useItem()) {
+//    			// no use limit left
+//            	this.specials.remove(special);	
+//            	this.owner.setStatsChange(true);
+//    		}
     	} else {
     		LOGGER.error("***** Unrecognized " + special.getName());
     	}
     }
+
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
+
+	@Override
+	public void onTick(int tick) {
+		if (!currentAction.get().completed()) {
+			currentAction.get().doAction();
+		} else {
+			currentAction = Optional.empty();
+		}
+	}
 
 }
