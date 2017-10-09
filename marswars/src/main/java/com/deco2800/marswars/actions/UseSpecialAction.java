@@ -67,10 +67,6 @@ public class UseSpecialAction implements DecoAction {
 		this.user = actor;
 		this.radius = item.getRadius();
 		state = radius == 0 ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
-		System.out.println("MADE!!!!!!!!!!!!!!!!!1");////////////
-		System.out.println("MADE!!!!!!!!!!!!!!!!!1");////////////
-		System.out.println("MADE!!!!!!!!!!!!!!!!!1");////////////
-		System.out.println("MADE!!!!!!!!!!!!!!!!!1");////////////
 	}
 	
 	/**

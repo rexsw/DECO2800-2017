@@ -4,6 +4,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.ItemArea;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Mason
  *
  */
-public class Inventory extends BaseEntity implements HasAction, Tickable, Renderable{
+public class Inventory extends AbstractEntity implements HasAction, Tickable, Renderable{
 	
 	private Commander owner;
     private Armour armour;
@@ -48,7 +49,7 @@ public class Inventory extends BaseEntity implements HasAction, Tickable, Render
      * @param owner  The Commander that would be the owner of this instance of Inventory
      */
     public Inventory(Commander owner) {
-    	super(0, 0,0, 1, 1, 1);
+    	super(1, 1, 1, 1, 1, 1);
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;
@@ -180,18 +181,8 @@ public class Inventory extends BaseEntity implements HasAction, Tickable, Render
      *  @param special to be used
      */
     public void useItem(Special special) {
-    	System.out.println(special);////////////
-		System.out.println(special);////////////
-		System.out.println(special);////////////
-		System.out.println("CHECK REFERENCE!!!!!!!!!!!!!!!!!!!!!!1");////////////
-    	for (Special s : specials) {
-    		System.out.println(s); ////////////////
-    	}
-    	
     	if(this.specials.contains(special)) {
-    		System.out.println(special);////////////
-    		System.out.println(special);////////////
-    		System.out.println(special);////////////
+    		ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
 //    		if(!special.useItem()) {
 //    			// no use limit left
@@ -210,9 +201,11 @@ public class Inventory extends BaseEntity implements HasAction, Tickable, Render
 
 	@Override
 	public void onTick(int tick) {
-		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
-		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
-		System.out.println("IN TICK!!!!!!!!!!!!!!!!!1");////////////
+		System.err.println("ticktock");
+		System.err.println("ticktock");
+		System.err.println("ticktock");
+		System.err.println("ticktock");
+		System.err.println("ticktock");
 		if (!currentAction.get().completed()) {
 			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
 			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////

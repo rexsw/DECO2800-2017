@@ -4,6 +4,9 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.Special;
+import com.deco2800.marswars.entities.items.SpecialType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +44,8 @@ public class Commander extends Soldier {
 		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
-		this.statsChange = false;
+		inventory.addToInventory(new Special(SpecialType.BOMB));///////test only
+		this.statsChange = true;
 	}
 
 	/**
