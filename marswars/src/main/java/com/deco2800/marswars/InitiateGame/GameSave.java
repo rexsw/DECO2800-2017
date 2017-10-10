@@ -22,6 +22,7 @@ public class GameSave {
 
     /**
      * this is the list of data will be saved
+     * the order of saving will follow this order
      */
     //gray fog of war
     private Array2D<Integer> fogOfWar;
