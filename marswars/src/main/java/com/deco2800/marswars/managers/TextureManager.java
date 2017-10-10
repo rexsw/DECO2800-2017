@@ -221,6 +221,11 @@ public class TextureManager extends Manager {
         this.saveTexture("range_stats", "resources/statsAssets/range_stats.png");
         this.saveTexture("move_speed_stats", "resources/statsAssets/move_speed_stats.png");
         this.saveTexture("attack_stats", "resources/statsAssets/attack_stats.png");
+
+        //Health Bars
+        for (int i = 0; i < 21; i++) {
+            this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
+        }
     }
     /*
      *

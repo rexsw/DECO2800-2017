@@ -5,9 +5,12 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +27,7 @@ import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.HealthBar;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -117,7 +121,7 @@ public class HUDView extends ApplicationAdapter{
 	private TextureManager textureManager; //for loading in resource images
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
-
+	private List<BaseEntity> selectedList = new ArrayList<>();
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
@@ -176,9 +180,24 @@ public class HUDView extends ApplicationAdapter{
 		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
-
-
+		generateTextures(19);
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
+	}
+
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) /number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			p.setColor(Color.GREEN);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
 	}
 
 	/**
@@ -660,7 +679,7 @@ public class HUDView extends ApplicationAdapter{
 			this.statsTable.setVisible(false);
             return;
         }
-		healthBars.add(selectedEntity.getHealthBar(GameManager.get().getStage())); //Track the health bar of the selected unit
+		updateHealthBars();
         selectedEntity = target;
         if (selectedEntity instanceof Astronaut) { //For Testing Purposes
         	selectedEntity.giveAllBuilding();
@@ -684,8 +703,13 @@ public class HUDView extends ApplicationAdapter{
 		}
     }
 
-		
-	
+	private void updateHealthBars() {
+		for (BaseEntity b : selectedList) {
+			b.getHealthBar();
+		}
+
+	}
+
 	/**
 	 * Handler for the size buttons of the customization menu
 	 *
@@ -865,9 +889,10 @@ public class HUDView extends ApplicationAdapter{
 		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1));
 		//Get the selected entity
 		selectedEntity = null;
+		selectedList.clear();
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
-				selectedEntity = e;
+				selectedList.add(e);
 			}
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
@@ -882,6 +907,7 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 		}
+		if (selectedList.size() > 0)	selectedEntity = selectedList.get(0);
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 
