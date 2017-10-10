@@ -1,6 +1,9 @@
 package com.deco2800.marswars.InitiateGame;
 
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -28,20 +31,22 @@ public class GameSave {
 
     //list of entities
     List<AbstractEntity> entities = new ArrayList<>();
-    
+
     //list of walkables
     List<AbstractEntity> walkables = new ArrayList<>();
 
-    //the map
+    //TODO: the map
 
 
     /**
      * this function is saving a game by writing data to the file save.bin
      * @throws java.io.FileNotFoundException
      */
-    public static void saveGame() throws java.io.FileNotFoundException{
+    public void saveGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Output output = new Output(new FileOutputStream("save.bin"));
+        fillData();
+
 
 
 
@@ -52,7 +57,7 @@ public class GameSave {
      * this function is loading a game by reading data from the file save.bin
      * @throws java.io.FileNotFoundException
      */
-    public static void loadGame() throws java.io.FileNotFoundException{
+    public void loadGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
 
@@ -63,7 +68,35 @@ public class GameSave {
     /**
      * this vunction will fetch the game with loaded data from the function loadGame()
      */
-    public static void fetchGame(){
+    public void fetchGame(){
 
+    }
+
+
+    /**
+     * this function will get all the entities and fills in the arrays
+     */
+    public void fillData(){
+        fogOfWar = FogManager.getFog();
+        blackFogOfWar = FogManager.getBlackFog();
+
+        //getting all the entities
+        List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
+
+        //converting these base entities to abstract entities
+        // Tutor approved workaround to avoid changing whole structure of game
+        List<AbstractEntity> renderables = new ArrayList<>();
+        for (BaseEntity e : renderables_be) {
+            renderables.add(e);
+        }
+
+        //Sort entities into walkables and entities
+        for (AbstractEntity r : renderables) {
+            if (r.canWalOver()) {
+                walkables.add(r);
+            } else {
+                entities.add(r);
+            }
+        }
     }
 }
