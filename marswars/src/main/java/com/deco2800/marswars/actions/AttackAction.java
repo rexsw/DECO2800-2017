@@ -64,7 +64,7 @@ public class AttackAction implements DecoAction {
 	 * Gets the absolute distance from the current entity to the current entity
 	 * @return the absolute distance from the 
 	 */
-	private float getDistanceToEnemy() {
+	public float getDistanceToEnemy() {
 		float diffX = enemy.getPosX() - entity.getPosX();
 		float diffY = enemy.getPosY() - entity.getPosY();
 		return Math.abs(diffX) + Math.abs(diffY);
