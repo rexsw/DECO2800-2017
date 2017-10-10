@@ -1,11 +1,6 @@
 package com.deco2800.marswars;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.map.tools.MapContainer;
-import com.deco2800.marswars.worlds.map.tools.NoiseMap;
-import com.deco2800.marswars.worlds.map.tools.RandomMapWriter;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +10,6 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.worlds.BaseWorld;
 
-import java.util.ArrayList;
 
 /**
  * Code coverage and Junit tests for MultiSelection and SelectedTiles.
@@ -24,6 +18,15 @@ import java.util.ArrayList;
  *
  */
 public class MultiSelectionTest {
+
+	/**
+	 * initialize everything needed by the test
+	 */
+	@Before
+	public void initMultiSelectionTest(){
+
+		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
+	}
 
 
 	/**
@@ -48,12 +51,47 @@ public class MultiSelectionTest {
 	@Test
 	public void testAddStartTile(){
 
-		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
-
 		MultiSelection.resetSelectedTiles();
 
 		MultiSelection.addStartTile(9f,12f);
 
+
+	}
+
+	/**
+	 * Test for function addEndTile
+	 */
+	@Test
+	public void testAddEndTile(){
+
+		MultiSelection.resetSelectedTiles();
+
+		MultiSelection.addEndTile(9f,12f);
+
+
+	}
+
+	/**
+	 * Test for function clicking all tiles
+	 */
+	@Test
+	public void testCallAllTiles(){
+		MultiSelection multiSelection = new MultiSelection();
+		MultiSelection.resetSelectedTiles();
+		MultiSelection.addStartTile(3f,3f);
+		MultiSelection.addEndTile(9f,12f);
+		multiSelection.clickAllTiles();
+
+
+	}
+
+	/**
+	 * Test for calling mouse handler
+	 */
+	@Test
+	public void testCallMouseHandler(){
+		MultiSelection multiSelection = new MultiSelection();
+		multiSelection.callMouseHandler(2,2);
 
 	}
 	
