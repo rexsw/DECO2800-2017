@@ -55,8 +55,9 @@ public class PauseMenu extends Dialog{
 			this.getButtonTable().row();
 			button("Quit to Main Menu", 3);
 			this.getButtonTable().row();
-
-			button("Exit Game", 4);
+			button("Save Game", 4);
+			this.getButtonTable().row();
+			button("Exit Game", 5);
 			
 			this.timeManager.pause();
 			
@@ -77,7 +78,7 @@ public class PauseMenu extends Dialog{
 				LOGGER.info("Quitting to main menu");
 				this.hud.setPauseCheck(0);
 				GameManager.get().resetGame();
-			} else if (object == (Object) 4) {
+			} else if (object == (Object) 5) {
 				LOGGER.info("Quitting the application");
 				System.exit(0);
 			} else {
