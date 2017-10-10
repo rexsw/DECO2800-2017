@@ -1,5 +1,6 @@
 package com.deco2800.marswars;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.apache.log4j.BasicConfigurator;
@@ -23,7 +24,9 @@ public class GameLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
+        config.addIcon("resources/SPLogo-32.png", FileType.Internal);
+
 		config.title = "DECO2800 2017: MarsWars";
-		new LwjglApplication(new MarsWars(), config);
+		new LwjglApplication(new MarsWars(), config);        
 	}
 }
