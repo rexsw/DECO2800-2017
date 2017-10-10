@@ -25,19 +25,6 @@ import java.util.ArrayList;
  */
 public class MultiSelectionTest {
 
-	String mapPath;
-	ArrayList tilesToAdd;
-	RandomMapWriter randomTiles;
-	@Before
-	public void setup(){
-		mapPath = RandomMapWriter.FILENAME;
-		tilesToAdd= new ArrayList<Integer>();
-		tilesToAdd.add(11);
-		tilesToAdd.add(16);
-		tilesToAdd.add(12);
-		tilesToAdd.add(18);
-
-	}
 
 	/**
 	 * Code coverage for MultiSelection, where world = null.
@@ -58,22 +45,17 @@ public class MultiSelectionTest {
 	/**
 	 * Test for function addStartTile
 	 */
-//	@Test
-//	public void testAddStartTile(){
-//		randomTiles = new RandomMapWriter(100, 100, tilesToAdd, new NoiseMap(100,100));
-//		randomTiles.addTile(1,1,10);
-//
-//		TiledMap mockMap = new TmxMapLoader().load(randomTiles.FILENAME);
-//		GameManager.get().setWorld(new BaseWorld(50, 50));
-//		MapContainer map = new MapContainer("resources/mapAssets/tinyMars.tmx");
-//		CustomizedWorld world = new CustomizedWorld(map);
-//		world.loadMapContainer(map);
-//		MultiSelection.resetSelectedTiles();
-//		GameManager.get().getWorld().getMap().getTileSets().
-//		MultiSelection.addStartTile(9f,12f);
-//
-//
-//	}
+	@Test
+	public void testAddStartTile(){
+
+		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
+
+		MultiSelection.resetSelectedTiles();
+
+		MultiSelection.addStartTile(9f,12f);
+
+
+	}
 	
 	/**
 	 * Code Coverage for entities.MultiSelectionTile.
