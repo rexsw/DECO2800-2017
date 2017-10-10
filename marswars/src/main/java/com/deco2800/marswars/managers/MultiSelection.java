@@ -45,8 +45,8 @@ public class MultiSelection extends Manager {
 
     /**
      * update the selecting area based on the ending points
-     * @param endX
-     * @param endY
+     * @param x
+     * @param y
      */
     public static void updateSelectedTiles(int x,int y){
         int endX=x;
