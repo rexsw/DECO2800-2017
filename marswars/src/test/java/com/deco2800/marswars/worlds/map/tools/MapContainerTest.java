@@ -23,6 +23,7 @@ public class MapContainerTest extends BaseTest{
         map = new MapContainer("resources/mapAssets/tinyMars.tmx");
         world = new CustomizedWorld(map);
     }
+
     @Test
     public void generateEntitiesRandom() throws Exception {
         GameManager.get().setWorld(new BaseWorld(50, 50));
