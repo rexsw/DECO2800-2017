@@ -9,7 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.GameManager;
@@ -30,8 +33,11 @@ import com.deco2800.marswars.managers.TimeManager;
  * 
  */
 public class PauseMenu extends Dialog{
+	private static final int WIDTH = 300;
+	private static final int HEIGHT = 500;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
+
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Hotkeys.class);
 	
@@ -41,26 +47,27 @@ public class PauseMenu extends Dialog{
 		super(title, skin);
 		this.stats = stats;
 		this.hud = hud;
+		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		LabelStyle labelStyle = skin.get("subtitle", LabelStyle.class);
 		LOGGER.info("Instantiating the Pause menu");
+		this.align(Align.center);
 		
 		{
 			hud.setPauseCheck(1);
-			text("Game Paused");
-			
-			button("Resume", 0);
+			//this.text("Game Paused", labelStyle);
+			button("Resume Game", 0, buttonStyle);
 			this.getButtonTable().row();
-			button("Statis;tics", 1);
+			button("Show Stats", 1, buttonStyle);
 			this.getButtonTable().row();
-			button("Settings", 2);
+			button("Settings", 2, buttonStyle);
 			this.getButtonTable().row();
-			button("Quit to Main Menu", 3);
+			button("Quit to Main Menu", 3, buttonStyle);
 			this.getButtonTable().row();
-			button("Save Game", 4);
+			button("Save Game", 4, buttonStyle);
 			this.getButtonTable().row();
-			button("Exit Game", 5);
+			button("Exit Game", 5, buttonStyle);
 			
 			this.timeManager.pause();
-			
 			}	
 	}
 		/**
@@ -85,5 +92,16 @@ public class PauseMenu extends Dialog{
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
 			}
+		}
+		
+		@Override
+		public float getPrefWidth() {
+			return WIDTH;
+		}
+		
+		
+		@Override
+		public int getAlign() {
+			return Align.center;
 		}
 }

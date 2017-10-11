@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -80,7 +81,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
-
+		
 		/*All managers */
 		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
@@ -186,5 +187,5 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}
-	}
+	}	
 }
