@@ -547,10 +547,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	/**
 	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the unit as long as you are zoomed in
-	 * @return the healthbar if the entity is a building, unit or hero, null otherwise
+	 * @return the healthbar if the entity is a building, unit or hero and has the stat properly set, null otherwise
 	 */
 	public HealthBar getHealthBar() {
-		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO )) return null; //Check if is valid type
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) return null; //Check if is valid type
 		if (healthBar != null) {//If there is a health bar
 			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
 				healthBar.setVisible(false);

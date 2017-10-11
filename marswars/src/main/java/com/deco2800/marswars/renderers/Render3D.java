@@ -50,6 +50,7 @@ public class Render3D implements Renderer {
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
         for (BaseEntity e : renderables_be) {
+            e.getHealthBar();
             renderables.add(e);
         }
 

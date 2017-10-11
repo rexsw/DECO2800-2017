@@ -14,7 +14,7 @@ import com.deco2800.marswars.util.Box3D;
 public class HealthBar extends BaseEntity {
     private BaseEntity parentEntity;
     private int state;
-    private boolean visible;
+    private boolean visible = true;
 
     public HealthBar(float posX, float posY, float posZ, float xLength, float yLength, float zLength, BaseEntity parentEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
@@ -22,13 +22,13 @@ public class HealthBar extends BaseEntity {
     }
 
     public void translateToParent() {
-        super.setPosition(parentEntity.getPosX()+2f, parentEntity.getPosY()-2f, parentEntity.getPosZ());
+        super.setPosition(parentEntity.getPosX()+parentEntity.getXRenderLength()*3, parentEntity.getPosY()-parentEntity.getYRenderLength()*3, parentEntity.getPosZ());
     }
 
     public void update() {
-        visible = parentEntity.isSelected();
         if (!visible) {
             super.setPosition(100000, 0, -4);
+            return;
         } else {
             translateToParent();
         }
