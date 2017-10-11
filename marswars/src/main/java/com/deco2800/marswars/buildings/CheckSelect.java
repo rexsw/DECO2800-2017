@@ -43,6 +43,10 @@ public class CheckSelect extends BaseEntity{
 	 *Sets the build area to be green (valid)
 	 */
 	public void setGreen() {
+		if (buildingType == null) { //should find a better way to do this
+			this.setTexture("tileSelectGreen");
+			return;
+		}
 		switch(buildingType) {
 		case TURRET:
 			validSelect = "greenSelect4";

@@ -149,4 +149,9 @@ public class Commander extends Soldier {
 		this.statsChange = bought;
 	}
 	
+	@Override
+	public void onTick(int tick) {
+		super.onTick(tick);
+		this.inventory.onTick(tick);
+	}
 }

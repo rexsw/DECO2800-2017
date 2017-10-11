@@ -4,7 +4,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
-import com.deco2800.marswars.entities.items.ItemArea;
+//import com.deco2800.marswars.entities.items.ItemArea;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
@@ -182,7 +182,7 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
      */
     public void useItem(Special special) {
     	if(this.specials.contains(special)) {
-    		ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
+    		//ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
 //    		if(!special.useItem()) {
 //    			// no use limit left
@@ -206,7 +206,7 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
 		System.err.println("ticktock");
 		System.err.println("ticktock");
 		System.err.println("ticktock");
-		if (!currentAction.get().completed()) {
+		if (currentAction.isPresent() && !currentAction.get().completed()) {
 			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
 			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
 			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////

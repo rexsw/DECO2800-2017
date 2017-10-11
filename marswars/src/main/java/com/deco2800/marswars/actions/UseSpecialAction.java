@@ -84,6 +84,10 @@ public class UseSpecialAction implements DecoAction {
 			return;
 		}
 		if (state == State.SELECT) { //need to get player's input of where to use the item (if needed)
+			System.err.println("selecting !!!!!!!!!!!!");
+			System.err.println("selecting !!!!!!!!!!!!");
+			System.err.println("selecting !!!!!!!!!!!!");
+			System.err.println("selecting !!!!!!!!!!!!");
 			float[] parse = new float[]{pointX, pointY, fixPos};
 			temp = WorldUtil.selectionStage(temp, radius, parse, null);
 			/*
