@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -40,7 +41,7 @@ public class Hotkeys {
 	private Dialog techTree;
 	private Dialog quit;
 	
-	private Window messageWindow;//window for the chatbox
+	private Table messageWindow;//window for the chatbox
 	/**
 	 * Calls a new instance of the hotkeys class
 	 * 
@@ -50,7 +51,7 @@ public class Hotkeys {
 	 * @param stats
 	 * @param messageWindow
 	 */
-	public Hotkeys(Stage stage, Skin skin, HUDView hud, GameStats stats, Window messageWindow) {
+	public Hotkeys(Stage stage, Skin skin, HUDView hud, GameStats stats, Table messageWindow) {
 		LOGGER.info("Instantiating the Hotkey check");
 		this.stage = stage;
 		this.skin = skin;
@@ -82,14 +83,10 @@ public class Hotkeys {
 		//chat listener
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.noActive()) {
 			LOGGER.info("Opening the Chat Window if no other window is active");
-			this.messageWindow.setVisible(true);
-			this.messageToggle = true;
-			this.hud.setChatActiveCheck(1);
+			hud.showChatBox();
 		} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			LOGGER.info("Closing the Chat Window");
-			this.messageWindow.setVisible(false);
-			this.messageToggle = false; 
-			this.hud.setChatActiveCheck(0);
+			hud.hideChatBox();
 		}
 		
 		//pause menu listener
@@ -129,7 +126,7 @@ public class Hotkeys {
 		}
 		
 		//HUD toggle listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.E) && noActive()) {
 			LOGGER.info("Toggles the HUD on and off each time the button is pressed");
 			if (this.hud.isInventoryToggle()) {
 				this.hud.actionsWindow.setVisible(true);

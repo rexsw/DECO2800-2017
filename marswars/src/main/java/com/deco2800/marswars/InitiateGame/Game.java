@@ -105,7 +105,6 @@ public class Game{
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
 		GameManager.get().setCamera(GameManager.get().getCamera());
 		LOGGER.debug("Game just started, map is now loaded, bring up active view");
-		GameManager.get().toggleActiveView();
 	}
 
 	/*

@@ -16,9 +16,25 @@ public class FogManager extends Manager {
 	private static Array2D<Integer> fogOfWar;
 
 	/**
+	 * this function will return the whole array for saving the game
+	 */
+	public static Array2D<Integer> getFog(){
+		return fogOfWar;
+	}
+
+	/**
 	 * this array contains black-out fog of war
 	 */
 	private static Array2D<Integer> blackFogOfWar;
+
+
+	/**
+	 * this function will return the whole array for saving the game
+	 */
+	public static Array2D<Integer> getBlackFog(){
+		return blackFogOfWar;
+	}
+
 
 	/**
 	 * this flag called activatedFog helps to turn on or off the fog of war

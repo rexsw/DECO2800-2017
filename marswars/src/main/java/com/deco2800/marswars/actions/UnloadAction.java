@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An UnloadAction for UNloading units from a carrier unit
+ * An UnloadAction for Unloading units from a carrier unit
  * 
  * @author Han Wei
  */
