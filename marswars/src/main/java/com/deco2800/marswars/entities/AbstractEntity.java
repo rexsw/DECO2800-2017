@@ -144,6 +144,22 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	}
 
 	/**
+	 * set the x size of an entity
+	 * @param x
+	 */
+	public void setXRenderLength(float x){
+		this.xRenderLength = x;
+	}
+
+	/**
+	 * set the y size of an entity
+	 * @param y
+	 */
+	public void setYRenderLength(float y){
+		this.yRenderLength = y;
+	}
+
+	/**
 	 * Sets the position Y
 	 * @param y
 	 */

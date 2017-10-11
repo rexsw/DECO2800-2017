@@ -94,6 +94,10 @@ public class PauseMenu extends Dialog{
 			}
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		@Override
 		public float getPrefWidth() {
 			return WIDTH;

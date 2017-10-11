@@ -1,5 +1,6 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -11,8 +12,11 @@ import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.WorldUtil;
+import com.deco2800.marswars.worlds.BaseWorld;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +40,9 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	private Random rand = new Random();
 	private int tickNumber = 0;
+	private int unitTrackRange = 10;
+	private int unitGroupRange = 3;
+	private int unitJoinGroupRange = 1000;
 	
 	public static enum State {
 		DEFAULT, AGGRESSIVE, DEFENSIVE
@@ -62,12 +69,14 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 					//Action depends on current state
 					switch (getState(e.getOwner())) {
 					case AGGRESSIVE:
-						soldierAttack(x);
+						soldierGroupAttack(x);
+						//soldierSearchAttack(x);
 						break;
 					case DEFENSIVE:
+						soldierDefend(x);
 						break;
 					default:
-						soldierDefend(x);
+						soldierGroupAttack(x);
 						break;
 					}
 				} else if(e instanceof AmbientAnimal){
@@ -150,37 +159,197 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	}
 	
 	/**
-	 * Orders a soldier to attack an enemy
-	 * @param x
+	 * Tasks a soldier to attack, but if they cannot then to join a group, and if not then
+	 * just search
+	 * @param soldier
 	 */
-	public void soldierAttack(Soldier x) {
-		//lets the ai target player spacman with it's enemyspacmen
-		if(x.showProgress()) {
+	public void soldierGroupAttack(Soldier soldier) {
+		// try to attack a target
+		if (soldierAttack(soldier)) {
 			return;
 		}
-		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
-			if(r instanceof AttackableEntity && !x.sameOwner(r) && ((AttackableEntity) r).getLoadStatus()!=1) {
-				LOGGER.error("ai - setting unit to attack " + r.toString());
-				AttackableEntity y = (AttackableEntity) r;
-				x.attack(y);
-				return;
+		// if no valid target or current action, group to commander
+		if (soldierGroup(soldier)) {
+			return;
+		} else {
+			// if cannot, then just search
+			soldierSearch(soldier);
+		}
+	}
+	/**
+	 * Tasks a soldier to attack, but if they cannot then just search
+	 * @param soldier
+	 */
+	public void soldierSearchAttack(Soldier soldier) {
+		// try to attack a target
+		if (soldierAttack(soldier)) {
+			return;
+		}
+		// if no valid target or current action, search for a target
+		soldierSearch(soldier);
+	}
+	
+	/**
+	 * Tasks a soldier to stay with a nearby commander
+	 * @param soldier
+	 * @return If the soldier now has a task
+	 */
+	private boolean soldierGroup(Soldier soldier) {
+		// if soldier already has an action
+		if(soldier.showProgress()) {
+			return true;
+		}
+		// if no valid target or current action, group to commander
+		BaseEntity commander = null;
+		for( BaseEntity newCommander : GameManager.get().getWorld().getEntities()) {
+			if (newCommander instanceof HasOwner && newCommander.sameOwner(soldier)) {
+				if (newCommander instanceof Commander) {
+					// found a commander; choose if none selected already or is closer
+					if (commander == null) {
+						commander = newCommander;
+					} else if (getDistanceLinear(soldier, newCommander) + 2
+							< getDistanceLinear(soldier, commander)) {
+						// if new commander is closer (with buffer), chose them
+						commander = newCommander;
+					}
+				}
 			}
 		}
-}
-		
+		// if there is a commander close by, and soldier is not a commander, join that group
+		if (commander != null && !(soldier instanceof Commander)
+				&& getDistanceLinear(soldier, commander) < unitJoinGroupRange) {
+			float posX = commander.getPosX() + rand.nextInt(unitGroupRange * 2) - unitGroupRange;
+			float posY = commander.getPosY() + rand.nextInt(unitGroupRange * 2) - unitGroupRange;
+			soldier.setAction(new MoveAction(posX, posY, (AttackableEntity)soldier));
+			LOGGER.info("ai - grouping to commander");
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Tasks a soldier to wander to a random spot on the map
+	 * @param soldier
+	 */
+	public void soldierSearch(Soldier soldier) {
+		// if soldier already has an action
+		if(soldier.showProgress()) {
+			return;
+		}
+		// wander around the world (i.e. move to a random location)
+		int width = GameManager.get().getWorld().getWidth();
+		int length = GameManager.get().getWorld().getLength();
+		int posX = rand.nextInt(width);
+		int posY = rand.nextInt(length);
+		soldier.setAction(new MoveAction(posX, posY, (AttackableEntity)soldier));
+		return;
+	}
+	
+	/**
+	 * Orders a soldier to attack an enemy
+	 * @param soldier
+	 * @return true if soldier now has a task
+	 */
+	private boolean soldierAttack(Soldier soldier) {
+		//lets the ai target player spacman with it's enemyspacmen
+		if(soldier.showProgress()) {
+			return true;
+		}
+		for( BaseEntity r : GameManager.get().getWorld().getEntities()) {
+			if (validAttackableEntity(soldier, r)) {
+				if (betterTarget(soldier, r)) {
+					LOGGER.info("ai - setting unit to attack " + r.toString());
+					AttackableEntity y = (AttackableEntity) r;
+					soldier.attack(y);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns whether or not a entity is a valid target
+	 * @param soldier
+	 * @param target
+	 * @return boolean
+	 */
+	private boolean validAttackableEntity(BaseEntity soldier, BaseEntity target) {
+		// if target is an attackable entity
+		if (target instanceof AttackableEntity) {
+			// if target has a different owner to soldier
+			if (!soldier.sameOwner(target)) {
+				// if target is not in a vehicle
+				if (((AttackableEntity) target).getLoadStatus()!=1) {
+					// if target is close enough to soldier
+					if (getDistanceLinear(soldier, target) <= unitTrackRange) {
+						return true;
+					}
+				}
+			}
+		}
+		// Else
+		return false;
+	}
+	
+	/**
+	 * Decides if this new target is better than the soldier's current target
+	 * @param soldier
+	 * @param target
+	 * @return if it is better
+	 */
+	private boolean betterTarget(BaseEntity soldier, BaseEntity target) {
+		// if there is no current action, then this is a better target
+		if (!soldier.getAction().isPresent()) {
+			return true;
+		}
+		AttackAction attack = (AttackAction)soldier.getAction().get();
+		// if there is no current target, then this one is good
+		if (attack.completed()) {
+			return true;
+		}
+		// If the new distance is closer than the current target's, then this is a better target
+		//   There is a buffer added to prevent constant target swaps
+		if (attack.getDistanceToEnemy() + 2 < getDistanceLinear(soldier, target)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Finds the diagonal distance between two BaseEntity objects, excluding vertical
+	 * @param entity1
+	 * @param entity2
+	 * @return distance
+	 */
+	public double getDistanceDiagonal(BaseEntity entity1, BaseEntity entity2) {
+		double lenX = entity1.getPosX() - entity2.getPosX();
+		double lenY = entity1.getPosY() - entity2.getPosY();
+		return Math.sqrt( Math.pow(lenX, 2) + Math.pow(lenY, 2) );
+	}
+	
+	/**
+	 * Finds the linear distance between two BaseEntity objects, excluding vertical
+	 * @param entity1
+	 * @param entity2
+	 * @return distance
+	 */
+	public double getDistanceLinear(BaseEntity entity1, BaseEntity entity2) {
+		double lenX = entity1.getPosX() - entity2.getPosX();
+		double lenY = entity1.getPosY() - entity2.getPosY();
+		return Math.abs(lenX) + Math.abs(lenY);
+	}
+	
 	/**
 	 * Tasks all soldiers to move back to base
 	 * @param x
 	 */
 	public void soldierDefend(Soldier soldier) {
-		//lets the ai target player spacman with it's enemyspacmen
 		if(soldier.showProgress()) {
 			return;
 		}
 		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
 			if(base instanceof Base && soldier.sameOwner(base)) {
-
-
 				// Move soldier to base (Not currently working, so will just not set any actions)
 				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
 						(AttackableEntity)soldier));
@@ -221,7 +390,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	
 	/**
 	 * Removes a team from the list of Ai players
-	 * @param id int the team's id to kill 
+	 * @param id int the team's id to kill
 	 */
 	public void kill(Integer id) {
 		if(teamid.contains(id)) {
@@ -235,7 +404,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 * Returns true if on the specified tick number
 	 * @param modulus
 	 * @param offset
-	 * @return
+	 * @return if open (true) or locked (false)
 	 */
 	public boolean tickLock(int modulus, int offset){
 		if (((this.tickNumber + offset) % modulus) == 0) {
@@ -247,7 +416,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Returns the specified team's strength (number of units + buildings)
 	 * @param teamID
-	 * @return
+	 * @return team's strength rating
 	 */
 	private int teamStrengthCount(Integer teamID) {
 		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
@@ -257,13 +426,14 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
 					+ blackboard.count(teamID, GameBlackBoard.Field.BUILDINGS);
 		}
+		// if blackboard does not exist, return -1
 		return -1;
 	}
 	
 	/**
 	 * Returns the highest team's strength (number of units + buildings)
 	 * Used to consider hostility
-	 * @return
+	 * @return max strength value
 	 */
 	private int highestStrengthCount() {
 		int strength;
@@ -278,14 +448,15 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Determines Ai team state depending on their strength compared to the leader's
 	 * @param teamID
-	 * @return
+	 * @return State
 	 */
 	private State hostility(Integer teamID) {
 		double ratio = 0.0;
 		if (teamStrengthCount(teamID) > 0) {
 			// Compares team strength to global strength
-			ratio = (double)highestStrengthCount() / (double)teamStrengthCount(teamID);
+			ratio = (double)teamStrengthCount(teamID) / (double)highestStrengthCount();
 		}
+		LOGGER.info("AI [" + teamID + "] strength ratio is [" + ratio + "]");
 		if (ratio >= 0.80) {
 			// If strong, then attack
 			return State.AGGRESSIVE;
@@ -314,7 +485,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	/**
 	 * Gets the state index in its Linked List that corresponds to the TeamID
 	 * @param teamID
-	 * @return
+	 * @return state index position
 	 */
 	public int getStateIndex(Integer teamID) {
 		int position = teamid.indexOf(teamID);

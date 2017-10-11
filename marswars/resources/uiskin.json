@@ -95,6 +95,12 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		titleFont: default-font,
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		stageBackground: dialogDim
+	},
+	chatWindow: {
+	   background: clear,
+       titleFont: default-font,
+       titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
+	   stageBackground: clear
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
@@ -105,6 +111,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 		cursor: cursor,
 		selection: selection
 	}
+	chatField: {
+        font: default-font,
+        fontColor: { a: 1, b: 1, g: 1, r: 1 },
+        background: clear,
+        cursor: cursor,
+        selection: selection
+	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
@@ -114,6 +127,14 @@ com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 		vScroll: default-scroll,
 		vScrollKnob: default-round-large
 	}
+	chatBox: {
+	   background: clear,
+	   hScroll: default-scroll,
+       hScrollKnob: default-round-large,
+       vScroll: default-scroll,
+       vScrollKnob: default-round-large
+	}
+	
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	optional: {

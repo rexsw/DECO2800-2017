@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class Spacman extends BaseEntity implements Tickable, Clickable,
 		HasHealth, HasAction, HasProgress {
-	//LineOfSight lineOfSight;
+
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Spacman.class);
 
@@ -62,13 +62,10 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 		this.addNewAction(ActionType.GATHER);
 		this.addNewAction(ActionType.MOVE);
 		this.addNewAction(ActionType.BUILD);
-		//TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+
 		this.setMoveSpeed(0.025f);
-		int fogScaleSize=5;//this number should always be odd (the size of the line of sight edge
-//
-//		lineOfSight = new LineOfSight(posX,posY,posZ,fogScaleSize,fogScaleSize);
-//		FogWorld fogWorld = GameManager.get().getFogWorld();
-//		fogWorld.addEntity(lineOfSight,fogScaleSize);
+
+
 	}
 
 
@@ -80,12 +77,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	@Override
 	public void setPosX(float x) {
 		if(!this.isAi()) {
-			//modifyFogOfWarMap(false,5);
+
 		}
 		super.setPosX(x);
-		//lineOfSight.setPosX(x);
+
 		if(!this.isAi()) {
-			//modifyFogOfWarMap(true,5);
+
 
 		}
 
@@ -99,12 +96,12 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	public void setPosY(float y) {
 
 		if(!this.isAi()) {
-			//modifyFogOfWarMap(false,5);
+
 		}
 		super.setPosY(y);
-		//lineOfSight.setPosY(y);
+
 		if(!this.isAi()) {
-			//modifyFogOfWarMap(true,5);
+
 
 		}
 
@@ -116,7 +113,8 @@ public class Spacman extends BaseEntity implements Tickable, Clickable,
 	 */
 	@Override
 	public void onTick(int i) {
-		if(this.getOwner()==-1) modifyFogOfWarMap(true,3);
+		if(this.getOwner()==-1)
+			modifyFogOfWarMap(true,3);
 		/* Don't let spacman stand on a tile with another entity,
 			and update fogmap
 			

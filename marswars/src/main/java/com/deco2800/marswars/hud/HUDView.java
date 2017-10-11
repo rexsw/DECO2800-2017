@@ -5,9 +5,12 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +27,7 @@ import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.HealthBar;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -70,7 +74,6 @@ public class HUDView extends ApplicationAdapter{
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
-	private Window messageWindow;//window for the chatbox
 	Window minimap;		 //window for containing the minimap
 	Window actionsWindow;    //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
@@ -114,7 +117,7 @@ public class HUDView extends ApplicationAdapter{
 	private TextureManager textureManager; //for loading in resource images
 
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
-
+	private List<BaseEntity> selectedList = new ArrayList<>();
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
@@ -173,9 +176,24 @@ public class HUDView extends ApplicationAdapter{
 		addPlayerDetails();
 		addMessages();
 		addBottomPanel();
+		generateTextures(19);
+		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
+	}
 
-
-		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.messageWindow);
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) /number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			p.setColor(Color.GREEN);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
 	}
 
 	/**
@@ -300,15 +318,14 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addMessages(){
 		LOGGER.debug("Creating chat lobby box");
-		messageWindow = new Window("Chat Lobby", skin);
-		messageWindow.setMovable(false);
-		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
+		
+		chatbox.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
 				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*4-BUTTONSIZE));
-		messageWindow.add(chatbox);
-		messageWindow.setVisible(false);
-		messageWindow.pack();
+		
+		chatbox.setVisible(false);
+		chatbox.pack();
 
-		stage.addActor(messageWindow);
+		stage.addActor(chatbox);
 	}
 
 
@@ -583,7 +600,7 @@ public class HUDView extends ApplicationAdapter{
 			this.statsTable.setVisible(false);
             return;
         }
-		healthBars.add(selectedEntity.getHealthBar(GameManager.get().getStage())); //Track the health bar of the selected unit
+		updateHealthBars();
         selectedEntity = target;
         if (selectedEntity instanceof Astronaut) { //For Testing Purposes
         	selectedEntity.giveAllBuilding();
@@ -607,8 +624,13 @@ public class HUDView extends ApplicationAdapter{
 		}
     }
 
-		
-	
+	private void updateHealthBars() {
+		for (BaseEntity b : selectedList) {
+			b.getHealthBar();
+		}
+
+	}
+
 	/**
 	 * Handler for the size buttons of the customization menu
 	 *
@@ -745,8 +767,8 @@ public class HUDView extends ApplicationAdapter{
 	 * Returns the chat window
 	 * @return chat window
 	 */
-	public Window getChatWindow() {
-		return messageWindow;
+	public Table getChatWindow() {
+		return chatbox;
 	}
 
 	/**
@@ -788,9 +810,10 @@ public class HUDView extends ApplicationAdapter{
 		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1));
 		//Get the selected entity
 		selectedEntity = null;
+		selectedList.clear();
 		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
 			if (e.isSelected()) {
-				selectedEntity = e;
+				selectedList.add(e);
 			}
 			if (e instanceof Commander) {
 				if (!heroMap.contains((Commander)e)) {
@@ -805,6 +828,7 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 		}
+		if (selectedList.size() > 0)	selectedEntity = selectedList.get(0);
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 
@@ -812,14 +836,11 @@ public class HUDView extends ApplicationAdapter{
 		//chat listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
 			if (messageToggle){
-				messageWindow.setVisible(false);
-				messageToggle = false;
-				this.setChatActiveCheck(0);
+			    hideChatBox();
 
 			} else {
-				messageWindow.setVisible(true);
-				messageToggle = true;
-				this.setChatActiveCheck(1);
+			    showChatBox();
+				
 			}
 		}
 
@@ -857,7 +878,6 @@ public class HUDView extends ApplicationAdapter{
 	    HUDManip.setVisible(false);
 
 		chatbox.setVisible(false);
-		messageWindow.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
 
@@ -896,9 +916,8 @@ public class HUDView extends ApplicationAdapter{
 
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
-		messageWindow.align(Align.right | Align.top);
-		messageWindow.setPosition(stage.getWidth()-chatbox.getWidth()-BUTTONPAD,
-				Math.round(stage.getHeight()-chatbox.getHeight()-BUTTONPAD*5-BUTTONSIZE));
+		chatbox.align(Align.right | Align.top);
+		chatbox.setPosition(2, 230);
 		//Bottom Panel
 		//Map
 		minimap.align(Align.topLeft);
@@ -1044,6 +1063,28 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public BaseEntity getSelectedEntity(){
 		return this.selectedEntity;
+	}
+	
+	/**
+	 * Makes the chat box visible on the screen and sets the appropriate flags.
+	 */
+	public void showChatBox() {
+	    chatbox.enableTextField();
+        chatbox.setVisible(true);
+        messageToggle = true;
+        hud.setChatActiveCheck(1);
+        stage.setKeyboardFocus(chatbox.getMessageField());
+    }
+	
+	/**
+	 * Makes the chat box not visible and sets the appropriate flags.
+	 */
+	public void hideChatBox() {
+	    chatbox.disableTextField();
+        chatbox.setVisible(false);
+        messageToggle = false;
+        hud.setChatActiveCheck(0);
+        stage.unfocusAll();
 	}
 
 }

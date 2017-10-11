@@ -156,12 +156,6 @@ public class InputProcessor {
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 				if (!multiSelectionFlag && GameManager.get().getWorld() != null) {
 					MultiSelection.resetSelectedTiles();
-					if (GameManager.get().getActiveView() == 1) {
-						InputProcessor.this.camera.position.set(InputProcessor.this.camera
-								.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
-						InputProcessor.this.camera.zoom = 1;
-						GameManager.get().toggleActiveView();
-					} else {
 						this.originX = screenX;
 						this.originY = screenY;
 						// if the click is on the minimap
@@ -172,7 +166,7 @@ public class InputProcessor {
 						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
 						mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button, false);
-					}
+
 
 				} else {
 					// click

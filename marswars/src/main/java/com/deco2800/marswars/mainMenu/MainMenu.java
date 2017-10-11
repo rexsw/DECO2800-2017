@@ -1,6 +1,7 @@
 package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -47,6 +48,8 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
+	Music music = null;
+
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -85,6 +88,9 @@ public class MainMenu {
 	    
 		mainmenu.align(Align.left | Align.top).pad(100);
 		this.stage.addActor(mainmenu);
+
+		music = Gdx.audio.newMusic(Gdx.files.internal("secret.mp3"));
+		music.play();
 	}
 	
 	/**

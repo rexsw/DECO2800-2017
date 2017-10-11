@@ -47,10 +47,10 @@ public class Render3D implements Renderer {
     public void render(SpriteBatch batch, Camera camera) {
 
         List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
-
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
         for (BaseEntity e : renderables_be) {
+            e.getHealthBar();
             renderables.add(e);
         }
 
@@ -58,6 +58,8 @@ public class Render3D implements Renderer {
         List<AbstractEntity> entities = new ArrayList<>();
 
         List<AbstractEntity> walkables = new ArrayList<>();
+
+        List<AbstractEntity> hpBars = new ArrayList<>();
 
         List<AbstractEntity> fogs = FogWorld.getFogMap();
 
@@ -70,6 +72,8 @@ public class Render3D implements Renderer {
         for (AbstractEntity r : renderables) {
             if (r.canWalOver()) {
                 walkables.add(r);
+            } else if (r instanceof HealthBar) {
+                hpBars.add(r);
             } else {
                 entities.add(r);
             }
@@ -83,6 +87,7 @@ public class Render3D implements Renderer {
         //render the entities
         renderEntities(walkables, batch, camera,0);
         renderEntities(entities, batch, camera,0);
+        renderEntities(hpBars, batch, camera,0);
 
         //render the gray fog of war first
         renderEntities(fogs,batch,camera,0);
