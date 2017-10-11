@@ -576,4 +576,5 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		}
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
+
 }
