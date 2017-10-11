@@ -54,6 +54,7 @@ public class MultiSelectionTest {
 		MultiSelection.resetSelectedTiles();
 
 		MultiSelection.addStartTile(9f,12f);
+		MultiSelection.addStartTile(-9f,-12f);
 
 
 	}
@@ -67,6 +68,7 @@ public class MultiSelectionTest {
 		MultiSelection.resetSelectedTiles();
 
 		MultiSelection.addEndTile(9f,12f);
+		MultiSelection.addStartTile(-9f,-12f);
 
 
 	}
@@ -78,8 +80,25 @@ public class MultiSelectionTest {
 	public void testCallAllTiles(){
 		MultiSelection multiSelection = new MultiSelection();
 		MultiSelection.resetSelectedTiles();
+
+		//x1 < x2 & y1 < y2
 		MultiSelection.addStartTile(3f,3f);
 		MultiSelection.addEndTile(9f,12f);
+		multiSelection.clickAllTiles();
+
+		//x1 > x2 & y1 < y2
+		MultiSelection.addStartTile(9f,3f);
+		MultiSelection.addEndTile(3f,12f);
+		multiSelection.clickAllTiles();
+
+		//x1 < x2 & y1 > y2
+		MultiSelection.addStartTile(3f,12f);
+		MultiSelection.addEndTile(9f,3f);
+		multiSelection.clickAllTiles();
+
+		//x1 > x2 & y1 > y2
+		MultiSelection.addStartTile(9f,12f);
+		MultiSelection.addEndTile(3f,3f);
 		multiSelection.clickAllTiles();
 
 
