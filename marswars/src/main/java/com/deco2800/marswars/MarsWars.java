@@ -108,6 +108,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Update the input managers
          */
 		this.inputP.handleInput();
+
         /*
          * Update the camera
          */
