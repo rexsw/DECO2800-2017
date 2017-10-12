@@ -56,6 +56,8 @@ public class HealthBar extends BaseEntity {
         }
     }
 
+    public int getState() {return state;}
+
     @Override
     public boolean isCollidable() {return false;}
 
