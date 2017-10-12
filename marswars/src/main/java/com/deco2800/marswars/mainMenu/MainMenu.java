@@ -104,7 +104,23 @@ public class MainMenu {
 	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
 		gameStarted = start;
 		if (gameStarted){
-			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
+			game = new Game(mapType, mapSize, aITeams, playerTeams, true); //Start up a new game
+			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		}
+	}
+	
+	/**
+	 * Method called by MenuScreen to start off the game with saved game 
+	 * @param start
+	 * @param mapType
+	 * @param mapSize
+	 * @param aITeams
+	 * @param playerTeams
+	 */
+	public void loadGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
+		gameStarted = start;
+		if (gameStarted){
+			game = new Game(mapType, mapSize, aITeams, playerTeams, false); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 	}

@@ -1,5 +1,6 @@
 package com.deco2800.marswars.hud;
 
+import com.deco2800.marswars.InitiateGame.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by Toby Guinea on 16/09
@@ -67,7 +70,7 @@ public class PauseMenu extends Dialog{
 		/**
 		 * interprets the button press chosen by the player
 		 */
-		protected void result(final Object object) {
+		protected void result(final Object object)  {
 			if (object == (Object) 1) {
 				LOGGER.info("Opening Stats");
 				this.stats.showStats();
@@ -79,7 +82,13 @@ public class PauseMenu extends Dialog{
 				LOGGER.info("Quitting to main menu");
 				this.hud.setPauseCheck(0);
 				GameManager.get().resetGame();
-			} else if (object == (Object) 5) {
+			} else if (object == (Object) 4) {
+                try {
+                    Game.savedGame.writeGame();
+                }catch (FileNotFoundException e){
+                    //do nothing
+                }
+            } else if (object == (Object) 5) {
 				LOGGER.info("Quitting the application");
 				System.exit(0);
 			} else {

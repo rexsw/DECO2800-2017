@@ -5,6 +5,8 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -25,40 +27,61 @@ public class GameSave {
      * the order of saving will follow this order
      */
     //gray fog of war
-    private Array2D<Integer> fogOfWar;
+    public Array2D<Integer> fogOfWar;
 
     //black fog of war
-    private Array2D<Integer> blackFogOfWar;
+    public Array2D<Integer> blackFogOfWar;
 
     //list of entities
-    List<AbstractEntity> entities = new ArrayList<>();
+    public List<AbstractEntity> entities = new ArrayList<>();
 
     //list of walkables
-    List<AbstractEntity> walkables = new ArrayList<>();
+    public List<AbstractEntity> walkables = new ArrayList<>();
 
-    //TODO: the map
+    //the map
+    MapTypes mapType;
+    MapSizeTypes mapSize;
+    int aITeams;
+    int playerTeams;
 
+    /**
+     * blank constructor to correctly load game
+     * this is used for loading
+     */
+    public GameSave(){}
+
+    /**
+     * the constructor to save map type and size
+     * only used when initiate game saving instance
+     */
+    public GameSave(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
+        this.mapType = mapType;
+        this.mapSize = mapSize;
+        this.aITeams = aITeams;
+        this.playerTeams = playerTeams;
+    }
 
     /**
      * this function is saving a game by writing data to the file save.bin
      * @throws java.io.FileNotFoundException
      */
-    public void saveGame() throws java.io.FileNotFoundException{
+    public void writeGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-
-
-
+        kryo.writeObject(output, fogOfWar);
+        kryo.writeObject(output, blackFogOfWar);
+        kryo.writeObject(output, entities);
+        kryo.writeObject(output, walkables);
+        kryo.writeObject(output, mapType);
+        kryo.writeObject(output, mapSize);
+        kryo.writeObject(output, aITeams);
+        kryo.writeObject(output, playerTeams);
         output.close();
     }
 
-    /**
-     * this function is loading a game by reading data from the file save.bin
-     * @throws java.io.FileNotFoundException
-     */
-    public void loadGame() throws java.io.FileNotFoundException{
+    public void readGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
 
@@ -66,12 +89,6 @@ public class GameSave {
         input.close();
     }
 
-    /**
-     * this vunction will fetch the game with loaded data from the function loadGame()
-     */
-    public void fetchGame(){
-
-    }
 
 
     /**

@@ -828,18 +828,6 @@ public class HUDView extends ApplicationAdapter{
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 
-		
-		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
-			if (messageToggle){
-			    hideChatBox();
-
-			} else {
-			    showChatBox();
-				
-			}
-		}
-
 		//Will check all of the specified hotkeys to see if any have been pressed
 		hotkeys.checkKeys();
 
