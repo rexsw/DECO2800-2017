@@ -44,51 +44,6 @@ public class TextureManager extends Manager {
      * need to.
      */
     public TextureManager() {
-		ProgressBar.ProgressBarStyle armourBarStyle;
-		ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
-		armourBarStyle = new ProgressBar.ProgressBarStyle();
-		
-		Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GRAY);
-		pixmap.fill();
-		healthBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		armourBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-		
-		pixmap = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		healthBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		armourBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.BLUE);
-		pixmap.fill();
-		armourBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-		
-		ProgressBar healthBar = new ProgressBar(0,100, 1, false, healthBarStyle);
-		healthBar.setValue(50);
-		
-		ProgressBar armourBar = new ProgressBar(0,100, 1, false, armourBarStyle);
-		armourBar.setValue(50);
-
-		
-		Label label = new Label("do u even", GameManager.get().getSkin());
-		GameManager.get().getStage().addActor(label);
-		armourBar.setValue(100);
-		GameManager.get().getStage().act();
-		GameManager.get().getStage().draw();
-		
-		
-		System.out.println("BEFORE ");
     	//Select indicators
 	    	textureMap.put("greenSelect1", new Texture("resources/buildSelect/greenSelect1.png"));
 	    	textureMap.put("redSelect1", new Texture("resources/buildSelect/redSelect1.png"));
@@ -205,7 +160,6 @@ public class TextureManager extends Manager {
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
         
-        armourBar.setValue(50);
         //----------- MainMenu Assets:
         this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
@@ -280,7 +234,6 @@ public class TextureManager extends Manager {
             this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
         }
         
-        armourBar.setValue(100);
     }
     /*
      *
