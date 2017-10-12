@@ -61,7 +61,7 @@ public class CodeInterpreterTest {
     @Test
     public void reduceOneEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
-        a.reduceOneEnemy();
+        a.killone();
         int num2 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num1,num2+1);
     }
@@ -73,7 +73,7 @@ public class CodeInterpreterTest {
     public void reduceAllEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num1,4);
-        a.reduceAllEnemy();
+        a.killall();
         int num2 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num2,0);
     }
@@ -84,7 +84,7 @@ public class CodeInterpreterTest {
     @Test
     public void addRock() throws Exception {
         int or = rm.getRocks(-1);
-        a.addRock(100);
+        a.rock(100);
         assertEquals(or+100,rm.getRocks(-1));
 
 
@@ -100,7 +100,7 @@ public class CodeInterpreterTest {
     @Test
     public void addBiomass() throws Exception {
         int or = rm.getBiomass(-1);
-        a.addBiomass(100);
+        a.biomass(100);
         assertEquals(or+100,rm.getBiomass(-1));
     }
 
@@ -110,7 +110,7 @@ public class CodeInterpreterTest {
     @Test
     public void addCrystal() throws Exception {
         int or = rm.getCrystal(-1);
-        a.addCrystal(100);
+        a.crystal(100);
         assertEquals(or+100,rm.getCrystal(-1));
     }
 
@@ -120,7 +120,7 @@ public class CodeInterpreterTest {
     @Test
     public void addWater() throws Exception {
         int or = rm.getWater(-1);
-        a.addWater(100);
+        a.water(100);
         assertEquals(or+100,rm.getWater(-1));
     }
 
@@ -129,7 +129,7 @@ public class CodeInterpreterTest {
      */
     @Test
     public void switchDay() throws Exception {
-        a.switchDay();
+        a.day();
         assertEquals(tm.getHours(),6);
     }
 
@@ -139,36 +139,11 @@ public class CodeInterpreterTest {
      */
     @Test
     public void switchNight() throws Exception {
-        a.switchNight();
+        a.night();
         assertEquals(tm.getHours(),21);
     }
 
-    /**
-     * to test if the soldier attributes has been modified after addAllTech();
-     */
-    @Test
-    public void addAllTech() throws Exception {
-        int num1 = tem.getUnitAttribute("Soldier",1);
-        int num2 = tem.getUnitAttribute("Soldier",2);
-        int num3 = tem.getUnitAttribute("Soldier",3);
-        int num4 = tem.getUnitAttribute("Soldier",4);
-        int num5 = tem.getUnitAttribute("Soldier",5);
-        int num6 = tem.getUnitAttribute("Soldier",6);
-        a.addAllTech();
-        int n1 = tem.getUnitAttribute("Soldier",1);
-        int n2 = tem.getUnitAttribute("Soldier",2);
-        int n3 = tem.getUnitAttribute("Soldier",3);
-        int n4 = tem.getUnitAttribute("Soldier",4);
-        int n5 = tem.getUnitAttribute("Soldier",5);
-        int n6 = tem.getUnitAttribute("Soldier",6);
-        assertTrue(num1<n1);
-        assertTrue(num2<n2);
-        assertTrue(num3<n3);
-        assertTrue(num4<n4);
-        assertTrue(num5<n5);
-        assertTrue(num6<n6);
 
-    }
 
 
 }
