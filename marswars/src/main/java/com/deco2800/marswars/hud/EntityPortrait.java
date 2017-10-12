@@ -20,7 +20,6 @@ import java.util.List;
 
 public class EntityPortrait extends ImageButton {
 
-    private EntityPortrait parent;
     private List<EntityPortrait> children = new ArrayList<>();
     private BaseEntity unit;
     private Image healthBarSprite;
@@ -47,7 +46,6 @@ public class EntityPortrait extends ImageButton {
      */
     public EntityPortrait(Skin skin, BaseEntity unit, EntityPortrait parent, float width, float height) {
         super(skin);
-        this.parent = parent;
         this.unit = unit;
         initiateButton(width, height);
         createListener();

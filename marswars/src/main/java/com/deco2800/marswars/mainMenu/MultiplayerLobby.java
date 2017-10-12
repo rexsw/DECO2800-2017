@@ -10,10 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.net.ConnectionManager;
-import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.net.StartGameAction;
 import com.deco2800.marswars.net.StartRequestAction;
-import com.deco2800.marswars.util.NewGameInformation;
 import com.esotericsoftware.kryonet.Connection;
 
 /**
