@@ -180,22 +180,6 @@ public class HUDView extends ApplicationAdapter{
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
 	}
 
-	public void generateTextures(int number) {
-		PixmapIO pIO = new PixmapIO();
-		for (int i = 0; i <= number; i++) {
-			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
-			int width = 512;
-			int fillPoint = (width * i) /number;
-			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
-			p.setColor(Color.GRAY);
-			p.fill();
-			p.setColor(Color.GREEN);
-			p.fillRectangle(0,0,fillPoint,20);
-			pIO.writePNG(f,p);
-			p.dispose();
-		}
-	}
-
 	/**
 	 * Contains top right section of the HUD to be displayed
 	 * on screen and set to stage.
@@ -669,6 +653,28 @@ public class HUDView extends ApplicationAdapter{
 		});
 	}
 
+
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) / number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			if (i == 0) {
+				p.dispose();
+				continue;
+			}
+			p.setColor(Color.GREEN);
+			if (i < number/2) p.setColor(Color.ORANGE);
+			if (i < number/8) p.setColor(Color.RED);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
+	}
 
     /**
      * Enables action button based on the actions avaliable to
