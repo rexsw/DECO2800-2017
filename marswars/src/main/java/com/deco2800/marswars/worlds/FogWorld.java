@@ -44,7 +44,7 @@ public class FogWorld {
     public static void initializeSelectedTiles(int width, int length){
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < length; y++) {
-                addEntity(new MultiSelectionTile(x,y,1,1f,1f),selectedTileMap);
+                addEntity(new MultiSelectionTile(x,y,0,1f,1f),selectedTileMap);
 
             }
         }
@@ -65,8 +65,8 @@ public class FogWorld {
     public static void initializeFogWorld(int width, int length){
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < length; y++) {
-                addEntity(new GrayTile(x,y,1,1f,1f),fogMap);
-                addEntity(new BlackTile(x,y,1,1f,1f),blackFogMap);
+                addEntity(new GrayTile(x,y,0,1f,1f),fogMap);
+                addEntity(new BlackTile(x,y,0,1f,1f),blackFogMap);
             }
         }
     }
