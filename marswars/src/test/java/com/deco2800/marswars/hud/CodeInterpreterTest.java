@@ -56,7 +56,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if reduceOneEnemy() can delete one enemy soldier successfully;
+     * to test if killone() can delete one enemy soldier successfully;
      */
     @Test
     public void reduceOneEnemy() throws Exception {
@@ -67,7 +67,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if reduceAllEnemy() can delete all enemy soldiers successfully;
+     * to test if killall() can delete all enemy soldiers successfully;
      */
     @Test
     public void reduceAllEnemy() throws Exception {
@@ -79,7 +79,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if addRock() can add specified rock successfully;
+     * to test if rock() can add specified rock successfully;
      */
     @Test
     public void addRock() throws Exception {
@@ -95,7 +95,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if addBiomass() can add specified biomass successfully;
+     * to test if biomass() can add specified biomass successfully;
      */
     @Test
     public void addBiomass() throws Exception {
@@ -105,7 +105,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if addCrystal() can add specified crystal successfully;
+     * to test if crystal() can add specified crystal successfully;
      */
     @Test
     public void addCrystal() throws Exception {
@@ -115,7 +115,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if addWater() can add specified water successfully;
+     * to test if water() can add specified water successfully;
      */
     @Test
     public void addWater() throws Exception {
@@ -125,7 +125,7 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if game time hour becomes 6 am after switchDay();
+     * to test if game time hour becomes 6 am after day();
      */
     @Test
     public void switchDay() throws Exception {
@@ -135,7 +135,7 @@ public class CodeInterpreterTest {
 
 
     /**
-     * to test if game time hour becomes 21 pm after switchNight();
+     * to test if game time hour becomes 21 pm after night();
      */
     @Test
     public void switchNight() throws Exception {
