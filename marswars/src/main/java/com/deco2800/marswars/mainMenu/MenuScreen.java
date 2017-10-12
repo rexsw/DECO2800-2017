@@ -588,10 +588,8 @@ public class MenuScreen{
 				if(! (mapType == null || mapSize == null)) {
 					mainmenu.setVisible(false);
 					int playerTeams = 1;
-					menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
+					menu.startGame(true, mapType, mapSize, AITeams, 1);
 				}
-				//TODO talk to AI team and see if at least one of each must be selected
-				//TODO come up with a better user notif of an unselected option
 		}});
 		
 		navigationButtons.removeActor(nextButton);
