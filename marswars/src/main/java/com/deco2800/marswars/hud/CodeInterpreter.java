@@ -20,7 +20,7 @@ public class CodeInterpreter {
     private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
     private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
     private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
-    private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
+
 
 
 
@@ -178,15 +178,29 @@ public class CodeInterpreter {
 
 
     /**
-     * If the code is "whosyourdaddy", set the player's team to be invincible.
+     * If the code is "whosyourdaddy", set the enemies attack to be of no effect.
      */
     public void whosyourdaddy(){
         MarsWars.invincible = 1;
     }
 
 
+    /**
+     * If the code is "fogoff", make the fog appear.
+     */
+    public void fogoff(){
+            FogManager.toggleFog(false);
+
+    }
 
 
+    /**
+     * If the code is "fogon", make the fog disappear.
+     */
+    public void fogon(){
+        FogManager.toggleFog(true);
+
+    }
 
 
 
