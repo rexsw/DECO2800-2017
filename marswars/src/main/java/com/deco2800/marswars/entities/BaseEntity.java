@@ -16,7 +16,9 @@ import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -397,8 +399,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
 					baseWorld.getCollisionMap().get(x, y).add(this);
+//					if (this instanceof BuildingEntity || this instanceof Soldier) {
+//						baseWorld.getFloodableEntityList().add(this);
+//					}
 				} else {
 					baseWorld.getCollisionMap().get(x, y).remove(this);
+//					if (this instanceof BuildingEntity || this instanceof Soldier) {
+//						baseWorld.getFloodableEntityList().remove(this);
+//					}
 				}
 			}
 		}
