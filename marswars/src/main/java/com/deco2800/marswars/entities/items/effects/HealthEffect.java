@@ -44,8 +44,18 @@ public class HealthEffect implements Effect{
 			entity.setHealth(entity.getHealth() + this.health > entity.getMaxHealth()?entity.getMaxHealth() :
 				entity.getHealth() + this.health);
 		}
-		System.out.println(entity.getClass());
-		System.out.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
+		System.err.println(entity.getClass());
+		System.err.println(entity.getHealth());
 	}
 
 	/**

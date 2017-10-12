@@ -169,12 +169,14 @@ public class Commander extends Soldier {
 	
 	@Override
 	protected void moveUnit(float x, float y) {
+		
 		if (itemInUse && inventory.getCurrentAction().isPresent()) {
 				UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
 				action.execute();
 				itemInUse = false;
+		} else {
+			super.moveUnit(x, y);
 		}
-		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
 	}
 	
 	@Override
