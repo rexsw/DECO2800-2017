@@ -18,7 +18,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.managers.GameManager;
@@ -444,7 +444,7 @@ public class ShortCut {
 		if (inputKeys.contains(Input.Keys.G) && !inputKeys.contains(Input.Keys.CONTROL_LEFT)) {
 			if(spac == false){
 				spac = true;
-				Spacman s = new Spacman(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0);
+				Astronaut s = new Astronaut(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,-1);
 				s.setOwner(-1);
 				GameManager.get().getWorld().addEntity(s);
 			}
@@ -461,7 +461,7 @@ public class ShortCut {
 		if (inputKeys.contains(Input.Keys.G) && inputKeys.contains(Input.Keys.CONTROL_LEFT)) {
 			if(aiSpac == false){
 				aiSpac = true;
-				Spacman s = new Spacman(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0);
+				Astronaut s = new Astronaut(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,1);
 				s.setOwner(0);
 				GameManager.get().getWorld().addEntity(s);
 			}

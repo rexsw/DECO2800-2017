@@ -6,11 +6,11 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -470,7 +470,7 @@ public class MapContainer {
         }
         switch (random){
             case SPACMAN:
-                entity = new Spacman(x, y, 0);
+                entity = new Astronaut(x, y, 0, -1);
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");
         }

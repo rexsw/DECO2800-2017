@@ -2,7 +2,6 @@ package com.deco2800.marswars.hud;
 
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EnemySpacman;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
 
