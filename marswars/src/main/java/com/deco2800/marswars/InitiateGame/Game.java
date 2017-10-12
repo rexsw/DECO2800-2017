@@ -74,7 +74,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
-//		this.weatherManager.setWeatherEvent();
+		//this.weatherManager.setWeatherEvent();
 	}
 	
 	/**

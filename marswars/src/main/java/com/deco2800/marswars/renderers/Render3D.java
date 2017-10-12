@@ -50,8 +50,12 @@ public class Render3D implements Renderer {
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
         for (BaseEntity e : renderables_be) {
-            e.getHealthBar();
-            renderables.add(e);
+            if (e instanceof Soldier && ((Soldier) e).getHealth() > 0) {
+                e.getHealthBar();
+                renderables.add(e);
+            } else if (! (e instanceof Soldier)) {
+                renderables.add(e);
+            }
         }
 
 
@@ -195,7 +199,7 @@ public class Render3D implements Renderer {
             float cartY = (worldWidth-1) - entity.getPosY();
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
-            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();
 
             // We want to keep the aspect ratio of the image so...
             float aspect = (float)(tex.getWidth())/(float)(tileWidth);
