@@ -195,7 +195,7 @@ public class Render3D implements Renderer {
             float cartY = (worldWidth-1) - entity.getPosY();
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
-            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight;
+            float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();
 
             // We want to keep the aspect ratio of the image so...
             float aspect = (float)(tex.getWidth())/(float)(tileWidth);
