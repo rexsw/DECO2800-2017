@@ -1,6 +1,8 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
@@ -27,7 +29,8 @@ public class Commander extends Soldier {
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
 	Optional<DecoAction> currentAction = Optional.empty();
-	private Boolean statsChange;
+	private boolean statsChange;
+	private boolean itemInUse = false;
 
 	/**
 	 * Constructor for the Commander in the specified location and with the specified owner (i.e. who controls the 
@@ -153,5 +156,34 @@ public class Commander extends Soldier {
 	public void onTick(int tick) {
 		super.onTick(tick);
 		this.inventory.onTick(tick);
+	}
+	
+	
+	public boolean isItemInUse() {
+		return this.itemInUse;
+	}
+	
+	public void setItemInUse(boolean set) {
+		this.itemInUse = set;
+	}
+	
+	@Override
+	protected void moveUnit(float x, float y) {
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+				UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+				action.execute();
+				itemInUse = false;
+		}
+		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	}
+	
+	@Override
+	public void deselect() {
+		super.deselect();
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+			action.cancel();
+			itemInUse = false;
+		}
 	}
 }

@@ -67,6 +67,9 @@ public class UseSpecialAction implements DecoAction {
 		this.user = actor;
 		this.radius = item.getRadius();
 		state = radius == 0 ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
+		if (state == State.SELECT) {
+			actor.setItemInUse(true);
+		}
 	}
 	
 	/**
@@ -98,6 +101,9 @@ public class UseSpecialAction implements DecoAction {
 			pointY = parse[1];
 			fixPos = parse[2];
 		} else { //should only get to here for EXECUTE.
+			System.err.println("EXECUTE !!!!!!!!!!!!");
+			System.err.println("EXECUTE !!!!!!!!!!!!");
+			System.err.println("EXECUTE !!!!!!!!!!!!");
 			for (Effect e : item.getEffect()) {
 				if ((e.getTarget() == Target.SELF) && (radius == 0)) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
@@ -120,7 +126,7 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnConditional(e, targets);
 				}				
 			}
-			completed = true; //aciton completed once all effects of the Special item have been considered/applied.
+			completed = true; //action completed once all effects of the Special item have been considered/applied.
 		}
 	}
 
@@ -157,6 +163,16 @@ public class UseSpecialAction implements DecoAction {
 			executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(targets, AttackableEntity.class, 
 					user.getOwner())); 
 		}
+	}
+	
+	public void execute() {
+		GameManager.get().getWorld().removeEntity(temp);
+		state = State.EXECUTE;
+	}
+	
+	public void cancel() {
+		GameManager.get().getWorld().removeEntity(temp);
+		this.completed = true;
 	}
 	
 	/**

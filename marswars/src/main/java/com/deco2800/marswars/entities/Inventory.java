@@ -201,22 +201,10 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
 
 	@Override
 	public void onTick(int tick) {
-		System.err.println("ticktock");
-		System.err.println("ticktock");
-		System.err.println("ticktock");
-		System.err.println("ticktock");
-		System.err.println("ticktock");
 		if (currentAction.isPresent() && !currentAction.get().completed()) {
-			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
-			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
-			System.out.println("ACTION!!!!!!!!!!!!!!!!!1");////////////
 			currentAction.get().doAction();
 		} else {
-			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
-			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
-			System.out.println("DONE!!!!!!!!!!!!!!!!!1");////////////
 			currentAction = Optional.empty();
 		}
 	}
-
 }
