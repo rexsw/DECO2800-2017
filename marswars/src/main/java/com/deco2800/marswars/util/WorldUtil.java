@@ -202,7 +202,9 @@ public class WorldUtil {
 	public static List<BaseEntity> getEntitiesOfClassAndNotOwner(List<BaseEntity> entities, Class<?> c, int m) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
+			System.err.println("w: " + w.getClass());
 			if (w.getClass() == c && w instanceof HasOwner && ((HasOwner) w).getOwner() != m) {
+				System.err.println("w2222: " + w.getClass());
 				classEntities.add(w);
 			}
 		}

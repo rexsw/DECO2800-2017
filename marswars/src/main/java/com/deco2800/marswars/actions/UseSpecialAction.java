@@ -79,18 +79,13 @@ public class UseSpecialAction implements DecoAction {
 	 */
 	@Override
 	public void doAction() {
-		System.err.println("doing something!!!!!!!!!!!!");
-		System.err.println("doing something!!!!!!!!!!!!");
-		System.err.println("doing something!!!!!!!!!!!!");
-		System.err.println("doing something!!!!!!!!!!!!");
 		if (timeManager.isPaused() || actionPaused || completed) { //check if paused or completed.
 			return;
 		}
 		if (state == State.SELECT) { //need to get player's input of where to use the item (if needed)
-			System.err.println("selecting !!!!!!!!!!!!");
-			System.err.println("selecting !!!!!!!!!!!!");
-			System.err.println("selecting !!!!!!!!!!!!");
-			System.err.println("selecting !!!!!!!!!!!!");
+			System.err.println("doing something!!!!!!!!!!!!");
+			System.err.println("doing something!!!!!!!!!!!!");
+			System.err.println("doing something!!!!!!!!!!!!");
 			float[] parse = new float[]{pointX, pointY, fixPos};
 			temp = WorldUtil.selectionStage(temp, radius, parse, null);
 			/*
@@ -113,6 +108,11 @@ public class UseSpecialAction implements DecoAction {
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
 				} else if (e.getTarget() == Target.ALL_ENEMY) { //affect only enemies
+					System.err.println("BOMB !!!!!!!!!!!!");
+					System.err.println("BOMB !!!!!!!!!!!!");
+					System.err.println("BOMB !!!!!!!!!!!!");
+					System.err.println("BOMB !!!!!!!!!!!!");
+					System.err.println("BOMB !!!!!!!!!!!!");
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
@@ -139,8 +139,10 @@ public class UseSpecialAction implements DecoAction {
 	 * 			onto.
 	 */
 	private void executeEffectOnTargets(Effect e, List<BaseEntity> targets) {
+		System.err.println("Number of targets: " + targets.size());
 		for (BaseEntity ent : targets) {
 			AttackableEntity mark = (AttackableEntity) ent;
+			System.err.println(mark.getStats());
 			e.applyEffect(mark);
 		}	
 	}
