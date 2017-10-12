@@ -186,11 +186,11 @@ public class TextureManager extends Manager {
         this.saveTexture("commanderSelected", "resources/UnitAssets/Neutral/Commander_2.png");
         
         //Backgrounds:
-        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
-        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
-        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
-        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/nighbg.png");
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
