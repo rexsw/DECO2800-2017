@@ -312,11 +312,11 @@ public class MenuScreen{
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
-		Button tiny = new TextButton("XS", skin, "toggle");
-		Button smol = new TextButton("S", skin, "toggle");
-		Button medium = new TextButton("M", skin, "toggle");
-		Button large = new TextButton("L", skin, "toggle");
-		Button veryLarge = new TextButton("XL", skin, "toggle");
+		Button tiny = new TextButton("XS", skin);
+		Button smol = new TextButton("S", skin);
+		Button medium = new TextButton("M", skin);
+		Button large = new TextButton("L", skin);
+		Button veryLarge = new TextButton("XL", skin);
 		
 		Table worldSizeButtons = new Table();
 		worldSizeButtons.add(tiny).size(NAVBUTTONSIZE).pad(BUTTONPAD);
@@ -387,14 +387,12 @@ public class MenuScreen{
 
 		Table gameTable = new Table();		
 		gameTable.align(Align.left | Align.center);
-		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");
 		
-		//int ai teams, int player teams
+		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");		
 		Label teamSelect = new Label("Pick the total number of teams", skin);
 		Label selected = new Label(String.format("Selected 2 teams"), skin);
 		
 		Table AIButtons = new Table();
-		
 		Button AI2 = new TextButton("2", skin, "menubutton");
 		Button AI3 = new TextButton("3", skin, "menubutton");
 		Button AI4 = new TextButton("4", skin, "menubutton");
@@ -413,12 +411,23 @@ public class MenuScreen{
 			
 			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
+		
+		
+		Label winConditions = new Label("SELECT WIN CONDITIONS", this.skin, "subtitle");		
+		Label winInfo = new Label("Pick your ideal win conditions", skin);
+
+		Label combatBehaviour = new Label("SELECT COMBAT BEHAVIOUR", this.skin, "subtitle");		
+		Label behaveSelect = new Label("Pick the AI behaviour", skin);
 						
-		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
+		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(AIButtons).row();
 		mainmenu.add(gameTable).row();
 		mainmenu.add(selected).align(Align.left).row();
+		mainmenu.add(combatBehaviour).align(Align.left).row();
+		mainmenu.add(behaveSelect).align(Align.left).row();
+		mainmenu.add(winConditions).align(Align.left).row();
+		mainmenu.add(winInfo).align(Align.left).row();
 		
 		addNavigationButton(ScreenMode.COMBATMODE);
 		this.addPlayButton();

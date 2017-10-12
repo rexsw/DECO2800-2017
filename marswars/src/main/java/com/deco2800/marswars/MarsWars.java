@@ -81,14 +81,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 		
-		/*All managers */
-		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
 		this.camera = new OrthographicCamera(1920, 1080);
+		
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
+
+		/*All managers */
+		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 
 		new MainMenu(this.skin, this.stage);
 	}

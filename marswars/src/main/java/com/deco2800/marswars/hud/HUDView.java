@@ -153,7 +153,7 @@ public class HUDView extends ApplicationAdapter{
 		this.stats = new GameStats(stage, skin, this, textureManager);
 		//create chatbox
 		this.chatbox = new ChatBox(skin);
-
+		
 		//initialise the minimap and set the image
 		MiniMap m = new MiniMap("minimap", 220, 220);
 		GameManager.get().setMiniMap(m);
@@ -208,7 +208,6 @@ public class HUDView extends ApplicationAdapter{
 		//add dispMainMenu image
 		Texture menuImage = textureManager.getTexture("menu_button");
 		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion menuRegion = new TextureRegion(menuImage);
 		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
 		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
@@ -329,6 +328,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Adds in the bottom panel of the HUD
 	 */
 	private void addBottomPanel(){
+		//HUDManip.setDebug(true);
 		addMiniMapMenu();
 		addInventoryMenu();
 
@@ -353,12 +353,9 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
 
-
-		HUDManip.setSize(50, 80);
-		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispTech).pad(BUTTONPAD);
-		HUDManip.add(dispFog).pad(BUTTONPAD);
-		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
+		HUDManip.add(dispTech).row();
+		HUDManip.add(dispShop).width(50).height(50);
+		HUDManip.add(dispFog);
 		
 		stage.addActor(HUDManip);
 		
@@ -470,13 +467,14 @@ public class HUDView extends ApplicationAdapter{
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
 
+		actionsWindow.padLeft(minimap.getWidth()/2);
 		actionsWindow.add(peonButton);
 		actionsWindow.add(helpText);
 		actionsWindow.setMovable(false);
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
-		actionsWindow.setPosition(220, 0);
+		actionsWindow.setHeight(100);
+		actionsWindow.setPosition((float) Math.sqrt(200)/2, 0);
 
 		//Add action buttons
 		addButtonArray();
@@ -784,8 +782,10 @@ public class HUDView extends ApplicationAdapter{
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		/*Update Minimap*/
+		//minimap.toFront();
 		addEntitiesToMiniMap();
 		this.updateMiniMapMenu();
+		actionsWindow.toBack();
 
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
@@ -915,24 +915,23 @@ public class HUDView extends ApplicationAdapter{
 		chatbox.align(Align.right | Align.top);
 		chatbox.setPosition(2, 230);
 		//Bottom Panel
+		//Avaliable actions
+		actionsWindow.align(Align.topLeft);
+		actionsWindow.setWidth((float) (stage.getWidth()-minimap.getWidth()/2));
+		actionsWindow.setHeight(minimap.getHeight()/2);
+		actionsWindow.setPosition(minimap.getWidth(), 0);
 		//Map
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
 		minimap.setSize(220, 220);
-		//Avaliable actions
-		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
-		actionsWindow.setPosition(220, 0);
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 		//Menu manipulator
 		HUDManip.setSize(50, 80);
-		HUDManip.setPosition(stage.getWidth()-50, 50);
-		HUDManip.align(Align.right| Align.bottom);
+		HUDManip.setPosition(minimap.getWidth(), 20);
 
 		//resize stats
 		stats.resizeStats(width, height);
