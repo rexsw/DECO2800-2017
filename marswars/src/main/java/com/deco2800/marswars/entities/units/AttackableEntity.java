@@ -181,6 +181,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 				modifyFogOfWarMap(false,3);
 			}
 			GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this.getHealthBar());
 			LOGGER.info("DEAD");
 
 		}
