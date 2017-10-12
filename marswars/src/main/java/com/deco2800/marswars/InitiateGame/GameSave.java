@@ -25,16 +25,16 @@ public class GameSave {
      * the order of saving will follow this order
      */
     //gray fog of war
-    private Array2D<Integer> fogOfWar;
+    public Array2D<Integer> fogOfWar;
 
     //black fog of war
-    private Array2D<Integer> blackFogOfWar;
+    public Array2D<Integer> blackFogOfWar;
 
     //list of entities
-    List<AbstractEntity> entities = new ArrayList<>();
+    public List<AbstractEntity> entities = new ArrayList<>();
 
     //list of walkables
-    List<AbstractEntity> walkables = new ArrayList<>();
+    public List<AbstractEntity> walkables = new ArrayList<>();
 
     //TODO: the map
 
