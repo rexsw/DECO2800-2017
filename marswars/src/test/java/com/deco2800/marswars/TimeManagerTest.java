@@ -5,7 +5,6 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -250,7 +249,7 @@ public class TimeManagerTest {
 	public void testUnpause() {
 		List<BaseEntity> pausedEntities = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
-			Spacman placeHolderUnit = new Spacman(i, i, 0);
+			Astronaut placeHolderUnit = new Astronaut(i, i, 0, -1);
 			GameManager.get().getWorld().addEntity(placeHolderUnit);
 			Astronaut affectedUnit = new Astronaut(i, 1, 0, 0);
 			pausedEntities.add(placeHolderUnit);

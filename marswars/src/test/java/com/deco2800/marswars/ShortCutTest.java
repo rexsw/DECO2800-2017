@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Tank;
 import com.deco2800.marswars.functionKeys.ShortCut;
 import com.deco2800.marswars.hud.HUDView;
@@ -44,7 +44,7 @@ public class ShortCutTest {
 		shortCut.addKey(Input.Keys.G);
 		shortCut.addExtraSpacMan();
 		shortCut.removeKey(Input.Keys.G);
-		Spacman man = new Spacman(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0);
+		Astronaut man = new Astronaut(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,-1);
 		assertEquals(true, GameManager.get().getWorld().getEntities().contains(man));
 	}
 	
@@ -55,9 +55,9 @@ public class ShortCutTest {
 		shortCut.addExtraAiSpacMan();
 		shortCut.removeKey(Input.Keys.G);
 		shortCut.removeKey(Input.Keys.CONTROL_LEFT);
-		Spacman man = new Spacman(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0);
+		Astronaut man = new Astronaut(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,1);
 		assertEquals(true, GameManager.get().getWorld().getEntities().contains(man));
-		assertEquals(0, ((Spacman) GameManager.get().getWorld().getEntities().get(0)).getOwner());
+		assertEquals(0, ((Astronaut) GameManager.get().getWorld().getEntities().get(0)).getOwner());
 	}
 	
 	/*@Test

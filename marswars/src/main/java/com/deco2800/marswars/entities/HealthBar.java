@@ -13,6 +13,7 @@ public class HealthBar extends BaseEntity {
     private BaseEntity parentEntity;
     private int state;
     private boolean visible = true;
+    private boolean finished = false;
 
     public HealthBar(float posX, float posY, float posZ, float xLength, float yLength, float zLength, BaseEntity parentEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
@@ -36,6 +37,10 @@ public class HealthBar extends BaseEntity {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 
     public void generateTextures(int number) {
