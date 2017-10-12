@@ -50,7 +50,7 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-	private GameSave savedGame;
+	public static GameSave savedGame;
 	
 	/**
 	 * Creates a Game instance and starts off the game
@@ -58,8 +58,7 @@ public class Game{
 	 * @param aITeams 
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame){
-	    GameSave savedGame = new GameSave();
-	    this.savedGame = savedGame;
+	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
 	    if(!newGame){
 		loadGame();
 	    } else {
