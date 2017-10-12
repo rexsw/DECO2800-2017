@@ -59,7 +59,6 @@ public class MenuScreen{
 	private Button quitButton;
 	private Button backButton; 
 	private Button nextButton;
-	private Label notSelected; 
 	
 	/* Multiplayer toggles */
 	public static int playerType;   // checks if multiplayer 
@@ -391,74 +390,36 @@ public class MenuScreen{
 		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");
 		
 		//int ai teams, int player teams
+		Label teamSelect = new Label("Pick the total number of teams", skin);
+		Label selected = new Label(String.format("Selected 2 teams"), skin);
 		
-		Label aiSelect = new Label("Pick the number of AI teams", skin);
-		Label playerSelect = new Label("Pick the number of player teams", skin);
-		Label selected = new Label(String.format("Selected %d AI teams and %d "
-				+ "player teams", AITeams, playerTeams), skin);
-		notSelected = new Label("You need to select at least 1 AI team and 1 "
-				+ "player team!", this.skin, "error");
-		notSelected.setVisible(false);
-		
-		Button AI1 = new TextButton("1", skin, "menubutton");
-		Button AI2 = new TextButton("2", skin, "menubutton");
-		Button P1 = new TextButton("1", skin, "menubutton");
-		Button P2 = new TextButton("2", skin, "menubutton");
-		
-		AI1.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				AITeams = 1;
-				selected.setText(String.format("Selected 1 AI team and %d player "
-						+ "team(s)", playerTeams));
-				notSelected.setVisible(false);
-			}
-		});
-		
-		AI2.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				AITeams = 2;
-				selected.setText(String.format("Selected 2 AI teams and %d player "
-						+ "team(s)", playerTeams));
-				notSelected.setVisible(false);
-			}
-		});
-		
-		P1.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				playerTeams = 1;
-				selected.setText(String.format("Selected %s AI team(s) and 1 player "
-						+ "team", playerTeams));
-			}
-		});
-		
-		P2.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				playerTeams = 2;
-				selected.setText(String.format("Selected %s AI team(s) and 2 player "
-						+ "teams", playerTeams));
-			}
-		});
-
 		Table AIButtons = new Table();
-		Table playerButtons = new Table();
 		
-		AIButtons.add(AI1).pad(BUTTONPAD);
-		AIButtons.add(AI2).pad(BUTTONPAD);
-		playerButtons.add(P1).pad(BUTTONPAD);
-		playerButtons.add(P2).pad(BUTTONPAD);
-
+		Button AI2 = new TextButton("2", skin, "menubutton");
+		Button AI3 = new TextButton("3", skin, "menubutton");
+		Button AI4 = new TextButton("4", skin, "menubutton");
+		Button AI5 = new TextButton("5", skin, "menubutton");
+		
+		Button[] buttonsList= {AI2, AI3, AI4, AI5};
+			
+		for  (int i = 0; i < buttonsList.length; i ++) {
+			buttonsList[i].addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					AITeams = 3;
+					selected.setText(String.format("Total %d teams playing", 3));
+				}
+			});
+			
+			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
+		}
+						
+		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
-		mainmenu.add(aiSelect).align(Align.left).row();
 		mainmenu.add(AIButtons).row();
-		mainmenu.add(playerSelect).align(Align.left).row();
-		mainmenu.add(playerButtons).row();
 		mainmenu.add(gameTable).row();
 		mainmenu.add(selected).align(Align.left).row();
-		mainmenu.add(notSelected).align(Align.left).row();
+		
 		addNavigationButton(ScreenMode.COMBATMODE);
 		this.addPlayButton();
 	}
@@ -624,19 +585,10 @@ public class MenuScreen{
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If a certain feature if not selected*/
-				if(! (mapType == null || mapSize == null || 
-						AITeams == 0 || playerTeams == 0 )){
+				if(! (mapType == null || mapSize == null)) {
 					mainmenu.setVisible(false);
-					menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
-				}
-				//TODO talk to AI team and see if at least one of each must be selected
-				//TODO come up with a better user notif of an unselected option
-				else if (mapType == null || mapSize == null){
-					notSelected.setText("Map not selected!");
-					notSelected.setVisible(true);
-				} else if (AITeams == 0 || playerTeams == 0){
-					notSelected.setText("You need to select at least 1 AI team and 1 player team!");
-					notSelected.setVisible(true);
+					int playerTeams = 1;
+					menu.startGame(true, mapType, mapSize, AITeams, 1);
 				}
 		}});
 		
