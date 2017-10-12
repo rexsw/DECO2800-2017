@@ -58,7 +58,7 @@ public class WeatherManager extends Manager implements Tickable {
                     this.setInterval();
                 }
             }
-            /*if (timeManager.getHours() >= 1 && floodWatersExist) {
+            if (timeManager.getHours() >= 1 && floodWatersExist) {
                 status = true;
                 // +10 a good time for actual condition
                 if (currentTime > interval + 2) {
@@ -68,7 +68,7 @@ public class WeatherManager extends Manager implements Tickable {
                     this.retreatWaters();
                     this.applyContinuousDamage(this.checkAffectedEntities());
                 }
-            } */
+            }
         }
         return status;
     }

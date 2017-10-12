@@ -399,14 +399,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
 					baseWorld.getCollisionMap().get(x, y).add(this);
-//					if (this instanceof BuildingEntity || this instanceof Soldier) {
-//						baseWorld.getFloodableEntityList().add(this);
-//					}
 				} else {
 					baseWorld.getCollisionMap().get(x, y).remove(this);
-//					if (this instanceof BuildingEntity || this instanceof Soldier) {
-//						baseWorld.getFloodableEntityList().remove(this);
-//					}
 				}
 			}
 		}
