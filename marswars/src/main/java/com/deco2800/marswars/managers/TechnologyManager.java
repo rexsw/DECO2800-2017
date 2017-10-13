@@ -196,6 +196,7 @@ public class TechnologyManager extends Manager{
     public void attackUpgrade(){
         unitAttributes.get("Soldier")[2] *= 2;
         unitAttributes.get("Soldier")[4] *= 2;
+
         }
     public void armourUpgrade(){
         unitAttributes.get("Soldier")[3] *= 2;
@@ -213,6 +214,7 @@ public class TechnologyManager extends Manager{
     }
     public void healthUpgrade() {
         unitAttributes.get("Soldier")[1] *= 2;
+
     }
     public void cowLevelUpgrade() {
 
@@ -298,7 +300,8 @@ public class TechnologyManager extends Manager{
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-
+        resourceManager.setBiomass(80, teamid);
+        resourceManager.setWater(80, teamid);
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
                 return "You have not researched the required Technology for this upgrade";
@@ -328,6 +331,7 @@ public class TechnologyManager extends Manager{
         resourceManager.setWater(resourceManager.getWater(teamid) - tech.getCost()[2], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
+
         if(techID == 1 || techID == 2 || techID == 3 || techID == 4){
             armourUpgrade();
         }
@@ -430,5 +434,42 @@ public class TechnologyManager extends Manager{
     		            BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
     	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
     	return buildingsAvailable;
+    }
+
+    public Set<Technology> getAllTech() {
+        Set<Technology> techSet = new HashSet<Technology>();
+        for (int i = 1; i<9;i++){
+            techSet.add(this.getTech(i));
+        }
+        return techSet;
+    }
+
+    public int getID(Technology tech){
+        if(tech == this.getTech(1)){
+            return 1;
+        } else
+        if(tech == this.getTech(1)){
+            return 2;
+        } else
+        if(tech == this.getTech(1)){
+            return 3;
+        }
+        if(tech == this.getTech(4)){
+            return 4;
+        }
+        if(tech == this.getTech(5)){
+            return 5;
+        }
+        if(tech == this.getTech(6)){
+            return 6;
+        }
+        if(tech == this.getTech(7)){
+            return 7;
+        }
+        if(tech == this.getTech(8)){
+            return 8;
+        }
+
+         return 0;
     }
 }
