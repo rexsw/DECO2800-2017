@@ -3,6 +3,8 @@ package com.deco2800.marswars.InitiateGame;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
@@ -164,10 +166,30 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities(aITeams, playerTeams);
+		setCameraInitialPosition();
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
 		//this.weatherManager.setWeatherEvent();
+	}
+
+	/**
+	 * Moves the camera to the player's base.
+	 */
+	private void setCameraInitialPosition() {
+		for (int i = 0; i < GameManager.get().getWorld().getEntities().size(); i++) {
+			AbstractEntity e = GameManager.get().getWorld().getEntities().get(i);
+			if (e instanceof Base && ((Base) e).getOwner() < 0) {
+				float x = e.getPosX();
+				float y = e.getPosY();
+				Vector2 basePosition = new Vector2();
+				// 55 and 32 come from the width and height of the tiles, 0.5 is sin(30)
+				basePosition.x = (float) (1 * (y * 55 * .5 + x * 55 * .5));
+				basePosition.y = (float) (1 * (x * 32 * .5 - y * 32 * .5));
+				this.camera.position.set(basePosition.x, basePosition.y, 0);
+				break;
+			}
+		}
 	}
 	
 	/**
