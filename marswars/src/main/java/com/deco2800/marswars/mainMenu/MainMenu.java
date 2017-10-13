@@ -2,6 +2,7 @@ package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -48,7 +49,8 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
-	Music music = null;
+	Sound openMusic = null;
+	Music defaultTheme = null;
 
 
 	/**
@@ -89,8 +91,9 @@ public class MainMenu {
 		mainmenu.align(Align.left | Align.top).pad(100);
 		this.stage.addActor(mainmenu);
 
-		music = Gdx.audio.newMusic(Gdx.files.internal("secret.mp3"));
-		music.play();
+		openMusic = Gdx.audio.newSound(Gdx.files.internal("OriginalSoundTracks/OpeningTheme.mp3"));
+		openMusic.loop();
+
 	}
 	
 	/**
@@ -104,6 +107,12 @@ public class MainMenu {
 	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
 		gameStarted = start;
 		if (gameStarted){
+			openMusic.stop();
+			openMusic.dispose();
+			defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+			defaultTheme.setVolume(0.9f);
+			defaultTheme.setLooping(true);
+			defaultTheme.play();
 			game = new Game(mapType, mapSize, aITeams, playerTeams, true); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
@@ -120,6 +129,12 @@ public class MainMenu {
 	public void loadGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
 		gameStarted = start;
 		if (gameStarted){
+			openMusic.stop();
+			openMusic.dispose();
+			defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+			defaultTheme.setVolume(0.9f);
+			defaultTheme.setLooping(true);
+			defaultTheme.play();
 			game = new Game(mapType, mapSize, aITeams, playerTeams, false); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
