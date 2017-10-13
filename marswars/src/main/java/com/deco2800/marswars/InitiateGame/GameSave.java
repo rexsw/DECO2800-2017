@@ -22,8 +22,7 @@ import java.util.List;
  */
 public class GameSave {
 
-    Data data = new Data();
-
+    public Data data = new Data();
     /**
      * blank constructor to correctly load game
      * this is used for loading
@@ -52,7 +51,7 @@ public class GameSave {
 
         kryo.writeObject(output, data.fogOfWar);
         kryo.writeObject(output, data.blackFogOfWar);
-        kryo.writeObject(output, data.entities);
+        kryo.writeObject(output, entities);
         kryo.writeObject(output, data.walkables);
         kryo.writeObject(output, data.mapType);
         kryo.writeObject(output, data.mapSize);

@@ -159,7 +159,7 @@ public class MenuScreen{
 			}
 		});
 
-		customizeButton.addListener(new ChangeListener() {
+		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
@@ -182,7 +182,8 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mainmenu.setVisible(false);
 				//loads game but uses dummy map type values for now
-				menu.loadGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
+
+				menu.loadGame(true);
 			}
 		});
 	}

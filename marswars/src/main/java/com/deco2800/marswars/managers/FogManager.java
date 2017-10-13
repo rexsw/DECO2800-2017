@@ -86,6 +86,22 @@ public class FogManager extends Manager {
 	}
 
 	/**
+	 * this function set the fog of war array when the game is loaded
+	 * @param newFogOfWar
+	 */
+	public static void setFog(Array2D<Integer> newFogOfWar){
+		fogOfWar = newFogOfWar;
+	}
+
+	/**
+	 * this function set the fog of war array when the game is loaded
+	 * @param newBlackFogOfWar
+	 */
+	public static void setBlackFog(Array2D<Integer> newBlackFogOfWar){
+		blackFogOfWar = newBlackFogOfWar;
+	}
+
+	/**
 	 * Updates the fogOfWar based on the sight range of an entity.
 	 *
 	 * @param x     The x position of the entity
