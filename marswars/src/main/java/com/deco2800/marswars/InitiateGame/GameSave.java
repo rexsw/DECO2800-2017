@@ -22,27 +22,7 @@ import java.util.List;
  */
 public class GameSave {
 
-    /**
-     * this is the list of data will be saved
-     * the order of saving will follow this order
-     */
-    //gray fog of war
-    public Array2D<Integer> fogOfWar;
-
-    //black fog of war
-    public Array2D<Integer> blackFogOfWar;
-
-    //list of entities
-    public List<AbstractEntity> entities = new ArrayList<>();
-
-    //list of walkables
-    public List<AbstractEntity> walkables = new ArrayList<>();
-
-    //the map
-    MapTypes mapType;
-    MapSizeTypes mapSize;
-    int aITeams;
-    int playerTeams;
+    Data data = new Data();
 
     /**
      * blank constructor to correctly load game
@@ -55,10 +35,10 @@ public class GameSave {
      * only used when initiate game saving instance
      */
     public GameSave(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
-        this.mapType = mapType;
-        this.mapSize = mapSize;
-        this.aITeams = aITeams;
-        this.playerTeams = playerTeams;
+        data.mapType = mapType;
+        data.mapSize = mapSize;
+        data.aITeams = aITeams;
+        data.playerTeams = playerTeams;
     }
 
     /**
@@ -70,22 +50,21 @@ public class GameSave {
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-        kryo.writeObject(output, fogOfWar);
-        kryo.writeObject(output, blackFogOfWar);
-        kryo.writeObject(output, entities);
-        kryo.writeObject(output, walkables);
-        kryo.writeObject(output, mapType);
-        kryo.writeObject(output, mapSize);
-        kryo.writeObject(output, aITeams);
-        kryo.writeObject(output, playerTeams);
+        kryo.writeObject(output, data.fogOfWar);
+        kryo.writeObject(output, data.blackFogOfWar);
+        kryo.writeObject(output, data.entities);
+        kryo.writeObject(output, data.walkables);
+        kryo.writeObject(output, data.mapType);
+        kryo.writeObject(output, data.mapSize);
+        kryo.writeObject(output, data.aITeams);
+        kryo.writeObject(output, data.playerTeams);
         output.close();
     }
 
     public void readGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
-
-
+        data  = kryo.readObject(input, Data.class);
         input.close();
     }
 
@@ -95,8 +74,8 @@ public class GameSave {
      * this function will get all the entities and fills in the arrays
      */
     public void fillData(){
-        fogOfWar = FogManager.getFog();
-        blackFogOfWar = FogManager.getBlackFog();
+        data.fogOfWar = FogManager.getFog();
+        data.blackFogOfWar = FogManager.getBlackFog();
 
         //getting all the entities
         List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
@@ -111,9 +90,9 @@ public class GameSave {
         //Sort entities into walkables and entities
         for (AbstractEntity r : renderables) {
             if (r.canWalOver()) {
-                walkables.add(r);
+                data.walkables.add(r);
             } else {
-                entities.add(r);
+                data.entities.add(r);
             }
         }
     }

@@ -102,6 +102,7 @@ public class Hotkeys {
 		}
 		
 
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if (this.noActive()) {
 				LOGGER.info("Open the quit menu");
@@ -109,6 +110,7 @@ public class Hotkeys {
 				this.quit = new ExitGame("Quit Game", this.skin, this.hud, true).show(this.stage); //$NON-NLS-1$
 			}
 		}
+
 
 		//tech tree listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {

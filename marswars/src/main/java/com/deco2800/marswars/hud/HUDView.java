@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -41,6 +42,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import com.deco2800.marswars.technology.Technology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Set;
 
@@ -362,7 +366,7 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage);
+				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
 
 		});
@@ -592,31 +596,31 @@ public class HUDView extends ApplicationAdapter{
 		}
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
-            return;
-        }
+			return;
+		}
 		updateHealthBars();
-        selectedEntity = target;
-        if (selectedEntity instanceof Astronaut) { //For Testing Purposes
-        	selectedEntity.giveAllBuilding();
-        }
+		selectedEntity = target;
+		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
+			selectedEntity.giveAllBuilding();
+		}
 		currentActions = target.getValidActions();
-	    enterActions(true); //Set up the buttons
-		if(target instanceof AttackableEntity) {
+		enterActions(true); //Set up the buttons
+		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
-	        // display hero inventory
-	        this.statsTable.hideInventory();
-	        heroSelected = null;
-	        if(target instanceof Commander) {
-	        	// display the inventory once a commander been selected
-	        	heroSelected = (Commander) target;
-	        	this.statsTable.showInventory();
-	        	this.statsTable.updateHeroInventory((Commander)target);
-	        }
+			// display hero inventory
+			this.statsTable.hideInventory();
+			heroSelected = null;
+			if (target instanceof Commander) {
+				// display the inventory once a commander been selected
+				heroSelected = (Commander) target;
+				this.statsTable.showInventory();
+				this.statsTable.updateHeroInventory((Commander) target);
+			}
 		}
-    }
+	}
 
 	private void updateHealthBars() {
 		for (BaseEntity b : selectedList) {
