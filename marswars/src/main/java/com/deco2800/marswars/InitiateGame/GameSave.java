@@ -51,7 +51,7 @@ public class GameSave {
 
         kryo.writeObject(output, data.fogOfWar);
         kryo.writeObject(output, data.blackFogOfWar);
-        kryo.writeObject(output, entities);
+        kryo.writeObject(output, data.entities);
         kryo.writeObject(output, data.walkables);
         kryo.writeObject(output, data.mapType);
         kryo.writeObject(output, data.mapSize);
