@@ -176,6 +176,15 @@ public class MenuScreen{
 				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
 		});
+		
+		loadGameButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mainmenu.setVisible(false);
+				//loads game but uses dummy map type values for now
+				menu.loadGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
+			}
+		});
 	}
 	
 	/**

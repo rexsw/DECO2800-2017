@@ -50,14 +50,33 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-
+	public static GameSave savedGame;
+	
 	/**
 	 * Creates a Game instance and starts off the game
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
-		startGame(mapType, mapSize, aITeams, playerTeams);
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame){
+	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
+	    if(!newGame){
+		loadGame();
+	    } else {
+	    	startGame(mapType, mapSize, aITeams, playerTeams);
+	    }
+	}
+	
+	/*Loads saved game*/
+	private void loadGame() {
+		//this.createMap(savedGame.mapType, savedGame.mapSize);
+//		this.view = new HUDView(GameManager.get().getStage(), 
+//				GameManager.get().getSkin(), GameManager.get());
+//		this.camera = GameManager.get().getCamera();
+//		this.addAIEntities(aITeams, playerTeams);
+//		this.setThread();
+//		this.fogOfWar();
+	    //RELOAD FOGOFWAR
+	   //ADD UNITS & WALKABLES
 	}
 	
 	/* The method that really starts off the game after Game instantiation. 
