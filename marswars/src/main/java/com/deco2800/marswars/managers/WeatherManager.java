@@ -183,8 +183,11 @@ public class WeatherManager extends Manager implements Tickable {
                 //        ((Soldier) e).getMaxHealth() / 10) {
                     // Check for existing action and complete before deletion
                 //}
-                ((Soldier) e).setHealth(((Soldier) e).getHealth() -
-                        (((Soldier) e)).getMaxHealth() / 10);
+        	//Carrier units and its loaded units are not affected by weather damage
+		if (((Soldier) e).getLoadStatus() == 0) {
+		    ((Soldier) e).setHealth(((Soldier) e).getHealth()
+			    - (((Soldier) e)).getMaxHealth() / 10);
+		}
             }
             damaged = true;
         } else if (timeManager.getPlaySeconds() % timeBetween <= condition) {

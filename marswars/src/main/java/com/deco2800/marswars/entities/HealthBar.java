@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.Box3D;
 
 /**
@@ -26,6 +27,11 @@ public class HealthBar extends BaseEntity {
     }
 
     public void update() {
+	if(parentEntity.getEntityType() == EntityType.UNIT) {
+	    if (((Soldier) parentEntity).getLoadStatus() == 1) {
+		setVisible(false);
+	    }
+	}
         if (!visible) {
             super.setPosition(100000, 0, -4);
             return;
