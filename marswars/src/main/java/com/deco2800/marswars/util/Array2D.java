@@ -15,6 +15,9 @@ public class Array2D<T> {
 
     private Object[] arr;
 
+    //NEVER DELETE THIS, THIS IS USED BY GAME LOADING FUNCTION
+    Array2D(){};
+
     /**
      * Constructs a 2D array of the given dimensions
      *

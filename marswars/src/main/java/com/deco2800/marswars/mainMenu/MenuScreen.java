@@ -181,8 +181,6 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mainmenu.setVisible(false);
-				//loads game but uses dummy map type values for now
-
 				menu.loadGame(true);
 			}
 		});

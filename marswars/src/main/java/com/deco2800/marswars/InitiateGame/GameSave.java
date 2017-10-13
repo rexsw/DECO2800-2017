@@ -1,7 +1,9 @@
 package com.deco2800.marswars.InitiateGame;
 
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
@@ -49,21 +51,29 @@ public class GameSave {
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-        kryo.writeObject(output, data.fogOfWar);
-        kryo.writeObject(output, data.blackFogOfWar);
-        kryo.writeObject(output, entities);
-        kryo.writeObject(output, data.walkables);
-        kryo.writeObject(output, data.mapType);
-        kryo.writeObject(output, data.mapSize);
-        kryo.writeObject(output, data.aITeams);
-        kryo.writeObject(output, data.playerTeams);
+        kryo.writeClassAndObject(output, data.fogOfWar);
+        kryo.writeClassAndObject(output, data.blackFogOfWar);
+        kryo.writeClassAndObject(output, data.entities);
+        kryo.writeClassAndObject(output, data.walkables);
+        kryo.writeClassAndObject(output, data.mapType);
+        kryo.writeClassAndObject(output, data.mapSize);
+        kryo.writeClassAndObject(output, data.aITeams);
+        kryo.writeClassAndObject(output, data.playerTeams);
         output.close();
     }
 
     public void readGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
-        data  = kryo.readObject(input, Data.class);
+
+        data.fogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
+        data.blackFogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
+        data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
+        data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
+        data.mapType  = (MapTypes)kryo.readClassAndObject(input);
+        data.mapSize  = (MapSizeTypes)kryo.readClassAndObject(input);
+        data.aITeams  = (int)kryo.readClassAndObject(input);
+        data.playerTeams  = (int)kryo.readClassAndObject(input);
         input.close();
     }
 
@@ -91,8 +101,29 @@ public class GameSave {
             if (r.canWalOver()) {
                 data.walkables.add(r);
             } else {
-                data.entities.add(r);
+                fillEntities(r);
             }
         }
+    }
+
+    public void fillEntities(AbstractEntity e){
+        if(e instanceof Astronaut){
+            data.entities.add(new SavedEntity("Astronaut",e.getPosX(),e.getPosY(),((Astronaut) e).getOwner()));
+        }else if(e instanceof Base){
+            data.entities.add(new SavedEntity("Base",e.getPosX(),e.getPosY(),((Base) e).getOwner()));
+        }else if(e instanceof Tank){
+            data.entities.add(new SavedEntity("Tank",e.getPosX(),e.getPosY(),((Tank) e).getOwner()));
+        }else if(e instanceof Carrier){
+            data.entities.add(new SavedEntity("Carrier",e.getPosX(),e.getPosY(),((Carrier) e).getOwner()));
+        }else if(e instanceof Commander){
+            data.entities.add(new SavedEntity("Commander",e.getPosX(),e.getPosY(),((Commander) e).getOwner()));
+        }else if(e instanceof Medic){
+            data.entities.add(new SavedEntity("Medic",e.getPosX(),e.getPosY(),((Medic) e).getOwner()));
+        }else if(e instanceof Hacker){
+            data.entities.add(new SavedEntity("Hacker",e.getPosX(),e.getPosY(),((Hacker) e).getOwner()));
+        }else if (e instanceof Soldier){
+            data.entities.add(new SavedEntity("Soldier",e.getPosX(),e.getPosY(),((Soldier) e).getOwner()));
+        }
+
     }
 }

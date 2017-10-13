@@ -117,11 +117,11 @@ public class MainMenu {
 			defaultTheme.play();
 			try {
 				game = new Game(mapType, mapSize, aITeams, playerTeams, true); //Start up a new game
-			} catch (FileNotFoundException e) {//do nothing}
+			} catch (FileNotFoundException e) {}//do nothing
 				game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			}
 		}
-	}
+	
 	
 	/**
 	 * Method called by MenuScreen to start off the game with saved game 
@@ -131,7 +131,7 @@ public class MainMenu {
 		GameSave loadedGame = new GameSave();
 		try {
 			loadedGame.readGame();
-		} catch (FileNotFoundException e) {//do nothing}
+		} catch (FileNotFoundException e) {}//do nothing
 			gameStarted = start;
 			if (gameStarted) {
 				openMusic.stop();
@@ -142,12 +142,12 @@ public class MainMenu {
 				defaultTheme.play();
 				try {
 					game = new Game(loadedGame.data.mapType, loadedGame.data.mapSize, loadedGame.data.aITeams, loadedGame.data.playerTeams, false); //Start up a new game
-				} catch (FileNotFoundException e2) {//do nothing}
+				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}
-			}
-		}
 	}
+
+
 	
 	/**
 	 * Flags the game as ended

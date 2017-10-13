@@ -101,9 +101,7 @@ public class Game{
 				.getManager(ResourceManager.class);
 
 		//add all entities
-		for(AbstractEntity each : loadedGame.data.walkables){
-			GameManager.get().getWorld().addEntity(((BaseEntity)each));
-		}
+		loadEntities(loadedGame);
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);
@@ -130,6 +128,28 @@ public class Game{
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
+	}
+
+	private void loadEntities(GameSave loadedGame){
+		for(SavedEntity each : loadedGame.data.entities)
+			if(each.getName().equals("Astronaut")){
+				GameManager.get().getWorld().addEntity(new Astronaut(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Base")){
+				GameManager.get().getWorld().addEntity(new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Tank")){
+				GameManager.get().getWorld().addEntity(new Tank(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Carrier")){
+				GameManager.get().getWorld().addEntity(new Carrier(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Commander")){
+				GameManager.get().getWorld().addEntity(new Commander(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Medic")){
+				GameManager.get().getWorld().addEntity(new Medic(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Hacker")){
+				GameManager.get().getWorld().addEntity(new Hacker(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if (each.getName().equals("Hacker")){
+				GameManager.get().getWorld().addEntity(new Soldier(each.getX(), each.getY(), 0, each.getTeamId()));
+			}
+
 	}
 
 	
