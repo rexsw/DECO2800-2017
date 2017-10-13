@@ -51,21 +51,29 @@ public class GameSave {
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-        kryo.writeObject(output, data.fogOfWar);
-        kryo.writeObject(output, data.blackFogOfWar);
-        kryo.writeObject(output, data.entities);
-        kryo.writeObject(output, data.walkables);
-        kryo.writeObject(output, data.mapType);
-        kryo.writeObject(output, data.mapSize);
-        kryo.writeObject(output, data.aITeams);
-        kryo.writeObject(output, data.playerTeams);
+        kryo.writeClassAndObject(output, data.fogOfWar);
+        kryo.writeClassAndObject(output, data.blackFogOfWar);
+        kryo.writeClassAndObject(output, data.entities);
+        kryo.writeClassAndObject(output, data.walkables);
+        kryo.writeClassAndObject(output, data.mapType);
+        kryo.writeClassAndObject(output, data.mapSize);
+        kryo.writeClassAndObject(output, data.aITeams);
+        kryo.writeClassAndObject(output, data.playerTeams);
         output.close();
     }
 
     public void readGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
-        data  = kryo.readObject(input, Data.class);
+
+        data.fogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
+        data.blackFogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
+        data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
+        data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
+        data.mapType  = (MapTypes)kryo.readClassAndObject(input);
+        data.mapSize  = (MapSizeTypes)kryo.readClassAndObject(input);
+        data.aITeams  = (int)kryo.readClassAndObject(input);
+        data.playerTeams  = (int)kryo.readClassAndObject(input);
         input.close();
     }
 

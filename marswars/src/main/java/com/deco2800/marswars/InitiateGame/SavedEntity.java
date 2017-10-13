@@ -4,6 +4,10 @@ package com.deco2800.marswars.InitiateGame;
  * Created by Treenhan on 10/13/17.
  */
 public class SavedEntity {
+
+    //never delete this, this is used by game loading
+    SavedEntity(){};
+
     SavedEntity(String name, float x, float y, int teamId){
         this.name = name;
         this.x = x;
