@@ -47,7 +47,6 @@ public class Commander extends Soldier {
 		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
-		inventory.addToInventory(new Special(SpecialType.BOMB));///////test only
 		this.statsChange = true;
 	}
 

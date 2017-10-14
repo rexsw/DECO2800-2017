@@ -30,7 +30,7 @@ public enum SpecialType implements ItemType {
 	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
 			new HealthEffect(100, false, Target.SELF)),
 	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
-			new HealthEffect(100000, true, Target.ENEMY)),
+			new HealthEffect(400, true, Target.ENEMY)),
 	TEAMHEAL("Team Heal", "scope", 0, 0, 1, new int[] { 50, 100, 100, 100 },
 			new HealthEffect(1000, false, Target.SELF_TEAM)),
 	NUKE("Nuke", "bullets", 0, 0, 1, new int[] { 500, 900, 50, 50 },

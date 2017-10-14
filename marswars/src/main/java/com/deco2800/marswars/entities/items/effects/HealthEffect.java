@@ -36,26 +36,12 @@ public class HealthEffect implements Effect{
 	 */
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		System.out.println(entity.getClass());
-		System.out.println(entity.getHealth());
 		if (isDamage) {
 			entity.setHealth(entity.getHealth() - this.health);
 		} else { //can't heal more than the max hp of the target
 			entity.setHealth(entity.getHealth() + this.health > entity.getMaxHealth()?entity.getMaxHealth() :
 				entity.getHealth() + this.health);
 		}
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
-		System.err.println(entity.getClass());
-		System.err.println(entity.getHealth());
 	}
 
 	/**

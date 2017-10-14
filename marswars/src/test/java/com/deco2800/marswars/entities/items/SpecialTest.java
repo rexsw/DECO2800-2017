@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.deco2800.marswars.entities.items.effects.HealthEffect;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -106,7 +107,7 @@ public class SpecialTest {
     public void getDescription () {
         //System.out.println(bomb.getDescription());
         String testString = "Bomb\n" +
-                "Damage: 100\n";
+                "Damage: 400\n";
         Assert.assertEquals(testString, bomb.getDescription());
     }
     
@@ -117,8 +118,10 @@ public class SpecialTest {
     @Test
     public void useEffect() {
     	//should normally run useItem method, but for testing it is not needed here.
-    	bomb.getEffect().get(0).applyEffect(com);
-    	Assert.assertTrue(com.getHealth() == baseHP - 100);
+    	HealthEffect bombEff = (HealthEffect) bomb.getEffect().get(0);
+    	bombEff.applyEffect(com);
+    	
+    	Assert.assertTrue(com.getHealth() == baseHP - 400);
     	Special heal = new Special(SpecialType.MASS1HEAL);
     	heal.getEffect().get(0).applyEffect(com);
     	Assert.assertTrue(com.getHealth() == baseHP);
