@@ -74,7 +74,7 @@ public class WorldUtil {
 	 */
 	public static List<BaseEntity> getEntitiesAroundWithClass(Class<?> c, float x, float y, float radiusX, 
 			float radiusY) {
-		List<BaseEntity> entities = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), c);
+		List<BaseEntity> entities = WorldUtil.getEntitiesOfLikeClass(GameManager.get().getWorld().getEntities(), c);
 		return getEntitiesAround(entities, x, y, radiusX, radiusY);
 	}
 	
@@ -116,6 +116,23 @@ public class WorldUtil {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
 			if (w.getClass() == c) {
+				classEntities.add(w);
+			}
+		}
+		return classEntities;
+	}
+	
+	/**
+	 * Lists the entities of a class or is a subclass of the provided class.
+	 * @param entities The list of entities to filter
+	 * @param c  class/parent class to search for.
+	 * @return  list of BaseEntities that are actually instances of the provided class or a subclass of the provided 
+	 * 			class. 
+	 */
+	public static List<BaseEntity> getEntitiesOfLikeClass(List<BaseEntity> entities, Class<?> c) {
+		List<BaseEntity> classEntities = new ArrayList<>();
+		for (BaseEntity w : entities) {
+			if (c.isAssignableFrom(w.getClass())) {
 				classEntities.add(w);
 			}
 		}
@@ -178,7 +195,7 @@ public class WorldUtil {
 	}
 
 	/**
-	 * Gets the closest entity of a class with an given owner 
+	 * Gets the closest entity of a class (and its subclasses) with an given owner 
 	 * @param c the class of entity searching for
 	 * @param m the owner of the entities 
 	 * @return a list of entities of type c if one is found 
@@ -186,7 +203,7 @@ public class WorldUtil {
 	public static List<BaseEntity> getEntitiesOfClassAndOwner(List<BaseEntity> entities, Class<?> c,  int m) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
-			if (w.getClass() == c && w instanceof HasOwner && ((HasOwner) w).getOwner() == m) {
+			if (c.isAssignableFrom(w.getClass()) && w instanceof HasOwner && ((HasOwner) w).getOwner() == m) {
 				classEntities.add(w);
 			}
 		}
@@ -194,7 +211,7 @@ public class WorldUtil {
 	}
 	
 	/**
-	 * Gets the entities of a class with an owners that are not the given owner. 
+	 * Gets the entities of a class (and its subclasses) with an owners that are not the given owner. 
 	 * @param c the class of entity searching for
 	 * @param m the owner of the entities to exclude 
 	 * @return a list of entities of type c and does not have an owner of m if found.
@@ -202,9 +219,7 @@ public class WorldUtil {
 	public static List<BaseEntity> getEntitiesOfClassAndNotOwner(List<BaseEntity> entities, Class<?> c, int m) {
 		List<BaseEntity> classEntities = new ArrayList<>();
 		for (BaseEntity w : entities) {
-			System.err.println("w: " + w.getClass());
-			if (w.getClass() == c && w instanceof HasOwner && ((HasOwner) w).getOwner() != m) {
-				System.err.println("w2222: " + w.getClass());
+			if (c.isAssignableFrom(w.getClass()) && w instanceof HasOwner && ((HasOwner) w).getOwner() != m) {
 				classEntities.add(w);
 			}
 		}

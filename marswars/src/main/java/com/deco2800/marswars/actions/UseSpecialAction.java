@@ -108,11 +108,6 @@ public class UseSpecialAction implements DecoAction {
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
 				} else if (e.getTarget() == Target.ALL_ENEMY) { //affect only enemies
-					System.err.println("BOMB !!!!!!!!!!!!");
-					System.err.println("BOMB !!!!!!!!!!!!");
-					System.err.println("BOMB !!!!!!!!!!!!");
-					System.err.println("BOMB !!!!!!!!!!!!");
-					System.err.println("BOMB !!!!!!!!!!!!");
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
@@ -120,7 +115,7 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
 					continue;
-				} else { //only affect those within selected area.
+				} else { //only affect e within selected area (Target.ENEMY)
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
 					executeEffectOnConditional(e, targets);
@@ -139,7 +134,6 @@ public class UseSpecialAction implements DecoAction {
 	 * 			onto.
 	 */
 	private void executeEffectOnTargets(Effect e, List<BaseEntity> targets) {
-		System.err.println("Number of targets: " + targets.size());
 		for (BaseEntity ent : targets) {
 			AttackableEntity mark = (AttackableEntity) ent;
 			System.err.println(mark.getStats());
