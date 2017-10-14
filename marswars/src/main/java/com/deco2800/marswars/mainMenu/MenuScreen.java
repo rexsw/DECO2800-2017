@@ -249,9 +249,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'Select world' layout for the main menu and adds it to the
 	 * menu.
-	 * 
-	 * @param mainmenu
-	 * @param stage
 	 */
 	public void selectWorldMode() {
 		mainmenu.clear();
@@ -416,18 +413,44 @@ public class MenuScreen{
 		Button AI5 = new TextButton("5", skin, "menubutton");
 		
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
-			
+
 		for  (int i = 0; i < buttonsList.length; i ++) {
-			buttonsList[i].addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					AITeams = 3;
-					selected.setText(String.format("Total %d teams playing", 3));
-				}
-			});
-			
 			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
+
+		// add listeners
+		AI2.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 2;
+				selected.setText(String.format("Total 2 teams playing"));
+				AIButtons.add(AI2).pad(BUTTONPAD);
+			}
+		});
+		AI3.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 3;
+				selected.setText(String.format("Total 3 teams playing"));
+				AIButtons.add(AI3).pad(BUTTONPAD);
+			}
+		});
+		AI4.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 4;
+				selected.setText(String.format("Total 4 teams playing"));
+				AIButtons.add(AI4).pad(BUTTONPAD);
+			}
+		});
+		AI5.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 5;
+				selected.setText(String.format("Total 5 teams playing"));
+				AIButtons.add(AI5).pad(BUTTONPAD);
+			}
+		});
 						
 		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
@@ -541,9 +564,8 @@ public class MenuScreen{
 						} else {
 							selectWorldMode();
 							break;
-							// do nothing for now
+							// do nothing
 						}
-
 					case CHARACTERMODE:
 						selectCombat();
 						break;
