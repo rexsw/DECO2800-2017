@@ -21,7 +21,7 @@ public class BaseWorld extends AbstractWorld {
 	
 	/* Crappy way of storing collision */
 	protected Array2D<List<BaseEntity>> collisionMap;
-	
+	protected ArrayList<BaseEntity> floodableEntities;
 	/**
 	 * Basic Constructor using specified dimensions
 	 * @param wide	Width of the world
@@ -31,6 +31,7 @@ public class BaseWorld extends AbstractWorld {
 		this.setWidth(wide);
 		this.setLength(len);
 		this.collisionMap = new Array2D<> (wide, len);
+		this.floodableEntities = new ArrayList<>();
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getLength(); y++) {
 				this.collisionMap.set(x, y, new ArrayList<>());
@@ -54,6 +55,7 @@ public class BaseWorld extends AbstractWorld {
 		this.setLength(this.getMap().getProperties().get("height", Integer.class));
 
 		this.collisionMap = new Array2D<>(this.getWidth(), this.getLength());
+		this.floodableEntities = new ArrayList<>();
 
 		/* Initialise the collision list */
 		for (int x = 0; x < this.getWidth(); x++) {
@@ -86,13 +88,18 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);
+		if (entity instanceof BuildingEntity || entity instanceof Soldier) {
+			floodableEntities.add(entity);
+		}
 
 		if (!entity.isCollidable())
 			return;
 
-		if (entity instanceof Soldier) {
+		if (entity != null && entity instanceof Soldier) {
 			// put things that can be attacked on the minimap
-			GameManager.get().getMiniMap().addEntity(entity);
+		    if (GameManager.get().getMiniMap() != null) {
+		        GameManager.get().getMiniMap().addEntity(entity);
+		    }
 		}
 
 		//Add to the collision map
@@ -127,6 +134,9 @@ public class BaseWorld extends AbstractWorld {
 			// remove entity from the minimap when they are removed from the world
 			GameManager.get().getMiniMap().removeEntity(entity);
 		}
+		if (entity instanceof BuildingEntity || entity instanceof Soldier) {
+			floodableEntities.remove(entity);
+		}
 		// Ensure water is also removed from Collision map upon deletion
 		if (! entity.isCollidable() && ! (entity instanceof Water))
 			return;
@@ -146,6 +156,15 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	public Array2D<List<BaseEntity>> getCollisionMap() {
 		return collisionMap;
+	}
+
+	/**
+	 * Gets the list of units in the world.
+	 *
+	 * @return the map of collisions of the world.
+	 */
+	public ArrayList<BaseEntity> getFloodableEntityList() {
+		return floodableEntities;
 	}
 
 	/**

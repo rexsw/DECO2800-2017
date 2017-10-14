@@ -227,7 +227,6 @@ public class GameManager implements TickableManager {
 		} else {
 			activeView = 0;
 			toggleMapOff();
-			
 		}
 	}
 

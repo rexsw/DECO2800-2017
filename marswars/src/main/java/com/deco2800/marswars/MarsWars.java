@@ -108,6 +108,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Update the input managers
          */
 		this.inputP.handleInput();
+
         /*
          * Update the camera
          */
@@ -133,7 +134,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
-		weatherManager.addRainVisuals(batch);
+		// weatherManager.addRainVisuals(batch);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
@@ -143,7 +144,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.dispose();
 
 		setInvincible();
-
 	}
 
 

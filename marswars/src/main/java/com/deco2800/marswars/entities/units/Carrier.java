@@ -36,21 +36,23 @@ public class Carrier extends Soldier {
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
 
-    public Carrier(float posX, float posY, float posZ, int owner) {
-	super(posX, posY, posZ, owner);
+	public Carrier(float posX, float posY, float posZ, int owner) {
+		super(posX, posY, posZ, owner);
+		setXRenderLength(1.3f);
+		setYRenderLength(1.3f);
 
-	// set all the attack attributes
-	this.setMaxHealth(1000);
-	this.setHealth(1000);
-	this.setDamage(0);
-	this.setArmor(500);
-	this.setArmorDamage(0);
-	this.setAttackRange(0);
-	this.setAttackSpeed(0);
-	this.isCarrier();
-	this.addNewAction(ActionType.LOAD);
-	this.addNewAction(ActionType.UNLOAD);
-	this.removeActions(ActionType.DAMAGE);
+		// set all the attack attributes
+		this.setMaxHealth(1000);
+		this.setHealth(1000);
+		this.setDamage(0);
+		this.setArmor(500);
+		this.setArmorDamage(0);
+		this.setAttackRange(0);
+		this.setAttackSpeed(0);
+		this.isCarrier();
+		this.addNewAction(ActionType.LOAD);
+		this.addNewAction(ActionType.UNLOAD);
+		this.removeActions(ActionType.DAMAGE);
     }
 
     /**

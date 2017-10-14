@@ -23,13 +23,14 @@ public class SoundManager extends Manager {
 	 */
 	public Sound loadSound(String soundString) {
 		LOGGER.info("Loading sound effect");
+		Sound sound;
 		try {
-			Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/" + soundString));
-			return sound;
+			 sound = Gdx.audio.newSound(Gdx.files.internal("sounds/" + soundString));
 		} catch (GdxRuntimeException e) {
 			LOGGER.error("Could not load sound effect " + soundString);
+			sound = Gdx.audio.newSound(Gdx.files.internal("sounds/ree1.wav"));
 		}
-		return null;
+		return sound;
 	}
 	
 	/**
@@ -39,11 +40,15 @@ public class SoundManager extends Manager {
 	 */
 	public long playSound(Sound sound) {
 		LOGGER.info("Playing sound effect");
+		if (sound == null) {
+			LOGGER.error("Sound effect not found");
+			return 0;
+		}
 		try {
 			long id = sound.play(1f);
 			return id;
 		} catch (GdxRuntimeException e) {
-			LOGGER.error("Could not play sound effect ");
+			LOGGER.error("Could not play sound effect");
 		}
 		return 0;
 	}

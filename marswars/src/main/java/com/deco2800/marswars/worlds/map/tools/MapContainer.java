@@ -6,17 +6,18 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.Spacman;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.*;
 import java.util.Random;
 
@@ -334,26 +335,124 @@ public class MapContainer {
     }
 
     /**
-     * Creates random pattern of resources
+     * Creates random pattern of resources. The chance of the game being stuck in an infinite loop is inversely proportional
+     * to the size of the map, use sensibly large map sizes!
      */
     protected void generateResourcePattern(){
-        int xLength = this.length ;
-        int yWidth = this.width;
-        int featureSize = 5;
-        int scale = 2;
-        if (xLength * yWidth > 110){
-            featureSize = 14;
-            scale = 5;
+        ResourceType resource = ResourceType.WATER;
+        for (int i =0; i<4; i++){
+            generateResourcePatternFor(resource);
+            switch (resource) {
+                case WATER:
+                    resource = ResourceType.BIOMASS;
+                    break;
+                case BIOMASS:
+                    resource = ResourceType.CRYSTAL;
+                    break;
+                case CRYSTAL:
+                    resource = ResourceType.ROCK;
+                    break;
+            }
         }
-        NoiseMap noise = new NoiseMap(xLength, yWidth, featureSize);
-        for (int ix=0; ix<this.length; ix++){
-            for (int iy=0; iy<this.width; iy++){
-                double n = noise.getNoiseAt(ix,iy);
-                if (n>0.4 && r.nextInt(10) > scale && checkForEntity(ix, iy)){
-                        this.getRandomResource(ix, iy);
+    }
+
+    /**
+     * generates the resource pattern for a single resource
+     * @param resource the resource to generate
+     */
+    protected void generateResourcePatternFor(ResourceType resource) {
+        Random r  = new Random();
+        double length, direction;
+        double xOrigin = this.length/2;
+        double yOrigin = this.width/2;
+        //maximum radial length
+        double maxLength = Math.floor(Math.sqrt(Math.pow(this.width/2,2)+Math.pow(this.width/2,2)));
+        int divisions = 4; //how many distinct circular divisions are used in the radial distribution
+        int frequency = (int)Math.sqrt(this.width/2+this.length/2)/4; //how many resource groups there are
+        for (int i = 0; i < divisions; i++) {
+            //maximum and mininum rangle for angles in this divisions
+            double radMin = ((Math.PI*2)/divisions)*i;
+            for (int ii=0; ii<frequency; ii++) {
+                direction = r.nextFloat()*(Math.PI*2/divisions) + radMin;
+                //make sure resources aren't bunched up in the middle!
+                length = maxLength*(1-Math.pow(r.nextFloat(),4));
+                double xOff = length*Math.cos(direction);
+                double yOff = length*Math.sin(direction);
+                double x = xOrigin+xOff;
+                double y = yOrigin+yOff;
+                if ((int)x<=0 || (int)x>=this.length || (int)y<=0 || (int)y>=this.width) {
+                    //try place it again if it lands outside the map
+                    ii--;
+                    continue;
+                }
+                //if the clump failed to generate, try again
+                if (!placeClumpAt(resource, 5, 4, (int)x, (int)y)) {
+                    ii--;
                 }
             }
         }
+    }
+
+    /**
+     * places a 'clump' of resources of a given size and type around a given coordinate. Complicated algorithm ensures
+     * shapes of resources conform to certain constraints, including parameters. if the clump cannot be generated, the
+     * function will return false.
+     *
+     * @param resource resource to place in clump
+     * @param clumpSize amount of resource per clump
+     * @param maxWidth maximum width of a clump (to stop long veins)
+     * @param x x position of resource clump
+     * @param y y position of resource clump
+     *
+     * @return returns false if a clump could not be generated at this position
+     */
+    protected boolean placeClumpAt(ResourceType resource, int clumpSize, int maxWidth, int x, int y){
+        Random r = new Random();
+        int maxTries = 90; //maximum amount of times to try generate the clump. Will fail after this
+        int tries=0; //how many attempts have been made at generating this clump
+        float chanceReset = 0.25f; //the chance that the clump generator will reset to xy after passing chanceResetDist
+        int chanceResetDistance = (int) (maxWidth*0.5);
+        int newX = x;
+        int newY = y;
+        int i;
+        List toAdd = new ArrayList<>();
+        //generate clumpsize resources
+        for (i = 0; (i < clumpSize)&&(tries<maxTries); i++) {
+            //make sure we dont go out of bounds of our clump OR the map
+            if (newX>x+maxWidth||newX<x-maxWidth||newX>x+maxWidth||newX<x-maxWidth||newX<0||newX>=this.length||newY<0||newY>=this.width) {
+                newX = x;
+                newY = y;
+            }
+            //check our position agianst our chanceResetDistance
+            if (Math.abs(newX-x)>=chanceResetDistance||Math.abs(newY-y)>=chanceResetDistance) {
+                if (r.nextFloat()>chanceReset) {
+                    //we're out of range of the reset distance  AND we rolled a reset
+                    newX = x;
+                    newY = y;
+                }
+            }
+            if (checkForEntity(newX, newY)){
+                //put the good stuff down
+                toAdd.add(new Resource(newX, newY, 0, 1f, 1f, resource));
+                //world.addEntity(new Resource(newX, newY, 0, 1f, 1f, resource));
+            }
+            else {//if the entity couldnt be placed, decrement i and retry
+                i--;
+            }
+            //randomly move the next tile to be generated in a random direction
+            newX += r.nextInt(3)-1;
+            newY += r.nextInt(3)-1;
+            //increment how many attempts have been made
+            tries+=1;
+        }
+        System.out.printf("generated "+i+" resources taking "+tries+"tries\n");
+        if (tries!=maxTries) {
+            for(i=0; i<toAdd.size(); i++) {
+                world.addEntity((BaseEntity) toAdd.get(i));
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -369,27 +468,11 @@ public class MapContainer {
         if(!checkForEntity(x, y)){
             return;
         }
-//<<<<<<< HEAD
         switch (random){
-//            case ASTRONAUT:
-//                entity = new Astronaut(x,y,0, 0);
-//                break;
-//            case TANK:
-//                entity = new Tank(x,y,0, 0);
-//                break;
             case SPACMAN:
-                entity = new Spacman(x, y, 0);
+                entity = new Astronaut(x, y, 0, -1);
             default:
                 LOGGER.error("Unhandled Case, Entity not supported");
-/*=======
-        random=EntityID.SPACMAN;
-        if(random == EntityID.SPACMAN){
-            newEntity = new Spacman(x, y, 0);
-            newEntity.setOwner(0);
-        }
-        else {
-            return;
->>>>>>> refs/heads/master*/
         }
 
         world.addEntity(entity);
@@ -452,7 +535,6 @@ public class MapContainer {
 
     /**
      * Chooses a random map (.tmx file) of a random size
-     *
      * @return the new map file path.
      */
     protected String getRandomMap(){
@@ -600,7 +682,7 @@ public class MapContainer {
             randomTiles.writeMap();
         }catch(Exception e){
             //oh no what do we do? (file IO error)
-            //we should probably throw some error and crash the game if this fails :[] ?
+            //we should probably throw some error and crash the game if this fails :[ ?
         }
         return randomTiles.FILENAME;
     }

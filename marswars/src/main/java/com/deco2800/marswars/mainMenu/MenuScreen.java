@@ -38,24 +38,27 @@ public class MenuScreen{
 	private LobbyButton lobby;
 	private HUDView hud;
 	private MainMenu menu;
+	private Stage stage;
+	private Window mainmenu;
 
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
 	static final int BUTTONHEIGHT = 40;
 	static final int BUTTONPAD = 15; 
 	static final int NAVBUTTONSIZE = 50;
-	static final int MAPBUTTONSIZE = 90;
+	static final int MAPBUTTONSIZE = 120;
 	
 	/*Character icon sizing*/
-	static final int ASTROWIDTH = 150;
+	static final int ASTROWIDTH = 120;
 	static final int ASTROLENGTH = 150;
 	
 	/* Navigation buttons + layout */
+	private Table lowerPanel;
 	private Table navigationButtons;
+	private Table actionButtons; 
 	private Button quitButton;
 	private Button backButton; 
 	private Button nextButton;
-	private Label notSelected; 
 	
 	/* Multiplayer toggles */
 	public static int playerType;   // checks if multiplayer 
@@ -97,9 +100,11 @@ public class MenuScreen{
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
+		this.stage = stage; 
+		this.mainmenu = window;
 		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		window.align(Align.left | Align.center);
-		playerModeSelect(window, stage);
+		playerModeSelect();
 	}
 	
 	/**
@@ -107,7 +112,7 @@ public class MenuScreen{
 	 * @param mainmenu window
 	 * @param stage
 	 */
-	public void playerModeSelect(Window mainmenu, Stage stage) {		
+	public void playerModeSelect() {		
 		Table playerMode = new Table();
 		playerMode.setDebug(enabled);		
 		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
@@ -134,15 +139,15 @@ public class MenuScreen{
 		
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).align(Align.left).row();
-		mainmenu.add(menuInfo).row();
 		mainmenu.add(quickGame);
+		mainmenu.add(menuInfo).row();
 		
 		/* Button listeners */
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				MenuScreen.playerType = 0; 
-				selectWorldMode(mainmenu, stage);
+				selectWorldMode();
 			}
 		});
 		
@@ -150,11 +155,11 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				MenuScreen.this.playerType = 1; 
-				selectServerMode(mainmenu, stage);
+				selectServerMode();
 			}
 		});
 
-		customizeButton.addListener(new ChangeListener() {
+		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
@@ -171,6 +176,14 @@ public class MenuScreen{
 				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
 		});
+		
+		loadGameButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mainmenu.setVisible(false);
+				menu.loadGame(true);
+			}
+		});
 	}
 	
 	/**
@@ -179,7 +192,7 @@ public class MenuScreen{
 	 * @param mainmenu
 	 * @param stage
 	 */
-	public void selectCharacter(Window mainmenu, Stage stage) {
+	public void selectCharacter() {
 		mainmenu.clear(); 
 		
 		Table playerTable = new Table(); 
@@ -218,13 +231,13 @@ public class MenuScreen{
 		mainmenu.add(playerInfo).align(Align.left).row();
 		mainmenu.add(moreInfo).row();
 		mainmenu.add(playerTable);
-		Table nav = addNavigationButton(ScreenMode.CHARACTERMODE, mainmenu, stage);
+		addNavigationButton(ScreenMode.CHARACTERMODE);
 		if (this.joinedServer){
-			this.addPlayButton(nav, mainmenu);
+			this.addPlayButton();
 		}
 	}
 	
-	public void multiplayerLobby(Window mainmenu, Stage stage, String hostIP, boolean host){
+	public void multiplayerLobby(String hostIP, boolean host){
 	    mainmenu.clear();
 	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
 	    mainmenu.add(lobby).expand().align(Align.topLeft);
@@ -239,7 +252,7 @@ public class MenuScreen{
 	 * @param mainmenu
 	 * @param stage
 	 */
-	public void selectWorldMode(Window mainmenu, Stage stage) {
+	public void selectWorldMode() {
 		mainmenu.clear();
 		mainmenu.setDebug(enabled);
 		
@@ -368,7 +381,7 @@ public class MenuScreen{
 		worldTable.add(worldInfoTable).align(Align.left);
 		mainmenu.add(worldTable).align(Align.left | Align.center);
 		mainmenu.row();
-		addNavigationButton(ScreenMode.WORLDMODE, mainmenu, stage);
+		addNavigationButton(ScreenMode.WORLDMODE);
 	}
 	
 	/**
@@ -377,7 +390,7 @@ public class MenuScreen{
 	 * @param mainmenu window
 	 * @param stage
 	 */
-	public void selectCombat(Window mainmenu, Stage stage) {
+	public void selectCombat() {
 		mainmenu.clear();
 
 		Table gameTable = new Table();		
@@ -385,86 +398,45 @@ public class MenuScreen{
 		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");
 		
 		//int ai teams, int player teams
+		Label teamSelect = new Label("Pick the total number of teams", skin);
+		Label selected = new Label(String.format("Selected 2 teams"), skin);
 		
-		Label aiSelect = new Label("Pick the number of AI teams", skin);
-		Label playerSelect = new Label("Pick the number of player teams", skin);
-		Label selected = new Label(String.format("Selected %d AI teams and %d "
-				+ "player teams", AITeams, playerTeams), skin);
-		notSelected = new Label("You need to select at least 1 AI team and 1 "
-				+ "player team!", this.skin, "error");
-		notSelected.setVisible(false);
-		
-		Button AI1 = new TextButton("1", skin, "menubutton");
-		Button AI2 = new TextButton("2", skin, "menubutton");
-		Button P1 = new TextButton("1", skin, "menubutton");
-		Button P2 = new TextButton("2", skin, "menubutton");
-		
-		AI1.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				AITeams = 1;
-				selected.setText(String.format("Selected 1 AI team and %d player "
-						+ "team(s)", playerTeams));
-				notSelected.setVisible(false);
-			}
-		});
-		
-		AI2.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				AITeams = 2;
-				selected.setText(String.format("Selected 2 AI teams and %d player "
-						+ "team(s)", playerTeams));
-				notSelected.setVisible(false);
-			}
-		});
-		
-		P1.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				playerTeams = 1;
-				selected.setText(String.format("Selected %s AI team(s) and 1 player "
-						+ "team", playerTeams));
-			}
-		});
-		
-		P2.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				playerTeams = 2;
-				selected.setText(String.format("Selected %s AI team(s) and 2 player "
-						+ "teams", playerTeams));
-			}
-		});
-
 		Table AIButtons = new Table();
-		Table playerButtons = new Table();
 		
-		AIButtons.add(AI1).pad(BUTTONPAD);
-		AIButtons.add(AI2).pad(BUTTONPAD);
-		playerButtons.add(P1).pad(BUTTONPAD);
-		playerButtons.add(P2).pad(BUTTONPAD);
-
+		Button AI2 = new TextButton("2", skin, "menubutton");
+		Button AI3 = new TextButton("3", skin, "menubutton");
+		Button AI4 = new TextButton("4", skin, "menubutton");
+		Button AI5 = new TextButton("5", skin, "menubutton");
+		
+		Button[] buttonsList= {AI2, AI3, AI4, AI5};
+			
+		for  (int i = 0; i < buttonsList.length; i ++) {
+			buttonsList[i].addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					AITeams = 3;
+					selected.setText(String.format("Total %d teams playing", 3));
+				}
+			});
+			
+			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
+		}
+						
+		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
-		mainmenu.add(aiSelect).align(Align.left).row();
 		mainmenu.add(AIButtons).row();
-		mainmenu.add(playerSelect).align(Align.left).row();
-		mainmenu.add(playerButtons).row();
 		mainmenu.add(gameTable).row();
 		mainmenu.add(selected).align(Align.left).row();
-		mainmenu.add(notSelected).align(Align.left).row();
-		Table nav = addNavigationButton(ScreenMode.COMBATMODE, mainmenu, stage);
-		nav.align(Align.left);
-		this.addPlayButton(nav, mainmenu);
+		
+		addNavigationButton(ScreenMode.COMBATMODE);
+		this.addPlayButton();
 	}
 	
 	/**
 	 * Creates a select server layout for the main menu and adds 
 	 * it in to the menu
-	 * @param mainmenu window
-	 * @param stage
 	 */
-	public void selectServerMode(Window mainmenu, Stage stage) {
+	public void selectServerMode() {
 		mainmenu.clear();
         this.lobby = new LobbyButton(this.skin, mainmenu, stage);
 		
@@ -476,7 +448,7 @@ public class MenuScreen{
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
 		serverTable.add(this.lobby.addJoinServerButton(this)).pad(BUTTONPAD).row();
 		mainmenu.add(serverTable);
-		addNavigationButton(ScreenMode.SERVERMODE, mainmenu, stage);
+		addNavigationButton(ScreenMode.SERVERMODE);
 	}
 	
 	/**
@@ -485,7 +457,7 @@ public class MenuScreen{
 	 * @param mainmenu window
 	 * @param stage
 	 */
-	public Table addNavigationButton(ScreenMode status, Window mainmenu, Stage stage) {
+	public Table addNavigationButton(ScreenMode status) {
 		this.backButton = new TextButton("<", this.skin, "menubutton");
 		this.nextButton = new TextButton(">", this.skin, "menubutton");
 		
@@ -498,13 +470,13 @@ public class MenuScreen{
 					//go back to previous state
 					case WORLDMODE:
 						mainmenu.clear(); 
-						playerModeSelect(mainmenu, stage);
+						playerModeSelect();
 						break; 
 					case CHARACTERMODE:
-						selectWorldMode(mainmenu, stage);
+						selectWorldMode();
 						break;
 					case COMBATMODE:
-						selectCharacter(mainmenu, stage);
+						selectCharacter();
 						break;
 					default:
 						break;
@@ -518,22 +490,22 @@ public class MenuScreen{
 					case SERVERMODE:
 						//go back to choose player
 						mainmenu.clear();
-						playerModeSelect(mainmenu, stage);
+						playerModeSelect();
 						break; 
 					case COMBATMODE:
 						mainmenu.clear(); 
-						selectCharacter(mainmenu, stage);
+						selectCharacter();
 						break;
 					case WORLDMODE:
 						mainmenu.clear(); 
-						selectServerMode(mainmenu, stage); 
+						selectServerMode(); 
 						break;
 					case CHARACTERMODE:
 						if (MenuScreen.this.joinedServer){
-							selectServerMode(mainmenu, stage);
+							selectServerMode();
 						}
 						else{
-							selectWorldMode(mainmenu, stage);
+							selectWorldMode();
 						}
 						break; 
 					}
@@ -552,10 +524,10 @@ public class MenuScreen{
 					//go back to next state
 					case WORLDMODE:
 						mainmenu.clear(); 
-						selectCharacter(mainmenu, stage);
+						selectCharacter();
 						break; 
 					case CHARACTERMODE:
-						selectCombat(mainmenu, stage);
+						selectCombat();
 						break;
 					default:
 						break;
@@ -568,14 +540,14 @@ public class MenuScreen{
 					switch(status) {
 					case WORLDMODE:
 						mainmenu.clear(); 
-						selectCombat(mainmenu, stage); 
+						selectCombat(); 
 						break;
 					case CHARACTERMODE:
 						if (MenuScreen.this.joinedServer){
 							;
 						}
 						else{
-							selectCombat(mainmenu, stage);
+							selectCombat();
 						}
 						break;
 					default:
@@ -595,54 +567,42 @@ public class MenuScreen{
 		}});
 		
 		mainmenu.row();
+		lowerPanel = new Table();
 		navigationButtons = new Table();
+		actionButtons = new Table();
 		
+		navigationButtons.setDebug(enabled);
 		navigationButtons.add(this.backButton).pad(BUTTONPAD);
 		navigationButtons.add(this.nextButton).pad(BUTTONPAD);
-		navigationButtons.add(this.quitButton).pad(BUTTONPAD);
-		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
-		mainmenu.add(navigationButtons);
-
 		
-		return navigationButtons; 
+		actionButtons.add(this.quitButton).pad(BUTTONPAD);
+		
+		lowerPanel.add(navigationButtons);
+		lowerPanel.add(actionButtons).expandX().align(Align.right);
+		mainmenu.add(lowerPanel).expandY().align(Align.left | Align.bottom);
+		
+		return lowerPanel; 
 	}
-	
-	public void resizeMenu(Window mainmenu){
-		navigationButtons.setPosition(mainmenu.getWidth()-navigationButtons.getWidth(), 0);
-	}
-	
-	/*
-	 * Adds in a play button to the select world mode
-	 * FOR DEBUGGING ONLY  
-	 * //TODO remove this once menu is fully functional 
-	 * @param nav
-	 * @param mainmenu
+		
+	/**
+	 * Adds in a play button
 	 */
-	private void addPlayButton(Table nav, Window mainmenu){
+	private void addPlayButton(){
 		Button playButton = new TextButton("Play!", this.skin);
 		playButton.pad(BUTTONPAD);
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If a certain feature if not selected*/
-				if(! (mapType == null || mapSize == null || 
-						AITeams == 0 || playerTeams == 0 )){
+				if(! (mapType == null || mapSize == null)) {
 					mainmenu.setVisible(false);
-					menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
-				}
-				//TODO talk to AI team and see if at least one of each must be selected
-				//TODO come up with a better user notif of an unselected option
-				else if (mapType == null || mapSize == null){
-					notSelected.setText("Map not selected!");
-					notSelected.setVisible(true);
-				} else if (AITeams == 0 || playerTeams == 0){
-					notSelected.setText("You need to select at least 1 AI team and 1 player team!");
-					notSelected.setVisible(true);
+					int playerTeams = 1;
+					menu.startGame(true, mapType, mapSize, AITeams, 1);
 				}
 		}});
-		nav.removeActor(nextButton);
-		nav.add(playButton).size(NAVBUTTONSIZE);
-		nav.swapActor(playButton, quitButton); //TODO figure out why this doesn't work 
 		
+		navigationButtons.removeActor(nextButton);
+		actionButtons.add(playButton).size(NAVBUTTONSIZE).expandY();
+		actionButtons.swapActor(0, 1); 
 	}
 	
 	/**
@@ -676,7 +636,7 @@ public class MenuScreen{
             public void changed(ChangeEvent event, Actor actor) {
                 netManager.getNetworkClient().stop();
                 unSetJoinedServer();
-                selectServerMode(mainmenu, stage);
+                selectServerMode();
             }
         });
         
@@ -687,7 +647,7 @@ public class MenuScreen{
                         if (o instanceof ServerShutdownAction) {
                             netManager.getNetworkClient().stop();
                             unSetJoinedServer();
-                            selectServerMode(mainmenu, stage);
+                            selectServerMode();
                         }
                     }
                 }

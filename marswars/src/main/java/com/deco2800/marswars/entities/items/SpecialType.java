@@ -25,7 +25,7 @@ import java.util.List;
  *
  */
 public enum SpecialType implements ItemType {
-	// name, duration(0 means instant), affect range (0 means self use), use
+	// name, duration(0 means instant), effect range (0 means self use), use
 	// limit, cost, effects)
 	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
 			new HealthEffect(100, false, Target.SELF)),
@@ -56,7 +56,7 @@ public enum SpecialType implements ItemType {
 	 *            of this item's effect
 	 * @param radius
 	 *            of this item's effect
-	 * @param original
+	 * @param useLimit
 	 *            useLimit of this item
 	 * @param cost
 	 *            to build this item
