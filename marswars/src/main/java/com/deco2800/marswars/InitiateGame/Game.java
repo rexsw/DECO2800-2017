@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.HeroFactory;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
@@ -253,22 +254,25 @@ public class Game{
 		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		Soldier soldier = new Soldier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(soldier);
-		Tank tank = new Tank(x, y, 0, teamid);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		Commander commander = new Commander(x,y,0,teamid);
-		Medic medic = new Medic(x, y, 0, teamid);
-		Hacker hacker = new Hacker(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(medic);
-		GameManager.get().getWorld().addEntity(commander);
-		GameManager.get().getWorld().addEntity(hacker);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(tank);
+//		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld
+				(), x, y, 0, teamid);
+//		Soldier soldier = new Soldier(x, y, 0, teamid);
+//		GameManager.get().getWorld().addEntity(soldier);
+//		Tank tank = new Tank(x, y, 0, teamid);
+//		Carrier carrier = new Carrier(x, y, 0, teamid);
+//		Commander commander = new Commander(x,y,0,teamid);
+//		Medic medic = new Medic(x, y, 0, teamid);
+//		Hacker hacker = new Hacker(x, y, 0, teamid);
+//		GameManager.get().getWorld().addEntity(medic);
+//		GameManager.get().getWorld().addEntity(commander);
+//		GameManager.get().getWorld().addEntity(hacker);
+//		GameManager.get().getWorld().addEntity(carrier);
+//		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
-		GameManager.get().getWorld().addEntity(aibase);
+//		GameManager.get().getWorld().addEntity(base);
+		GameManager.get().getWorld().addEntity(heroFactory);
 		
 		LOGGER.info("Team units successfully set");
 	}
