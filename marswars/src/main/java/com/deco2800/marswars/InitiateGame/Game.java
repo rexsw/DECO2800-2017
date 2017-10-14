@@ -3,10 +3,17 @@ package com.deco2800.marswars.InitiateGame;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
+<<<<<<< HEAD
 import com.deco2800.marswars.buildings.HeroFactory;
+=======
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BaseEntity;
+>>>>>>> 4a8b00a316acc47657f92120e1129dbc26b8f5be
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
@@ -32,7 +39,7 @@ public class Game{
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
-	
+
 	/**
 	 * Set the renderer.
 	 * 3D is for Isometric worlds
@@ -58,7 +65,7 @@ public class Game{
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame){
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame) throws java.io.FileNotFoundException{
 	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
 	    if(!newGame){
 		loadGame();
@@ -66,19 +73,91 @@ public class Game{
 	    	startGame(mapType, mapSize, aITeams, playerTeams);
 	    }
 	}
+
 	
 	/*Loads saved game*/
-	private void loadGame() {
-		//this.createMap(savedGame.mapType, savedGame.mapSize);
-//		this.view = new HUDView(GameManager.get().getStage(), 
-//				GameManager.get().getSkin(), GameManager.get());
-//		this.camera = GameManager.get().getCamera();
-//		this.addAIEntities(aITeams, playerTeams);
-//		this.setThread();
-//		this.fogOfWar();
-	    //RELOAD FOGOFWAR
+	private void loadGame() throws java.io.FileNotFoundException {
+		GameSave loadedGame = new GameSave();
+		loadedGame.readGame();
+
+		this.createMap(loadedGame.data.mapType, loadedGame.data.mapSize);
+		this.view = new HUDView(GameManager.get().getStage(),
+				GameManager.get().getSkin(), GameManager.get());
+		this.camera = GameManager.get().getCamera();
+		this.timeManager.setGameStartTime();
+		this.timeManager.unPause();
+
+		//different
+		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
+
+		//same
+		this.setThread();
+		this.fogOfWar();
+		FogManager.setFog(loadedGame.data.fogOfWar);
+		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
 	   //ADD UNITS & WALKABLES
 	}
+
+	private void addEntitiesFromLoadGame(int aiteams, int playerteams,GameSave loadedGame){
+		LOGGER.info("Start loading game");
+
+		int playerid;
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get()
+				.getManager(ResourceManager.class);
+
+		//add all entities
+		loadEntities(loadedGame);
+
+		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
+			cm.setColour(teamid);
+			AiManager aim = (AiManager) GameManager.get()
+					.getManager(AiManager.class);
+			aim.addTeam(teamid);
+			rm.setBiomass(0, teamid);
+			rm.setRocks(0, teamid);
+			rm.setCrystal(0, teamid);
+			rm.setWater(0, teamid);
+			rm.setMaxPopulation(10, teamid);
+		}
+		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
+			playerid = teamid * (-1);
+			cm.setColour(playerid);
+			rm.setBiomass(0, teamid);
+			rm.setRocks(0, teamid);
+			rm.setCrystal(0, teamid);
+			rm.setWater(0, teamid);
+			rm.setMaxPopulation(10, teamid);
+		}
+
+
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
+		GameManager.get().getManager(WinManager.class);
+	}
+
+	private void loadEntities(GameSave loadedGame){
+		for(SavedEntity each : loadedGame.data.entities)
+			if(each.getName().equals("Astronaut")){
+				GameManager.get().getWorld().addEntity(new Astronaut(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Base")){
+				GameManager.get().getWorld().addEntity(new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Tank")){
+				GameManager.get().getWorld().addEntity(new Tank(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Carrier")){
+				GameManager.get().getWorld().addEntity(new Carrier(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Commander")){
+				GameManager.get().getWorld().addEntity(new Commander(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Medic")){
+				GameManager.get().getWorld().addEntity(new Medic(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if(each.getName().equals("Hacker")){
+				GameManager.get().getWorld().addEntity(new Hacker(each.getX(), each.getY(), 0, each.getTeamId()));
+			}else if (each.getName().equals("Hacker")){
+				GameManager.get().getWorld().addEntity(new Soldier(each.getX(), each.getY(), 0, each.getTeamId()));
+			}
+
+	}
+
 	
 	/* The method that really starts off the game after Game instantiation. 
 	 * Loads in other game components and initialises Game private variables.
@@ -91,10 +170,30 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities(aITeams, playerTeams);
+		setCameraInitialPosition();
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
 		//this.weatherManager.setWeatherEvent();
+	}
+
+	/**
+	 * Moves the camera to the player's base.
+	 */
+	private void setCameraInitialPosition() {
+		for (int i = 0; i < GameManager.get().getWorld().getEntities().size(); i++) {
+			AbstractEntity e = GameManager.get().getWorld().getEntities().get(i);
+			if (e instanceof Base && ((Base) e).getOwner() < 0) {
+				float x = e.getPosX();
+				float y = e.getPosY();
+				Vector2 basePosition = new Vector2();
+				// 55 and 32 come from the width and height of the tiles, 0.5 is sin(30)
+				basePosition.x = (float) (1 * (y * 55 * .5 + x * 55 * .5));
+				basePosition.y = (float) (1 * (x * 32 * .5 - y * 32 * .5));
+				this.camera.position.set(basePosition.x, basePosition.y, 0);
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -252,6 +351,7 @@ public class Game{
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
 		rm.setMaxPopulation(10, teamid);
+
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 //		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
