@@ -96,8 +96,8 @@ public class WorldUtil {
 		List<BaseEntity> result = new ArrayList<BaseEntity>();
 		float lowerX = x - radiusX;
 		float upperX = x + radiusX;
-		float lowerY = y - radiusY;
-		float upperY = y + radiusY;
+		float lowerY = y - radiusY*0.75f;
+		float upperY = y + radiusY*1.25f;
 		for (BaseEntity w : entities) {
 			if (w.getPosX() >= lowerX && w.getPosX() <= upperX && w.getPosY() >= lowerY && w.getPosY() <= upperY) {
 				result.add(w);
@@ -238,19 +238,40 @@ public class WorldUtil {
 	 * 			tile (green or red).
 	 */
 	public static CheckSelect selectionStage(CheckSelect temp, float dimensions, float[] proj, BuildingType building) {
-		boolean validSelect;
+		boolean[] validSelect = {false};
 		int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
 		int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 		if (temp != null) {
 			GameManager.get().getWorld().removeEntity(temp);
-			validSelect = true;
+			validSelect[0] = true;
 		}
 		OrthographicCamera camera = GameManager.get().getCamera();
 		Vector3 worldCoords = camera.unproject(new
 				Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+		if (building == null) {
+			temp = handleCheckSelect(temp, dimensions, proj, tileWidth, tileHeight, worldCoords);
+		} else {
+			temp = handleCheckSelect(temp, dimensions, proj, building, validSelect, tileWidth, tileHeight, worldCoords);
+		}
+		return temp;
+	}
+	
+	/**
+	 * Private helper method to handle accurate display of the overlay when choosing a spot to build a building.
+	 * @param temp  CheckSelect entity that is the overlay.
+	 * @param dimensions  the radius of the overlay
+	 * @param proj  array of coordinates for describing where the user selected and the adjusting factor
+	 * @param building  the type of building to for a building specific overlay
+	 * @param validSelect  array of 1 boolean indicating whether the selection is valid (array so that changes persist)
+	 * @param tileWidth  width of 1 tile in the game.
+	 * @param tileHeight  height of 1 tile in the game.
+	 * @param worldCoords  Vector3 object containing exactly where the user's cursor is.
+	 * @return  CheckSelect updated with the new coordinates.
+	 */
+	private static CheckSelect handleCheckSelect(CheckSelect temp, float dimensions, float[] proj, BuildingType building, 
+			boolean[] validSelect, int tileWidth, int tileHeight, Vector3 worldCoords) {
 		proj[0] = worldCoords.x / tileWidth;
-		proj[1] = -(worldCoords.y - tileHeight / 2f)
-				/ tileHeight + proj[0];
+		proj[1] = -(worldCoords.y - tileHeight / 2f) / tileHeight + proj[0];
 		proj[0] -= proj[1] - proj[0];
 		proj[0] = (int) proj[0];
 		proj[1] = (int) proj[1];
@@ -268,9 +289,9 @@ public class WorldUtil {
 			} else {
 				temp = new CheckSelect(proj[0]+proj[2]-((int)((dimensions+1)/2)), proj[1]+proj[2], 0f, dimensions, dimensions, 
 						0f,	building);
-				validSelect = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), 
+				validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), 
 						dimensions, proj[2]);
-				if (validSelect) {
+				if (validSelect[0]) {
 					temp.setGreen();
 				} else {
 					temp.setRed();
@@ -278,6 +299,45 @@ public class WorldUtil {
 			}
 			GameManager.get().getWorld().addEntity(temp);
 		}
+		return temp;
+	}
+	
+	/**
+	 * Private helper method to handle accurate display of the overlay when choosing a spot for using a special item.
+	 * @param temp  CheckSelect entity that is the overlay.
+	 * @param dimensions  the radius of the overlay
+	 * @param proj  array of coordinates for describing where the user selected and the adjusting factor
+	 * @param validSelect  array of 1 boolean indicating whether the selection is valid (array so that changes persist)
+	 * @param tileWidth  width of 1 tile in the game.
+	 * @param tileHeight  height of 1 tile in the game.
+	 * @param worldCoords  Vector3 object containing exactly where the user's cursor is.
+	 * @return  CheckSelect updated with the new coordinates.
+	 */
+	private static CheckSelect handleCheckSelect(CheckSelect temp, float dimensions, float[] proj, int tileWidth, 
+			int tileHeight, Vector3 worldCoords) {
+		proj[0] = worldCoords.x / tileWidth;
+		proj[1] = -(worldCoords.y - tileHeight / 2f) / tileHeight + proj[0];
+		proj[0] -= proj[1] - proj[0];
+		proj[0] = (int) proj[0];
+		proj[1] = (int) proj[1];
+		int lower = (int) dimensions / 2;
+		int higherY = GameManager.get().getWorld().getLength() - lower;
+		int higherX = GameManager.get().getWorld().getWidth() - lower;
+		if (proj[0] < lower) {
+			proj[0] = lower;
+		}
+		if (proj[0] > higherX) {
+			proj[0] = higherX;
+		}
+		if (proj[1] < lower) {
+			proj[1] = lower;
+		}
+		if (proj[1] > higherY) {
+			proj[1] = higherY;
+		}
+		temp = new CheckSelect(proj[0] - 4* lower, proj[1] + (int)(lower / 2), 0f, dimensions*2, dimensions*2, 0f, false);
+		temp.setGreen();
+		GameManager.get().getWorld().addEntity(temp);
 		return temp;
 	}
 }

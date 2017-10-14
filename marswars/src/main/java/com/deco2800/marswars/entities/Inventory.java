@@ -193,7 +193,7 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
     		LOGGER.error("***** Unrecognized " + special.getName());
     	}
     }
-
+    
 	@Override
 	public Optional<DecoAction> getCurrentAction() {
 		return currentAction;

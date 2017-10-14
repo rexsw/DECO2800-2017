@@ -83,9 +83,9 @@ public class UseSpecialAction implements DecoAction {
 			return;
 		}
 		if (state == State.SELECT) { //need to get player's input of where to use the item (if needed)
-			System.err.println("doing something!!!!!!!!!!!!");
-			System.err.println("doing something!!!!!!!!!!!!");
-			System.err.println("doing something!!!!!!!!!!!!");
+			if (temp != null) {
+				GameManager.get().getWorld().removeEntity(temp);
+			}
 			float[] parse = new float[]{pointX, pointY, fixPos};
 			temp = WorldUtil.selectionStage(temp, radius, parse, null);
 			/*
@@ -96,9 +96,6 @@ public class UseSpecialAction implements DecoAction {
 			pointY = parse[1];
 			fixPos = parse[2];
 		} else { //should only get to here for EXECUTE.
-			System.err.println("EXECUTE !!!!!!!!!!!!");
-			System.err.println("EXECUTE !!!!!!!!!!!!");
-			System.err.println("EXECUTE !!!!!!!!!!!!");
 			for (Effect e : item.getEffect()) {
 				if ((e.getTarget() == Target.SELF) && (radius == 0)) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
@@ -136,7 +133,6 @@ public class UseSpecialAction implements DecoAction {
 	private void executeEffectOnTargets(Effect e, List<BaseEntity> targets) {
 		for (BaseEntity ent : targets) {
 			AttackableEntity mark = (AttackableEntity) ent;
-			System.err.println(mark.getStats());
 			e.applyEffect(mark);
 		}	
 	}

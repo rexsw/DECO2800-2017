@@ -40,6 +40,21 @@ public class CheckSelect extends BaseEntity{
 	}
 	
 	/**
+	 * Constructor for CheckSelect for features not limited to constructing buildings.
+	 * @param posX  X coordinate that the overlaying image would be located
+	 * @param posY  Y coordinate that the overlaying image would be located
+	 * @param posZ  Z coordinate that the overlaying image would be located
+	 * @param lengthX  The length of the overlaying image in the x coordinate direction
+	 * @param lengthY  The length of the overlaying image in the y coordinate direction
+	 * @param lengthZ  The length of the overlaying image in the z coordinate direction
+	 * @param centered  whether so spawn centered.
+	 */
+	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ, boolean centered) {
+		super(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ, lengthX, lengthY, centered);
+		super.canWalkOver = true;
+	}
+	
+	/**
 	 *Sets the build area to be green (valid)
 	 */
 	public void setGreen() {
