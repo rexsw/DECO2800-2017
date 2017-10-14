@@ -4,16 +4,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.Base;
-<<<<<<< HEAD
 import com.deco2800.marswars.buildings.HeroFactory;
-=======
 import com.deco2800.marswars.entities.AbstractEntity;
-import com.deco2800.marswars.entities.BaseEntity;
->>>>>>> 4a8b00a316acc47657f92120e1129dbc26b8f5be
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
