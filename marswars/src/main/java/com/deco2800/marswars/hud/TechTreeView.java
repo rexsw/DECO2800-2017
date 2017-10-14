@@ -44,6 +44,7 @@ public class TechTreeView extends Dialog{
 		this.getButtonTable().debugCell().center();
 		getButtonTable().defaults().height(60).width(200).padTop(10).padBottom(10);
 
+
 		//Armour Upgrades
 		getButtonTable().add(new Label("Armour Tech", skin));
 		button("Extra Padding \n R: 10", 1); //$NON-NLS-1$
@@ -52,7 +53,6 @@ public class TechTreeView extends Dialog{
 		button("Cloyster Mode", 4); //$NON-NLS-1$
 
 		getButtonTable().row();
-
 
 		//Attack Damage Upgrades
 		getButtonTable().add(new Label("Attack Damage Tech", skin));
@@ -63,7 +63,6 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().row();
 
-
 		//Attack Speed Upgrades
 
 		getButtonTable().add(new Label("Attack Speed Tech", skin));
@@ -73,7 +72,6 @@ public class TechTreeView extends Dialog{
 		button("Korean Starcraft pro", 12); //$NON-NLS-1$
 
 		getButtonTable().row();
-
 
 		//Health Upgrades
 
@@ -94,13 +92,38 @@ public class TechTreeView extends Dialog{
 		button("Unlock Cow level", 19); //$NON-NLS-1$
 		button("Vampirism", 20); //$NON-NLS-1$
 
+		getButtonTable().row();
+
+		//Armour Item Level Upgrades
+		getButtonTable().add(new Label("Armour Levels", skin));
+
+//		Button b1 = new TextButton("Level 2 Armour", skin, "menubutton");
+//		Button b2 = new TextButton("Level 3 Armour", skin, "menubutton");
+//		Button b3 = new TextButton("Level 4 Armour", skin, "menubutton");
+//		Button b4 = new TextButton("Level 5 Armour", skin, "menubutton");
+
+
+
+		button("Level 2 Armour \n R: 0", 21); //$NON-NLS-1$ // cost of 0 for
+		// now
+		button("Level 3 Armour", 22); //$NON-NLS-1$
+		button("Level 4 Armour", 23); //$NON-NLS-1$
+		button("Level 5 Armour", 24); //$NON-NLS-1$
+
+		getButtonTable().row();
+
+		//Weapon Item Level Upgrades
+		getButtonTable().add(new Label("Weapon Levels", skin));
+		button("Level 2 Weapons \n R: 0", 21); //$NON-NLS-1$ // cost of 0
+		// for
+		// now
+		button("Level 3 Weapons", 22); //$NON-NLS-1$
+		button("Level 4 Weapons", 23); //$NON-NLS-1$
+		button("Level 5 Weapons", 24); //$NON-NLS-1$
+
 
 		timeManager.pause();
-
-
 	}
-
-
 
 	/**
 	 * Checks the result of the Dialogue box and then if a Upgrade was selected

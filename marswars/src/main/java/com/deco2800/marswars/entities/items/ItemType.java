@@ -14,6 +14,7 @@ public interface ItemType {
 	 * @return String that is the name of the item defined in the enumerate tuple.
 	 */
 	String getName();
+
 	
 	/**
 	 * Method to get the saved texture string of the image file to be used as the item's icon defined in the enumerate 
