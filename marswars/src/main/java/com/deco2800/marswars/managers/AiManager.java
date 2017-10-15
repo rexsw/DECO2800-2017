@@ -36,16 +36,29 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private List<Integer> teamid = new LinkedList<Integer>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiManager.class);
 	private List<State> state = new LinkedList<State>();
+	private List<AiType> aiType = new LinkedList<AiType>();
 	private long timeAtStateChange;
 	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	private Random rand = new Random();
 	private int tickNumber = 0;
 	private int unitTrackRange = 10;
 	private int unitGroupRange = 3;
+	private int unitPatrolRange = 10;
 	private int unitJoinGroupRange = 1000;
+	private Difficulty AiDifficulty = Difficulty.NORMAL;
+	
 	
 	public static enum State {
-		DEFAULT, AGGRESSIVE, DEFENSIVE
+		AGGRESSIVE, DEFENSIVE, ECONOMIC
+	}
+	
+	// The personality and strategy type an Ai will use
+	public static enum AiType {
+		STANDARD, HOSTILE, PROTECTIVE, EXPANSIVE
+	}
+	
+	public static enum Difficulty {
+		EASY, NORMAL, HARD
 	}
 
 	@Override
@@ -58,34 +71,44 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
-				if(e instanceof Astronaut) {
-					Astronaut x = (Astronaut)e;
-					useSpacman(x);
-				} else if(e instanceof Base) {
-					Base x = (Base)e;
-					generateSpacman(x);
-				} else if(e instanceof Soldier) {
-					Soldier x = (Soldier)e;
-					//Action depends on current state
-					switch (getState(e.getOwner())) {
-					case AGGRESSIVE:
-						soldierGroupAttack(x);
-						//soldierSearchAttack(x);
-						break;
-					case DEFENSIVE:
-						soldierDefend(x);
-						break;
-					default:
-						soldierGroupAttack(x);
-						break;
-					}
-				} else if(e instanceof AmbientAnimal){
+				if(e instanceof AmbientAnimal){
 					animalController((AmbientAnimal)e);
+				} else {
+					// run decider functions
+					decider(e);
 				}
 			}
 		}
 	}
 	
+	private void decider(HasOwner unit) {
+		//int unitOwner = unit.getOwner();
+		//State unitState = getState(unitOwner);
+		//AiType unitAiType = getAiType(unitOwner);
+		if(unit instanceof Astronaut) {
+			// send astronauts to work
+			Astronaut x = (Astronaut)unit;
+			useSpacman(x);
+		} else if(unit instanceof Base) {
+			Base x = (Base)unit;
+			generateSpacman(x);
+		} else if(unit instanceof Soldier) {
+			Soldier x = (Soldier)unit;
+			// Action depends on current state
+			switch (getState(unit.getOwner())) {
+			case AGGRESSIVE:
+				soldierGroupAttack(x);
+				//soldierSearchAttack(x);
+				break;
+			case DEFENSIVE:
+				soldierDefend(x);
+				break;
+			case ECONOMIC:
+				soldierDefend(x);
+				break;
+			}
+		}
+	}
 	
 	/**
 	 * A controller which control the ambient animal's actions
@@ -348,14 +371,35 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		if(soldier.showProgress()) {
 			return;
 		}
-		for( BaseEntity base : GameManager.get().getWorld().getEntities()) {
-			if(base instanceof Base && soldier.sameOwner(base)) {
-				// Move soldier to base (Not currently working, so will just not set any actions)
-				soldier.setAction(new MoveAction(base.getPosX(), base.getPosY(),
-						(AttackableEntity)soldier));
-				return;
+		// try to attack a target
+		if (soldierAttack(soldier)) {
+			return;
+		}
+		// if no current action, patrol around the nearest base
+		BaseEntity base = null;
+		for( BaseEntity newBase : GameManager.get().getWorld().getEntities()) {
+			if (newBase instanceof HasOwner && newBase.sameOwner(soldier)) {
+				if (newBase instanceof Base) {
+					// found a base; choose if none selected already or is closer
+					if (base == null) {
+						base = newBase;
+					} else if (getDistanceLinear(soldier, newBase) + 10
+							< getDistanceLinear(soldier, base)) {
+						// if new base is closer (with buffer), chose them
+						base = newBase;
+					}
+				}
 			}
 		}
+		// if there is a base, patrol there
+		if (base != null) {
+			float posX = base.getPosX() + rand.nextInt(unitPatrolRange * 2) - unitPatrolRange;
+			float posY = base.getPosY() + rand.nextInt(unitPatrolRange * 2) - unitPatrolRange;
+			soldier.setAction(new MoveAction(posX, posY, (AttackableEntity)soldier));
+			LOGGER.info("ai - patrolling base");
+		}
+		// else: no action
+		return;
 	}
 	
 	/**
@@ -372,12 +416,27 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	}
 	
 	/**
-	 * Adds an Ai team to the AiManager
+	 * Adds an Ai team to the AiManager, and gives it a random AiType
 	 * @param id
 	 */
 	public void addTeam(Integer id) {
 		teamid.add(id);
-		state.add(State.DEFAULT);
+		state.add(State.ECONOMIC);
+		switch(rand.nextInt(4)) {
+		case 0:
+			aiType.add(AiType.STANDARD);
+			break;
+		case 1:
+			aiType.add(AiType.EXPANSIVE);
+			break;
+		case 2:
+			aiType.add(AiType.HOSTILE);
+			break;
+		case 3:
+			aiType.add(AiType.PROTECTIVE);
+			break;
+		}
+		
 	}
 	
 	/**
@@ -395,6 +454,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public void kill(Integer id) {
 		if(teamid.contains(id)) {
 			state.remove(getStateIndex(id));
+			aiType.remove(getStateIndex(id));
 			teamid.remove(id);
 		}
 	}
@@ -411,6 +471,55 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns a team's number of economic units
+	 * @param teamID
+	 * @return integer
+	 */
+	private int teamCountEconomicUnits(Integer teamID) {
+		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
+				getManager(GameBlackBoard.class);
+		// test if GameBlackBoard exists
+		if (blackboard != null) {
+			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
+					- teamCountBuildings(teamID) - teamCountCombatUnits(teamID);
+		}
+		// if blackboard does not exist, return -1
+		return -1;
+	}
+	
+	/**
+	 * Returns a team's number of buildings
+	 * @param teamID
+	 * @return integer
+	 */
+	private int teamCountBuildings(Integer teamID) {
+		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
+				getManager(GameBlackBoard.class);
+		// test if GameBlackBoard exists
+		if (blackboard != null) {
+			return blackboard.count(teamID, GameBlackBoard.Field.BUILDINGS);
+		}
+		// if blackboard does not exist, return -1
+		return -1;
+	}
+	
+	/**
+	 * Returns a team's number of combat units
+	 * @param teamID
+	 * @return integer
+	 */
+	private int teamCountCombatUnits(Integer teamID) {
+		GameBlackBoard blackboard = (GameBlackBoard) GameManager.get().
+				getManager(GameBlackBoard.class);
+		// test if GameBlackBoard exists
+		if (blackboard != null) {
+			return blackboard.count(teamID, GameBlackBoard.Field.COMBAT_UNITS);
+		}
+		// if blackboard does not exist, return -1
+		return -1;
 	}
 	
 	/**
@@ -446,26 +555,76 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	}
 	
 	/**
-	 * Determines Ai team state depending on their strength compared to the leader's
+	 * Determines Ai team state depending on their AiType
 	 * @param teamID
 	 * @return State
 	 */
-	private State hostility(Integer teamID) {
-		double ratio = 0.0;
-		if (teamStrengthCount(teamID) > 0) {
-			// Compares team strength to global strength
-			ratio = (double)teamStrengthCount(teamID) / (double)highestStrengthCount();
-		}
-		LOGGER.info("AI [" + teamID + "] strength ratio is [" + ratio + "]");
-		if (ratio >= 0.80) {
-			// If strong, then attack
-			return State.AGGRESSIVE;
-		} else if (ratio >= 0.50) {
-			// If moderate, then default stance
-			return State.DEFAULT;
+	private State updateState(Integer teamID) {
+		AiType teamAiType = getAiType(teamID);
+		int numSoldiers = teamCountCombatUnits(teamID);
+		int numAstronauts = teamCountEconomicUnits(teamID);
+		int numBuildings = teamCountBuildings(teamID);
+		double ratioMilitary = 0.0;
+		double ratioStructure = 0.0; //Not currently used
+		if (numSoldiers + numAstronauts != 0) {
+			ratioMilitary = (double)numSoldiers / (double)(numSoldiers + numAstronauts);
+			ratioStructure = (double)numBuildings / (double)(numSoldiers + numAstronauts);
 		} else {
-			// If weak, then defend
+			ratioMilitary = 0.0;
+			ratioStructure = 1.0;
+		}
+		LOGGER.info("AI [" + teamID + "] military ratio is [" + ratioMilitary + "]");
+		LOGGER.info("AI [" + teamID + "] structure ratio is [" + ratioStructure + "]");
+		// Depending on AiType, ratio and minimums, decide state
+		// If few astronauts or buildings, then get more
+		if (numAstronauts < 3 || numBuildings < 1) {
+			return State.ECONOMIC;
+		}
+		// If few soldiers, then get more
+		if (ratioMilitary < minimumMilitaryRatio(teamAiType)) {
 			return State.DEFENSIVE;
+		}
+		// If many soldiers, then attack
+		if (numSoldiers > maximumMilitaryCount(teamAiType)) {
+			return State.AGGRESSIVE;
+		}
+		// else
+		return State.ECONOMIC;
+	}
+	
+	/**
+	 * Determines the minimum Military to Economic Ratio for an AiType
+	 * @param aiType
+	 * @return
+	 */
+	private double minimumMilitaryRatio(AiType aiType) {
+		switch (aiType) {
+		case HOSTILE:
+			return 0.75;
+		case PROTECTIVE:
+			return 0.85;
+		case EXPANSIVE:
+			return 0.3;
+		default: //case: STANDARD
+			return 0.6;
+		}
+	}
+	
+	/**
+	 * Determines the maximum number of military units for an AiType to have before attacking
+	 * @param aiType
+	 * @return
+	 */
+	private int maximumMilitaryCount(AiType aiType) {
+		switch (aiType) {
+		case HOSTILE:
+			return 5;
+		case PROTECTIVE:
+			return 30;
+		case EXPANSIVE:
+			return 10;
+		default: //case: STANDARD
+			return 10;
 		}
 	}
 	
@@ -476,7 +635,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public void decideChangeState() {
 		for (Integer teamID = 1; teamID <= teamid.size(); teamID++) {
 			if (getTimeSinceStateChange() > 60*60) {
-				setState(teamID, hostility(teamID));
+				setState(teamID, updateState(teamID));
 				LOGGER.info("AI [" + teamID + "] State updated to " + state);
 			}
 		}
@@ -513,6 +672,27 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		return state.get(getStateIndex(teamID));
 	}
 
+	/**
+	 * Gets the aiType index in its Linked List that corresponds to the TeamID
+	 * @param teamID
+	 * @return aiType index position
+	 */
+	public int getAiTypeIndex(Integer teamID) {
+		int position = teamid.indexOf(teamID);
+		if (position == -1) {
+			LOGGER.error("Invalid Team Id");
+		}
+		return position;
+	}
+	
+	/**
+	 * Get the current aiType of the team id of the AI Manager
+	 * @return
+	 */
+	public AiType getAiType(Integer teamID) {
+		return aiType.get(getAiTypeIndex(teamID));
+	}
+	
 	/**
 	 * Get the time at which the AI Manager last changed state
 	 * @return
