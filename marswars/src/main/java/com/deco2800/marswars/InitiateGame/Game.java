@@ -54,19 +54,25 @@ public class Game{
 	
 	private HUDView view; 
 	public static GameSave savedGame;
+
+	/**
+	 * start a loaded game
+	 * @param playerTeams
+	 * @param aITeams
+	 */
+	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
+		savedGame = new GameSave(aITeams,playerTeams);
+			loadGame();
+	}
 	
 	/**
 	 * Creates a Game instance and starts off the game
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame) throws java.io.FileNotFoundException{
-	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
-	    if(!newGame){
-		loadGame();
-	    } else {
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
+	    savedGame = new GameSave(aITeams,playerTeams);
 	    	startGame(mapType, mapSize, aITeams, playerTeams);
-	    }
 	}
 
 	
@@ -75,7 +81,7 @@ public class Game{
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
 
-		this.createMap(loadedGame.data.mapType, loadedGame.data.mapSize);
+		createMapForLoading();
 		this.view = new HUDView(GameManager.get().getStage(),
 				GameManager.get().getSkin(), GameManager.get());
 		this.camera = GameManager.get().getCamera();
@@ -190,6 +196,16 @@ public class Game{
 			}
 		}
 	}
+
+	private void createMapForLoading(){
+		MapContainer map = new MapContainer("./resources/mapAssets/loadmap.tmx");
+		CustomizedWorld world = new CustomizedWorld(map);
+		GameManager.get().setWorld(world);
+		world.loadMapContainer(map);
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
+		GameManager.get().setCamera(GameManager.get().getCamera());
+		LOGGER.debug("Game just started, map is now loaded, bring up active view");
+	}
 	
 	/**
 	 * Creates game map based off user input in the main menu. 
@@ -214,7 +230,7 @@ public class Game{
 			GameManager.get().setWorld(world);
 			world.loadMapContainer(map);
 		}
-		
+
 		/* Move camera to the center of the world */
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
 		GameManager.get().setCamera(GameManager.get().getCamera());

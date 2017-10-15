@@ -34,10 +34,6 @@ public class Data {
     //list of entities
     public List<SavedEntity> entities = new ArrayList<>();
 
-
-    //the map
-    public MapTypes mapType;
-    public MapSizeTypes mapSize;
     public int aITeams;
     public int playerTeams;
 }

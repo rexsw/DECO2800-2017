@@ -15,8 +15,10 @@ import com.esotericsoftware.kryo.io.Output;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 /**
  * Created by Treenhan on 10/10/17.
@@ -35,11 +37,21 @@ public class GameSave {
      * the constructor to save map type and size
      * only used when initiate game saving instance
      */
-    public GameSave(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
-        data.mapType = mapType;
-        data.mapSize = mapSize;
+    public GameSave(int aITeams, int playerTeams){
         data.aITeams = aITeams;
         data.playerTeams = playerTeams;
+
+        File delete = new File("./resources/mapAssets/loadmap.tmx");
+        delete.delete();
+
+        //copying the map
+        File source = new File("./resources/mapAssets/tmap.tmx");
+        File dest = new File("./resources/mapAssets/loadmap.tmx");
+
+        try {
+            Files.copy(source.toPath(), dest.toPath());
+        }catch (java.io.IOException e){}
+
     }
 
     /**
@@ -55,8 +67,6 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.blackFogOfWar);
         kryo.writeClassAndObject(output, data.entities);
         kryo.writeClassAndObject(output, data.walkables);
-        kryo.writeClassAndObject(output, data.mapType);
-        kryo.writeClassAndObject(output, data.mapSize);
         kryo.writeClassAndObject(output, data.aITeams);
         kryo.writeClassAndObject(output, data.playerTeams);
         output.close();
@@ -70,8 +80,6 @@ public class GameSave {
         data.blackFogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
         data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
         data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
-        data.mapType  = (MapTypes)kryo.readClassAndObject(input);
-        data.mapSize  = (MapSizeTypes)kryo.readClassAndObject(input);
         data.aITeams  = (int)kryo.readClassAndObject(input);
         data.playerTeams  = (int)kryo.readClassAndObject(input);
         input.close();
