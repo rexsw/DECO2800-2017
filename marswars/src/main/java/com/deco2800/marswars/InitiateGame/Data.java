@@ -41,6 +41,10 @@ public class Data {
     public int aITeams;
     public int playerTeams;
 
+
+    //stats are saved in this order
+    //biomass-rocks-crystal-water-population
+
     //aiStats
     public List<ArrayList<Integer>> aIStats = new ArrayList<ArrayList<Integer>>();
 
