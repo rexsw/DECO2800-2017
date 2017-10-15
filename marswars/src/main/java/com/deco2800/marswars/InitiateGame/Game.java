@@ -23,6 +23,7 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -123,20 +124,28 @@ public class Game{
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
-			rm.setBiomass(0, teamid);
-			rm.setRocks(0, teamid);
-			rm.setCrystal(0, teamid);
-			rm.setWater(0, teamid);
+
+			ArrayList<Integer> aIStats = loadedGame.data.aIStats.get(teamid-1);
+
+			rm.setBiomass(aIStats.get(0), teamid);
+			rm.setRocks(aIStats.get(1), teamid);
+			rm.setCrystal(aIStats.get(2), teamid);
+			rm.setWater(aIStats.get(3), teamid);
 			rm.setMaxPopulation(10, teamid);
+			rm.setPopulation(aIStats.get(4), teamid);
 		}
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
 			cm.setColour(playerid);
-			rm.setBiomass(0, playerid);
-			rm.setRocks(0, playerid);
-			rm.setCrystal(0, playerid);
-			rm.setWater(0, playerid);
+
+			ArrayList<Integer> playerStats = loadedGame.data.playerStats.get(teamid-1);
+
+			rm.setBiomass(playerStats.get(0), playerid);
+			rm.setRocks(playerStats.get(1), playerid);
+			rm.setCrystal(playerStats.get(2), playerid);
+			rm.setWater(playerStats.get(3), playerid);
 			rm.setMaxPopulation(10, playerid);
+			rm.setPopulation(playerStats.get(4), playerid);
 		}
 
 		//add all entities
