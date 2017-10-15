@@ -2,6 +2,7 @@ package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,10 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.InitiateGame.Game;
+import com.deco2800.marswars.InitiateGame.GameSave;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 
 /**
@@ -48,16 +53,15 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
-	Music music = null;
+	Sound openMusic = null;
+	Music defaultTheme = null;
 
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
 	 * @param skin
 	 * @param stage
-	 * @param window
-	 * @param marswars
-	 * @param camera 
+
 	 */
 	public MainMenu(Skin skin, Stage stage) {
 		this.skin = skin;
@@ -89,8 +93,9 @@ public class MainMenu {
 		mainmenu.align(Align.left | Align.top).pad(100);
 		this.stage.addActor(mainmenu);
 
-		music = Gdx.audio.newMusic(Gdx.files.internal("secret.mp3"));
-		music.play();
+		openMusic = Gdx.audio.newSound(Gdx.files.internal("OriginalSoundTracks/OpeningTheme.mp3"));
+		openMusic.loop();
+
 	}
 	
 	/**
@@ -101,13 +106,48 @@ public class MainMenu {
 	 * @param aITeams
 	 * @param playerTeams
 	 */
-	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
+	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
 		gameStarted = start;
-		if (gameStarted){
-			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
-			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		if (gameStarted) {
+			openMusic.stop();
+			openMusic.dispose();
+			defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+			defaultTheme.setVolume(0.9f);
+			defaultTheme.setLooping(true);
+			defaultTheme.play();
+			try {
+				game = new Game(mapType, mapSize, aITeams, playerTeams, true); //Start up a new game
+			} catch (FileNotFoundException e) {}//do nothing
+				game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
 		}
+	
+	
+	/**
+	 * Method called by MenuScreen to start off the game with saved game 
+	 * @param start
+	 */
+	public void loadGame(boolean start) {
+		GameSave loadedGame = new GameSave();
+		try {
+			loadedGame.readGame();
+		} catch (FileNotFoundException e) {}//do nothing
+			gameStarted = start;
+			if (gameStarted) {
+				openMusic.stop();
+				openMusic.dispose();
+				defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+				defaultTheme.setVolume(0.9f);
+				defaultTheme.setLooping(true);
+				defaultTheme.play();
+				try {
+					game = new Game(loadedGame.data.mapType, loadedGame.data.mapSize, loadedGame.data.aITeams, loadedGame.data.playerTeams, false); //Start up a new game
+				} catch (FileNotFoundException e2) {}//do nothing
+					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				}
 	}
+
+
 	
 	/**
 	 * Flags the game as ended

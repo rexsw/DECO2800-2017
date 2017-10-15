@@ -40,11 +40,15 @@ public class SoundManager extends Manager {
 	 */
 	public long playSound(Sound sound) {
 		LOGGER.info("Playing sound effect");
+		if (sound == null) {
+			LOGGER.error("Sound effect not found");
+			return 0;
+		}
 		try {
 			long id = sound.play(1f);
 			return id;
 		} catch (GdxRuntimeException e) {
-			LOGGER.error("Could not play sound effect ");
+			LOGGER.error("Could not play sound effect");
 		}
 		return 0;
 	}

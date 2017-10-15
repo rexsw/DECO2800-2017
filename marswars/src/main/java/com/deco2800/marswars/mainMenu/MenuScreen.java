@@ -82,6 +82,11 @@ public class MenuScreen{
 	private boolean 
 	enabled = false; //FOR DEBUGGING
 
+	// To keep track of whether a map type and size have been selected, 1 is
+	// true, 0 is false
+	private int mapTypeSet = 0;
+	private int mapSizeSet = 0;
+
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
 	 * layouts to set into the Main Menu window.
@@ -109,8 +114,6 @@ public class MenuScreen{
 	
 	/**
 	 * Loads up the layout for the player selection stage of the main menu
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public void playerModeSelect() {		
 		Table playerMode = new Table();
@@ -159,7 +162,7 @@ public class MenuScreen{
 			}
 		});
 
-		customizeButton.addListener(new ChangeListener() {
+		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
@@ -176,13 +179,19 @@ public class MenuScreen{
 				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
 		});
+		
+		loadGameButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				mainmenu.setVisible(false);
+				menu.loadGame(true);
+			}
+		});
 	}
 	
 	/**
 	 * Creates a 'Select Character' layout for the main menu and 
 	 * adds it to the menu.
-	 * @param mainmenu
-	 * @param stage
 	 */
 	public void selectCharacter() {
 		mainmenu.clear(); 
@@ -240,9 +249,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'Select world' layout for the main menu and adds it to the
 	 * menu.
-	 * 
-	 * @param mainmenu
-	 * @param stage
 	 */
 	public void selectWorldMode() {
 		mainmenu.clear();
@@ -292,6 +298,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
+				mapTypeSet = 1;
 			}
 		});	
 		
@@ -300,6 +307,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
+				mapTypeSet= 1;
 			}
 		});	
 		
@@ -308,6 +316,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
+				mapTypeSet = 1;
 			}
 		});	
 		
@@ -331,6 +340,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.TINY;
 				currentSizeSelection.setText("tiny map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -338,7 +348,8 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.SMALL;
-				currentSizeSelection.setText("smol map selected.");
+				currentSizeSelection.setText("small map selected.");
+				mapSizeSet = 1;
 			}
 		});
 
@@ -347,6 +358,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setText("medium map selected.");
+				mapSizeSet = 1;
 			}
 		});
 
@@ -355,6 +367,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setText("large map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -363,6 +376,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.VERY_LARGE;
 				currentSizeSelection.setText("very large map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -379,8 +393,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'select combat' layout for the main menu and 
 	 * adds it to the menu.
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public void selectCombat() {
 		mainmenu.clear();
@@ -401,18 +413,44 @@ public class MenuScreen{
 		Button AI5 = new TextButton("5", skin, "menubutton");
 		
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
-			
+
 		for  (int i = 0; i < buttonsList.length; i ++) {
-			buttonsList[i].addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					AITeams = 3;
-					selected.setText(String.format("Total %d teams playing", 3));
-				}
-			});
-			
 			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
+
+		// add listeners
+		AI2.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 2;
+				selected.setText(String.format("Total 2 teams playing"));
+				AIButtons.add(AI2).pad(BUTTONPAD);
+			}
+		});
+		AI3.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 3;
+				selected.setText(String.format("Total 3 teams playing"));
+				AIButtons.add(AI3).pad(BUTTONPAD);
+			}
+		});
+		AI4.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 4;
+				selected.setText(String.format("Total 4 teams playing"));
+				AIButtons.add(AI4).pad(BUTTONPAD);
+			}
+		});
+		AI5.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AITeams = 5;
+				selected.setText(String.format("Total 5 teams playing"));
+				AIButtons.add(AI5).pad(BUTTONPAD);
+			}
+		});
 						
 		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
@@ -446,8 +484,6 @@ public class MenuScreen{
 	/**
 	 * Creates a button to navigate one step back in the main menu
 	 * @param status
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public Table addNavigationButton(ScreenMode status) {
 		this.backButton = new TextButton("<", this.skin, "menubutton");
@@ -463,11 +499,17 @@ public class MenuScreen{
 					case WORLDMODE:
 						mainmenu.clear(); 
 						playerModeSelect();
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						break; 
 					case CHARACTERMODE:
 						selectWorldMode();
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						break;
 					case COMBATMODE:
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						selectCharacter();
 						break;
 					default:
@@ -515,9 +557,15 @@ public class MenuScreen{
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
-						mainmenu.clear(); 
-						selectCharacter();
-						break; 
+						if (mapSizeSet == 1 && mapTypeSet == 1) {
+							mainmenu.clear();
+							selectCharacter();
+							break;
+						} else {
+							selectWorldMode();
+							break;
+							// do nothing
+						}
 					case CHARACTERMODE:
 						selectCombat();
 						break;

@@ -95,9 +95,11 @@ public class BaseWorld extends AbstractWorld {
 		if (!entity.isCollidable())
 			return;
 
-		if (entity instanceof Soldier) {
+		if (entity != null && entity instanceof Soldier) {
 			// put things that can be attacked on the minimap
-			GameManager.get().getMiniMap().addEntity(entity);
+		    if (GameManager.get().getMiniMap() != null) {
+		        GameManager.get().getMiniMap().addEntity(entity);
+		    }
 		}
 
 		//Add to the collision map

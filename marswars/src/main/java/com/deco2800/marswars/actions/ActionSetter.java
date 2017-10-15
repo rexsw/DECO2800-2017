@@ -205,6 +205,9 @@ public final class ActionSetter {
             case CARRIER:
                 target.setAction(new GenerateAction(new Carrier(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
+            case COMMANDER:
+                target.setAction(new GenerateAction(new Commander(target
+                        .getPosX(), target.getPosY(), 0, target.getOwner())));
             case HEALER:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
