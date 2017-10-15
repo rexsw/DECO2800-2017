@@ -34,12 +34,11 @@ public class Weapon extends Item {
     public Weapon(WeaponType type, int level) {
     	this.effects = new ArrayList<>();
         this.type = type;
-<<<<<<< HEAD
         this.level = level;
-        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
-=======
+      //  this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed
+		//		(), getWeaponRange()));
+
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange(), Target.SELF));
->>>>>>> Team-11-Resources
     }
 
     /**

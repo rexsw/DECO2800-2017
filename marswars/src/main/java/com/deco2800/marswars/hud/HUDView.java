@@ -66,8 +66,10 @@ public class HUDView extends ApplicationAdapter{
 
 	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
-	private Stage stage;
-	private Skin skin;
+	// package protected to allow access from tech tree view
+	Stage stage;
+	Skin skin;
+
 	private ImageButton quitButton;
 	private ImageButton helpButton;
 	private ImageButton messageButton;

@@ -34,12 +34,10 @@ public class Armour extends Item {
 	public Armour(ArmourType type, int level) {
 		this.effects = new ArrayList<>();
 		this.type = type;
-<<<<<<< HEAD
 		this.level = level;
-		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
-=======
+//		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth
+//				(), getMoveSpeed()));
 		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed(), Target.SELF));
->>>>>>> Team-11-Resources
 	}
 
 	/**
