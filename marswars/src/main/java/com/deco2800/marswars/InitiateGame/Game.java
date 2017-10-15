@@ -81,7 +81,7 @@ public class Game{
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
 
-		createMapForLoading();
+		createMapForLoading(loadedGame);
 		this.view = new HUDView(GameManager.get().getStage(),
 				GameManager.get().getSkin(), GameManager.get());
 		this.camera = GameManager.get().getCamera();
@@ -200,11 +200,11 @@ public class Game{
 		}
 	}
 
-	private void createMapForLoading(){
+	private void createMapForLoading(GameSave loadedGame){
 		MapContainer map = new MapContainer("./resources/mapAssets/loadmap.tmx");
 		CustomizedWorld world = new CustomizedWorld(map);
 		GameManager.get().setWorld(world);
-		world.loadMapContainer(map);
+		world.loadAlreadyMapContainer(map,loadedGame);
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
 		GameManager.get().setCamera(GameManager.get().getCamera());
 		LOGGER.debug("Game just started, map is now loaded, bring up active view");

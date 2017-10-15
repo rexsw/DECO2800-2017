@@ -3,6 +3,7 @@ package com.deco2800.marswars.InitiateGame;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -64,6 +65,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.fogOfWar);
         kryo.writeClassAndObject(output, data.blackFogOfWar);
         kryo.writeClassAndObject(output, data.entities);
+        kryo.writeClassAndObject(output, data.resource);
         kryo.writeClassAndObject(output, data.walkables);
         kryo.writeClassAndObject(output, data.aITeams);
         kryo.writeClassAndObject(output, data.playerTeams);
@@ -77,6 +79,7 @@ public class GameSave {
         data.fogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
         data.blackFogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
         data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
+        data.resource  = (ArrayList<Resource>)kryo.readClassAndObject(input);
         data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
         data.aITeams  = (int)kryo.readClassAndObject(input);
         data.playerTeams  = (int)kryo.readClassAndObject(input);
@@ -106,7 +109,11 @@ public class GameSave {
         for (AbstractEntity r : renderables) {
             if (r.canWalOver()) {
                 data.walkables.add(r);
-            } else {
+            }
+            else if(r instanceof Resource){
+                data.resource.add((Resource)r);
+            }
+            else {
                 fillEntities(r);
             }
         }
