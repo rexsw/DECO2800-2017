@@ -4,11 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.buildings.Barracks;
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.buildings.Bunker;
-import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.units.Astronaut;
 
 public class AiBuilder extends Manager {

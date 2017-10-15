@@ -319,7 +319,7 @@ public class Game{
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
-		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
+		for (int teamid = 1; teamid < aiteams; teamid++) {
 			int avoidInfinite = 0;
 			do {
 				x = ThreadLocalRandom.current().nextInt(1, length - 1);
@@ -368,7 +368,7 @@ public class Game{
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-//		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld
 				(), x, y, 0, teamid);
 //		Soldier soldier = new Soldier(x, y, 0, teamid);
@@ -385,7 +385,7 @@ public class Game{
 //		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
-//		GameManager.get().getWorld().addEntity(base);
+		GameManager.get().getWorld().addEntity(base);
 		GameManager.get().getWorld().addEntity(heroFactory);
 		
 		LOGGER.info("Team units successfully set");
