@@ -54,19 +54,25 @@ public class Game{
 	
 	private HUDView view; 
 	public static GameSave savedGame;
+
+	/**
+	 * start a loaded game
+	 * @param playerTeams
+	 * @param aITeams
+	 */
+	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
+		savedGame = new GameSave(aITeams,playerTeams);
+		loadGame();
+	}
 	
 	/**
 	 * Creates a Game instance and starts off the game
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame) throws java.io.FileNotFoundException{
-	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
-	    if(!newGame){
-		loadGame();
-	    } else {
-	    	startGame(mapType, mapSize, aITeams, playerTeams);
-	    }
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
+	    savedGame = new GameSave(aITeams,playerTeams);
+		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 
 	
@@ -75,7 +81,7 @@ public class Game{
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
 
-		this.createMap(loadedGame.data.mapType, loadedGame.data.mapSize);
+		createMapForLoading(loadedGame);
 		this.view = new HUDView(GameManager.get().getStage(),
 				GameManager.get().getSkin(), GameManager.get());
 		this.camera = GameManager.get().getCamera();
@@ -85,12 +91,13 @@ public class Game{
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
 
+		setCameraInitialPosition();
 		//same
 		this.setThread();
 		this.fogOfWar();
 		FogManager.setFog(loadedGame.data.fogOfWar);
 		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
-	   //ADD UNITS & WALKABLES
+
 	}
 
 	private void addEntitiesFromLoadGame(int aiteams, int playerteams,GameSave loadedGame){
@@ -101,8 +108,7 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 
-		//add all entities
-		loadEntities(loadedGame);
+
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);
@@ -124,6 +130,9 @@ public class Game{
 			rm.setWater(0, teamid);
 			rm.setMaxPopulation(10, teamid);
 		}
+
+		//add all entities
+		loadEntities(loadedGame);
 
 
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
@@ -190,6 +199,16 @@ public class Game{
 			}
 		}
 	}
+
+	private void createMapForLoading(GameSave loadedGame){
+		MapContainer map = new MapContainer("./resources/mapAssets/loadmap.tmx");
+		CustomizedWorld world = new CustomizedWorld(map);
+		GameManager.get().setWorld(world);
+		world.loadAlreadyMapContainer(map,loadedGame);
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
+		GameManager.get().setCamera(GameManager.get().getCamera());
+		LOGGER.debug("Game just started, map is now loaded, bring up active view");
+	}
 	
 	/**
 	 * Creates game map based off user input in the main menu. 
@@ -214,7 +233,7 @@ public class Game{
 			GameManager.get().setWorld(world);
 			world.loadMapContainer(map);
 		}
-		
+
 		/* Move camera to the center of the world */
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
 		GameManager.get().setCamera(GameManager.get().getCamera());
