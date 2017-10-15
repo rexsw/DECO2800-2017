@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.items;
 
 import com.deco2800.marswars.entities.items.effects.DefenceEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,12 @@ public class Armour extends Item {
 	public Armour(ArmourType type, int level) {
 		this.effects = new ArrayList<>();
 		this.type = type;
+<<<<<<< HEAD
 		this.level = level;
 		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
+=======
+		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed(), Target.SELF));
+>>>>>>> Team-11-Resources
 	}
 
 	/**

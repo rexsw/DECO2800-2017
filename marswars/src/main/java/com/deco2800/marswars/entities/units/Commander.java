@@ -1,9 +1,14 @@
 package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.Special;
+import com.deco2800.marswars.entities.items.SpecialType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +29,8 @@ public class Commander extends Soldier {
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
 	Optional<DecoAction> currentAction = Optional.empty();
+	private boolean statsChange;
+	private boolean itemInUse = false;
 
 	/**
 	 * Constructor for the Commander in the specified location and with the specified owner (i.e. who controls the 
@@ -40,6 +47,7 @@ public class Commander extends Soldier {
 		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
+		this.statsChange = true;
 	}
 
 	/**
@@ -125,4 +133,58 @@ public class Commander extends Soldier {
 		return;
 	}
 	
+	/**
+	 * The purpose of this method is to track if hero has bought a new item
+	 * 
+	 * @return true if there is item change, else no
+	 */
+	public boolean getStatsChange() {
+		return statsChange;
+	}
+	
+	/**
+	 * The purpose of this method is update if hero has bought a new item
+	 * 
+	 * @param true if there is item change, else no
+	 */
+	public void setStatsChange(boolean bought) {
+		this.statsChange = bought;
+	}
+	
+	@Override
+	public void onTick(int tick) {
+		super.onTick(tick);
+		this.inventory.onTick(tick);
+	}
+	
+	
+	public boolean isItemInUse() {
+		return this.itemInUse;
+	}
+	
+	public void setItemInUse(boolean set) {
+		this.itemInUse = set;
+	}
+	
+	@Override
+	protected void moveUnit(float x, float y) {
+		
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+			action.execute();
+			itemInUse = false;
+		} else {
+			super.moveUnit(x, y);
+		}
+	}
+	
+	@Override
+	public void deselect() {
+		super.deselect();
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+			action.cancel();
+			itemInUse = false;
+		}
+	}
 }

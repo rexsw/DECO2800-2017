@@ -29,9 +29,9 @@ import java.util.List;
  *
  */
 public class ShopDialog extends Dialog{
-	
+	private float windowSize = Gdx.graphics.getWidth() /5f;
     private TextureManager textureManager; // a manager for the textures of the item icons and the Commander icons
-    private int iconSize = Gdx.graphics.getWidth() / 12; //getting the standard icon size for the window
+    private int iconSize = (int) (windowSize/4); //getting the standard icon size for the window
     private List<ItemType> itemList; //list of items to be put into the shop
     private Table heroTable; //table of the player's Commander units.
     private Label status; //Essentially a label that acts as a log specifically for the shop
@@ -85,7 +85,8 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
-	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+//	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+	                boolean enoughResources = true;
 	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item, 1);
@@ -100,6 +101,7 @@ public class ShopDialog extends Dialog{
 	                		selectedHero.addItemToInventory(special);
 	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
 	                	}
+	                	selectedHero.setStatsChange(true);
 	                	transact(selectedHero.getOwner(), item);
 	                } else {
 	                	String mes = selectedHero == null ? "unsuccessful shopping, please select a hero." : 
@@ -233,7 +235,7 @@ public class ShopDialog extends Dialog{
 	 */
 	@Override
     public float getPrefWidth() {
-        return Gdx.graphics.getWidth() /2.5f;
+        return windowSize;
     }
 
 	/**
@@ -242,12 +244,7 @@ public class ShopDialog extends Dialog{
 	 */
     @Override
     public float getPrefHeight() {
-        return Gdx.graphics.getHeight() /1.8f;
+        return windowSize;
     }
-	
-    
-	@Override
-	protected void result(Object object){
-		
-	}
+
 }

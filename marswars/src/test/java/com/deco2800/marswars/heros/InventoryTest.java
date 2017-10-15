@@ -28,7 +28,7 @@ public class InventoryTest {
 	Armour arm11 = new Armour(ArmourType.ARMOUR1, 1);
 	Armour arm2 = new Armour(ArmourType.BOOTS1, 1);
 	Special heal1 = new Special(SpecialType.AOEHEAL1);
-	Special heal2 = new Special(SpecialType.AOEHEAL2);
+	Special heal2 = new Special(SpecialType.TEAMHEAL);
 	Special boomHeal = new Special(SpecialType.MASS1HEAL);
 	Special bomb = new Special(SpecialType.BOMB);
 	Special nuke = new Special(SpecialType.NUKE);

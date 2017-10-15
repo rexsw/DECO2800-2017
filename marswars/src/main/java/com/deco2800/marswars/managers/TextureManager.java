@@ -48,6 +48,8 @@ public class TextureManager extends Manager {
 	    	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
 	        this.saveTexture("selected", "resources/placeholderassets/selected.png");
 	        this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
+	        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/GreenSelect.png"));
+	        textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
         //Buildings
         	//Base Stages
         	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/base1.png"));

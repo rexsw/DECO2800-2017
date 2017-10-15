@@ -513,10 +513,10 @@ public class TechnologyManager extends Manager{
         if(tech == this.getTech(1)){
             return 1;
         } else
-        if(tech == this.getTech(1)){
+        if(tech == this.getTech(2)){
             return 2;
         } else
-        if(tech == this.getTech(1)){
+        if(tech == this.getTech(3)){
             return 3;
         }
         if(tech == this.getTech(4)){

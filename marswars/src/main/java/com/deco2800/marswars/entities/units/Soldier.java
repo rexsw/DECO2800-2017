@@ -218,7 +218,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				attack(target);
 
 			} else {
-				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+				moveUnit(x,y);
 			}
 			this.setTexture(defaultTextureName);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
@@ -230,7 +230,15 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		sound.playSound(loadedSound);
 	}
 	
-
+	/**
+	 * Helper to be inherited and changed for different right click options (mainly for commander)
+	 * @param x coordinate along x axis of the mouse right click input
+	 * @param y coordinate along y axis of the mouse right click input
+	 */
+	protected void moveUnit(float x, float y) {
+		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	}
+	
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}

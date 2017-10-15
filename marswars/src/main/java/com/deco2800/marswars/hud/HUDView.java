@@ -454,6 +454,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				shopDialog.show(stage);
+				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
 			}
 		});
 		/*

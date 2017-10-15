@@ -23,10 +23,12 @@ public class Special extends Item {
 	private SpecialType type;
 	private List<Effect> effects;
 	private int useLimit;
+	
 
 	/**
 	 * Constructor for Special items taking in enumerate that contains the meta data for specific items.
 	 * @param type  The SpecialType enumerate value containing the meta data for the specific Special item.
+	 * @param target  
 	 */
 	public Special(SpecialType type) {
 		this.type = type;
@@ -112,4 +114,5 @@ public class Special extends Item {
 	public String getTexture() {
 		return type.getTextureString();
 	}
+	
 }
