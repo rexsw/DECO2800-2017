@@ -34,7 +34,6 @@ build
 Thumbs.db
 
 
-# Merge conflicts
 *.orig
 
 

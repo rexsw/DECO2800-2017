@@ -24,6 +24,9 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	protected boolean canWalkOver = false;
 
+	//NEVER DELETE THIS
+	public AbstractEntity(){}
+
 	/**
 	 * Constructor for the abstract entity
 	 * @param posX

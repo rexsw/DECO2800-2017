@@ -94,6 +94,11 @@ public class MenuScreen{
 	private boolean 
 	enabled = false; //FOR DEBUGGING
 
+	// To keep track of whether a map type and size have been selected, 1 is
+	// true, 0 is false
+	private int mapTypeSet = 0;
+	private int mapSizeSet = 0;
+
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
 	 * layouts to set into the Main Menu window.
@@ -128,8 +133,6 @@ public class MenuScreen{
 	
 	/**
 	 * Loads up the layout for the player selection stage of the main menu
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public void playerModeSelect() {		
 		Table playerMode = new Table();
@@ -178,7 +181,7 @@ public class MenuScreen{
 			}
 		});
 
-		customizeButton.addListener(new ChangeListener() {
+		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
@@ -200,8 +203,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mainmenu.setVisible(false);
-				//loads game but uses dummy map type values for now
-				menu.loadGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
+				menu.loadGame(true);
 			}
 		});
 	}
@@ -209,8 +211,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'Select Character' layout for the main menu and 
 	 * adds it to the menu.
-	 * @param mainmenu
-	 * @param stage
 	 */
 	public void selectCharacter() {
 		mainmenu.clear(); 
@@ -268,9 +268,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'Select world' layout for the main menu and adds it to the
 	 * menu.
-	 * 
-	 * @param mainmenu
-	 * @param stage
 	 */
 	public void selectWorldMode() {
 		mainmenu.clear();
@@ -320,6 +317,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
+				mapTypeSet = 1;
 			}
 		});	
 		
@@ -328,6 +326,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
+				mapTypeSet= 1;
 			}
 		});	
 		
@@ -336,6 +335,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
+				mapTypeSet = 1;
 			}
 		});	
 		
@@ -360,6 +360,7 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.TINY;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("tiny map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -378,6 +379,7 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("medium map selected.");
+				mapSizeSet = 1;
 			}
 		});
 
@@ -387,6 +389,7 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("large map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -396,6 +399,7 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.VERY_LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("very large map selected.");
+				mapSizeSet = 1;
 			}
 		});
 		
@@ -414,8 +418,6 @@ public class MenuScreen{
 	/**
 	 * Creates a 'select combat' layout for the main menu and 
 	 * adds it to the menu.
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public void selectCombat() {
 		mainmenu.clear();
@@ -508,8 +510,6 @@ public class MenuScreen{
 	/**
 	 * Creates a button to navigate one step back or one step forward in the main menu
 	 * @param status
-	 * @param mainmenu window
-	 * @param stage
 	 */
 	public Table addNavigationButton(ScreenMode status) {
 		this.backButton = new TextButton("<", this.skin, "menubutton");
@@ -525,11 +525,17 @@ public class MenuScreen{
 					case WORLDMODE:
 						mainmenu.clear(); 
 						playerModeSelect();
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						break; 
 					case CHARACTERMODE:
 						selectWorldMode();
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						break;
 					case COMBATMODE:
+						mapTypeSet = 0;
+						mapSizeSet = 0;
 						selectCharacter();
 						break;
 					default:

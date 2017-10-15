@@ -3,9 +3,11 @@ package com.deco2800.marswars.InitiateGame;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
-import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.*;
+import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
@@ -21,6 +23,7 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -31,7 +34,7 @@ public class Game{
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
-	
+
 	/**
 	 * Set the renderer.
 	 * 3D is for Isometric worlds
@@ -51,33 +54,196 @@ public class Game{
 	
 	private HUDView view; 
 	public static GameSave savedGame;
+
+	/**
+	 * start a loaded game
+	 * @param playerTeams
+	 * @param aITeams
+	 */
+	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
+		savedGame = new GameSave(aITeams,playerTeams);
+		loadGame();
+	}
 	
 	/**
 	 * Creates a Game instance and starts off the game
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, boolean newGame){
-	    savedGame = new GameSave(mapType,mapSize,aITeams,playerTeams);
-	    if(!newGame){
-		loadGame();
-	    } else {
-	    	startGame(mapType, mapSize, aITeams, playerTeams);
-	    }
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
+	    savedGame = new GameSave(aITeams,playerTeams);
+		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
-	
-	/*Loads saved game*/
-	private void loadGame() {
-		//this.createMap(savedGame.mapType, savedGame.mapSize);
-//		this.view = new HUDView(GameManager.get().getStage(), 
-//				GameManager.get().getSkin(), GameManager.get());
-//		this.camera = GameManager.get().getCamera();
-//		this.addAIEntities(aITeams, playerTeams);
-//		this.setThread();
-//		this.fogOfWar();
-	    //RELOAD FOGOFWAR
-	   //ADD UNITS & WALKABLES
+
+
+	/**
+	 * this function load the game
+	 * @throws java.io.FileNotFoundException
+	 */
+	private void loadGame() throws java.io.FileNotFoundException {
+		GameSave loadedGame = new GameSave();
+		loadedGame.readGame();
+
+		createMapForLoading(loadedGame);
+		this.view = new HUDView(GameManager.get().getStage(),
+				GameManager.get().getSkin(), GameManager.get());
+		this.camera = GameManager.get().getCamera();
+		this.timeManager.setGameStartTime();
+		this.timeManager.unPause();
+
+		//different
+		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
+
+		setCameraInitialPosition();
+		//same
+		this.setThread();
+		this.fogOfWar();
+		FogManager.setFog(loadedGame.data.fogOfWar);
+		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
+
 	}
+
+	/**
+	 * this function sets up the players of the loaded game
+	 * @param aiteams
+	 * @param playerteams
+	 * @param loadedGame
+	 */
+	private void addEntitiesFromLoadGame(int aiteams, int playerteams,GameSave loadedGame){
+		LOGGER.info("Start loading game");
+
+		int playerid;
+		ColourManager cm = (ColourManager) GameManager.get().getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get()
+				.getManager(ResourceManager.class);
+
+
+
+		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
+			cm.setColour(teamid);
+			AiManager aim = (AiManager) GameManager.get()
+					.getManager(AiManager.class);
+			aim.addTeam(teamid);
+
+			ArrayList<Integer> aIStats = loadedGame.data.aIStats.get(teamid-1);
+
+			rm.setBiomass(aIStats.get(0), teamid);
+			rm.setRocks(aIStats.get(1), teamid);
+			rm.setCrystal(aIStats.get(2), teamid);
+			rm.setWater(aIStats.get(3), teamid);
+			rm.setMaxPopulation(10, teamid);
+			rm.setPopulation(aIStats.get(4), teamid);
+		}
+		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
+			playerid = teamid * (-1);
+			cm.setColour(playerid);
+
+			ArrayList<Integer> playerStats = loadedGame.data.playerStats.get(teamid-1);
+
+			rm.setBiomass(playerStats.get(0), playerid);
+			rm.setRocks(playerStats.get(1), playerid);
+			rm.setCrystal(playerStats.get(2), playerid);
+			rm.setWater(playerStats.get(3), playerid);
+			rm.setMaxPopulation(10, playerid);
+			rm.setPopulation(playerStats.get(4), playerid);
+		}
+
+		//add all entities
+		loadEntities(loadedGame);
+		loadBuildings(loadedGame);
+
+
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
+		GameManager.get().getManager(WinManager.class);
+	}
+
+	/**
+	 * this functions laods all the saved buildings
+	 * @param loadedGame
+	 */
+	private void loadBuildings(GameSave loadedGame){
+		for(SavedBuilding e : loadedGame.data.building){
+			switch(e.getBuildingType()){
+				case TURRET:
+					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					turret.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(turret);
+					break;
+				case BASE:
+					Base base = new Base(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					base.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(base);
+					break;
+				case BARRACKS:
+					Barracks barracks = new Barracks(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					barracks.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(barracks);
+					break;
+				case BUNKER:
+					Bunker bunker = new Bunker(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					bunker.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(bunker);
+					break;
+				case HEROFACTORY:
+					HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					heroFactory.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(heroFactory);
+					break;
+				case TECHBUILDING:
+					TechBuilding techBuilding = new TechBuilding(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					techBuilding.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(techBuilding);
+					break;
+				default:
+					break;
+
+			}
+		}
+	}
+
+	/**
+	 * this function loads all the saved entities
+	 * @param loadedGame
+	 */
+	private void loadEntities(GameSave loadedGame){
+		for(SavedEntity each : loadedGame.data.entities)
+			if(each.getName().equals("Astronaut")){
+				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
+				astronaut.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(astronaut);
+			}else if(each.getName().equals("Base")){
+				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
+				base.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(base);
+			}else if(each.getName().equals("Tank")){
+				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
+				tank.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(tank);
+			}else if(each.getName().equals("Carrier")){
+				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
+				carrier.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(carrier);
+			}else if(each.getName().equals("Commander")){
+				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
+				commander.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(commander);
+			}else if(each.getName().equals("Medic")){
+				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
+				medic.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(medic);
+			}else if(each.getName().equals("Hacker")){
+				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
+				hacker.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(hacker);
+			}else if (each.getName().equals("Hacker")){
+				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
+				hacker.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(hacker);
+			}
+
+	}
+
 	
 	/* The method that really starts off the game after Game instantiation. 
 	 * Loads in other game components and initialises Game private variables.
@@ -90,10 +256,40 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 		this.addAIEntities(aITeams, playerTeams);
+		setCameraInitialPosition();
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
 		//this.weatherManager.setWeatherEvent();
+	}
+
+	/**
+	 * Moves the camera to the player's base.
+	 */
+	private void setCameraInitialPosition() {
+		for (int i = 0; i < GameManager.get().getWorld().getEntities().size(); i++) {
+			AbstractEntity e = GameManager.get().getWorld().getEntities().get(i);
+			if (e instanceof Base && ((Base) e).getOwner() < 0) {
+				float x = e.getPosX();
+				float y = e.getPosY();
+				Vector2 basePosition = new Vector2();
+				// 55 and 32 come from the width and height of the tiles, 0.5 is sin(30)
+				basePosition.x = (float) (1 * (y * 55 * .5 + x * 55 * .5));
+				basePosition.y = (float) (1 * (x * 32 * .5 - y * 32 * .5));
+				this.camera.position.set(basePosition.x, basePosition.y, 0);
+				break;
+			}
+		}
+	}
+
+	private void createMapForLoading(GameSave loadedGame){
+		MapContainer map = new MapContainer("./resources/mapAssets/loadmap.tmx");
+		CustomizedWorld world = new CustomizedWorld(map);
+		GameManager.get().setWorld(world);
+		world.loadAlreadyMapContainer(map,loadedGame);
+		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
+		GameManager.get().setCamera(GameManager.get().getCamera());
+		LOGGER.debug("Game just started, map is now loaded, bring up active view");
 	}
 	
 	/**
@@ -119,7 +315,7 @@ public class Game{
 			GameManager.get().setWorld(world);
 			world.loadMapContainer(map);
 		}
-		
+
 		/* Move camera to the center of the world */
 		GameManager.get().getCamera().translate(GameManager.get().getWorld().getWidth()/2, 0);
 		GameManager.get().setCamera(GameManager.get().getCamera());
@@ -251,24 +447,28 @@ public class Game{
 		rm.setCrystal(0, teamid);
 		rm.setWater(0, teamid);
 		rm.setMaxPopulation(10, teamid);
+
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Base aibase = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		Soldier soldier = new Soldier(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(soldier);
-		Tank tank = new Tank(x, y, 0, teamid);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		Commander commander = new Commander(x,y,0,teamid);
-		Medic medic = new Medic(x, y, 0, teamid);
-		Hacker hacker = new Hacker(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(medic);
-		GameManager.get().getWorld().addEntity(commander);
-		GameManager.get().getWorld().addEntity(hacker);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(tank);
+//		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld
+				(), x, y, 0, teamid);
+//		Soldier soldier = new Soldier(x, y, 0, teamid);
+//		GameManager.get().getWorld().addEntity(soldier);
+//		Tank tank = new Tank(x, y, 0, teamid);
+//		Carrier carrier = new Carrier(x, y, 0, teamid);
+//		Commander commander = new Commander(x,y,0,teamid);
+//		Medic medic = new Medic(x, y, 0, teamid);
+//		Hacker hacker = new Hacker(x, y, 0, teamid);
+//		GameManager.get().getWorld().addEntity(medic);
+//		GameManager.get().getWorld().addEntity(commander);
+//		GameManager.get().getWorld().addEntity(hacker);
+//		GameManager.get().getWorld().addEntity(carrier);
+//		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
-		GameManager.get().getWorld().addEntity(aibase);
+//		GameManager.get().getWorld().addEntity(base);
+		GameManager.get().getWorld().addEntity(heroFactory);
 		
 		LOGGER.info("Team units successfully set");
 	}
