@@ -141,7 +141,6 @@ public class Game{
 	}
 
 	private void loadEntities(GameSave loadedGame){
-		GameManager.get().getWorld().addEntity(new Astronaut(1, 1, 0, -1));
 		for(SavedEntity each : loadedGame.data.entities)
 			if(each.getName().equals("Astronaut")){
 				GameManager.get().getWorld().addEntity(new Astronaut(each.getX(), each.getY(), 0, each.getTeamId()));
