@@ -31,12 +31,12 @@ import java.util.ArrayList;
  *
  */
 public class TechTreeView extends Dialog{
-	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+	private TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 	HUDView hud;
 	
-	public TechTreeView(String title, Skin skin, HUDView hud) {
+	TechTreeView(String title, Skin skin, HUDView hud) {
 		super(title, skin);
 		this.hud = hud;
 
