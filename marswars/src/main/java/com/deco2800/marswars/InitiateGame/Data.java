@@ -40,4 +40,10 @@ public class Data {
 
     public int aITeams;
     public int playerTeams;
+
+    //aiStats
+    public List<ArrayList<Integer>> aIStats = new ArrayList<ArrayList<Integer>>();
+
+    //playerStats
+    public List<ArrayList<Integer>> playerStats = new ArrayList<ArrayList<Integer>>();
 }

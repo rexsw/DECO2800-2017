@@ -75,6 +75,10 @@ public class GameSave {
         output.close();
     }
 
+    /**
+     * this function will read the saved data out of a file
+     * @throws java.io.FileNotFoundException
+     */
     public void readGame() throws java.io.FileNotFoundException{
         Kryo kryo = new Kryo();
         Input input = new Input(new FileInputStream("save.bin"));
@@ -126,6 +130,10 @@ public class GameSave {
         }
     }
 
+    /**
+     * this function fill the data with saved buildings
+     * @param b
+     */
     public void fillBuilding(AbstractEntity b){
         BuildingEntity bE = (BuildingEntity)b;
         if(bE.getbuilding().equals("Turret")){
@@ -148,23 +156,27 @@ public class GameSave {
         }
     }
 
+    /**
+     * this function fills the data with proper entities
+     * @param e
+     */
     public void fillEntities(AbstractEntity e){
         if(e instanceof Astronaut){
-            data.entities.add(new SavedEntity("Astronaut",e.getPosX(),e.getPosY(),((Astronaut) e).getOwner()));
+            data.entities.add(new SavedEntity("Astronaut",e.getPosX(),e.getPosY(),((Astronaut) e).getOwner(),((Astronaut) e).getHealth()));
         }else if(e instanceof Base){
-            data.entities.add(new SavedEntity("Base",e.getPosX(),e.getPosY(),((Base) e).getOwner()));
+            data.entities.add(new SavedEntity("Base",e.getPosX(),e.getPosY(),((Base) e).getOwner(),((Base) e).getHealth()));
         }else if(e instanceof Tank){
-            data.entities.add(new SavedEntity("Tank",e.getPosX(),e.getPosY(),((Tank) e).getOwner()));
+            data.entities.add(new SavedEntity("Tank",e.getPosX(),e.getPosY(),((Tank) e).getOwner(),((Tank) e).getHealth()));
         }else if(e instanceof Carrier){
-            data.entities.add(new SavedEntity("Carrier",e.getPosX(),e.getPosY(),((Carrier) e).getOwner()));
+            data.entities.add(new SavedEntity("Carrier",e.getPosX(),e.getPosY(),((Carrier) e).getOwner(),((Carrier) e).getHealth()));
         }else if(e instanceof Commander){
-            data.entities.add(new SavedEntity("Commander",e.getPosX(),e.getPosY(),((Commander) e).getOwner()));
+            data.entities.add(new SavedEntity("Commander",e.getPosX(),e.getPosY(),((Commander) e).getOwner(),((Commander) e).getHealth()));
         }else if(e instanceof Medic){
-            data.entities.add(new SavedEntity("Medic",e.getPosX(),e.getPosY(),((Medic) e).getOwner()));
+            data.entities.add(new SavedEntity("Medic",e.getPosX(),e.getPosY(),((Medic) e).getOwner(),((Medic) e).getHealth()));
         }else if(e instanceof Hacker){
-            data.entities.add(new SavedEntity("Hacker",e.getPosX(),e.getPosY(),((Hacker) e).getOwner()));
+            data.entities.add(new SavedEntity("Hacker",e.getPosX(),e.getPosY(),((Hacker) e).getOwner(),((Hacker) e).getHealth()));
         }else if (e instanceof Soldier){
-            data.entities.add(new SavedEntity("Soldier",e.getPosX(),e.getPosY(),((Soldier) e).getOwner()));
+            data.entities.add(new SavedEntity("Soldier",e.getPosX(),e.getPosY(),((Soldier) e).getOwner(),((Soldier) e).getHealth()));
         }
 
     }

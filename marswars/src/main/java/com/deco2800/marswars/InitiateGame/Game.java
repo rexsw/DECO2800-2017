@@ -74,8 +74,11 @@ public class Game{
 		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 
-	
-	/*Loads saved game*/
+
+	/**
+	 * this function load the game
+	 * @throws java.io.FileNotFoundException
+	 */
 	private void loadGame() throws java.io.FileNotFoundException {
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
@@ -99,6 +102,12 @@ public class Game{
 
 	}
 
+	/**
+	 * this function sets up the players of the loaded game
+	 * @param aiteams
+	 * @param playerteams
+	 * @param loadedGame
+	 */
 	private void addEntitiesFromLoadGame(int aiteams, int playerteams,GameSave loadedGame){
 		LOGGER.info("Start loading game");
 
@@ -123,11 +132,11 @@ public class Game{
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
 			cm.setColour(playerid);
-			rm.setBiomass(0, teamid);
-			rm.setRocks(0, teamid);
-			rm.setCrystal(0, teamid);
-			rm.setWater(0, teamid);
-			rm.setMaxPopulation(10, teamid);
+			rm.setBiomass(0, playerid);
+			rm.setRocks(0, playerid);
+			rm.setCrystal(0, playerid);
+			rm.setWater(0, playerid);
+			rm.setMaxPopulation(10, playerid);
 		}
 
 		//add all entities
@@ -140,6 +149,10 @@ public class Game{
 		GameManager.get().getManager(WinManager.class);
 	}
 
+	/**
+	 * this functions laods all the saved buildings
+	 * @param loadedGame
+	 */
 	private void loadBuildings(GameSave loadedGame){
 		for(SavedBuilding e : loadedGame.data.building){
 			switch(e.getBuildingType()){
@@ -180,24 +193,44 @@ public class Game{
 		}
 	}
 
+	/**
+	 * this function loads all the saved entities
+	 * @param loadedGame
+	 */
 	private void loadEntities(GameSave loadedGame){
 		for(SavedEntity each : loadedGame.data.entities)
 			if(each.getName().equals("Astronaut")){
-				GameManager.get().getWorld().addEntity(new Astronaut(each.getX(), each.getY(), 0, each.getTeamId()));
+				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
+				astronaut.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(astronaut);
 			}else if(each.getName().equals("Base")){
-				GameManager.get().getWorld().addEntity(new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId()));
+				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
+				base.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(base);
 			}else if(each.getName().equals("Tank")){
-				GameManager.get().getWorld().addEntity(new Tank(each.getX(), each.getY(), 0, each.getTeamId()));
+				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
+				tank.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(tank);
 			}else if(each.getName().equals("Carrier")){
-				GameManager.get().getWorld().addEntity(new Carrier(each.getX(), each.getY(), 0, each.getTeamId()));
+				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
+				carrier.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(carrier);
 			}else if(each.getName().equals("Commander")){
-				GameManager.get().getWorld().addEntity(new Commander(each.getX(), each.getY(), 0, each.getTeamId()));
+				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
+				commander.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(commander);
 			}else if(each.getName().equals("Medic")){
-				GameManager.get().getWorld().addEntity(new Medic(each.getX(), each.getY(), 0, each.getTeamId()));
+				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
+				medic.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(medic);
 			}else if(each.getName().equals("Hacker")){
-				GameManager.get().getWorld().addEntity(new Hacker(each.getX(), each.getY(), 0, each.getTeamId()));
+				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
+				hacker.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(hacker);
 			}else if (each.getName().equals("Hacker")){
-				GameManager.get().getWorld().addEntity(new Soldier(each.getX(), each.getY(), 0, each.getTeamId()));
+				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
+				hacker.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(hacker);
 			}
 
 	}
