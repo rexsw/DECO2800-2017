@@ -41,6 +41,7 @@ public class TechTreeView extends Dialog{
 	Dialog techtree;
 
 	public TechTreeView(String title, Skin skin, HUDView hud) {
+
 		super(title, skin);
 		this.hud = hud;
 

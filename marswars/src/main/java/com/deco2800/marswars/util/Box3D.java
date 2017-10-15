@@ -17,6 +17,9 @@ public class Box3D {
 	private float yLength;
 	private float zLength;
 
+	//NEVER DELETE THIS
+	Box3D(){}
+
 	/**
 	 * Constructs a new Box3D with the given corner point and dimensions.
 	 * 

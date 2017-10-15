@@ -115,12 +115,10 @@ public class MainMenu {
 			defaultTheme.setVolume(0.9f);
 			defaultTheme.setLooping(true);
 			defaultTheme.play();
-			try {
-				game = new Game(mapType, mapSize, aITeams, playerTeams, true); //Start up a new game
-			} catch (FileNotFoundException e) {}//do nothing
-				game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			}
+			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
+			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
+	}
 	
 	
 	/**
@@ -141,7 +139,7 @@ public class MainMenu {
 				defaultTheme.setLooping(true);
 				defaultTheme.play();
 				try {
-					game = new Game(loadedGame.data.mapType, loadedGame.data.mapSize, loadedGame.data.aITeams, loadedGame.data.playerTeams, false); //Start up a new game
+					game = new Game(loadedGame.data.aITeams, loadedGame.data.playerTeams); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}
