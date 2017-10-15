@@ -32,9 +32,22 @@ public class Data {
     //list of resources
     public List<Resource> resource = new ArrayList<>();
 
+    //list of buildings
+    public List<SavedBuilding> building = new ArrayList<>();
+
     //list of entities
     public List<SavedEntity> entities = new ArrayList<>();
 
     public int aITeams;
     public int playerTeams;
+
+
+    //stats are saved in this order
+    //biomass-rocks-crystal-water-population
+
+    //aiStats
+    public List<ArrayList<Integer>> aIStats = new ArrayList<ArrayList<Integer>>();
+
+    //playerStats
+    public List<ArrayList<Integer>> playerStats = new ArrayList<ArrayList<Integer>>();
 }

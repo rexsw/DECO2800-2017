@@ -68,9 +68,9 @@ public class ChatBox extends Table {
     public ChatBox(Skin skin) {
         this.skin = skin;
         // Create the elements of chat box
-        this.messageTextField = new TextField("", this.skin, "chatField") ; 
+        this.messageTextField = new TextField("", this.skin) ; 
         this.chatMessages = new Table(this.skin);
-        this.chatPane = new ScrollPane(this.chatMessages, this.skin, "chatBox");
+        this.chatPane = new ScrollPane(this.chatMessages, this.skin);
 		//add dispActions button + image for it 
 		Texture arrowImage = textureManager.getTexture("arrow_button");
 		TextureRegion arrowRegion = new TextureRegion(arrowImage);

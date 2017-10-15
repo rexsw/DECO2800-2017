@@ -4,15 +4,11 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -28,7 +24,6 @@ import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.HealthBar;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
@@ -45,12 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import com.deco2800.marswars.technology.Technology;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Naziah Siddique on 19/08
@@ -64,24 +54,21 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
 
-	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
-
 	private Stage stage;
 	private Skin skin;
 	private ImageButton quitButton;
 	private ImageButton helpButton;
 	private ImageButton messageButton;
-	private ImageButton cheatButton;
 
 	//HUD elements
 	private Table overheadRight; //contains all basic quit/help/chat buttons
-	Table resourceTable; //contains table of resource images + count
-    Table HUDManip;		 //contains buttons for toggling HUD + old menu
+	Table resourceTable;         //contains table of resource images + count
+    Table HUDManip;		         //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
-	Window minimap;		 //window for containing the minimap
-	Window actionsWindow;    //window for the players actions
+	Window minimap;		         //window for containing the minimap
+	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
 
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
@@ -103,13 +90,11 @@ public class HUDView extends ApplicationAdapter{
 
 
 	//Toggles; checks if the feature is visible on-screen or not
-	private boolean messageToggle;
 	private boolean inventoryToggle;
+	private boolean messageToggle = true;
 	private boolean fogToggle = true;
 	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD
-	ImageButton dispActions;//Button for displaying actions window
-	ImageButton removeActions; //button for removing actions window
 
 	private TextureRegionDrawable plusRegionDraw;
 	private TextureRegionDrawable minusRegionDraw;
@@ -128,10 +113,6 @@ public class HUDView extends ApplicationAdapter{
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
-
-	private boolean showHealthBars = false;
-	private Set<ProgressBar> healthBars = new LinkedHashSet<>();
-
 	private GameStats stats;
 
 	HUDView hud = this;
@@ -246,8 +227,8 @@ public class HUDView extends ApplicationAdapter{
 
 		//Create + align time displays
 		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("0:00", skin);
-		gameLengthDisp = new Label("00:00:00", skin);
+		gameTimeDisp = new Label("0:00", skin, "seven-seg");
+		gameLengthDisp = new Label("00:00:00", skin, "seven-seg");
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
 
@@ -266,7 +247,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add in quit + help + chat buttons and time labels
 		overheadRight.add(gametimeStack).padRight(BUTTONPAD).height(BUTTONSIZE).width(BUTTONSIZE*2);
-		overheadRight.add(messageButton).padRight(BUTTONPAD);
 		overheadRight.add(helpButton).padRight(BUTTONPAD);
 		overheadRight.add(dispMainMenu).padRight(BUTTONPAD);
 		overheadRight.add(quitButton).padRight(BUTTONPAD);
@@ -299,22 +279,6 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}});
-
-		//Creates the message button listener
-		LOGGER.debug("Creating message button listener");
-		messageButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				if (messageToggle){
-				    hideChatBox();
-
-				} else {
-				    showChatBox();
-				}
-
-			}
-		});
-
 	}
 
 
@@ -373,17 +337,6 @@ public class HUDView extends ApplicationAdapter{
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
 		//remove dispActions button + image for it
 
-		Texture minusImage = textureManager.getTexture("minus_button");
-		TextureRegion minusRegion = new TextureRegion(minusImage);
-		minusRegionDraw = new TextureRegionDrawable(minusRegion);
-		removeActions = new ImageButton(minusRegionDraw);
-
-		//add dispActions image
-		Texture plusImage = textureManager.getTexture("plus_button");
-		TextureRegion plusRegion = new TextureRegion(plusImage);
-		plusRegionDraw = new TextureRegionDrawable(plusRegion);
-		dispActions = new ImageButton(plusRegionDraw);
-
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button");
 		TextureRegion techRegion = new TextureRegion(techImage);
@@ -400,47 +353,13 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
 
-
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispTech).pad(BUTTONPAD);
 		HUDManip.add(dispFog).pad(BUTTONPAD);
 		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
-		HUDManip.add(removeActions).pad(BUTTONPAD);
 
 		stage.addActor(HUDManip);
-
-		dispActions.addListener(new ChangeListener() {
-			@Override
-			/*displays the (-) button for setting the hud to invisible*/
-			public void changed(ChangeEvent event, Actor actor) {
-				if (isInventoryToggle()) {
-					LOGGER.debug("Enable hud");
-					actionsWindow.setVisible(true);
-					minimap.setVisible(true);
-					resourceTable.setVisible(true);
-					//show (-) button to make resources invisible
-					dispActions.remove();
-					HUDManip.add(removeActions);
-					setInventoryToggle(false);
-				}
-			}
-		});
-
-		removeActions.addListener(new ChangeListener() {
-			@Override
-			/*displays the (+) button for setting the hud to visible*/
-			public void changed(ChangeEvent event, Actor actor) {
-				LOGGER.debug("Disable Hud");
-				actionsWindow.setVisible(true);
-				minimap.setVisible(false);
-				resourceTable.setVisible(false);
-				//show (+) to show resources again
-				removeActions.remove();
-				HUDManip.add(dispActions);
-				setInventoryToggle(true);
-			}
-		});
 
 		dispTech.addListener(new ChangeListener() {
 			@Override
@@ -472,7 +391,6 @@ public class HUDView extends ApplicationAdapter{
                 return false;
             }
        });
-
 
 		dispFog.addListener(new ChangeListener() {
 			@Override
@@ -610,13 +528,11 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		//the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
 		//TODO update the skin
-		minimap = new Window("Map", skin);
+		minimap = new Window("", skin, "minimap");
 
 		//set the properties of the minimap window
 		GameManager.get().getMiniMap().stageReference = minimap;
 		minimap.add(GameManager.get().getMiniMap().getBackground());
-		minimap.align(Align.topLeft);
-		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
 		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
 		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
@@ -864,6 +780,7 @@ public class HUDView extends ApplicationAdapter{
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		/*Update Minimap*/
+		actionsWindow.toBack();
 		addEntitiesToMiniMap();
 		this.updateMiniMapMenu();
 
@@ -986,13 +903,12 @@ public class HUDView extends ApplicationAdapter{
 		//Map
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
-		minimap.setMovable(false);
 		minimap.setSize(220, 220);
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
-		actionsWindow.setPosition(220, 0);
+		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2);
+		actionsWindow.setHeight(minimap.getHeight()/2);
+		actionsWindow.setPosition(minimap.getWidth()/2, 0);
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);
