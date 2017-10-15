@@ -4,6 +4,7 @@ import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.Barracks;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -92,7 +93,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		} else if(unit instanceof Base) {
 			Base x = (Base)unit;
 			generateSpacman(x);
-		} else if(unit instanceof Soldier) {
+		} else if(unit instanceof Barracks) {
+			Barracks x = (Barracks)unit;
+			generateSolder(x);
+		}
+		else if(unit instanceof Soldier) {
 			Soldier x = (Soldier)unit;
 			// Action depends on current state
 			switch (getState(unit.getOwner())) {
@@ -177,6 +182,17 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			LOGGER.info("ai - set base to make spacman");
 			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
 			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
+			x.setAction(new GenerateAction(r));
+		}
+	}
+	
+	private void generateSolder(Barracks x) {
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if(!x.showProgress() && rm.getBiomass(x.getOwner()) > 30) {
+			//sets the ai base to make more spacman if possible
+			LOGGER.info("ai - set base to make spacman");
+			rm.setBiomass(rm.getBiomass(x.getOwner()) - 30, x.getOwner());
+			Soldier r = new Soldier(x.getPosX(), x.getPosY(), 0, x.getOwner());
 			x.setAction(new GenerateAction(r));
 		}
 	}
@@ -408,6 +424,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	public void useSpacman(Astronaut x) {
 		if(!(x.showProgress())) {
+			AiBuilder build = (AiBuilder) GameManager.get().getManager(AiBuilder.class);
+			build.build(x);
+			if(x.showProgress()) {
+				return;
+			}
 			//allow spacmans to collect the closest resources
 			Optional<BaseEntity> resource = WorldUtil.getClosestEntityOfClass(Resource.class, x.getPosX(),x.getPosY());
 			x.setAction(new GatherAction(x, (Resource) resource.get()));

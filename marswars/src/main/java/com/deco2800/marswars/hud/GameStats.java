@@ -36,7 +36,7 @@ public class GameStats{
 	private HUDView hud; 
 	private TextureManager textureManager; 
 	private Window window; 
-	private GameGraph gameGraph;
+	private Field gameGraph;
 	
 	/* Managers */
 	private TimeManager timeManager = (TimeManager) 
@@ -59,6 +59,7 @@ public class GameStats{
 	 */
 	public GameStats(Stage stage, Skin skin, HUDView hud, TextureManager textureManager){
 		this.stage = stage; 
+		this.gameGraph = null;
 		this.skin = skin;
 		this.hud = hud; 
 		this.textureManager = textureManager; 
@@ -66,7 +67,7 @@ public class GameStats{
 		window.setMovable(false);
 		window.setVisible(false);
 		this.statsButtons = setStatusButtons();
-		gameGraph = new GameGraph(null);  //will need to be the first 
+		//will need to be the first 
 										  //stats button's graph instead
 		this.graphTable = setGraph();
 
@@ -118,8 +119,14 @@ public class GameStats{
 	 * @return graphTable represents the table in which the graph is drawn
 	 */
 	private Table setGraph(){
+		Label graphInfo;
 		Table graphTable = new Table();
-		Label graphInfo = new Label("-Graph goes here-", skin);
+		if(gameGraph == null) {
+			graphInfo = new Label("please pick which stat you wish to view", skin);
+		}
+		else {
+			graphInfo = new Label(gameGraph.toString() + " You: " + (black.count(-1, gameGraph)), skin);
+		}
 		graphTable.add(graphInfo).align(Align.center);
 		
 		return graphTable; 
@@ -186,49 +193,57 @@ public class GameStats{
 		bioButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.BIOMASS);
+				gameGraph = Field.BIOMASS;
+				graphTable = setGraph();
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.CRYSTAL);
+				gameGraph = Field.CRYSTAL;
+				graphTable = setGraph();
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.ROCKS);
+				gameGraph = Field.ROCKS;
+				graphTable = setGraph();
 			}
 		});
 		waterButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.WATER);
+				gameGraph = Field.WATER;
+				graphTable = setGraph();
 			}
 		});
 		combatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.COMBAT_UNITS);
+				gameGraph = Field.COMBAT_UNITS;
+				graphTable = setGraph();
 			}
 		});
 		unitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.UNITS_LOST);
+				gameGraph = Field.UNITS_LOST;
+				graphTable = setGraph();
 			}
 		});
 		baseButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.BUILDINGS);
+				gameGraph = Field.BUILDINGS;
+				graphTable = setGraph();
 			}
 		});
 		techButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.TECHNOLOGY);
+				gameGraph = Field.TECHNOLOGY;
+				graphTable = setGraph();
 			}
 		});	
 
@@ -294,13 +309,13 @@ public class GameStats{
 		window.setPosition(width/2-STATSWIDTH/2, height/2-STATSHEIGHT/2);
 	}
 
-	/**
-	 * Render the in-game stats
-	 */
-	public void render() {
-		if (window.isVisible()){
-			gameGraph.render();
-		}
-	}
+//	/**
+//	 * Render the in-game stats
+//	 */
+//	public void render() {
+//		if (window.isVisible()){
+//			gameGraph.render();
+//		}
+//	}
 	
 }
