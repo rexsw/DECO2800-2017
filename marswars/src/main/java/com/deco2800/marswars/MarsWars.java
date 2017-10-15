@@ -15,10 +15,7 @@ import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.managers.BackgroundManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.WeatherManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 
@@ -82,7 +79,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setStage(this.stage);
 
 		/*All managers */
-		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		this.reg = (TextureManager) (GameManager.get().getManager(TextureManager.class));
 
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
@@ -91,6 +88,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setCamera(this.camera);
 
 		new MainMenu(this.skin, this.stage);
+
 	}
 
 	/**
