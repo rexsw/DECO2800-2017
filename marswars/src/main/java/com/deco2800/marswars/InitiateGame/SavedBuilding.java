@@ -11,11 +11,12 @@ public class SavedBuilding {
     //never delete this, this is used by game loading
     SavedBuilding(){}
 
-    SavedBuilding(float x, float y, BuildingType buildingType, int teamId){
+    SavedBuilding(float x, float y, BuildingType buildingType, int teamId, int health){
         this.buildingType = buildingType;
         this.x = x;
         this.y = y;
         this.teamId = teamId;
+        this.health = health;
     }
 
     public BuildingType getBuildingType() {

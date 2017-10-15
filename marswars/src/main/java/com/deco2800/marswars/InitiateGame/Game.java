@@ -145,32 +145,32 @@ public class Game{
 			switch(e.getBuildingType()){
 				case TURRET:
 					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-					//turret.setHealth(e.getHealth());
+					turret.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(turret);
 					break;
 				case BASE:
 					Base base = new Base(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-					//base.setHealth(e.getHealth());
+					base.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(base);
 					break;
 				case BARRACKS:
 					Barracks barracks = new Barracks(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-					//barracks.setHealth(e.getHealth());
+					barracks.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(barracks);
 					break;
 				case BUNKER:
 					Bunker bunker = new Bunker(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-					//bunker.setHealth(e.getHealth());
+					bunker.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(bunker);
 					break;
 				case HEROFACTORY:
 					HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-				//	heroFactory.setHealth(e.getHealth());
+					heroFactory.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(heroFactory);
 					break;
 				case TECHBUILDING:
 					TechBuilding techBuilding = new TechBuilding(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
-					//techBuilding.setHealth(e.getHealth());
+					techBuilding.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(techBuilding);
 					break;
 				default:

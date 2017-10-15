@@ -129,22 +129,22 @@ public class GameSave {
     public void fillBuilding(AbstractEntity b){
         BuildingEntity bE = (BuildingEntity)b;
         if(bE.getbuilding().equals("Turret")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TURRET,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TURRET,bE.getOwner(),bE.getHealth()));
         }
         else if (bE.getbuilding().equals("Base")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BASE,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BASE,bE.getOwner(),bE.getHealth()));
         }
         else if (bE.getbuilding().equals("Barracks")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BARRACKS,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BARRACKS,bE.getOwner(),bE.getHealth()));
         }
         else if (bE.getbuilding().equals("Bunker")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BUNKER,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BUNKER,bE.getOwner(),bE.getHealth()));
         }
         else if(bE.getbuilding().equals("Hero Factory")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner(),bE.getHealth()));
         }
         else if(bE.getbuilding().equals("TechBuilding")){
-            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner()));
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
         }
     }
 
