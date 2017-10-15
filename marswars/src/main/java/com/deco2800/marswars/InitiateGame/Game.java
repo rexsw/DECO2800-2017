@@ -6,8 +6,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.MarsWars;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.buildings.HeroFactory;
+import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.*;
@@ -133,11 +132,52 @@ public class Game{
 
 		//add all entities
 		loadEntities(loadedGame);
+		loadBuildings(loadedGame);
 
 
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
+	}
+
+	private void loadBuildings(GameSave loadedGame){
+		for(SavedBuilding e : loadedGame.data.building){
+			switch(e.getBuildingType()){
+				case TURRET:
+					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					//turret.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(turret);
+					break;
+				case BASE:
+					Base base = new Base(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					//base.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(base);
+					break;
+				case BARRACKS:
+					Barracks barracks = new Barracks(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					//barracks.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(barracks);
+					break;
+				case BUNKER:
+					Bunker bunker = new Bunker(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					//bunker.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(bunker);
+					break;
+				case HEROFACTORY:
+					HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+				//	heroFactory.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(heroFactory);
+					break;
+				case TECHBUILDING:
+					TechBuilding techBuilding = new TechBuilding(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					//techBuilding.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(techBuilding);
+					break;
+				default:
+					break;
+
+			}
+		}
 	}
 
 	private void loadEntities(GameSave loadedGame){

@@ -1,6 +1,8 @@
 package com.deco2800.marswars.InitiateGame;
 
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
+import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
@@ -66,6 +68,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.blackFogOfWar);
         kryo.writeClassAndObject(output, data.entities);
         kryo.writeClassAndObject(output, data.resource);
+        kryo.writeClassAndObject(output, data.building);
         kryo.writeClassAndObject(output, data.walkables);
         kryo.writeClassAndObject(output, data.aITeams);
         kryo.writeClassAndObject(output, data.playerTeams);
@@ -80,6 +83,7 @@ public class GameSave {
         data.blackFogOfWar  = (Array2D<Integer>)kryo.readClassAndObject(input);
         data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
         data.resource  = (ArrayList<Resource>)kryo.readClassAndObject(input);
+        data.building  = (ArrayList<SavedBuilding>)kryo.readClassAndObject(input);
         data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
         data.aITeams  = (int)kryo.readClassAndObject(input);
         data.playerTeams  = (int)kryo.readClassAndObject(input);
@@ -113,9 +117,34 @@ public class GameSave {
             else if(r instanceof Resource){
                 data.resource.add((Resource)r);
             }
+            else if(r instanceof BuildingEntity){
+                fillBuilding(r);
+            }
             else {
                 fillEntities(r);
             }
+        }
+    }
+
+    public void fillBuilding(AbstractEntity b){
+        BuildingEntity bE = (BuildingEntity)b;
+        if(bE.getbuilding().equals("Turret")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TURRET,bE.getOwner()));
+        }
+        else if (bE.getbuilding().equals("Base")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BASE,bE.getOwner()));
+        }
+        else if (bE.getbuilding().equals("Barracks")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BARRACKS,bE.getOwner()));
+        }
+        else if (bE.getbuilding().equals("Bunker")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BUNKER,bE.getOwner()));
+        }
+        else if(bE.getbuilding().equals("Hero Factory")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner()));
+        }
+        else if(bE.getbuilding().equals("TechBuilding")){
+            data.building.add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner()));
         }
     }
 

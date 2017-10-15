@@ -32,6 +32,9 @@ public class Data {
     //list of resources
     public List<Resource> resource = new ArrayList<>();
 
+    //list of buildings
+    public List<SavedBuilding> building = new ArrayList<>();
+
     //list of entities
     public List<SavedEntity> entities = new ArrayList<>();
 
