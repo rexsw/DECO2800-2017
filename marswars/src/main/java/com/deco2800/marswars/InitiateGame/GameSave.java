@@ -7,8 +7,6 @@ import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
-import com.deco2800.marswars.worlds.MapSizeTypes;
-import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;

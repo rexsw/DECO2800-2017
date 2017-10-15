@@ -62,7 +62,7 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
 		savedGame = new GameSave(aITeams,playerTeams);
-			loadGame();
+		loadGame();
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class Game{
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
 	    savedGame = new GameSave(aITeams,playerTeams);
-	    	startGame(mapType, mapSize, aITeams, playerTeams);
+		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 
 	
@@ -91,12 +91,13 @@ public class Game{
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
 
+		setCameraInitialPosition();
 		//same
 		this.setThread();
 		this.fogOfWar();
 		FogManager.setFog(loadedGame.data.fogOfWar);
 		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
-	   //ADD UNITS & WALKABLES
+
 	}
 
 	private void addEntitiesFromLoadGame(int aiteams, int playerteams,GameSave loadedGame){
@@ -107,8 +108,7 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 
-		//add all entities
-		loadEntities(loadedGame);
+
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);
@@ -131,6 +131,9 @@ public class Game{
 			rm.setMaxPopulation(10, teamid);
 		}
 
+		//add all entities
+		loadEntities(loadedGame);
+
 
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
@@ -138,6 +141,7 @@ public class Game{
 	}
 
 	private void loadEntities(GameSave loadedGame){
+		GameManager.get().getWorld().addEntity(new Astronaut(1, 1, 0, -1));
 		for(SavedEntity each : loadedGame.data.entities)
 			if(each.getName().equals("Astronaut")){
 				GameManager.get().getWorld().addEntity(new Astronaut(each.getX(), each.getY(), 0, each.getTeamId()));
