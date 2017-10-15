@@ -1,5 +1,7 @@
 package com.deco2800.marswars.mainMenu;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -52,6 +54,9 @@ public class MenuScreen{
 	static final int ASTROWIDTH = 120;
 	static final int ASTROLENGTH = 150;
 	
+	/*Always 1 player team */
+	static final int PLAYERTEAMS = 1; 
+	
 	/* Navigation buttons + layout */
 	private Table lowerPanel;
 	private Table navigationButtons;
@@ -59,6 +64,13 @@ public class MenuScreen{
 	private Button quitButton;
 	private Button backButton; 
 	private Button nextButton;
+	private Label errorWorldSelection;
+	private Label errorPlayerSelection;
+	private Label errorTeamsSelection;
+	
+	/* To ensure 'saving' of the old state*/
+	private Label currentWorldSelection;
+	private Label currentSizeSelection; 
 	
 	/* Multiplayer toggles */
 	public static int playerType;   // checks if multiplayer 
@@ -68,8 +80,8 @@ public class MenuScreen{
 	private MapTypes mapType;
 	private MapSizeTypes mapSize;	
 	
-	private int AITeams; 
-	private int playerTeams;
+	/* Always at most two teams*/
+	private int allTeams = 0; 
 	
 	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
@@ -103,6 +115,13 @@ public class MenuScreen{
 		this.stage = stage; 
 		this.mainmenu = window;
 		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		
+		/* UI prompts */
+		currentWorldSelection = new Label("No type selected, ", skin);
+		currentSizeSelection = new Label("no map size selected.", skin);
+		currentWorldSelection.setAlignment(Align.left);
+		currentSizeSelection.setAlignment(Align.left);
+
 		window.align(Align.left | Align.center);
 		playerModeSelect();
 	}
@@ -162,7 +181,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				menu.startGame(true, mapType, mapSize, AITeams, playerTeams);
+				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
@@ -261,10 +280,11 @@ public class MenuScreen{
 		worldTable.align(Align.left | Align.center);
 		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
+
 		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subtitle");
 		Label worldSelected = new Label("Your current selection:", skin);
-		Label currentWorldSelection = new Label("No type selected, ", skin);
-		Label currentSizeSelection = new Label("no map size selected.", skin);
+		errorWorldSelection = new Label("", skin, "error");
+		
 		Table worldInfoTable = new Table();
 		worldInfoTable.add(currentWorldSelection, currentSizeSelection);
 		
@@ -293,8 +313,7 @@ public class MenuScreen{
 		worldTypeButtons.add(moon).pad(BUTTONPAD).size(MAPBUTTONSIZE);
 		worldTypeButtons.add(mars).pad(BUTTONPAD).size(MAPBUTTONSIZE);
 		worldTypeButtons.add(desert).pad(BUTTONPAD).size(MAPBUTTONSIZE);
-				
-		
+						
 		/* Button listeners*/
 		moon.addListener(new ChangeListener() {
 			@Override
@@ -321,11 +340,11 @@ public class MenuScreen{
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
-		Button tiny = new TextButton("XS", skin, "toggle");
-		Button smol = new TextButton("S", skin, "toggle");
-		Button medium = new TextButton("M", skin, "toggle");
-		Button large = new TextButton("L", skin, "toggle");
-		Button veryLarge = new TextButton("XL", skin, "toggle");
+		Button tiny = new TextButton("XS", skin);
+		Button smol = new TextButton("S", skin);
+		Button medium = new TextButton("M", skin);
+		Button large = new TextButton("L", skin);
+		Button veryLarge = new TextButton("XL", skin);
 		
 		Table worldSizeButtons = new Table();
 		worldSizeButtons.add(tiny).size(NAVBUTTONSIZE).pad(BUTTONPAD);
@@ -339,6 +358,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.TINY;
+				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("tiny map selected.");
 			}
 		});
@@ -347,6 +367,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.SMALL;
+				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("smol map selected.");
 			}
 		});
@@ -355,6 +376,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.MEDIUM;
+				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("medium map selected.");
 			}
 		});
@@ -363,6 +385,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.LARGE;
+				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("large map selected.");
 			}
 		});
@@ -371,6 +394,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				mapSize = MapSizeTypes.VERY_LARGE;
+				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("very large map selected.");
 			}
 		});
@@ -379,7 +403,9 @@ public class MenuScreen{
 		worldTable.add(worldTypeButtons).row();
 		worldTable.add(worldSizeButtons).row();						
 		worldTable.add(worldSelected).align(Align.left).row();
-		worldTable.add(worldInfoTable).align(Align.left);
+		worldTable.add(worldInfoTable).align(Align.left).row();
+		worldTable.add(errorWorldSelection).align(Align.left);
+
 		mainmenu.add(worldTable).align(Align.left | Align.center);
 		mainmenu.row();
 		addNavigationButton(ScreenMode.WORLDMODE);
@@ -393,41 +419,68 @@ public class MenuScreen{
 	 */
 	public void selectCombat() {
 		mainmenu.clear();
+		
+		errorTeamsSelection = new Label("", skin, "error");
 
-		Table gameTable = new Table();		
-		gameTable.align(Align.left | Align.center);
-		Label combatInfo = new Label("SELECT A COMBAT MODE", this.skin, "subtitle");
+		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, "subtitle");
+		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, "subtitle");
+		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subtitle");
 		
-		//int ai teams, int player teams
-		Label teamSelect = new Label("Pick the total number of teams", skin);
-		Label selected = new Label(String.format("Selected 2 teams"), skin);
+		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin);
+
 		
+		/* no of teams buttons*/
 		Table AIButtons = new Table();
-		
 		Button AI2 = new TextButton("2", skin, "menubutton");
 		Button AI3 = new TextButton("3", skin, "menubutton");
 		Button AI4 = new TextButton("4", skin, "menubutton");
 		Button AI5 = new TextButton("5", skin, "menubutton");
-		
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
-			
-		for  (int i = 0; i < buttonsList.length; i ++) {
-			buttonsList[i].addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					AITeams = 3;
-					selected.setText(String.format("Total %d teams playing", 3));
-				}
-			});
-			
+
+		AI2.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 2;
+				selected.setText(String.format("Total %d teams playing", allTeams));
+			}
+		});
+
+		AI3.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 3;
+				selected.setText(String.format("Total %d teams playing", allTeams));
+			}
+		});
+
+		AI4.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 4;
+				selected.setText(String.format("Total %d teams playing", allTeams));
+			}
+		});
+
+		
+		AI5.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 5;
+				selected.setText(String.format("Total %d teams playing", allTeams));
+			}
+		});
+		
+		for (int i = 0; i < buttonsList.length; i++) {
 			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
 						
-		mainmenu.add(teamSelect).align(Align.left).row();
 		mainmenu.add(combatInfo).align(Align.left).row();
-		mainmenu.add(AIButtons).row();
-		mainmenu.add(gameTable).row();
+		mainmenu.add(AIButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).row();
+		mainmenu.add(aiInfo).align(Align.left).row();
+		mainmenu.add(winInfo).align(Align.left).row();
+		
+		mainmenu.add(errorTeamsSelection).align(Align.left).row();
 		
 		addNavigationButton(ScreenMode.COMBATMODE);
 		this.addPlayButton();
@@ -453,7 +506,7 @@ public class MenuScreen{
 	}
 	
 	/**
-	 * Creates a button to navigate one step back in the main menu
+	 * Creates a button to navigate one step back or one step forward in the main menu
 	 * @param status
 	 * @param mainmenu window
 	 * @param stage
@@ -524,8 +577,10 @@ public class MenuScreen{
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
-						mainmenu.clear(); 
-						selectCharacter();
+						if (checkWorld(mapType, mapSize)) {
+							mainmenu.clear();
+							selectCharacter();
+						}
 						break; 
 					case CHARACTERMODE:
 						selectCombat();
@@ -540,8 +595,10 @@ public class MenuScreen{
 					 */				
 					switch(status) {
 					case WORLDMODE:
-						mainmenu.clear(); 
-						selectCombat(); 
+						if (checkWorld(mapType, mapSize)) {
+							mainmenu.clear(); 
+							selectCharacter(); 
+						}
 						break;
 					case CHARACTERMODE:
 						if (MenuScreen.this.joinedServer){
@@ -554,7 +611,6 @@ public class MenuScreen{
 					default:
 						break; 
 					}
-					
 				}
 			}
 		});
@@ -562,7 +618,6 @@ public class MenuScreen{
 		quitButton = new TextButton("Exit", this.skin);
 		quitButton.addListener(new ChangeListener() {
 			@Override
-			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);
 		}});
@@ -584,6 +639,26 @@ public class MenuScreen{
 		
 		return lowerPanel; 
 	}
+	
+	private boolean checkWorld(MapTypes mapType, MapSizeTypes mapSize){
+		if (mapType == null) {
+			errorWorldSelection.setText("You need to pick a map type!");
+		} else if (mapSize == null) {
+			errorWorldSelection.setText("You need to pick a map size!");
+		} else {
+			return true;
+		}
+		
+		return false; 
+	}
+	
+	private boolean checkTeams() {
+		if (allTeams == 0) {
+			errorTeamsSelection.setText("Pick how many teams you want in your game!");
+			return false;
+		}
+		return true;
+	}
 		
 	/**
 	 * Adds in a play button
@@ -593,11 +668,10 @@ public class MenuScreen{
 		playButton.pad(BUTTONPAD);
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
-				/* If a certain feature if not selected*/
-				if(! (mapType == null || mapSize == null)) {
+				/* If the final 'select combat' features not selected*/
+				if (checkTeams()) {
 					mainmenu.setVisible(false);
-					int playerTeams = 1;
-					menu.startGame(true, mapType, mapSize, AITeams, 1);
+					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS);
 				}
 		}});
 		
