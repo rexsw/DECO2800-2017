@@ -28,6 +28,7 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -93,6 +94,7 @@ public class HUDView extends ApplicationAdapter{
 	private boolean inventoryToggle;
 	private boolean messageToggle = true;
 	private boolean fogToggle = true;
+	private boolean floodToggle = true;
 	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD
 
@@ -353,10 +355,14 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
 
+		//add toggle for flood effect (FOR DEBUGGING)
+		Button dispFlood = new TextButton("Flood", skin);
+
 		HUDManip.setSize(50, 80);
 		HUDManip.pad(BUTTONPAD);
 		HUDManip.add(dispTech).pad(BUTTONPAD);
 		HUDManip.add(dispFog).pad(BUTTONPAD);
+		HUDManip.add(dispFlood).pad(BUTTONPAD);
 		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
 
 		stage.addActor(HUDManip);
@@ -399,6 +405,13 @@ public class HUDView extends ApplicationAdapter{
 				toggleFog();
 			}
 		});
+		dispFlood.addListener(new ChangeListener() {
+			@Override
+			/*displays the (-) button for setting the hud to invisible*/
+			public void changed(ChangeEvent event, Actor actor) {
+				toggleFlood();
+			}
+		});
 
 		spawnMenu = new SpawnMenu(stage, skin);
 		spawnMenu.setupEntitiesPickerMenu();
@@ -420,6 +433,26 @@ public class HUDView extends ApplicationAdapter{
 			fogToggle = true;
 		}
 	}
+
+	/**
+	 * Toggle flood effect on and off. See WeatherManager.toggleFlood() for
+	 * further information.
+	 */
+	private void toggleFlood(){
+		WeatherManager weatherManager = (WeatherManager)
+				GameManager.get().getManager(WeatherManager.class);
+		//disable fog
+		if (floodToggle) {
+			LOGGER.debug("fog of war is now off");
+			weatherManager.toggleFlood(false);
+			floodToggle = false;
+		}else {
+			LOGGER.debug("fog of war is now on");
+			weatherManager.toggleFlood(true);
+			floodToggle = true;
+		}
+	}
+
 	/**
 	 * Adds in the selectable menu for the inventory for resources
 	 */
@@ -804,7 +837,7 @@ public class HUDView extends ApplicationAdapter{
 		//Get the selected entity
 		selectedEntity = null;
 		selectedList.clear();
-		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
+		for (BaseEntity e : gameManager.get().getWorld().getFloodableEntityList()) {
 			if (e.isSelected()) {
 				selectedList.add(e);
 			}
