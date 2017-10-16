@@ -300,10 +300,6 @@ public class TextureManager extends Manager {
                 unitType,textureType);
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
-        for (int i = 0; i < 1000; i++) {
-            System.out.println("loadUnitSprite CALLED, path is  " + path +
-                    " retval is " + retVal);
-        }
         saveTexture(retVal,path);
         return retVal;
     }

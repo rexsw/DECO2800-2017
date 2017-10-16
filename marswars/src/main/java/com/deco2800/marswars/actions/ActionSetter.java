@@ -208,6 +208,7 @@ public final class ActionSetter {
             case COMMANDER:
                 target.setAction(new GenerateAction(new Commander(target
                         .getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
             case HEALER:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
