@@ -493,6 +493,58 @@ public class TechnologyManager extends Manager{
     }
     
 
+    
+    /**
+     * Sets up the dependencies of the items' levels (research)
+     */
+    private void setUpHeroTechs() {
+        heroFactory = new Technology(new int[]{0, 0, 20, 20}, "Hero " +
+                "Factory", new ArrayList<Technology>(), "Unlocks the ability" +
+                " to build factories to manufacture hero units.");
+
+        ArrayList<Technology> armourL1Parents = new ArrayList<Technology>();
+        armourL1Parents.add(heroFactory);
+        armourLevelOne = new Technology(new int[]{20, 20, 0, 0}, "Armour " +
+                "Level One", armourL1Parents, "Unlocks the " +
+                "ability to build Level One Armour for Hero units.");
+
+        this.armourL2Parents = new ArrayList<Technology>();
+        armourL2Parents.add(armourLevelOne);
+        armourLevelTwo = new Technology(new int[]{40, 40, 0, 0}, "Armour " +
+                "Level Two", armourL2Parents, "Unlocks the " +
+                "ability to build Level Two Armour for Hero units.");
+
+        this.armourL3Parents = new ArrayList<Technology>();
+        armourL3Parents.add(armourLevelTwo);
+        armourLevelThree = new Technology(new int[]{60, 60, 0, 0}, "Armour " +
+                "Level Three", armourL3Parents, "Unlocks the " +
+                "ability to build Level Three Armour for Hero units.");
+
+        this.weaponL1Parents = new ArrayList<Technology>();
+        weaponL1Parents.add(heroFactory);
+        weaponLevelOne = new Technology(new int[]{20, 20, 0, 0}, "Weapons " +
+                "Level One", weaponL1Parents, "Unlocks the " +
+                "ability to build Level One Weapons for Hero units.");
+
+        this.weaponL2Parents = new ArrayList<Technology>();
+        weaponL2Parents.add(weaponLevelOne);
+        weaponLevelTwo = new Technology(new int[]{40, 40, 0, 0}, "Weapon " +
+                "Level Two", weaponL2Parents, "Unlocks the " +
+                "ability to build Level Two Weapons for Hero units.");
+
+        this.weaponL3Parents = new ArrayList<Technology>();
+        weaponL3Parents.add(weaponLevelTwo);
+        weaponLevelThree = new Technology(new int[]{60, 60, 0, 0}, "Weapons " +
+                "Level Three", weaponL3Parents, "Unlocks the " +
+                "ability to build Level Three Weapons for Hero units.");
+
+        this.specialParents = new ArrayList<Technology>();
+        specialParents.add(heroFactory);
+        special = new Technology(new int[]{20, 20, 20, 20}, "Armour " +
+                "Level One", specialParents, "Unlocks the " +
+                "ability to build Special items for Hero units..");
+    }
+
     /**
      * Gets the buildings available for specified team 
      * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet

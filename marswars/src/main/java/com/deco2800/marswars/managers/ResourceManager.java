@@ -159,13 +159,18 @@ private static final String CLOSED = "closed.wav";
 	 * @return int a non zero teamid if there a winer else 0 if no winer
 	 */
 	public int CappedTeam() {
-		for(int teamid:rocks.keySet()) {
-			if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
-					crystal.get(teamid) > 400 && water.get(teamid) > 400) {
-				return teamid;
+		try {
+			for(int teamid:rocks.keySet()) {
+				if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
+						crystal.get(teamid) > 400 && water.get(teamid) > 400) {
+					return teamid;
+				}
 			}
+			return 0;
 		}
-		return 0;
+		catch(NullPointerException e) {
+			return 0;
+		}
 	}
 	
 	/**

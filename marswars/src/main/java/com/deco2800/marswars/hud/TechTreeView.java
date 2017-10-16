@@ -32,6 +32,7 @@ import java.util.ArrayList;
  *
  */
 public class TechTreeView extends Dialog{
+
 	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 	private TimeManager timeManager = (TimeManager)
@@ -41,7 +42,6 @@ public class TechTreeView extends Dialog{
 	Dialog techtree;
 
 	public TechTreeView(String title, Skin skin, HUDView hud) {
-
 		super(title, skin);
 		this.hud = hud;
 
