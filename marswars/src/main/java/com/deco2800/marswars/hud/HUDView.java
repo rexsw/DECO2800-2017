@@ -28,6 +28,7 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -804,7 +805,7 @@ public class HUDView extends ApplicationAdapter{
 		//Get the selected entity
 		selectedEntity = null;
 		selectedList.clear();
-		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
+		for (BaseEntity e : gameManager.get().getWorld().getFloodableEntityList()) {
 			if (e.isSelected()) {
 				selectedList.add(e);
 			}

@@ -45,12 +45,12 @@ public class WeatherManager extends Manager implements Tickable {
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            if (timeManager.getHours() < 1) {
+            if (timeManager.getHours() < 3) {
                 status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
                     if (waterEntities < (world.getWidth() *
-                            world.getLength()) / 2) {
+                            world.getLength()) / 3 * 2) {
                         this.generateFlood();
                     }
                     //this.applyEffects();
@@ -58,7 +58,8 @@ public class WeatherManager extends Manager implements Tickable {
                     this.setInterval();
                 }
             }
-            if (timeManager.getHours() >= 1 && floodWatersExist) {
+            //this.applyContinuousDamage(this.checkAffectedEntities());
+            if (timeManager.getHours() >= 3 && floodWatersExist) {
                 status = true;
                 // +10 a good time for actual condition
                 if (currentTime > interval + 2) {
