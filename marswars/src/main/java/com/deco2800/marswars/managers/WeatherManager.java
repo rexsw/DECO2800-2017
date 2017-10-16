@@ -32,6 +32,19 @@ public class WeatherManager extends Manager implements Tickable {
     private int waterEntities = 0;
     // Set as a class variable so that buildings can be unpaused properly
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
+    private boolean floodOn = true;
+
+
+    /**
+     * Sets the toggle value for the UI flood toggle button. The toggle either
+     * enables the flood effect, or prevents further flooding and causes any
+     * currently existing flood waters to retreat.
+     * @param isFlooding
+     * @return
+     */
+    public void toggleFlood(boolean isFlooding) {
+        this.floodOn = isFlooding;
+    }
 
     /**
      * Sets the relevant weather even according to the current in game time.
@@ -45,7 +58,7 @@ public class WeatherManager extends Manager implements Tickable {
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            if (timeManager.getHours() < 3) {
+            if (timeManager.getHours() < 3 && floodOn) {
                 status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
@@ -59,7 +72,7 @@ public class WeatherManager extends Manager implements Tickable {
                 }
             }
             //this.applyContinuousDamage(this.checkAffectedEntities());
-            if (timeManager.getHours() >= 3 && floodWatersExist) {
+            if ((timeManager.getHours() >= 3 && floodWatersExist) || ! floodOn) {
                 status = true;
                 // +10 a good time for actual condition
                 if (currentTime > interval + 2) {
