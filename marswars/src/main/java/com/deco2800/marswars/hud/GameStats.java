@@ -37,6 +37,7 @@ public class GameStats{
 	private TextureManager textureManager; 
 	private Window window; 
 	private Field gameGraph;
+	private Label graphInfo;
 	
 	/* Managers */
 	private TimeManager timeManager = (TimeManager) 
@@ -119,14 +120,8 @@ public class GameStats{
 	 * @return graphTable represents the table in which the graph is drawn
 	 */
 	private Table setGraph(){
-		Label graphInfo;
 		Table graphTable = new Table();
-		if(gameGraph == null) {
-			graphInfo = new Label("please pick which stat you wish to view", skin);
-		}
-		else {
-			graphInfo = new Label(gameGraph.toString() + " You: " + (black.count(-1, gameGraph)), skin);
-		}
+		graphInfo = new Label("please pick which stat you wish to view", skin);
 		graphTable.add(graphInfo).align(Align.center);
 		
 		return graphTable; 
@@ -194,56 +189,64 @@ public class GameStats{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.BIOMASS;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.CRYSTAL;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.ROCKS;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		waterButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.WATER;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		combatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.COMBAT_UNITS;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		unitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.UNITS_LOST;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		baseButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.BUILDINGS;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		techButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				gameGraph = Field.TECHNOLOGY;
-				graphTable = setGraph();
+				graphInfo.setText(gameGraph.toString() + " You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});	
 
