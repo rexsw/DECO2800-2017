@@ -110,6 +110,9 @@ public class FogManager extends Manager {
 	 * @param state deleting or creating new state for the fog of war map
 	 */
 	public static void sightRange(int x, int y, int maxRange, boolean state) {
+		if (fogOfWar == null) {
+			return;
+		}
 		int w = fogOfWar. getWidth();
 		int l = fogOfWar.getLength();
 			if (state) {//set the new position on the map
