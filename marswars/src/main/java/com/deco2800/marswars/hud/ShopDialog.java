@@ -86,8 +86,8 @@ public class ShopDialog extends Dialog{
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
 //	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
-	                boolean enoughResources = true;
-	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
+//	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
+					if ((selectedHero != null) && (selectedHero.getHealth() > 0)) {
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item, 1);
 		                	selectedHero.addItemToInventory(weapon);
