@@ -416,7 +416,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					attackDefensively(a);
 					return;
 				}
@@ -434,7 +435,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					attack(a);
 					return;
 				}
@@ -452,11 +454,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+                boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+                if (distanceEquality) {
 					float xLocation;
 					float yLocation;
 					//If xDistance and yDistance is the same increment one by random
-					if (xDistance == yDistance) {
+					boolean distanceEquality2 = (Math.abs(xDistance - yDistance) < 0.01);
+					if (distanceEquality2) {
 						Random random = new Random();
 						if (random.nextBoolean()) {
 							xDistance += 1;
@@ -488,7 +492,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		for (AttackableEntity a: enemy) {
 			float xDistance = a.getPosX() - this.getPosX();
 			float yDistance = a.getPosY() - this.getPosY();
-			if (Math.abs(yDistance) + Math.abs(xDistance) == this.getAttackRange()) {
+			boolean distanceEquality = (Math.abs(Math.abs(yDistance) +
+					Math.abs(xDistance) - this.getAttackRange()) < 0.01);
+			if (distanceEquality) {
 				attack(a);
 				return;
 			}
@@ -505,7 +511,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
 					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
 					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));

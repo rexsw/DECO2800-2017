@@ -151,12 +151,25 @@ public class Armour extends Item {
 	 */
 	@Override
 	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass()) || (object == null)) {
+		if (getClass() != object.getClass()) {
 			return false;
 		}
 		return ((Armour) object).type == this.type;
+	}
+
+	/**
+	 * The updated hashcode for this class.
+	 *
+	 * @return The updated hashcode for this class.
+	 */
+	@Override
+	public int hashCode() {
+		return type.hashCode();
 	}
 }
