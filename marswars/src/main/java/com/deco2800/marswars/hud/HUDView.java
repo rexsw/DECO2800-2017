@@ -647,8 +647,10 @@ public class HUDView extends ApplicationAdapter{
 			if (target instanceof Commander) {
 				// display the inventory once a commander been selected
 				heroSelected = (Commander) target;
-				this.statsTable.showInventory();
-				this.statsTable.updateHeroInventory((Commander) target);
+				if (!heroSelected.isAi()) {
+					this.statsTable.showInventory();
+					this.statsTable.updateHeroInventory((Commander) target);
+				}
 			}
 		}
 	}
