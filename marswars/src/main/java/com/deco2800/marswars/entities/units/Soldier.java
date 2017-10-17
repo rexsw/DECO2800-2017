@@ -212,14 +212,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
-			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-				// we cant assign different owner yet
-				AttackableEntity target = (AttackableEntity) entities.get(0);
-				attack(target);
-
-			} else {
-				moveUnit(x,y);
-			}
+			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			Sound loadedSound = sound.loadSound(movementSound);
@@ -231,12 +224,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	}
 	
 	/**
-	 * Helper to be inherited and changed for different right click options (mainly for commander)
+	 * Helper to be inherited and changed for different right click options (mainly for commander). here simply assigns
+	 * the action when right click occurs.
+	 * @param entities  List of entities found
 	 * @param x coordinate along x axis of the mouse right click input
 	 * @param y coordinate along y axis of the mouse right click input
 	 */
-	protected void moveUnit(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+			// we cant assign different owner yet
+			AttackableEntity target = (AttackableEntity) entities.get(0);
+			attack(target);
+
+		} else {
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+		}
 	}
 	
 	public void setCurrentAction(Optional<DecoAction> currentAction) {

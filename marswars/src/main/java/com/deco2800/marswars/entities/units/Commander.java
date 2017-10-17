@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
@@ -12,6 +13,7 @@ import com.deco2800.marswars.entities.items.SpecialType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 // A reminder for coder, the connectHero function should called when hero has been spawned! like bind to hero factory
@@ -170,14 +172,14 @@ public class Commander extends Soldier {
 	}
 	
 	@Override
-	protected void moveUnit(float x, float y) {
+	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
 		
 		if (itemInUse && inventory.getCurrentAction().isPresent()) {
 			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
 			action.execute();
 			itemInUse = false;
 		} else {
-			super.moveUnit(x, y);
+			super.moveOrAttack(entities, x, y);
 		}
 	}
 	
