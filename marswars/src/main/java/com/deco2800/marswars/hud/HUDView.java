@@ -261,7 +261,8 @@ public class HUDView extends ApplicationAdapter{
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin, hud).show(stage);
+				new HelpWindow(stage, skin);
+				//new WorkInProgress("Help  Menu", skin, hud).show(stage);
 			}
 		});
 		helpButton.addListener(new TextTooltip("Help", skin));
