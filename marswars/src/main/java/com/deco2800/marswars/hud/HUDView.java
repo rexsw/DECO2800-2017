@@ -50,6 +50,7 @@ import java.util.List;
  */
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+	private boolean enabled = false;
 
 	private static final int BUTTONSIZE = 50; //sets size of image buttons
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
@@ -59,7 +60,6 @@ public class HUDView extends ApplicationAdapter{
 	private Skin skin;
 	private ImageButton quitButton;
 	private ImageButton helpButton;
-	private ImageButton messageButton;
 
 	//HUD elements
 	private Table overheadRight; //contains all basic quit/help/chat buttons
@@ -201,8 +201,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add dispMainMenu image
 		Texture menuImage = textureManager.getTexture("menu_button");
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion menuRegion = new TextureRegion(menuImage);
 		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
 		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
@@ -213,12 +211,6 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegion helpRegion = new TextureRegion(helpImage);
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
-
-		//create message button + image for it
-		Texture messageImage = textureManager.getTexture("chat_button");
-		TextureRegion messageRegion = new TextureRegion(messageImage);
-		TextureRegionDrawable messageRegionDraw = new TextureRegionDrawable(messageRegion);
-		messageButton = new ImageButton(messageRegionDraw);
 
 
 		//add quit button + image for it
@@ -332,7 +324,8 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addMiniMapMenu();
 		addInventoryMenu();
-
+		HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(minimap.getWidth(), 0);
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
@@ -358,13 +351,18 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle for flood effect (FOR DEBUGGING)
 		Button dispFlood = new TextButton("Flood", skin);
 
-		HUDManip.setSize(50, 80);
-		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispTech).pad(BUTTONPAD);
-		HUDManip.add(dispFog).pad(BUTTONPAD);
-		HUDManip.add(dispFlood).pad(BUTTONPAD);
-		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
+		HUDManip.setDebug(enabled);
+		Table debugToggles = new Table();
+		debugToggles.setDebug(enabled);
+		debugToggles.add(dispFog).size(BUTTONSIZE).row();
+		debugToggles.add(dispFlood).size(BUTTONSIZE);
 
+		Table options = new Table();
+		options.setDebug(enabled);
+		options.add(dispShop).width(50).height(50);
+		options.add(dispTech);
+
+		HUDManip.add(options, debugToggles);
 		stage.addActor(HUDManip);
 
 		dispTech.addListener(new ChangeListener() {
@@ -459,6 +457,7 @@ public class HUDView extends ApplicationAdapter{
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
 		actionsWindow = new Window("Actions", skin);
+		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
@@ -573,7 +572,6 @@ public class HUDView extends ApplicationAdapter{
 		//add the map window to the stage
 		stage.addActor(minimap);
 	}
-
 
 	/**
 	 *
@@ -947,9 +945,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(60);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 		//Menu manipulator
-		HUDManip.setSize(50, 80);
-		HUDManip.setPosition(stage.getWidth()-50, 50);
-		HUDManip.align(Align.right| Align.bottom);
+		HUDManip.setPosition(250, 40);
 
 		//resize stats
 		stats.resizeStats(width, height);
