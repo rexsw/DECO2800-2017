@@ -1,11 +1,17 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.deco2800.marswars.mainMenu.MainMenu;
+
 /**
  * BackgroundManager: A class for managing the progression of backgrounds
  * for the game world. Changes the background according to the current In-Game
  * Time.
  */
 public class BackgroundManager extends Manager {
+
+
+
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
 

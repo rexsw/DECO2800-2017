@@ -20,7 +20,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isGamePaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
-	private int days = 0;
+	private static int days = 0;
 	private boolean daysIncremented = false;
 
 	/**
@@ -268,7 +268,7 @@ public class TimeManager extends Manager implements TickableManager {
 	/**
 	 * Sets the In-Game Time to be 0 (Resets current clock)
 	 */
-	public void resetInGameTime() {
+	public static void resetInGameTime() {
 		time = 0;
 		days = 0;
 	}

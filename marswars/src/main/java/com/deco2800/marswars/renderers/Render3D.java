@@ -1,5 +1,6 @@
 package com.deco2800.marswars.renderers;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,9 +9,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MultiSelection;
@@ -35,6 +39,8 @@ public class Render3D implements Renderer {
     private static final boolean DEBUG = false;
 
     BitmapFont font;
+
+    public static int battleFlag=0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Render3D.class);
 
@@ -106,6 +112,10 @@ public class Render3D implements Renderer {
 
         batch.end();
 
+        if(battleFlag==1 && !MainMenu.player.isBattlePlaying)
+            MainMenu.player.playBattleSoundTrack();
+
+
     }
 
     /**
@@ -159,6 +169,8 @@ public class Render3D implements Renderer {
         for (int index = 0; index < entities.size(); index++) {
 
             Renderable entity = entities.get(index);
+
+            if(entity instanceof MissileEntity && !MainMenu.player.isBattlePlaying) battleFlag=1;
 
             //multi selection entities
             if(entity instanceof MultiSelectionTile){

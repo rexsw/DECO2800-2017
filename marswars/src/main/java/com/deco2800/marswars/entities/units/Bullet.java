@@ -60,7 +60,9 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 			if (find && currentAction.get().completed()) {
 				// check for the positions
-				if (this.getTarget().getPosX() == posX && this.getTarget().getPosY() == posY) {
+				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+				if (xPos && yPos) {
 					impact();
 					GameManager.get().getWorld().removeEntity(this);
 
