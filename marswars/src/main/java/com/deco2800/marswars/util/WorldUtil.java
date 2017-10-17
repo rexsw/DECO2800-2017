@@ -275,7 +275,8 @@ public class WorldUtil {
 		proj[0] -= proj[1] - proj[0];
 		proj[0] = (int) proj[0];
 		proj[1] = (int) proj[1];
-		if (dimensions % 2 == 0) {
+		int dimensionsInt = (int)dimensions;
+		if (dimensionsInt % 2 == 0) {
 			proj[2] = .5f;
 		}
 		if (!(proj[0] < (((dimensions + 1) / 2) - proj[2]) || proj[0] >
