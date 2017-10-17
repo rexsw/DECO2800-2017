@@ -435,7 +435,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					attack(a);
 					return;
 				}
