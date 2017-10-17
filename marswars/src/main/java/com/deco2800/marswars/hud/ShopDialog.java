@@ -29,11 +29,11 @@ import java.util.List;
  *
  */
 public class ShopDialog extends Dialog{
-	private float windowSize = Gdx.graphics.getWidth() /5f;
+	private float windowSize = Gdx.graphics.getWidth() /4f;
     private TextureManager textureManager; // a manager for the textures of the item icons and the Commander icons
-    private int iconSize = (int) (windowSize/4); //getting the standard icon size for the window
+    private int iconSize = (int) (windowSize/3); //getting the standard icon size for the window
     private List<ItemType> itemList; //list of items to be put into the shop
-    private Table heroTable; //table of the player's Commander units.
+//    private Table heroTable; //table of the player's Commander units.
     private Label status; //Essentially a label that acts as a log specifically for the shop
     private Commander selectedHero; //variable for the Commander that needs to be selected to buy an item
     
@@ -121,13 +121,13 @@ public class ShopDialog extends Dialog{
 		//making the right side table for the Commander icons.
         final ScrollPane scroller = new ScrollPane(scrollTable);
 
-        heroTable = new Table();
-        heroTable.top();
-        heroTable.add(new Label("Commander", skin)).width(iconSize);
-        heroTable.row();
+//        heroTable = new Table();
+//        heroTable.top();
+//        heroTable.add(new Label("Commander", skin)).width(iconSize);
+//        heroTable.row();
         
         this.getContentTable().add(scroller).fill().expand().top();
-        this.getContentTable().add(heroTable).width(iconSize).top();
+//        this.getContentTable().add(heroTable).width(iconSize).top();
         
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
@@ -190,6 +190,7 @@ public class ShopDialog extends Dialog{
 	 * selected.
 	 * @return ImageButton object that has the provided images for the selected and deselected icons.
 	 */
+	@Deprecated
 	private ImageButton generateHeroButton(Texture image, Texture offImage) {
 		TextureRegion imgRegion = new TextureRegion(image);
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
@@ -206,12 +207,13 @@ public class ShopDialog extends Dialog{
 	 * Method to add Commander Hero icons to the right side table of the shop dialog window.
 	 * @param hero Commander unit to get/make an icon for.
 	 */
-	public void addHeroIcon(Commander hero) {
+	@Deprecated
+	public void addHeroIconDeprecated(Commander hero) {
 		//making the button object
 		Texture heroImage = textureManager.getTexture("hero_button");
 		Texture heroOffImage = textureManager.getTexture("hero_button_off");
         ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
-        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
+//        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
         //adding the listener to the button created
         heroButton.addListener(new ClickListener(){
         	public void clicked(InputEvent event, float x, float y){
@@ -226,7 +228,11 @@ public class ShopDialog extends Dialog{
                 }
                 }
         	});
-        heroTable.row();
+//        heroTable.row();
+	}
+	
+	public void connectHero(Commander hero) {
+		this.selectedHero = hero;
 	}
 	
 	/**
@@ -235,7 +241,7 @@ public class ShopDialog extends Dialog{
 	 */
 	@Override
     public float getPrefWidth() {
-        return windowSize;
+        return windowSize*1.2f;
     }
 
 	/**
@@ -244,7 +250,7 @@ public class ShopDialog extends Dialog{
 	 */
     @Override
     public float getPrefHeight() {
-        return windowSize;
+        return windowSize*0.8f;
     }
 
 }

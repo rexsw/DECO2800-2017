@@ -853,7 +853,7 @@ public class HUDView extends ApplicationAdapter{
 					 * multiplayer gets implemented
 					 */
 					if (!e.isAi()) {
-						shopDialog.addHeroIcon((Commander) e);
+						shopDialog.connectHero((Commander) e);
 					}
 				}
 			}

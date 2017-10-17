@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+// A reminder for coder, the connectHero function should called when hero has been spawned! like bind to hero factory
+
 /**
  * A hero for the game previously called as HeroSpacman.
  * Class for the hero character that the player chooses at the start of the game. This unit will be different to other 
@@ -48,6 +50,7 @@ public class Commander extends Soldier {
 		setAttributes();
 		this.inventory = new Inventory(this);
 		this.statsChange = true;
+		this.inventory.addToInventory(new Special(SpecialType.NUKE));
 	}
 
 	/**
