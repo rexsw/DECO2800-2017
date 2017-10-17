@@ -12,6 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * @author xhy6006 on 12/10/17
+ */
+
 public class TechBuildingTest {
 	BaseWorld world;
     TechBuilding t;
