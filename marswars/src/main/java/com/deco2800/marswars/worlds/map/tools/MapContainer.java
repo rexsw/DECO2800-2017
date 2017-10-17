@@ -477,7 +477,6 @@ public class MapContainer {
         }
 
         world.addEntity(entity);
-        System.out.println(random + " " + entity.toString());
     }
 
     /**
