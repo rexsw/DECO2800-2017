@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.InitiateGame.GameSave;
+import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -53,9 +54,10 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
-	Sound openMusic = null;
-	Music defaultTheme = null;
+	public static Sound openMusic = null;
 
+
+	public static SoundTrackPlayer player = new SoundTrackPlayer();
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -78,6 +80,7 @@ public class MainMenu {
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
+
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
 		MenuScreen menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
@@ -111,12 +114,10 @@ public class MainMenu {
 		if (gameStarted) {
 			openMusic.stop();
 			openMusic.dispose();
-			defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-			defaultTheme.setVolume(0.9f);
-			defaultTheme.setLooping(true);
-			defaultTheme.play();
+			player.updateNormalSoundTrack();
 			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		}
 	}
 	
@@ -134,10 +135,7 @@ public class MainMenu {
 			if (gameStarted) {
 				openMusic.stop();
 				openMusic.dispose();
-				defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-				defaultTheme.setVolume(0.9f);
-				defaultTheme.setLooping(true);
-				defaultTheme.play();
+				player.updateNormalSoundTrack();
 				try {
 					game = new Game(loadedGame.data.aITeams, loadedGame.data.playerTeams); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
