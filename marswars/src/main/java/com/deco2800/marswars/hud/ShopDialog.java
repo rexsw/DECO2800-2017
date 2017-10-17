@@ -104,7 +104,7 @@ public class ShopDialog extends Dialog{
 	                	selectedHero.setStatsChange(true);
 	                	transact(selectedHero.getOwner(), item);
 	                } else {
-	                	String mes = selectedHero == null ? "unsuccessful shopping, please select a hero." : 
+	                	String mes = selectedHero == null ? "unsuccessful shopping, No hero exist." : 
 	                		(selectedHero.getHealth() > 0 ? "Not enough resources." : 
 	    	                		"Your Commander is dead. Can't buy anything.");
 	                	status.setText(mes);
@@ -208,7 +208,7 @@ public class ShopDialog extends Dialog{
 	 * @param hero Commander unit to get/make an icon for.
 	 */
 	@Deprecated
-	public void addHeroIconDeprecated(Commander hero) {
+	public void addHeroIcon(Commander hero) {
 		//making the button object
 		Texture heroImage = textureManager.getTexture("hero_button");
 		Texture heroOffImage = textureManager.getTexture("hero_button_off");
