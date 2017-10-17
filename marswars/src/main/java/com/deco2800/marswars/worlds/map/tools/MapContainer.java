@@ -420,7 +420,7 @@ public class MapContainer {
         //generate clumpsize resources
         for (i = 0; (i < clumpSize)&&(tries<maxTries); i++) {
             //make sure we dont go out of bounds of our clump OR the map
-            if (newX>x+maxWidth||newX<x-maxWidth||newX>x+maxWidth||newX<x-maxWidth||newX<0||newX>=this.length||newY<0||newY>=this.width) {
+            if (newX>x+maxWidth||newX<x-maxWidth||newX<0||newX>=this.length||newY<0||newY>=this.width) {
                 newX = x;
                 newY = y;
             }
