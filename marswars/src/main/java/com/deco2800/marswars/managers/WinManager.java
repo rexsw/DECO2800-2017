@@ -48,6 +48,7 @@ public class WinManager extends Manager implements TickableManager {
 		}
 	}
 	
+	
 	/**
 	 * for testing is a winner has been choose 
 	 * 

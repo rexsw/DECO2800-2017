@@ -261,6 +261,9 @@ public class Game{
 		this.fogOfWar();
 		// Please don't delete
 		this.weatherManager.setWeatherEvent();
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		black.set();
+		GameManager.get().getManager(WinManager.class);
 	}
 
 	/**
@@ -371,11 +374,8 @@ public class Game{
 		int length = GameManager.get().getWorld().getLength();
 		int width = GameManager.get().getWorld().getWidth();
 		setPlayer(length, width, aITeams, playerTeams);
-		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
-		black.set();
-		GameManager.get().getManager(WinManager.class);
+				
 		
-		LOGGER.info("Entities for the AI successfully added");
 	}
 	
 	/**
@@ -401,7 +401,7 @@ public class Game{
 				.getManager(ColourManager.class);
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
-		for (int teamid = 1; teamid < aiteams; teamid++) {
+		for (int teamid = 1; teamid < aiteams+1; teamid++) {
 			int avoidInfinite = 0;
 			do {
 				x = ThreadLocalRandom.current().nextInt(1, length - 1);
@@ -414,6 +414,7 @@ public class Game{
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
 		}
+		LOGGER.info("Entities for the AI successfully added");
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
 			int avoidInfinite = 0;
