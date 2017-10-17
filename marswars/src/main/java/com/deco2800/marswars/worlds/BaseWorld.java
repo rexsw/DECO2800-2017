@@ -88,6 +88,9 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);
+		if (entity == null) {
+			return;
+		}
 		if (entity instanceof BuildingEntity || entity instanceof Soldier) {
 			floodableEntities.add(entity);
 		}
@@ -95,7 +98,7 @@ public class BaseWorld extends AbstractWorld {
 		if (!entity.isCollidable())
 			return;
 
-		if (entity != null && entity instanceof Soldier) {
+		if (entity instanceof Soldier) {
 			// put things that can be attacked on the minimap
 		    if (GameManager.get().getMiniMap() != null) {
 		        GameManager.get().getMiniMap().addEntity(entity);
