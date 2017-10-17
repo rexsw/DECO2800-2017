@@ -40,16 +40,16 @@ public class DefenceEffect implements Effect{
 	 */
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
-			Commander hero = (Commander) entity;
+//		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
+//			Commander hero = (Commander) entity;
 			
-			hero.setMaxArmor(hero.getMaxArmor() + this.armour);
-			hero.setArmor(hero.getArmor() + this.armour);
-			hero.setMaxHealth(hero.getMaxHealth() + this.health);
-			hero.setHealth(hero.getHealth() + this.health);
+			entity.setMaxArmor(entity.getMaxArmor() + this.armour);
+			entity.setArmor(entity.getArmor() + this.armour);
+			entity.setMaxHealth(entity.getMaxHealth() + this.health);
+			entity.setHealth(entity.getHealth() + this.health);
 			//only allows the resulting movement speed to be positive.
-			hero.setSpeed(hero.getSpeed() + this.moveSpeed > 0 ? hero.getSpeed() + this.moveSpeed : 0.0001f);
-		}
+			entity.setSpeed(entity.getSpeed() + this.moveSpeed);
+//		}
 		
 	}
 
@@ -60,16 +60,16 @@ public class DefenceEffect implements Effect{
 	 */
 	@Override
 	public void removeEffect(AttackableEntity entity) {
-		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
-			Commander hero = (Commander) entity;
+//		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
+//			Commander hero = (Commander) entity;
 			
-			hero.setMaxArmor(hero.getMaxArmor() > this.armour ? hero.getMaxArmor() - this.armour : 1);
-			hero.setArmor(hero.getArmor() > this.armour ? hero.getArmor() - this.armour : 1);
-			hero.setMaxHealth(hero.getMaxHealth() > this.health ? hero.getMaxHealth() - this.health : 1);
-			hero.setHealth(hero.getHealth() > this.health ? hero.getHealth() - this.health : 1);
-			hero.setSpeed(hero.getSpeed() > this.moveSpeed ? hero.getSpeed() - this.moveSpeed : 0.01f);
+		entity.setMaxArmor(entity.getMaxArmor() - this.armour);
+		entity.setArmor(entity.getArmor() - this.armour > 0? entity.getArmor() - this.armour : 1);
+		entity.setMaxHealth(entity.getMaxHealth() - this.health);
+		entity.setHealth(entity.getHealth() - this.health > 0? entity.getHealth() - this.health : 1);
+		entity.setSpeed(entity.getSpeed() - this.moveSpeed > 0.01f ? entity.getSpeed() - this.moveSpeed : 0.01f);
 			
-		}
+//		}
 	}
 	
 	/**

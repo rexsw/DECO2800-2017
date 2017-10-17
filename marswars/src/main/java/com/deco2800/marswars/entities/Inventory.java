@@ -184,6 +184,7 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
     	if(this.specials.contains(special)) {
     		//ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
+
 //    		if(!special.useItem()) {
 //    			// no use limit left
 //            	this.specials.remove(special);	

@@ -1,6 +1,5 @@
 package com.deco2800.marswars.hud;
 
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -312,7 +311,7 @@ public class UnitStatsBox extends Table{
 		this.atkDmgLabel.setText("" + target.getDamageDeal());
 		this.atkRngLabel.setText("" + target.getAttackRange());
 		this.atkSpeedLabel.setText(""+ target.getAttackSpeed());
-		this.moveSpeedLabel.setText("" + target.getSpeed());
+		this.moveSpeedLabel.setText(String.format("%.2f", target.getSpeed()));
 	}
 
     /**

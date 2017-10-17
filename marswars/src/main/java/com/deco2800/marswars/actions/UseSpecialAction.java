@@ -112,11 +112,18 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
 					continue;
-				} else { //only affect e within selected area (Target.ENEMY)
+				} else if (e.getTarget() == Target.ENEMY){ //only affect e within selected area (Target.ENEMY)
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
-					executeEffectOnConditional(e, targets);
-				}				
+//					executeEffectOnConditional(e, targets);
+					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(targets, AttackableEntity.class, 
+							user.getOwner())); 
+				} else {
+					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
+							pointY,	radius, radius);
+					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
+							user.getOwner())); 
+				}
 			}
 			completed = true; //action completed once all effects of the Special item have been considered/applied.
 		}
@@ -134,7 +141,37 @@ public class UseSpecialAction implements DecoAction {
 		for (BaseEntity ent : targets) {
 			AttackableEntity mark = (AttackableEntity) ent;
 			e.applyEffect(mark);
+			
 		}	
+		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
+		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
+		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
+		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
+		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
+		if(item.getDuration() > 0) {
+			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
+			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
+			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
+			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
+			new java.util.Timer().schedule( 
+			        new java.util.TimerTask() {
+			            @Override
+			            public void run() {
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
+			            	for (BaseEntity ent : targets) {
+			        			AttackableEntity mark = (AttackableEntity) ent;
+			        			e.removeEffect(mark);
+			        		}	
+			            }
+			        }, 
+			        item.getDuration() * 1000
+			);
+		}
 	}
 	
 	/**
@@ -146,6 +183,7 @@ public class UseSpecialAction implements DecoAction {
 	 * @param targets  List of BaseEntities (which are in fact all instances of AttackableEntities) to apply the effect
 	 * 			onto.
 	 */
+	@Deprecated
 	private void executeEffectOnConditional(Effect e, List<BaseEntity> targets){
 		if (e.getTarget() == Target.SELF) {
 			executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 

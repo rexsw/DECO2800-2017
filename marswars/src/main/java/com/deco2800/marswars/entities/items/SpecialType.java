@@ -29,13 +29,13 @@ public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), effect range (0 means self use), use
 	// limit, cost, effects)
 	SELFHEAL("SelfOnly", "heal_needle", 0, 0, 2, new int[] { 0, 10, 30, 30 },
-			new HealthEffect(100, false, Target.SELF)), //work
-	BOOT("selfArea", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
-			new DefenceEffect(0, 0, 0.5f, Target.SELF)), // work
+			new HealthEffect(100, false, Target.SELF)),
+	BOOT("selfArea", "boot", 5, 10, 1, new int[] { 200, 50, 50, 0 },
+			new DefenceEffect(0, 0, 0.5f, Target.SELF)),
 	INSTANTKILL("Instant kill", "scope", 0, 2, 1, new int[] { 50, 100, 100, 100 },
 			new HealthEffect(10000, true, Target.ENEMY)),
 	NUKE("AllEnemy", "bullets", 0, 0, 1, new int[] { 500, 900, 50, 50 },
-			new HealthEffect(1000, true, Target.ALL_ENEMY)), // work
+			new HealthEffect(1000, true, Target.ALL_ENEMY)),
 	TEAMHEAL("Team heal", "health_boost", 0, 1, 1, new int[] { 200, 500, 300, 500 },
 			new HealthEffect(9000, false, Target.SELF_TEAM));
 	private String name;
