@@ -190,24 +190,28 @@ public class InputProcessor {
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				//if click and drag, multiselect things instead of moving the map
-				if (!multiSelectionFlag) {
-					startMultiSelect(screenX, screenY);
+				if (GameManager.get().getWorld() != null) {
+					//if click and drag, multiselect things instead of moving the map
+					if (!multiSelectionFlag) {
+						startMultiSelect(screenX, screenY);
+					}
+					MultiSelection.resetSelectedTiles();
+					mouseHandler.multiSelect(true);
+					float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth",
+							Integer.class);
+					float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight",
+							Integer.class);
+					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, 0, false);
+					float projX = worldCoords.x / tileWidth;
+					float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
+					projX -= projY - projX;
+	
+					MultiSelection.updateSelectedTiles((int) projX, (int) projY);
+					return true;
+				} else {
+					return false;
 				}
-				MultiSelection.resetSelectedTiles();
-				mouseHandler.multiSelect(true);
-				float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth",
-						Integer.class);
-				float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight",
-						Integer.class);
-				Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-				mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, 0, false);
-				float projX = worldCoords.x / tileWidth;
-				float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
-				projX -= projY - projX;
-
-				MultiSelection.updateSelectedTiles((int) projX, (int) projY);
-				return true;
 			}
 
 			@Override
