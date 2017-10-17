@@ -134,16 +134,12 @@ public class Hotkeys {
 				this.hud.minimap.setVisible(true);
 				this.hud.resourceTable.setVisible(true);
 				//show (-) button to make resources invisible
-				this.hud.dispActions.remove();
-				this.hud.HUDManip.add(this.hud.removeActions);
 				this.hud.setInventoryToggle(false);
 			} else {
 				this.hud.actionsWindow.setVisible(false);
 				this.hud.minimap.setVisible(false);
 				this.hud.resourceTable.setVisible(false);
 				//show (+) to show resources again
-				this.hud.removeActions.remove();
-				this.hud.HUDManip.add(this.hud.dispActions);
 				this.hud.setInventoryToggle(true);
 			}
 		}

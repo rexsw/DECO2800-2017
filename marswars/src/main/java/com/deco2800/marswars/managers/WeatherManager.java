@@ -32,6 +32,19 @@ public class WeatherManager extends Manager implements Tickable {
     private int waterEntities = 0;
     // Set as a class variable so that buildings can be unpaused properly
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
+    private boolean floodOn = true;
+
+
+    /**
+     * Sets the toggle value for the UI flood toggle button. The toggle either
+     * enables the flood effect, or prevents further flooding and causes any
+     * currently existing flood waters to retreat.
+     * @param isFlooding
+     * @return
+     */
+    public void toggleFlood(boolean isFlooding) {
+        this.floodOn = isFlooding;
+    }
 
     /**
      * Sets the relevant weather even according to the current in game time.
@@ -45,12 +58,12 @@ public class WeatherManager extends Manager implements Tickable {
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            if (timeManager.getHours() < 1) {
+            if (timeManager.getHours() < 3 && floodOn) {
                 status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
                     if (waterEntities < (world.getWidth() *
-                            world.getLength()) / 2) {
+                            world.getLength()) / 3 * 2) {
                         this.generateFlood();
                     }
                     //this.applyEffects();
@@ -58,7 +71,8 @@ public class WeatherManager extends Manager implements Tickable {
                     this.setInterval();
                 }
             }
-            if (timeManager.getHours() >= 1 && floodWatersExist) {
+            //this.applyContinuousDamage(this.checkAffectedEntities());
+            if ((timeManager.getHours() >= 3 && floodWatersExist) || ! floodOn) {
                 status = true;
                 // +10 a good time for actual condition
                 if (currentTime > interval + 2) {
@@ -183,8 +197,11 @@ public class WeatherManager extends Manager implements Tickable {
                 //        ((Soldier) e).getMaxHealth() / 10) {
                     // Check for existing action and complete before deletion
                 //}
-                ((Soldier) e).setHealth(((Soldier) e).getHealth() -
-                        (((Soldier) e)).getMaxHealth() / 10);
+        	//Carrier units and its loaded units are not affected by weather damage
+		if (((Soldier) e).getLoadStatus() == 0) {
+		    ((Soldier) e).setHealth(((Soldier) e).getHealth()
+			    - (((Soldier) e)).getMaxHealth() / 10);
+		}
             }
             damaged = true;
         } else if (timeManager.getPlaySeconds() % timeBetween <= condition) {

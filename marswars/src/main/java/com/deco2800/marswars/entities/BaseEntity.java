@@ -40,6 +40,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
 
+	//NEVER DELETE THIS
+	public BaseEntity(){};
+
 	/**
 	 * Constructor for the base entity
 	 * @param posX

@@ -2,6 +2,7 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.InitiateGame.GameSave;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -506,6 +507,15 @@ public class MapContainer {
             return;
         }
         setRandomResource(random, x, y);
+    }
+
+    /**
+     * this will reload resource from gamesave
+     */
+    public void loadResourceEntities(GameSave loadedGame){
+        for(Resource each : loadedGame.data.resource){
+            world.addEntity(each);
+        }
     }
 
     /**

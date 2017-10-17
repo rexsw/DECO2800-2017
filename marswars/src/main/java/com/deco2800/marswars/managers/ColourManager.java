@@ -24,7 +24,7 @@ public class ColourManager extends Manager {
 	 * 
 	 * @param teamid int the teamid to map to a colour
 	 */
-	public void setColour(int teamid) {
+	public void   setColour(int teamid) {
 		Colours teamcolour = colour.get(index);
 		index++;
 		index %= 5;

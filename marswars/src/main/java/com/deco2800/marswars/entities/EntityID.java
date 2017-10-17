@@ -6,9 +6,10 @@ package com.deco2800.marswars.entities;
  *
  * NOTE: This list shouldn't include entities such as buildings or resources.
  */
-/*A more suitable name will be appreciated8*/
+/*A more suitable name will be appreciated*/
 public enum EntityID {
     ASTRONAUT,
+    COMMANDER,
     CARRIER,
     HEALER,
     SOLDIER,

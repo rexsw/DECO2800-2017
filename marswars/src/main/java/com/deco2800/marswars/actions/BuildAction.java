@@ -67,6 +67,16 @@ public class BuildAction implements DecoAction{
 		this.buildingDims = (int)(building.getBuildSize());
 	}
 	
+	public BuildAction(BaseEntity builder, BuildingType building, float x, float y) {
+		this.actor = builder;
+		this.building = building;
+		this.buildingDims = (int)(building.getBuildSize());
+		this.projX = x;
+		this.projY = y;
+		this.state = State.SETUP_MOVE;
+		createBuilding();
+	}
+	
 	/**
 	 * Keeps getting current position of mouse pointer and checks if it's a valid build area
 	 * When called on, switches state to move builder and begin building
@@ -240,7 +250,8 @@ public class BuildAction implements DecoAction{
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
 			break;
 		case HEROFACTORY:
-			//Update this
+			base = new HeroFactory(GameManager.get().getWorld(),
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
 			break;
 		case TECHBUILDING:
 			base = new TechBuilding(GameManager.get().getWorld(), 

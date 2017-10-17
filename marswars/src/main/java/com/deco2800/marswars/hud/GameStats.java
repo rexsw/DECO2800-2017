@@ -25,10 +25,13 @@ import com.deco2800.marswars.managers.TimeManager;
  */
 public class GameStats{
 	/*some basic constants button/window dimensions + padding*/
-	private static final int STATSWIDTH = 600; 
-	private static final int STATSHEIGHT = 400;
-	private static final int BUTTONPAD = 10; 
-	private static final int BUTTONSIZE = 60; 
+	private static final int BUTTONPAD = 5; 
+	private static final int BUTTONSIZE = 60;
+	private static final int WINDOWPAD = 10; 
+	
+	private static final int STATSWIDTH = (9*(BUTTONSIZE + 2 * BUTTONPAD)) + 2 * WINDOWPAD; 
+	private static final int STATSHEIGHT = 300;
+
 
 	/*Constructors*/
 	private Skin skin; 
@@ -36,7 +39,11 @@ public class GameStats{
 	private HUDView hud; 
 	private TextureManager textureManager; 
 	private Window window; 
-	private GameGraph gameGraph;
+	private Field gameGraph;
+	private Label graphInfo;
+	private Label graphType;
+	private Label graphPrompt;
+
 	
 	/* Managers */
 	private TimeManager timeManager = (TimeManager) 
@@ -46,7 +53,8 @@ public class GameStats{
 	
 	/* Stats window layouts */
 	private Table statsButtons;
-	private Table graphTable;
+	
+	private boolean enabled = false; 
 	
 	/**
 	 * Constructs the GameStats instance. 
@@ -59,17 +67,15 @@ public class GameStats{
 	 */
 	public GameStats(Stage stage, Skin skin, HUDView hud, TextureManager textureManager){
 		this.stage = stage; 
+		this.gameGraph = null;
 		this.skin = skin;
 		this.hud = hud; 
 		this.textureManager = textureManager; 
-		this.window = new Window("SPACWARS STATS", skin);
+		this.window = new Window("", skin);
 		window.setMovable(false);
 		window.setVisible(false);
+		window.setDebug(enabled);
 		this.statsButtons = setStatusButtons();
-		gameGraph = new GameGraph(null);  //will need to be the first 
-										  //stats button's graph instead
-		this.graphTable = setGraph();
-
 	}
 	
 	/**
@@ -103,26 +109,16 @@ public class GameStats{
 	 * Set the layout of the game stats window 
 	 */
 	private void setLayout(){
-		graphTable = setGraph(); 
-		graphTable.setPosition(20, STATSHEIGHT);
-		window.add(graphTable);
-		window.row();
-		
+		graphPrompt = new Label("Please select which stat you would like to view", skin);
+		graphType = new Label("", skin, "statsTitle");
+		graphInfo = new Label("", skin, "subtitle");
+		window.add(graphPrompt).align(Align.center).row();
+		window.add(graphType).align(Align.center).expandY().row();
+		window.add(graphInfo).align(Align.center).expandY().row(); //for the next entry below
+				
 		/*Set up the stat buttons*/
 		statsButtons.setPosition(0, 0);
 		window.add(statsButtons);
-	}
-	
-	/*
-	 * Create the graph layout table of the statistics window
-	 * @return graphTable represents the table in which the graph is drawn
-	 */
-	private Table setGraph(){
-		Table graphTable = new Table();
-		Label graphInfo = new Label("-Graph goes here-", skin);
-		graphTable.add(graphInfo).align(Align.center);
-		
-		return graphTable; 
 	}
 	
 	/**
@@ -132,7 +128,7 @@ public class GameStats{
 	 */
 	private Table setStatusButtons(){
 		Table pStatsTable = new Table(); //p denotes 'parent'
-		pStatsTable.setDebug(true);
+		pStatsTable.setDebug(enabled);
 
 		//Water image button
 		Texture waterImage = textureManager.getTexture("water_HUD");
@@ -186,60 +182,99 @@ public class GameStats{
 		bioButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.BIOMASS);
+				gameGraph = Field.BIOMASS;
+				graphPrompt.setText("");
+				graphType.setText("Biomass");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.CRYSTAL);
+				gameGraph = Field.CRYSTAL;
+				graphPrompt.setText("");
+				graphType.setText("Crystal");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.ROCKS);
+				gameGraph = Field.ROCKS;
+				graphPrompt.setText("");
+				graphType.setText("Rocks");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});
 		waterButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.WATER);
+				gameGraph = Field.WATER;
+				graphPrompt.setText("");
+				graphType.setText("Water");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});
 		combatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.COMBAT_UNITS);
+				gameGraph = Field.COMBAT_UNITS;
+				graphPrompt.setText("");
+				graphType.setText("Combat Units");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});
 		unitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.UNITS_LOST);
+				gameGraph = Field.UNITS_LOST;
+				graphPrompt.setText("");
+				graphType.setText("Units Lost");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});
 		baseButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.BUILDINGS);
+				gameGraph = Field.BUILDINGS;
+				graphPrompt.setText("");
+				graphType.setText("Buildings");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});
 		techButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = new GameGraph(Field.TECHNOLOGY);
+				gameGraph = Field.TECHNOLOGY;
+				graphPrompt.setText("");
+				graphType.setText("Technology");
+				graphInfo.setText("You: " + (black.count(-1, gameGraph))
+						+ " Highest:" + black.highCount(gameGraph));
+
 			}
 		});	
 
 		pStatsTable.add(bioButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(crystalButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(rockButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
-		pStatsTable.add(waterButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE).row();
+		pStatsTable.add(waterButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(baseButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(combatButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(unitButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
-		pStatsTable.add(techButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE).row();		
+		pStatsTable.add(techButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
+		pStatsTable.add(this.getExitButton()).pad(BUTTONPAD).size(BUTTONSIZE);
 		
 		return pStatsTable; 
 	}
@@ -251,6 +286,7 @@ public class GameStats{
 	 */
 	private Button getExitButton(){
 		Button exitStats = new TextButton("Back to game", skin);
+		exitStats.setSize(BUTTONSIZE, BUTTONSIZE);
 		exitStats.setPosition(STATSWIDTH- exitStats.getWidth(), 0);
 		
 		/*Closes the stats and goes back to the game*/
@@ -269,18 +305,17 @@ public class GameStats{
 	 * @return the window the stats were added to
 	 */
 	private Window buildStats(){
-		//window.setDebug(true);
 		window.setSize(STATSWIDTH, STATSHEIGHT);
+		// Center 
 		window.setPosition((Gdx.graphics.getWidth()-STATSWIDTH)/2, (Gdx.graphics.getHeight()-STATSHEIGHT)/2);
 		window.align(Align.center);
-
-		Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin);
-		window.add(statsText).align(Align.left | Align.top).row();
+		window.pad(WINDOWPAD);
+		window.padTop(WINDOWPAD*3);
+		//Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin, "subtitle");
+		//window.add(statsText).align(Align.left | Align.top).row();
 				
 		setLayout();
 		window.row();
-		
-		window.add(getExitButton()).align(Align.bottom | Align.right);
 
 		return window; 
 	}
@@ -294,13 +329,4 @@ public class GameStats{
 		window.setPosition(width/2-STATSWIDTH/2, height/2-STATSHEIGHT/2);
 	}
 
-	/**
-	 * Render the in-game stats
-	 */
-	public void render() {
-		if (window.isVisible()){
-			gameGraph.render();
-		}
-	}
-	
 }

@@ -76,7 +76,16 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
-	        
+	        //HeroFactory Stages
+            //PLACEHOLDER TEXTURES WHILE HF GRAPHICS BEING CREATED
+            textureMap.put("herofactory1",new Texture
+                    ("resources/BuildingAssets/Building process/Barracks/barracks1.png"));
+            textureMap.put("herofactory2",new Texture
+                    ("resources/BuildingAssets/Building process/Barracks/barracks2.png"));
+            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks3.png"));
+            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/Barracks/barracks4.png"));
+
+
 	        //TechBuilding Stages
 	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
 	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
@@ -297,6 +306,10 @@ public class TextureManager extends Manager {
                 unitType,textureType);
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
+        for (int i = 0; i < 1000; i++) {
+            System.out.println("loadUnitSprite CALLED, path is  " + path +
+                    " retval is " + retVal);
+        }
         saveTexture(retVal,path);
         return retVal;
     }

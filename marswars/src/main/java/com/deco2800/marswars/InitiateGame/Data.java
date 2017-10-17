@@ -1,6 +1,10 @@
 package com.deco2800.marswars.InitiateGame;
 
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
@@ -22,15 +26,28 @@ public class Data {
     //black fog of war
     public Array2D<Integer> blackFogOfWar;
 
-    //list of entities
-    public List<AbstractEntity> entities = new ArrayList<>();
-
     //list of walkables
     public List<AbstractEntity> walkables = new ArrayList<>();
 
-    //the map
-    public MapTypes mapType;
-    public MapSizeTypes mapSize;
+    //list of resources
+    public List<Resource> resource = new ArrayList<>();
+
+    //list of buildings
+    public List<SavedBuilding> building = new ArrayList<>();
+
+    //list of entities
+    public List<SavedEntity> entities = new ArrayList<>();
+
     public int aITeams;
     public int playerTeams;
+
+
+    //stats are saved in this order
+    //biomass-rocks-crystal-water-population
+
+    //aiStats
+    public List<ArrayList<Integer>> aIStats = new ArrayList<ArrayList<Integer>>();
+
+    //playerStats
+    public List<ArrayList<Integer>> playerStats = new ArrayList<ArrayList<Integer>>();
 }
