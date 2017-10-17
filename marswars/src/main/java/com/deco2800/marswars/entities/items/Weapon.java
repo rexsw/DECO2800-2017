@@ -153,5 +153,15 @@ public class Weapon extends Item {
 		}
 		return ((Weapon) object).type == this.type;
 	}
+
+	/**
+	 * The updated hashcode for this class.
+	 *
+	 * @return The updated hashcode for this class.
+	 */
+	@Override
+	public int hashCode() {
+		return type.hashCode();
+	}
 }
 
