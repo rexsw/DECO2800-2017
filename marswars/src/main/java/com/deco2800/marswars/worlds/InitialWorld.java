@@ -33,13 +33,7 @@ public class InitialWorld extends BaseWorld {
 				if (r.nextInt(10) < 0.1) {
 					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.CRYSTAL));
 					continue;
-				}
-
-				// WATER
-				if (r.nextInt(10) < 0.1) {
-					this.addEntity(new Resource(x, y, 0, 1f, 1f, ResourceType.WATER));
-					continue;
-				}
+				} 
 
 				// ROCK
 				if (r.nextInt(10) < 0.1) {

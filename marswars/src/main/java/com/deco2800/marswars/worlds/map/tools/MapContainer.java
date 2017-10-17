@@ -340,11 +340,11 @@ public class MapContainer {
      * to the size of the map, use sensibly large map sizes!
      */
     protected void generateResourcePattern(){
-        ResourceType resource = ResourceType.WATER;
+        ResourceType resource = ResourceType.ROCK;
         for (int i =0; i<4; i++){
             generateResourcePatternFor(resource);
             switch (resource) {
-                case WATER:
+                case ROCK:
                     resource = ResourceType.BIOMASS;
                     break;
                 case BIOMASS:
@@ -534,8 +534,8 @@ public class MapContainer {
         else if(random == ResourceType.ROCK){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
         }
-        else if(random == ResourceType.WATER){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
+        else if(random == ResourceType.ROCK){
+            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
         }
         else{
             return;
