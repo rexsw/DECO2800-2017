@@ -27,6 +27,7 @@ public class GameLauncher {
         config.addIcon("resources/SPLogo-32.png", FileType.Internal);
 
 		config.title = "DECO2800 2017: MarsWars";
-		new LwjglApplication(new MarsWars(), config);        
+		LwjglApplication app = new LwjglApplication(new MarsWars(), config);
+		app.log("Running", "Application Running fine");
 	}
 }
