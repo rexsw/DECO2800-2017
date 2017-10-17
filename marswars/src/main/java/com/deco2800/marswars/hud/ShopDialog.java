@@ -182,54 +182,54 @@ public class ShopDialog extends Dialog{
 		return new ImageButton(imgDraw);
 	}
 	
-	/**
-	 * Private helper method to make image buttons for the commanders with the provided texture (the Commander icon 
-	 * image). Thi button will have 2 icon looks, 1 for when it is selected and another for when it is not selected.
-	 * @param image  Texture that is the desired Commander icon for the button for when the commander is selected.
-	 * @param offImage  Texture that is the desired Commander icon for the button for when the commander is not
-	 * selected.
-	 * @return ImageButton object that has the provided images for the selected and deselected icons.
-	 */
-	@Deprecated
-	private ImageButton generateHeroButton(Texture image, Texture offImage) {
-		TextureRegion imgRegion = new TextureRegion(image);
-		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-		TextureRegion offImgRegion = new TextureRegion(offImage);
-		TextureRegionDrawable offImgDraw = new TextureRegionDrawable(offImgRegion);
-
-		ImageButton button = new ImageButton(offImgDraw);
-		button.getStyle().imageChecked = imgDraw;
-        
-		return button;
-	}
+//	/**
+//	 * Private helper method to make image buttons for the commanders with the provided texture (the Commander icon 
+//	 * image). Thi button will have 2 icon looks, 1 for when it is selected and another for when it is not selected.
+//	 * @param image  Texture that is the desired Commander icon for the button for when the commander is selected.
+//	 * @param offImage  Texture that is the desired Commander icon for the button for when the commander is not
+//	 * selected.
+//	 * @return ImageButton object that has the provided images for the selected and deselected icons.
+//	 */
+//	@Deprecated
+//	private ImageButton generateHeroButton(Texture image, Texture offImage) {
+//		TextureRegion imgRegion = new TextureRegion(image);
+//		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
+//		TextureRegion offImgRegion = new TextureRegion(offImage);
+//		TextureRegionDrawable offImgDraw = new TextureRegionDrawable(offImgRegion);
+//
+//		ImageButton button = new ImageButton(offImgDraw);
+//		button.getStyle().imageChecked = imgDraw;
+//        
+//		return button;
+//	}
 	
-	/**
-	 * Method to add Commander Hero icons to the right side table of the shop dialog window.
-	 * @param hero Commander unit to get/make an icon for.
-	 */
-	@Deprecated
-	public void addHeroIcon(Commander hero) {
-		//making the button object
-		Texture heroImage = textureManager.getTexture("hero_button");
-		Texture heroOffImage = textureManager.getTexture("hero_button_off");
-        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
-//        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
-        //adding the listener to the button created
-        heroButton.addListener(new ClickListener(){
-        	public void clicked(InputEvent event, float x, float y){
-                if(heroButton.isChecked()) {
-                	heroButton.setChecked(true);
-                	status.setText("Selected " + hero.toString());
-                	selectedHero = hero;
-                } else {
-                	heroButton.setChecked(false);
-                	status.setText("Unselected "+ hero.toString());
-                	selectedHero = null;
-                }
-                }
-        	});
-//        heroTable.row();
-	}
+//	/**
+//	 * Method to add Commander Hero icons to the right side table of the shop dialog window.
+//	 * @param hero Commander unit to get/make an icon for.
+//	 */
+//	@Deprecated
+//	public void addHeroIcon(Commander hero) {
+//		//making the button object
+//		Texture heroImage = textureManager.getTexture("hero_button");
+//		Texture heroOffImage = textureManager.getTexture("hero_button_off");
+//        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
+////        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
+//        //adding the listener to the button created
+//        heroButton.addListener(new ClickListener(){
+//        	public void clicked(InputEvent event, float x, float y){
+//                if(heroButton.isChecked()) {
+//                	heroButton.setChecked(true);
+//                	status.setText("Selected " + hero.toString());
+//                	selectedHero = hero;
+//                } else {
+//                	heroButton.setChecked(false);
+//                	status.setText("Unselected "+ hero.toString());
+//                	selectedHero = null;
+//                }
+//                }
+//        	});
+////        heroTable.row();
+//	}
 	
 	public void connectHero(Commander hero) {
 		this.selectedHero = hero;

@@ -18,13 +18,12 @@ package com.deco2800.marswars.entities.items;
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 },
+	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0 },
 			new float[] { 1.0f, 1.2f, 1.4f, 1.6f }),
 	
 	//some OP movement speed boots (texture here is a placeholder)
-	BOOTS1("BootI", "goggle", 9999, 9999, 9999, new int[] { 1000, 2000, 1000,
-			5000}, new float[] { 1.0f,
-			1.2f, 1.4f, 1.6f });
+	BOOTS1("BootI", "goggle", 9999, 9999, 9999, new int[] { 1000, 2000,
+			5000}, new float[] { 1.0f, 1.2f, 1.4f, 1.6f });
 	
 	private String name;
 	private int baseArmour;
@@ -156,10 +155,7 @@ public enum ArmourType implements ItemType {
 			result += "Crystal: " + this.baseCost[1] + "\n";
 		}
 		if (this.baseCost[2] > 0) {
-			result += "Water: " + this.baseCost[2] + "\n";
-		}
-		if (this.baseCost[3] > 0) {
-			result += "Biomass: " + this.baseCost[3] + "\n";
+			result += "Biomass: " + this.baseCost[2] + "\n";
 		}
 		return result;
 	}

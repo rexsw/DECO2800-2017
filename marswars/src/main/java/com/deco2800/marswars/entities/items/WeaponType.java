@@ -17,11 +17,11 @@ package com.deco2800.marswars.entities.items;
  */
 public enum WeaponType implements ItemType {
 	// assault blasters
-	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }, new
+	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0 }, new
 			float[] { 1.0f, 1.2f, 1.4f, 1.6f }),
 
 	// sniper rifles
-	WEAPON2("W2", "hand_gun", 999, 999, 999, new int[] { 30, 30, 0, 0 }, new float[] { 1.0f, 1.2f, 1.4f, 1.6f });
+	WEAPON2("W2", "hand_gun", 999, 999, 999, new int[] { 30, 30, 0 }, new float[] { 1.0f, 1.2f, 1.4f, 1.6f });
 
 	private String name;
 	private int baseDamage;
@@ -130,10 +130,7 @@ public enum WeaponType implements ItemType {
 			result += "Crystal: " + this.baseCost[1] + "\n";
 		}
 		if (this.baseCost[2] > 0) {
-			result += "Water: " + this.baseCost[2] + "\n";
-		}
-		if (this.baseCost[3] > 0) {
-			result += "Biomass: " + this.baseCost[3] + "\n";
+			result += "Biomass: " + this.baseCost[2] + "\n";
 		}
 		return result;
 	}
