@@ -145,10 +145,11 @@ public class Weapon extends Item {
 	 */
 	@Override
 	public boolean equals(Object object) {
+
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass()) || (object == null)) {
+		if ((getClass() != object.getClass())) {
 			return false;
 		}
 		return ((Weapon) object).type == this.type;
