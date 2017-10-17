@@ -18,8 +18,8 @@ import com.deco2800.marswars.worlds.MapSizeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.html.parser.Entity;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -364,12 +364,12 @@ public class MapContainer {
     protected void generateResourcePatternFor(ResourceType resource) {
         Random r  = new Random();
         double length, direction;
-        double xOrigin = this.length/2;
-        double yOrigin = this.width/2;
+        double xOrigin = this.length/2d;
+        double yOrigin = this.width/2d;
         //maximum radial length
-        double maxLength = Math.floor(Math.sqrt(Math.pow(this.width/2,2)+Math.pow(this.width/2,2)));
+        double maxLength = Math.floor(Math.sqrt(Math.pow(this.width/2d,2)+Math.pow(this.width/2d,2)));
         int divisions = 4; //how many distinct circular divisions are used in the radial distribution
-        int frequency = (int)Math.sqrt(this.width/2+this.length/2)/4; //how many resource groups there are
+        int frequency = (int)Math.sqrt(this.width/2d+this.length/2d)/4; //how many resource groups there are
         for (int i = 0; i < divisions; i++) {
             //maximum and mininum rangle for angles in this divisions
             double radMin = ((Math.PI*2)/divisions)*i;

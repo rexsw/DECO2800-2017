@@ -115,7 +115,7 @@ public class BaseWorld extends AbstractWorld {
 		//Fixes the collision models to better match rendered image
 		if (entity.getFix()) {
 			BuildingEntity ent = (BuildingEntity) entity;
-			if (ent.getbuilding() == "Base") {
+			if (ent.getbuilding().equals("Base")) {
 				ent.fixPosition((int)(entity.getPosX()), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 1, 0);
 			}
 			else {
