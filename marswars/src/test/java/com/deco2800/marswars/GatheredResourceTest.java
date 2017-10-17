@@ -10,10 +10,10 @@ import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 public class GatheredResourceTest {
 	@Test
 	public void constructorTest() {
-		GatheredResource gr = new GatheredResource(ResourceType.WATER, 10);
+		GatheredResource gr = new GatheredResource(ResourceType.BIOMASS, 10);
 		
 		assertEquals(gr.getAmount(), 10);
-		assertEquals(gr.getType(), ResourceType.WATER);
+		assertEquals(gr.getType(), ResourceType.BIOMASS);
 		
 		GatheredResource gr2 = new GatheredResource(ResourceType.ROCK, -10);
 		assertEquals(gr2.getAmount(), 0);

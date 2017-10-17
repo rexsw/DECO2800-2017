@@ -52,7 +52,7 @@ public class Commander extends Soldier {
 		setAttributes();
 		this.inventory = new Inventory(this);
 		this.statsChange = true;
-		this.inventory.addToInventory(new Special(SpecialType.NUKE));
+//		this.inventory.addToInventory(new Special(SpecialType.NUKE));
 	}
 
 	/**
