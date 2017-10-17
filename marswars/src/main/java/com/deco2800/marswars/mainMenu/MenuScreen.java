@@ -1,7 +1,5 @@
 package com.deco2800.marswars.mainMenu;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -36,12 +34,12 @@ import com.esotericsoftware.kryonet.Connection;
  */
 public class MenuScreen{
 	/* Constructors*/
-	private Skin skin; 
+	private Skin skin;
 	private LobbyButton lobby;
 	private HUDView hud;
 	private MainMenu menu;
 	private Stage stage;
-	private Window mainmenu;
+	private static Window mainmenu;
 
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
@@ -91,8 +89,7 @@ public class MenuScreen{
 		CHARACTERMODE;  // choosing character, goes back to select world
 	}
 	
-	private boolean 
-	enabled = false; //FOR DEBUGGING
+	private static boolean enabled = false; //FOR DEBUGGING
 
 	// To keep track of whether a map type and size have been selected, 1 is
 	// true, 0 is false
@@ -134,7 +131,7 @@ public class MenuScreen{
 	/**
 	 * Loads up the layout for the player selection stage of the main menu
 	 */
-	public void playerModeSelect() {		
+	public  void playerModeSelect() {
 		Table playerMode = new Table();
 		playerMode.setDebug(enabled);		
 		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
@@ -176,7 +173,7 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				MenuScreen.this.playerType = 1; 
+				MenuScreen.playerType = 1;
 				selectServerMode();
 			}
 		});
