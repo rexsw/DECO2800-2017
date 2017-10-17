@@ -261,11 +261,9 @@ public class HUDView extends ApplicationAdapter{
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new HelpWindow(stage, skin);
-				//new WorkInProgress("Help  Menu", skin, hud).show(stage);
+				new WorkInProgress("Help  Menu", skin, hud).show(stage);
 			}
 		});
-		helpButton.addListener(new TextTooltip("Help", skin));
 
 		//Creates the quit button listener
 		LOGGER.debug("Creating quit button listener");
@@ -274,17 +272,7 @@ public class HUDView extends ApplicationAdapter{
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
-			}
-		});
-		quitButton.addListener(new TextTooltip("Quit Game", skin));
-		
-		dispMainMenu.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);
-			}
-		});
-		dispMainMenu.addListener(new TextTooltip("Go back to menu", skin));
+			}});
 	}
 
 
@@ -384,7 +372,6 @@ public class HUDView extends ApplicationAdapter{
 			}
 
 		});
-		dispTech.addListener(new TextTooltip("Technology", skin));
 
 		dispShop.addListener(new ChangeListener(){
 			@Override
@@ -392,8 +379,6 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.show(stage);
 			}
 		});
-		dispShop.addListener(new TextTooltip("Shop", skin));
-		
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
@@ -805,7 +790,7 @@ public class HUDView extends ApplicationAdapter{
 	 * Returns the chat window
 	 * @return chat window
 	 */
-	public Table getChatWindow() {
+	public ChatBox getChatWindow() {
 		return chatbox;
 	}
 
