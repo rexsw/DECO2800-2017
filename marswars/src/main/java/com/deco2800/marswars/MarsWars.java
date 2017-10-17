@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -139,8 +140,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
-		// weatherManager.addRainVisuals(batch);
-
+		//weatherManager.addRainVisuals(batch);
+/*		if (weatherManager.isRaining()) {
+			SpriteBatch particleBatch = new SpriteBatch();
+			particleBatch.begin();
+			ParticleEffect effect = weatherManager.addRainVisuals(batch);
+			effect.draw(particleBatch);
+			particleBatch.end();
+		}
+*/
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
