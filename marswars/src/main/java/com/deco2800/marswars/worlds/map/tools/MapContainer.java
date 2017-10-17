@@ -533,9 +533,6 @@ public class MapContainer {
         else if(random == ResourceType.ROCK){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
         }
-        else if(random == ResourceType.ROCK){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
-        }
         else{
             return;
         }
