@@ -451,7 +451,7 @@ public class Game{
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Commander c1 = new Commander(x, y, 0, teamid); // testing
+//		Commander c1 = new Commander(x, y, 0, teamid); // testing
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld
 				(), x, y, 0, teamid);
@@ -470,7 +470,7 @@ public class Game{
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(base);
-		GameManager.get().getWorld().addEntity(c1); // testing
+//		GameManager.get().getWorld().addEntity(c1); // testing
 		GameManager.get().getWorld().addEntity(heroFactory);
 		
 		LOGGER.info("Team units successfully set");
