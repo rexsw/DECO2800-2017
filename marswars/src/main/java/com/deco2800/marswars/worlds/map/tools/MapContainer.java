@@ -446,7 +446,7 @@ public class MapContainer {
             //increment how many attempts have been made
             tries+=1;
         }
-        System.out.printf("generated "+i+" resources taking "+tries+"tries\n");
+//        System.out.printf("generated "+i+" resources taking "+tries+"tries\n");
         if (tries!=maxTries) {
             for(i=0; i<toAdd.size(); i++) {
                 world.addEntity((BaseEntity) toAdd.get(i));
