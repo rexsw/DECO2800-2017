@@ -1,7 +1,6 @@
 package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +19,6 @@ import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 
@@ -54,7 +52,7 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
-	public static Sound openMusic = null;
+	public Sound openMusic = null;
 
 
 	public static SoundTrackPlayer player = new SoundTrackPlayer();
