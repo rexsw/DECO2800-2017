@@ -24,44 +24,5 @@ public class FogEntity extends AbstractEntity {
         super(posX, posY, posZ, xLength, yLength, zLength);
     }
 
-    /**
-     * Sets the current position of the Fog Of War Tile
-     *
-     * @param x
-     * @param y
-     * @param z
-     */
-    @Override
-    public void setPosition(float x, float y, float z) {
-        super.setPosition(x, y, z);
-    }
-
-    /**
-     * Sets the Position X
-     * @param x
-     */
-    @Override
-    public void setPosX(float x) {
-        super.setPosX(x);
-    }
-
-    /**
-     * Sets the position Y
-     * @param y
-     */
-    @Override
-    public void setPosY(float y) {
-        super.setPosY(y);
-    }
-
-    /**
-     * Sets the position Z
-     * @param z
-     */
-    @Override
-    public void setPosZ(float z) {
-        super.setPosZ(z);
-    }
-
 
 }

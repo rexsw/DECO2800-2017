@@ -22,8 +22,6 @@ public class AttackAction implements DecoAction {
 	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AttackAction.class);
 
 	
 	enum State {
