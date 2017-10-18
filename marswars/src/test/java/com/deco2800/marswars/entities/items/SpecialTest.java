@@ -49,28 +49,8 @@ public class SpecialTest {
         Assert.assertTrue(bomb != null);
     }
     
-    /**
-     * test the get method for the duration of the Bomb item's effect
-     */
-    @Test
-    public void getDuration () {
-        Assert.assertEquals(0, bomb.getDuration());
-    }
-    
-    /**
-     * test the get method for the texture of the item.
-     */
-    @Test
-    public void getTexture () {
-        Assert.assertEquals("boot", bomb.getTexture());
-    }
-    
-    /**
-     * test the get method for the aoe radius
-     */
-    @Test
-    public void getRadius () {
-        Assert.assertEquals(5, bomb.getRadius());
+    public void enumTest() {
+    	Assert.assertTrue(SpecialType.BOMB == bomb.getEnum());
     }
 
     /**
@@ -80,17 +60,10 @@ public class SpecialTest {
     @Test
     public void getUse () {
         Assert.assertEquals(false, bomb.useItem());
-        Special aoeHeal = new Special(SpecialType.AOEHEAL1);
+        Special aoeHeal = new Special(SpecialType.REGEN_SHOT);
         Assert.assertEquals(true, aoeHeal.useItem());
     }
     
-    /**
-     * test the get method for the name of the bomb.
-     */
-    @Test
-    public void getName () {
-        Assert.assertEquals("Bomb", bomb.getName());
-    }
 
     /**
      * test the get method for the Item type enumerate value of the item (not the one to make it).
@@ -105,7 +78,6 @@ public class SpecialTest {
      */
     @Test
     public void getDescription () {
-        //System.out.println(bomb.getDescription());
         String testString = "Bomb\n" +
                 "Damage: 400\n";
         Assert.assertEquals(testString, bomb.getDescription());

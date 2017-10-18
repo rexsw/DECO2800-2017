@@ -80,7 +80,6 @@ public class HealthEffect implements Effect{
 		} else {
 			string.append("Damage: " + health + "\n");
 		}
-		string.append("Target: " + this.target + "\n");
 		return string.toString();
 	}
 

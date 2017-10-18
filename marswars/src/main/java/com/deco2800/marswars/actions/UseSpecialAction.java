@@ -25,7 +25,7 @@ import com.deco2800.marswars.util.WorldUtil;
  *  temp = the texture BaseEntity for the overlay image for the player to visualise and select where the aoe effect will
  *  		be
  *  radius = the aoe radius in terms of tiles
- *  fixPos = ....? (need to ask the building team)
+ *  fixPos = value to help fix the centre location spawn point for rounding issues.
  *  user = The Commander that carries the item that is being used.
  *  item = The Special item being used.
  *  completed = Boolean for indicating if the action is complete or not.
@@ -103,12 +103,12 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
-				} else if (e.getTarget() == Target.ALL_ENEMY) { //affect only enemies
+				} else if (e.getTarget() == Target.ENEMY_TEAM) { //affect only enemies
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
 				} else if (e.getTarget() == Target.GLOBAL) { //affect everyone
-					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(),
+					executeEffectOnTargets(e, WorldUtil.getEntitiesOfLikeClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
 					continue;
 				} else if (e.getTarget() == Target.ENEMY){ //only affect e within selected area (Target.ENEMY)
@@ -123,6 +123,7 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
 							user.getOwner())); 
 				}
+				WorldUtil.removeOverlay();
 			}
     		if(!item.useItem()) {
     			// no use limit left
@@ -226,5 +227,4 @@ public class UseSpecialAction implements DecoAction {
 	public void resumeAction() {
 		this.actionPaused = false;
 	}
-
 }

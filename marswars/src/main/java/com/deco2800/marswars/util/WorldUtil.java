@@ -340,4 +340,14 @@ public class WorldUtil {
 		GameManager.get().getWorld().addEntity(temp);
 		return temp;
 	}
+	
+	/**
+	 * Method to remove overlay entities on the world.
+	 */
+	public static void removeOverlay() {
+		List<BaseEntity> temp = WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(), CheckSelect.class);
+		for (BaseEntity t : temp) {
+			GameManager.get().getWorld().removeEntity(t);
+		}
+	}
 }

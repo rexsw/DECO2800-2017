@@ -214,9 +214,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}else {
 			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			Sound loadedSound = sound.loadSound(movementSound);
-			sound.playSound(loadedSound);
+//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//			Sound loadedSound = sound.loadSound(movementSound);
+//			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);

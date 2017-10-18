@@ -123,4 +123,12 @@ public class Special extends Item {
 		return type.getTextureString();
 	}
 	
+	/**
+	 * Gets the enumerate value used to create the the Special item.
+	 * @return
+	 */
+	public SpecialType getEnum() {
+		return this.type;
+	}
+	
 }
