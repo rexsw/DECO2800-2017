@@ -161,6 +161,7 @@ public enum SpecialType implements ItemType {
 	@Override
 	public String getDescription() {
 		String result = "Name: " + this.getName() + "\n";
+		result += "Type: Special\n";
 		for (Effect e : this.effects) {
 			result += e.generateDescription();
 			String mark = e.getTarget().toString();

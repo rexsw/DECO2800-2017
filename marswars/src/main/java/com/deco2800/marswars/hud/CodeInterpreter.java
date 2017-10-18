@@ -128,17 +128,6 @@ public class CodeInterpreter {
 
 
     /**
-     * If the code contains "water" and digits, add the number of water indicated by the digits.
-     *  @param int the number indicated by the digits
-     */
-    public void water(int a){
-        int num = rm.getWater(-1) + a;
-        rm.setWater(num,-1);
-    }
-
-
-
-    /**
      * If the code contains "day", add the game time, so it makes it 6 am in the game.
      */
     public void day(){

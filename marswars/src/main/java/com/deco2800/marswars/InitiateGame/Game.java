@@ -130,7 +130,6 @@ public class Game{
 			rm.setBiomass(aIStats.get(0), teamid);
 			rm.setRocks(aIStats.get(1), teamid);
 			rm.setCrystal(aIStats.get(2), teamid);
-			rm.setWater(aIStats.get(3), teamid);
 			rm.setMaxPopulation(10, teamid);
 			rm.setPopulation(aIStats.get(4), teamid);
 		}
@@ -143,7 +142,6 @@ public class Game{
 			rm.setBiomass(playerStats.get(0), playerid);
 			rm.setRocks(playerStats.get(1), playerid);
 			rm.setCrystal(playerStats.get(2), playerid);
-			rm.setWater(playerStats.get(3), playerid);
 			rm.setMaxPopulation(10, playerid);
 			rm.setPopulation(playerStats.get(4), playerid);
 		}
@@ -442,7 +440,6 @@ public class Game{
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
-		rm.setWater(0, teamid);
 		rm.setMaxPopulation(10, teamid);
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);

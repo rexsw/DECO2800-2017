@@ -140,7 +140,6 @@ public class GameSave {
             stats.add(rm.getBiomass(i));
             stats.add(rm.getRocks(i));
             stats.add(rm.getCrystal(i));
-            stats.add(rm.getWater(i));
             stats.add(rm.getPopulation(i));
             data.aIStats.add(stats);
         }
@@ -152,7 +151,6 @@ public class GameSave {
             stats.add(rm.getBiomass(-i));
             stats.add(rm.getRocks(-i));
             stats.add(rm.getCrystal(-i));
-            stats.add(rm.getWater(-i));
             stats.add(rm.getPopulation(-i));
             data.playerStats.add(stats);
         }

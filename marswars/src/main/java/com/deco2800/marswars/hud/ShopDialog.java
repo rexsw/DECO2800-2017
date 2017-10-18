@@ -90,19 +90,26 @@ public class ShopDialog extends Dialog{
 					if ((selectedHero != null) && (selectedHero.getHealth() > 0)) {
 	                	if (item instanceof WeaponType) {
 	                		Weapon weapon = new Weapon((WeaponType) item, 1);
-		                	selectedHero.addItemToInventory(weapon);
+	                		selectedHero.addItemToInventory(weapon);
 		                	status.setText("Bought " + weapon.getName() + "(Weapon) for " + selectedHero.toString());
 	                	} else if (item instanceof ArmourType) {
 	                		Armour armour = new Armour((ArmourType) item, 1);
 	                		selectedHero.addItemToInventory(armour);
 	                		status.setText("Bought " + armour.getName() + "(Armour) for " + selectedHero.toString());
 	                	} else {
-	                		Special special = new Special((SpecialType) item);
-	                		selectedHero.addItemToInventory(special);
-	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
+	                		boolean transactSuccess = false;
+	                		Special special = new Special((SpecialType) item);	
+	                		transactSuccess = selectedHero.addItemToInventory(special);
+	                		if (transactSuccess) {
+	                			status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
+		                	} else {
+		                		status.setText("Unsuccessful Shopping, can only hold 4 specials");
+		                		return;
+		                	}
+	                		
 	                	}
 	                	selectedHero.setStatsChange(true);
-//	                	transact(selectedHero.getOwner(), item);
+	                	transact(selectedHero.getOwner(), item);
 	                } else {
 	                	String mes = selectedHero == null ? "unsuccessful shopping, No hero exist." : 
 	                		(selectedHero.getHealth() > 0 ? "Not enough resources." : 
@@ -148,10 +155,7 @@ public class ShopDialog extends Dialog{
 		if (rm.getCrystal(owner) < cost[1]) {
 			return false;
 		}
-		if (rm.getWater(owner) < cost[2]) {
-			return false;
-		}
-		if (rm.getBiomass(owner) < cost[3]) {
+		if (rm.getBiomass(owner) < cost[2]) {
 			return false;
 		}
 		return true;
@@ -167,8 +171,7 @@ public class ShopDialog extends Dialog{
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rm.setRocks(rm.getRocks(owner) - cost[0], owner);
 		rm.setCrystal(rm.getCrystal(owner) - cost[1], owner);
-		rm.setWater(rm.getWater(owner) - cost[2], owner);
-		rm.setBiomass(rm.getBiomass(owner) - cost[3], owner);
+		rm.setBiomass(rm.getBiomass(owner) - cost[2], owner);
 	}
 	
 	/**
@@ -250,7 +253,7 @@ public class ShopDialog extends Dialog{
 	 */
     @Override
     public float getPrefHeight() {
-        return windowSize*0.8f;
+        return windowSize*0.6f;
     }
 
 }

@@ -136,9 +136,9 @@ public enum ArmourType implements ItemType {
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nArmour: " + this.getArmourValue()
-				+ "\nMaxHealth: " + this.getArmourHealth() + "\nMove Speed: "
-				+ this.getMoveSpeed();
+		return "Name: " + this.getName() + "\nType: Armour\nArmour: " + 
+				this.getArmourValue() + "\nMaxHealth: " + this.getArmourHealth() 
+				+ "\nMove Speed: " + this.getMoveSpeed();
 	}
 
 	/**
