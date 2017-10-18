@@ -166,7 +166,6 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 			    setPlayerType(0);
-//				MenuScreen.playerType = 0;
 				selectWorldMode();
 			}
 		});
@@ -175,7 +174,6 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 setPlayerType(1);
-//				MenuScreen.playerType = 1;
 				selectServerMode();
 			}
 		});
