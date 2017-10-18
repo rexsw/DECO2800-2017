@@ -24,7 +24,7 @@ public class SoundTrackPlayer {
 
     public  void updateNormalSoundTrack(){
         if(timeManager.getHours() >= 6 && timeManager.getHours() < 17){
-            if(!dayTheme.isPlaying() && fadeDone && Render3D.battleFlag==0) {
+            if(!dayTheme.isPlaying() && fadeDone && Render3D.getBattleFlag()==0) {
                 stopSoundTrack();
                 dayTheme.setVolume(0.0f);
                 dayTheme.setLooping(true);
@@ -34,7 +34,7 @@ public class SoundTrackPlayer {
 
         }
         else{
-            if(!nightTheme.isPlaying() && fadeDone && Render3D.battleFlag==0){
+            if(!nightTheme.isPlaying() && fadeDone && Render3D.getBattleFlag()==0){
                 stopSoundTrack();
                 nightTheme.setVolume(0.0f);
                 nightTheme.setLooping(true);
@@ -50,14 +50,14 @@ public class SoundTrackPlayer {
             battleTheme.setVolume(0.0f);
             battleTheme.play();
             fadeIn(battleTheme);
-            Render3D.battleFlag = 0;
+            Render3D.setBattleFlag(0);
         }
 
 
         battleTheme.setOnCompletionListener(new Music.OnCompletionListener() {
             @Override
             public void onCompletion(Music music) {
-                if(Render3D.battleFlag==1){
+                if(Render3D.getBattleFlag()==1){
                     playBattleSoundTrack();
                 }
             }
