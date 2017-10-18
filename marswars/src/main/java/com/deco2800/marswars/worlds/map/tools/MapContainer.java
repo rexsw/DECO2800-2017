@@ -2,7 +2,6 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.marswars.InitiateGame.GameSave;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -12,6 +11,7 @@ import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
 import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -512,7 +512,7 @@ public class MapContainer {
      * this will reload resource from gamesave
      */
     public void loadResourceEntities(GameSave loadedGame){
-        for(Resource each : loadedGame.data.resource){
+        for(Resource each : loadedGame.data.getResource()){
             world.addEntity(each);
         }
     }

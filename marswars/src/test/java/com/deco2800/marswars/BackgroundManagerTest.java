@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;

@@ -1,4 +1,4 @@
-package com.deco2800.marswars.InitiateGame;
+package com.deco2800.marswars.initiateGame;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -92,14 +92,14 @@ public class Game{
 		this.timeManager.unPause();
 
 		//different
-		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
+		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
 
 		setCameraInitialPosition();
 		//same
 		this.setThread();
 		this.fogOfWar();
-		FogManager.setFog(loadedGame.data.fogOfWar);
-		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
+		FogManager.setFog(loadedGame.data.getFogOfWar());
+		FogManager.setBlackFog(loadedGame.data.getBlackFogOfWar());
 
 	}
 
@@ -125,7 +125,7 @@ public class Game{
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
 
-			ArrayList<Integer> aIStats = loadedGame.data.aIStats.get(teamid-1);
+			ArrayList<Integer> aIStats = loadedGame.data.getaIStats().get(teamid-1);
 
 			rm.setBiomass(aIStats.get(0), teamid);
 			rm.setRocks(aIStats.get(1), teamid);
@@ -138,7 +138,7 @@ public class Game{
 			playerid = teamid * (-1);
 			cm.setColour(playerid);
 
-			ArrayList<Integer> playerStats = loadedGame.data.playerStats.get(teamid-1);
+			ArrayList<Integer> playerStats = loadedGame.data.getPlayerStats().get(teamid-1);
 
 			rm.setBiomass(playerStats.get(0), playerid);
 			rm.setRocks(playerStats.get(1), playerid);
@@ -153,6 +153,7 @@ public class Game{
 		loadBuildings(loadedGame);
 
 
+
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
@@ -163,7 +164,7 @@ public class Game{
 	 * @param loadedGame
 	 */
 	private void loadBuildings(GameSave loadedGame){
-		for(SavedBuilding e : loadedGame.data.building){
+		for(SavedBuilding e : loadedGame.data.getBuilding()){
 			switch(e.getBuildingType()){
 				case TURRET:
 					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
@@ -207,7 +208,7 @@ public class Game{
 	 * @param loadedGame
 	 */
 	private void loadEntities(GameSave loadedGame){
-		for(SavedEntity each : loadedGame.data.entities)
+		for(SavedEntity each : loadedGame.data.getEntities())
 			if(each.getName().equals("Astronaut")){
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
