@@ -44,7 +44,7 @@ public class MainMenu {
 	private MenuScreen menuScreen;
 	
 	private Window mainmenu; 
-	public static boolean gameStarted = false;
+	private static boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
 	boolean enabled = false; 
@@ -108,8 +108,8 @@ public class MainMenu {
 	 * @param playerTeams
 	 */
 	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
-		gameStarted = start;
-		if (gameStarted) {
+		setGameStarted(start);
+		if (isGameStarted()) {
 			openMusic.stop();
 			openMusic.dispose();
 			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
@@ -128,8 +128,8 @@ public class MainMenu {
 		try {
 			loadedGame.readGame();
 		} catch (FileNotFoundException e) {}//do nothing
-			gameStarted = start;
-			if (gameStarted) {
+			setGameStarted(start);
+			if (isGameStarted()) {
 				openMusic.stop();
 				openMusic.dispose();
 				try {
@@ -147,7 +147,25 @@ public class MainMenu {
 	public static void endGame(){
 		gameStarted = false;
 	}
-	
+
+	/**
+	 * Return whether the game has started
+	 *
+	 * @return whether the game has started
+	 */
+	public static boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	/**
+	 * set the game as started
+	 *
+	 * @param gameStarted yes or no
+	 */
+	public static void setGameStarted(boolean gameStarted) {
+		MainMenu.gameStarted = gameStarted;
+	}
+
 	/**
 	 * Flags the game as started
 	 * @return
@@ -182,4 +200,6 @@ public class MainMenu {
 			game.render(batch, camera);
 		}
 	}
+
+
 }

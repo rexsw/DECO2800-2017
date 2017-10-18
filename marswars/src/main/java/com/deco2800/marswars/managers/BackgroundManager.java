@@ -22,7 +22,7 @@ public class BackgroundManager extends Manager {
      * in MarsWars
      */
     public String getBackground() {
-        if(MainMenu.gameStarted && !MainMenu.player.battleTheme.isPlaying()) {
+        if(MainMenu.isGameStarted() && !MainMenu.player.battleTheme.isPlaying()) {
             MainMenu.player.updateNormalSoundTrack();
         }
 
