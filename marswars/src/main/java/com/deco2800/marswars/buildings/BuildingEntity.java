@@ -85,6 +85,10 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.building = "Barracks";
 			fogRange = 3;
 			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.SOLDIER);
+			this.addNewAction(EntityID.CARRIER);
+			//this.addNewAction(EntityID.HEALER);
+			//this.addNewAction(EntityID.TANK);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
