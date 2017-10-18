@@ -1,14 +1,7 @@
 package com.deco2800.marswars.hud;
 
-<<<<<<< HEAD
-import com.deco2800.marswars.InitiateGame.Game;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-=======
->>>>>>> origin
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
