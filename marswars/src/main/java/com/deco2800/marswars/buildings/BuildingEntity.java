@@ -183,7 +183,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
-		currentAction = Optional.of(action);
+		if (! isFlooded) {
+			currentAction = Optional.of(action);
+		}
 	}
 
 	/**
@@ -199,7 +201,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (!currentAction.isPresent() && ! isFlooded) {
 			currentAction = Optional.of(action);
 		}
 	}

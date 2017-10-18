@@ -1,7 +1,6 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.deco2800.marswars.buildings.BuildingEntity;
@@ -130,7 +129,9 @@ public class WeatherManager extends Manager implements Tickable {
                         BuildingEntity) {
                     buildingFlooded = true;
                     ((BuildingEntity) entity).setFlooded(true);
-                    pausedBuildings.add(entity);
+                    if (! pausedBuildings.contains(entity)) {
+                        pausedBuildings.add(entity);
+                    }
                     timeManager.pause(entity);
                     break;
                 }
@@ -144,6 +145,8 @@ public class WeatherManager extends Manager implements Tickable {
                 }
             }
         }
+        System.out.println("%%%%%%%%% NUM PAUSED BUILDINGS: " +
+                pausedBuildings.size());
         return damagedUnits;
     }
 
