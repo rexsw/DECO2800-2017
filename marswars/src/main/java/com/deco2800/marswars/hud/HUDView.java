@@ -56,9 +56,6 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
 
-	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
-
-
 	private Stage stage;
 	private Skin skin;
 	private ImageButton quitButton;
@@ -74,7 +71,9 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		         //window for containing the minimap
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
-
+	private Image statsbg; 
+	private Image headerbg;
+	private Image actionsBg;
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -99,11 +98,6 @@ public class HUDView extends ApplicationAdapter{
 	private boolean fogToggle = true;
 	private boolean floodToggle = true;
 	private boolean gameStarted = false;
-	//Image buttons to display/ remove lower HUD
-
-	private TextureRegionDrawable plusRegionDraw;
-	private TextureRegionDrawable minusRegionDraw;
-
 	//Time displays
 	private Label gameTimeDisp;
 	private Label gameLengthDisp;
@@ -196,9 +190,15 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void topRight(){
 		overheadRight = new Table();
-		overheadRight.setWidth(stage.getWidth());
-		overheadRight.align(Align.right | Align.top);
-		overheadRight.setPosition(0, Gdx.graphics.getHeight());
+		overheadRight.setDebug(enabled);
+		overheadRight.setPosition(BUTTONPAD, Gdx.graphics.getHeight()-BUTTONPAD);
+		
+		Texture headerTex = textureManager.getTexture("header");
+		headerbg = new Image(headerTex);
+		stage.addActor(headerbg);
+		overheadRight.setPosition(Gdx.graphics.getWidth()-overheadRight.getWidth()-BUTTONPAD, 
+				Gdx.graphics.getHeight()-overheadRight.getHeight()-BUTTONPAD);
+		headerbg.toBack();
 
 		LOGGER.debug("Add help, quit and message buttons");
 
@@ -313,6 +313,13 @@ public class HUDView extends ApplicationAdapter{
 		statsTable.pad(5);
 		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
+		
+		Texture statsTex = textureManager.getTexture("stats");
+		statsbg = new Image(statsTex);
+		stage.addActor(statsbg);
+		statsbg.setPosition(0, stage.getHeight()-statsbg.getHeight());
+		statsbg.toBack();
+		statsbg.setVisible(false);
 	}
 
 	/**
@@ -344,7 +351,6 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating HUD manipulation buttons");
 
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
-		//remove dispActions button + image for it
 
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button");
@@ -472,7 +478,18 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
-		actionsWindow = new Window("", skin, "inventory_back");
+		actionsWindow = new Window("", skin, "clear");
+		actionsWindow.pad(BUTTONPAD);
+
+		Texture actionsTex = textureManager.getTexture("actions_window_cropped");
+		Texture actionsTopTex = textureManager.getTexture("actions_window_top");
+		actionsBg = new Image(actionsTopTex);
+		stage.addActor(actionsBg);
+		actionsBg.setPosition(stage.getWidth()-actionsBg.getWidth()-BUTTONPAD, actionsWindow.getHeight() + actionsWindow.getY());
+		
+		TextureRegion menuRegion = new TextureRegion(actionsTex);
+		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
+		actionsWindow.setBackground(menuRegionDraw);
 
 		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
@@ -637,6 +654,7 @@ public class HUDView extends ApplicationAdapter{
 		}
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
+			this.statsbg.setVisible(false);
 			return;
 		}
 		updateHealthBars();
@@ -649,6 +667,7 @@ public class HUDView extends ApplicationAdapter{
 		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
+			this.statsbg.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
 			// display hero inventory
@@ -739,7 +758,7 @@ public class HUDView extends ApplicationAdapter{
      * Sets up all buttons for available actions
      */
 	private void ActionButtons() {
-		float buttonWidth = actionsWindow.getWidth()/ currentActions.size();
+		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size();
 		float buttonHeight = actionsWindow.getHeight();
 		if (buttonWidth >= (actionsWindow.getWidth()/4)){
 			buttonWidth = (actionsWindow.getWidth()/4);
@@ -930,17 +949,20 @@ public class HUDView extends ApplicationAdapter{
 	 * @param height the stages height
 	 */
 	public void resize(int width, int height) {
-
         //Top Left
         LOGGER.debug("Window resized, rescaling hud");
 		statsTable.setWidth(100);
 		statsTable.align(Align.left | Align.top);
-		statsTable.setPosition(0, stage.getHeight());
+		statsTable.setPosition(BUTTONPAD*2, stage.getHeight()-BUTTONPAD*2);
+		statsbg.setPosition(BUTTONPAD, stage.getHeight()-statsbg.getHeight()-BUTTONPAD);
+		statsbg.toBack();
+		
         //Top of panel
-        overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);
-        overheadRight.setPosition(0, Gdx.graphics.getHeight());
+        overheadRight.setPosition(width-overheadRight.getWidth()-BUTTONPAD, Gdx.graphics.getHeight()-overheadRight.getHeight()-BUTTONPAD);
         welcomeMsg.setWidth(Gdx.graphics.getWidth());
+        headerbg.setPosition(width-headerbg.getWidth()-BUTTONPAD, height-headerbg.getHeight()-BUTTONPAD);
+        headerbg.setHeight(BUTTONSIZE +  2 * BUTTONPAD);
 
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
@@ -953,9 +975,11 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setSize(220, 220);
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2);
-		actionsWindow.setHeight(minimap.getHeight()/2 + 50);
+		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2 - BUTTONPAD);
+		actionsWindow.setHeight(minimap.getHeight()/2);
 		actionsWindow.setPosition(minimap.getWidth()/2, 0);
+		actionsBg.setPosition(stage.getWidth()-actionsBg.getWidth() - BUTTONPAD, actionsWindow.getHeight() + actionsWindow.getY());
+
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);

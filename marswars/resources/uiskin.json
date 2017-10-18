@@ -81,7 +81,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	def: {
+	default: {
 		down: btn1,
 		over: btn1,
 		pressedOffsetX: 10
