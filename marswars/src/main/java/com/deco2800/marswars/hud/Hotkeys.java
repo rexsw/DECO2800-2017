@@ -33,6 +33,7 @@ public class Hotkeys {
 	private Skin skin;
 	private HUDView hud;
 	private GameStats stats;
+	private ChatBox chatBox;
 	
 	private boolean messageToggle = false;
 	
@@ -58,6 +59,8 @@ public class Hotkeys {
 		this.hud = hud;
 		this.stats = stats;
 		this.messageWindow = messageWindow;
+		
+		this.chatBox = this.hud.getChatWindow();
 	}
 	
 	/** 
@@ -83,10 +86,15 @@ public class Hotkeys {
 		//chat listener
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.noActive()) {
 			LOGGER.info("Opening the Chat Window if no other window is active");
+			this.chatBox.enableTextField();
 			hud.showChatBox();
-		} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+		} 
+
+		if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			LOGGER.info("Closing the Chat Window");
+			this.chatBox.disableTextField();
 			hud.hideChatBox();
+			
 		}
 		
 		//pause menu listener
@@ -176,8 +184,6 @@ public class Hotkeys {
 		} else if (this.hud.getExitCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getPauseCheck() != 0) {
-			return retBool;
-		} else if (this.hud.getChatActiveCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getTechCheck() != 0) {
 			return retBool;
