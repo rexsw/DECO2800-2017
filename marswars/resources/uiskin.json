@@ -35,6 +35,15 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		over: btn1,
 		pressedOffsetX: 10
 	},
+	menubutton: {
+		font: font_andale__mono_28pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		down: btn1,
+		over: btn1,
+		pressedOffsetX: 10
+	},
 	default: {
 		font: font_andale__mono_18pt,
 		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
@@ -171,8 +180,17 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: font_andale__mono_18pt,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
+	info: {
+		font: font_andale__mono_18pt,
+		fontColor: { a: 1, b: 0.5, g: 0.5, r: 0.5 }
+	},
+	
 	title: {
 		font: font_andale__mono_48pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
+	}
+	subheading: {
+		font: font_andale__mono_28pt_bold,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	}
 },
@@ -201,7 +219,10 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	spac_check: {
 		checkboxOn: 22635432_10156163945688676_2069349400_n,
 		checkboxOff: 22657131_10156163945683676_699462849_n_(1),
-		font: default-font
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		font: font_andale__mono_28pt_bold
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
