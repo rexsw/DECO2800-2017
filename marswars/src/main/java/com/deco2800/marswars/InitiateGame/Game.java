@@ -508,7 +508,7 @@ public class Game{
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
-						throw new RuntimeException(e);
+						Thread.currentThread().interrupt();
 					}
 				}
 			}
