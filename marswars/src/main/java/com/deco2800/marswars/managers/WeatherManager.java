@@ -1,6 +1,7 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.deco2800.marswars.buildings.BuildingEntity;
@@ -388,10 +389,12 @@ public class WeatherManager extends Manager implements Tickable {
         if (effect == null) {
             effect = new ParticleEffect();
             effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"), (Gdx.files.internal("resources/WeatherAssets")));
-            effect.setPosition(Gdx.graphics.getWidth() / 2 * GameManager.get().getCamera().zoom, Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
+            //effect.setPosition(world.getWidth(), world.getLength());
+            effect.setPosition(Gdx.graphics.getWidth()  * GameManager.get().getCamera().zoom, Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
             effect.start();
         }
-    	effect.draw(batch,  Gdx.graphics.getDeltaTime());
+        effect.setPosition(Gdx.graphics.getWidth() * GameManager.get().getCamera().zoom , Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
+        effect.draw(batch,  Gdx.graphics.getDeltaTime());
     }
 
     /**
