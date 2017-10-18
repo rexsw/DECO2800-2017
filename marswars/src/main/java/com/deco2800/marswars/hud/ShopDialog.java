@@ -102,7 +102,7 @@ public class ShopDialog extends Dialog{
 	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
 	                	}
 	                	selectedHero.setStatsChange(true);
-	                	transact(selectedHero.getOwner(), item);
+//	                	transact(selectedHero.getOwner(), item);
 	                } else {
 	                	String mes = selectedHero == null ? "unsuccessful shopping, No hero exist." : 
 	                		(selectedHero.getHealth() > 0 ? "Not enough resources." : 

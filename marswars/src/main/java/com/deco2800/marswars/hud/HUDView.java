@@ -118,6 +118,7 @@ public class HUDView extends ApplicationAdapter{
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
+	private Commander heroExist;
 	private GameStats stats;
 
 	HUDView hud = this;
@@ -550,6 +551,18 @@ public class HUDView extends ApplicationAdapter{
 						}
 						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
 					} else {
+						if((EntityID) currentActions.get(index) == EntityID.COMMANDER) {
+							if(heroExist != null) {
+								if(heroExist.getHealth() <= 0) {
+									heroExist.setHealth(heroExist.getMaxHealth());
+									heroExist.setPosition(selectedEntity.getPosX(), selectedEntity.getPosY(), 0);
+									heroExist.setEmptyAction();
+									GameManager.get().getWorld().addEntity(heroExist);
+									
+								}
+								return;
+							}
+						}
 						ActionSetter.setGenerate(selectedEntity, (EntityID) currentActions.get(index));
 					}
 					}
@@ -856,6 +869,7 @@ public class HUDView extends ApplicationAdapter{
 					 */
 					if (!e.isAi()) {
 						shopDialog.connectHero((Commander) e);
+						heroExist = (Commander) e;
 					}
 				}
 			}

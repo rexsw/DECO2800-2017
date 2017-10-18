@@ -65,6 +65,14 @@ public class Special extends Item {
 	}
 	
 	/**
+	 * This method should get called when an item is displayed in the inventory
+	 * @return the remaining usage of this item
+	 */
+	public int getUsage() {
+		return this.useLimit;
+	}
+	
+	/**
 	 * Gets the type of the item which should be SPECIAL.
 	 * @reutrn SPECIAL of the Item.Type enumerate values.
 	 */

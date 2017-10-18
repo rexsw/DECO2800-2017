@@ -124,6 +124,11 @@ public class UseSpecialAction implements DecoAction {
 							user.getOwner())); 
 				}
 			}
+    		if(!item.useItem()) {
+    			// no use limit left
+    			this.user.getInventory().getSpecials().remove(item);
+    		}
+        	this.user.setStatsChange(true);
 			completed = true; //action completed once all effects of the Special item have been considered/applied.
 		}
 	}
@@ -142,26 +147,11 @@ public class UseSpecialAction implements DecoAction {
 			e.applyEffect(mark);
 			
 		}	
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
 		if(item.getDuration() > 0) {
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
 			new java.util.Timer().schedule( 
 			        new java.util.TimerTask() {
 			            @Override
 			            public void run() {
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
 			            	for (BaseEntity ent : targets) {
 			        			AttackableEntity mark = (AttackableEntity) ent;
 			        			e.removeEffect(mark);

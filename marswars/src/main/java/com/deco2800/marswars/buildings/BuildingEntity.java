@@ -98,8 +98,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			// placeholder graphics textures being used while HF texture is
-			// created
 			graphics = Arrays.asList("herofactory1"+colour,
 					"herofactory2"+colour, "herofactory3"+colour,
 					"herofactory4"+colour);
