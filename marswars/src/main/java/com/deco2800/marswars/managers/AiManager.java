@@ -729,4 +729,8 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public long getTimeSinceStateChange() {
 		return tm.getGameSeconds() - timeAtStateChange;
 	}
+	
+	public void setDifficulty(Difficulty dif) {
+		AiDifficulty = dif;
+	}
 }
