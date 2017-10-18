@@ -102,7 +102,7 @@ public class Data {
      *
      * @return the fog of war array
      */
-    public Array2D<Integer> getFogOfWar() {
+    Array2D<Integer> getFogOfWar() {
         return fogOfWar;
     }
 
@@ -111,7 +111,7 @@ public class Data {
      *
      * @param fogOfWar the new fog of war
      */
-    public void setFogOfWar(Array2D<Integer> fogOfWar) {
+    void setFogOfWar(Array2D<Integer> fogOfWar) {
         this.fogOfWar = fogOfWar;
     }
 
@@ -120,7 +120,7 @@ public class Data {
      *
      * @return the black fog of war array
      */
-    public Array2D<Integer> getBlackFogOfWar() {
+    Array2D<Integer> getBlackFogOfWar() {
         return blackFogOfWar;
     }
 
@@ -129,7 +129,7 @@ public class Data {
      *
      * @param blackFogOfWar the new black fog of war
      */
-    public void setBlackFogOfWar(Array2D<Integer> blackFogOfWar) {
+    void setBlackFogOfWar(Array2D<Integer> blackFogOfWar) {
         this.blackFogOfWar = blackFogOfWar;
     }
 
@@ -147,7 +147,7 @@ public class Data {
      *
      * @param aITeams the number of ai teams
      */
-    public void setaITeams(int aITeams) {
+    void setaITeams(int aITeams) {
         this.aITeams = aITeams;
     }
 
@@ -165,7 +165,7 @@ public class Data {
      *
      * @param playerTeams the new number of player teams
      */
-    public void setPlayerTeams(int playerTeams) {
+    void setPlayerTeams(int playerTeams) {
         this.playerTeams = playerTeams;
     }
 
@@ -174,7 +174,7 @@ public class Data {
      *
      * @return the list of ai stats
      */
-    public List<ArrayList<Integer>> getaIStats() {
+    List<ArrayList<Integer>> getaIStats() {
         return aIStats;
     }
 
@@ -183,7 +183,7 @@ public class Data {
      *
      * @param aIStats the new list of ai stats
      */
-    public void setaIStats(List<ArrayList<Integer>> aIStats) {
+    void setaIStats(List<ArrayList<Integer>> aIStats) {
         this.aIStats = aIStats;
     }
 
@@ -192,7 +192,7 @@ public class Data {
      *
      * @return the list of player stats
      */
-    public List<ArrayList<Integer>> getPlayerStats() {
+    List<ArrayList<Integer>> getPlayerStats() {
         return playerStats;
     }
 
@@ -201,7 +201,7 @@ public class Data {
      *
      * @param playerStats the new list of player stats
      */
-    public void setPlayerStats(List<ArrayList<Integer>> playerStats) {
+    void setPlayerStats(List<ArrayList<Integer>> playerStats) {
         this.playerStats = playerStats;
     }
 }
