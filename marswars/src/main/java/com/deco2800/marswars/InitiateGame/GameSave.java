@@ -70,7 +70,6 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.entities);
         kryo.writeClassAndObject(output, data.resource);
         kryo.writeClassAndObject(output, data.building);
-        kryo.writeClassAndObject(output, data.walkables);
         kryo.writeClassAndObject(output, data.aITeams);
         kryo.writeClassAndObject(output, data.playerTeams);
         kryo.writeClassAndObject(output, data.aIStats);
@@ -91,7 +90,6 @@ public class GameSave {
         data.entities  = (ArrayList<SavedEntity>)kryo.readClassAndObject(input);
         data.resource  = (ArrayList<Resource>)kryo.readClassAndObject(input);
         data.building  = (ArrayList<SavedBuilding>)kryo.readClassAndObject(input);
-        data.walkables  = (ArrayList<AbstractEntity>)kryo.readClassAndObject(input);
         data.aITeams  = (int)kryo.readClassAndObject(input);
         data.playerTeams  = (int)kryo.readClassAndObject(input);
         data.aIStats = (ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input);
@@ -122,10 +120,7 @@ public class GameSave {
 
         //Sort entities into walkables and entities
         for (AbstractEntity r : renderables) {
-            if (r.canWalOver()) {
-                data.walkables.add(r);
-            }
-            else if(r instanceof Resource){
+             if(r instanceof Resource){
                 data.resource.add((Resource)r);
             }
             else if(r instanceof BuildingEntity){

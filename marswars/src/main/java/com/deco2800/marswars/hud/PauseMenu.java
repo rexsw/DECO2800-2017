@@ -1,20 +1,15 @@
 package com.deco2800.marswars.hud;
 
-import com.deco2800.marswars.InitiateGame.Game;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 
@@ -44,26 +39,29 @@ public class PauseMenu extends Dialog{
 		super(title, skin);
 		this.stats = stats;
 		this.hud = hud;
+		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		
+		LOGGER.info("Instantiating the Pause menu");
+		this.align(Align.center);
+
 		LOGGER.info("Instantiating the Pause menu");
 		
 		{
 			hud.setPauseCheck(1);
-			text("Game Paused");
-			
-			button("Resume", 0);
+			//this.text("Game Paused", labelStyle);
+			button("Resume Game", 0, buttonStyle);
 			this.getButtonTable().row();
-			button("Statis;tics", 1);
+			button("Show Stats", 1, buttonStyle);
 			this.getButtonTable().row();
-			button("Settings", 2);
+			button("Settings", 2, buttonStyle);
 			this.getButtonTable().row();
-			button("Quit to Main Menu", 3);
+			button("Quit to Main Menu", 3, buttonStyle);
 			this.getButtonTable().row();
-			button("Save Game", 4);
+			button("Save Game", 4, buttonStyle);
 			this.getButtonTable().row();
-			button("Exit Game", 5);
+			button("Exit Game", 5, buttonStyle);
 			
 			this.timeManager.pause();
-			
 			}	
 	}
 		/**
@@ -83,7 +81,7 @@ public class PauseMenu extends Dialog{
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
                 try {
-                    Game.savedGame.writeGame();
+                    Game.getSavedGame().writeGame();
                 }catch (FileNotFoundException e){
                     //do nothing
                 }

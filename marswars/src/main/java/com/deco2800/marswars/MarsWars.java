@@ -15,9 +15,14 @@ import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.BackgroundManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +36,8 @@ import java.util.Set;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
+	// logger of the class
+	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -58,7 +65,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible = 0;
+	private static int invincible = 0;
 	
 	private Skin skin;
 
@@ -87,8 +94,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
-		new MainMenu(this.skin, this.stage);
-
+		MainMenu mainMenu = new MainMenu(this.skin, this.stage);
+		LOGGER.info("Game running: " + mainMenu.gameStarted());
 	}
 
 	/**
@@ -132,8 +139,15 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
-		// weatherManager.addRainVisuals(batch);
-
+		//weatherManager.addRainVisuals(batch);
+/*		if (weatherManager.isRaining()) {
+			SpriteBatch particleBatch = new SpriteBatch();
+			particleBatch.begin();
+			ParticleEffect effect = weatherManager.addRainVisuals(batch);
+			effect.draw(particleBatch);
+			particleBatch.end();
+		}
+*/
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
@@ -184,5 +198,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}
+	}
+
+	/**
+	 * set a new invisible flag
+	 *
+	 * @param invincible the new flag
+	 */
+	public static void setInvincible(int invincible) {
+		MarsWars.invincible = invincible;
 	}
 }

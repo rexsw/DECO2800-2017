@@ -1,4 +1,4 @@
-rain
+Rain
 - Delay -
 active: false
 - Duration - 

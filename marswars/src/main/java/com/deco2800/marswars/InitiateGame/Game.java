@@ -53,7 +53,7 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-	public static GameSave savedGame;
+	private static GameSave savedGame;
 
 	/**
 	 * start a loaded game
@@ -233,10 +233,6 @@ public class Game{
 				medic.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(medic);
 			}else if(each.getName().equals("Hacker")){
-				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
-				hacker.setHealth(each.getHealth());
-				GameManager.get().getWorld().addEntity(hacker);
-			}else if (each.getName().equals("Hacker")){
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);
@@ -455,7 +451,7 @@ public class Game{
 //		Soldier soldier = new Soldier(x, y, 0, teamid);
 //		GameManager.get().getWorld().addEntity(soldier);
 //		Tank tank = new Tank(x, y, 0, teamid);
-//		Carrier carrier = new Carrier(x, y, 0, teamid);
+//		Carrier carrier = new Carrier(2, 2, 0, teamid);
 //		Commander commander = new Commander(x,y,0,teamid);
 //		Medic medic = new Medic(x, y, 0, teamid);
 //		Hacker hacker = new Hacker(x, y, 0, teamid);
@@ -481,7 +477,7 @@ public class Game{
 				while(true) {
 					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						if (TimeUtils.nanoTime() - lastGameTick > 10500000) {
-							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
+//							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
 						}
 
 						/*
@@ -495,7 +491,7 @@ public class Game{
 								long endTime = TimeUtils.nanoTime();
 
 								if (endTime - startTime > 100000) { //0.01ms
-									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
+//									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
 								}
 							}
 						}
@@ -507,10 +503,19 @@ public class Game{
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
+						Thread.currentThread().interrupt();
 					}
 				}
 			}
 		}).start();
 	}
 
+	/**
+	 * Returns the game GameSave object.
+	 *
+	 * @return the game GameSave object.
+	 */
+	public static GameSave getSavedGame() {
+		return savedGame;
+	}
 }

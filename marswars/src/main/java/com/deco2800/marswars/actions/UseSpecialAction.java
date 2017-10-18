@@ -1,7 +1,5 @@
 package com.deco2800.marswars.actions;
 
-import java.util.List;
-
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.items.Special;
@@ -12,6 +10,8 @@ import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.WorldUtil;
+
+import java.util.List;
 
 /**
  * General class to implement the action of using a Special item. Would consider both cases of when the item effect is
@@ -65,7 +65,8 @@ public class UseSpecialAction implements DecoAction {
 		this.item = item;
 		this.user = actor;
 		this.radius = item.getRadius();
-		state = radius == 0 ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
+		boolean radiusZero = Math.abs(radius - 0) < 0.01;
+		state = radiusZero ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
 		if (state == State.SELECT) {
 			actor.setItemInUse(true);
 		}
@@ -96,7 +97,8 @@ public class UseSpecialAction implements DecoAction {
 			fixPos = parse[2];
 		} else { //should only get to here for EXECUTE.
 			for (Effect e : item.getEffect()) {
-				if ((e.getTarget() == Target.SELF) && (radius == 0)) {//affect only the Commander that owns the item.
+				boolean radiusZero = Math.abs(radius - 0) < 0.01;
+				if ((e.getTarget() == Target.SELF) && radiusZero) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
 					continue;
 				} else if (e.getTarget() == Target.SELF_TEAM) { //affect only player's team

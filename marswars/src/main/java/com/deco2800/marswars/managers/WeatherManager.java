@@ -3,7 +3,6 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
@@ -30,9 +29,10 @@ public class WeatherManager extends Manager implements Tickable {
     private boolean damaged = false;
     private boolean floodWatersExist = false;
     private int waterEntities = 0;
-    // Set as a class variable so that buildings can be unpaused properly
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
     private boolean floodOn = true;
+
+    public ParticleEffect effect;
 
 
     /**
@@ -98,7 +98,7 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public boolean isRaining() {
-        return timeManager.getHours() > 10 && timeManager.getHours() < 15;
+        return timeManager.getHours() > 0 && timeManager.getHours() < 15;
     }
 
     /**
@@ -119,15 +119,14 @@ public class WeatherManager extends Manager implements Tickable {
             List<BaseEntity> locationEntities =
                     GameManager.get().getWorld().getEntities((int) unitX,
                     (int) unitY);
-            // Iterate through list of entities at the same location as the entity of interest
+            // Iterate through list of entities at the same location as
+            // the entity of interest
             for (BaseEntity e: locationEntities) {
                 if (e instanceof Water && entity instanceof Soldier) {
-                    // Check how many times comes in here - should only be once (can break if more than once)
-                    //System.out.println("&&&&&&&&&&&&&&&&&&&&&&&& Adding DAMAGED SOLDIER FROM: " + (int) unitX + ", " + (int) unitY);
                     damagedUnits.add(entity);
                     break;
-                } else if (e instanceof Water && entity instanceof BuildingEntity) {
-                   // System.out.println("&&&&&&&&&&&&&&&&&&&&&&&& Adding PAUSED BUILDING FROM: " + (int) unitX + ", " + (int) unitY);
+                } else if (e instanceof Water && entity instanceof
+                        BuildingEntity) {
                     buildingFlooded = true;
                     ((BuildingEntity) entity).setFlooded(true);
                     pausedBuildings.add(entity);
@@ -135,7 +134,8 @@ public class WeatherManager extends Manager implements Tickable {
                     break;
                 }
             }
-            // If water is not found on the same tile as a BuildingEntity, set it's flooded attribute to false
+            // If water is not found on the same tile as a BuildingEntity,
+            // set it's flooded attribute to false
             if (entity instanceof BuildingEntity && ! buildingFlooded) {
                 ((BuildingEntity) entity).setFlooded(false);
                 if (pausedBuildings.remove(entity)) {
@@ -145,40 +145,6 @@ public class WeatherManager extends Manager implements Tickable {
         }
         return damagedUnits;
     }
-
-    /**
-     * Sets the damage over time taken by units caught in the weather event.
-     */
-/*    private void applyEffects(ArrayList<BaseEntity> damagedUnits, ) {
-        ArrayList<float []> areaOfEffect = getAffectedTiles();
-        ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
-        for (float [] tile: areaOfEffect) {
-            List<BaseEntity> entities =
-                    GameManager.get().getWorld().getEntities((int) tile[0],
-                            (int) tile[1]);
-            Iterator<BaseEntity> iterator = entities.iterator();
-            if (entities.size() > 5) {
-                // Currently getting far too many entities at only one location (18) still shouldn't be slowing things significantly
-                System.out.println("&&&&&&&&&&&&&&&&&&&&&&&& NUMBER OF ENTITIES: " + entities.size() + "AT: " + tile[0] + ", " + tile[1]);
-            }
-            while (iterator.hasNext()) {
-                BaseEntity e = iterator.next();
-                if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
-                    if (e instanceof Soldier) {
-                        damagedUnits.add(e);
-                    } else if (e instanceof BuildingEntity) {
-                        pausedBuildings.add(e);
-                        timeManager.pause(e);
-                        ((BuildingEntity) e).setFlooded(true);
-                    }
-                }
-            }
-        }
-        applyContinuousDamage(damagedUnits);
-        timeManager.pause(pausedBuildings);
-        resumeProduction(pausedBuildings, areaOfEffect);
-        areaOfEffect.clear();
-    } */
 
     /**
      * Sets the damage over time taken by units caught in the weather event.
@@ -210,51 +176,6 @@ public class WeatherManager extends Manager implements Tickable {
         damagedUnits.clear();
         return;
     }
-
-    /**
-     * Returns any building caught in the weather events area of effect to its
-     * normal state.
-     */
-/*    private void resumeProduction(List<BaseEntity> pausedBuildings,
-                                  List<float []> areaOfEffect) {
-        Iterator<BaseEntity> buildingIterator = pausedBuildings.iterator();
-        while (buildingIterator.hasNext()) {
-            BaseEntity e = buildingIterator.next();
-            boolean stillFlooded = false;
-            for (float [] tile: areaOfEffect) {
-                if (e.getPosX() == tile[0] && e.getPosY() == tile[1]) {
-                    stillFlooded = true;
-                }
-            }
-            // set flooded in here
-            if (! stillFlooded) {
-                timeManager.unPause(e);
-                ((BuildingEntity) e).setFlooded(false);
-                // Remove unpaused building from list
-                buildingIterator.remove();
-            }
-        }
-    } */
-
-    /**
-     * Returns the tiles affected by the current weather event.
-     * @return
-     */
-/*    private ArrayList<float []> getAffectedTiles() {
-        List<BaseEntity> entities =
-                GameManager.get().getWorld().getEntities();
-        ArrayList<float []> affectedTiles = new ArrayList<>();
-
-        for (BaseEntity e : entities) {
-            if (e instanceof Water) {
-                float [] coords = {e.getPosX(), e.getPosY()};
-                affectedTiles.add(coords);
-            }
-        }
-        return affectedTiles;
-    } */
-
-
 
     /**
      * Checks that the given point is within the bounds of the map.
@@ -402,11 +323,6 @@ public class WeatherManager extends Manager implements Tickable {
         int length = world.getLength();
         Point p = new Point(width/2
                 - 1,  length/2 - 1);
-        //Point p = new Point(r.nextInt(width/2)
-        //        - 1,  r.nextInt(length/2) - 1);
-        //Point p = new Point(width - r.nextInt(width/4)
-         //       - 1, length - r.nextInt(length/4) - 1);
-        // Ensure position valid (should be trivially true)
         if (! checkPosition(p)) {
             Water firstDrop = new Water(p.getX(),
                     p.getY(), 0);
@@ -457,17 +373,25 @@ public class WeatherManager extends Manager implements Tickable {
         return floodWatersExist;
     }
 
-    public void addRainVisuals(SpriteBatch batch) {
-        if (this.isRaining()) {
+    public ParticleEffect addRainVisuals(SpriteBatch batch) {
             // Particle for rain visuals
             ParticleEffect effect = new ParticleEffect();
-            effect.load(Gdx.files.internal("resources/WeatherAssets/rain.p"),
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"),
                     Gdx.files.internal("resources/WeatherAssets"));
             effect.setPosition(Gdx.graphics.getWidth() / 2,
                     Gdx.graphics.getHeight());
             effect.start();
-            effect.draw(batch);
+        return effect;
+    }
+
+    public void render(SpriteBatch batch) {
+        if (effect == null) {
+            effect = new ParticleEffect();
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"), (Gdx.files.internal("resources/WeatherAssets")));
+            effect.setPosition(Gdx.graphics.getWidth() / 2 * GameManager.get().getCamera().zoom, Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
+            effect.start();
         }
+    	effect.draw(batch,  Gdx.graphics.getDeltaTime());
     }
 
     /**
