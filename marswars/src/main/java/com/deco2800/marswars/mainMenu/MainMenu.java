@@ -144,7 +144,7 @@ public class MainMenu {
 	/**
 	 * Flags the game as ended
 	 */
-	public void endGame(){
+	public static void endGame(){
 		gameStarted = false;
 	}
 	
