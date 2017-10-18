@@ -11,91 +11,73 @@ import com.deco2800.marswars.renderers.Render3D;
  * Created by Treenhan on 10/17/17.
  */
 public class SoundTrackPlayer {
-    public  boolean isBattlePlaying = false;
 
-    Music battleTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+    public Music battleTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+    public Music dayTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Day_Soundtrack.mp3"));
 
-    public boolean change
+    public Music nightTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
 
-    public  Music defaultTheme = null;
-
-    public boolean transitionCompleted=false;
-
-    boolean first = true;
-    boolean firsthaha=true;
 
     private static TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
 
     public  void updateNormalSoundTrack(){
-        isBattlePlaying = false;
-
-        if(first) {
-            defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
-            defaultTheme.setVolume(0.9f);
-            defaultTheme.setLooping(true);
-            defaultTheme.play();
-first=false;
-        }
-
-        if(timeManager.getHours() >= 1 && timeManager.getHours() < 2){
-            if(firsthaha) {
-                trackTransition("OriginalSoundTracks/Day_Soundtrack.mp3");
-firsthaha=false;
+        if(timeManager.getHours() >= 6 && timeManager.getHours() < 17){
+            if(!dayTheme.isPlaying()) {
+                stopSoundTrack();
+                dayTheme.setVolume(0.0f);
+                fadeIn(dayTheme);
+                dayTheme.setLooping(true);
+                dayTheme.play();
             }
-            //defaultTheme =  Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Day_Soundtrack.mp3"));
+
         }
         else{
-            //defaultTheme =  Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
+            if(!nightTheme.isPlaying()){
+                stopSoundTrack();
+                nightTheme.setVolume(0.0f);
+                fadeIn(nightTheme);
+                nightTheme.setLooping(true);
+                nightTheme.play();
+            }
         }
-
-//        defaultTheme.setVolume(0.0f);
-//        defaultTheme.setLooping(true);
-//        defaultTheme.play();
     }
 
     public  void playBattleSoundTrack(){
-        defaultTheme =  Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-        defaultTheme.setVolume(0.0f);
-        defaultTheme.play();
-        isBattlePlaying = true;
-        Render3D.battleFlag = 0;
+        if(!battleTheme.isPlaying()){
+            stopSoundTrack();
+            battleTheme.setVolume(0.0f);
+            fadeIn(battleTheme);
+            battleTheme.play();
+            Render3D.battleFlag = 0;
+        }
 
-        defaultTheme.setOnCompletionListener(new Music.OnCompletionListener() {
+
+        battleTheme.setOnCompletionListener(new Music.OnCompletionListener() {
             @Override
             public void onCompletion(Music music) {
-                updateNormalSoundTrack();
+                if(Render3D.battleFlag==0){
+                    stopSoundTrack();
+                }
             }
         });
 
     }
 
     public  void stopSoundTrack(){
-        if( defaultTheme != null)
-            defaultTheme.dispose();
+        if(nightTheme.isPlaying()){
+            fadeOut(nightTheme);
+        }
+        if(dayTheme.isPlaying()){
+            fadeOut(dayTheme);
+        }
+        if(battleTheme.isPlaying()){
+            fadeOut(battleTheme);
+        }
     }
 
 
-    public void trackTransition(String next){
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                if (defaultTheme.getVolume() >= 0.01)
-                    defaultTheme.setVolume(defaultTheme.getVolume() - 0.01f);
-                else {
-                    stopSoundTrack();
-                    defaultTheme = Gdx.audio.newMusic(Gdx.files.internal(next));
-                    defaultTheme.setVolume(0.0f);
-                    defaultTheme.play();
-                    fadeIn(defaultTheme);
-                    this.cancel();
-                }
-            }
-        }, 0f, 0.01f);
-
-    }
-
-    public void fadeIn(Music music){
+    public static void fadeIn(Music music){
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -103,7 +85,21 @@ firsthaha=false;
                 if (music.getVolume() <= 0.9)
                     music.setVolume(music.getVolume() + 0.01f);
                 else {
-                    transitionCompleted = true;
+                    this.cancel();
+                }
+            }
+        }, 0f, 0.01f);
+    }
+
+    public static void fadeOut(Music music){
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+
+                if (music.getVolume() >= 0.01)
+                    music.setVolume(music.getVolume() - 0.01f);
+                else {
+                    music.stop();
                     this.cancel();
                 }
             }

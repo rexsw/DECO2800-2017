@@ -112,7 +112,7 @@ public class Render3D implements Renderer {
 
         batch.end();
 
-        if(battleFlag==1 && !MainMenu.player.isBattlePlaying)
+        if(battleFlag==1)
             MainMenu.player.playBattleSoundTrack();
 
 
@@ -170,7 +170,7 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-            if(entity instanceof MissileEntity && !MainMenu.player.isBattlePlaying) battleFlag=1;
+            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) battleFlag=1;
 
             //multi selection entities
             if(entity instanceof MultiSelectionTile){

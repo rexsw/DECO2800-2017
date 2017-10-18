@@ -46,7 +46,7 @@ public class MainMenu {
 	private MenuScreen menuScreen;
 	
 	private Window mainmenu; 
-	boolean gameStarted = false;
+	public static boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
 	boolean enabled = false; 
@@ -114,7 +114,6 @@ public class MainMenu {
 		if (gameStarted) {
 			openMusic.stop();
 			openMusic.dispose();
-			player.updateNormalSoundTrack();
 			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -135,7 +134,6 @@ public class MainMenu {
 			if (gameStarted) {
 				openMusic.stop();
 				openMusic.dispose();
-				player.updateNormalSoundTrack();
 				try {
 					game = new Game(loadedGame.data.aITeams, loadedGame.data.playerTeams); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing

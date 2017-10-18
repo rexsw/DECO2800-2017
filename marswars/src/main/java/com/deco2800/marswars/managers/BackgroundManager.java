@@ -24,9 +24,8 @@ public class BackgroundManager extends Manager {
      * in MarsWars
      */
     public String getBackground() {
-        if ((timeManager.getHours() == 1 || timeManager.getHours()==2)&& timeManager.getMinutes()==0 && !MainMenu.player.isBattlePlaying ) {
-            MainMenu.player.updateNormalSoundTrack();
-        }
+        if(MainMenu.gameStarted && !MainMenu.player.battleTheme.isPlaying())
+        MainMenu.player.updateNormalSoundTrack();
 
         String background;
         if (timeManager.getHours() >= 6 && timeManager.getHours() < 9) {
