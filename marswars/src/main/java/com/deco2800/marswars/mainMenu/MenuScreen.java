@@ -228,7 +228,7 @@ public class MenuScreen{
 		
 		Label playerInfo = new Label("CHARACTERS", this.skin, "title");
 		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, "subheading");
-		Label moreInfo = new Label("click '>' since this feautre has not "
+		Label moreInfo = new Label("click '>' since this feature has not "
 				+ "yet been implemented)", skin);
 		
 		//TODO talk to the team looking into this 
