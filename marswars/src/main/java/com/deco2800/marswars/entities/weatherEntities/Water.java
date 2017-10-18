@@ -1,13 +1,10 @@
 package com.deco2800.marswars.entities.weatherEntities;
 
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
-
-import java.util.Optional;
 
 /**
  * A Water object. Used for terrain elements and WeatherManager's flooding
