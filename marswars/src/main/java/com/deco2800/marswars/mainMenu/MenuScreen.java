@@ -71,7 +71,7 @@ public class MenuScreen{
 	private Label currentSizeSelection; 
 	
 	/* Multiplayer toggles */
-	public int playerType;   // checks if multiplayer
+	private static int playerType;   // checks if multiplayer
 	private boolean joinedServer;   // checks if joined server 
 	
 	/* For recording which map to play in*/
@@ -165,7 +165,8 @@ public class MenuScreen{
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				setPlayerType(0);
+			    setPlayerType(0);
+//				MenuScreen.playerType = 0;
 				selectWorldMode();
 			}
 		});
@@ -173,7 +174,8 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				setPlayerType(1);
+                setPlayerType(1);
+//				MenuScreen.playerType = 1;
 				selectServerMode();
 			}
 		});
@@ -736,10 +738,19 @@ public class MenuScreen{
 
 	/**
 	 * Set the new player type.
-	 *
+     *
 	 * @param playerType the new player type
 	 */
 	void setPlayerType(int playerType) {
 		this.playerType = playerType;
 	}
+
+    /**
+     * Returns the type of player.
+     *
+     * @return the type of player.
+     */
+    public static int getPlayerType() {
+        return playerType;
+    }
 }
