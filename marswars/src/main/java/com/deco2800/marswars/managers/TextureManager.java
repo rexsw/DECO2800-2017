@@ -163,6 +163,7 @@ public class TextureManager extends Manager {
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
+        this.saveTexture("actions_window", "resources/HUDAssets/actions_window.png");
 
         //----------- Technology Assets:
 

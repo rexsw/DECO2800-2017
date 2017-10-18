@@ -215,7 +215,6 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
 
-
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button");
 		TextureRegion quitRegion = new TextureRegion(quitImage);
@@ -224,8 +223,8 @@ public class HUDView extends ApplicationAdapter{
 
 		//Create + align time displays
 		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("0:00", skin, "seven-seg");
-		gameLengthDisp = new Label("00:00:00", skin, "seven-seg");
+		gameTimeDisp = new Label("0:00", skin);
+		gameLengthDisp = new Label("00:00:00", skin);
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
 
@@ -258,15 +257,25 @@ public class HUDView extends ApplicationAdapter{
 
 		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
+		
+		//Creates the help button listener
+		LOGGER.debug("Creating main menu button listener");
+		dispMainMenu.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
+		});
+		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
 		//Creates the help button listener
 		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin, hud).show(stage);
+				new HelpWindow(stage, skin);
 			}
 		});
+		helpButton.addListener(new TextTooltip("Help", skin));
 
 		//Creates the quit button listener
 		LOGGER.debug("Creating quit button listener");
@@ -275,7 +284,9 @@ public class HUDView extends ApplicationAdapter{
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
-			}});
+			}
+		});
+		quitButton.addListener(new TextTooltip("Quit Game", skin));
 	}
 
 
@@ -373,8 +384,8 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor){
 				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
-
 		});
+		dispTech.addListener(new TextTooltip("Open Technology", skin));
 
 		dispShop.addListener(new ChangeListener(){
 			@Override
@@ -383,6 +394,7 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
 			}
 		});
+		dispShop.addListener(new TextTooltip("Open Shop", skin));
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
@@ -460,7 +472,8 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
-		actionsWindow = new Window("Actions", skin);
+		actionsWindow = new Window("", skin, "inventory_back");
+
 		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
@@ -509,7 +522,6 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setMovable(false);
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
 		actionsWindow.setPosition(220, 0);
 
 		//Add action buttons
@@ -564,7 +576,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		//the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
 		//TODO update the skin
-		minimap = new Window("", skin, "minimap");
+		minimap = new Window("", skin, "clear");
 
 		//set the properties of the minimap window
 		GameManager.get().getMiniMap().stageReference = minimap;
@@ -942,7 +954,7 @@ public class HUDView extends ApplicationAdapter{
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2);
-		actionsWindow.setHeight(minimap.getHeight()/2);
+		actionsWindow.setHeight(minimap.getHeight()/2 + 50);
 		actionsWindow.setPosition(minimap.getWidth()/2, 0);
 		//Resources
 		resourceTable.align(Align.left | Align.center);

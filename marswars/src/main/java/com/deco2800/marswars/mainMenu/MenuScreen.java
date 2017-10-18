@@ -137,10 +137,10 @@ public class MenuScreen{
 		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
 		//modeInfo.setVisible(false);
 		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin, "menubutton");
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "menubutton");
-		Button customizeButton = new TextButton("Customize", this.skin, "menubutton");
-		Button loadGameButton = new TextButton("Load Game", this.skin, "menubutton");
+		Button singlePlayerButton = new TextButton("Single Player", this.skin, "button2");
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "button2");
+		Button customizeButton = new TextButton("Customize", this.skin, "button2");
+		Button loadGameButton = new TextButton("Load Game", this.skin, "button2");
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -214,7 +214,7 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, "subtitle");
+		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, "title");
 		Label moreInfo = new Label("click '>' since this feautre has not "
 				+ "yet been implemented)", skin);
 		
@@ -275,7 +275,7 @@ public class MenuScreen{
 		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
 
-		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subtitle");
+		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, "title");
 		Label worldSelected = new Label("Your current selection:", skin);
 		errorWorldSelection = new Label("", skin, "error");
 		
@@ -417,23 +417,21 @@ public class MenuScreen{
 	 * adds it to the menu.
 	 */
 	public void selectCombat() {
-		mainmenu.clear();
-		
+		mainmenu.clear();		
 		errorTeamsSelection = new Label("", skin, "error");
 
-		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, "subtitle");
-		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, "subtitle");
-		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subtitle");
+		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, "title");
+		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, "title");
+		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "title");
 		
 		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin);
 
-		
 		/* no of teams buttons*/
 		Table AIButtons = new Table();
-		Button AI2 = new TextButton("2", skin, "menubutton");
-		Button AI3 = new TextButton("3", skin, "menubutton");
-		Button AI4 = new TextButton("4", skin, "menubutton");
-		Button AI5 = new TextButton("5", skin, "menubutton");
+		Button AI2 = new TextButton("2", skin, "button2");
+		Button AI3 = new TextButton("3", skin, "button2");
+		Button AI4 = new TextButton("4", skin, "button2");
+		Button AI5 = new TextButton("5", skin, "button2");
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
 
 		AI2.addListener(new ChangeListener() {
@@ -472,13 +470,22 @@ public class MenuScreen{
 		for (int i = 0; i < buttonsList.length; i++) {
 			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
-						
+		
+		CheckBox economic = new CheckBox("Economy", skin, "spac_check");
+		CheckBox millitary = new CheckBox("Millitary", skin, "spac_check");
+		CheckBox population = new CheckBox("Population", skin, "spac_check");
+								
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(AIButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).row();
-		mainmenu.add(aiInfo).align(Align.left).row();
-		mainmenu.add(winInfo).align(Align.left).row();
 		
+		mainmenu.add(aiInfo).align(Align.left).row();
+
+		mainmenu.add(winInfo).align(Align.left).row();
+		mainmenu.add(economic).align(Align.left).padLeft(10).row();
+		mainmenu.add(millitary).align(Align.left).padLeft(10).row();
+		mainmenu.add(population).align(Align.left).padLeft(10).row();
+
 		mainmenu.add(errorTeamsSelection).align(Align.left).row();
 		
 		addNavigationButton(ScreenMode.COMBATMODE);
@@ -495,7 +502,7 @@ public class MenuScreen{
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", this.skin, "subtitle");
+		Label serverInfo = new Label("Join a server or start your own!", this.skin, "title");
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -509,8 +516,8 @@ public class MenuScreen{
 	 * @param status
 	 */
 	public Table addNavigationButton(ScreenMode status) {
-		this.backButton = new TextButton("<", this.skin, "menubutton");
-		this.nextButton = new TextButton(">", this.skin, "menubutton");
+		this.backButton = new TextButton("<", this.skin, "pre_button");
+		this.nextButton = new TextButton(">", this.skin, "next_button");
 		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
@@ -618,7 +625,7 @@ public class MenuScreen{
 			}
 		});
 		
-		quitButton = new TextButton("Exit", this.skin);
+		quitButton = new TextButton("x", this.skin, "pre_button");
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -633,7 +640,6 @@ public class MenuScreen{
 		navigationButtons.setDebug(enabled);
 		navigationButtons.add(this.backButton).pad(BUTTONPAD);
 		navigationButtons.add(this.nextButton).pad(BUTTONPAD);
-		
 		actionButtons.add(this.quitButton).pad(BUTTONPAD);
 		
 		lowerPanel.add(navigationButtons);

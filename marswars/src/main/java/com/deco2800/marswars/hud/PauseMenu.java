@@ -46,7 +46,7 @@ public class PauseMenu extends Dialog{
 		super(title, skin);
 		this.stats = stats;
 		this.hud = hud;
-		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		TextButtonStyle buttonStyle = skin.get("button2", TextButtonStyle.class);			
 		
 		LOGGER.info("Instantiating the Pause menu");
 		this.align(Align.center);
@@ -55,7 +55,6 @@ public class PauseMenu extends Dialog{
 		
 		{
 			hud.setPauseCheck(1);
-			//this.text("Game Paused", labelStyle);
 			button("Resume Game", 0, buttonStyle);
 			this.getButtonTable().row();
 			button("Show Stats", 1, buttonStyle);
