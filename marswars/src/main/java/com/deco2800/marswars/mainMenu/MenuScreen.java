@@ -739,8 +739,8 @@ public class MenuScreen{
      *
 	 * @param playerType the new player type
 	 */
-	void setPlayerType(int playerType) {
-		this.playerType = playerType;
+	static void setPlayerType(int playerType) {
+		MenuScreen.playerType = playerType;
 	}
 
     /**
