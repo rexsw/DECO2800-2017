@@ -1,6 +1,7 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.mainMenu.MainMenu;
 
 /**
@@ -23,6 +24,10 @@ public class BackgroundManager extends Manager {
      * in MarsWars
      */
     public String getBackground() {
+        if ((timeManager.getHours() == 1 || timeManager.getHours()==2)&& timeManager.getMinutes()==0 && !MainMenu.player.isBattlePlaying ) {
+            MainMenu.player.updateNormalSoundTrack();
+        }
+
         String background;
         if (timeManager.getHours() >= 6 && timeManager.getHours() < 9) {
             background = "dawn_Bg";
