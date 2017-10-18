@@ -188,7 +188,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			this.health = this.getMaxHealth();
 			return;
 		}
-		if(this instanceof Soldier && ((Soldier)this).getLoadStatus()!=1) {
+		if((this instanceof Soldier && ((Soldier)this).getLoadStatus() == 1)) {
+			return;
+		} else {
 			this.health = health;
 		}
 	}
