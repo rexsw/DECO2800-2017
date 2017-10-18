@@ -55,7 +55,7 @@ public class MainMenu {
 	public Sound openMusic = null;
 
 
-	public static SoundTrackPlayer player = new SoundTrackPlayer();
+	public static final SoundTrackPlayer player = new SoundTrackPlayer();
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game

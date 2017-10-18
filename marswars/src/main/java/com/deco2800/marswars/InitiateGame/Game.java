@@ -53,7 +53,7 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-	public static GameSave savedGame;
+	private static GameSave savedGame;
 
 	/**
 	 * start a loaded game
@@ -515,4 +515,12 @@ public class Game{
 		}).start();
 	}
 
+	/**
+	 * Returns the game GameSave object.
+	 *
+	 * @return the game GameSave object.
+	 */
+	public static GameSave getSavedGame() {
+		return savedGame;
+	}
 }
