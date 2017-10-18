@@ -97,7 +97,8 @@ public class UseSpecialAction implements DecoAction {
 			fixPos = parse[2];
 		} else { //should only get to here for EXECUTE.
 			for (Effect e : item.getEffect()) {
-				if ((e.getTarget() == Target.SELF) && (radius == 0f)) {//affect only the Commander that owns the item.
+				boolean radiusZero = Math.abs(radius - 0) < 0.01;
+				if ((e.getTarget() == Target.SELF) && radiusZero) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
 					continue;
 				} else if (e.getTarget() == Target.SELF_TEAM) { //affect only player's team
