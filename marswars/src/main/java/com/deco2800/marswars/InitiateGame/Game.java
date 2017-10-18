@@ -482,7 +482,7 @@ public class Game{
 				while(true) {
 					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						if (TimeUtils.nanoTime() - lastGameTick > 10500000) {
-							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
+//							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
 						}
 
 						/*
@@ -496,7 +496,7 @@ public class Game{
 								long endTime = TimeUtils.nanoTime();
 
 								if (endTime - startTime > 100000) { //0.01ms
-									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
+//									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
 								}
 							}
 						}

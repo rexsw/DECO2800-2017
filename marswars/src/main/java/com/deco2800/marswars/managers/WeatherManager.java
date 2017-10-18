@@ -32,6 +32,8 @@ public class WeatherManager extends Manager implements Tickable {
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
     private boolean floodOn = true;
 
+    public ParticleEffect effect;
+
 
     /**
      * Sets the toggle value for the UI flood toggle button. The toggle either
@@ -380,6 +382,16 @@ public class WeatherManager extends Manager implements Tickable {
                     Gdx.graphics.getHeight());
             effect.start();
         return effect;
+    }
+
+    public void render(SpriteBatch batch) {
+        if (effect == null) {
+            effect = new ParticleEffect();
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"), (Gdx.files.internal("resources/WeatherAssets")));
+            effect.setPosition(Gdx.graphics.getWidth() / 2 * GameManager.get().getCamera().zoom, Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
+            effect.start();
+        }
+    	effect.draw(batch,  Gdx.graphics.getDeltaTime());
     }
 
     /**

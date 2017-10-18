@@ -1,6 +1,5 @@
 package com.deco2800.marswars.renderers;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,16 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MultiSelection;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +104,9 @@ public class Render3D implements Renderer {
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
+
+        WeatherManager m = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
+        m.render(batch);
 
         batch.end();
 
