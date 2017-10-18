@@ -21,7 +21,6 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
 
     private WeatherManager weatherManager = (WeatherManager)
             GameManager.get().getManager(WeatherManager.class);
-    private Optional<DecoAction> currentAction = Optional.empty();
     private boolean surrounded = false;
     private int health;
 
