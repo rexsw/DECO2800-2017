@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -66,7 +65,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible = 0;
+	private static int invincible = 0;
 	
 	private Skin skin;
 
@@ -199,5 +198,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}
+	}
+
+	/**
+	 * set a new invisible flag
+	 *
+	 * @param invincible the new flag
+	 */
+	public static void setInvincible(int invincible) {
+		MarsWars.invincible = invincible;
 	}
 }

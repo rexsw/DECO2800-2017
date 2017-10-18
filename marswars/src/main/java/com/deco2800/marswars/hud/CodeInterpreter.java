@@ -181,7 +181,7 @@ public class CodeInterpreter {
      * If the code is "whosyourdaddy", set the enemies attack to be of no effect.
      */
     public void whosyourdaddy(){
-        MarsWars.invincible = 1;
+        MarsWars.setInvincible(1);
     }
 
 
