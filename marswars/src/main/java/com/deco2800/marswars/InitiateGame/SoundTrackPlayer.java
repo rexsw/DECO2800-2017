@@ -14,8 +14,9 @@ public class SoundTrackPlayer {
 
     public Music battleTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
     public Music dayTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Day_Soundtrack.mp3"));
-
     public Music nightTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
+
+     static boolean fadeDone = true;
 
 
     private static TimeManager timeManager =
@@ -23,32 +24,32 @@ public class SoundTrackPlayer {
 
     public  void updateNormalSoundTrack(){
         if(timeManager.getHours() >= 6 && timeManager.getHours() < 17){
-            if(!dayTheme.isPlaying()) {
+            if(!dayTheme.isPlaying() && fadeDone && Render3D.battleFlag==0) {
                 stopSoundTrack();
                 dayTheme.setVolume(0.0f);
-                fadeIn(dayTheme);
                 dayTheme.setLooping(true);
                 dayTheme.play();
+                fadeIn(dayTheme);
             }
 
         }
         else{
-            if(!nightTheme.isPlaying()){
+            if(!nightTheme.isPlaying() && fadeDone && Render3D.battleFlag==0){
                 stopSoundTrack();
                 nightTheme.setVolume(0.0f);
-                fadeIn(nightTheme);
                 nightTheme.setLooping(true);
                 nightTheme.play();
+                fadeIn(nightTheme);
             }
         }
     }
 
     public  void playBattleSoundTrack(){
-        if(!battleTheme.isPlaying()){
+        if(!battleTheme.isPlaying() && fadeDone){
             stopSoundTrack();
             battleTheme.setVolume(0.0f);
-            fadeIn(battleTheme);
             battleTheme.play();
+            fadeIn(battleTheme);
             Render3D.battleFlag = 0;
         }
 
@@ -56,8 +57,8 @@ public class SoundTrackPlayer {
         battleTheme.setOnCompletionListener(new Music.OnCompletionListener() {
             @Override
             public void onCompletion(Music music) {
-                if(Render3D.battleFlag==0){
-                    stopSoundTrack();
+                if(Render3D.battleFlag==1){
+                    playBattleSoundTrack();
                 }
             }
         });
@@ -78,6 +79,7 @@ public class SoundTrackPlayer {
 
 
     public static void fadeIn(Music music){
+        fadeDone = false;
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -85,6 +87,7 @@ public class SoundTrackPlayer {
                 if (music.getVolume() <= 0.9)
                     music.setVolume(music.getVolume() + 0.01f);
                 else {
+                    fadeDone=true;
                     this.cancel();
                 }
             }
@@ -92,6 +95,7 @@ public class SoundTrackPlayer {
     }
 
     public static void fadeOut(Music music){
+        fadeDone=false;
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -99,7 +103,9 @@ public class SoundTrackPlayer {
                 if (music.getVolume() >= 0.01)
                     music.setVolume(music.getVolume() - 0.01f);
                 else {
+
                     music.stop();
+                    fadeDone=true;
                     this.cancel();
                 }
             }

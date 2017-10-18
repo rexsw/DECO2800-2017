@@ -454,7 +454,7 @@ public class Game{
 //		Soldier soldier = new Soldier(x, y, 0, teamid);
 //		GameManager.get().getWorld().addEntity(soldier);
 //		Tank tank = new Tank(x, y, 0, teamid);
-//		Carrier carrier = new Carrier(x, y, 0, teamid);
+//		Carrier carrier = new Carrier(2, 2, 0, teamid);
 //		Commander commander = new Commander(x,y,0,teamid);
 //		Medic medic = new Medic(x, y, 0, teamid);
 //		Hacker hacker = new Hacker(x, y, 0, teamid);
