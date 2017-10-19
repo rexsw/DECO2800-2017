@@ -82,7 +82,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	@Override
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
-		this.skin = new Skin(Gdx.files.internal("DefaultSkin/uiskin.json"));
+		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		this.altSkin = new Skin(Gdx.files.internal("AltSkin/uiskin.json"));
 		
 		GameManager.get().setSkin(this.skin);
