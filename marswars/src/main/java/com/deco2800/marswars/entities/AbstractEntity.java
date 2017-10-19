@@ -341,10 +341,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * gets the parent world for this entity
 	 * NOTE: This is useless now that we have GameManager
 	 *
-	 * @deprecated
+	 *
 	 * @return returns the world loaded on the game manager.
 	 */
-	@Deprecated
+	
 	public AbstractWorld getParent() {
 		return GameManager.get().getWorld();
 	}

@@ -3,6 +3,7 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -82,6 +83,10 @@ public class HelpWindow {
 		sidePane.add(back).size(SIDEPANEBUTTONWIDTH, SIDEPANEBUTTONHEIGHT).row();
 				
 		return sidePane;
+	}
+	
+	public Window getHelpWindow() {
+		return this.window;
 	}
 	
 	private Table hotKeysInfo() {

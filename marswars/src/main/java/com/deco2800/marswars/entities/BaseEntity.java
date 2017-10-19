@@ -75,13 +75,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	/**
 	 * Outdated constructor for the base entity
-	 * @deprecated
 	 * @param position
 	 * @param xRenderLength
 	 * @param yRenderLength
 	 * @param centered
 	 */
-	@Deprecated
 	public BaseEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
 	}
@@ -229,7 +227,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void deselect() {
 		this.selected = false;
-		if (this.healthBar != null) this.healthBar.setVisible(false);
+		if (this.healthBar != null) {
+			this.healthBar.setVisible(false);
+		}
 	}
 
 	/**
@@ -241,14 +241,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return this.validActions;
 	}
 
-	/**
-	 * Instantiates the list of actions
-	 * @deprecated addNewActions will now automatically instantiate the list if it does not exist
-	 */
-	@Deprecated
-	public void initActions() {
-		this.validActions = new ActionList();
-	}
 
 	/**
 	 *Adds a new valid action to the entity
@@ -544,7 +536,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @return the healthbar if the entity is a building, unit or hero and has the stat properly set, null otherwise
 	 */
 	public HealthBar getHealthBar() {
-		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) return null; //Check if is valid type
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) {
+			return null; //Check if is valid type
+		}
 		if (healthBar != null) {//If there is a health bar
 			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
 				healthBar.setVisible(false);

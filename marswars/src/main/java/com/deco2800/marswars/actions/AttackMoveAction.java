@@ -8,9 +8,6 @@ import com.deco2800.marswars.managers.TimeManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Created by timhadwen on 30/7/17.
  * Edited by Tze Thong Khor on 22/8/17
@@ -59,6 +56,8 @@ public class AttackMoveAction implements DecoAction {
 					return;
 				case ATTACKING:
 					attackingAction();
+					return;
+				default:
 					return;
 			}
 

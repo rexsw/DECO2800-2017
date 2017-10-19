@@ -58,11 +58,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
-	//long lastGameTick = 0;
-	//long lastMenuTick = 0;
+
 	long pauseTime = 0;
 
 	private static int invincible = 0;
