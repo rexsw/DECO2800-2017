@@ -46,6 +46,8 @@ public class TextureManager extends Manager {
 	    	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
 	    	textureMap.put("greenSelect4", new Texture("resources/buildSelect/greenSelect4.png"));
 	    	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
+	    	textureMap.put("greenSelect6", new Texture("resources/buildSelect/greenSelect6.png"));
+	    	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
 	        this.saveTexture("selected", "resources/placeholderassets/selected.png");
 	        this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
 	        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
@@ -72,13 +74,12 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
 	        //HeroFactory Stages
-            //PLACEHOLDER TEXTURES WHILE HF GRAPHICS BEING CREATED
             textureMap.put("herofactory1",new Texture
-                    ("resources/BuildingAssets/Building process/Barracks/barracks1.png"));
+                    ("resources/BuildingAssets/Building process/HeroFactory/factory1.png"));
             textureMap.put("herofactory2",new Texture
-                    ("resources/BuildingAssets/Building process/Barracks/barracks2.png"));
-            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks3.png"));
-            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/Barracks/barracks4.png"));
+            		("resources/BuildingAssets/Building process/HeroFactory/factory2.png"));
+            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory3.png"));
+            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory4.png"));
 
 
 	        //TechBuilding Stages

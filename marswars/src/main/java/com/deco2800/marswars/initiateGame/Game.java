@@ -1,4 +1,4 @@
-package com.deco2800.marswars.InitiateGame;
+package com.deco2800.marswars.initiateGame;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -53,7 +53,7 @@ public class Game{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
-	public static GameSave savedGame;
+	private static GameSave savedGame;
 
 	/**
 	 * start a loaded game
@@ -92,14 +92,14 @@ public class Game{
 		this.timeManager.unPause();
 
 		//different
-		this.addEntitiesFromLoadGame(loadedGame.data.aITeams,loadedGame.data.playerTeams,loadedGame);
+		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
 
 		setCameraInitialPosition();
 		//same
 		this.setThread();
 		this.fogOfWar();
-		FogManager.setFog(loadedGame.data.fogOfWar);
-		FogManager.setBlackFog(loadedGame.data.blackFogOfWar);
+		FogManager.setFog(loadedGame.data.getFogOfWar());
+		FogManager.setBlackFog(loadedGame.data.getBlackFogOfWar());
 
 	}
 
@@ -125,12 +125,11 @@ public class Game{
 					.getManager(AiManager.class);
 			aim.addTeam(teamid);
 
-			ArrayList<Integer> aIStats = loadedGame.data.aIStats.get(teamid-1);
+			ArrayList<Integer> aIStats = loadedGame.data.getaIStats().get(teamid-1);
 
 			rm.setBiomass(aIStats.get(0), teamid);
 			rm.setRocks(aIStats.get(1), teamid);
 			rm.setCrystal(aIStats.get(2), teamid);
-			rm.setWater(aIStats.get(3), teamid);
 			rm.setMaxPopulation(10, teamid);
 			rm.setPopulation(aIStats.get(4), teamid);
 		}
@@ -138,12 +137,11 @@ public class Game{
 			playerid = teamid * (-1);
 			cm.setColour(playerid);
 
-			ArrayList<Integer> playerStats = loadedGame.data.playerStats.get(teamid-1);
+			ArrayList<Integer> playerStats = loadedGame.data.getPlayerStats().get(teamid-1);
 
 			rm.setBiomass(playerStats.get(0), playerid);
 			rm.setRocks(playerStats.get(1), playerid);
 			rm.setCrystal(playerStats.get(2), playerid);
-			rm.setWater(playerStats.get(3), playerid);
 			rm.setMaxPopulation(10, playerid);
 			rm.setPopulation(playerStats.get(4), playerid);
 		}
@@ -151,6 +149,7 @@ public class Game{
 		//add all entities
 		loadEntities(loadedGame);
 		loadBuildings(loadedGame);
+
 
 
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
@@ -163,7 +162,7 @@ public class Game{
 	 * @param loadedGame
 	 */
 	private void loadBuildings(GameSave loadedGame){
-		for(SavedBuilding e : loadedGame.data.building){
+		for(SavedBuilding e : loadedGame.data.getBuilding()){
 			switch(e.getBuildingType()){
 				case TURRET:
 					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
@@ -207,7 +206,7 @@ public class Game{
 	 * @param loadedGame
 	 */
 	private void loadEntities(GameSave loadedGame){
-		for(SavedEntity each : loadedGame.data.entities)
+		for(SavedEntity each : loadedGame.data.getEntities())
 			if(each.getName().equals("Astronaut")){
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
@@ -442,19 +441,15 @@ public class Game{
 		rm.setBiomass(0, teamid);
 		rm.setRocks(0, teamid);
 		rm.setCrystal(0, teamid);
-		rm.setWater(0, teamid);
 		rm.setMaxPopulation(10, teamid);
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-//		Commander c1 = new Commander(x, y, 0, teamid); // testing
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-		HeroFactory heroFactory = new HeroFactory(GameManager.get().getWorld
-				(), x, y, 0, teamid);
 //		Soldier soldier = new Soldier(x, y, 0, teamid);
 //		GameManager.get().getWorld().addEntity(soldier);
 //		Tank tank = new Tank(x, y, 0, teamid);
-//		Carrier carrier = new Carrier(x, y, 0, teamid);
+//		Carrier carrier = new Carrier(2, 2, 0, teamid);
 //		Commander commander = new Commander(x,y,0,teamid);
 //		Medic medic = new Medic(x, y, 0, teamid);
 //		Hacker hacker = new Hacker(x, y, 0, teamid);
@@ -466,8 +461,6 @@ public class Game{
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(base);
-//		GameManager.get().getWorld().addEntity(c1); // testing
-		GameManager.get().getWorld().addEntity(heroFactory);
 		
 		LOGGER.info("Team units successfully set");
 	}
@@ -482,7 +475,7 @@ public class Game{
 				while(true) {
 					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
 						if (TimeUtils.nanoTime() - lastGameTick > 10500000) {
-							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
+//							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
 						}
 
 						/*
@@ -496,7 +489,7 @@ public class Game{
 								long endTime = TimeUtils.nanoTime();
 
 								if (endTime - startTime > 100000) { //0.01ms
-									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
+//									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
 								}
 							}
 						}
@@ -508,11 +501,19 @@ public class Game{
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						LOGGER.error(e.toString());
-						throw new RuntimeException(e);
+						Thread.currentThread().interrupt();
 					}
 				}
 			}
 		}).start();
 	}
 
+	/**
+	 * Returns the game GameSave object.
+	 *
+	 * @return the game GameSave object.
+	 */
+	public static GameSave getSavedGame() {
+		return savedGame;
+	}
 }

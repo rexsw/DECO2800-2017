@@ -305,7 +305,8 @@ public class TimeManager extends Manager implements TickableManager {
 			if ((this.getHours() % dayLength > dayLength ||
 					this.getHours() % dayLength < window) &&
 					! this.daysIncremented) {
-				this.days++;
+				incrementDays(1);
+				setDay();
 				this.daysIncremented = true;
 			}
 			if (this.getHours() % dayLength > window &&
@@ -330,5 +331,14 @@ public class TimeManager extends Manager implements TickableManager {
 	@Override
 	public String toString() {
 		return getHours() + ":" + getMinutes();
+	}
+
+	/**
+	 * Increment the number of days.
+	 *
+	 * @param days how many days to increment
+	 */
+	private static void incrementDays(int days) {
+		TimeManager.days += days;
 	}
 }

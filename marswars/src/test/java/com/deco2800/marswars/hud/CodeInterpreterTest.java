@@ -115,16 +115,6 @@ public class CodeInterpreterTest {
     }
 
     /**
-     * to test if water() can add specified water successfully;
-     */
-    @Test
-    public void addWater() throws Exception {
-        int or = rm.getWater(-1);
-        a.water(100);
-        assertEquals(or+100,rm.getWater(-1));
-    }
-
-    /**
      * to test if game time hour becomes 6 am after day();
      */
     @Test

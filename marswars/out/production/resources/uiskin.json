@@ -197,4 +197,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		listStyle: default
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {label: {font: default-font}, background: textfield, wrapWidth: 400}
+}
 }

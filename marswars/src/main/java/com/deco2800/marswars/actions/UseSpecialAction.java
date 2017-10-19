@@ -25,7 +25,7 @@ import java.util.List;
  *  temp = the texture BaseEntity for the overlay image for the player to visualise and select where the aoe effect will
  *  		be
  *  radius = the aoe radius in terms of tiles
- *  fixPos = ....? (need to ask the building team)
+ *  fixPos = value to help fix the centre location spawn point for rounding issues.
  *  user = The Commander that carries the item that is being used.
  *  item = The Special item being used.
  *  completed = Boolean for indicating if the action is complete or not.
@@ -65,7 +65,8 @@ public class UseSpecialAction implements DecoAction {
 		this.item = item;
 		this.user = actor;
 		this.radius = item.getRadius();
-		state = radius == 0f ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
+		boolean radiusZero = Math.abs(radius - 0) < 0.01;
+		state = radiusZero ? State.EXECUTE : State.SELECT; //0 aoe radius means does not need player to select an area
 		if (state == State.SELECT) {
 			actor.setItemInUse(true);
 		}
@@ -96,19 +97,20 @@ public class UseSpecialAction implements DecoAction {
 			fixPos = parse[2];
 		} else { //should only get to here for EXECUTE.
 			for (Effect e : item.getEffect()) {
-				if ((e.getTarget() == Target.SELF) && (radius == 0f)) {//affect only the Commander that owns the item.
+				boolean radiusZero = Math.abs(radius - 0) < 0.01;
+				if ((e.getTarget() == Target.SELF) && radiusZero) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
 					continue;
 				} else if (e.getTarget() == Target.SELF_TEAM) { //affect only player's team
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
-				} else if (e.getTarget() == Target.ALL_ENEMY) { //affect only enemies
+				} else if (e.getTarget() == Target.ENEMY_TEAM) { //affect only enemies
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
 					continue;
 				} else if (e.getTarget() == Target.GLOBAL) { //affect everyone
-					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClass(GameManager.get().getWorld().getEntities(),
+					executeEffectOnTargets(e, WorldUtil.getEntitiesOfLikeClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
 					continue;
 				} else if (e.getTarget() == Target.ENEMY){ //only affect e within selected area (Target.ENEMY)
@@ -123,7 +125,13 @@ public class UseSpecialAction implements DecoAction {
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
 							user.getOwner())); 
 				}
+				WorldUtil.removeOverlay();
 			}
+    		if(!item.useItem()) {
+    			// no use limit left
+    			this.user.getInventory().getSpecials().remove(item);
+    		}
+        	this.user.setStatsChange(true);
 			completed = true; //action completed once all effects of the Special item have been considered/applied.
 		}
 	}
@@ -142,26 +150,11 @@ public class UseSpecialAction implements DecoAction {
 			e.applyEffect(mark);
 			
 		}	
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
-		System.err.println("Duration : ????????????????t!!!!!!!!!!!!!!!!!:    "+item.getDuration());
 		if(item.getDuration() > 0) {
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
-			System.err.println("called????????????????t!!!!!!!!!!!!!!!!!");
 			new java.util.Timer().schedule( 
 			        new java.util.TimerTask() {
 			            @Override
 			            public void run() {
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
-			            	System.err.println("remove effect!!!!!!!!!!!!!!!!!");
 			            	for (BaseEntity ent : targets) {
 			        			AttackableEntity mark = (AttackableEntity) ent;
 			        			e.removeEffect(mark);
@@ -236,5 +229,4 @@ public class UseSpecialAction implements DecoAction {
 	public void resumeAction() {
 		this.actionPaused = false;
 	}
-
 }

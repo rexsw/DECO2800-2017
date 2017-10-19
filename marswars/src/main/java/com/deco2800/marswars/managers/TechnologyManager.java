@@ -7,7 +7,7 @@ import com.deco2800.marswars.technology.Technology;
 import java.util.*;
 
 public class TechnologyManager extends Manager{
-    //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
+    //each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
     //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
     // .. new HashMap<Integer, Integer[], String, List<Integer>>();
 
@@ -394,7 +394,7 @@ public class TechnologyManager extends Manager{
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
         resourceManager.setBiomass(80, teamid);
-        resourceManager.setWater(80, teamid);
+//        resourceManager.setWater(80, teamid);
 //        System.out.println("prereqs are: " + tech.getParents());
 //        System.out.println("active tech is: " + getActive());
 
@@ -424,10 +424,7 @@ public class TechnologyManager extends Manager{
         if (tech.getCost()[1] > resourceManager.getCrystal(teamid)) {
             return "Insufficient Crystals";
         }
-        if (tech.getCost()[2] > resourceManager.getWater(teamid)) {
-            return "Insufficient Water levels";
-        }
-        if (tech.getCost()[3] > resourceManager.getBiomass(teamid)) {
+        if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
             return "Insufficient Biomass";
         }
         return "Activating Technology!";
@@ -437,7 +434,6 @@ public class TechnologyManager extends Manager{
     public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
-        resourceManager.setWater(resourceManager.getWater(teamid) - tech.getCost()[2], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
 
@@ -551,7 +547,7 @@ public class TechnologyManager extends Manager{
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
         ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
     	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
     	return buildingsAvailable;
     }

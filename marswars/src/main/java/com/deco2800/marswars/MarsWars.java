@@ -6,15 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiateGame.InputProcessor;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -66,7 +65,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible = 0;
+	private static int invincible = 0;
 	
 	private Skin skin;
 
@@ -199,5 +198,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 				}
 			}
 		}
+	}
+
+	/**
+	 * set a new invisible flag
+	 *
+	 * @param invincible the new flag
+	 */
+	public static void setInvincible(int invincible) {
+		MarsWars.invincible = invincible;
 	}
 }

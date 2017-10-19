@@ -4,13 +4,13 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
-//import com.deco2800.marswars.entities.items.ItemArea;
 import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.util.WorldUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,9 +182,11 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
      */
     public void useItem(Special special) {
     	if(this.specials.contains(special)) {
+    		WorldUtil.removeOverlay();
     		//ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
-
+    		//should not have to worry about null pointer since it was just created.
+    		
 //    		if(!special.useItem()) {
 //    			// no use limit left
 //            	this.specials.remove(special);	

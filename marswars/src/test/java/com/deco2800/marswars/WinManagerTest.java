@@ -61,7 +61,6 @@ public class WinManagerTest {
 		rm.setBiomass(500, 1);
 		rm.setCrystal(500, 1);
 		rm.setRocks(500, 1);
-		rm.setWater(500, 1);
 		assertFalse(test.isWinner());
 		test.onTick(0);
 		assertTrue(test.isWinner());

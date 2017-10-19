@@ -1,23 +1,24 @@
 package com.deco2800.marswars.hud;
 
+<<<<<<< HEAD
 import com.deco2800.marswars.InitiateGame.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+=======
+>>>>>>> origin
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.initiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 
@@ -92,7 +93,7 @@ public class PauseMenu extends Dialog{
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
                 try {
-                    Game.savedGame.writeGame();
+                    Game.getSavedGame().writeGame();
                 }catch (FileNotFoundException e){
                     //do nothing
                 }

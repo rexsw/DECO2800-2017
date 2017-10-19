@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.mainMenu.MenuScreen;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -18,8 +19,6 @@ import com.deco2800.marswars.net.ChatAction;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.MessageAction;
 import com.esotericsoftware.kryonet.Connection;
-
-import static com.deco2800.marswars.mainMenu.MenuScreen.playerType;
 
 
 /**
@@ -149,7 +148,7 @@ public class ChatBox extends Table {
     protected void sendMessage() {
         String message = this.messageTextField.getText();
         if (!"".equals(message)) {
-            if(playerType==1) {
+            if(MenuScreen.getPlayerType()==1) {
                 MessageAction action = new MessageAction(message);
                 netManager.getNetworkClient().sendObject(action);
             } else {

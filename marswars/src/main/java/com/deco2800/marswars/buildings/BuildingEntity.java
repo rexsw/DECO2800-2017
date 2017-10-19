@@ -1,11 +1,9 @@
 package com.deco2800.marswars.buildings;
 
 import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
@@ -87,6 +85,10 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.building = "Barracks";
 			fogRange = 3;
 			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.SOLDIER);
+			this.addNewAction(EntityID.CARRIER);
+			//this.addNewAction(EntityID.HEALER);
+			//this.addNewAction(EntityID.TANK);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
@@ -98,8 +100,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			// placeholder graphics textures being used while HF texture is
-			// created
 			graphics = Arrays.asList("herofactory1"+colour,
 					"herofactory2"+colour, "herofactory3"+colour,
 					"herofactory4"+colour);
@@ -183,7 +183,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
-		currentAction = Optional.of(action);
+		if (! isFlooded) {
+			currentAction = Optional.of(action);
+		}
 	}
 
 	/**
@@ -199,7 +201,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (!currentAction.isPresent() && ! isFlooded) {
 			currentAction = Optional.of(action);
 		}
 	}

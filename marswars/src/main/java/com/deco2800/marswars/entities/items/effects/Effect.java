@@ -16,7 +16,7 @@ public interface Effect {
 		SELF, //the Commander themselves or simply entities on your team in the area selected (for aoe purposes).
 		SELF_TEAM, //player's whole entire team globally
 		ENEMY, //other players' (if not allied)/AI's entities in area selected
-		ALL_ENEMY, //all other players' (if not allied)/AI's entities globally.
+		ENEMY_TEAM, //all other players' (if not allied)/AI's entities globally.
 		GLOBAL //every players' and AI's entities gets targetted globally.
 	}
 	

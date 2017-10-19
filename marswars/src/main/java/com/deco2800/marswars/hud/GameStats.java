@@ -129,12 +129,6 @@ public class GameStats{
 	private Table setStatusButtons(){
 		Table pStatsTable = new Table(); //p denotes 'parent'
 		pStatsTable.setDebug(enabled);
-
-		//Water image button
-		Texture waterImage = textureManager.getTexture("water_HUD");
-		TextureRegion waterRegion = new TextureRegion(waterImage);
-		TextureRegionDrawable waterRegionDraw = new TextureRegionDrawable(waterRegion);
-		ImageButton waterButton = new ImageButton(waterRegionDraw);
 		
 		//Rock image button
 		Texture rockImage = textureManager.getTexture("rock_HUD");
@@ -210,17 +204,6 @@ public class GameStats{
 
 			}
 		});
-		waterButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor){
-				gameGraph = Field.WATER;
-				graphPrompt.setText("");
-				graphType.setText("Water");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
-
-			}
-		});
 		combatButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
@@ -269,7 +252,6 @@ public class GameStats{
 		pStatsTable.add(bioButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(crystalButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(rockButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
-		pStatsTable.add(waterButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(baseButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(combatButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
 		pStatsTable.add(unitButton).pad(BUTTONPAD).size(BUTTONSIZE, BUTTONSIZE);
