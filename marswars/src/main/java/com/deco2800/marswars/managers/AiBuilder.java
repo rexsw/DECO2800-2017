@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.units.Astronaut;
 
@@ -16,31 +17,39 @@ public class AiBuilder extends Manager {
 		float xy[] = new float[] {builder.getPosX(), builder.getPosY()};
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		LOGGER.info("start");
-		if(rm.getCrystal(team) > 50) {
-			rm.setCrystal(rm.getCrystal(team) - 30, team);
+		LOGGER.info("Crystal count: " + rm.getCrystal(team));
+		if (rm.getCrystal(team) > 50) {
 			switch(choice) {
 			case 0:
 				if(findloc(xy, BuildingType.BASE)) {
 					return;
 				}
+				LOGGER.info("BUILD BASE");
 				builder.setAction(new BuildAction(builder, BuildingType.BASE, xy[0], xy[1]));
+				break;
 			case 1:
 				if(findloc(xy, BuildingType.BARRACKS)) {
 					return;
 				}
 				builder.setAction(new BuildAction(builder, BuildingType.BARRACKS, xy[0], xy[1]));
+				break;
 			case 2:
 				if(findloc(xy, BuildingType.BUNKER)) {
 					return;
 				}
 				builder.setAction(new BuildAction(builder, BuildingType.BUNKER, xy[0], xy[1]));
+				break;
 			case 3:
 				if(findloc(xy, BuildingType.TURRET)) {
 					return;
 				}
 				builder.setAction(new BuildAction(builder, BuildingType.TURRET, xy[0], xy[1]));
+				break;
 			}
-			choice = choice + 1 % 4;
+			choice = (choice + 1) % 4;
+			if (builder.getAction().isPresent()) {
+				((BuildAction)(builder.getAction().get())).finaliseBuild();
+			}
 			}
 		}
 	
@@ -48,7 +57,7 @@ public class AiBuilder extends Manager {
 		LOGGER.info("find");
 		int x = 0;
 		int i = 0;
-		while(!GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], (type.getBuildSize()), (float)0)) {
+		while(!(GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], (type.getBuildSize()), (float)0))) {
 			if(x == 0) {
 				x = 1;
 				xy[0] = (float) (xy[0] + 1.0);

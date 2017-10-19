@@ -5,6 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.GameManager;
@@ -180,6 +181,23 @@ public class BaseWorld extends AbstractWorld {
 	public boolean hasEntity(int x, int y) {
 		return collisionMap.get(x, y).size() > 0;
 	}
+	
+	/**
+	 * Returns true if there is a building or resource here.
+	 *
+	 * @param x a tile x coordinate.
+	 * @param y a tile y coordinate.
+	 * @return whether it contains an unmovable entity
+	 */
+	public boolean hasUnmovableEntity(int x, int y) {
+		if (hasEntity(x,y)) {
+			BaseEntity collide = collisionMap.get(x, y).get(0);
+			if (collide instanceof BuildingEntity || collide instanceof Resource) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Gets the entity at an x y position.
@@ -238,7 +256,7 @@ public class BaseWorld extends AbstractWorld {
 		for (int x = left+checkX; x < right+checkX; x++) {
 			for (int y = bottom-checkY; y < top-checkY; y++) {
 				if (x >= 0 && y >= 0  && x < this.getWidth() && y < this.getLength()){
-					if (hasEntity(x, y)) {
+					if (hasUnmovableEntity(x, y)) { //only checks buildings and resources
 						return false;
 					}
 				}
