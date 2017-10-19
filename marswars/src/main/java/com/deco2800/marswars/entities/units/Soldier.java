@@ -209,6 +209,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			turret.numOfSolider += 1;
 			turret.powerUpTurret();
 			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
+			turret.addNewAction(EntityID.SOLDIER);
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
