@@ -11,8 +11,8 @@ public class Obstacle extends BaseEntity {
     private ObstacleType type;
 
     public Obstacle(float posX, float posY, float posZ, float height, float width, ObstacleType type, String colour){
-        super(posX, posY, posZ, height, width, 1f);
-        /*switch (type) {
+        super(posX, posY, posZ, 1, 1, 1f, height, width, false);
+        switch (type) {
             case TREE1:
                 this.setTexture("tree1_"+colour);
                 break;
@@ -22,13 +22,19 @@ public class Obstacle extends BaseEntity {
             case TREE3:
                 this.setTexture("tree3_"+colour);
                 break;
-        }*/
-        this.setTexture("tree1_red");
+        }
         this.canWalkOver = false;
         this.setCost(Integer.MAX_VALUE); //patfinding should never go through this
         this.colour = colour;
         this.type = type;
-        this.setXoff(width*0.775f);
-        this.setYoff(width*0.1f);
+        if (type==ObstacleType.TREE1||type==ObstacleType.TREE2||type==ObstacleType.TREE3) {
+            this.setXoff(width*0.775f);
+            this.setYoff(width*0.1f);
+        }
+    }
+
+    @Override
+    public boolean getFix() {
+        return false;
     }
 }

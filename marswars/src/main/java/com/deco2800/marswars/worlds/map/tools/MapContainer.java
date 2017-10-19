@@ -112,8 +112,16 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
-            Obstacle tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "red");
+            /*Obstacle tree = new Obstacle(this.width-1, this.length-1, 0, 8, 8, ObstacleType.TREE1, "red");
             world.addEntity(tree);
+            tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "blue");
+            world.addEntity(tree);
+            tree = new Obstacle(0, 10, 0, 8, 8, ObstacleType.TREE2, "red");
+            world.addEntity(tree);
+            tree = new Obstacle(10, 10, 0, 8, 8, ObstacleType.TREE3, "green");
+            world.addEntity(tree);*/
+
+            placeTrees("", true);
 
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
@@ -122,6 +130,43 @@ public class MapContainer {
               // this.getRandomEntity();
                //this.getRandomResource();
             }
+        }
+    }
+
+    private void placeTrees(String colour, boolean randomColour) {
+        Random r = new Random();
+        float rf;
+        ObstacleType type;
+        Obstacle tree;
+        for (int i = 0; i<Math.sqrt(this.length); i++) {
+            if (randomColour) {
+                rf = r.nextFloat();
+                if (rf<0.25) {
+                    colour = "red";
+                }
+                else if (rf<0.5) {
+                    colour = "blue";
+                }
+                else if (rf<0.75) {
+                    colour = "green";
+                }
+                else {
+                    colour= "yellow";
+                }
+            }
+            rf = r.nextFloat();
+            if (rf<0.33) {
+                type = ObstacleType.TREE1;
+            }
+            else if (rf<0.66) {
+                type = ObstacleType.TREE2;
+            }
+            else {
+                type = ObstacleType.TREE3;
+            }
+            tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 8, 8,
+                    type, colour);
+            world.addEntity(tree);
         }
     }
 
