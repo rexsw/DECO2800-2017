@@ -5,6 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.GameManager;
@@ -132,6 +133,9 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	@Override
 	public void removeEntity(BaseEntity entity) {
+		if(entity instanceof AttackableEntity)
+		entity.modifyFogOfWarMap(false,((AttackableEntity)entity).getFogRange());
+
 		super.removeEntity(entity);
 		if (entity instanceof Soldier) {
 			// remove entity from the minimap when they are removed from the world

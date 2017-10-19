@@ -37,8 +37,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	boolean isFlooded = false;
 	private String colour;
 	//Colour for this building
-	protected int fogRange;
-	//distance building can see in fog
+
 	protected boolean built = true;
 	//building has functionality if built is true
 	/**
@@ -62,7 +61,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(1850);
 			this.setDamage(10);
 			this.building = "Turret";
-			fogRange = 7;
+			setFogRange(7);
 			break;
 		case BASE:
 			graphics = Arrays.asList("base1"+colour, "base2"+colour, "base3"+colour, "base4"+colour);
@@ -72,7 +71,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(2500);
 			this.setFix(true);
 			this.building = "Base";
-			fogRange = 3;
+			setFogRange(3);
 			this.addNewAction(EntityID.ASTRONAUT);
 			this.addNewAction(EntityID.TANK);
 			this.addNewAction(EntityID.SOLDIER);
@@ -85,7 +84,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(2000);
 			this.setFix(true);
 			this.building = "Barracks";
-			fogRange = 3;
+			setFogRange(3);
 			this.addNewAction(EntityID.HEALER);
 			this.addNewAction(EntityID.HACKER);
 			this.addNewAction(EntityID.CARRIER);
@@ -97,7 +96,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setMaxHealth(800);
 			this.setHealth(800);
 			this.building = "Bunker";
-			fogRange = 2;
+			setFogRange(2);
 			this.addNewAction(EntityID.SNIPER);
 			this.addNewAction(EntityID.TANKDESTROYER);
 			break;
@@ -110,7 +109,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setMaxHealth(3000);
 			this.setHealth(3000);
 			this.building = "Hero Factory";
-			fogRange = 3;
+			setFogRange(3);
 			this.addNewAction(EntityID.COMMANDER);
 			break;
 		case TECHBUILDING:
@@ -120,7 +119,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setMaxHealth(800);
 			this.setHealth(800);
 			this.building = "TechBuilding";
-			fogRange = 2;
+			setFogRange(2);
 			break;
 		default:
 			break;
@@ -248,7 +247,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 */
 	public void onTick(int i) {
 		if (this.getOwner() == -1 && built)  {
-			modifyFogOfWarMap(true, fogRange);
+			modifyFogOfWarMap(true, getFogRange());
 		}
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();

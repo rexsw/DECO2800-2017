@@ -123,7 +123,7 @@ public class Carrier extends Soldier {
 	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)
-		modifyFogOfWarMap(true, 3);
+		modifyFogOfWarMap(true, getFogRange());
 	    // make stances here.
 	    int xPosition = (int) this.getPosX();
 	    int yPosition = (int) this.getPosY();
