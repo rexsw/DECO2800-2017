@@ -1,6 +1,5 @@
 package com.deco2800.marswars.managers;
 
-import com.badlogic.gdx.utils.reflect.Field;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
@@ -239,7 +238,18 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return int the count of this field
 	 */
 	public int count(int teamid, Field field) {
-		return values.get(teamid).get(field).get(index);
+		if(teams.contains(teamid)) {
+			return values.get(teamid).get(field).get(index);
+		}
+		return -1;
+	}
+	
+	public int highCount(Field field) {
+		int ret = -1;
+		for(int i: teams) {
+			ret = Math.max(ret, count(i, field));
+		}
+		return ret;
 	}
 	
 

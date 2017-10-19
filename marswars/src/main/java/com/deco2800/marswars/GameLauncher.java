@@ -29,7 +29,6 @@ public class GameLauncher {
         config.addIcon("resources/SPLogo-32.png", FileType.Internal);
 
 		config.title = "DECO2800 2017: MarsWars";
-		config.initialBackgroundColor.add(Color.DARK_GRAY);
 		new LwjglApplication(new MarsWars(), config);        
 	}
 }

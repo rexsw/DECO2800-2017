@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -103,6 +102,7 @@ public class Hotkeys {
 		}
 		
 
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if (this.noActive()) {
 				LOGGER.info("Open the quit menu");
@@ -110,6 +110,7 @@ public class Hotkeys {
 				this.quit = new ExitGame("Quit Game", this.skin, this.hud, true).show(this.stage); //$NON-NLS-1$
 			}
 		}
+
 
 		//tech tree listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
@@ -133,16 +134,12 @@ public class Hotkeys {
 				this.hud.minimap.setVisible(true);
 				this.hud.resourceTable.setVisible(true);
 				//show (-) button to make resources invisible
-				this.hud.dispActions.remove();
-				this.hud.HUDManip.add(this.hud.removeActions);
 				this.hud.setInventoryToggle(false);
 			} else {
 				this.hud.actionsWindow.setVisible(false);
 				this.hud.minimap.setVisible(false);
 				this.hud.resourceTable.setVisible(false);
 				//show (+) to show resources again
-				this.hud.removeActions.remove();
-				this.hud.HUDManip.add(this.hud.dispActions);
 				this.hud.setInventoryToggle(true);
 			}
 		}

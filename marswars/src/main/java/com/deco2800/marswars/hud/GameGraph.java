@@ -2,9 +2,7 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.managers.AiManager;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameBlackBoard.Field;
 import com.deco2800.marswars.managers.GameManager;

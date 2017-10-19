@@ -4,18 +4,15 @@ package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -27,11 +24,11 @@ import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.HealthBar;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -44,9 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Naziah Siddique on 19/08
@@ -55,12 +50,11 @@ import java.util.Set;
  */
 public class HUDView extends ApplicationAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
+	private boolean enabled = false;
 
 	private static final int BUTTONSIZE = 50; //sets size of image buttons
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
-
-	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
 
 	private Stage stage;
 	private Skin skin;
@@ -69,13 +63,13 @@ public class HUDView extends ApplicationAdapter{
 
 	//HUD elements
 	private Table overheadRight; //contains all basic quit/help/chat buttons
-	Table resourceTable; //contains table of resource images + count
-    Table HUDManip;		 //contains buttons for toggling HUD + old menu
+	Table resourceTable;         //contains table of resource images + count
+    Table HUDManip;		         //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
-	Window minimap;		 //window for containing the minimap
-	Window actionsWindow;    //window for the players actions
+	Window minimap;		         //window for containing the minimap
+	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
 
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
@@ -95,14 +89,14 @@ public class HUDView extends ApplicationAdapter{
 	private List<TextButton> buttonList;
 	private ActionList currentActions;
 
+
 	//Toggles; checks if the feature is visible on-screen or not
-	private boolean messageToggle;
 	private boolean inventoryToggle;
+	private boolean messageToggle = true;
 	private boolean fogToggle = true;
+	private boolean floodToggle = true;
 	private boolean gameStarted = false;
 	//Image buttons to display/ remove lower HUD
-	ImageButton dispActions;//Button for displaying actions window
-	ImageButton removeActions; //button for removing actions window
 
 	private TextureRegionDrawable plusRegionDraw;
 	private TextureRegionDrawable minusRegionDraw;
@@ -121,10 +115,6 @@ public class HUDView extends ApplicationAdapter{
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
-
-	private boolean showHealthBars = false;
-	private Set<ProgressBar> healthBars = new LinkedHashSet<>();
-
 	private GameStats stats;
 
 	HUDView hud = this;
@@ -136,6 +126,7 @@ public class HUDView extends ApplicationAdapter{
 	int chatActiveCheck = 0;
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
+	private Table selectedTable;
 
 
 	/**
@@ -195,8 +186,6 @@ public class HUDView extends ApplicationAdapter{
 
 		//add dispMainMenu image
 		Texture menuImage = textureManager.getTexture("menu_button");
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(stage.getWidth()-50, 50);
 		TextureRegion menuRegion = new TextureRegion(menuImage);
 		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
 		ImageButton dispMainMenu = new ImageButton(menuRegionDraw);
@@ -207,6 +196,7 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegion helpRegion = new TextureRegion(helpImage);
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
+
 
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button");
@@ -268,7 +258,6 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}});
-
 	}
 
 
@@ -313,12 +302,15 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 
+
 	/**
 	 * Adds in the bottom panel of the HUD
 	 */
 	private void addBottomPanel(){
 		addMiniMapMenu();
 		addInventoryMenu();
+		HUDManip = new Table(); //adding buttons into a table
+		HUDManip.setPosition(minimap.getWidth(), 0);
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
@@ -341,19 +333,27 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
 
+		//add toggle for flood effect (FOR DEBUGGING)
+		Button dispFlood = new TextButton("Flood", skin);
 
-		HUDManip.setSize(50, 80);
-		HUDManip.pad(BUTTONPAD);
-		HUDManip.add(dispTech).pad(BUTTONPAD);
-		HUDManip.add(dispFog).pad(BUTTONPAD);
-		HUDManip.add(dispShop).padRight(BUTTONPAD).width(50).height(50);
-		
+		HUDManip.setDebug(enabled);
+		Table debugToggles = new Table();
+		debugToggles.setDebug(enabled);
+		debugToggles.add(dispFog).size(BUTTONSIZE).row();
+		debugToggles.add(dispFlood).size(BUTTONSIZE);
+
+		Table options = new Table();
+		options.setDebug(enabled);
+		options.add(dispShop).width(50).height(50);
+		options.add(dispTech);
+
+		HUDManip.add(options, debugToggles);
 		stage.addActor(HUDManip);
-		
+
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage);
+				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
 
 		});
@@ -364,7 +364,6 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.show(stage);
 			}
 		});
-		
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
@@ -389,6 +388,13 @@ public class HUDView extends ApplicationAdapter{
 				toggleFog();
 			}
 		});
+		dispFlood.addListener(new ChangeListener() {
+			@Override
+			/*displays the (-) button for setting the hud to invisible*/
+			public void changed(ChangeEvent event, Actor actor) {
+				toggleFlood();
+			}
+		});
 
 		spawnMenu = new SpawnMenu(stage, skin);
 		spawnMenu.setupEntitiesPickerMenu();
@@ -404,22 +410,49 @@ public class HUDView extends ApplicationAdapter{
 			LOGGER.debug("fog of war is now off");
 			FogManager.toggleFog(false);
 			fogToggle = false;
-		} else {
+		}else {
 			LOGGER.debug("fog of war is now on");
 			FogManager.toggleFog(true);
 			fogToggle = true;
 		}
 	}
+
+	/**
+	 * Toggle flood effect on and off. See WeatherManager.toggleFlood() for
+	 * further information.
+	 */
+	private void toggleFlood(){
+		WeatherManager weatherManager = (WeatherManager)
+				GameManager.get().getManager(WeatherManager.class);
+		//disable fog
+		if (floodToggle) {
+			LOGGER.debug("fog of war is now off");
+			weatherManager.toggleFlood(false);
+			floodToggle = false;
+		}else {
+			LOGGER.debug("fog of war is now on");
+			weatherManager.toggleFlood(true);
+			floodToggle = true;
+		}
+	}
+
 	/**
 	 * Adds in the selectable menu for the inventory for resources
 	 */
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
 		actionsWindow = new Window("Actions", skin);
+		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+
+		selectedTable = new Table();
+		selectedTable.align(Align.left | Align.top);
+		selectedTable.setHeight(40);
+		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
+
 
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
@@ -454,6 +487,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
+		stage.addActor(selectedTable);
 
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
@@ -505,7 +539,8 @@ public class HUDView extends ApplicationAdapter{
 					} else {
 						ActionSetter.setGenerate(selectedEntity, (EntityID) currentActions.get(index));
 					}
-				}
+					}
+
 			}
 		});
 	}
@@ -518,13 +553,10 @@ public class HUDView extends ApplicationAdapter{
 		//the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
 		//TODO update the skin
 		minimap = new Window("", skin, "minimap");
-		minimap.setColor(Color.GOLD);
 
 		//set the properties of the minimap window
 		GameManager.get().getMiniMap().stageReference = minimap;
 		minimap.add(GameManager.get().getMiniMap().getBackground());
-		minimap.align(Align.topLeft);
-		minimap.setPosition(0, 0);
 		minimap.setMovable(false);
 		minimap.setWidth(GameManager.get().getMiniMap().getWidth());
 		minimap.setHeight(GameManager.get().getMiniMap().getHeight());
@@ -532,7 +564,6 @@ public class HUDView extends ApplicationAdapter{
 		//add the map window to the stage
 		stage.addActor(minimap);
 	}
-
 
 	/**
 	 *
@@ -580,33 +611,35 @@ public class HUDView extends ApplicationAdapter{
 		for (int i = 0; i < NUMBER_ACTION_BUTTONS; i++) { //Disable buttons
 			disableButton(buttonList.get(i));
 		}
+		selectedTable.clear();
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
-            return;
-        }
+			return;
+		}
+		populateSelectedTable();
 		updateHealthBars();
-        selectedEntity = target;
-        if (selectedEntity instanceof Astronaut) { //For Testing Purposes
-        	selectedEntity.giveAllBuilding();
-        }
+		selectedEntity = target;
+		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
+			selectedEntity.giveAllBuilding();
+		}
 		currentActions = target.getValidActions();
-	    enterActions(true); //Set up the buttons
-		if(target instanceof AttackableEntity) {
+		enterActions(true); //Set up the buttons
+		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
-	        // display hero inventory
-	        this.statsTable.hideInventory();
-	        heroSelected = null;
-	        if(target instanceof Commander) {
-	        	// display the inventory once a commander been selected
-	        	heroSelected = (Commander) target;
-	        	this.statsTable.showInventory();
-	        	this.statsTable.updateHeroInventory((Commander)target);
-	        }
+			// display hero inventory
+			this.statsTable.hideInventory();
+			heroSelected = null;
+			if (target instanceof Commander) {
+				// display the inventory once a commander been selected
+				heroSelected = (Commander) target;
+				this.statsTable.showInventory();
+				this.statsTable.updateHeroInventory((Commander) target);
+			}
 		}
-    }
+	}
 
 	private void updateHealthBars() {
 		for (BaseEntity b : selectedList) {
@@ -794,6 +827,7 @@ public class HUDView extends ApplicationAdapter{
 		gameLengthDisp.setText(timeManager.getPlayClockTime());
 
 		/*Update Minimap*/
+		actionsWindow.toBack();
 		addEntitiesToMiniMap();
 		this.updateMiniMapMenu();
 
@@ -817,7 +851,7 @@ public class HUDView extends ApplicationAdapter{
 		//Get the selected entity
 		selectedEntity = null;
 		selectedList.clear();
-		for (BaseEntity e : gameManager.get().getWorld().getEntities()) {
+		for (BaseEntity e : gameManager.get().getWorld().getFloodableEntityList()) {
 			if (e.isSelected()) {
 				selectedList.add(e);
 			}
@@ -837,18 +871,6 @@ public class HUDView extends ApplicationAdapter{
 		if (selectedList.size() > 0)	selectedEntity = selectedList.get(0);
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
-
-		
-		//chat listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && cheatActiveCheck ==0) {
-			if (messageToggle){
-			    hideChatBox();
-
-			} else {
-			    showChatBox();
-				
-			}
-		}
 
 		//Will check all of the specified hotkeys to see if any have been pressed
 		hotkeys.checkKeys();
@@ -928,21 +950,18 @@ public class HUDView extends ApplicationAdapter{
 		//Map
 		minimap.align(Align.topLeft);
 		minimap.setPosition(0, 0);
-		minimap.setMovable(false);
 		minimap.setSize(220, 220);
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
-		actionsWindow.setPosition(220, 0);
+		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2);
+		actionsWindow.setHeight(minimap.getHeight()/2);
+		actionsWindow.setPosition(minimap.getWidth()/2, 0);
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 		//Menu manipulator
-		HUDManip.setSize(50, 80);
-		HUDManip.setPosition(stage.getWidth()-50, 50);
-		HUDManip.align(Align.right| Align.bottom);
+		HUDManip.setPosition(250, 40);
 
 		//resize stats
 		stats.resizeStats(width, height);
@@ -1091,6 +1110,13 @@ public class HUDView extends ApplicationAdapter{
         messageToggle = false;
         hud.setChatActiveCheck(0);
         stage.unfocusAll();
+	}
+
+
+	private void populateSelectedTable() {
+		for (BaseEntity be: selectedList) {
+			selectedTable.add(be.getPortrait());
+		}
 	}
 
 }

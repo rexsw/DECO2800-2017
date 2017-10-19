@@ -12,14 +12,16 @@ package com.deco2800.marswars.entities.items;
  * array is [rocks, crystals, water, biomass].
  * 
  * @author Mason
+ * @author Z
  *
  */
 public enum WeaponType implements ItemType {
 	// assault blasters
-	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }),
+	WEAPON1("W1", "power_gloves", 10, 3, 90, new int[] { 20, 20, 0, 0 }, new
+			float[] { 1.0f, 1.2f, 1.4f, 1.6f }),
 
 	// sniper rifles
-	WEAPON2("W2", "hand_gun", 999, 999, 999, new int[] { 30, 30, 0, 0 });
+	WEAPON2("W2", "hand_gun", 999, 999, 999, new int[] { 30, 30, 0, 0 }, new float[] { 1.0f, 1.2f, 1.4f, 1.6f });
 
 	private String name;
 	private int baseDamage;
@@ -27,6 +29,7 @@ public enum WeaponType implements ItemType {
 	private int baseRange;
 	private int baseSpeed;
 	private String texture;
+	private float[] itemLevelMultipliers;
 
 	/**
 	 * Constructor method of Weapon Type
@@ -44,13 +47,14 @@ public enum WeaponType implements ItemType {
 	 * @param baseCost
 	 *            of this weapon
 	 */
-	WeaponType(String name, String texture, int baseDamage, int baseRange, int baseSpeed, int[] baseCost) {
+	WeaponType(String name, String texture, int baseDamage, int baseRange, int baseSpeed, int[] baseCost, float[] levelMultipliers) {
 		this.name = name;
 		this.baseDamage = baseDamage;
 		this.baseRange = baseRange;
 		this.baseSpeed = baseSpeed;
 		this.baseCost = baseCost;
 		this.texture = texture;
+		this.itemLevelMultipliers = levelMultipliers;
 	}
 
 	/**
@@ -61,6 +65,16 @@ public enum WeaponType implements ItemType {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * Gets the item level stat multipliers
+	 *
+	 * @return float array that contains the stat multipliers for
+	 * corresponding item levels
+	 */
+	public float[] getItemLevelMultipliers() {
+		return this.itemLevelMultipliers;
 	}
 
 	/**

@@ -1,6 +1,13 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.units.Soldier;
@@ -69,7 +76,16 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
-	        
+	        //HeroFactory Stages
+            //PLACEHOLDER TEXTURES WHILE HF GRAPHICS BEING CREATED
+            textureMap.put("herofactory1",new Texture
+                    ("resources/BuildingAssets/Building process/Barracks/barracks1.png"));
+            textureMap.put("herofactory2",new Texture
+                    ("resources/BuildingAssets/Building process/Barracks/barracks2.png"));
+            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks3.png"));
+            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/Barracks/barracks4.png"));
+
+
 	        //TechBuilding Stages
 	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
 	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
@@ -152,7 +168,9 @@ public class TextureManager extends Manager {
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
-        
+
+        //----------- Technology Assets:
+
         //----------- MainMenu Assets:
         this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
@@ -186,11 +204,11 @@ public class TextureManager extends Manager {
         this.saveTexture("commanderSelected", "resources/UnitAssets/Neutral/Commander_2.png");
         
         //Backgrounds:
-        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
-        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
-        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
-        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/nighbg.png");
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
@@ -226,6 +244,7 @@ public class TextureManager extends Manager {
         for (int i = 0; i < 21; i++) {
             this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
         }
+        
     }
     /*
      *
@@ -287,6 +306,10 @@ public class TextureManager extends Manager {
                 unitType,textureType);
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
+        for (int i = 0; i < 1000; i++) {
+            System.out.println("loadUnitSprite CALLED, path is  " + path +
+                    " retval is " + retVal);
+        }
         saveTexture(retVal,path);
         return retVal;
     }

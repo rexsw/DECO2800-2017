@@ -32,7 +32,7 @@ public class ExitGame extends Dialog{
 				button("Yes", 1);
 				button("No, keep playing", 2);
 				if(started) {
-					timeManager.pause();
+					this.timeManager.pause();
 				}
 			}
 	}		
@@ -45,8 +45,8 @@ public class ExitGame extends Dialog{
 					System.exit(0);
 				} else {
 					this.hud.setExitCheck(0);
-					if(started) {
-						timeManager.unPause();
+					if(this.started) {
+						this.timeManager.unPause();
 					}
 				}
 			}	

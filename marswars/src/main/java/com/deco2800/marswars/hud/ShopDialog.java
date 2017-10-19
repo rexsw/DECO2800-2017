@@ -88,11 +88,11 @@ public class ShopDialog extends Dialog{
 	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
 	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
 	                	if (item instanceof WeaponType) {
-	                		Weapon weapon = new Weapon((WeaponType) item);
+	                		Weapon weapon = new Weapon((WeaponType) item, 1);
 		                	selectedHero.addItemToInventory(weapon);
 		                	status.setText("Bought " + weapon.getName() + "(Weapon) for " + selectedHero.toString());
 	                	} else if (item instanceof ArmourType) {
-	                		Armour armour = new Armour((ArmourType) item);
+	                		Armour armour = new Armour((ArmourType) item, 1);
 	                		selectedHero.addItemToInventory(armour);
 	                		status.setText("Bought " + armour.getName() + "(Armour) for " + selectedHero.toString());
 	                	} else {

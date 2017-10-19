@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -16,10 +15,7 @@ import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.managers.BackgroundManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.WeatherManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 
@@ -81,17 +77,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
-		
 		/*All managers */
-		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
-
+		this.reg = (TextureManager) (GameManager.get().getManager(TextureManager.class));
 		this.camera = new OrthographicCamera(1920, 1080);
+		
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
+		/*All managers */
+		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+
 		new MainMenu(this.skin, this.stage);
+
 	}
 
 	/**
@@ -135,7 +134,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
-		weatherManager.addRainVisuals(batch);
+		// weatherManager.addRainVisuals(batch);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());

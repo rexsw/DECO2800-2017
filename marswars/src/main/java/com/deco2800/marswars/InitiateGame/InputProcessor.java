@@ -154,35 +154,29 @@ public class InputProcessor {
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				if (!multiSelectionFlag && GameManager.get().getWorld() != null) {
+				if (GameManager.get().getWorld() != null && !multiSelectionFlag) {
 					MultiSelection.resetSelectedTiles();
-						this.originX = screenX;
-						this.originY = screenY;
-						// if the click is on the minimap
-						if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
-							return true;
-						}
+					this.originX = screenX;
+					this.originY = screenY;
+					// if the click is on the minimap
+					if (GameManager.get().getMiniMap().clickedOn(screenX, screenY)) {
+						return true;
+					}
 
-						Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-						mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
-						mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button, false);
-
-
-				} else {
-					// click
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
-					multiSelection.addStartTile(worldCoords.x, worldCoords.y);
-
+					mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+					mouseHandler.handleMouseClick(worldCoords.x, worldCoords.y, button, false);
 					return true;
 				}
-				return true;
+				// nothing was done so return false
+				return false;
 			}
 
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
 				// this is used for multiselection
 				if (multiSelectionFlag) {
+					multiSelectionFlag = false;
 					Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
 					multiSelection.addEndTile(worldCoords.x, worldCoords.y);
 					multiSelection.clickAllTiles();
@@ -190,15 +184,19 @@ public class InputProcessor {
 					return true;
 
 				}
-				return true;
+				return false;
 
 			}
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				//if shift is held, multiselect things instead of moving the map
-				if (multiSelectionFlag) {
+				if (GameManager.get().getWorld() != null) {
+					//if click and drag, multiselect things instead of moving the map
+					if (!multiSelectionFlag) {
+						startMultiSelect(screenX, screenY);
+					}
 					MultiSelection.resetSelectedTiles();
+					mouseHandler.multiSelect(true);
 					float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth",
 							Integer.class);
 					float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight",
@@ -208,43 +206,16 @@ public class InputProcessor {
 					float projX = worldCoords.x / tileWidth;
 					float projY = -(worldCoords.y - tileHeight / 2f) / tileHeight + projX;
 					projX -= projY - projX;
-
+	
 					MultiSelection.updateSelectedTiles((int) projX, (int) projY);
 					return true;
+				} else {
+					return false;
 				}
-
-				this.originX -= screenX;
-				this.originY -= screenY;
-
-				// invert the y axis
-				this.originY = -this.originY;
-
-				this.originX += InputProcessor.this.camera.position.x;
-				this.originY += InputProcessor.this.camera.position.y;
-
-				InputProcessor.this.camera.translate(this.originX - InputProcessor.this.camera.position.x,
-						this.originY - InputProcessor.this.camera.position.y);
-
-				this.originX = screenX;
-				this.originY = screenY;
-
-				GameManager.get().setCamera(InputProcessor.this.camera);
-
-				return true;
-
 			}
 
 			@Override
 			public boolean keyDown(int keyCode) {
-
-				// enable multiSelection through touch and drag if Shift is held
-				if (keyCode == Input.Keys.SHIFT_LEFT || keyCode == Input.Keys.SHIFT_RIGHT) {
-					multiSelectionFlag = true;
-
-					//reset the selected tiles grid
-					MultiSelection.resetSelectedTiles();
-					mouseHandler.multiSelect(true);
-				}
 				if (keyCode == Input.Keys.CONTROL_LEFT || keyCode == Input.Keys.CONTROL_RIGHT) {
 					mouseHandler.multiSelect(true);
 				}
@@ -308,6 +279,15 @@ public class InputProcessor {
 		});
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
+
+	/**
+	 * initiates the multiselection process
+	 */
+	private void startMultiSelect(int screenX, int screenY) {
+		multiSelectionFlag = true;
+		Vector3 worldCoords = InputProcessor.this.camera.unproject(new Vector3(screenX, screenY, 0));
+		multiSelection.addStartTile(worldCoords.x, worldCoords.y);
 	}
 
 	/**
