@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by Hayden Bird on 11/10/2017.
  */
 
-public class EntityPortrait extends ImageButton {
+public class EntityPortrait extends TextButton {
 
     private List<EntityPortrait> children = new ArrayList<>();
     private BaseEntity unit;
@@ -32,7 +33,7 @@ public class EntityPortrait extends ImageButton {
      * @param unit The entity that will be represented with the portrait
      */
     public EntityPortrait(Skin skin, BaseEntity unit, float width, float height) {
-        super(skin);
+        super("", skin);
         this.unit = unit;
         initiateButton(width, height);
         createListener();
@@ -45,7 +46,7 @@ public class EntityPortrait extends ImageButton {
      * @param parent The parent entity of this portrait
      */
     public EntityPortrait(Skin skin, BaseEntity unit, EntityPortrait parent, float width, float height) {
-        super(skin);
+        super("", skin);
         this.unit = unit;
         initiateButton(width, height);
         createListener();
@@ -89,8 +90,10 @@ public class EntityPortrait extends ImageButton {
         Texture healthBar = textureManager.getTexture("Health" + unit.getHealthBar().getState());
         Image unitSprite = new Image(unitTexture);
         this.healthBarSprite = new Image(healthBar);
-        this.add(unitSprite).align(Align.top);
-        this.add(healthBarSprite).align(Align.top).bottom();
+        this.add(unitSprite).align(Align.top).width(width).height(height);
+        this.add(healthBarSprite).align(Align.top).bottom().width(width).height(height*0.2f);
+        super.setWidth(width);
+        super.setHeight(height);
     }
 
     /**

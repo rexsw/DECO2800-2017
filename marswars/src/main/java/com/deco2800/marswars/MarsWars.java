@@ -77,14 +77,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
-<<<<<<< HEAD
-		
-=======
-
 		/*All managers */
 		this.reg = (TextureManager) (GameManager.get().getManager(TextureManager.class));
-
->>>>>>> v2
 		this.camera = new OrthographicCamera(1920, 1080);
 		
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);

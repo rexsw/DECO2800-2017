@@ -12,6 +12,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.hud.EntityPortrait;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
@@ -39,6 +40,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
+	private EntityPortrait portrait;
 
 	//NEVER DELETE THIS
 	public BaseEntity(){};
@@ -572,4 +574,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 
+    public EntityPortrait getPortrait() {
+		if (this.portrait == null) {
+			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
+		}
+		portrait.updateHealth();
+		return portrait;
+    }
 }
