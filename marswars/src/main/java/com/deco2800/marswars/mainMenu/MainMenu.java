@@ -200,6 +200,4 @@ public class MainMenu {
 			game.render(batch, camera);
 		}
 	}
-
-
 }

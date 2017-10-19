@@ -222,7 +222,7 @@ public class HUDView extends ApplicationAdapter{
 
 		//Create + align time displays
 		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("0:00", skin);
+		gameTimeDisp = new Label("0:00", GameManager.get().getAltSkin(), "seven-seg");
 		gameLengthDisp = new Label("00:00:00", skin);
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
@@ -310,6 +310,7 @@ public class HUDView extends ApplicationAdapter{
 		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
 		statsTable.setWidth(200);
 		statsTable.pad(5);
+		statsTable.setDebug(true);
 		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
 		
@@ -857,6 +858,7 @@ public class HUDView extends ApplicationAdapter{
 		addEntitiesToMiniMap();
 		this.updateMiniMapMenu();
 
+		/*
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
 			gameLengthDisp.setColor(Color.FIREBRICK);
@@ -865,6 +867,7 @@ public class HUDView extends ApplicationAdapter{
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
+		*/
 
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
