@@ -1,29 +1,32 @@
 package com.deco2800.marswars.entities.items.effects;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;
 
 /**
  * Class that defines an effect that increases or decreases health of a target instantly for purposes of healing or 
- * damage (for item effects that instantly heal or instantly do damage).
+ * damage (for item effects that instantly heal or instantly do damage). Damage here bypasses armour.
  * 
  * health = amount of health to heal or damage to deal
  * isDamage = boolean indicating whether if the effect would be a heal or damage (true if it is damage)
+ * target = Target enumerate value indicating the intended target of this effect (see Effect interface for more detail).
  * @author Mason
  *
  */
 public class HealthEffect implements Effect{
 	private int health;
 	private boolean isDamage;
+	private Target target;
 	
 	/**
 	 * Constructor for this effect. Sets the class fields with the parameters.
 	 * @param health  amount of health to heal or damage to deal
 	 * @param isDamage  boolean indicating whether if the effect would be a heal or damage (true if it is damage)
+	 * @param target  Target enumerate value indicating the intended target of this effect.
 	 */
-	public HealthEffect(int health, boolean isDamage) {
+	public HealthEffect(int health, boolean isDamage, Target target) {
 		this.health = health;
 		this.isDamage = isDamage;
+		this.target = target;
 	}
 	
 	/**
@@ -33,16 +36,12 @@ public class HealthEffect implements Effect{
 	 */
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-		if (entity instanceof Commander) { //only allowing changes on Commander for testing purposes at this stage.
-			Commander hero = (Commander) entity;		
-			if (isDamage) {
-				hero.setHealth(hero.getHealth() - this.health);
-			} else { //can't heal more than the max hp of the target
-				hero.setHealth(hero.getHealth() + this.health > hero.getMaxHealth()?hero.getMaxHealth() :
-					hero.getHealth() + this.health);
-			}
+		if (isDamage) {
+			entity.setHealth(entity.getHealth() - this.health);
+		} else { //can't heal more than the max hp of the target
+			entity.setHealth(entity.getHealth() + this.health > entity.getMaxHealth()?entity.getMaxHealth() :
+				entity.getHealth() + this.health);
 		}
-		
 	}
 
 	/**
@@ -52,7 +51,21 @@ public class HealthEffect implements Effect{
 	 */
 	@Override
 	public void removeEffect(AttackableEntity entity) {
-		return;
+		if (isDamage) {
+			entity.setHealth(entity.getHealth() + this.health > entity.getMaxHealth()?entity.getMaxHealth() :
+				entity.getHealth() + this.health);
+		} else { //can't heal more than the max hp of the target
+			entity.setHealth(entity.getHealth() - this.health);
+		}
+	}
+	
+	/**
+	 * Returns the intended target of this effect as a Target enumerate value.
+	 * @return Target enumerate value corresponding to the intended target of this effect.
+	 */
+	@Override
+	public Target getTarget() {
+		return this.target;
 	}
 	
 	/**

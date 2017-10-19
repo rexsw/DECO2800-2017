@@ -8,7 +8,7 @@ import com.deco2800.marswars.worlds.AbstractWorld;
  * A turret that can be used for base defence
  */
 
-public class Turret extends BuildingEntity{
+public class Turret extends BuildingEntity {
 
 	/**
 	 * Constructor for the turret.

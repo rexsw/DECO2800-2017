@@ -24,6 +24,9 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	protected boolean canWalkOver = false;
 
+	//NEVER DELETE THIS
+	public AbstractEntity(){}
+
 	/**
 	 * Constructor for the abstract entity
 	 * @param posX
@@ -141,6 +144,22 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 			centeredX += (1-this.position.getXLength() / 2);
 		}
 		this.position.setX(centeredX);
+	}
+
+	/**
+	 * set the x size of an entity
+	 * @param x
+	 */
+	public void setXRenderLength(float x){
+		this.xRenderLength = x;
+	}
+
+	/**
+	 * set the y size of an entity
+	 * @param y
+	 */
+	public void setYRenderLength(float y){
+		this.yRenderLength = y;
 	}
 
 	/**

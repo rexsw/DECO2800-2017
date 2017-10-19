@@ -1,11 +1,7 @@
 package com.deco2800.marswars.hud;
 
 
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-
-import java.awt.*;
 
 public class MiniMapEntity {
     private int x; // x coordinate of the entity in pixels: 0 <= x < minimap width
@@ -41,5 +37,15 @@ public class MiniMapEntity {
         } else {
             return "AI_unit";
         }
+    }
+
+    /**
+     *
+     * Only frienly units, and enemys not obscured by the fog of war should be displayed on the minimap
+     *
+     * @return true if the entity is to be displayed on the minimap, false otherwise
+     */
+    public boolean toBeDisplayed() {
+        return !entity.concealedByFog();
     }
 }

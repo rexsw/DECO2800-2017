@@ -1,20 +1,20 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.FireAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A missile.
@@ -39,8 +39,8 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.setareaDamage(areaDamage);
         this.setOwner(owner);
         this.setOwnerEntity(ownerEntity);
-        this.addNewAction(ActionType.MOVE);
-        currentAction = Optional.of(new MoveAction((int) target.getPosX(), (int) target.getPosY(), this));
+        this.addNewAction(ActionType.FIRE);
+        currentAction = Optional.of(new FireAction((int) target.getPosX(), (int) target.getPosY(), this));
         if (ownerEntity instanceof Hacker) {
         	this.setDamage(ownerEntity.getLoyaltyDamage());
         }
@@ -55,21 +55,24 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     	/* If the action is completed, remove it otherwise keep doing that action */
     	try {
     		// check if the target still exists in the world
-    		float posX = this.getPosX(); float posY = this.getPosY();
+    		float posX = this.getPosX();
+			float posY = this.getPosY();
     		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 			if (find && currentAction.get().completed()) {
 				// check for the positions
-				if (this.getTarget().getPosX() == posX && this.getTarget().getPosY() == posY) {
+				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+				if (xPos && yPos) {
 					impact();
 					GameManager.get().getWorld().removeEntity(this);
-					//LOGGER.info("target health " + this.getTarget().getHealth());
+
 				} else {
 					GameManager.get().getWorld().removeEntity(this);
 				}
-			} else if (find == true) { // if target is still existing then continue the action
+			} else if (find) { // if target is still existing then continue the action
 				currentAction.get().doAction();
 			} else { // either the target is not existing anymore or the action is completed
-				//LOGGER.info("Action is completed. Deleting");
+
 				currentAction = Optional.empty();
 				GameManager.get().getWorld().removeEntity(this);
 			}
@@ -128,7 +131,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * @param listOfEntity
      * 			the list to add enemy entity
      */
-    public void addEnemyEntity(int areaDamage, ArrayList<AttackableEntity> listOfEntity) {
+    public void addEnemyEntity(int areaDamage, List<AttackableEntity> listOfEntity) {
     	int length = 1 + 2 * areaDamage;
     	BaseWorld world = GameManager.get().getWorld();
     	int posX = (int) this.getTarget().getPosX();
@@ -140,13 +143,13 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 				int currentX = x + posX + areaDamage;
 				int currentY = y + posY + areaDamage;
 				// invalid position
-				//LOGGER.info("Checking valid position");
+
 				if (currentX < 0 || currentX > world.getWidth() || currentY > world.getLength()) {
 					continue;
 				}
 				// check for attackablentity enemy and add them to listOfEntity
 				List<BaseEntity> entitiesList = GameManager.get().getWorld().getEntities(currentX, currentY);
-				if (entitiesList.size() > 0) {
+				if (!entitiesList.isEmpty()) {
 					for (BaseEntity entity: entitiesList) {
 						// need to change the condition at some point
 						if (entity instanceof AttackableEntity && !this.sameOwner(entity)) {

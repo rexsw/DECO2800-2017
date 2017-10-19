@@ -1,19 +1,13 @@
 package com.deco2800.marswars.managers;
 
-import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.AbstractWorld;
-
-import java.util.List;
 
 /**this class will contain info for multi selection
  * Created by Treenhan on 9/19/17.
  * this class holds the information about multiselection
  */
 public class MultiSelection extends Manager {
-    //private static AbstractWorld world = GameManager.get().getWorld();
 
     /**
      * this array contain the status of each tile
@@ -51,23 +45,24 @@ public class MultiSelection extends Manager {
 
     /**
      * update the selecting area based on the ending points
-     * @param endX
-     * @param endY
+     * @param x
+     * @param y
      */
-    public static void updateSelectedTiles(int endX,int endY){
-
+    public static void updateSelectedTiles(int x,int y){
+        int endX=x;
+        int endY=y;
         //this check the boundaries
         AbstractWorld world = GameManager.get().getWorld();
-        if (endX < 0){
+        if (endX <= 0){
             endX=0;
-        }else if( endX > world.getWidth()){
-            endX=world.getWidth();
+        }else if( endX >= world.getWidth()){
+            endX=world.getWidth()-1;
         }
 
-        if (endY < 0){
+        if (endY <= 0){
             endY=0;
-        }else if( endY > world.getLength()){
-            endY=world.getLength();
+        }else if( endY >= world.getLength()){
+            endY=world.getLength()-1;
         }
 
         //assign the ending points
@@ -120,7 +115,7 @@ public class MultiSelection extends Manager {
      * @param x
      * @param y
      */
-    public void addStartTile(float x, float y){
+    public static void addStartTile(float x, float y){
     	if (GameManager.get().getWorld() != null){
             float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
             float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
@@ -132,6 +127,19 @@ public class MultiSelection extends Manager {
             projX -= projY - projX;
 
 
+            //this check the boundaries
+            AbstractWorld world = GameManager.get().getWorld();
+            if (projX < 0){
+                projX=0;
+            }else if( projX >= world.getWidth()){
+                projX=world.getWidth()-1;
+            }
+
+            if (projY < 0){
+                projY=0;
+            }else if( projY >= world.getLength()){
+                projY=world.getLength()-1;
+            }
             //adding the starting tile
             tiles[0]=(int)projX;
             tiles[1]=(int)projY;
@@ -143,7 +151,7 @@ public class MultiSelection extends Manager {
      * @param x
      * @param y
      */
-    public void addEndTile(float x, float y){
+    public static void addEndTile(float x, float y){
         float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
         float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
         float projX;
@@ -153,10 +161,18 @@ public class MultiSelection extends Manager {
         projY = -(y - tileHeight / 2f) / tileHeight + projX;
         projX -= projY - projX;
 
-//        if (projX < 0 || projX > world.getWidth() || projY < 0 || projY > world.getLength()) {
-//            return;//TODO put the boundary in
-//        }
+        AbstractWorld world = GameManager.get().getWorld();
+        if (projX < 0){
+            projX=0;
+        }else if( projX >= world.getWidth()){
+            projX=world.getWidth()-1;
+        }
 
+        if (projY < 0){
+            projY=0;
+        }else if( projY >= world.getLength()){
+            projY=world.getLength()-1;
+        }
         //add the ending tile
         tiles[2]=(int)projX;
         tiles[3]=(int)projY;
@@ -168,21 +184,21 @@ public class MultiSelection extends Manager {
     public void clickAllTiles() {
 
         //loop through the area and call the mouse handler at every position
-        if (tiles[0] >= tiles[2]) {
-            if (tiles[1] >= tiles[3]) {
-                for (int i = tiles[2]; i <= tiles[0]; i++) {
-                    for (int j = tiles[3]; j <= tiles[1]; j++) {
-                        callMouseHandler(i, j);
-                    }
+        if (tiles[0] >= tiles[2] && tiles[1] >= tiles[3]) {
+            for (int i = tiles[2]; i <= tiles[0]; i++) {
+                for (int j = tiles[3]; j <= tiles[1]; j++) {
+                    callMouseHandler(i, j);
                 }
-            } else {
+            }
+        }
+            else if (tiles[0] >= tiles[2] && tiles[1] < tiles[3]){
                 for (int i = tiles[2]; i <= tiles[0]; i++) {
                     for (int j = tiles[1]; j <= tiles[3]; j++) {
                         callMouseHandler(i, j);
                     }
                 }
             }
-        } else {
+        else {
             if (tiles[1] >= tiles[3]) {
                 for (int i = tiles[0]; i <= tiles[2]; i++) {
                     for (int j = tiles[3]; j <= tiles[1]; j++) {
@@ -199,7 +215,11 @@ public class MultiSelection extends Manager {
         }
     }
 
-    //this function will call the mouse handler at a specific position
+    /**
+     * this function will call the mouse handler at a specific position
+     * @param x
+     * @param y
+     */
     public void callMouseHandler(int x, int y){
         MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
         mouseHandler.handleMouseClick(x, y, 0,true);

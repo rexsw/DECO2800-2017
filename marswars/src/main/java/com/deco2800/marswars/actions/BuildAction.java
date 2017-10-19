@@ -1,28 +1,17 @@
 package com.deco2800.marswars.actions;
 
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.worlds.AbstractWorld;
-
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.buildings.Barracks;
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.buildings.Bunker;
-import com.deco2800.marswars.buildings.CheckSelect;
-import com.deco2800.marswars.buildings.TechBuilding;
-import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.util.WorldUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,8 +31,6 @@ public class BuildAction implements DecoAction{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildAction.class);
 	private boolean completed = false;
-	private int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-	private int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera;
 	private float projX;
 	private float projY;
@@ -78,12 +65,22 @@ public class BuildAction implements DecoAction{
 		this.buildingDims = (int)(building.getBuildSize());
 	}
 	
+	public BuildAction(BaseEntity builder, BuildingType building, float x, float y) {
+		this.actor = builder;
+		this.building = building;
+		this.buildingDims = (int)(building.getBuildSize());
+		this.projX = x;
+		this.projY = y;
+		this.state = State.SETUP_MOVE;
+		createBuilding();
+	}
+	
 	/**
 	 * Keeps getting current position of mouse pointer and checks if it's a valid build area
 	 * When called on, switches state to move builder and begin building
 	 */
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused && completed == false) {
+		if (! timeManager.isPaused() && ! actionPaused && !completed) {
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);
@@ -104,38 +101,18 @@ public class BuildAction implements DecoAction{
 			if (state == State.SELECT_SPACE) {
 				relocateSelect--;
 				if (relocateSelect == 0) {
-					if (temp != null) {
-						GameManager.get().getWorld().removeEntity(temp);
-						validBuild = true;
-					}
-					camera = GameManager.get().getCamera();
-					Vector3 worldCoords = camera.unproject(new
-							Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-					projX = worldCoords.x / tileWidth;
-					projY = -(worldCoords.y - tileHeight / 2f)
-							/ tileHeight + projX;
-					projX -= projY - projX;
-					projX = (int) projX;
-					projY = (int) projY;
-					if (buildingDims % 2 == 0) {
-						fixPos = .5f;
-					}
-					if (!(projX < (((buildingDims + 1) / 2) - fixPos) || projX >
-							(GameManager.get().getWorld().getWidth() - buildingDims - fixPos)
-							|| projY < (((buildingDims + 1) / 2) - fixPos) || projY >
-							GameManager.get().getWorld().getLength() - buildingDims - fixPos)) {
-						temp = new CheckSelect(projX+fixPos-((int)((buildingDims+1)/2)), projY+fixPos, 0f,
-								buildingDims, buildingDims, 0f, building);
-						validBuild = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), buildingDims, fixPos);
-						if (validBuild) {
-							temp.setGreen();
-							GameManager.get().getWorld().addEntity(temp);
-
-						} else {
-							temp.setRed();
-							GameManager.get().getWorld().addEntity(temp);
-						}
-					}
+					float[] parse = new float[]{projX, projY, fixPos};
+					temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
+					/*
+					 * updating coordinates and parsed values into selectionStage because java passes by values unless 
+					 * it's an object.
+					 */
+					projX = parse[0];
+					projY = parse[1];
+					fixPos = parse[2];
+					//updating validBuild based on the texture of temp.
+					validBuild = temp == null ? false : temp.getTexture().contains("green") || 
+							temp.getTexture().contains("Green");
 					relocateSelect = 10;
 
 				}
@@ -251,7 +228,8 @@ public class BuildAction implements DecoAction{
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
 			break;
 		case HEROFACTORY:
-			//Update this
+			base = new HeroFactory(GameManager.get().getWorld(),
+					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
 			break;
 		case TECHBUILDING:
 			base = new TechBuilding(GameManager.get().getWorld(), 

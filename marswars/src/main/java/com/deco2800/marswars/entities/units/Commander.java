@@ -1,15 +1,26 @@
 package com.deco2800.marswars.entities.units;
 
-import com.deco2800.marswars.actions.*;
+import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.actions.UseSpecialAction;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
-import com.deco2800.marswars.entities.items.*;
+import com.deco2800.marswars.entities.items.Item;
+import com.deco2800.marswars.entities.items.Special;
+import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.managers.GameManager;
-
-import java.util.Optional;
+import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.util.WorldUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+
+// A reminder for coder, the connectHero function should called when hero has been spawned! like bind to hero factory
 
 /**
  * A hero for the game previously called as HeroSpacman.
@@ -19,15 +30,15 @@ import org.slf4j.LoggerFactory;
  * inventory = instance of the Inventory class to store items that the Commander has equipped.
  * currentAction = the Commander's action that it is currently taking.
  * 
- * Created by timhadwen on 19/7/17.
- * Edited by Zeid Ismail on 8/09
+ * 
  */
 public class Commander extends Soldier {
 
 	private Inventory inventory;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commander.class);
-	//master merging testing
 	Optional<DecoAction> currentAction = Optional.empty();
+	private boolean statsChange;
+	private boolean itemInUse = false;
 
 	/**
 	 * Constructor for the Commander in the specified location and with the specified owner (i.e. who controls the 
@@ -39,105 +50,65 @@ public class Commander extends Soldier {
 	 */
 	public Commander(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		
+		LOGGER.debug("Create a commander for team: " + owner);
 		this.name = "Commander";
+		this.setEntityType(EntityType.HERO);
 		setAttributes();
 		this.inventory = new Inventory(this);
-		//GameManager.get().getGui().
+		this.statsChange = true;
+		this.setArmor(this.getMaxArmor());
 	}
 
-//	/**
-//	 * Method to check, execute and update the Commander's actions for the Commander to actually do and appear to do 
-//	 * the assigned current action.
-//	 * @param i  The current game tick.
-//	 */
-//	@Override
-//	public void onTick(int i) {
-//		if (!currentAction.isPresent()) { //no need to update or do anything if there already is no assigned action
-//			return;
-//		}
-//		//Do the assigned action if it's not completed already.
-//		if (!currentAction.get().completed()) {
-//			currentAction.get().doAction();
-//		}
-//	}
-
-
-//	@Override
-//	public void onTick(int i) {
-//		if (!currentAction.isPresent()) {
-//			return;
-//		}
-//
-//		if (!currentAction.get().completed()) {
-//			currentAction.get().doAction();
-//		}
-//	}
-//
-
-
-//	@Override
-//	public void onRightClick(float x, float y) {
-//		List<BaseEntity> entities;
-//		try {
-//			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
-//
-//		} catch (IndexOutOfBoundsException e) {
-//			// if the right click occurs outside of the game world, nothing will happen
-//			LOGGER.info("Right click occurred outside game world.");
-//			this.setTexture(defaultTextureName);
-//			return;
-//		}
-//		
-//		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
-//				
-//		if (attack) {
-//			// we cant assign different owner yet
-//			AttackableEntity target = (AttackableEntity) entities.get(0);
-//			attack(target);
-//			
-//		} else {
-//			this.setCurrentAction(Optional.of(new MoveAction((int) x, (int) y, this)));
-//			LOGGER.error("Assigned action move to" + x + " " + y);
-//		}
-//		this.setTexture(defaultTextureName);
-//		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-//		sound.playSound(movementSound);
-//	}
-//
-//	@Override
-//	public boolean isSelected() {
-//		return false;
-//	}
-//
-//	@Override
-//	public void deselect() {
-//	}
-
+	/**
+	 * Add an item to the commander's inventory
+	 * 
+	 * @param item to be added
+	 * @return true if added successful, else false
+	 */
 	public boolean addItemToInventory(Item item) {
 		return inventory.addToInventory(item);
 	}
 
+	/**
+	 * Remove an item from the commander's inventory
+	 * 
+	 * @param item to be removed
+	 * @return true if removed successful, else false
+	 */
 	public boolean removeItemFromInventory(Item item) {
 		return inventory.removeFromInventory(item);
 	}
 
-	/** not a to string, returns the inventory object itself
-	 *
+	/** 
+	 *	This method returns the inventory object or the items bag of this commander
 	 * @return inventory
 	 */
 	public Inventory getInventory() {
 		return inventory;
 	}
 
-//	@Override
-//	public boolean equals(Object other) { // need more compare later
-//		if (other instanceof Commander) {
-//			return this.toString().equals(((Commander)other).toString());
-//		}
-//		return false;
-//	}
+	/**
+	 * Equals method of this class, at the moment, it only checks 3 things
+	 * 1. is other object an instance of Commander, if no return false
+	 * 2. is other object has the same toString result as this commander, if no return false
+	 * 3. are these two object has the same owner, if no return false
+	 * @return boolean whether they are the same commander
+	 */
+	@Override
+	public boolean equals(Object other) { 
+		if (other instanceof Commander) {
+			return this.toString().equals(((Commander)other).toString()) && this.owner == ((Commander)other).owner;
+		}
+		return false;
+	}
 	
+	/**
+	 * Hashcode method of commander class
+	 * Currently, it only checks if two commander got the same owner.
+	 * and because there should be only one commander for each player
+	 * so this hash code should works fine
+	 * @return int hash code of this commander object
+	 */
 	@Override
 	public int hashCode() { // need more hash later
 	    final int prime = 31;
@@ -147,20 +118,116 @@ public class Commander extends Soldier {
 	}
 	
 	/**
-	 * @return The stats of the entity
+	 * Gets the stats of this commander
+	 * @return The stats of the entity follow the parent class soldier
 	 */
 	public EntityStats getStats() {
 		return new EntityStats("Commander", this.getHealth(), this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
+	/**
+	 * Gets the name of this commander, should be 'Commander'
+	 * @return The name of commander
+	 */
 	@Override
 	public String toString(){
 		return this.name;
 	}
 	
+	/**
+	 * The purpose of this method is to avoid hero character gets hacked by hacker
+	 */
 	@Override
 	public void setLoyalty(int loyalty) {
 		return;
 	}
 	
+	/**
+	 * The purpose of this method is to track if hero has bought a new item
+	 * 
+	 * @return true if there is item change, else no
+	 */
+	public boolean getStatsChange() {
+		return statsChange;
+	}
+	
+	/**
+	 * The purpose of this method is update if hero has bought a new item
+	 * 
+	 * @param true if there is item change, else no
+	 */
+	public void setStatsChange(boolean bought) {
+		this.statsChange = bought;
+	}
+	
+	/**
+	 * Override to fit in inventory's on tick method into Commander's. This is so that Special items can have the overlay
+	 * and to allow the constraints that special items can only be used with a Commander alive.
+	 * @param tick  the current game tick
+	 */
+	@Override
+	public void onTick(int tick) {
+		super.onTick(tick);
+		this.inventory.onTick(tick);
+	}
+	
+	
+	/**
+	 * Boolean to indicate whether an item is being used. Only really used for activated special items that need the 
+	 * user to select an area.
+	 * @return  true if an item (as specified above) is being used. False otherwise.
+	 */
+	public boolean isItemInUse() {
+		return this.itemInUse;
+	}
+	
+	/**
+	 * Set method to set the boolean field to indicate whether an item is being used.
+	 * @param set  the boolean to be set to.
+	 */
+	public void setItemInUse(boolean set) {
+		this.itemInUse = set;
+	}
+	
+	@Override
+	public void onRightClick(float x, float y) {
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+			action.execute();
+			itemInUse = false;
+			return;
+		} else {
+			super.onRightClick(x, y);
+		}
+	}
+	
+//	/**
+//	 * Method to allow execution/usage of Special items via right click (in cases where the special item requires the 
+//	 * player to choose an area) without interrupting 
+//	 */
+//	@Override
+//	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
+//		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+//			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+//			action.execute();
+//			itemInUse = false;
+//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//			Sound loadedSound = sound.loadSound(movementSound);
+//			sound.playSound(loadedSound);
+//			return;
+//		} else {
+//			super.moveOrAttack(entities, x, y);
+//		}
+//	}
+	
+	@Override
+	public void deselect() {
+		super.deselect();
+		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+			action.cancel();
+			itemInUse = false;
+			WorldUtil.removeOverlay();
+		}
+	}
 }

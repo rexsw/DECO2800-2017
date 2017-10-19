@@ -51,6 +51,8 @@ public class GameManager implements TickableManager {
 	private MainMenu menu;
 	
 	private TextureManager gameTexture;
+	
+	private boolean gameStarted = false;
 
 	/**
 	 * Returns an instance of the GM
@@ -205,11 +207,13 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
-		this.mapWorld = null;
+		this.gameWorld.getEntities().clear();
 		this.gameWorld = null;
 		this.gui = null;
 		this.miniMap = null;
+		this.menu.endGame();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
@@ -224,7 +228,6 @@ public class GameManager implements TickableManager {
 		} else {
 			activeView = 0;
 			toggleMapOff();
-			
 		}
 	}
 

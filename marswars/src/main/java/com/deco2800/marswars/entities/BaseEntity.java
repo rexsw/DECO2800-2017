@@ -1,20 +1,21 @@
 package com.deco2800.marswars.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.entities.weatherEntities.Water;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
+import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private boolean selected = false;
 	protected int owner = 0;
 	private boolean fixPos = false;
+	private HealthBar healthBar;
 	protected float speed = 0.05f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
+	OrthographicCamera camera = GameManager.get().getCamera();
+
+	//NEVER DELETE THIS
+	public BaseEntity(){};
 
 	/**
 	 * Constructor for the base entity
@@ -48,6 +54,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
 		this.modifyCollisionMap(true);
+
 	}
 
 	/**
@@ -94,7 +101,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
-	
+
 	/**
 	 * Gets the build speed modifier for this entity
 	 * @return
@@ -131,7 +138,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		super.setPosition(x, y, z);
 		modifyCollisionMap(true);
 	}
-	
+
 	/**
 	 * Workaround for making position line up with rendered object rendered over multiple tiles
 	 * @param xPos
@@ -154,7 +161,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 				for (int y = bottom; y < top+addYLength; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
 				}
-			}	
+			}
 		}
 	}
 
@@ -165,8 +172,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosX(x);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -176,8 +187,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosY(y);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -187,8 +202,12 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
+		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
+
 		super.setPosZ(z);
+
+		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -210,6 +229,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void deselect() {
 		this.selected = false;
+		if (this.healthBar != null) this.healthBar.setVisible(false);
 	}
 
 	/**
@@ -249,7 +269,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		this.validActions.add(newAction);
 		return true;
 	}
-	
+
     /**
      * Adds all available building actions to the list
      */
@@ -260,7 +280,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
     		addNewAction(c);
     	}
     }
-    
+
 	/**
 	 *Removes a valid action from the entity
 	 * @param actionToRemove The new action that is valid for the unit to perform
@@ -316,9 +336,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	@Override
 	public void buttonWasPressed() {return;}
-	
+
 	/**
-	 * Returns a label to display into 'Actions' of the HUD 
+	 * Returns a label to display into 'Actions' of the HUD
 	 */
 	@Override
 	public Label getHelpText() {
@@ -415,7 +435,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setAction(DecoAction action) {
 		currentAction = Optional.of(action);
 	}
-	
+
 	/**
 	 * get the current action of the base entity
 	 * @return returns current action (can be empty)
@@ -452,7 +472,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		boolean isInstance = entity instanceof HasOwner;
 		return isInstance && this.owner == ((HasOwner) entity).getOwner();
 	}
-	
+
 	/**
 	 * Sets boolean fixPosition
 	 * @param fix
@@ -460,7 +480,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setFix(boolean fix) {
 		fixPos = fix;
 	}
-	
+
 	/**
 	 * returns boolean fixPosition
 	 * @return true if entity must be fixed
@@ -480,7 +500,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setBuildSpeed(float speed) {
 		this.buildSpeed = speed;
 	}
-	
+
 	public float getBuildSpeed() {
 		return buildSpeed;
 	}
@@ -518,4 +538,37 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	public void setNextAction(ActionType current) {
 		nextAction = current;
 	}
+
+	/**
+	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the unit as long as you are zoomed in
+	 * @return the healthbar if the entity is a building, unit or hero and has the stat properly set, null otherwise
+	 */
+	public HealthBar getHealthBar() {
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) return null; //Check if is valid type
+		if (healthBar != null) {//If there is a health bar
+			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
+				healthBar.setVisible(false);
+				return healthBar;
+			}
+			healthBar.setVisible(true);
+			healthBar.update();
+		} else {
+			healthBar = new HealthBar(this.getPosX(), this.getPosY(), this.getPosZ(), this.getXLength(), this.getYLength(), this.getZLength(), this);
+			GameManager.get().getWorld().addEntity(healthBar);
+		}
+		return healthBar;
+	}
+
+	/**
+	 * Whether or not this entity is concealed by the fog of war
+	 * @return true if concealed, false otherwise
+	 */
+	public boolean concealedByFog() {
+		if (getOwner() < 0) {
+			// friendly units are never concealed by the fog
+			return false;
+		}
+		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
+	}
+
 }

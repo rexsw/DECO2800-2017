@@ -1,7 +1,5 @@
 package com.deco2800.marswars.technology;
 
-import com.deco2800.marswars.entities.Spacman;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +43,11 @@ public class Technology {
 	}
 
 	public int[] getCost(){
-		return cost;
+		int [] result = new int[cost.length];
+		for (int i = 0; i < cost.length; i++) {
+			result[i] = cost[i];
+		}
+		return result;
 	}
 
 	public String getName(){

@@ -1,35 +1,19 @@
 package com.deco2800.marswars.entities.units;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.LoadAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.actions.UnloadAction;
-import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
-import com.deco2800.marswars.managers.AbstractPlayerManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A carrier unit that is able to load up to 3 other units, extends Soldier
@@ -39,34 +23,38 @@ import com.deco2800.marswars.worlds.BaseWorld;
  */
 
 public class Carrier extends Soldier {
-	private static final float MOVING_SPEED=0.03f;
+    private static final float MOVING_SPEED = 0.1f;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Carrier.class);
 
-    private static final int capacity = 3;
+    private static final int CAPACITY = 4;
 
     private Optional<DecoAction> currentAction = Optional.empty();
 
-	private String loadSound = "carrier-loading-sound.mp3";
+    private String loadSound = "carrier-loading-sound.mp3";
 
-    private Soldier[] loadedUnits = new Soldier[capacity];
+    private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
+    private int totalLoaded = 0;
 
-    public Carrier(float posX, float posY, float posZ, int owner) {
-	super(posX, posY, posZ, owner);
+	public Carrier(float posX, float posY, float posZ, int owner) {
+		super(posX, posY, posZ, owner);
+		setXRenderLength(1.3f);
+		setYRenderLength(1.3f);
 
-	// set all the attack attributes
-	this.setMaxHealth(1000);
-	this.setHealth(1000);
-	this.setDamage(0);
-	this.setArmor(500);
-	this.setArmorDamage(0);
-	this.setAttackRange(0);
-	this.setAttackSpeed(0);
-	this.isCarrier();
-	this.addNewAction(ActionType.LOAD);
-	this.addNewAction(ActionType.UNLOAD);
-	this.removeActions(ActionType.DAMAGE);
+		// set all the attack attributes
+		this.setMaxHealth(1000);
+		this.setHealth(1000);
+		this.setDamage(0);
+		this.setArmor(500);
+		this.setArmorDamage(0);
+		this.setAttackRange(0);
+		this.setAttackSpeed(0);
+		this.isCarrier();
+		this.addNewAction(ActionType.LOAD);
+		this.addNewAction(ActionType.UNLOAD);
+		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
+		this.removeActions(ActionType.DAMAGE);
     }
 
     /**
@@ -87,7 +75,7 @@ public class Carrier extends Soldier {
 	} catch (IndexOutOfBoundsException e) {
 	    // if the right click occurs outside of the game world, nothing will
 	    // happen
-	    LOGGER.info("Right click occurred outside game world.");
+	    LOGGER.info("Right click occurred outside game world." + e);
 	    this.setTexture(defaultTextureName);
 	    return;
 	}
@@ -96,28 +84,28 @@ public class Carrier extends Soldier {
 	    nextAction = null;
 	} else {
 	    if (!entities.isEmpty() && entities.get(0) instanceof Soldier) {
-			Soldier target = (Soldier) entities.get(0);
-			load(target);
+		Soldier target = (Soldier) entities.get(0);
+		load(target);
+	    }
+
+	    for (int i = 0; i < CAPACITY; i++) {
+		if (!(loadedUnits[i] == null)) {
+		    LOGGER.error("moving unit " + i);
+
+		    loadedUnits[i].setCurrentAction(Optional.of(new MoveAction(
+			    (int) x, (int) y, loadedUnits[i], MOVING_SPEED)));
 		}
+	    }
 
-			for (int i = 0; i < capacity; i++) {
-				if (!(loadedUnits[i] == null)) {
-					LOGGER.error("moving unit " + i);
-
-					loadedUnits[i].setCurrentAction(
-							Optional.of(new MoveAction((int) x,
-									(int) y, loadedUnits[i],MOVING_SPEED)));
-				}
-			}
-
-		if (!(!entities.isEmpty() && entities.get(0) instanceof Soldier)) {
-		currentAction = Optional
-			.of(new MoveAction((int) x, (int) y, this,MOVING_SPEED));
+	    if (!(!entities.isEmpty() && entities.get(0) instanceof Soldier)) {
+		currentAction = Optional.of(
+			new MoveAction((int) x, (int) y, this, MOVING_SPEED));
 		LOGGER.error("Assigned action move to" + x + " " + y);
 	    }
 	}
 	this.setTexture(defaultTextureName);
-	SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+	SoundManager sound = (SoundManager) GameManager.get()
+		.getManager(SoundManager.class);
 	Sound loadedSound = sound.loadSound(movementSound);
 	sound.playSound(loadedSound);
     }
@@ -130,8 +118,8 @@ public class Carrier extends Soldier {
      */
     @Override
     public void onTick(int tick) {
-		loyalty_regeneration();
-		checkOwnerChange();
+	loyalty_regeneration();
+	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)
 		modifyFogOfWarMap(true, 3);
@@ -173,15 +161,9 @@ public class Carrier extends Soldier {
 		    return;
 		}
 
-		// LOGGER.info("Spacman is on a tile with another entity, move
-		// out of the way");
-
-		// List<BaseEntity> entities =
-		// GameManager.get().getWorld().getEntities(xPosition,
-		// yPosition);
 		/* Finally move to that position using a move action */
-		currentAction = Optional.of(
-			new MoveAction((int) p.getX(), (int) p.getY(), this,MOVING_SPEED));
+		currentAction = Optional.of(new MoveAction((int) p.getX(),
+			(int) p.getY(), this, MOVING_SPEED));
 	    }
 	    return;
 	}
@@ -189,7 +171,6 @@ public class Carrier extends Soldier {
 	if (!currentAction.get().completed()) {
 	    currentAction.get().doAction();
 	} else {
-	    // LOGGER.info("Action is completed. Deleting");
 	    currentAction = Optional.empty();
 	}
 
@@ -207,10 +188,32 @@ public class Carrier extends Soldier {
 		&& target.getLoadStatus() == 0) {
 	    // prevent carrier from loading itself or other carriers
 	    currentAction = Optional.of(new LoadAction(this, target));
-	    LOGGER.error("Assigned action load target at " + x + " " + y);
+	    LOGGER.info("Assigned action load target at " + x + " " + y);
 	} else {
-	    currentAction = Optional.of(new MoveAction((int) x, (int) y, this,MOVING_SPEED));
-	    LOGGER.error("Unloadable target");
+	    currentAction = Optional
+		    .of(new MoveAction((int) x, (int) y, this, MOVING_SPEED));
+	    LOGGER.error("Impossible to load target");
+	}
+    }
+
+    /**
+     * Unloads units in carrier using an UnloadAction if it is not doing
+     * anything else
+     * 
+     */
+    public void unload() {
+	if (!currentAction.isPresent()) {
+	    unloadPassenger();
+	} else {
+	    LOGGER.error("cant unload while doing something else");
+	}
+    }
+    
+    public void unloadIndividual() {
+	if (!currentAction.isPresent()) {
+	    unloadPassengerIndividual();
+	} else {
+	    LOGGER.error("cant unload while doing something else");
 	}
     }
 
@@ -221,15 +224,17 @@ public class Carrier extends Soldier {
      * @return true if able to load the target, false otherwise
      */
     public boolean loadPassengers(Soldier target) {
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		Sound loadedSound = sound.loadSound(loadSound);
-		sound.playSound(loadedSound);
-	for (int i = 0; i < capacity; i++) {
+	SoundManager sound = (SoundManager) GameManager.get()
+		.getManager(SoundManager.class);
+	Sound loadedSound = sound.loadSound(loadSound);
+	sound.playSound(loadedSound);
+	for (int i = 0; i < CAPACITY; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
-		LOGGER.error("target loaded");
+		LOGGER.info("target loaded");
 		if (target.getLoadStatus() != 2) {
 		    target.setLoaded();
+		    totalLoaded++;
 		}
 		return true;
 	    }
@@ -250,32 +255,67 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassenger() {
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		Sound loadedSound = sound.loadSound(loadSound);
-		sound.playSound(loadedSound);
+	SoundManager sound = (SoundManager) GameManager.get()
+		.getManager(SoundManager.class);
+	Sound loadedSound = sound.loadSound(loadSound);
+	sound.playSound(loadedSound);
 	LOGGER.info("Everyone off!");
 	int empty = 0;
-	for (int i = 0; i < capacity; i++) {
+	boolean flag;
+	for (int i = 0; i < CAPACITY; i++) {
 	    if (!(loadedUnits[i] == null)) {
 		loadedUnits[i].setUnloaded();
+		totalLoaded--;
 		LOGGER.error("Unit unloaded.");
 		loadedUnits[i] = null;
 		empty++;
 	    }
 	}
 	if (empty == 0) {
-	    return false;
+	    flag = false;
 	} else {
-	    return true;
+	    flag = true;
 	}
+	return flag;
+    }
+    
+    /**
+     * unloads the last loaded Passengers in the carrier
+     * 
+     * @return true if units unloaded, false otherwise
+     */
+    public boolean unloadPassengerIndividual() {
+	SoundManager sound = (SoundManager) GameManager.get()
+		.getManager(SoundManager.class);
+	Sound loadedSound = sound.loadSound(loadSound);
+	sound.playSound(loadedSound);
+	LOGGER.info("Last in first out!");
+	int empty = 0;
+	boolean flag;
+	if(totalLoaded > 0) {
+	    if (!(loadedUnits[totalLoaded - 1] == null)) {
+		LOGGER.info("Unloading last!!!!");
+		loadedUnits[totalLoaded - 1].setUnloaded();
+		LOGGER.error("Unit unloaded.");
+		loadedUnits[totalLoaded - 1] = null;
+		totalLoaded--;
+		empty++;
+	   }
+	}
+	if (empty == 0) {
+	    flag = false;
+	} else {
+	    flag = true;
+	}
+	return flag;
     }
 
     /**
      * @return The stats of the entity
      */
     public EntityStats getStats() {
-	return new EntityStats("Carrier", this.getHealth(),this.getMaxHealth(), null,
-		this.getCurrentAction(), this);
+	return new EntityStats("Carrier", this.getHealth(), this.getMaxHealth(),
+		null, this.getCurrentAction(), this);
     }
 
     /**
@@ -284,7 +324,19 @@ public class Carrier extends Soldier {
     @Override
     public void setNextAction(ActionType a) {
 	if (a == ActionType.UNLOAD) {
-	    unloadPassenger();
+	    if (!currentAction.isPresent()) {
+		LOGGER.info("Starting to unload");
+		unloadPassenger();
+	    } else {
+		LOGGER.error("cant unload while doing something else");
+	    }
+	} else if (a == ActionType.UNLOADINDIVIDUAL) {
+	    if (!currentAction.isPresent()) {
+		LOGGER.info("Starting to unload last unit");
+		unloadPassengerIndividual();
+	    } else {
+		LOGGER.error("cant unload while doing something else");
+	    }
 	} else {
 	    LOGGER.info("Assigned action " + ActionSetter.getActionName(a));
 	    this.nextAction = a;

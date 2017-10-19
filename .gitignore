@@ -8,6 +8,7 @@ bin/
 lib/
 
 marswars/resources/HUDAssets/minimap.png
+marswars/resources/mapAssets/tmap.tmx
 
 # Gradle
 build
@@ -33,7 +34,6 @@ build
 Thumbs.db
 
 
-# Merge conflicts
 *.orig
 
 

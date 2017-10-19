@@ -3,12 +3,12 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +91,7 @@ public class MiniMap {
     public void addEntity(BaseEntity entity) {
         Vector2 coordinates = convertCoordinates(entity);
         entitiesOnMap.add(new MiniMapEntity((AttackableEntity) entity, (int) coordinates.x, (int) coordinates.y));
-        miniMapDisplay[(int) coordinates.x][(int) coordinates.y] += 1;
+        miniMapDisplay[(int) coordinates.x][(int) coordinates.y] = 1;
     }
 
 
@@ -99,17 +99,20 @@ public class MiniMap {
      * remove an entity from the minimap display
      * @param entity the entity to be removed
      */
-/*    public void removeEntity(BaseEntity entity) {
+    public void removeEntity(BaseEntity entity) {
         entitiesOnMap.remove(entity);
         Vector2 coordinates = convertCoordinates(entity);
         if (miniMapDisplay[(int) coordinates.x][(int) coordinates.y] > 0) {
-            miniMapDisplay[(int) coordinates.x][(int) coordinates.y] -= 1;
+            miniMapDisplay[(int) coordinates.x][(int) coordinates.y] = 0;
         }
-        if (entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] != null) {
+        try {
             entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y].remove();
-            entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
+        } catch (NullPointerException e) {
+            //actor was already removed
         }
-    }*/
+        entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
+
+    }
 
     /**
      * Convert the given entity's game world coordinates to the minimap corrdinates and rotates them to the correct

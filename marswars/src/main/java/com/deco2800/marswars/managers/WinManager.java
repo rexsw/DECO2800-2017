@@ -1,11 +1,10 @@
 package com.deco2800.marswars.managers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.GameStats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class the handles winning the game
@@ -25,6 +24,7 @@ public class WinManager extends Manager implements TickableManager {
 
 	@Override
 	public void onTick(long i) {
+		//on tick checks in someone has won
 		teams = black.teamsAlive();
 		if (teams == 1) {
 			//combat win for a team
@@ -47,6 +47,7 @@ public class WinManager extends Manager implements TickableManager {
 			}
 		}
 	}
+	
 	
 	/**
 	 * for testing is a winner has been choose 
@@ -80,7 +81,7 @@ public class WinManager extends Manager implements TickableManager {
 		@Override
 		protected void result(final Object object) {
 			if (object == (Object) 1) {
-				System.exit(0);
+				GameManager.get().resetGame();
 			} else {
 				GameStats stats = new GameStats(GameManager.get().getStage(), GameManager.get().getSkin(),GameManager.get().getGui(),(TextureManager) GameManager.get().getManager(TextureManager.class));
 				stats.showStats();

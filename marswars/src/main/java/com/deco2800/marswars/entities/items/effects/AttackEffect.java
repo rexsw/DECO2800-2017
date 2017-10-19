@@ -1,7 +1,9 @@
 package com.deco2800.marswars.entities.items.effects;
 
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;;
+import com.deco2800.marswars.entities.units.Commander;
+
 
 /**
  * Class that defines an effect that increases the offensive stats of a unit i.e. damage, armour damage, attack speed
@@ -13,6 +15,7 @@ import com.deco2800.marswars.entities.units.Commander;;
  * attackSpeed = amount to add onto attack speed stat
  * attackRange = amount to add on to attack range stat
  * armourDamage = amount to add onto armour damage stat (25% of attackDamage rounded to integer)
+ * target = Target enumerate value indicating the intended target of this effect (see Effect interface for more detail).
  * 
  * @author Mason
  *
@@ -22,6 +25,7 @@ public class AttackEffect implements Effect{
 	private int attackSpeed;
 	private int attackRange;
 	private int armourDamage;
+	private Target target;
 	
 	/**
 	 * Constructor for AttackEffect. armourDamage will be calculated here.
@@ -29,11 +33,12 @@ public class AttackEffect implements Effect{
 	 * @param damageSpeed  amount to add onto attack speed stat 
 	 * @param damageRange  amount to add on to attack range stat
 	 */
-	public AttackEffect(int damage, int damageSpeed, int damageRange) {
+	public AttackEffect(int damage, int damageSpeed, int damageRange, Target target) {
 		this.attackDamage = damage;
 		this.attackSpeed = damageSpeed;
 		this.attackRange = damageRange;
 		this.armourDamage = (int) (damage * 0.25);
+		this.target = target;
 	}
 	
 	/**
@@ -69,7 +74,6 @@ public class AttackEffect implements Effect{
 			Commander hero = (Commander) entity;
 			hero.setDamage(hero.getDamageDeal() - this.attackDamage > 0 ? hero.getDamageDeal() - this.attackDamage :
 				1);
-			System.err.println("damage after: " + hero.getDamageDeal());
 			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed > 0 ? 
 					hero.getAttackSpeed() - this.attackSpeed : 1);
 			hero.setAttackRange(hero.getAttackRange() - this.attackRange > 0 ? 
@@ -77,6 +81,15 @@ public class AttackEffect implements Effect{
 			hero.setArmorDamage(hero.getArmorDamage() - this.armourDamage > 0 ?
 					hero.getArmorDamage() - this.armourDamage : 1);
 		}
+	}
+	
+	/**
+	 * Returns the intended target of this effect as a Target enumerate value.
+	 * @return Target enumerate value corresponding to the intended target of this effect.
+	 */
+	@Override
+	public Target getTarget() {
+		return this.target;
 	}
 
 	/**
