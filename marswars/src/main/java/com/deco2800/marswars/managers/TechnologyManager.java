@@ -241,7 +241,7 @@ public class TechnologyManager extends Manager{
         // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
         unitAttributes.put("Soldier", new int[]{10, 750, 100, 500, 100, 8, 20});
-        unitAttributes.put("Tank", new int[]{10, 1000, 100, 500, 150, 10, 20});
+        unitAttributes.put("Tank", new int[]{10, 2500, 100, 1500, 150, 10, 20});
         unitAttributes.put("Astronaut", new int[]{10, 250, 20, 200, 10, 5, 10});
         unitAttributes.put("Medic", new int[]{10, 250, -50, 400, 0, 8, 10});
         unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
