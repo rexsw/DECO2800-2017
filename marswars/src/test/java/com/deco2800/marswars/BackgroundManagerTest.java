@@ -1,8 +1,15 @@
 package com.deco2800.marswars;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -13,6 +20,13 @@ public class BackgroundManagerTest {
     private BackgroundManager bgManager = (BackgroundManager) GameManager.get()
             .getManager(BackgroundManager.class);
 
+    @Before
+    public void init(){
+        MainMenu menu = new MainMenu(new Skin(Gdx.files.internal("uiskin.json")),new Stage(new ScreenViewport()));
+        GameManager.get().setMainMenu(menu);
+    }
+
+    @Ignore
     @Test
     public void correctBackgrounds() {
         timeManager.resetInGameTime();

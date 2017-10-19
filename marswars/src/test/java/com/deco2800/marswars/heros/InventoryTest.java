@@ -21,14 +21,14 @@ public class InventoryTest {
 	private static Commander entity; //Commander to test with and check stats.
 	private static Inventory bag; //Instance of Inventory class to test with
 	// making all the items to test with.
-	Weapon wep1 = new Weapon(WeaponType.WEAPON1);
-	Weapon wep1b = new Weapon(WeaponType.WEAPON1);
-	Weapon wep2 = new Weapon(WeaponType.WEAPON2);
-	Armour arm1 = new Armour(ArmourType.ARMOUR1);
-	Armour arm11 = new Armour(ArmourType.ARMOUR1);
-	Armour arm2 = new Armour(ArmourType.BOOTS1);
-	Special heal1 = new Special(SpecialType.AOEHEAL1);
-	Special heal2 = new Special(SpecialType.AOEHEAL2);
+	Weapon wep1 = new Weapon(WeaponType.WEAPON1, 1);
+	Weapon wep1b = new Weapon(WeaponType.WEAPON1, 1);
+	Weapon wep2 = new Weapon(WeaponType.WEAPON2, 1);
+	Armour arm1 = new Armour(ArmourType.ARMOUR1, 1);
+	Armour arm11 = new Armour(ArmourType.ARMOUR1, 1);
+	Armour arm2 = new Armour(ArmourType.BOOTS1, 1);
+	Special heal1 = new Special(SpecialType.REGEN_SHOT);
+	Special heal2 = new Special(SpecialType.TEAMHEAL);
 	Special boomHeal = new Special(SpecialType.MASS1HEAL);
 	Special bomb = new Special(SpecialType.BOMB);
 	Special nuke = new Special(SpecialType.NUKE);
@@ -250,7 +250,7 @@ public class InventoryTest {
 	 * slot and whether if they can be removed separately.
 	 */
 	public void testAddSameSpecialItems() {
-		Special heal1b = new Special(SpecialType.AOEHEAL1);
+		Special heal1b = new Special(SpecialType.REGEN_SHOT);
 		assertTrue(bag.addToInventory(heal2));
 		assertTrue(bag.addToInventory(heal1));
 		assertTrue(bag.addToInventory(heal1b));

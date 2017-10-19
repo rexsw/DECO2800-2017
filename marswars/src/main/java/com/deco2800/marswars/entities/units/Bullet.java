@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.FireAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
@@ -38,8 +39,8 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.setareaDamage(areaDamage);
         this.setOwner(owner);
         this.setOwnerEntity(ownerEntity);
-        this.addNewAction(ActionType.MOVE);
-        currentAction = Optional.of(new MoveAction((int) target.getPosX(), (int) target.getPosY(), this));
+        this.addNewAction(ActionType.FIRE);
+        currentAction = Optional.of(new FireAction((int) target.getPosX(), (int) target.getPosY(), this));
         if (ownerEntity instanceof Hacker) {
         	this.setDamage(ownerEntity.getLoyaltyDamage());
         }
@@ -59,7 +60,9 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 			if (find && currentAction.get().completed()) {
 				// check for the positions
-				if (this.getTarget().getPosX() == posX && this.getTarget().getPosY() == posY) {
+				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+				if (xPos && yPos) {
 					impact();
 					GameManager.get().getWorld().removeEntity(this);
 

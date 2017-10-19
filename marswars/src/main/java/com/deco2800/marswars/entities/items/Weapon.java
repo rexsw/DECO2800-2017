@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.items;
 
 import com.deco2800.marswars.entities.items.effects.AttackEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +17,28 @@ import java.util.List;
  * effects = the list of Effect classes which contain the item's effect(s) (i.e. their functionality).
  * 
  * @author Mason
+ * @author Z
  *
  */
 public class Weapon extends Item {
     private WeaponType type;
     private List<Effect> effects;
+    private int level;
 
     /**
 	 * Constructor for an Weapon item. Takes in an Weapontype enumerate value which specifies the stat changes the
 	 * Weapon item is to have as well as its name, costs and the ratio for increasing these when upgraded.
 	 * @param type The ArmouType enumerate that has the stored meta data for the specific item to be created.
-	 * @param lvl the level of the item to be created.
+	 * @param level the level of the item to be created.
 	 */
-    public Weapon(WeaponType type) {
+    public Weapon(WeaponType type, int level) {
     	this.effects = new ArrayList<>();
         this.type = type;
-        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
+        this.level = level;
+      //  this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed
+		//		(), getWeaponRange()));
+
+        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange(), Target.SELF));
     }
 
     /**
@@ -40,7 +47,8 @@ public class Weapon extends Item {
 	 * @return the current amount of damage (normal and armour damage) that the item will add on.
 	 */
     public int getWeaponDamage() {
-        return type.getWeaponDamage();
+        return Math.round(type.getWeaponDamage()*type.getItemLevelMultipliers()
+				[level - 1]);
     }
     
     /**
@@ -49,16 +57,19 @@ public class Weapon extends Item {
 	 * @return the current range of the damage change that the item will add on.
 	 */
     public int getWeaponRange() {
-    	return type.getWeaponRange();
-    }
-    
+		return Math.round(type.getWeaponRange() * type.getItemLevelMultipliers()
+				[level - 1]);
+	}
+
     /**
 	 * Gets the current attack speed the item will add on. Takes into account the multiplier based on the item's current
 	 *  level. 
 	 * @return the current amount attack speed that the item will add on.
 	 */
     public int getWeaponSpeed() {
-    	return type.getWeaponSpeed();
+
+		return Math.round(type.getWeaponSpeed()*type.getItemLevelMultipliers()
+				[level - 1]);
     }
     
     /**
@@ -80,6 +91,19 @@ public class Weapon extends Item {
     public Type getItemType() {
         return Type.WEAPON;
     }
+
+	/**
+	 * Gets the item level of the Weapon item.
+	 *
+	 * @return int representing the level of the Weapon item.
+	 */
+	public int getItemLevel() {	return level; }
+
+	/**
+	 * Sets the item level of the Weapon item.
+	 *
+	 */
+	public void setItemLevel(int level) { this.level = level; }
 
     /**
 	 * Gets the item name
@@ -121,13 +145,26 @@ public class Weapon extends Item {
 	 */
 	@Override
 	public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass()) || (object == null)) {
+		if ((getClass() != object.getClass())) {
 			return false;
 		}
 		return ((Weapon) object).type == this.type;
+	}
+
+	/**
+	 * The updated hashcode for this class.
+	 *
+	 * @return The updated hashcode for this class.
+	 */
+	@Override
+	public int hashCode() {
+		return type.hashCode();
 	}
 }
 

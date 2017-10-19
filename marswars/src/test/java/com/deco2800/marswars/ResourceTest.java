@@ -13,17 +13,14 @@ public class ResourceTest {
 	@Test
 	public void constructorTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
-		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		Resource t3 = new Resource(0, 1, 2, 3, 4, ResourceType.CRYSTAL);
 		Resource t4 = new Resource(0, 1, 2, 3, 4, ResourceType.BIOMASS);
 		
-		assertEquals(t1.getType(), ResourceType.WATER);
 		assertEquals(t2.getType(), ResourceType.ROCK);
 		assertEquals(t3.getType(), ResourceType.CRYSTAL);
 		assertEquals(t4.getType(), ResourceType.BIOMASS);
 		
-		assertEquals(t1.getTexture(), "large_water");
 		assertEquals(t2.getTexture(), "large_rock");
 		assertEquals(t3.getTexture(), "large_crystal");
 		assertEquals(t4.getTexture(), "large_biomass");
@@ -32,7 +29,7 @@ public class ResourceTest {
 	@Test
 	public void harvesterTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
-		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
+		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		
 		assertEquals(t1.getHarvesterCapacity(), 5);
 		
@@ -64,7 +61,7 @@ public class ResourceTest {
 	@Test
 	public void storageTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
-		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
+		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		
 		assertEquals(t1.getHealth(), initialStorage); 
 		
@@ -78,34 +75,27 @@ public class ResourceTest {
 	@Test
 	public void storageStateTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
-		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		Resource t3 = new Resource(0, 1, 2, 3, 4, ResourceType.CRYSTAL);
 		Resource t4 = new Resource(0, 1, 2, 3, 4, ResourceType.BIOMASS);
 		
-		t1.setHealth(initialStorage - 1);
 		t2.setHealth(initialStorage - 1);
 		t3.setHealth(initialStorage - 1);
 		t4.setHealth(initialStorage - 1);
-		assertEquals(t1.getTexture(), "large_water");
 		assertEquals(t2.getTexture(), "large_rock");
 		assertEquals(t3.getTexture(), "large_crystal");
 		assertEquals(t4.getTexture(), "large_biomass");
 		
-		t1.setHealth(initialStorage / 2);
 		t2.setHealth(initialStorage / 2);
 		t3.setHealth(initialStorage / 2);
 		t4.setHealth(initialStorage / 2);
-		assertEquals(t1.getTexture(), "medium_water");
 		assertEquals(t2.getTexture(), "medium_rock");
 		assertEquals(t3.getTexture(), "medium_crystal");
 		assertEquals(t4.getTexture(), "medium_biomass");
 		
-		t1.setHealth(initialStorage / 5);
 		t2.setHealth(initialStorage / 5);
 		t3.setHealth(initialStorage / 5);
 		t4.setHealth(initialStorage / 5);
-		assertEquals(t1.getTexture(), "small_water");
 		assertEquals(t2.getTexture(), "small_rock");
 		assertEquals(t3.getTexture(), "small_crystal");
 		assertEquals(t4.getTexture(), "small_biomass");
@@ -114,7 +104,7 @@ public class ResourceTest {
 	@Test
 	public void removedTest() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
-		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.WATER);
+		Resource t1 = new Resource(0, 1, 2, 3, 4, ResourceType.BIOMASS);
 		Resource t2 = new Resource(0, 1, 2, 3, 4, ResourceType.ROCK);
 		GameManager.get().getWorld().addEntity(t1);
 		

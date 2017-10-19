@@ -9,37 +9,37 @@ import org.junit.Test;
 public class ArmourTest {
     @Test
     public void constructorTest () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertTrue(armour != null);
     }
 
     @Test
     public void getArmourValue () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertTrue(armour != null);
         Assert.assertEquals(15, armour.getArmourValue());
     }
 
     @Test
     public void getArmourHealth () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertEquals(30, armour.getArmourHealth());
     }
 
     @Test
     public void getArmourMoveSpeed () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertTrue(armour.getMoveSpeed() == 10.0);
     }
     @Test
     public void getArmourType () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertEquals("ARMOUR", armour.getItemType().toString());
     }
 
     @Test
     public void getArmourDescription () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         String test = "A1\n" +
                 "Armour: 15\n" +
                 "Health: 30\n" +
@@ -49,7 +49,7 @@ public class ArmourTest {
 
     @Test
     public void getArmourTexture () {
-        Armour armour = new Armour(ArmourType.ARMOUR1);
+        Armour armour = new Armour(ArmourType.ARMOUR1, 1);
         Assert.assertEquals("defence_helmet", armour.getTexture().toString());
     }
 }

@@ -10,6 +10,7 @@ package com.deco2800.marswars.entities;
  */
 public class FogEntity extends AbstractEntity {
 
+
     /**
      * the constructor for the Fog Entity
      * @param posX

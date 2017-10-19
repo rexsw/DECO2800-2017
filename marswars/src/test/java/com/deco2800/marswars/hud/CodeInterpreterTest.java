@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.technology.Technology;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +23,10 @@ import static org.junit.Assert.*;
  * This test is used to test the CodeInterpreter class.
  */
 public class CodeInterpreterTest {
-    private static TimeManager tm;
-    private static ResourceManager rm;
+    private static TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
+    private static ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
+    private static TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private static FogManager fm = (FogManager)GameManager.get().getManager(FogManager.class);
     private static HeadlessApplication game;
     private CodeInterpreter a;
     BaseWorld baseWorld;
@@ -47,95 +50,90 @@ public class CodeInterpreterTest {
         GameManager.get().getWorld().addEntity(entity2);
         GameManager.get().getWorld().addEntity(entity3);
         GameManager.get().getWorld().addEntity(entity4);
-        FogManager fogOfWar = (FogManager)(GameManager.get().getManager(FogManager.class));
-        FogManager.initialFog(2, 2);
+        fm.initialFog(2, 2);
         a = new CodeInterpreter();
-        Manager manager = GameManager.get().getManager(ResourceManager.class);
-        rm = (ResourceManager)manager;
-        Manager manager2 = GameManager.get().getManager(TimeManager.class);
-        tm = (TimeManager)manager2;
+
     }
 
     /**
-     * to test if reduceOneEnemy() can delete one enemy soldier successfully;
+     * to test if killone() can delete one enemy soldier successfully;
      */
     @Test
-    public void reduceOneEnemyTest() throws Exception {
+    public void reduceOneEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
-        a.reduceOneEnemy();
+        a.killone();
         int num2 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num1,num2+1);
     }
 
     /**
-     * to test if reduceAllEnemy() can delete all enemy soldiers successfully;
+     * to test if killall() can delete all enemy soldiers successfully;
      */
     @Test
-    public void reduceAllEnemyTest() throws Exception {
+    public void reduceAllEnemy() throws Exception {
         int num1 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num1,4);
-        a.reduceAllEnemy();
+        a.killall();
         int num2 = GameManager.get().getWorld().getEntities().size();
         assertEquals(num2,0);
     }
 
     /**
-     * to test if addRock() can add specified rock successfully;
+     * to test if rock() can add specified rock successfully;
      */
     @Test
     public void addRock() throws Exception {
         int or = rm.getRocks(-1);
-        a.addRock(100);
+        a.rock(100);
         assertEquals(or+100,rm.getRocks(-1));
+
+
+
+
+
+
     }
 
     /**
-     * to test if addBiomass() can add specified biomass successfully;
+     * to test if biomass() can add specified biomass successfully;
      */
     @Test
     public void addBiomass() throws Exception {
         int or = rm.getBiomass(-1);
-        a.addBiomass(100);
+        a.biomass(100);
         assertEquals(or+100,rm.getBiomass(-1));
     }
 
     /**
-     * to test if addCrystal() can add specified crystal successfully;
+     * to test if crystal() can add specified crystal successfully;
      */
     @Test
     public void addCrystal() throws Exception {
         int or = rm.getCrystal(-1);
-        a.addCrystal(100);
+        a.crystal(100);
         assertEquals(or+100,rm.getCrystal(-1));
     }
 
     /**
-     * to test if addWater() can add specified water successfully;
-     */
-    @Test
-    public void addWater() throws Exception {
-        int or = rm.getWater(-1);
-        a.addWater(100);
-        assertEquals(or+100,rm.getWater(-1));
-    }
-
-    /**
-     * to test if game time hour becomes 6 am after switchDay();
+     * to test if game time hour becomes 6 am after day();
      */
     @Test
     public void switchDay() throws Exception {
-        a.switchDay();
+        a.day();
         assertEquals(tm.getHours(),6);
     }
 
 
     /**
-     * to test if game time hour becomes 21 pm after switchNight();
+     * to test if game time hour becomes 21 pm after night();
      */
     @Test
     public void switchNight() throws Exception {
-        a.switchNight();
+        a.night();
         assertEquals(tm.getHours(),21);
     }
+
+
+
 
 }

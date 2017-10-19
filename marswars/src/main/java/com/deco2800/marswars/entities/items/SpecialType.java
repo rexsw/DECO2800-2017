@@ -1,6 +1,8 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.DefenceEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.items.effects.HealthEffect;
 
 import java.util.ArrayList;
@@ -24,18 +26,25 @@ import java.util.List;
  *
  */
 public enum SpecialType implements ItemType {
-	// name, duration(0 means instant), affect range (0 means self use), use
+	// name, duration(0 means instant), effect range (0 means self use), use
 	// limit, cost, effects)
-	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
-			new HealthEffect(100, false)),
-	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
-			new HealthEffect(100, true)),
-	AOEHEAL2("Heal Bomb", "scope", 0, 5, 1, new int[] { 50, 100, 100, 100 },
-			new HealthEffect(100, false)),
-	NUKE("Nuke", "bullets", 0, 15, 1, new int[] { 500, 900, 50, 50 },
-			new HealthEffect(1000, true)),
-	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300, 500 },
-			new HealthEffect(9000, false));
+	SELFHEAL("SelfOnly", "heal_needle", 0, 0, 2, new int[] { 0, 10, 30 }, //maybe remove?
+			new HealthEffect(100, false, Target.SELF)),
+	GRAV_SHOES("Anti-Grav. Shoes", "boot", 5, 10, 1, new int[] { 200, 50, 50},
+			new DefenceEffect(0, 0, 0.5f, Target.SELF)),
+	INSTANTKILL("Instant kill", "scope", 0, 0, 10, new int[] { 50, 100, 100 },
+			new HealthEffect(10000, true, Target.SELF)),
+	
+	REGEN_SHOT("Regen Shot", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30},
+			new HealthEffect(100, false, Target.SELF)),
+	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50 },
+			new HealthEffect(400, true, Target.ENEMY)),
+	TEAMHEAL("Team Heal", "health_boost", 0, 0, 1, new int[] { 50, 100, 100 },
+			new HealthEffect(1000, false, Target.SELF_TEAM)),
+	NUKE("Nuke", "bullets", 0, 0, 1, new int[] { 500, 50, 50 },
+			new HealthEffect(1000, true, Target.ENEMY_TEAM)),
+	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300},
+			new HealthEffect(9000, false, Target.SELF));
 	private String name;
 	private String texture;
 	private int duration;
@@ -55,7 +64,7 @@ public enum SpecialType implements ItemType {
 	 *            of this item's effect
 	 * @param radius
 	 *            of this item's effect
-	 * @param original
+	 * @param useLimit
 	 *            useLimit of this item
 	 * @param cost
 	 *            to build this item
@@ -152,8 +161,12 @@ public enum SpecialType implements ItemType {
 	@Override
 	public String getDescription() {
 		String result = "Name: " + this.getName() + "\n";
+		result += "Type: Special\n";
 		for (Effect e : this.effects) {
 			result += e.generateDescription();
+			String mark = e.getTarget().toString();
+			mark = mark.contains("_") ? mark.replace("_", " ") : mark;
+			result += "Target: " + mark + "\n";
 		}
 		return result;
 	}
@@ -173,10 +186,7 @@ public enum SpecialType implements ItemType {
 			result += "Crystal: " + this.cost[1] + "\n";
 		}
 		if (this.cost[2] > 0) {
-			result += "Water: " + this.cost[2] + "\n";
-		}
-		if (this.cost[3] > 0) {
-			result += "Biomass: " + this.cost[3] + "\n";
+			result += "Biomass: " + this.cost[2] + "\n";
 		}
 		return result;
 	}

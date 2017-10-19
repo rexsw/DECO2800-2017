@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -32,6 +33,7 @@ public class Hotkeys {
 	private Skin skin;
 	private HUDView hud;
 	private GameStats stats;
+	private ChatBox chatBox;
 	
 	private boolean messageToggle = false;
 	
@@ -40,7 +42,7 @@ public class Hotkeys {
 	private Dialog techTree;
 	private Dialog quit;
 	
-	private Window messageWindow;//window for the chatbox
+	private Table messageWindow;//window for the chatbox
 	/**
 	 * Calls a new instance of the hotkeys class
 	 * 
@@ -50,13 +52,15 @@ public class Hotkeys {
 	 * @param stats
 	 * @param messageWindow
 	 */
-	public Hotkeys(Stage stage, Skin skin, HUDView hud, GameStats stats, Window messageWindow) {
+	public Hotkeys(Stage stage, Skin skin, HUDView hud, GameStats stats, Table messageWindow) {
 		LOGGER.info("Instantiating the Hotkey check");
 		this.stage = stage;
 		this.skin = skin;
 		this.hud = hud;
 		this.stats = stats;
 		this.messageWindow = messageWindow;
+		
+		this.chatBox = this.hud.getChatWindow();
 	}
 	
 	/** 
@@ -82,14 +86,15 @@ public class Hotkeys {
 		//chat listener
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.noActive()) {
 			LOGGER.info("Opening the Chat Window if no other window is active");
-			this.messageWindow.setVisible(true);
-			this.messageToggle = true;
-			this.hud.setChatActiveCheck(1);
-		} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+			this.chatBox.enableTextField();
+			hud.showChatBox();
+		} 
+
+		if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			LOGGER.info("Closing the Chat Window");
-			this.messageWindow.setVisible(false);
-			this.messageToggle = false; 
-			this.hud.setChatActiveCheck(0);
+			this.chatBox.disableTextField();
+			hud.hideChatBox();
+			
 		}
 		
 		//pause menu listener
@@ -106,6 +111,7 @@ public class Hotkeys {
 		}
 		
 
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if (this.noActive()) {
 				LOGGER.info("Open the quit menu");
@@ -113,6 +119,7 @@ public class Hotkeys {
 				this.quit = new ExitGame("Quit Game", this.skin, this.hud, true).show(this.stage); //$NON-NLS-1$
 			}
 		}
+
 
 		//tech tree listener
 		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
@@ -129,23 +136,19 @@ public class Hotkeys {
 		}
 		
 		//HUD toggle listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.E) && noActive()) {
 			LOGGER.info("Toggles the HUD on and off each time the button is pressed");
 			if (this.hud.isInventoryToggle()) {
 				this.hud.actionsWindow.setVisible(true);
 				this.hud.minimap.setVisible(true);
 				this.hud.resourceTable.setVisible(true);
 				//show (-) button to make resources invisible
-				this.hud.dispActions.remove();
-				this.hud.HUDManip.add(this.hud.removeActions);
 				this.hud.setInventoryToggle(false);
 			} else {
 				this.hud.actionsWindow.setVisible(false);
 				this.hud.minimap.setVisible(false);
 				this.hud.resourceTable.setVisible(false);
 				//show (+) to show resources again
-				this.hud.removeActions.remove();
-				this.hud.HUDManip.add(this.hud.dispActions);
 				this.hud.setInventoryToggle(true);
 			}
 		}
@@ -181,8 +184,6 @@ public class Hotkeys {
 		} else if (this.hud.getExitCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getPauseCheck() != 0) {
-			return retBool;
-		} else if (this.hud.getChatActiveCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getTechCheck() != 0) {
 			return retBool;

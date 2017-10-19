@@ -66,6 +66,8 @@ public final class ActionSetter {
                 return doMove(performer, x, y);
             case UNLOAD:
                 return doUnload((Soldier) performer);
+            case UNLOADINDIVIDUAL:
+                return doUnloadIndividual((Soldier) performer);
             default:
                 return false;
         }
@@ -110,7 +112,20 @@ public final class ActionSetter {
      */
     private static boolean doUnload(Soldier performer) {
         LOGGER.info("Try to unload");
-        performer.setAction(new UnloadAction(performer));
+        Carrier carrier =  (Carrier)performer;
+        carrier.unload();
+        return true;
+    }
+    
+    /**
+     * Assigns the unload individual action to the entity
+     * @param performer the entity to be assigned the action
+     * @return true
+     */
+    private static boolean doUnloadIndividual(Soldier performer) {
+        LOGGER.info("Try to unload last loaded unit");
+        Carrier carrier =  (Carrier)performer;
+        carrier.unloadIndividual();
         return true;
     }
     
@@ -190,6 +205,8 @@ public final class ActionSetter {
         	return "Load";
             case UNLOAD:
         	return "Unload";
+            case UNLOADINDIVIDUAL:
+        	return "Unload Individual";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }
@@ -203,6 +220,10 @@ public final class ActionSetter {
                 break;
             case CARRIER:
                 target.setAction(new GenerateAction(new Carrier(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case COMMANDER:
+                target.setAction(new GenerateAction(new Commander(target
+                        .getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             case HEALER:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));

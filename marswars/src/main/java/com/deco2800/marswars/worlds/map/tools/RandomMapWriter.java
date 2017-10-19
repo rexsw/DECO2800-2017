@@ -1,15 +1,11 @@
 package com.deco2800.marswars.worlds.map.tools;
 
-import com.deco2800.marswars.util.Point;
-
-import java.lang.Math.*;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.badlogic.gdx.math.MathUtils.floor;
 
 /**
  * <p>Class for generating a new TMX map file to be loaded. For the purpose of randon tile placement without changing
@@ -153,7 +149,13 @@ public class RandomMapWriter {
          */
         @Override
         public boolean equals(Object o) {
-            return ((pointInt) o).getX()==x && ((pointInt) o).getY()==y;
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            pointInt pointInt = (pointInt) o;
+
+            if (getX() != pointInt.getX()) return false;
+            return getY() == pointInt.getY();
         }
     }
 }

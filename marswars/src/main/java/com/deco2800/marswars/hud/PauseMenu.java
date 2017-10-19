@@ -1,17 +1,17 @@
 package com.deco2800.marswars.hud;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.initiateGame.Game;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.deco2800.marswars.mainMenu.MainMenu;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TimeManager;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Toby Guinea on 16/09
@@ -39,31 +39,35 @@ public class PauseMenu extends Dialog{
 		super(title, skin);
 		this.stats = stats;
 		this.hud = hud;
+		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		
+		LOGGER.info("Instantiating the Pause menu");
+		this.align(Align.center);
+
 		LOGGER.info("Instantiating the Pause menu");
 		
 		{
 			hud.setPauseCheck(1);
-			text("Game Paused");
-			
-			button("Resume", 0);
-			this.getButtonTable();
+			//this.text("Game Paused", labelStyle);
+			button("Resume Game", 0, buttonStyle);
 			this.getButtonTable().row();
-			button("Statistics", 1);
+			button("Show Stats", 1, buttonStyle);
 			this.getButtonTable().row();
-			button("Settings", 2);
+			button("Settings", 2, buttonStyle);
 			this.getButtonTable().row();
-			button("Quit to Main Menu", 3);
+			button("Quit to Main Menu", 3, buttonStyle);
 			this.getButtonTable().row();
-
-			button("Exit Game", 4);
+			button("Save Game", 4, buttonStyle);
+			this.getButtonTable().row();
+			button("Exit Game", 5, buttonStyle);
 			
 			this.timeManager.pause();
-		}	
+			}	
 	}
 		/**
 		 * interprets the button press chosen by the player
 		 */
-		protected void result(final Object object) {
+		protected void result(final Object object)  {
 			if (object == (Object) 1) {
 				LOGGER.info("Opening Stats");
 				this.stats.showStats();
@@ -76,6 +80,12 @@ public class PauseMenu extends Dialog{
 				this.hud.setPauseCheck(0);
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
+                try {
+                    Game.getSavedGame().writeGame();
+                }catch (FileNotFoundException e){
+                    //do nothing
+                }
+            } else if (object == (Object) 5) {
 				LOGGER.info("Quitting the application");
 				System.exit(0);
 			} else {
@@ -83,4 +93,5 @@ public class PauseMenu extends Dialog{
 				this.hud.setPauseCheck(0);
 			}
 		}
+
 }

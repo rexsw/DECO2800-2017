@@ -23,6 +23,9 @@ public class Resource extends BaseEntity implements HasHealth{
 	
 	private int reserves; // current reserves of this resource
 	private int harvester = 0; // no. of harvester on the resource
+
+	//NEVER DELETE THIS
+	public Resource(){}
 	
 	/**
 	 * constructor for the resource class
@@ -32,6 +35,7 @@ public class Resource extends BaseEntity implements HasHealth{
 	 * @param height
 	 * @param width
 	 * @param type
+
 	 */
 	public Resource(float posX, float posY, float posZ, float height, float width, ResourceType type) {
 		// I'm thinking of make the constructor method shorter, 
@@ -46,9 +50,6 @@ public class Resource extends BaseEntity implements HasHealth{
 			break;
 		case CRYSTAL:
 			this.setTexture("large_crystal"); 
-			break;
-		case WATER:
-			this.setTexture("large_water");
 			break;
 		default:
 			this.setTexture("large_biomass");
@@ -70,9 +71,6 @@ public class Resource extends BaseEntity implements HasHealth{
 			break;
 		case CRYSTAL:
 			resetTexture("small_crystal", "medium_crystal");
-			break;
-		case WATER:
-			resetTexture("small_water", "medium_water");
 			break;
 		default:
 			resetTexture("small_biomass", "medium_biomass");

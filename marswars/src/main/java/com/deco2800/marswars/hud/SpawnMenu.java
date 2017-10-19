@@ -25,8 +25,8 @@ public class SpawnMenu {
 
     private static final int NUMBER_OF_MENU_OPTIONS = 6; // the maximum number of buttons in a row
 
-    private Stage stage; // the stage of the game
-    private Skin skin; // the skin for the menu
+    private static Stage stage; // the stage of the game
+    private static Skin skin; // the skin for the menu
     // the game's texture manager
     private TextureManager textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
     // the game's time manager
@@ -50,7 +50,7 @@ public class SpawnMenu {
     /**
      *  Creates the basic structure of the Entities picker menu
      */
-     void setupEntitiesPickerMenu(){
+     static void setupEntitiesPickerMenu(){
         entitiesPicker = new Window("Spawn", skin);
         entitiesPicker.align(Align.topLeft);
         entitiesPicker.setPosition(220,0);

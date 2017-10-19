@@ -46,8 +46,12 @@ public class TextureManager extends Manager {
 	    	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
 	    	textureMap.put("greenSelect4", new Texture("resources/buildSelect/greenSelect4.png"));
 	    	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
+	    	textureMap.put("greenSelect6", new Texture("resources/buildSelect/greenSelect6.png"));
+	    	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
 	        this.saveTexture("selected", "resources/placeholderassets/selected.png");
 	        this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
+	        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
+	        textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
         //Buildings
         	//Base Stages
         	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/base1.png"));
@@ -69,7 +73,15 @@ public class TextureManager extends Manager {
 	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
 	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
 	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
-	        
+	        //HeroFactory Stages
+            textureMap.put("herofactory1",new Texture
+                    ("resources/BuildingAssets/Building process/HeroFactory/factory1.png"));
+            textureMap.put("herofactory2",new Texture
+            		("resources/BuildingAssets/Building process/HeroFactory/factory2.png"));
+            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory3.png"));
+            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory4.png"));
+
+
 	        //TechBuilding Stages
 	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
 	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
@@ -152,9 +164,21 @@ public class TextureManager extends Manager {
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
-        
+
+        //----------- Technology Assets:
+
         //----------- MainMenu Assets:
-        this.saveTexture("menubackground", "resources/Mainmenu/background.png");       
+        this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
+        this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
+        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon002.png");
+        this.saveTexture("desert_map", "resources/mapAssets/tileset/tile001.png");
+        this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
+        this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
+        this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
+        this.saveTexture("astro_purple", "resources/UnitAssets/Astronaut/Purple/default.png");
+        this.saveTexture("astro_red", "resources/UnitAssets/Astronaut/Red/default.png");
+        this.saveTexture("astro_yellow", "resources/UnitAssets/Astronaut/Yellow/default.png");
+        
         
         //----------Unit Assets:
         //Soldier:
@@ -176,11 +200,11 @@ public class TextureManager extends Manager {
         this.saveTexture("commanderSelected", "resources/UnitAssets/Neutral/Commander_2.png");
         
         //Backgrounds:
-        this.saveTexture("dawn_Bg", "resources/Backgrounds/dawn_Bg.png");
-        this.saveTexture("day_Bg", "resources/Backgrounds/day_Bg.png");
-        this.saveTexture("dusk_Bg", "resources/Backgrounds/dusk_Bg.png");
-        this.saveTexture("night_Bg1", "resources/Backgrounds/night_Bg1.png");
-        this.saveTexture("night_Bg2", "resources/Backgrounds/night_Bg2.png");
+        this.saveTexture("dawn_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("day_Bg", "resources/Backgrounds/daybg.png");
+        this.saveTexture("dusk_Bg", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg1", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("night_Bg2", "resources/Backgrounds/nighbg.png");
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
@@ -211,6 +235,11 @@ public class TextureManager extends Manager {
         this.saveTexture("range_stats", "resources/statsAssets/range_stats.png");
         this.saveTexture("move_speed_stats", "resources/statsAssets/move_speed_stats.png");
         this.saveTexture("attack_stats", "resources/statsAssets/attack_stats.png");
+
+        //Health Bars
+        for (int i = 0; i < 21; i++) {
+            this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
+        }
     }
     /*
      *

@@ -35,7 +35,7 @@ public class WinManagerTest {
 		GameManager.get().setSkin(null);
     }	
 	
-	@Test @Ignore
+	@Test
 	public void combatWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
@@ -49,7 +49,7 @@ public class WinManagerTest {
 		assertTrue(test.isWinner());
 	}
 	
-	@Test @Ignore
+	@Test
 	public void resourceWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
@@ -61,7 +61,6 @@ public class WinManagerTest {
 		rm.setBiomass(500, 1);
 		rm.setCrystal(500, 1);
 		rm.setRocks(500, 1);
-		rm.setWater(500, 1);
 		assertFalse(test.isWinner());
 		test.onTick(0);
 		assertTrue(test.isWinner());

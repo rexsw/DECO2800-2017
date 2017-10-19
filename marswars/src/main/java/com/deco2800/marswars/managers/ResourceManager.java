@@ -17,7 +17,6 @@ public class ResourceManager extends Manager implements TickableManager{
 private static final String CLOSED = "closed.wav";
 	private Map<Integer, Integer> rocks = new HashMap<Integer, Integer>();
 	private Map<Integer, Integer> crystal = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> water = new HashMap<Integer, Integer>();
 	private Map<Integer, Integer> biomass = new HashMap<Integer, Integer>();
 	private Map<Integer, Integer> population = new HashMap<Integer, Integer>();
 	private Map<Integer, Integer> maxPopulation = new HashMap<Integer, Integer>();
@@ -86,43 +85,10 @@ private static final String CLOSED = "closed.wav";
 		}
 	}
 	
-
 	/**
-	 * Gets the number of water if the team is apart of the resource manager else -1
+	 * Gets the number of biomass if the team is apart of the resource manager else -1
 	 * 
-	 * @return the teams water or -1 if not a vaild team id
-	 */
-	public int getWater(int team) {
-		if(this.water.containsKey(team)) {
-			return water.get(team);
-		}
-		return -1;
-	}
-
-	/**
-	 * Sets the number of crystal if given a vaild teamid
-	 * 
-	 * @param crystal int the number to set it too
-	 * @param team int the team id to set
-	 */
-	public void setWater(int water, int team) {
-		if(this.water.containsKey(team)) {
-			if (this.water.get(team) < water) {
-				SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-				Sound loadedSound = sound.loadSound(CLOSED);
-				sound.playSound(loadedSound);
-			}
-		this.water.put(team, water);
-		}
-		else {
-			this.water.put(team, water);
-		}
-	}
-	
-	/**
-	 * Gets the number of water if the team is apart of the resource manager else -1
-	 * 
-	 * @return the teams water or -1 if not a vaild team id
+	 * @return the teams biomass or -1 if not a vaild team id
 	 */
 	public int getBiomass(int team) {
 		if(this.biomass.containsKey(team)) {
@@ -159,13 +125,18 @@ private static final String CLOSED = "closed.wav";
 	 * @return int a non zero teamid if there a winer else 0 if no winer
 	 */
 	public int CappedTeam() {
-		for(int teamid:rocks.keySet()) {
-			if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
-					crystal.get(teamid) > 400 && water.get(teamid) > 400) {
-				return teamid;
+		try {
+			for(int teamid:rocks.keySet()) {
+				if(rocks.get(teamid) > 400 && biomass.get(teamid) > 400 &&
+						crystal.get(teamid) > 400) {
+					return teamid;
+				}
 			}
+			return 0;
 		}
-		return 0;
+		catch(NullPointerException e) {
+			return 0;
+		}
 	}
 	
 	/**

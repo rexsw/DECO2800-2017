@@ -182,6 +182,8 @@ public class BaseEntityTest {
 		String unit = "This is a unit";
 		String hero = "This is a hero";
 		String resource = "This is a resource";
+		String aispacman = "This is an AI spacman";
+		String techtree = "You have clicked on the base";
 
 		t.setEntityType(EntityType.NOT_SET);
 		assertEquals(t.getHelpText().getText().toString(), notSet);
@@ -197,6 +199,13 @@ public class BaseEntityTest {
 
 		t.setEntityType(EntityType.RESOURCE);
 		assertEquals(t.getHelpText().getText().toString(), resource);
+		
+		t.setEntityType(EntityType.AISPACMAN);
+		assertEquals(t.getHelpText().getText().toString(), aispacman);
+		
+		t.setEntityType(EntityType.TECHTREE);
+		assertEquals(t.getHelpText().getText().toString(), techtree);
+		
 	}
 
 	@Test
@@ -245,4 +254,5 @@ public class BaseEntityTest {
 		assertEquals(ActionSetter.getActionName(ActionType.DAMAGE), "Attack");
 		assertEquals(ActionSetter.getActionName(ActionType.GENERATE), "Create");
 	}
+	
 }

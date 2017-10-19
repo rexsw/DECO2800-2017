@@ -29,11 +29,11 @@ import java.util.List;
  *
  */
 public class ShopDialog extends Dialog{
-	
+	private float windowSize = Gdx.graphics.getWidth() /4f;
     private TextureManager textureManager; // a manager for the textures of the item icons and the Commander icons
-    private int iconSize = Gdx.graphics.getWidth() / 12; //getting the standard icon size for the window
+    private int iconSize = (int) (windowSize/3); //getting the standard icon size for the window
     private List<ItemType> itemList; //list of items to be put into the shop
-    private Table heroTable; //table of the player's Commander units.
+//    private Table heroTable; //table of the player's Commander units.
     private Label status; //Essentially a label that acts as a log specifically for the shop
     private Commander selectedHero; //variable for the Commander that needs to be selected to buy an item
     
@@ -60,6 +60,7 @@ public class ShopDialog extends Dialog{
 		for (WeaponType wep : WeaponType.values()) {
 			itemList.add(wep);
 		}
+
 		//Adding all the defined armour in ArmourType enumerate class
 		for (ArmourType arm : ArmourType.values()) {
 			itemList.add(arm);
@@ -84,24 +85,33 @@ public class ShopDialog extends Dialog{
 			button.addListener(new ClickListener() {  
 	            public void clicked(InputEvent event, float x, float y){
 	                status.setText(item.getName());
-	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
-	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
+//	                boolean enoughResources = checkCost(selectedHero.getOwner(), item);
+//	                if ((selectedHero != null) && (selectedHero.getHealth() > 0) && enoughResources) {
+					if ((selectedHero != null) && (selectedHero.getHealth() > 0)) {
 	                	if (item instanceof WeaponType) {
-	                		Weapon weapon = new Weapon((WeaponType) item);
-		                	selectedHero.addItemToInventory(weapon);
+	                		Weapon weapon = new Weapon((WeaponType) item, 1);
+	                		selectedHero.addItemToInventory(weapon);
 		                	status.setText("Bought " + weapon.getName() + "(Weapon) for " + selectedHero.toString());
 	                	} else if (item instanceof ArmourType) {
-	                		Armour armour = new Armour((ArmourType) item);
+	                		Armour armour = new Armour((ArmourType) item, 1);
 	                		selectedHero.addItemToInventory(armour);
 	                		status.setText("Bought " + armour.getName() + "(Armour) for " + selectedHero.toString());
 	                	} else {
-	                		Special special = new Special((SpecialType) item);
-	                		selectedHero.addItemToInventory(special);
-	                		status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
+	                		boolean transactSuccess = false;
+	                		Special special = new Special((SpecialType) item);	
+	                		transactSuccess = selectedHero.addItemToInventory(special);
+	                		if (transactSuccess) {
+	                			status.setText("Bought " + special.getName() + "(Special) for " + selectedHero.toString());
+		                	} else {
+		                		status.setText("Unsuccessful Shopping, can only hold 4 specials");
+		                		return;
+		                	}
+	                		
 	                	}
+	                	selectedHero.setStatsChange(true);
 	                	transact(selectedHero.getOwner(), item);
 	                } else {
-	                	String mes = selectedHero == null ? "unsuccessful shopping, please select a hero." : 
+	                	String mes = selectedHero == null ? "unsuccessful shopping, No hero exist." : 
 	                		(selectedHero.getHealth() > 0 ? "Not enough resources." : 
 	    	                		"Your Commander is dead. Can't buy anything.");
 	                	status.setText(mes);
@@ -118,13 +128,13 @@ public class ShopDialog extends Dialog{
 		//making the right side table for the Commander icons.
         final ScrollPane scroller = new ScrollPane(scrollTable);
 
-        heroTable = new Table();
-        heroTable.top();
-        heroTable.add(new Label("Commander", skin)).width(iconSize);
-        heroTable.row();
+//        heroTable = new Table();
+//        heroTable.top();
+//        heroTable.add(new Label("Commander", skin)).width(iconSize);
+//        heroTable.row();
         
         this.getContentTable().add(scroller).fill().expand().top();
-        this.getContentTable().add(heroTable).width(iconSize).top();
+//        this.getContentTable().add(heroTable).width(iconSize).top();
         
         this.getContentTable().row();
         this.getContentTable().add(status).expandX().center().colspan(2);
@@ -145,10 +155,7 @@ public class ShopDialog extends Dialog{
 		if (rm.getCrystal(owner) < cost[1]) {
 			return false;
 		}
-		if (rm.getWater(owner) < cost[2]) {
-			return false;
-		}
-		if (rm.getBiomass(owner) < cost[3]) {
+		if (rm.getBiomass(owner) < cost[2]) {
 			return false;
 		}
 		return true;
@@ -164,8 +171,7 @@ public class ShopDialog extends Dialog{
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rm.setRocks(rm.getRocks(owner) - cost[0], owner);
 		rm.setCrystal(rm.getCrystal(owner) - cost[1], owner);
-		rm.setWater(rm.getWater(owner) - cost[2], owner);
-		rm.setBiomass(rm.getBiomass(owner) - cost[3], owner);
+		rm.setBiomass(rm.getBiomass(owner) - cost[2], owner);
 	}
 	
 	/**
@@ -179,51 +185,57 @@ public class ShopDialog extends Dialog{
 		return new ImageButton(imgDraw);
 	}
 	
-	/**
-	 * Private helper method to make image buttons for the commanders with the provided texture (the Commander icon 
-	 * image). Thi button will have 2 icon looks, 1 for when it is selected and another for when it is not selected.
-	 * @param image  Texture that is the desired Commander icon for the button for when the commander is selected.
-	 * @param offImage  Texture that is the desired Commander icon for the button for when the commander is not
-	 * selected.
-	 * @return ImageButton object that has the provided images for the selected and deselected icons.
-	 */
-	private ImageButton generateHeroButton(Texture image, Texture offImage) {
-		TextureRegion imgRegion = new TextureRegion(image);
-		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-		TextureRegion offImgRegion = new TextureRegion(offImage);
-		TextureRegionDrawable offImgDraw = new TextureRegionDrawable(offImgRegion);
-
-		ImageButton button = new ImageButton(offImgDraw);
-		button.getStyle().imageChecked = imgDraw;
-        
-		return button;
-	}
+//	/**
+//	 * Private helper method to make image buttons for the commanders with the provided texture (the Commander icon 
+//	 * image). Thi button will have 2 icon looks, 1 for when it is selected and another for when it is not selected.
+//	 * @param image  Texture that is the desired Commander icon for the button for when the commander is selected.
+//	 * @param offImage  Texture that is the desired Commander icon for the button for when the commander is not
+//	 * selected.
+//	 * @return ImageButton object that has the provided images for the selected and deselected icons.
+//	 */
+//	@Deprecated
+//	private ImageButton generateHeroButton(Texture image, Texture offImage) {
+//		TextureRegion imgRegion = new TextureRegion(image);
+//		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
+//		TextureRegion offImgRegion = new TextureRegion(offImage);
+//		TextureRegionDrawable offImgDraw = new TextureRegionDrawable(offImgRegion);
+//
+//		ImageButton button = new ImageButton(offImgDraw);
+//		button.getStyle().imageChecked = imgDraw;
+//        
+//		return button;
+//	}
 	
-	/**
-	 * Method to add Commander Hero icons to the right side table of the shop dialog window.
-	 * @param hero Commander unit to get/make an icon for.
-	 */
-	public void addHeroIcon(Commander hero) {
-		//making the button object
-		Texture heroImage = textureManager.getTexture("hero_button");
-		Texture heroOffImage = textureManager.getTexture("hero_button_off");
-        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
-        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
-        //adding the listener to the button created
-        heroButton.addListener(new ClickListener(){
-        	public void clicked(InputEvent event, float x, float y){
-                if(heroButton.isChecked()) {
-                	heroButton.setChecked(true);
-                	status.setText("Selected " + hero.toString());
-                	selectedHero = hero;
-                } else {
-                	heroButton.setChecked(false);
-                	status.setText("Unselected "+ hero.toString());
-                	selectedHero = null;
-                }
-                }
-        	});
-        heroTable.row();
+//	/**
+//	 * Method to add Commander Hero icons to the right side table of the shop dialog window.
+//	 * @param hero Commander unit to get/make an icon for.
+//	 */
+//	@Deprecated
+//	public void addHeroIcon(Commander hero) {
+//		//making the button object
+//		Texture heroImage = textureManager.getTexture("hero_button");
+//		Texture heroOffImage = textureManager.getTexture("hero_button_off");
+//        ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
+////        heroTable.add(heroButton).width(iconSize).height(iconSize).top();
+//        //adding the listener to the button created
+//        heroButton.addListener(new ClickListener(){
+//        	public void clicked(InputEvent event, float x, float y){
+//                if(heroButton.isChecked()) {
+//                	heroButton.setChecked(true);
+//                	status.setText("Selected " + hero.toString());
+//                	selectedHero = hero;
+//                } else {
+//                	heroButton.setChecked(false);
+//                	status.setText("Unselected "+ hero.toString());
+//                	selectedHero = null;
+//                }
+//                }
+//        	});
+////        heroTable.row();
+//	}
+	
+	public void connectHero(Commander hero) {
+		this.selectedHero = hero;
 	}
 	
 	/**
@@ -232,7 +244,7 @@ public class ShopDialog extends Dialog{
 	 */
 	@Override
     public float getPrefWidth() {
-        return Gdx.graphics.getWidth() /2.5f;
+        return windowSize*1.2f;
     }
 
 	/**
@@ -241,12 +253,7 @@ public class ShopDialog extends Dialog{
 	 */
     @Override
     public float getPrefHeight() {
-        return Gdx.graphics.getHeight() /1.8f;
+        return windowSize*0.6f;
     }
-	
-    
-	@Override
-	protected void result(Object object){
-		
-	}
+
 }

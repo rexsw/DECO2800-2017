@@ -1,17 +1,10 @@
 package com.deco2800.marswars.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
@@ -40,11 +33,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	private boolean selected = false;
 	protected int owner = 0;
 	private boolean fixPos = false;
-	private ProgressBar healthBar;
+	private HealthBar healthBar;
 	protected float speed = 0.05f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
+
+	//NEVER DELETE THIS
+	public BaseEntity(){};
 
 	/**
 	 * Constructor for the base entity
@@ -545,73 +541,34 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	/**
 	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the unit as long as you are zoomed in
-	 * @param s The stage that the UI is on
-	 * @return the progressbar if the entity is a building, unit or hero, null otherwise
+	 * @return the healthbar if the entity is a building, unit or hero and has the stat properly set, null otherwise
 	 */
-	public ProgressBar getHealthBar(Stage s) {
-		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO )) return null; //Check if is valid type
+	public HealthBar getHealthBar() {
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) return null; //Check if is valid type
 		if (healthBar != null) {//If there is a health bar
 			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
 				healthBar.setVisible(false);
 				return healthBar;
 			}
 			healthBar.setVisible(true);
-			healthBar.setValue(this.getStats().getHealth());
-
-			float worldX = this.getPosX();
-			float worldY = this.getPosY();
-			float pixelX;
-			float pixelY;
-			float tileWidth = (float) GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-			float tileHeight = (float) GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
-			//Calculate the position of unit on camera in pixels
-			worldX = (worldY + worldX)/2f;
-			pixelY = tileHeight * (-worldY - 1/2 + worldX);
-			pixelX = tileWidth * worldX;
-			pixelY -= camera.position.y - camera.viewportHeight/2;
-			pixelX -= camera.position.x - camera.viewportWidth/2;
-			healthBar.setWidth(100/ camera.zoom);
-			healthBar.setHeight(50/ camera.zoom);
-			healthBar.setPosition(pixelX - healthBar.getWidth()/4* camera.zoom, pixelY+50);
+			healthBar.update();
 		} else {
-			makeHealthBar(s);
+			healthBar = new HealthBar(this.getPosX(), this.getPosY(), this.getPosZ(), this.getXLength(), this.getYLength(), this.getZLength(), this);
+			GameManager.get().getWorld().addEntity(healthBar);
 		}
 		return healthBar;
 	}
 
 	/**
-	 * This function creates a new progressbar to use as a health bar
-	 * @param s the stage to put the health bar on
+	 * Whether or not this entity is concealed by the fog of war
+	 * @return true if concealed, false otherwise
 	 */
-	private void makeHealthBar(Stage s) {
-		ProgressBar.ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
-
-		Pixmap pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GRAY);
-		pixmap.fill();
-		healthBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(0, 5, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		healthBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.GREEN);
-		pixmap.fill();
-		healthBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-
-		pixmap = new Pixmap(10, 5, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.BLUE);
-		pixmap.fill();
-		pixmap.dispose();
-
-		healthBar = new ProgressBar(0,this.getStats().getMaxHealth(), 1, false, healthBarStyle);
-		healthBar.setValue(100);
-		s.addActor(healthBar);
-		healthBar.setVisible(true);
+	public boolean concealedByFog() {
+		if (getOwner() < 0) {
+			// friendly units are never concealed by the fog
+			return false;
+		}
+		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
+
 }

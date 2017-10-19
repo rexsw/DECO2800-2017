@@ -23,10 +23,12 @@ public class Special extends Item {
 	private SpecialType type;
 	private List<Effect> effects;
 	private int useLimit;
+	
 
 	/**
 	 * Constructor for Special items taking in enumerate that contains the meta data for specific items.
 	 * @param type  The SpecialType enumerate value containing the meta data for the specific Special item.
+	 * @param target  
 	 */
 	public Special(SpecialType type) {
 		this.type = type;
@@ -60,6 +62,14 @@ public class Special extends Item {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * This method should get called when an item is displayed in the inventory
+	 * @return the remaining usage of this item
+	 */
+	public int getUsage() {
+		return this.useLimit;
 	}
 	
 	/**
@@ -112,4 +122,13 @@ public class Special extends Item {
 	public String getTexture() {
 		return type.getTextureString();
 	}
+	
+	/**
+	 * Gets the enumerate value used to create the the Special item.
+	 * @return
+	 */
+	public SpecialType getEnum() {
+		return this.type;
+	}
+	
 }

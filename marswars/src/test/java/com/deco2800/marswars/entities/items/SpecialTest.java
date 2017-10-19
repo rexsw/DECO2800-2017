@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.deco2800.marswars.entities.items.effects.HealthEffect;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -48,28 +49,8 @@ public class SpecialTest {
         Assert.assertTrue(bomb != null);
     }
     
-    /**
-     * test the get method for the duration of the Bomb item's effect
-     */
-    @Test
-    public void getDuration () {
-        Assert.assertEquals(0, bomb.getDuration());
-    }
-    
-    /**
-     * test the get method for the texture of the item.
-     */
-    @Test
-    public void getTexture () {
-        Assert.assertEquals("boot", bomb.getTexture());
-    }
-    
-    /**
-     * test the get method for the aoe radius
-     */
-    @Test
-    public void getRadius () {
-        Assert.assertEquals(5, bomb.getRadius());
+    public void enumTest() {
+    	Assert.assertTrue(SpecialType.BOMB == bomb.getEnum());
     }
 
     /**
@@ -79,17 +60,10 @@ public class SpecialTest {
     @Test
     public void getUse () {
         Assert.assertEquals(false, bomb.useItem());
-        Special aoeHeal = new Special(SpecialType.AOEHEAL1);
+        Special aoeHeal = new Special(SpecialType.REGEN_SHOT);
         Assert.assertEquals(true, aoeHeal.useItem());
     }
     
-    /**
-     * test the get method for the name of the bomb.
-     */
-    @Test
-    public void getName () {
-        Assert.assertEquals("Bomb", bomb.getName());
-    }
 
     /**
      * test the get method for the Item type enumerate value of the item (not the one to make it).
@@ -104,9 +78,8 @@ public class SpecialTest {
      */
     @Test
     public void getDescription () {
-        //System.out.println(bomb.getDescription());
         String testString = "Bomb\n" +
-                "Damage: 100\n";
+                "Damage: 400\n";
         Assert.assertEquals(testString, bomb.getDescription());
     }
     
@@ -117,8 +90,10 @@ public class SpecialTest {
     @Test
     public void useEffect() {
     	//should normally run useItem method, but for testing it is not needed here.
-    	bomb.getEffect().get(0).applyEffect(com);
-    	Assert.assertTrue(com.getHealth() == baseHP - 100);
+    	HealthEffect bombEff = (HealthEffect) bomb.getEffect().get(0);
+    	bombEff.applyEffect(com);
+    	
+    	Assert.assertTrue(com.getHealth() == baseHP - 400);
     	Special heal = new Special(SpecialType.MASS1HEAL);
     	heal.getEffect().get(0).applyEffect(com);
     	Assert.assertTrue(com.getHealth() == baseHP);

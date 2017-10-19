@@ -188,9 +188,6 @@ public class GatherAction implements DecoAction {
 			ResourceType resourceType = resource.getType();
 			int amount = resource.getAmount();
 			switch (resourceType) {
-				case WATER:
-					resourceManager.setWater(resourceManager.getWater(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
-					break;
 				case ROCK:
 					resourceManager.setRocks(resourceManager.getRocks(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;

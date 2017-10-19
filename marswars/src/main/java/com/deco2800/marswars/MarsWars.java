@@ -11,9 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.deco2800.marswars.InitiateGame.InputProcessor;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiateGame.InputProcessor;
 import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -36,6 +36,8 @@ import java.util.Set;
  */
 public class MarsWars extends ApplicationAdapter implements ApplicationListener {
 
+	// logger of the class
+	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 
 	/**
 	 * Set the renderer.
@@ -63,7 +65,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	//long lastMenuTick = 0;
 	long pauseTime = 0;
 
-	public static int invincible = 0;
+	private static int invincible = 0;
 	
 	private Skin skin;
 
@@ -84,7 +86,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().setStage(this.stage);
 
 		/*All managers */
-		this.reg = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+		this.reg = (TextureManager) (GameManager.get().getManager(TextureManager.class));
 
 		this.camera = new OrthographicCamera(1920, 1080);
 		this.inputP = new InputProcessor(this.camera, this.stage, this.skin);
@@ -92,7 +94,8 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		this.inputP.setInputProcessor();
 		GameManager.get().setCamera(this.camera);
 
-		new MainMenu(this.skin, this.stage);
+		MainMenu mainMenu = new MainMenu(this.skin, this.stage);
+		LOGGER.info("Game running: " + mainMenu.gameStarted());
 	}
 
 	/**
@@ -110,6 +113,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Update the input managers
          */
 		this.inputP.handleInput();
+
         /*
          * Update the camera
          */
@@ -136,7 +140,14 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		// Render the rain effect if raining PLEASE DO NOT DELETE
 		//weatherManager.addRainVisuals(batch);
-
+/*		if (weatherManager.isRaining()) {
+			SpriteBatch particleBatch = new SpriteBatch();
+			particleBatch.begin();
+			ParticleEffect effect = weatherManager.addRainVisuals(batch);
+			effect.draw(particleBatch);
+			particleBatch.end();
+		}
+*/
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
@@ -145,7 +156,6 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.dispose();
 
 		setInvincible();
-
 	}
 
 
@@ -190,7 +200,12 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		}
 	}
 
-
-
-
+	/**
+	 * set a new invisible flag
+	 *
+	 * @param invincible the new flag
+	 */
+	public static void setInvincible(int invincible) {
+		MarsWars.invincible = invincible;
+	}
 }
