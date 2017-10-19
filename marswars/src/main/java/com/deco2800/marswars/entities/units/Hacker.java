@@ -11,13 +11,13 @@ public class Hacker extends Soldier {
 
 	public Hacker(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		this.setMaxHealth(200);
-		this.setHealth(200);
+		this.setMaxHealth(750);
+		this.setHealth(750);
 		this.setDamage(0);
 		this.setLoyaltyDamage(50);
-		this.setArmor(50);
+		this.setArmor(400);
 		this.setArmorDamage(0);
-		this.setAttackRange(5);
+		this.setAttackRange(8);
 		this.setAttackSpeed(20);
 	}
 
