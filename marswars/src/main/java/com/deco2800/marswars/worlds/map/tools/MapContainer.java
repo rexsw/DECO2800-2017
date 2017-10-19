@@ -112,7 +112,7 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
-            Obstacle tree = new Obstacle(1, 1, 0, 1, 1, ObstacleType.TREE1, "red");
+            Obstacle tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "red");
             world.addEntity(tree);
 
             this.generateResourcePattern();

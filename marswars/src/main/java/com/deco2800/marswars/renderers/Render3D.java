@@ -209,8 +209,8 @@ public class Render3D implements Renderer {
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
             Texture tex = reg.getTexture(textureString);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+            float cartX = entity.getPosX()-entity.getXoff();
+            float cartY = (worldWidth-1) - (entity.getPosY()-entity.getYoff());
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
             float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();

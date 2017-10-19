@@ -28,5 +28,7 @@ public class Obstacle extends BaseEntity {
         this.setCost(Integer.MAX_VALUE); //patfinding should never go through this
         this.colour = colour;
         this.type = type;
+        this.setXoff(width*0.775f);
+        this.setYoff(width*0.1f);
     }
 }

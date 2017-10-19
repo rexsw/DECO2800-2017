@@ -24,6 +24,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	protected boolean canWalkOver = false;
 
+	float Xoff = 0;
+	float Yoff = 0;
+	float Zoff = 0;
+
 	//NEVER DELETE THIS
 	public AbstractEntity(){}
 
@@ -367,5 +371,21 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 */
 	public boolean canWalOver() {
 		return canWalkOver;
+	}
+
+	public float getXoff() {
+		return Xoff;
+	}
+
+	public float getYoff() {
+		return Yoff;
+	}
+
+	public void setXoff(float x) {
+		this.Xoff = x;
+	}
+
+	public void setYoff(float y) {
+		this.Yoff = y;
 	}
 }

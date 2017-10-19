@@ -37,6 +37,9 @@ public interface Renderable {
      */
     float getPosZ();
 
+    float getXoff();
+
+    float getYoff();
     /**
      * Gets the X render length of the entity
      * @return the x render length of the entity
