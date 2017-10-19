@@ -25,6 +25,7 @@ public class Tank extends Soldier {
 		this.setAttackSpeed(20);
 		//setAttributes();
 		this.setAreaDamage(1);
+		this.name = "Soldier";
 		
 	}
 	/*
