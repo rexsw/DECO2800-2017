@@ -133,6 +133,11 @@ public class MapContainer {
         }
     }
 
+    /**
+     * places the trees on the map
+     * @param colour the colour of the tree to place (red, green, blue, yellow)
+     * @param randomColour whether to randomly choose a colour for ea tree (& disregard colour parameter)
+     */
     private void placeTrees(String colour, boolean randomColour) {
         Random r = new Random();
         float rf;

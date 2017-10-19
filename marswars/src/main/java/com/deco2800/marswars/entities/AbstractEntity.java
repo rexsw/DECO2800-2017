@@ -373,18 +373,32 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		return canWalkOver;
 	}
 
+	/**
+	 * gets the X offset for rendering
+	 * @return te X offset
+	 */
 	public float getXoff() {
 		return Xoff;
 	}
 
+	/**
+	 * gets the y offset for rendering
+	 * @return te y offset
+	 */
 	public float getYoff() {
 		return Yoff;
 	}
 
+	/**
+	 * setss the x offset for rendering
+	 */
 	public void setXoff(float x) {
 		this.Xoff = x;
 	}
 
+	/**
+	 * setss the y offset for rendering
+	 */
 	public void setYoff(float y) {
 		this.Yoff = y;
 	}
