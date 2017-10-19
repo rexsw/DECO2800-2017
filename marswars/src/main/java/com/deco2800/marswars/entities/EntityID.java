@@ -14,7 +14,11 @@ public enum EntityID {
     HEALER,
     SOLDIER,
     TANK,
-    SPACMAN
+    SPACMAN,
+    MEDIC,
+    HACKER,
+    SNIPER,
+    TANKDESTROYER
 
 }
 

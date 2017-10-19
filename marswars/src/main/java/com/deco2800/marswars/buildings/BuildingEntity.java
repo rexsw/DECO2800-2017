@@ -74,6 +74,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.building = "Base";
 			fogRange = 3;
 			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.TANK);
+			this.addNewAction(EntityID.SOLDIER);
 			break;
 		case BARRACKS:
 			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
@@ -84,11 +86,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setFix(true);
 			this.building = "Barracks";
 			fogRange = 3;
-			this.addNewAction(EntityID.ASTRONAUT);
-			this.addNewAction(EntityID.SOLDIER);
+			this.addNewAction(EntityID.MEDIC);
+			this.addNewAction(EntityID.HACKER);
 			this.addNewAction(EntityID.CARRIER);
-			//this.addNewAction(EntityID.HEALER);
-			//this.addNewAction(EntityID.TANK);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
@@ -98,6 +98,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(800);
 			this.building = "Bunker";
 			fogRange = 2;
+			this.addNewAction(EntityID.SNIPER);
+			this.addNewAction(EntityID.TANKDESTROYER);
 			break;
 		case HEROFACTORY:
 			graphics = Arrays.asList("herofactory1"+colour,
