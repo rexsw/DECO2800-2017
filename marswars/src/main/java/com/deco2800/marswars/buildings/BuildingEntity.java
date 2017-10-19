@@ -86,7 +86,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setFix(true);
 			this.building = "Barracks";
 			fogRange = 3;
-			this.addNewAction(EntityID.MEDIC);
+			this.addNewAction(EntityID.HEALER);
 			this.addNewAction(EntityID.HACKER);
 			this.addNewAction(EntityID.CARRIER);
 			break;
