@@ -13,7 +13,7 @@ public class AiBuilder extends Manager {
 	
 	public void build(Astronaut builder){
 		int team = builder.getOwner();
-		float xy[] = new float[] {builder.getPosX(), builder.getPosY()};
+		float[] xy = new float[] {builder.getPosX(), builder.getPosY()};
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		LOGGER.info("start");
 		if(rm.getCrystal(team) > 50) {
@@ -44,11 +44,11 @@ public class AiBuilder extends Manager {
 			}
 		}
 	
-	private boolean findloc(float xy[], BuildingType type) {
+	private boolean findloc(float[] xy, BuildingType type) {
 		LOGGER.info("find");
 		int x = 0;
 		int i = 0;
-		while(!GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], (type.getBuildSize()), (float)0)) {
+		while(!GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], type.getBuildSize(), (float)0)) {
 			if(x == 0) {
 				x = 1;
 				xy[0] = (float) (xy[0] + 1.0);
