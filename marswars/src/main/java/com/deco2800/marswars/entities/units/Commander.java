@@ -2,14 +2,12 @@ package com.deco2800.marswars.entities.units;
 
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.WorldUtil;
