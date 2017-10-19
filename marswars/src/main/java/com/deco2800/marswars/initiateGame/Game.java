@@ -131,7 +131,7 @@ public class Game{
 			rm.setRocks(aIStats.get(1), teamid);
 			rm.setCrystal(aIStats.get(2), teamid);
 			rm.setMaxPopulation(10, teamid);
-			rm.setPopulation(aIStats.get(4), teamid);
+			rm.setPopulation(aIStats.get(3), teamid);
 		}
 		for (int teamid = 1; teamid < playerteams + 1; teamid++) {
 			playerid = teamid * (-1);
@@ -143,7 +143,7 @@ public class Game{
 			rm.setRocks(playerStats.get(1), playerid);
 			rm.setCrystal(playerStats.get(2), playerid);
 			rm.setMaxPopulation(10, playerid);
-			rm.setPopulation(playerStats.get(4), playerid);
+			rm.setPopulation(playerStats.get(3), playerid);
 		}
 
 		//add all entities
