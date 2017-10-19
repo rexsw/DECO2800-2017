@@ -1,24 +1,14 @@
 package com.deco2800.marswars.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -26,7 +16,6 @@ import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-import com.deco2800.marswars.worlds.FogWorld;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -45,14 +45,6 @@ public class ResourceManagerTest {
 	}
 	
 	@Test
-	public void waterTest() {
-		rm.setWater(100, 1);
-		assertEquals(rm.getWater(1), 100);
-		rm.setWater(80, 1);
-		assertEquals(rm.getWater(1), 80);
-	}
-	
-	@Test
 	public void crystalTest() {	
 		rm.setCrystal(100, 1);
 		assertEquals(rm.getCrystal(1), 100);

@@ -1,11 +1,9 @@
 package com.deco2800.marswars.buildings;
 
 import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
@@ -76,6 +74,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.building = "Base";
 			fogRange = 3;
 			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.TANK);
+			this.addNewAction(EntityID.SOLDIER);
 			break;
 		case BARRACKS:
 			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
@@ -86,7 +86,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setFix(true);
 			this.building = "Barracks";
 			fogRange = 3;
-			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.HEALER);
+			this.addNewAction(EntityID.HACKER);
+			this.addNewAction(EntityID.CARRIER);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
@@ -96,6 +98,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setHealth(800);
 			this.building = "Bunker";
 			fogRange = 2;
+			this.addNewAction(EntityID.SNIPER);
+			this.addNewAction(EntityID.TANKDESTROYER);
 			break;
 		case HEROFACTORY:
 			graphics = Arrays.asList("herofactory1"+colour,
@@ -181,7 +185,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
-		currentAction = Optional.of(action);
+		if (! isFlooded) {
+			currentAction = Optional.of(action);
+		}
 	}
 
 	/**
@@ -197,7 +203,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (!currentAction.isPresent() && ! isFlooded) {
 			currentAction = Optional.of(action);
 		}
 	}

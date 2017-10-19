@@ -74,7 +74,6 @@ public class AttackEffect implements Effect{
 			Commander hero = (Commander) entity;
 			hero.setDamage(hero.getDamageDeal() - this.attackDamage > 0 ? hero.getDamageDeal() - this.attackDamage :
 				1);
-			System.err.println("damage after: " + hero.getDamageDeal());
 			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed > 0 ? 
 					hero.getAttackSpeed() - this.attackSpeed : 1);
 			hero.setAttackRange(hero.getAttackRange() - this.attackRange > 0 ? 

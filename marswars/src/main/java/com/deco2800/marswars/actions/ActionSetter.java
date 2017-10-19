@@ -66,6 +66,8 @@ public final class ActionSetter {
                 return doMove(performer, x, y);
             case UNLOAD:
                 return doUnload((Soldier) performer);
+            case UNLOADINDIVIDUAL:
+                return doUnloadIndividual((Soldier) performer);
             default:
                 return false;
         }
@@ -112,6 +114,18 @@ public final class ActionSetter {
         LOGGER.info("Try to unload");
         Carrier carrier =  (Carrier)performer;
         carrier.unload();
+        return true;
+    }
+    
+    /**
+     * Assigns the unload individual action to the entity
+     * @param performer the entity to be assigned the action
+     * @return true
+     */
+    private static boolean doUnloadIndividual(Soldier performer) {
+        LOGGER.info("Try to unload last loaded unit");
+        Carrier carrier =  (Carrier)performer;
+        carrier.unloadIndividual();
         return true;
     }
     
@@ -191,6 +205,8 @@ public final class ActionSetter {
         	return "Load";
             case UNLOAD:
         	return "Unload";
+            case UNLOADINDIVIDUAL:
+        	return "Unload Individual";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }
@@ -217,6 +233,15 @@ public final class ActionSetter {
                 break;
             case TANK:
                 target.setAction(new GenerateAction(new Tank(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case HACKER:
+            	target.setAction(new GenerateAction(new Hacker(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SNIPER:
+            	target.setAction(new GenerateAction(new Sniper(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case TANKDESTROYER:
+            	target.setAction(new GenerateAction(new TankDestroyer(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             default:
                 break;

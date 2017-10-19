@@ -93,7 +93,20 @@ public class TextureManager extends Manager {
 	        //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
-        textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));
+        //environmental obstacles
+        textureMap.put("tree1_blue", new Texture("resources/EnvironmentalAssets/treestyle1-blue.png"));
+        textureMap.put("tree1_green", new Texture("resources/EnvironmentalAssets/treestyle1-green.png"));
+        textureMap.put("tree1_yellow", new Texture("resources/EnvironmentalAssets/treestyle1-yellow.png"));
+        textureMap.put("tree1_red", new Texture("resources/EnvironmentalAssets/treestyle1-red.png"));
+        textureMap.put("tree2_blue", new Texture("resources/EnvironmentalAssets/treestyle3-blue.png"));
+        textureMap.put("tree2_green", new Texture("resources/EnvironmentalAssets/treestyle3-green.png"));
+        textureMap.put("tree2_yellow", new Texture("resources/EnvironmentalAssets/treestyle3-yellow.png"));
+        textureMap.put("tree2_red", new Texture("resources/EnvironmentalAssets/treestyle3-red.png"));
+        textureMap.put("tree3_blue", new Texture("resources/EnvironmentalAssets/treestyle4-blue.png"));
+        textureMap.put("tree3_green", new Texture("resources/EnvironmentalAssets/treestyle4-green.png"));
+        textureMap.put("tree3_yellow", new Texture("resources/EnvironmentalAssets/treestyle4-yellow.png"));
+        textureMap.put("tree3_red", new Texture("resources/EnvironmentalAssets/treestyle4-red.png"));
+
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
@@ -214,17 +227,24 @@ public class TextureManager extends Manager {
 
 
         // Item icon in shop dialog
-        this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
+        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
+        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
+        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
+        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        this.saveTexture("helmet_1", "resources/shopAssets/items/helmet_1.png");
+        this.saveTexture("gun_1", "resources/shopAssets/items/gun_1.png");
+        this.saveTexture("rifle_1", "resources/shopAssets/items/rifle_1.png");
+        this.saveTexture("goggle_1", "resources/shopAssets/items/goggle_1.png");
+        this.saveTexture("teleboots", "resources/shopAssets/items/teleboots.png");
+        this.saveTexture("penetration", "resources/shopAssets/items/penetration.png");
+        this.saveTexture("health_shot", "resources/shopAssets/items/health_shot.png");
+        this.saveTexture("health_station", "resources/shopAssets/items/health_station.png");
+        this.saveTexture("barrier_gloves", "resources/shopAssets/items/barrier_gloves.png");
+        this.saveTexture("snipper_shot", "resources/shopAssets/items/snipper_shot.png");
+        
+        this.saveTexture("military_command", "resources/shopAssets/items/hero_button.png");
         this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
-        this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
-        this.saveTexture("heal_needle", "resources/shopAssets/items/heal_needle.png");
-        this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
-        this.saveTexture("boot", "resources/shopAssets/items/boot.png");
-        this.saveTexture("bullets", "resources/shopAssets/items/bullet.png");
-        this.saveTexture("goggle", "resources/shopAssets/items/goggle.png");
-        this.saveTexture("hand_gun", "resources/shopAssets/items/hand_gun.png");
-        this.saveTexture("health_boost", "resources/shopAssets/items/health_boost.png");
-        this.saveTexture("scope", "resources/shopAssets/items/scope.png");
+        
         this.saveTexture("locked_inventory", "resources/shopAssets/items/lock.png");
         
         

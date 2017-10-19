@@ -11,9 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.InitiateGame.Game;
-import com.deco2800.marswars.InitiateGame.GameSave;
-import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
+import com.deco2800.marswars.initiateGame.Game;
+import com.deco2800.marswars.initiateGame.GameSave;
+import com.deco2800.marswars.initiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -133,7 +133,7 @@ public class MainMenu {
 				openMusic.stop();
 				openMusic.dispose();
 				try {
-					game = new Game(loadedGame.data.aITeams, loadedGame.data.playerTeams); //Start up a new game
+					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams()); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}

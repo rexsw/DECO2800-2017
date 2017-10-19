@@ -17,12 +17,14 @@ public class TankDestroyer extends Soldier {
 		this.setMaxHealth(1000);
 		this.setHealth(1000);
 		this.setDamage(100);
+		this.setMaxArmor(500);
 		this.setArmor(500);
 		this.setArmorDamage(200);
 		this.setAttackRange(10);
 		this.setAttackSpeed(10);
 		//setAttributes();
 		this.setAreaDamage(1);
+		this.name = "TankDestroyer";
 		
 	}
 	/*
