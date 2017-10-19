@@ -76,7 +76,7 @@ public class Armour extends Item {
 	 * decrease when applied.
 	 */
 	public float getMoveSpeed() {
-		return Math.round(type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1]);
+		return type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1];
 	}
 
 	/**

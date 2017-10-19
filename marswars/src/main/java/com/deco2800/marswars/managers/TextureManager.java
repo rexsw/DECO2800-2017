@@ -227,7 +227,7 @@ public class TextureManager extends Manager {
 
 
         // Item icon in shop dialog
-        this.saveTexture("missile", "resources/shopAssets/items/missile.png");
+        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
         this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
         this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
         this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
@@ -242,7 +242,7 @@ public class TextureManager extends Manager {
         this.saveTexture("barrier_gloves", "resources/shopAssets/items/barrier_gloves.png");
         this.saveTexture("snipper_shot", "resources/shopAssets/items/snipper_shot.png");
         
-        this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
+        this.saveTexture("military_command", "resources/shopAssets/items/hero_button.png");
         this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
         
         this.saveTexture("locked_inventory", "resources/shopAssets/items/lock.png");
