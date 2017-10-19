@@ -234,6 +234,15 @@ public final class ActionSetter {
             case TANK:
                 target.setAction(new GenerateAction(new Tank(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
+            case HACKER:
+            	target.setAction(new GenerateAction(new Hacker(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SNIPER:
+            	target.setAction(new GenerateAction(new Sniper(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case TANKDESTROYER:
+            	target.setAction(new GenerateAction(new TankDestroyer(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
             default:
                 break;
 

@@ -4,9 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.util.Box3D;
 
 /**
  * Created by Hayden Bird on 5/10/2017.

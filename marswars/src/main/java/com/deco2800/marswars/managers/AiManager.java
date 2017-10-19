@@ -16,7 +16,6 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.util.WorldUtil;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,19 +45,19 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private int unitGroupRange = 3;
 	private int unitPatrolRange = 10;
 	private int unitJoinGroupRange = 1000;
-	private Difficulty AiDifficulty = Difficulty.NORMAL;
+	private Difficulty aiDifficulty = Difficulty.NORMAL;
 	
 	
-	public static enum State {
+	public enum State {
 		AGGRESSIVE, DEFENSIVE, ECONOMIC
 	}
 	
 	// The personality and strategy type an Ai will use
-	public static enum AiType {
+	public enum AiType {
 		STANDARD, HOSTILE, PROTECTIVE, EXPANSIVE
 	}
 	
-	public static enum Difficulty {
+	public enum Difficulty {
 		EASY, NORMAL, HARD
 	}
 

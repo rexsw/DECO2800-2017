@@ -51,6 +51,7 @@ public class Carrier extends Soldier {
 		this.setAttackRange(0);
 		this.setAttackSpeed(0);
 		this.isCarrier();
+		this.name = "Carrier";
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);

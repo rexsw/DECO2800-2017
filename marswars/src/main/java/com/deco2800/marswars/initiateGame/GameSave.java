@@ -144,7 +144,7 @@ public class GameSave {
             data.getaIStats().add(stats);
         }
 
-        //filling stats for AI
+        //filling stats for player
         //biomass-rocks-crystal-water-population
         for(int i=1;i<data.getPlayerTeams()+1;i++){
             ArrayList<Integer> stats = new ArrayList<>();
