@@ -6,10 +6,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.entities.TerrainElements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
@@ -115,12 +112,15 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
+            Obstacle tree = new Obstacle(1, 1, 0, 1, 1, ObstacleType.TREE1, "red");
+            world.addEntity(tree);
+
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
             	//I removed random entities and buildings for now, don't think they make sense in a strategy game
               // this.getRandomBuilding();
               // this.getRandomEntity();
-               this.getRandomResource();
+               //this.getRandomResource();
             }
         }
     }
