@@ -2,16 +2,12 @@ package com.deco2800.marswars.hud;
 
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class is to interprete and excute the cheatcode catched in chatbox
@@ -20,6 +16,7 @@ public class CodeInterpreter {
     private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
     private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
     private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private WeatherManager wm = (WeatherManager)GameManager.get().getManager(WeatherManager.class);
 
 
 
@@ -193,9 +190,16 @@ public class CodeInterpreter {
 
 
 
+    public void floodon(){
+        wm.toggleFlood(true);
 
 
+    }
 
+    public void floodoff(){
+        wm.toggleFlood(false);
+
+    }
 
 
 

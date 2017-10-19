@@ -376,16 +376,12 @@ public class WeatherManager extends Manager implements Tickable {
             effect = new ParticleEffect();
             effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"),
                     (Gdx.files.internal("resources/WeatherAssets")));
-            effect.setPosition(Gdx.graphics.getWidth()  *
-                    GameManager.get().getCamera().zoom,
-                    Gdx.graphics.getHeight() *
-                            GameManager.get().getCamera().zoom);
+            // this.camera.position.x - this.camera.viewportWidth*this.camera.zoom/2
+            // this.camera.position.y - this.camera.viewportHeight*this.camera.zoom/2
+            effect.setPosition(GameManager.get().getCamera().position.x - GameManager.get().getCamera().viewportWidth * GameManager.get().getCamera().zoom/2, GameManager.get().getCamera().position.y + GameManager.get().getCamera().viewportHeight * GameManager.get().getCamera().zoom/2);
             effect.start();
         }
-        effect.setPosition(Gdx.graphics.getWidth() *
-                GameManager.get().getCamera().zoom ,
-                Gdx.graphics.getHeight() *
-                        GameManager.get().getCamera().zoom);
+        effect.setPosition(GameManager.get().getCamera().position.x - GameManager.get().getCamera().viewportWidth * GameManager.get().getCamera().zoom/2, GameManager.get().getCamera().position.y + GameManager.get().getCamera().viewportHeight * GameManager.get().getCamera().zoom/2);
         effect.draw(batch,  Gdx.graphics.getDeltaTime());
     }
 

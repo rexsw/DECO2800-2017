@@ -35,6 +35,7 @@ public class Carrier extends Soldier {
 
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
+    private int totalLoaded = 0;
 
 	public Carrier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
@@ -50,8 +51,10 @@ public class Carrier extends Soldier {
 		this.setAttackRange(0);
 		this.setAttackSpeed(0);
 		this.isCarrier();
+		this.name = "Carrier";
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
+		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
     }
 
@@ -206,6 +209,14 @@ public class Carrier extends Soldier {
 	    LOGGER.error("cant unload while doing something else");
 	}
     }
+    
+    public void unloadIndividual() {
+	if (!currentAction.isPresent()) {
+	    unloadPassengerIndividual();
+	} else {
+	    LOGGER.error("cant unload while doing something else");
+	}
+    }
 
     /**
      * Adds loaded target into list of loaded units
@@ -224,6 +235,7 @@ public class Carrier extends Soldier {
 		LOGGER.info("target loaded");
 		if (target.getLoadStatus() != 2) {
 		    target.setLoaded();
+		    totalLoaded++;
 		}
 		return true;
 	    }
@@ -254,10 +266,42 @@ public class Carrier extends Soldier {
 	for (int i = 0; i < CAPACITY; i++) {
 	    if (!(loadedUnits[i] == null)) {
 		loadedUnits[i].setUnloaded();
+		totalLoaded--;
 		LOGGER.error("Unit unloaded.");
 		loadedUnits[i] = null;
 		empty++;
 	    }
+	}
+	if (empty == 0) {
+	    flag = false;
+	} else {
+	    flag = true;
+	}
+	return flag;
+    }
+    
+    /**
+     * unloads the last loaded Passengers in the carrier
+     * 
+     * @return true if units unloaded, false otherwise
+     */
+    public boolean unloadPassengerIndividual() {
+	SoundManager sound = (SoundManager) GameManager.get()
+		.getManager(SoundManager.class);
+	Sound loadedSound = sound.loadSound(loadSound);
+	sound.playSound(loadedSound);
+	LOGGER.info("Last in first out!");
+	int empty = 0;
+	boolean flag;
+	if(totalLoaded > 0) {
+	    if (!(loadedUnits[totalLoaded - 1] == null)) {
+		LOGGER.info("Unloading last!!!!");
+		loadedUnits[totalLoaded - 1].setUnloaded();
+		LOGGER.error("Unit unloaded.");
+		loadedUnits[totalLoaded - 1] = null;
+		totalLoaded--;
+		empty++;
+	   }
 	}
 	if (empty == 0) {
 	    flag = false;
@@ -284,6 +328,13 @@ public class Carrier extends Soldier {
 	    if (!currentAction.isPresent()) {
 		LOGGER.info("Starting to unload");
 		unloadPassenger();
+	    } else {
+		LOGGER.error("cant unload while doing something else");
+	    }
+	} else if (a == ActionType.UNLOADINDIVIDUAL) {
+	    if (!currentAction.isPresent()) {
+		LOGGER.info("Starting to unload last unit");
+		unloadPassengerIndividual();
 	    } else {
 		LOGGER.error("cant unload while doing something else");
 	    }

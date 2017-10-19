@@ -4,7 +4,6 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.WeatherManager;
-import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
  * A generic class for tile entities - to be utilised in future dynamic weather
