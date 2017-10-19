@@ -74,19 +74,19 @@ clear
   orig: 1, 1
   offset: 0, 0
   index: -1
-clearpmg
-  rotate: false
-  xy: 1354, 195
-  size: 1, 1
-  orig: 1, 1
-  offset: 0, 0
-  index: -1
 clearbg
   rotate: false
   xy: 1354, 195
   size: 1, 1
   split: 0, 2, 0, 2
   pad: 0, 0, 0, 0
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+clearpmg
+  rotate: false
+  xy: 1354, 195
+  size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1

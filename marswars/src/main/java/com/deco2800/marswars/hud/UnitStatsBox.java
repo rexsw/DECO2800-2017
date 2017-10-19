@@ -35,6 +35,7 @@ public class UnitStatsBox extends Table{
 	private TextureManager tm;
 	private Image unitImage;
 	private Pixmap pixmap; 		   //used for progress bar 
+	private boolean enabled = false; 
 	
 	//Player stats + progress bar 
 	private Label healthLabel;     //numeric indicator for health level
@@ -126,7 +127,7 @@ public class UnitStatsBox extends Table{
 		
 		// add in the hero inventory display
 		heroInventory = new Table();
-		heroInventory.setDebug(true);
+		heroInventory.setDebug(enabled);
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
 		
@@ -148,7 +149,7 @@ public class UnitStatsBox extends Table{
 		pixmap.setColor(Color.DARK_GRAY);
 		pixmap.fill();
 		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
-		heroInventory.setDebug(true);
+		heroInventory.setDebug(enabled);
 		pixmap.dispose();
 	}
 	
