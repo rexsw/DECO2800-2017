@@ -16,6 +16,7 @@ public class CodeInterpreter {
     private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
     private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
     private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private WeatherManager wm = (WeatherManager)GameManager.get().getManager(WeatherManager.class);
 
 
 
@@ -189,9 +190,16 @@ public class CodeInterpreter {
 
 
 
+    public void floodon(){
+        wm.toggleFlood(true);
 
 
+    }
 
+    public void floodoff(){
+        wm.toggleFlood(false);
+
+    }
 
 
 
