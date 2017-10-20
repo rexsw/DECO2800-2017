@@ -225,7 +225,7 @@ public class HUDView extends ApplicationAdapter{
 
 		//Create + align time displays
 		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("0:00", GameManager.get().getAltSkin(), "seven-seg");
+		gameTimeDisp = new Label("0:00", this.skin, "seven-seg");
 		gameLengthDisp = new Label("00:00:00", skin);
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
@@ -361,12 +361,12 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 
-
 		//add shop button (uses arrow icon for now)
 		Texture shopImage = textureManager.getTexture("shop_button");
 		TextureRegion shopRegion = new TextureRegion(shopImage);
 		TextureRegionDrawable shopRegionDraw = new TextureRegionDrawable(shopRegion);
 		ImageButton dispShop = new ImageButton(shopRegionDraw);
+		
 
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
@@ -497,7 +497,7 @@ public class HUDView extends ApplicationAdapter{
 		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
 		actionsBgMain.setVisible(false);
 				
-		actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
+		//actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
 
 		//actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();

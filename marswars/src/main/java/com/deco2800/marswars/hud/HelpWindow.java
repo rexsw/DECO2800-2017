@@ -43,18 +43,19 @@ public class HelpWindow {
 	 * Builds the help window
 	 */
 	private void buildWindow() {
-		window.add(this.sidePane());
+		window.add(this.sidePane()).align(Align.topLeft);
 	}
 
 	private Table sidePane() {
 		sidePane = new Table();
 		sidePane.setDebug(enabled);
+		sidePane.align(Align.topLeft);
 		Button gameGuide = new TextButton("GAME GUIDE", skin);
 		Button hotKeys = new TextButton("HOTKEYS", skin);
 		Button settings = new TextButton("SETTINGS", skin);
 		Button back = new TextButton("BACK TO GAME", skin);
 		
-		hotKeys.addListener(new ChangeListener() {
+		gameGuide.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				window.clear();
@@ -124,5 +125,4 @@ public class HelpWindow {
 		window.add(hotKeysParent);
 		return hotKeysParent;
 	}
-
 }
