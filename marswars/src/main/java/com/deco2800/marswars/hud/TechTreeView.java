@@ -37,6 +37,7 @@ public class TechTreeView extends Dialog{
 
 		//Armour Upgrades
 		getButtonTable().add(new Label("Armour Tech", skin));
+
 		button(String.format("Extra Padding \n %d R, %d C, %d W, %d B", this.techMan.getTech(1).getCost()[0], this.techMan.getTech(1).getCost()[1], this.techMan.getTech(1).getCost()[2], this.techMan.getTech(1).getCost()[3]), 1);
 		button(String.format("Hard Shell \n %d R, %d C, %d W, %d B", this.techMan.getTech(2).getCost()[0], this.techMan.getTech(2).getCost()[1], this.techMan.getTech(2).getCost()[2], this.techMan.getTech(2).getCost()[3]), 2);
 		button(String.format("Spiky Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(3).getCost()[0], this.techMan.getTech(3).getCost()[1], this.techMan.getTech(3).getCost()[2], this.techMan.getTech(3).getCost()[3]), 3);
@@ -46,6 +47,7 @@ public class TechTreeView extends Dialog{
 
 		//Attack Damage Upgrades
 		getButtonTable().add(new Label("Attack Damage Tech", skin));
+
 		button(String.format("Anger \n %d R, %d C, %d W, %d B", this.techMan.getTech(5).getCost()[0], this.techMan.getTech(5).getCost()[1], this.techMan.getTech(5).getCost()[2], this.techMan.getTech(5).getCost()[3]), 5);
 		button(String.format("Rage \n %d R, %d C, %d W, %d B", this.techMan.getTech(6).getCost()[0], this.techMan.getTech(6).getCost()[1], this.techMan.getTech(6).getCost()[2], this.techMan.getTech(6).getCost()[3]), 6);
 		button(String.format("Sleight of Hand \n %d R, %d C, %d W, %d B", this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2], this.techMan.getTech(7).getCost()[3]), 7);
@@ -56,6 +58,7 @@ public class TechTreeView extends Dialog{
 		//Attack Speed Upgrades
 
 		getButtonTable().add(new Label("Attack Speed Tech", skin));
+
 		button(String.format("Sleight of Hand \n %d R, %d C, %d W, %d B", this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2], this.techMan.getTech(9).getCost()[3]), 9);
 		button(String.format("Unnatural Dexterity \n %d R, %d C, %d W, %d B", this.techMan.getTech(10).getCost()[0], this.techMan.getTech(10).getCost()[1], this.techMan.getTech(10).getCost()[2], this.techMan.getTech(10).getCost()[3]), 10);
 		button(String.format("120 WPM \n %d R, %d C, %d W, %d B", this.techMan.getTech(11).getCost()[0], this.techMan.getTech(11).getCost()[1], this.techMan.getTech(11).getCost()[2], this.techMan.getTech(11).getCost()[3]), 11);
@@ -66,6 +69,7 @@ public class TechTreeView extends Dialog{
 		//Health Upgrades
 
 		getButtonTable().add(new Label("Health Tech", skin));
+
 		button(String.format("Swole \n %d R, %d C, %d W, %d B", this.techMan.getTech(13).getCost()[0], this.techMan.getTech(13).getCost()[1], this.techMan.getTech(13).getCost()[2], this.techMan.getTech(13).getCost()[3]), 13);
 		button(String.format("Jacked \n %d R, %d C, %d W, %d B", this.techMan.getTech(14).getCost()[0], this.techMan.getTech(14).getCost()[1], this.techMan.getTech(14).getCost()[2], this.techMan.getTech(14).getCost()[3]), 14);
 		button(String.format("Ripped \n %d R, %d C, %d W, %d B", this.techMan.getTech(15).getCost()[0], this.techMan.getTech(15).getCost()[1], this.techMan.getTech(15).getCost()[2], this.techMan.getTech(15).getCost()[3]), 15);
@@ -78,7 +82,6 @@ public class TechTreeView extends Dialog{
 		getButtonTable().add(new Label("Special Technology", skin));
 
 		button(String.format("Nootropics \n %d R, %d C, %d W, %d B", this.techMan.getTech(17).getCost()[0], this.techMan.getTech(17).getCost()[1], this.techMan.getTech(17).getCost()[2], this.techMan.getTech(17).getCost()[3]), 17);
-
 		button(String.format("Steroids \n %d R, %d C, %d W, %d B", this.techMan.getTech(18).getCost()[0], this.techMan.getTech(18).getCost()[1], this.techMan.getTech(18).getCost()[2], this.techMan.getTech(18).getCost()[3]), 18);
 		button(String.format("Unlock cow level \n %d R, %d C, %d W, %d B", this.techMan.getTech(19).getCost()[0], this.techMan.getTech(19).getCost()[1], this.techMan.getTech(19).getCost()[2], this.techMan.getTech(19).getCost()[3]), 19);
 		button(String.format("Vampirism \n %d R, %d C, %d W, %d B", this.techMan.getTech(20).getCost()[0], this.techMan.getTech(20).getCost()[1], this.techMan.getTech(20).getCost()[2], this.techMan.getTech(20).getCost()[3]), 20);
@@ -119,39 +122,43 @@ public class TechTreeView extends Dialog{
 
 		//Armour Upgrades
 		getButtonTable().add(new Label("Armour Tech", skin));
-		button("Extra Padding \n R: 10", 1); //$NON-NLS-1$
-		button("Hard Shells", 2); //$NON-NLS-1$
-		button("Spiky Armour", 3); //$NON-NLS-1$
-		button("Cloyster Mode", 4); //$NON-NLS-1$
+
+		button(String.format("Extra Padding \n %d R, %d C, %d W, %d B", this.techMan.getTech(1).getCost()[0], this.techMan.getTech(1).getCost()[1], this.techMan.getTech(1).getCost()[2], this.techMan.getTech(1).getCost()[3]), 1);
+		button(String.format("Hard Shell \n %d R, %d C, %d W, %d B", this.techMan.getTech(2).getCost()[0], this.techMan.getTech(2).getCost()[1], this.techMan.getTech(2).getCost()[2], this.techMan.getTech(2).getCost()[3]), 2);
+		button(String.format("Spiky Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(3).getCost()[0], this.techMan.getTech(3).getCost()[1], this.techMan.getTech(3).getCost()[2], this.techMan.getTech(3).getCost()[3]), 3);
+		button(String.format("Cloister Mode \n %d R, %d C, %d W, %d B", this.techMan.getTech(4).getCost()[0], this.techMan.getTech(4).getCost()[1], this.techMan.getTech(4).getCost()[2], this.techMan.getTech(4).getCost()[3]), 4);
 
 		getButtonTable().row();
 
 		//Attack Damage Upgrades
 		getButtonTable().add(new Label("Attack Damage Tech", skin));
-		button("Anger", 5); //$NON-NLS-1$
-		button("Rabid", 6); //$NON-NLS-1$
-		button("Ferocity", 7); //$NON-NLS-1$
-		button("Demonic Rage", 8); //$NON-NLS-1$
+
+		button(String.format("Anger \n %d R, %d C, %d W, %d B", this.techMan.getTech(5).getCost()[0], this.techMan.getTech(5).getCost()[1], this.techMan.getTech(5).getCost()[2], this.techMan.getTech(5).getCost()[3]), 5);
+		button(String.format("Rage \n %d R, %d C, %d W, %d B", this.techMan.getTech(6).getCost()[0], this.techMan.getTech(6).getCost()[1], this.techMan.getTech(6).getCost()[2], this.techMan.getTech(6).getCost()[3]), 6);
+		button(String.format("Sleight of Hand \n %d R, %d C, %d W, %d B", this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2], this.techMan.getTech(7).getCost()[3]), 7);
+		button(String.format("Sleight of Hand \n %d R, %d C, %d W, %d B", this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2], this.techMan.getTech(8).getCost()[3]), 8);
 
 		getButtonTable().row();
 
 		//Attack Speed Upgrades
 
 		getButtonTable().add(new Label("Attack Speed Tech", skin));
-		button("Sleight of Hand", 9); //$NON-NLS-1$
-		button("Unnatural Dexterity", 10); //$NON-NLS-1$
-		button("120 wpm", 11); //$NON-NLS-1$
-		button("Korean Starcraft pro", 12); //$NON-NLS-1$
+
+		button(String.format("Sleight of Hand \n %d R, %d C, %d W, %d B", this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2], this.techMan.getTech(9).getCost()[3]), 9);
+		button(String.format("Unnatural Dexterity \n %d R, %d C, %d W, %d B", this.techMan.getTech(10).getCost()[0], this.techMan.getTech(10).getCost()[1], this.techMan.getTech(10).getCost()[2], this.techMan.getTech(10).getCost()[3]), 10);
+		button(String.format("120 WPM \n %d R, %d C, %d W, %d B", this.techMan.getTech(11).getCost()[0], this.techMan.getTech(11).getCost()[1], this.techMan.getTech(11).getCost()[2], this.techMan.getTech(11).getCost()[3]), 11);
+		button(String.format("Korean Starcraft Pro \n %d R, %d C, %d W, %d B", this.techMan.getTech(12).getCost()[0], this.techMan.getTech(12).getCost()[1], this.techMan.getTech(12).getCost()[2], this.techMan.getTech(12).getCost()[3]), 12);
 
 		getButtonTable().row();
 
 		//Health Upgrades
 
 		getButtonTable().add(new Label("Health Tech", skin));
-		button("Swole", 13); //$NON-NLS-1$
-		button("Jacked", 14); //$NON-NLS-1$
-		button("Ripped", 15); //$NON-NLS-1$
-		button("Beast Mode", 16); //$NON-NLS-1$
+
+		button(String.format("Swole \n %d R, %d C, %d W, %d B", this.techMan.getTech(13).getCost()[0], this.techMan.getTech(13).getCost()[1], this.techMan.getTech(13).getCost()[2], this.techMan.getTech(13).getCost()[3]), 13);
+		button(String.format("Jacked \n %d R, %d C, %d W, %d B", this.techMan.getTech(14).getCost()[0], this.techMan.getTech(14).getCost()[1], this.techMan.getTech(14).getCost()[2], this.techMan.getTech(14).getCost()[3]), 14);
+		button(String.format("Ripped \n %d R, %d C, %d W, %d B", this.techMan.getTech(15).getCost()[0], this.techMan.getTech(15).getCost()[1], this.techMan.getTech(15).getCost()[2], this.techMan.getTech(15).getCost()[3]), 15);
+		button(String.format("Beast Mode \n %d R, %d C, %d W, %d B", this.techMan.getTech(16).getCost()[0], this.techMan.getTech(16).getCost()[1], this.techMan.getTech(16).getCost()[2], this.techMan.getTech(16).getCost()[3]), 16);
 
 		getButtonTable().row();
 
@@ -159,10 +166,10 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().add(new Label("Special Technology", skin));
 
-		button("Unlock Hero Factory", 17); //$NON-NLS-1$
-		button("Steroids", 18); //$NON-NLS-1$
-		button("Unlock Cow level", 19); //$NON-NLS-1$
-		button("Vampirism", 20); //$NON-NLS-1$
+		button(String.format("Nootropics \n %d R, %d C, %d W, %d B", this.techMan.getTech(17).getCost()[0], this.techMan.getTech(17).getCost()[1], this.techMan.getTech(17).getCost()[2], this.techMan.getTech(17).getCost()[3]), 17);
+		button(String.format("Steroids \n %d R, %d C, %d W, %d B", this.techMan.getTech(18).getCost()[0], this.techMan.getTech(18).getCost()[1], this.techMan.getTech(18).getCost()[2], this.techMan.getTech(18).getCost()[3]), 18);
+		button(String.format("Unlock cow level \n %d R, %d C, %d W, %d B", this.techMan.getTech(19).getCost()[0], this.techMan.getTech(19).getCost()[1], this.techMan.getTech(19).getCost()[2], this.techMan.getTech(19).getCost()[3]), 19);
+		button(String.format("Vampirism \n %d R, %d C, %d W, %d B", this.techMan.getTech(20).getCost()[0], this.techMan.getTech(20).getCost()[1], this.techMan.getTech(20).getCost()[2], this.techMan.getTech(20).getCost()[3]), 20);
 
 		getButtonTable().row();
 
@@ -187,7 +194,7 @@ public class TechTreeView extends Dialog{
 
 
 //		getButtonTable().row();
-//		button("EXIT TECHNOLOGY TREE", 29); //$NON-NLS-1$
+//		button("EXIT TECHNOLOGY TREE", 29);
 
 		//exit button
 

@@ -563,33 +563,5 @@ public class TechnologyManager extends Manager{
         }
         return techSet;
     }
-    
-    public int getID(Technology tech){
-        if(tech == this.getTech(1)){
-            return 1;
-        } else
-        if(tech == this.getTech(2)){
-            return 2;
-        } else
-        if(tech == this.getTech(3)){
-            return 3;
-        }
-        if(tech == this.getTech(4)){
-            return 4;
-        }
-        if(tech == this.getTech(5)){
-            return 5;
-        }
-        if(tech == this.getTech(6)){
-            return 6;
-        }
-        if(tech == this.getTech(7)){
-            return 7;
-        }
-        if(tech == this.getTech(8)){
-            return 8;
-        }
 
-         return 0;
-    }
 }
