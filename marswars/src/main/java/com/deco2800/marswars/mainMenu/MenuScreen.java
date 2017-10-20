@@ -447,10 +447,10 @@ public class MenuScreen{
 
 		/* no of teams buttons*/
 		Table AIButtons = new Table();
-		Button AI2 = new TextButton("2", skin, "menubutton");
-		Button AI3 = new TextButton("3", skin, "menubutton");
-		Button AI4 = new TextButton("4", skin, "menubutton");
-		Button AI5 = new TextButton("5", skin, "menubutton");
+		Button AI2 = new TextButton("2", skin, "num_button");
+		Button AI3 = new TextButton("3", skin, "num_button");
+		Button AI4 = new TextButton("4", skin, "num_button");
+		Button AI5 = new TextButton("5", skin, "num_button");
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
 
 		AI2.addListener(new ChangeListener() {
@@ -492,9 +492,9 @@ public class MenuScreen{
 		
 		/* no of teams buttons*/
 		Table AIBehaviorButtons = new Table();
-		Button AIEasy = new TextButton("Passive", skin, "menubutton");
-		Button AINormal = new TextButton("Normal", skin, "menubutton");
-		Button AIHard = new TextButton("Hard", skin, "menubutton");
+		Button AIEasy = new TextButton("Passive", skin, "num_button");
+		Button AINormal = new TextButton("Normal", skin, "num_button");
+		Button AIHard = new TextButton("Hard", skin, "num_button");
 		Button[] behaviorButtonsList= {AIEasy, AINormal, AIHard};
 
 		AIEasy.addListener(new ChangeListener() {
