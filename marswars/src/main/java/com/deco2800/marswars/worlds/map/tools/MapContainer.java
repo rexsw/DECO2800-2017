@@ -6,10 +6,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.entities.TerrainElements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
@@ -115,13 +112,66 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
+            /*Obstacle tree = new Obstacle(this.width-1, this.length-1, 0, 8, 8, ObstacleType.TREE1, "red");
+            world.addEntity(tree);
+            tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "blue");
+            world.addEntity(tree);
+            tree = new Obstacle(0, 10, 0, 8, 8, ObstacleType.TREE2, "red");
+            world.addEntity(tree);
+            tree = new Obstacle(10, 10, 0, 8, 8, ObstacleType.TREE3, "green");
+            world.addEntity(tree);*/
+
+            placeTrees("", true);
+
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
             	//I removed random entities and buildings for now, don't think they make sense in a strategy game
               // this.getRandomBuilding();
               // this.getRandomEntity();
-               this.getRandomResource();
+               //this.getRandomResource();
             }
+        }
+    }
+
+    /**
+     * places the trees on the map
+     * @param colour the colour of the tree to place (red, green, blue, yellow)
+     * @param randomColour whether to randomly choose a colour for ea tree (& disregard colour parameter)
+     */
+    private void placeTrees(String colour, boolean randomColour) {
+        Random r = new Random();
+        float rf;
+        ObstacleType type;
+        Obstacle tree;
+        for (int i = 0; i<Math.sqrt(this.length); i++) {
+            if (randomColour) {
+                rf = r.nextFloat();
+                if (rf<0.25) {
+                    colour = "red";
+                }
+                else if (rf<0.5) {
+                    colour = "blue";
+                }
+                else if (rf<0.75) {
+                    colour = "green";
+                }
+                else {
+                    colour= "yellow";
+                }
+            }
+            rf = r.nextFloat();
+            if (rf<0.33) {
+                type = ObstacleType.TREE1;
+            }
+            else if (rf<0.66) {
+                type = ObstacleType.TREE2;
+            }
+            else {
+                type = ObstacleType.TREE3;
+            }
+            tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 8, 8,
+                    type, colour);
+            world.addEntity(tree);
         }
     }
 

@@ -10,6 +10,7 @@ import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -74,6 +75,9 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
         kryo.writeClassAndObject(output, data.getPlayerStats());
+        kryo.writeClassAndObject(output, data.getHour());
+        kryo.writeClassAndObject(output, data.getMin());
+        kryo.writeClassAndObject(output, data.getSec());
         output.close();
     }
 
@@ -94,8 +98,9 @@ public class GameSave {
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setPlayerStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
-
-
+        data.setHour((long)kryo.readClassAndObject(input));
+        data.setMin((long)kryo.readClassAndObject(input));
+        data.setSec((long)kryo.readClassAndObject(input));
         input.close();
     }
 
@@ -144,7 +149,7 @@ public class GameSave {
             data.getaIStats().add(stats);
         }
 
-        //filling stats for AI
+        //filling stats for player
         //biomass-rocks-crystal-water-population
         for(int i=1;i<data.getPlayerTeams()+1;i++){
             ArrayList<Integer> stats = new ArrayList<>();
@@ -154,6 +159,13 @@ public class GameSave {
             stats.add(rm.getPopulation(-i));
             data.getPlayerStats().add(stats);
         }
+
+        //fill the time
+        TimeManager timeManager = (TimeManager)
+                GameManager.get().getManager(TimeManager.class);
+        data.setHour(timeManager.getPlayHours());
+        data.setMin(timeManager.getPlayMinutes());
+        data.setSec(timeManager.getPlaySeconds());
 
     }
 

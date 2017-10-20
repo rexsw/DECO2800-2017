@@ -51,6 +51,7 @@ public class Carrier extends Soldier {
 		this.setAttackRange(0);
 		this.setAttackSpeed(0);
 		this.isCarrier();
+		this.name = "Carrier";
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
@@ -122,7 +123,7 @@ public class Carrier extends Soldier {
 	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)
-		modifyFogOfWarMap(true, 3);
+		modifyFogOfWarMap(true, getFogRange());
 	    // make stances here.
 	    int xPosition = (int) this.getPosX();
 	    int yPosition = (int) this.getPosY();

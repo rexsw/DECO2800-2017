@@ -3,10 +3,10 @@ Rain
 active: false
 - Duration -
 lowMin: 5000.0
-lowMax: 5000.0
+lowMax: 7500.0
 - Count -
 min: 1000
-max: 3500
+max: 4500
 - Emission -
 lowMin: 500.0
 lowMax: 500.0
@@ -24,8 +24,8 @@ timeline2: 0.8630137
 - Life -
 lowMin: 4000.0
 lowMax: 4000.0
-highMin: 5000.0
-highMax: 5000.0
+highMin: 7500.0
+highMax: 7500.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -64,10 +64,10 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Scale -
-lowMin: 5.0
-lowMax: 5.0
-highMin: 20.0
-highMax: 20.0
+lowMin: 10.0
+lowMax: 10.0
+highMin: 30.0
+highMax: 30.0
 relative: false
 scalingCount: 4
 scaling0: 0.9591837
@@ -81,8 +81,8 @@ timeline2: 0.5479452
 timeline3: 0.9041096
 - Velocity -
 active: true
-lowMin: 30.0
-lowMax: 0.0
+lowMin: 100.0
+lowMax: 100.0
 highMin: 200.0
 highMax: 500.0
 relative: false
@@ -92,10 +92,10 @@ timelineCount: 1
 timeline0: 0.0
 - Angle -
 active: true
-lowMin: -97.0
-lowMax: -97.0
-highMin: -45.0
-highMax: -141.0
+lowMin: -135.0
+lowMax: -135.0
+highMin: -135.0
+highMax: -135.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -107,10 +107,10 @@ timeline1: 0.5
 timeline2: 1.0
 - Rotation -
 active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 0.0
-highMax: 0.0
+lowMin: -35.0
+lowMax: -35.0
+highMin: -35.0
+highMax: -35.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -145,10 +145,10 @@ colors2: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Transparency -
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 0.2
+lowMax: 0.4
 highMin: 1.0
-highMax: 1.0
+highMax: 1.5
 relative: false
 scalingCount: 5
 scaling0: 0.7719298
