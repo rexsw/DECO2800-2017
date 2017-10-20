@@ -45,6 +45,6 @@ public class StartGameAction implements Action {
     
     @Override
     public String toString() {
-        return "Tried to start game: " + String.valueOf(canStart) + "| " + gameInfo.toString();  
+        return "Tried to start game: " + canStart + "| " + gameInfo.toString();  
     }
 }

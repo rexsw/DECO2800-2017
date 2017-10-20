@@ -32,8 +32,8 @@ public class RandomMapWriter {
     //output file
     public static final String FILENAME = "resources/mapAssets/tmap.tmx";
     //some hard coded constants
-    private static final int tileHeight = 32;
-    private static final int tileWidth = 55;
+    private static final int TILEHEIGHT = 32;
+    private static final int TILEWIDTH = 55;
     //add tiles
     private Map<pointInt, String> tileOverride = new HashMap<pointInt, String>();
 
@@ -67,8 +67,8 @@ public class RandomMapWriter {
         //fill the header info
         writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<map version=\"1.0\" tiledversion=\"1.0.2\" orientation=\"isometric\" " +
-                "renderorder=\"right-down\" width=\""+width+"\" height=\""+height+"\" tilewidth=\""+tileWidth+"\" " +
-                "tileheight=\""+tileHeight+"\" nextobjectid=\"1\">\n" +
+                "renderorder=\"right-down\" width=\""+width+"\" height=\""+height+"\" tilewidth=\""+TILEWIDTH+"\" " +
+                "tileheight=\""+TILEHEIGHT+"\" nextobjectid=\"1\">\n" +
                 " <tileset firstgid=\"1\" source=\"tileset1.tsx\"/>\n" +
                 " <layer name=\"Tile Layer 1\" width=\""+width+"\" height=\""+width+"\">\n" +
                 "  <data encoding=\"csv\">");
