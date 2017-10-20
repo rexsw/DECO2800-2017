@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainMenu;
+package com.deco2800.marswars.mainmenu;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

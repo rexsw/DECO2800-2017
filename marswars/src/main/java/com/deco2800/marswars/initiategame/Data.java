@@ -1,4 +1,4 @@
-package com.deco2800.marswars.initiateGame;
+package com.deco2800.marswars.initiategame;
 
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.util.Array2D;
