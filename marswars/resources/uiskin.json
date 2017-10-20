@@ -71,13 +71,6 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: clear,
 		over: clear
 	},
-	next_button: {
-		font: font_airstrike_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
-		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
-		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
-		pressedOffsetX: 5
-	},
 	buttons: {
 		font: default-font,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
@@ -126,6 +119,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: btn2,
 		over: btn2,
 		pressedOffsetX: 5
+	},
+	next_button: {
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		pressedOffsetX: 5
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
@@ -144,7 +144,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
-		background: window_smoller,
+		background: window_smol_final,
 		titleFont: default-font,
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		stageBackground: clear
@@ -155,7 +155,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	dialog: {
-		background: default-window,
+		background: window_smol_final,
 		titleFont: default-font,
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		stageBackground: dialogDim
@@ -224,16 +224,16 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: font_consola_18pt,
 		fontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 }
 	},
+	title: {
+		font: font_airstrike_56pt_bold,
+		fontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
 	seven-seg: {
 		font: font_d_seg14_classic-_regular_16pt,
 		fontColor: { a: 1, b: 1, g: 0.4, r: 0.2 }
 	},
 	subtitle: {
 		font: font_arial_18pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
-	},
-	title: {
-		font: font_airstrike_56pt_bold,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	statsTitle: { font: font_a_rialnb_42pt_italic },
@@ -296,5 +296,12 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		scrollStyle: default,
 		listStyle: default
 	}
+},
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {
+    	label: default, 
+    	background: textfield, 
+    	wrapWidth: 400
+  	}
 }
 }
