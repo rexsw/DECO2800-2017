@@ -946,7 +946,7 @@ public class HUDView extends ApplicationAdapter{
 		chatbox.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
-
+		actionsBg.setVisible(false);
 	}
 
 	/**
@@ -956,7 +956,7 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
 	    HUDManip.setVisible(true);
-
+	    actionsBg.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
