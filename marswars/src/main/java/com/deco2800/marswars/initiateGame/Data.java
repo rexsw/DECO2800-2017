@@ -1,6 +1,6 @@
 package com.deco2800.marswars.initiateGame;
 
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainElements.Resource;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;

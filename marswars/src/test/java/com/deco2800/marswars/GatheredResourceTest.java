@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.terrainElements.ResourceType;
 
 public class GatheredResourceTest {
 	@Test

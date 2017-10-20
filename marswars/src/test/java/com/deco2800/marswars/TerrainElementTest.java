@@ -1,7 +1,9 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
 import org.junit.Test;
+
+import com.deco2800.marswars.entities.terrainElements.TerrainElementTypes;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
