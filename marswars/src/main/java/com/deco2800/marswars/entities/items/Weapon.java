@@ -35,8 +35,6 @@ public class Weapon extends Item {
     	this.effects = new ArrayList<>();
         this.type = type;
         this.level = level;
-      //  this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed
-		//		(), getWeaponRange()));
 
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange(), Target.SELF));
     }
@@ -151,7 +149,7 @@ public class Weapon extends Item {
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass())) {
+		if (getClass() != object.getClass()) {
 			return false;
 		}
 		return ((Weapon) object).type == this.type;

@@ -399,6 +399,7 @@ public class HUDView extends ApplicationAdapter{
             }
        });
 
+
 		dispFog.addListener(new ChangeListener() {
 			@Override
 			/*displays the (-) button for setting the hud to invisible*/
