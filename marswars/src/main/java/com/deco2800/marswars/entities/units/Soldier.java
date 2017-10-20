@@ -47,13 +47,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosX(float x) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 		super.setPosX(x);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 	}
 
@@ -66,14 +66,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosY(float y) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 
 		super.setPosY(y);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 
 
@@ -206,7 +206,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			nextAction = null;
 		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
 			Turret turret = (Turret) entities.get(0);
-			turret.numOfSolider += 1;
+			turret.setNumOfSolider(turret.getNumOfSolider() + 1);
 			turret.powerUpTurret();
 			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
 			this.setHealth(0);
@@ -270,7 +270,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 		}
 
 		loyalty_regeneration();
@@ -282,7 +282,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 
 			if(getHealth()<=0)
-				modifyFogOfWarMap(false,3);
+				modifyFogOfWarMap(false,getFogRange());
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -599,7 +599,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
 			//turn of the fog of war for this entity when it switches side
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);

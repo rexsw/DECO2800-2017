@@ -1,31 +1,22 @@
 package com.deco2800.marswars;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.Manager;
-import com.deco2800.marswars.managers.PlayerManager;
-import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.util.Box3D;
 
 class TestOnwerEntity extends AbstractEntity implements HasOwner {
 
 
 	public TestOnwerEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-		super(posX, posY, posZ, xLength, yLength, zLength);
+		super(new Box3D(posX, posY, posZ, xLength, yLength, zLength));
 	}
 	
 	private int owner;

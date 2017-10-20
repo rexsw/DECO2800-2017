@@ -151,7 +151,7 @@ public class Game{
 		loadBuildings(loadedGame);
 
 
-
+		this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);

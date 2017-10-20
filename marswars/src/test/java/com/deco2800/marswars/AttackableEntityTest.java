@@ -31,7 +31,7 @@ public class AttackableEntityTest {
 		test.setOwner(-1);
 		enemy = new AttackableEntity(10, 10, 10, 1, 1, 1);
 		enemy.setOwner(1);
-		constructor2Test = new AttackableEntity(5, 5, 5, 2, 2, 2, 2, 2, true);
+		constructor2Test = new AttackableEntity(new Box3D(5, 5, 5, 2, 2, 2), 2, 2, true);
 		constructor2Test.setOwner(0);
 		position = new Box3D(15, 15, 15, 2, 3, 1);
 		constructor3Test = new AttackableEntity(position, 2, 3, true);
@@ -79,7 +79,7 @@ public class AttackableEntityTest {
 		assertEquals(constructor2Test.getArmorDamage(), 0);
 		
 		assertEquals(constructor3Test.getPosX(), 15, 0.1);
-		assertEquals(constructor3Test.getPosY(), 15.5, 0.1);
+		assertEquals(constructor3Test.getPosY(), 15, 0.1);
 		assertEquals(constructor3Test.getPosZ(), 15, 0.1);
 		assertEquals(constructor3Test.getXLength(), 2, 0.1);
 		assertEquals(constructor3Test.getYLength(), 3, 0.1);

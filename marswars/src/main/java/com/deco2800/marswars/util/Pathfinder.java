@@ -63,7 +63,9 @@ public class Pathfinder {
 
 				int cost = 0;
 				for (BaseEntity e : entities) {
+					if (e != null) {
 						cost += e.getCost();
+					}
 				}
 
 				if (closedSet.contains(p)) {

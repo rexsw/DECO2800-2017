@@ -3,6 +3,7 @@ package com.deco2800.marswars;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.deco2800.marswars.managers.FogManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,6 +76,7 @@ public class GameBlackBoardTest {
 	public void buildingcounttest() {
 		GameBlackBoard test = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		BaseWorld baseWorld = new BaseWorld(10, 15);
+		FogManager.initialFog(10,15);
 		MiniMap m = null;
 		GameManager.get().setMiniMap(m);
 		GameManager.get().setWorld(baseWorld);

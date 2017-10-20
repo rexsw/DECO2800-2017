@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
@@ -18,15 +17,12 @@ import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Moos
@@ -54,22 +50,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	OrthographicCamera camera;
 
 	Stage stage;
-	Window window;
-
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
-
-	//long lastGameTick = 0;
-	//long lastMenuTick = 0;
-	long pauseTime = 0;
-
 	private static int invincible = 0;
-	
 	private Skin skin;
-
-	Set<Integer> downKeys = new HashSet<>();
 	TextureManager reg;
 
 	private InputProcessor inputP;
@@ -130,26 +114,20 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		String backgroundString = this.bgManager.getBackground();
 		Texture background = this.reg.getTexture(backgroundString);
 		batch.begin();
-		batch.draw(background, this.camera.position.x - this.camera.viewportWidth*this.camera.zoom/2 , this.camera.position.y -
-				this.camera.viewportHeight*this.camera.zoom/2, this.camera.viewportWidth*this.camera.zoom,
+		batch.draw(background, this.camera.position.x -
+						this.camera.viewportWidth*this.camera.zoom/2 ,
+				this.camera.position.y -
+				this.camera.viewportHeight*this.camera.zoom/2,
+				this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
 		
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
-		// Render the rain effect if raining PLEASE DO NOT DELETE
-		//weatherManager.addRainVisuals(batch);
-/*		if (weatherManager.isRaining()) {
-			SpriteBatch particleBatch = new SpriteBatch();
-			particleBatch.begin();
-			ParticleEffect effect = weatherManager.addRainVisuals(batch);
-			effect.draw(particleBatch);
-			particleBatch.end();
-		}
-*/
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName() +  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
+				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
 		this.stage.act();
 		this.stage.draw();
 		GameManager.get().setCamera(this.camera);

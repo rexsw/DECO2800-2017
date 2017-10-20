@@ -1,6 +1,6 @@
 package com.deco2800.marswars.initiateGame;
 
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -41,6 +41,37 @@ public class Data {
 
     //playerStats
     private List<ArrayList<Integer>> playerStats = new ArrayList<>();
+
+    //gameTime
+    private long hour;
+    private long min;
+    private long sec;
+
+    public long getHour() {
+        return hour;
+    }
+
+    public void setHour(long hour) {
+        this.hour = hour;
+    }
+
+    public long getMin() {
+        return min;
+    }
+
+    public void setMin(long min) {
+        this.min = min;
+    }
+
+    public long getSec() {
+        return sec;
+    }
+
+    public void setSec(long sec) {
+        this.sec = sec;
+    }
+
+
 
 
     /**

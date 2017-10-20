@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.TerrainElements;
+package com.deco2800.marswars.entities.terrainelements;
 
 /**
  * Types of terrains that can be found in the game.

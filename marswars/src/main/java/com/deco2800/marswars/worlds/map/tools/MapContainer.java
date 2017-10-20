@@ -6,7 +6,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.*;
+import com.deco2800.marswars.entities.terrainelements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
@@ -143,7 +143,7 @@ public class MapContainer {
         float rf;
         ObstacleType type;
         Obstacle tree;
-        for (int i = 0; i<Math.sqrt(this.length); i++) {
+        for (int i = 0; i<this.length*4; i++) {
             if (randomColour) {
                 rf = r.nextFloat();
                 if (rf<0.25) {
@@ -169,7 +169,7 @@ public class MapContainer {
             else {
                 type = ObstacleType.TREE3;
             }
-            tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 8, 8,
+            tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
                     type, colour);
             world.addEntity(tree);
         }
