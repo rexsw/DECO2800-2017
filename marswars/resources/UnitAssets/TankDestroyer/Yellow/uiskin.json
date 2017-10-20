@@ -10,7 +10,6 @@ com.badlogic.gdx.graphics.Color: {
 },
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font_arial_16pt: { file: font_arial_16pt.fnt },
-	font_impact_28pt_bold: { file: font_impact_28pt_bold.fnt },
 	font_impact_48pt_bold: { file: font_impact_48pt_bold.fnt },
 	font_impact_18pt: { file: font_impact_18pt.fnt },
 	font_impact_24pt_bold: { file: font_impact_24pt_bold.fnt },
@@ -29,8 +28,8 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	button2: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		font: font_impact_24pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
 		down: btn1,
@@ -45,8 +44,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: default-round-down
 	},
 	next_button: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		font: font_impact_32pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
 		pressedOffsetX: 5
@@ -59,25 +58,18 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		pressedOffsetX: 1
 	},
 	num_button: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		font: font_impact_24pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
 		pressedOffsetX: 10
 	},
 	pre_button: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		font: font_impact_24pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
 		pressedOffsetX: -5
-	},
-	menubutton: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
-		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
-		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
-		pressedOffsetX: 10
 	},
 	toggle: {
 		font: default-font,
@@ -86,8 +78,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		overFontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 }
 	},
 	button3: {
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		font: font_impact_24pt_bold,
+		fontColor: { a: 1, b: 0.49803922, g: 0.49803922, r: 0.52156866 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
 		down: btn2,
@@ -177,7 +169,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	subheading: {
-		font: font_arial_18pt,
+		font: font_impact_32pt_bold,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	error: {
@@ -218,13 +210,12 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		checkboxOn: check-on,
 		checkboxOff: check-off,
 		font: default-font,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
+		fontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	spac_check: {
 		checkboxOn: 22635432_10156163945688676_2069349400_n,
 		checkboxOff: 22657131_10156163945683676_699462849_n_(1),
-		font: font_impact_28pt_bold,
-		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
+		font: font_impact_24pt_bold
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {

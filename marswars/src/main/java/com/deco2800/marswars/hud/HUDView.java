@@ -264,7 +264,7 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor) {
 				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
 		});
-		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
+		//dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
 		//Creates the help button listener
 		LOGGER.debug("Creating help button listener");
@@ -274,7 +274,7 @@ public class HUDView extends ApplicationAdapter{
 				new HelpWindow(stage, skin);
 			}
 		});
-		helpButton.addListener(new TextTooltip("Help", skin));
+		//helpButton.addListener(new TextTooltip("Help", skin));
 
 		//Creates the quit button listener
 		LOGGER.debug("Creating quit button listener");
@@ -285,7 +285,7 @@ public class HUDView extends ApplicationAdapter{
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
 			}
 		});
-		quitButton.addListener(new TextTooltip("Quit Game", skin));
+		//quitButton.addListener(new TextTooltip("Quit Game", skin));
 	}
 
 
@@ -391,7 +391,7 @@ public class HUDView extends ApplicationAdapter{
 				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
 		});
-		dispTech.addListener(new TextTooltip("Open Technology", skin));
+		//dispTech.addListener(new TextTooltip("Open Technology", skin));
 
 		dispShop.addListener(new ChangeListener(){
 			@Override
@@ -400,7 +400,7 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
 			}
 		});
-		dispShop.addListener(new TextTooltip("Open Shop", skin));
+		//dispShop.addListener(new TextTooltip("Open Shop", skin));
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
