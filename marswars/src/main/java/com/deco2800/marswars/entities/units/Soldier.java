@@ -449,42 +449,12 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void skirmishingBehaviour(List<AttackableEntity> enemy) {
 		//Run away from closest enemy until just within attack range
-		for (int i=1; i<getAttackRange(); i++) { 
+		for (int i = 1; i < getAttackRange(); i++) { 
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-                boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
-                if (distanceEquality) {
-					float xLocation;
-					float yLocation;
-					//If xDistance and yDistance is the same increment one by random
-					boolean distanceEquality2 = (Math.abs(xDistance - yDistance) < 0.01);
-					if (distanceEquality2) {
-						Random random = new Random();
-						if (random.nextBoolean()) {
-							xDistance += 1;
-						} else {
-							yDistance += 1;
-						}
-					}
-					if (xDistance > yDistance) {
-						if (a.getPosX() - this.getPosX() > 0) {
-							xLocation = this.getPosX() - 1;
-						} else {
-							xLocation = this.getPosX() + 1;
-						} 
-						yLocation = this.getPosY();
-					} else {
-						if (a.getPosY() - this.getPosY() > 0) {
-							yLocation = this.getPosY() - 1;
-						} else {
-							yLocation = this.getPosY() + 1;
-						}
-						xLocation = this.getPosX();
-					}
-					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
-					return;
-				}
+                boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
+                performSkirmishingbehaviour(distanceEquality, xDistance, yDistance, a);
 			}
 		}
 		//Consider attacking at maximum range
@@ -501,6 +471,44 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	}
 	
 	/**
+	 * Helper method for skirmishing behavior.
+	 * 
+	 */
+	private void performSkirmishingbehaviour(boolean distanceEquality, float xDistance, float yDistance, AttackableEntity a) {
+        if (distanceEquality) {
+			float xLocation;
+			float yLocation;
+			//If xDistance and yDistance is the same increment one by random
+			boolean distanceEquality2 = Math.abs(xDistance - yDistance) < 0.01 ;
+			if (distanceEquality2) {
+				Random random = new Random();
+				if (random.nextBoolean()) {
+					xDistance += 1;
+				} else {
+					yDistance += 1;
+				}
+			}
+			if (xDistance > yDistance) {
+				if (a.getPosX() - this.getPosX() > 0) {
+					xLocation = this.getPosX() - 1;
+				} else {
+					xLocation = this.getPosX() + 1;
+				} 
+				yLocation = this.getPosY();
+			} else {
+				if (a.getPosY() - this.getPosY() > 0) {
+					yLocation = this.getPosY() - 1;
+				} else {
+					yLocation = this.getPosY() + 1;
+				}
+				xLocation = this.getPosX();
+			}
+			currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+			return;
+		}
+	}
+	
+	/**
 	 * Will run away from enemy units.
 	 * @param enemy
 	 */
@@ -510,7 +518,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
 					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
@@ -547,6 +555,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){
+			LOGGER.error("setAlltexture has error");
 			return;
 		}
 	}
@@ -582,7 +591,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void loyalty_regeneration() {
 		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
 		if ((this.getLoyaltyRegenInterval()) <= 0) {
-			//LOGGER.info("Regen loyalty");
 			this.setLoyalty(this.getLoyalty() + 0);
 			this.resetLoyaltyRegenInterval();
 			return;
