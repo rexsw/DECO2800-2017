@@ -257,7 +257,7 @@ public class TechnologyManager extends Manager{
 
     public void setUnitAttributes() {
         // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
-        unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
+        unitAttributes.put("TankDestroyer", new int[]{10, 800, 50, 500, 400, 12, 20});
         unitAttributes.put("Soldier", new int[]{10, 750, 100, 500, 100, 8, 20});
         unitAttributes.put("Tank", new int[]{10, 2500, 100, 1500, 150, 10, 20});
         unitAttributes.put("Astronaut", new int[]{10, 250, 20, 200, 10, 5, 10});
@@ -265,6 +265,8 @@ public class TechnologyManager extends Manager{
         unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
         unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
         unitAttributes.put("Ambient", new int[]{10,1000*1000,100,50,0,30});
+        unitAttributes.put("Hacker", new int[]{10, 750, 0, 400, 0, 8, 20});
+        unitAttributes.put("Carrier", new int[] {10, 1000, 0, 500, 0, 0, 0});
 
         //These need to be implemented on the unit class end of things first, Using soldier as a testing unit.
 //        unitAttributes.put("Bullet", new int[]{10, 500, 50, 250, 50, 8, 30});

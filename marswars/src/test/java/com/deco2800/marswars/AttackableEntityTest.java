@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
@@ -15,6 +17,7 @@ import com.deco2800.marswars.actions.AttackAction;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.Assert;
 import org.junit.Before;
 
 public class AttackableEntityTest {
@@ -188,6 +191,15 @@ public class AttackableEntityTest {
 	public void testSetAttackSpeed() {
 		test.setAttackSpeed(20);
 		assertEquals(test.getAttackSpeed(), 20);
+	}
+	
+	@Test
+	public void testSetLoyalty() {
+		Soldier soldier = new Soldier(1, 0, 0, 1);
+		Carrier carrier = new Carrier(1, 0, 0, 1);
+		int maxLoyalty = carrier.getMaxLoyalty();
+		carrier.setLoyalty(maxLoyalty + 1);
+		Assert.assertTrue(carrier.getLoyalty() == maxLoyalty);
 	}
 
 }

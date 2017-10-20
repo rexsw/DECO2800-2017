@@ -283,7 +283,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setLoyalty(int loyalty) {
-		if (loyalty < 0) {
+		if (loyalty <= 0) {
 			if(this instanceof Carrier) {
 			    ((Carrier)this).unloadPassenger();
 			}
