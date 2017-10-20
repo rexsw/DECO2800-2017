@@ -39,7 +39,7 @@ public class ShortCut {
 	// inputKeys is used to stored the user input.
 	private Set<Integer> inputKeys = new HashSet<>();
 	
-	private final static int speed = 10;
+	private static final int SPEED = 10;
 	
 	// cameraPosition will store different list of positions of camera.
 	private ArrayList<ArrayList<Float>> cameraPosition = new ArrayList<ArrayList<Float>>();
@@ -103,16 +103,16 @@ public class ShortCut {
 	 */
 	public void moveCamera(OrthographicCamera camera) {
 		if (inputKeys.contains(Input.Keys.UP) || inputKeys.contains(Input.Keys.W)) {
-			camera.translate(0, 1 * speed * camera.zoom, 0);
+			camera.translate(0, 1 * SPEED * camera.zoom, 0);
 		}
 		if (inputKeys.contains(Input.Keys.DOWN) || inputKeys.contains(Input.Keys.S)) {
-			camera.translate(0, -1 * speed * camera.zoom, 0);
+			camera.translate(0, -1 * SPEED * camera.zoom, 0);
 		}
 		if (inputKeys.contains(Input.Keys.LEFT) || inputKeys.contains(Input.Keys.A)) {
-			camera.translate(-1 * speed * camera.zoom, 0, 0);
+			camera.translate(-1 * SPEED * camera.zoom, 0, 0);
 		}
 		if (inputKeys.contains(Input.Keys.RIGHT) || inputKeys.contains(Input.Keys.D)) {
-			camera.translate(1 * speed * camera.zoom, 0, 0);
+			camera.translate(1 * SPEED * camera.zoom, 0, 0);
 		}
 		if ((inputKeys.contains(Input.Keys.EQUALS)) && (camera.zoom > 0.5)) {
 			camera.zoom /= 1.05;
@@ -244,17 +244,18 @@ public class ShortCut {
 	public void cameraDeleteLastPosition() {
 		if((inputKeys.contains(Input.Keys.C)) && inputKeys.contains(Input.Keys.CONTROL_LEFT)){
 			if(!cameraPosition.isEmpty()){
-				if(delete == false){
-					delete = true;
-					cameraPosition.remove(cameraPointer);
-					cameraPointer--;
-					if (cameraPointer < 0 && cameraPosition.size() > 0) {
-						cameraPointer = cameraPosition.size() - 1;
-						cameraPointer = cameraPointer % cameraPosition.size();
-					} else if (cameraPointer < 0) {
-						cameraPointer = 0;
-					}
-				}	
+				if (delete) {
+					return;
+				}
+				delete = true;
+				cameraPosition.remove(cameraPointer);
+				cameraPointer--;
+				if (cameraPointer < 0 && cameraPosition.size() > 0) {
+					cameraPointer = cameraPosition.size() - 1;
+					cameraPointer = cameraPointer % cameraPosition.size();
+				} else if (cameraPointer < 0) {
+					cameraPointer = 0;
+				}
 			}
 		}else{
 			delete = false;
@@ -275,11 +276,11 @@ public class ShortCut {
 	
 	// still working on it
 	public void moveToOneOfTheEntity(OrthographicCamera camera) {
-		if (inputKeys.contains(Input.Keys.Z) && baseEntityList.size() > 0) {
+		if (inputKeys.contains(Input.Keys.Z) && !baseEntityList.isEmpty()) {
 			if (!moveToEntity) {
 				int length = GameManager.get().getWorld().getLength();
 				int width = GameManager.get().getWorld().getWidth();
-				float x = ((camera.position.x / 32) - (baseEntityList.get(0).getPosX()) * width / length) ;
+				float x = (camera.position.x / 32) - (baseEntityList.get(0).getPosX()) * width / length ;
 				float y = camera.position.y - baseEntityList.get(0).getPosY();
 				x *= -1;
 				y *= -1;
@@ -298,7 +299,6 @@ public class ShortCut {
 	 * @param camera the orthographicCamera.
 	 */
 	public void moveCameraToBase(OrthographicCamera camera) {
-		Array2D<List<BaseEntity>> a = GameManager.get().getWorld().getCollisionMap();
 		BaseWorld  w = GameManager.get().getWorld();
 		List<BaseEntity> l = w.getEntities();
 		float xNow = camera.position.x;
@@ -306,28 +306,23 @@ public class ShortCut {
 		float baseX;
 		float baseY;
 		if (inputKeys.contains(Input.Keys.BACKSPACE)) {
-				for(BaseEntity i: l)
-				{
-					if(i instanceof  Base)
-					{
-						baseX = i.getPosX();
-						baseY = i.getPosY();
-						System.out.println(baseX+"   "+baseY);
-						System.out.println(xNow+"   "+yNow);
-						inputKeys.remove(Input.Keys.Z);
-
-						camera.position.x = baseX*58;
-						camera.position.y = baseY*18;
-						camera.update();
-						return;
-
-
-					}
-
+			for(BaseEntity i: l) {
+				if(i instanceof  Base) {
+					baseX = i.getPosX();
+					baseY = i.getPosY();
+					LOGGER.info(baseX+"   "+baseY);
+					LOGGER.info(xNow+"   "+yNow);
+					inputKeys.remove(Input.Keys.Z);
+					camera.position.x = baseX*58;
+					camera.position.y = baseY*18;
+					camera.update();
+					return;
 				}
+			}
 		}
 	}
 
+	
 	public void moveToOneOfTheEntity() {
 		
 
@@ -406,12 +401,11 @@ public class ShortCut {
 	 * 
 	 * @param ArrayList<BaseEntity> list
 	 */
-	public void setOnClick(ArrayList<BaseEntity> list) {
-		MouseHandler  mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
+	public void setOnClick(List<BaseEntity> list) {
+		MouseHandler mouseHandler = (MouseHandler) (GameManager.get().getManager(MouseHandler.class));
 		for (BaseEntity entity: list) {
 			entity.makeSelected();
-			Clickable c = ((Clickable) entity);
-			c.onClick(mouseHandler);
+			((Clickable) entity).onClick(mouseHandler);
 		}
 	}
 	
@@ -421,7 +415,7 @@ public class ShortCut {
 	 * 
 	 * @param ArrayList<BaseEntity> list
 	 */
-	public void entityOnClick(ArrayList<BaseEntity> list) {
+	public void entityOnClick(List<BaseEntity> list) {
 		for (Renderable e : GameManager.get().getWorld().getEntities()) {
 			if ((e instanceof Clickable) && (e instanceof BaseEntity) && ((BaseEntity) e).isSelected() && !list.contains((BaseEntity) e)) {
 				list.add((BaseEntity) e);
@@ -488,8 +482,8 @@ public class ShortCut {
 		if (inputKeys.contains(Input.Keys.J)) {
 			if(!soldier){
 				soldier = true;
-				Soldier soldier = new Soldier(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
-				GameManager.get().getWorld().addEntity(soldier);
+				Soldier soldier1 = new Soldier(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
+				GameManager.get().getWorld().addEntity(soldier1);
 			}
 		} else {
 			soldier = false;
