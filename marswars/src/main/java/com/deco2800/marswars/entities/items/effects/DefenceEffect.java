@@ -1,8 +1,6 @@
 package com.deco2800.marswars.entities.items.effects;
 
-import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;
 
 /**
  * Class defines effect that increases defensive stats of a unit i.e. armour, max armour, hp, max hp and movement speed.
@@ -40,8 +38,6 @@ public class DefenceEffect implements Effect{
 	 */
 	@Override
 	public void applyEffect(AttackableEntity entity) {
-//		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
-//			Commander hero = (Commander) entity;
 			
 			entity.setMaxArmor(entity.getMaxArmor() + this.armour);
 			entity.setArmor(entity.getArmor() + this.armour);
@@ -49,7 +45,6 @@ public class DefenceEffect implements Effect{
 			entity.setHealth(entity.getHealth() + this.health);
 			//only allows the resulting movement speed to be positive.
 			entity.setSpeed(entity.getSpeed() + this.moveSpeed);
-//		}
 		
 	}
 
@@ -60,8 +55,6 @@ public class DefenceEffect implements Effect{
 	 */
 	@Override
 	public void removeEffect(AttackableEntity entity) {
-//		if (entity instanceof Commander) {//only allowing changes on Commander for testing purposes at this stage.
-//			Commander hero = (Commander) entity;
 			
 		entity.setMaxArmor(entity.getMaxArmor() - this.armour > 0 ? entity.getMaxArmor() - this.armour : 1);
 		entity.setArmor(entity.getArmor() - this.armour > 0? entity.getArmor() - this.armour : 1);
@@ -69,7 +62,6 @@ public class DefenceEffect implements Effect{
 		entity.setHealth(entity.getHealth() - this.health > 0? entity.getHealth() - this.health : 1);
 		entity.setSpeed(entity.getSpeed() - this.moveSpeed > 0.01f ? entity.getSpeed() - this.moveSpeed : 0.01f);
 			
-//		}
 	}
 	
 	/**

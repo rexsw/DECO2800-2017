@@ -183,15 +183,9 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
     public void useItem(Special special) {
     	if(this.specials.contains(special)) {
     		WorldUtil.removeOverlay();
-    		//ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
     		//should not have to worry about null pointer since it was just created.
-    		
-//    		if(!special.useItem()) {
-//    			// no use limit left
-//            	this.specials.remove(special);	
-//            	this.owner.setStatsChange(true);
-//    		}
+
     	} else {
     		LOGGER.error("***** Unrecognized " + special.getName());
     	}
