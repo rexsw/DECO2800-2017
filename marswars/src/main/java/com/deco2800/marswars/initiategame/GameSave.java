@@ -114,12 +114,12 @@ public class GameSave {
         data.setBlackFogOfWar(FogManager.getBlackFog());
 
         //getting all the entities
-        List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
+        List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();
 
         //converting these base entities to abstract entities
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
-        for (BaseEntity e : renderables_be) {
+        for (BaseEntity e : renderablesBe) {
             renderables.add(e);
         }
 

@@ -433,14 +433,14 @@ public class MenuScreen{
 
 		
 		/* no of teams buttons*/
-		Table AIButtons = new Table();
-		Button AI2 = new TextButton("2", skin, menuButtonString);
-		Button AI3 = new TextButton("3", skin, menuButtonString);
-		Button AI4 = new TextButton("4", skin, menuButtonString);
-		Button AI5 = new TextButton("5", skin, menuButtonString);
-		Button[] buttonsList= {AI2, AI3, AI4, AI5};
+		Table aiButtons = new Table();
+		Button ai2 = new TextButton("2", skin, menuButtonString);
+		Button ai3 = new TextButton("3", skin, menuButtonString);
+		Button ai4 = new TextButton("4", skin, menuButtonString);
+		Button ai5 = new TextButton("5", skin, menuButtonString);
+		Button[] buttonsList= {ai2, ai3, ai4, ai5};
 
-		AI2.addListener(new ChangeListener() {
+		ai2.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 2;
@@ -448,7 +448,7 @@ public class MenuScreen{
 			}
 		});
 
-		AI3.addListener(new ChangeListener() {
+		ai3.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 3;
@@ -456,7 +456,7 @@ public class MenuScreen{
 			}
 		});
 
-		AI4.addListener(new ChangeListener() {
+		ai4.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 4;
@@ -465,7 +465,7 @@ public class MenuScreen{
 		});
 
 		
-		AI5.addListener(new ChangeListener() {
+		ai5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 5;
@@ -474,11 +474,11 @@ public class MenuScreen{
 		});
 		
 		for (int i = 0; i < buttonsList.length; i++) {
-			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
+			aiButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
 						
 		mainmenu.add(combatInfo).align(Align.left).row();
-		mainmenu.add(AIButtons).align(Align.center).row();
+		mainmenu.add(aiButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).row();
 		mainmenu.add(aiInfo).align(Align.left).row();
 		mainmenu.add(winInfo).align(Align.left).row();
