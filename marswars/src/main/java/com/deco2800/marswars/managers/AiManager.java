@@ -8,7 +8,7 @@ import com.deco2800.marswars.buildings.Barracks;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.terrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
 import com.deco2800.marswars.entities.units.Astronaut;

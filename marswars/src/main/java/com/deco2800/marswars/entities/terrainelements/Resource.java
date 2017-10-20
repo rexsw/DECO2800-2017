@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.deco2800.marswars.entities.terrainElements;
+package com.deco2800.marswars.entities.terrainelements;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasHealth;

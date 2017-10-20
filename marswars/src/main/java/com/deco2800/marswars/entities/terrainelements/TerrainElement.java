@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.terrainElements;
+package com.deco2800.marswars.entities.terrainelements;
 
 /**
  * Creates terrain objects of various dimensions, textures and with different

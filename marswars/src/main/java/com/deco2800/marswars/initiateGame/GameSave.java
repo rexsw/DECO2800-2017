@@ -5,7 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.terrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;

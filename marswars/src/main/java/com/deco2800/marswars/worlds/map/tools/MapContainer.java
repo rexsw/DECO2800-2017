@@ -6,7 +6,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.terrainElements.*;
+import com.deco2800.marswars.entities.terrainelements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
