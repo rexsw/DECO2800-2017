@@ -46,13 +46,11 @@ public class UnloadAction implements DecoAction {
     @Override
     public void doAction() {
         if (! timeManager.isPaused() && ! actionPaused) {
-            switch (state) {
-                case UNLOAD_STATE:
-                    unloadAction();
-                    break;
-                default:
-                    state = State.UNLOAD_STATE;
-                    return;
+            if (state == State.UNLOAD_STATE) {
+        	unloadAction();
+            } else {
+                state = State.UNLOAD_STATE;
+                return;
             }
         }
     }

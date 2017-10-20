@@ -32,6 +32,7 @@ public class Carrier extends Soldier {
     private Optional<DecoAction> currentAction = Optional.empty();
 
     private String loadSound = "carrier-loading-sound.mp3";
+    private String unableLoad = "cant unload while doing something else";
 
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
@@ -198,7 +199,7 @@ public class Carrier extends Soldier {
 	if (!currentAction.isPresent()) {
 	    unloadPassenger();
 	} else {
-	    LOGGER.error("cant unload while doing something else");
+	    LOGGER.error(unableLoad);
 	}
     }
     
@@ -206,7 +207,7 @@ public class Carrier extends Soldier {
 	if (!currentAction.isPresent()) {
 	    unloadPassengerIndividual();
 	} else {
-	    LOGGER.error("cant unload while doing something else");
+	    LOGGER.error(unableLoad);
 	}
     }
 
@@ -287,7 +288,6 @@ public class Carrier extends Soldier {
 	boolean flag;
 	if(totalLoaded > 0) {
 	    if (!(loadedUnits[totalLoaded - 1] == null)) {
-		LOGGER.info("Unloading last!!!!");
 		loadedUnits[totalLoaded - 1].setUnloaded();
 		LOGGER.error("Unit unloaded.");
 		loadedUnits[totalLoaded - 1] = null;
@@ -321,14 +321,14 @@ public class Carrier extends Soldier {
 		LOGGER.info("Starting to unload");
 		unloadPassenger();
 	    } else {
-		LOGGER.error("cant unload while doing something else");
+		LOGGER.error(unableLoad);
 	    }
 	} else if (a == ActionType.UNLOADINDIVIDUAL) {
 	    if (!currentAction.isPresent()) {
 		LOGGER.info("Starting to unload last unit");
 		unloadPassengerIndividual();
 	    } else {
-		LOGGER.error("cant unload while doing something else");
+		LOGGER.error(unableLoad);
 	    }
 	} else {
 	    LOGGER.info("Assigned action " + ActionSetter.getActionName(a));
