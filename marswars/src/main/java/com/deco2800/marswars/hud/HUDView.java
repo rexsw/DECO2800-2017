@@ -956,7 +956,6 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setVisible(true);
 	    HUDManip.setVisible(true);
 
-		chatbox.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
