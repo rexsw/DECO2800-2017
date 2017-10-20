@@ -86,7 +86,7 @@ public class GameManager implements TickableManager {
 	 * @param type The class type (ie SoundManager.class)
 	 * @return A Manager component of the requested type
 	 */
-	public Manager getManager(Class<?> type) {
+	synchronized public Manager getManager(Class<?> type) {
 		/* Check if the manager exists */
 		for (Manager m : managers) {
 			if (m.getClass() == type) {

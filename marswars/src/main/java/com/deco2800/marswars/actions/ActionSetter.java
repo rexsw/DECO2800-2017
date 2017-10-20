@@ -225,7 +225,7 @@ public final class ActionSetter {
                 target.setAction(new GenerateAction(new Commander(target
                         .getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
-            case HEALER:
+            case MEDIC:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             case SOLDIER:
