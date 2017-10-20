@@ -325,7 +325,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
             this.addNewAction(EntityID.SOLDIER);
             break;
         case BARRACKS:
-            this.addNewAction(EntityID.HEALER);
+            this.addNewAction(EntityID.MEDIC);
             this.addNewAction(EntityID.HACKER);
             this.addNewAction(EntityID.CARRIER);
             break;
