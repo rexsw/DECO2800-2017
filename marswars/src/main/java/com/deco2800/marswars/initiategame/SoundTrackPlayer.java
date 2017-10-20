@@ -23,7 +23,7 @@ public class SoundTrackPlayer {
             (TimeManager) GameManager.get().getManager(TimeManager.class);
 
     public  void updateNormalSoundTrack(){
-        if(timeManager.getHours() >= 6 && timeManager.getHours() < 17){
+        if(timeManager.getHours() >= 6 && timeManager.getHours() < 18){
             if(!dayTheme.isPlaying() && fadeDone && Render3D.getBattleFlag()==0) {
                 stopSoundTrack();
                 dayTheme.setVolume(0.0f);

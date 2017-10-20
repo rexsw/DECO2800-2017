@@ -5,6 +5,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
@@ -76,6 +77,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getEntities());
         kryo.writeClassAndObject(output, data.getResource());
         kryo.writeClassAndObject(output, data.getBuilding());
+        kryo.writeClassAndObject(output, data.getObstacles());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
@@ -99,6 +101,7 @@ public class GameSave {
         data.setEntities((ArrayList<SavedEntity>)kryo.readClassAndObject(input));
         data.setResource((ArrayList<Resource>)kryo.readClassAndObject(input));
         data.setBuilding((ArrayList<SavedBuilding>)kryo.readClassAndObject(input));
+        data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
@@ -136,6 +139,9 @@ public class GameSave {
             else if(r instanceof BuildingEntity){
                 fillBuilding(r);
             }
+            else if(r instanceof Obstacle){
+                 data.getObstacles().add((Obstacle)r);
+             }
             else {
                 fillEntities(r);
             }

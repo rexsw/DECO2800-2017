@@ -9,6 +9,7 @@ import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
@@ -144,6 +145,11 @@ public class Game{
 			rm.setCrystal(playerStats.get(2), playerid);
 			rm.setMaxPopulation(10, playerid);
 			rm.setPopulation(playerStats.get(3), playerid);
+		}
+
+		//load obatacles
+		for(Obstacle each : loadedGame.data.getObstacles()){
+			GameManager.get().getWorld().addEntity(each);
 		}
 
 		//add all entities

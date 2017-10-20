@@ -8,6 +8,11 @@ import com.deco2800.marswars.util.Box3D;
  */
 public class Obstacle extends BaseEntity {
 
+    /**
+     * this function is used for gamesave. Never delete this
+     */
+    public Obstacle(){}
+
     public Obstacle(float posX, float posY, float posZ, float height, float width, ObstacleType type, String colour){
         super(new Box3D(posX, posY, posZ, 1, 1, 1f), height, width, false);
         switch (type) {
