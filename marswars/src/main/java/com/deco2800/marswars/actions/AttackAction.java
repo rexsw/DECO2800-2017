@@ -3,8 +3,6 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by timhadwen on 30/7/17.
@@ -17,28 +15,36 @@ public class AttackAction implements DecoAction {
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
 	boolean completed = false;
-
 	// Variables for pause
-	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 
-	
+	/**
+	 * Possible states of the AttackAction
+	 */
 	enum State {
 		SETUP_MOVE,
 		MOVE_TOWARDS,
 		ATTACK,
 		ATTACKING
 	}
-	
+
+	/**
+	 * Constructor - creates a new AttackAction object.
+	 * @param entity
+	 * @param enemy
+	 */
 	public AttackAction(AttackableEntity entity, AttackableEntity enemy) {
 		this.entity = entity;
 		this.enemy= enemy;
 	}
 
+	/**
+	 * Perform the current action, only if the game is not currently paused.
+	 */
 	@Override
 	public void doAction() {
-		if (!timeManager.isPaused() && !actionPaused) {
+		if (!timeManager.isPaused()) {
 			switch (state) {
 				case MOVE_TOWARDS:
 					moveTowardsAction();
@@ -58,6 +64,7 @@ public class AttackAction implements DecoAction {
 
 		}
 	}
+
 	/**
 	 * Gets the absolute distance from the current entity to the current entity
 	 * @return the absolute distance from the 
@@ -67,17 +74,27 @@ public class AttackAction implements DecoAction {
 		float diffY = enemy.getPosY() - entity.getPosY();
 		return Math.abs(diffX) + Math.abs(diffY);
 	}
-	
+
+	/**
+	 * Returns a boolean describing whether or not the current AttackAction
+	 * has been completed.
+	 * @return
+	 */
 	@Override
 	public boolean completed() {
 		return completed;
 	}
 
+	/**
+	 * Stub method
+	 * @return int value
+	 */
 	@Override
 	public int actionProgress() {
 		return 0;
 	}
-	
+
+
 	private void attackingAction() {
 		//If the enemy is converted while being attacked
 		if (entity.sameOwner(enemy)) {
@@ -96,7 +113,11 @@ public class AttackAction implements DecoAction {
 		}
 		shoot.doAction();
 	}
-	
+
+	/**
+	 * Causes the unit possessing this action to attack an enemy, should it come
+	 * within attacking distance of this unit.
+	 */
 	private void moveTowardsAction() {
 	    float distance;
 		// When close to the enemy's attack range, attack.
@@ -112,15 +133,19 @@ public class AttackAction implements DecoAction {
 		action.doAction();
 	}
 
+	/**
+	 * Attack actions do not need to be paused. (Dummy method)
+	 */
 	@Override
 	public void pauseAction() {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 
+	/**
+	 * Attack actions do not need to be paused. (Dummy method)
+	 */
 	@Override
 	public void resumeAction() {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 }

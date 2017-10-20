@@ -20,7 +20,7 @@ public interface AttackAttributes {
 	
 	/**
 	 * Set the maximum armor of the entity
-	 * @param maxarmor the maximum armor of the entity
+	 * @param maxArmor the maximum armor of the entity
 	 */
 	public void setMaxArmor(int maxArmor);
 	
@@ -38,7 +38,7 @@ public interface AttackAttributes {
 	
 	/**
 	 * Sets the attack range of an entity.
-	 * @param attakRange
+	 * @param attackRange
 	 */
 	void setAttackRange(int attackRange);
 	
@@ -126,7 +126,7 @@ public interface AttackAttributes {
 	
 	/**
 	 * Set the loyalty damage of an entity
-	 * @param loyalty damage of an entity
+	 * @param loyaltyDamage damage of an entity
 	 */
 	public void setLoyaltyDamage(int loyaltyDamage);
 	

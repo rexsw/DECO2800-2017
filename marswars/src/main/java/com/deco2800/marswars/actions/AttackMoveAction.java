@@ -26,7 +26,10 @@ public class AttackMoveAction implements DecoAction {
 	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	
+
+	/**
+	 * Possible states of the AttackAction
+	 */
 	enum State {
 		SETUP_MOVE,
 		MOVE_TOWARDS,
@@ -40,6 +43,9 @@ public class AttackMoveAction implements DecoAction {
 		this.entity = entity;
 	}
 
+	/**
+	 * Perform the current action, only if the game is not currently paused.
+	 */
 	@Override
 	public void doAction() {
 		if (!timeManager.isPaused() && !actionPaused) {
@@ -63,7 +69,11 @@ public class AttackMoveAction implements DecoAction {
 
 		}
 	}
-	
+
+	/**
+	 * Causes the unit possessing this action to attack an enemy, should it come
+	 * within attacking distance of this unit.
+	 */
 	private void moveTowardsAction() {
 		//Enemies within attack range are found
 		List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
@@ -71,16 +81,14 @@ public class AttackMoveAction implements DecoAction {
 		//For each entity in the world
 		for (BaseEntity e: entityList) {
 			//If an attackable entity
-			if (e instanceof AttackableEntity) {
+			if (e instanceof AttackableEntity && ! entity.sameOwner(e)) {
 				//Not owned by the same player
-				AttackableEntity attackable = (AttackableEntity) e;
-				if (!entity.sameOwner(attackable)) {
-					//Within attacking distance
-					float diffX = attackable.getPosX() - entity.getPosX();
-					float diffY = attackable.getPosY() - entity.getPosY();
-					if (Math.abs(diffX) + Math.abs(diffY) <= entity.getAttackRange()) {
-						enemy.add((AttackableEntity) e);
-					}
+				//Within attacking distance
+				float diffX = e.getPosX() - entity.getPosX();
+				float diffY = e.getPosY() - entity.getPosY();
+				if (Math.abs(diffX) + Math.abs(diffY) <=
+						entity.getAttackRange()) {
+					enemy.add((AttackableEntity) e);
 				}
 			}
 		}
@@ -107,26 +115,39 @@ public class AttackMoveAction implements DecoAction {
 		}
 		attack.doAction();
 	}
-	
+
+	/**
+	 * Returns a boolean describing whether or not the current AttackAction
+	 * has been completed.
+	 * @return
+	 */
 	@Override
 	public boolean completed() {
 		return completed;
 	}
 
+	/**
+	 * Stub method
+	 * @return int value
+	 */
 	@Override
 	public int actionProgress() {
 		return 0;
 	}
 
+	/**
+	 * Attack actions do not need to be paused. (Dummy method)
+	 */
 	@Override
 	public void pauseAction() {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 
+	/**
+	 * Attack actions do not need to be paused. (Dummy method)
+	 */
 	@Override
 	public void resumeAction() {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 }
