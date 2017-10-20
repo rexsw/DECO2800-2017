@@ -33,7 +33,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * acceptable fields for use in the blackboard used for type safety 
 	 */
 	public enum Field {
-		BIOMASS, CRYSTAL, ROCKS, WATER, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY
+		BIOMASS, CRYSTAL, ROCKS, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY
 	}
 	
 
@@ -46,7 +46,6 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get(Field.BIOMASS).add(rm.getRocks(teamid));
 				values.get(teamid).get(Field.CRYSTAL).add(rm.getCrystal(teamid));
 				values.get(teamid).get(Field.ROCKS).add(rm.getRocks(teamid));
-				values.get(teamid).get(Field.WATER).add(rm.getWater(teamid));
 				values.get(teamid).get(Field.UNITS).add(this.count(teamid, Field.UNITS));
 				values.get(teamid).get(Field.UNITS_LOST).add(this.count(teamid, Field.UNITS_LOST));
 				values.get(teamid).get(Field.COMBAT_UNITS).add(this.count(teamid, Field.COMBAT_UNITS));
@@ -96,7 +95,6 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		setmap.put(Field.BIOMASS, new ArrayList<Integer>(base));
 		setmap.put(Field.CRYSTAL,  new ArrayList<Integer>(base));
 		setmap.put(Field.ROCKS,  new ArrayList<Integer>(base));
-		setmap.put(Field.WATER,  new ArrayList<Integer>(base));
 		setmap.put(Field.UNITS,  new ArrayList<Integer>(base));
 		setmap.put(Field.UNITS_LOST,  new ArrayList<Integer>(base));
 		setmap.put(Field.COMBAT_UNITS,  new ArrayList<Integer>(base));

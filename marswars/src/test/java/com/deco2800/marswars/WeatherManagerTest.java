@@ -1,8 +1,6 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.InitiateGame.Game;
 import com.deco2800.marswars.buildings.Turret;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.GameManager;

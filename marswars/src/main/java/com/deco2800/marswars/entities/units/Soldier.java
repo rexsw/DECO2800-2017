@@ -47,13 +47,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosX(float x) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 		super.setPosX(x);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 	}
 
@@ -66,14 +66,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosY(float y) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 
 		super.setPosY(y);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 
 
@@ -212,18 +212,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
-			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-				// we cant assign different owner yet
-				AttackableEntity target = (AttackableEntity) entities.get(0);
-				attack(target);
-
-			} else {
-				moveUnit(x,y);
-			}
+			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			Sound loadedSound = sound.loadSound(movementSound);
-			sound.playSound(loadedSound);
+//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//			Sound loadedSound = sound.loadSound(movementSound);
+//			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);
@@ -231,12 +224,21 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	}
 	
 	/**
-	 * Helper to be inherited and changed for different right click options (mainly for commander)
+	 * Helper to be inherited and changed for different right click options (mainly for commander). here simply assigns
+	 * the action when right click occurs.
+	 * @param entities  List of entities found
 	 * @param x coordinate along x axis of the mouse right click input
 	 * @param y coordinate along y axis of the mouse right click input
 	 */
-	protected void moveUnit(float x, float y) {
-		currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+			// we cant assign different owner yet
+			AttackableEntity target = (AttackableEntity) entities.get(0);
+			attack(target);
+
+		} else {
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+		}
 	}
 	
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
@@ -268,7 +270,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 		}
 
 		loyalty_regeneration();
@@ -280,7 +282,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 
 			if(getHealth()<=0)
-				modifyFogOfWarMap(false,3);
+				modifyFogOfWarMap(false,getFogRange());
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -597,7 +599,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
 			//turn of the fog of war for this entity when it switches side
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);

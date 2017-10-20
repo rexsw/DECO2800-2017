@@ -3,9 +3,11 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.entities.Inventory;
@@ -158,8 +160,8 @@ public class UnitStatsBox extends Table{
 			return;
 		}
 		hero.setStatsChange(false);
-		ImageButton weaponBtn;
-		ImageButton armourBtn;
+		ImageTextButton weaponBtn;
+		ImageTextButton armourBtn;
 		heroInventory.clear();
 		
 		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
@@ -172,11 +174,10 @@ public class UnitStatsBox extends Table{
 		List<Special> specials = inventory.getSpecials();
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
-			// will add handler later
-			 
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
+		weaponBtn.setText("");
 		heroInventory.add(weaponBtn).width(35).height(35).pad(3);
 		
 		if(armour != null) {
@@ -185,11 +186,12 @@ public class UnitStatsBox extends Table{
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
+		armourBtn.setText("");
 		heroInventory.add(armourBtn).width(35).height(35).pad(3);
 		
 		int size = specials.size();
 		for(Special s : specials) {
-			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
 			// handler button click here
 			specialBtn.addListener( new ClickListener() {              
 			    @Override
@@ -197,10 +199,12 @@ public class UnitStatsBox extends Table{
 			       hero.getInventory().useItem(s);
 			    };
 			});
+			specialBtn.setText(String.valueOf(s.getUsage()));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		for(int i = 0; i < 4-size; i++) {
-			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			specialBtn.setText("");
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		
@@ -319,9 +323,12 @@ public class UnitStatsBox extends Table{
 	 * @param image  Texture that is the desired item icon for the button
 	 * @return ImageButton object that has the provided image for the item icon
 	 */
-	private ImageButton generateItemButton(Texture image) {
+	private ImageTextButton generateItemButton(Texture image) {
 		TextureRegion imgRegion = new TextureRegion(image);
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-		return new ImageButton(imgDraw);
+		BitmapFont font = new BitmapFont();
+		font.setColor(Color.BLACK);
+		ImageTextButtonStyle style = new ImageTextButtonStyle(imgDraw, imgDraw, imgDraw, font); 
+		return new ImageTextButton("", style);
 	}
 }

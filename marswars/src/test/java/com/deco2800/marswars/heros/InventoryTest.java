@@ -27,7 +27,7 @@ public class InventoryTest {
 	Armour arm1 = new Armour(ArmourType.ARMOUR1, 1);
 	Armour arm11 = new Armour(ArmourType.ARMOUR1, 1);
 	Armour arm2 = new Armour(ArmourType.BOOTS1, 1);
-	Special heal1 = new Special(SpecialType.AOEHEAL1);
+	Special heal1 = new Special(SpecialType.REGEN_SHOT);
 	Special heal2 = new Special(SpecialType.TEAMHEAL);
 	Special boomHeal = new Special(SpecialType.MASS1HEAL);
 	Special bomb = new Special(SpecialType.BOMB);
@@ -250,7 +250,7 @@ public class InventoryTest {
 	 * slot and whether if they can be removed separately.
 	 */
 	public void testAddSameSpecialItems() {
-		Special heal1b = new Special(SpecialType.AOEHEAL1);
+		Special heal1b = new Special(SpecialType.REGEN_SHOT);
 		assertTrue(bag.addToInventory(heal2));
 		assertTrue(bag.addToInventory(heal1));
 		assertTrue(bag.addToInventory(heal1b));

@@ -35,7 +35,7 @@ public class Render3D implements Renderer {
 
     BitmapFont font;
 
-    public static int battleFlag=0;
+    private static int battleFlag = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Render3D.class);
 
@@ -168,7 +168,9 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) battleFlag=1;
+            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
+                setBattleFlag(1);
+            }
 
             //multi selection entities
             if(entity instanceof MultiSelectionTile){
@@ -207,8 +209,8 @@ public class Render3D implements Renderer {
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
             Texture tex = reg.getTexture(textureString);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+            float cartX = entity.getPosX()-entity.getXoff();
+            float cartY = (worldWidth-1) - (entity.getPosY()-entity.getYoff());
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
             float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();
@@ -230,5 +232,23 @@ public class Render3D implements Renderer {
                         (tex.getHeight() / aspect) * entity.getYRenderLength());
             }
         }
+    }
+
+    /**
+     * Set the new balttle flag
+     *
+     * @param battleFlag the new battle flag to use
+     */
+    public static void setBattleFlag(int battleFlag) {
+        Render3D.battleFlag = battleFlag;
+    }
+
+    /**
+     * Get the battle flag
+     *
+     * @return the battle flag
+     */
+    public static int getBattleFlag() {
+        return battleFlag;
     }
 }

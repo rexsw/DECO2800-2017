@@ -152,7 +152,8 @@ public enum WeaponType implements ItemType {
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nDamage: " + this.getWeaponDamage() + "\nSpeed: " + this.getWeaponSpeed()
+		return "Name: " + this.getName() + "\nType: Weapon\nDamage: " + 
+				this.getWeaponDamage() + "\nSpeed: " + this.getWeaponSpeed()
 				+ "\nRange: " + this.getWeaponRange();
 	}
 

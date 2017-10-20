@@ -31,9 +31,7 @@ public class WeatherManager extends Manager implements Tickable {
     private int waterEntities = 0;
     private ArrayList<BaseEntity> pausedBuildings = new ArrayList<>();
     private boolean floodOn = true;
-
     public ParticleEffect effect;
-
 
     /**
      * Sets the toggle value for the UI flood toggle button. The toggle either
@@ -108,9 +106,9 @@ public class WeatherManager extends Manager implements Tickable {
      * is returned for processing by `applyContinuousDamage()`;
      * @return ArrayList</BaseEntity> containing units caught in flood waters
      */
-    private ArrayList<BaseEntity> checkAffectedEntities() {
-        ArrayList<BaseEntity> floodableEntities = world.getFloodableEntityList();
-        ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
+    private List<BaseEntity> checkAffectedEntities() {
+        List<BaseEntity> floodableEntities = world.getFloodableEntityList();
+        List<BaseEntity> damagedUnits = new ArrayList<>();
         // Iterate over list of all floodable entities in the world
         for (BaseEntity entity: floodableEntities) {
             boolean buildingFlooded = false;
@@ -129,7 +127,9 @@ public class WeatherManager extends Manager implements Tickable {
                         BuildingEntity) {
                     buildingFlooded = true;
                     ((BuildingEntity) entity).setFlooded(true);
-                    pausedBuildings.add(entity);
+                    if (! pausedBuildings.contains(entity)) {
+                        pausedBuildings.add(entity);
+                    }
                     timeManager.pause(entity);
                     break;
                 }
@@ -151,7 +151,7 @@ public class WeatherManager extends Manager implements Tickable {
      * @param damagedUnits - the entities to take damage
      */
     private void applyContinuousDamage(List<BaseEntity> damagedUnits) {
-        int timeBetween = 5;
+        int timeBetween = 3;
         int condition = 1;
         if (damagedUnits.size() < 1) {
             return;
@@ -159,15 +159,10 @@ public class WeatherManager extends Manager implements Tickable {
         // assuming that the function will not always be called 5 seconds apart
         if (timeManager.getPlaySeconds() % timeBetween > condition && ! damaged) {
             for (BaseEntity e: damagedUnits) {
-                //if (((Soldier) e).getHealth() <
-                //        ((Soldier) e).getMaxHealth() / 10) {
-                    // Check for existing action and complete before deletion
-                //}
-        	//Carrier units and its loaded units are not affected by weather damage
-		if (((Soldier) e).getLoadStatus() == 0) {
-		    ((Soldier) e).setHealth(((Soldier) e).getHealth()
-			    - (((Soldier) e)).getMaxHealth() / 10);
-		}
+                if (((Soldier) e).getLoadStatus() == 0) {
+		            ((Soldier) e).setHealth(((Soldier) e).getHealth()
+			                - (((Soldier) e)).getMaxHealth() / 10);
+		        }
             }
             damaged = true;
         } else if (timeManager.getPlaySeconds() % timeBetween <= condition) {
@@ -184,7 +179,6 @@ public class WeatherManager extends Manager implements Tickable {
      */
     public boolean checkPosition(Point p) {
         /* Ensure new water position is on the map */
-        // SHOULD THIS BE WIDTH AND LENGTH OR WIDTH-1, LENGTH-1?
         return p.getX() < 0 || p.getY() < 0 || p.getX() > world.getWidth()
                 || p.getY() > world.getLength();
     }
@@ -373,50 +367,29 @@ public class WeatherManager extends Manager implements Tickable {
         return floodWatersExist;
     }
 
-    public ParticleEffect addRainVisuals(SpriteBatch batch) {
-            // Particle for rain visuals
-            ParticleEffect effect = new ParticleEffect();
-            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"),
-                    Gdx.files.internal("resources/WeatherAssets"));
-            effect.setPosition(Gdx.graphics.getWidth() / 2,
-                    Gdx.graphics.getHeight());
-            effect.start();
-        return effect;
-    }
-
+    /**
+     * Renders the rain particle effect for the flood.
+     * @param batch
+     */
     public void render(SpriteBatch batch) {
         if (effect == null) {
             effect = new ParticleEffect();
-            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"), (Gdx.files.internal("resources/WeatherAssets")));
-            effect.setPosition(Gdx.graphics.getWidth() / 2 * GameManager.get().getCamera().zoom, Gdx.graphics.getHeight() * GameManager.get().getCamera().zoom);
+            effect.load(Gdx.files.internal("resources/WeatherAssets/rain2.p"),
+                    (Gdx.files.internal("resources/WeatherAssets")));
+            // this.camera.position.x - this.camera.viewportWidth*this.camera.zoom/2
+            // this.camera.position.y - this.camera.viewportHeight*this.camera.zoom/2
+            effect.setPosition(GameManager.get().getCamera().position.x - GameManager.get().getCamera().viewportWidth * GameManager.get().getCamera().zoom/2, GameManager.get().getCamera().position.y + GameManager.get().getCamera().viewportHeight * GameManager.get().getCamera().zoom/2);
             effect.start();
         }
-    	effect.draw(batch,  Gdx.graphics.getDeltaTime());
+        effect.setPosition(GameManager.get().getCamera().position.x - GameManager.get().getCamera().viewportWidth * GameManager.get().getCamera().zoom/2, GameManager.get().getCamera().position.y + GameManager.get().getCamera().viewportHeight * GameManager.get().getCamera().zoom/2);
+        effect.draw(batch,  Gdx.graphics.getDeltaTime());
     }
 
     /**
-     * Causes effects to come into play each game tick.
+     * Stub method. Water's onTick controls the weather effect.
      * @param tick Current game tick
      */
     @Override
-    public void onTick(int tick) {
-
-        //this.setWeatherEvent();
-    }
-//    //Add Rain Particle effect
-//    private SpriteBatch batch;    //is already within MarsWars
-//    private ParticleEffect effect;    
-//    public void show(){
-//    	batch = new SpriteBatch;
-//    	effect = new particleEffect();
-//    	effect.load(Gdx.files.internal("resources/WeatherAssets/rainParticle"),
-//    			(Gdx.files.internal("resources/WeatherAssets")));
-//    	effect.setPosition(Gdx.graphics.getWidth() / 2,
-//    			Gdx.graphics.getHeight());
-//      effect.start();
-//    }
-    
-//		Within MarsWars just need to draw this particle effect using effect.draw();    
-    	
+    public void onTick(int tick) {}
 }
 

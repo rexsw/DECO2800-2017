@@ -28,7 +28,6 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -84,7 +83,6 @@ public class HUDView extends ApplicationAdapter{
 	private Label rockCount;
 	private Label crystalCount;
 	private Label biomassCount;
-	private Label waterCount;
 	private Label popCount;
 	private Label maxPopCount;
 
@@ -118,6 +116,7 @@ public class HUDView extends ApplicationAdapter{
 	// hero manage
 	private HashSet<Commander> heroMap = new HashSet<>();
 	private Commander heroSelected;
+	private Commander heroExist;
 	private GameStats stats;
 
 	HUDView hud = this;
@@ -471,16 +470,12 @@ public class HUDView extends ApplicationAdapter{
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
 		biomassCount = new Label("Biomass: 0", skin);
-		waterCount = new Label("Water: 0", skin);
 		popCount = new Label("0 ", skin);
 		maxPopCount = new Label(" / 10", skin);
 
 		//add rock image
 		Texture rockTex = textureManager.getTexture("rock_HUD");
 		Image rock = new Image(rockTex);
-		//add water image
-		Texture waterTex = textureManager.getTexture("water_HUD");
-		Image water = new Image(waterTex);
 		//add biomass image
 		Texture biomassTex = textureManager.getTexture("biomass_HUD");
 		Image biomass = new Image(biomassTex);
@@ -494,8 +489,6 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(crystalCount).padRight(60);
 		resourceTable.add(biomass).width(40).height(40).pad(10);
 		resourceTable.add(biomassCount).padRight(60);
-		resourceTable.add(water).width(40).height(40).pad(10);
-		resourceTable.add(waterCount).padRight(50);
 		resourceTable.add(popCount).padRight(10);
 		resourceTable.add(maxPopCount);
 
@@ -549,6 +542,18 @@ public class HUDView extends ApplicationAdapter{
 						}
 						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
 					} else {
+						if((EntityID) currentActions.get(index) == EntityID.COMMANDER) {
+							if(heroExist != null) {
+								if(heroExist.getHealth() <= 0) {
+									heroExist.setHealth(heroExist.getMaxHealth());
+									heroExist.setPosition(selectedEntity.getPosX(), selectedEntity.getPosY(), 0);
+									heroExist.setEmptyAction();
+									GameManager.get().getWorld().addEntity(heroExist);
+									
+								}
+								return;
+							}
+						}
 						ActionSetter.setGenerate(selectedEntity, (EntityID) currentActions.get(index));
 					}
 					}
@@ -645,8 +650,10 @@ public class HUDView extends ApplicationAdapter{
 			if (target instanceof Commander) {
 				// display the inventory once a commander been selected
 				heroSelected = (Commander) target;
-				this.statsTable.showInventory();
-				this.statsTable.updateHeroInventory((Commander) target);
+				if (!heroSelected.isAi()) {
+					this.statsTable.showInventory();
+					this.statsTable.updateHeroInventory((Commander) target);
+				}
 			}
 		}
 	}
@@ -832,7 +839,6 @@ public class HUDView extends ApplicationAdapter{
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		rockCount.setText("" + resourceManager.getRocks(-1));
 		crystalCount.setText("" + resourceManager.getCrystal(-1));
-		waterCount.setText("" + resourceManager.getWater(-1));
 		biomassCount.setText("" + resourceManager.getBiomass(-1));
 		popCount.setText("" + resourceManager.getPopulation(-1));
 		maxPopCount.setText("/ " + resourceManager.getMaxPopulation(-1));
@@ -852,6 +858,7 @@ public class HUDView extends ApplicationAdapter{
 					 */
 					if (!e.isAi()) {
 						shopDialog.connectHero((Commander) e);
+						heroExist = (Commander) e;
 					}
 				}
 			}

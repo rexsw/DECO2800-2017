@@ -1,17 +1,21 @@
 package com.deco2800.marswars.entities.units;
 
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.entities.items.SpecialType;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.util.WorldUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 // A reminder for coder, the connectHero function should called when hero has been spawned! like bind to hero factory
@@ -50,7 +54,7 @@ public class Commander extends Soldier {
 		setAttributes();
 		this.inventory = new Inventory(this);
 		this.statsChange = true;
-//		this.inventory.addToInventory(new Special(SpecialType.NUKE));
+		this.setArmor(this.getMaxArmor());
 	}
 
 	/**
@@ -154,6 +158,11 @@ public class Commander extends Soldier {
 		this.statsChange = bought;
 	}
 	
+	/**
+	 * Override to fit in inventory's on tick method into Commander's. This is so that Special items can have the overlay
+	 * and to allow the constraints that special items can only be used with a Commander alive.
+	 * @param tick  the current game tick
+	 */
 	@Override
 	public void onTick(int tick) {
 		super.onTick(tick);
@@ -161,25 +170,53 @@ public class Commander extends Soldier {
 	}
 	
 	
+	/**
+	 * Boolean to indicate whether an item is being used. Only really used for activated special items that need the 
+	 * user to select an area.
+	 * @return  true if an item (as specified above) is being used. False otherwise.
+	 */
 	public boolean isItemInUse() {
 		return this.itemInUse;
 	}
 	
+	/**
+	 * Set method to set the boolean field to indicate whether an item is being used.
+	 * @param set  the boolean to be set to.
+	 */
 	public void setItemInUse(boolean set) {
 		this.itemInUse = set;
 	}
 	
 	@Override
-	protected void moveUnit(float x, float y) {
-		
+	public void onRightClick(float x, float y) {
 		if (itemInUse && inventory.getCurrentAction().isPresent()) {
 			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
 			action.execute();
 			itemInUse = false;
+			return;
 		} else {
-			super.moveUnit(x, y);
+			super.onRightClick(x, y);
 		}
 	}
+	
+//	/**
+//	 * Method to allow execution/usage of Special items via right click (in cases where the special item requires the 
+//	 * player to choose an area) without interrupting 
+//	 */
+//	@Override
+//	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
+//		if (itemInUse && inventory.getCurrentAction().isPresent()) {
+//			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
+//			action.execute();
+//			itemInUse = false;
+//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//			Sound loadedSound = sound.loadSound(movementSound);
+//			sound.playSound(loadedSound);
+//			return;
+//		} else {
+//			super.moveOrAttack(entities, x, y);
+//		}
+//	}
 	
 	@Override
 	public void deselect() {
@@ -188,6 +225,7 @@ public class Commander extends Soldier {
 			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
 			action.cancel();
 			itemInUse = false;
+			WorldUtil.removeOverlay();
 		}
 	}
 }

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.units.Astronaut;
 
@@ -14,20 +13,20 @@ public class AiBuilder extends Manager {
 	
 	public void build(Astronaut builder){
 		int team = builder.getOwner();
-		float xy[] = new float[] {builder.getPosX(), builder.getPosY()};
+		float[] xy = new float[] {builder.getPosX(), builder.getPosY()};
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		LOGGER.info("start");
 		LOGGER.info("Crystal count: " + rm.getCrystal(team));
 		if (rm.getRocks(team) > 50) {
 			switch(choice) {
-			case 0:
+			case 1:
 				if(findloc(xy, BuildingType.BASE)) {
 					return;
 				}
 				LOGGER.info("BUILD BASE");
 				builder.setAction(new BuildAction(builder, BuildingType.BASE, xy[0], xy[1]));
 				break;
-			case 1:
+			case 0:
 				if(findloc(xy, BuildingType.BARRACKS)) {
 					return;
 				}
@@ -53,7 +52,7 @@ public class AiBuilder extends Manager {
 			}
 		}
 	
-	private boolean findloc(float xy[], BuildingType type) {
+	private boolean findloc(float[] xy, BuildingType type) {
 		LOGGER.info("find");
 		int x = 0;
 		int i = 0;

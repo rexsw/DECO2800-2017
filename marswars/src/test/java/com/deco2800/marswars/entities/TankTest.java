@@ -18,8 +18,8 @@ public class TankTest {
     public void getStatTest(){
         Tank tank = new Tank(0, 0, 0 , 1);
         Assert.assertTrue(tank.getStats() != null);
-        Assert.assertEquals(10000, tank.getStats().getHealth());
-        Assert.assertEquals(10000, tank.getStats().getMaxHealth());
+        Assert.assertEquals(2500, tank.getStats().getHealth());
+        Assert.assertEquals(2500, tank.getStats().getMaxHealth());
         Assert.assertEquals("Tank", tank.getStats().getName());
     }
 }

@@ -7,7 +7,7 @@ import com.deco2800.marswars.technology.Technology;
 import java.util.*;
 
 public class TechnologyManager extends Manager{
-    //each tech thingo has id, Cost(Rocks, Crystal, Water, Biomass), Name, parent(list)
+    //each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
     //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
     // .. new HashMap<Integer, Integer[], String, List<Integer>>();
 
@@ -240,10 +240,10 @@ public class TechnologyManager extends Manager{
     public void setUnitAttributes() {
         // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 500, 200, 200, 100, 12, 10});
-        unitAttributes.put("Soldier", new int[]{10, 1000, 100, 250, 50, 8, 30});
-        unitAttributes.put("Tank", new int[]{10, 1000, 100, 500, 150, 10, 20});
-        unitAttributes.put("Astronaut", new int[]{10, 500, 50, 250, 50, 8, 30});
-        unitAttributes.put("Medic", new int[]{10, 250, -25, 200, 150, 10, 20});
+        unitAttributes.put("Soldier", new int[]{10, 750, 100, 500, 100, 8, 20});
+        unitAttributes.put("Tank", new int[]{10, 2500, 100, 1500, 150, 10, 20});
+        unitAttributes.put("Astronaut", new int[]{10, 250, 20, 200, 10, 5, 10});
+        unitAttributes.put("Medic", new int[]{10, 250, -50, 400, 0, 8, 10});
         unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
         unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
         unitAttributes.put("Ambient", new int[]{10,1000*1000,100,50,0,30});
@@ -394,7 +394,7 @@ public class TechnologyManager extends Manager{
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
         resourceManager.setBiomass(80, teamid);
-        resourceManager.setWater(80, teamid);
+//        resourceManager.setWater(80, teamid);
 //        System.out.println("prereqs are: " + tech.getParents());
 //        System.out.println("active tech is: " + getActive());
 
@@ -424,10 +424,7 @@ public class TechnologyManager extends Manager{
         if (tech.getCost()[1] > resourceManager.getCrystal(teamid)) {
             return "Insufficient Crystals";
         }
-        if (tech.getCost()[2] > resourceManager.getWater(teamid)) {
-            return "Insufficient Water levels";
-        }
-        if (tech.getCost()[3] > resourceManager.getBiomass(teamid)) {
+        if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
             return "Insufficient Biomass";
         }
         return "Activating Technology!";
@@ -437,7 +434,6 @@ public class TechnologyManager extends Manager{
     public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
-        resourceManager.setWater(resourceManager.getWater(teamid) - tech.getCost()[2], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
         techMan.addActiveTech(tech);
 
@@ -551,7 +547,7 @@ public class TechnologyManager extends Manager{
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
         ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
     	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
     	return buildingsAvailable;
     }

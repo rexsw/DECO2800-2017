@@ -12,10 +12,12 @@ public class Medic extends Soldier {
 		this.setMaxHealth(200);
 		this.setHealth(200);
 		this.setDamage(-25);
+		this.setMaxArmor(50);
 		this.setArmor(50);
 		this.setArmorDamage(0);
 		this.setAttackRange(5);
 		this.setAttackSpeed(10);
+		this.name = "Medic";
 	}
 	
 	@Override

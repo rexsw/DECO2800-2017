@@ -9,7 +9,7 @@ package com.deco2800.marswars.entities.items;
  * baseHealth = amount of health (max and current) it changes without any multipliers being applied 
  * baseSpeed = amount of movement speed it changes without any multipliers being applied 
  * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the
- * array is [rocks, crystals, water, biomass].
+ * array is [rocks, crystals, biomass].
  * texture = string of the saved texture for the image file that would be used for the item's icon
  * 
  * @author Mason
@@ -136,9 +136,9 @@ public enum ArmourType implements ItemType {
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nArmour: " + this.getArmourValue()
-				+ "\nMaxHealth: " + this.getArmourHealth() + "\nMove Speed: "
-				+ this.getMoveSpeed();
+		return "Name: " + this.getName() + "\nType: Armour\nArmour: " + 
+				this.getArmourValue() + "\nMaxHealth: " + this.getArmourHealth() 
+				+ "\nMove Speed: " + this.getMoveSpeed();
 	}
 
 	/**
