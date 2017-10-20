@@ -7,7 +7,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;

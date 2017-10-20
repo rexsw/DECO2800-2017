@@ -1,6 +1,6 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
