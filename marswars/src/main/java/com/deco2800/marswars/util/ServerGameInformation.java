@@ -30,9 +30,4 @@ public class ServerGameInformation extends NewGameInformation {
         setMapSize(mapSize);
         setMapType(mapType);
     }
-    
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
