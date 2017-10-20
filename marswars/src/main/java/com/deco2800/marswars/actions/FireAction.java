@@ -10,7 +10,7 @@ import com.deco2800.marswars.managers.TimeManager;
  * A FireAction for moving missiles around
  * Created by vinsonyeung on 12/10/17.
  */
-public class FireAction implements DecoAction {
+public class FireAction extends AbstractPauseAction {
 
 	/* Goal positions */
 	private float goalX = 0;
@@ -32,7 +32,6 @@ public class FireAction implements DecoAction {
 	
 	/* Completed variable */
 	private boolean completed = false;
-	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 
@@ -120,31 +119,5 @@ public class FireAction implements DecoAction {
 	@Override
 	public boolean completed() {
 		return completed;
-	}
-
-	/**
-	 * Returns progress
-	 * @return
-	 */
-	@Override
-	public int actionProgress() {
-		return 0;
-	}
-	
-	
-	/**
-	 * Prevents the current action from progressing.
-	 */
-	@Override
-	public void pauseAction() {
-		actionPaused = true;
-	}
-
-	/**
-	 * Resumes the current action
-	 */
-	@Override
-	public void resumeAction() {
-		actionPaused = false;
 	}
 }
