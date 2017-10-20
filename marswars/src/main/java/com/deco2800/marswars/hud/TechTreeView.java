@@ -82,26 +82,23 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().row();
 
-		//Armour Item Level Upgrades
+		//Weapon Item Level Upgrades
 		getButtonTable().add(new Label("Armour Levels", skin));
 
-		// cost is 0 for now
-		button("Unlock Hero Factory \n R: 0", 21); //$NON-NLS-1$
-		button("Level 1 Armour", 22); //$NON-NLS-1$
-		button("Level 2 Armour", 23); //$NON-NLS-1$
-		button("Level 3 Armour", 24); //$NON-NLS-1$
+		button(String.format("Unlock Hero Factory \n %d R, %d C, %d W, %d B", this.techMan.getTech(21).getCost()[0], this.techMan.getTech(21).getCost()[1], this.techMan.getTech(21).getCost()[2], this.techMan.getTech(21).getCost()[3]), 21);
+		button(String.format("Level 1 Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(22).getCost()[0], this.techMan.getTech(22).getCost()[1], this.techMan.getTech(22).getCost()[2], this.techMan.getTech(22).getCost()[3]), 22);
+		button(String.format("Level 2 Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(23).getCost()[0], this.techMan.getTech(23).getCost()[1], this.techMan.getTech(23).getCost()[2], this.techMan.getTech(23).getCost()[3]), 23);
+		button(String.format("Level 3  Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(24).getCost()[0], this.techMan.getTech(24).getCost()[1], this.techMan.getTech(24).getCost()[2], this.techMan.getTech(24).getCost()[3]), 24);
 
 		getButtonTable().row();
 
-		//Weapon Item Level Upgrades
+		//Armour Item Level Upgrades
 		getButtonTable().add(new Label("Weapon Levels", skin));
 
-		// cost is 0 for now
-
-		button("Unlock Special Items \n R: 0", 21); //$NON-NLS-1$
-		button("Level 1 Weapons", 22); //$NON-NLS-1$
-		button("Level 2 Weapons", 23); //$NON-NLS-1$
-		button("Level 3 Weapons", 24); //$NON-NLS-1$
+		button(String.format("Unlock Special Items \n %d R, %d C, %d W, %d B", this.techMan.getTech(25).getCost()[0], this.techMan.getTech(25).getCost()[1],this.techMan.getTech(25).getCost()[2], this.techMan.getTech(25).getCost()[3]), 25);
+		button(String.format("Level 1 Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(26).getCost()[0], this.techMan.getTech(26).getCost()[1], this.techMan.getTech(26).getCost()[2], this.techMan.getTech(26).getCost()[3]), 26);
+		button(String.format("Level 2 Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(27).getCost()[0], this.techMan.getTech(27).getCost()[1], this.techMan.getTech(27).getCost()[2], this.techMan.getTech(27).getCost()[3]), 27);
+		button(String.format("Level 3  Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(28).getCost()[0], this.techMan.getTech(28).getCost()[1], this.techMan.getTech(28).getCost()[2], this.techMan.getTech(28).getCost()[3]), 28);
 
 
 		timeManager.pause();
@@ -166,26 +163,23 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().row();
 
-		//Armour Item Level Upgrades
+		//Weapon Item Level Upgrades
 		getButtonTable().add(new Label("Armour Levels", skin));
 
-		// cost is 0 for now
-		button("Unlock Hero Factory \n R: 0", 21); //$NON-NLS-1$
-		button("Level 1 Armour", 22); //$NON-NLS-1$
-		button("Level 2 Armour", 23); //$NON-NLS-1$
-		button("Level 3 Armour", 24); //$NON-NLS-1$
+		button(String.format("Unlock Hero Factory \n %d R, %d C, %d W, %d B", this.techMan.getTech(21).getCost()[0], this.techMan.getTech(21).getCost()[1], this.techMan.getTech(21).getCost()[2], this.techMan.getTech(21).getCost()[3]), 21);
+		button(String.format("Level 1 Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(22).getCost()[0], this.techMan.getTech(22).getCost()[1], this.techMan.getTech(22).getCost()[2], this.techMan.getTech(22).getCost()[3]), 22);
+		button(String.format("Level 2 Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(23).getCost()[0], this.techMan.getTech(23).getCost()[1], this.techMan.getTech(23).getCost()[2], this.techMan.getTech(23).getCost()[3]), 23);
+		button(String.format("Level 3  Weapons \n %d R, %d C, %d W, %d B", this.techMan.getTech(24).getCost()[0], this.techMan.getTech(24).getCost()[1], this.techMan.getTech(24).getCost()[2], this.techMan.getTech(24).getCost()[3]), 24);
 
 		getButtonTable().row();
 
-		//Weapon Item Level Upgrades
+		//Armour Item Level Upgrades
 		getButtonTable().add(new Label("Weapon Levels", skin));
 
-		// cost is 0 for now
-
-		button("Unlock Special Items \n R: 0", 25); //$NON-NLS-1$
-		button("Level 1 Weapons", 26); //$NON-NLS-1$
-		button("Level 2 Weapons", 27); //$NON-NLS-1$
-		button("Level 3 Weapons", 28); //$NON-NLS-1$
+		button(String.format("Unlock Special Items \n %d R, %d C, %d W, %d B", this.techMan.getTech(25).getCost()[0], this.techMan.getTech(25).getCost()[1],this.techMan.getTech(25).getCost()[2], this.techMan.getTech(25).getCost()[3]), 25);
+		button(String.format("Level 1 Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(26).getCost()[0], this.techMan.getTech(26).getCost()[1], this.techMan.getTech(26).getCost()[2], this.techMan.getTech(26).getCost()[3]), 26);
+		button(String.format("Level 2 Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(27).getCost()[0], this.techMan.getTech(27).getCost()[1], this.techMan.getTech(27).getCost()[2], this.techMan.getTech(27).getCost()[3]), 27);
+		button(String.format("Level 3  Armour \n %d R, %d C, %d W, %d B", this.techMan.getTech(28).getCost()[0], this.techMan.getTech(28).getCost()[1], this.techMan.getTech(28).getCost()[2], this.techMan.getTech(28).getCost()[3]), 28);
 
 
 

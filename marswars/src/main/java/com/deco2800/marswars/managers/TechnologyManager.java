@@ -465,25 +465,25 @@ public class TechnologyManager extends Manager{
             unlockHeroFactory();
         }
         if(techID == 22){
-            unlockArmourLevelOne();
+            unlockWeaponLevelOne();
         }
         if(techID == 23){
-            unlockArmourLevelTwo();
+            unlockWeaponLevelTwo();
         }
         if(techID == 24){
-            unlockArmourLevelThree();
+            unlockWeaponLevelThree();
         }
         if(techID == 25){
             unlockSpecial();
         }
         if(techID == 26){
-            unlockWeaponLevelOne();
+            unlockArmourLevelOne();
         }
         if(techID == 27){
-            unlockWeaponLevelTwo();
+            unlockArmourLevelTwo();
         }
         if(techID == 28){
-            unlockWeaponLevelThree();
+            unlockArmourLevelThree();
         }
         return "Technology successfully researched";
     }
