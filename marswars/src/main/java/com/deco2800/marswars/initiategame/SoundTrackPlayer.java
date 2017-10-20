@@ -12,9 +12,9 @@ import com.deco2800.marswars.renderers.Render3D;
  */
 public class SoundTrackPlayer {
 
-    public Music battleTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-    public Music dayTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Day_Soundtrack.mp3"));
-    public Music nightTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
+    public static final Music battleTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
+    public static final Music dayTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Day_Soundtrack.mp3"));
+    public static final Music nightTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/Night_Soundtrack.mp3"));
 
      static boolean fadeDone = true;
 

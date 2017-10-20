@@ -207,31 +207,31 @@ public class Game{
 	 */
 	private void loadEntities(GameSave loadedGame){
 		for(SavedEntity each : loadedGame.data.getEntities())
-			if(each.getName().equals("Astronaut")){
+			if("Astronaut".equals(each.getName())){
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
-			}else if(each.getName().equals("Base")){
+			}else if("Base".equals(each.getName())){
 				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
 				base.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(base);
-			}else if(each.getName().equals("Tank")){
+			}else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(tank);
-			}else if(each.getName().equals("Carrier")){
+			}else if("Carrier".equals(each.getName())){
 				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
 				carrier.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(carrier);
-			}else if(each.getName().equals("Commander")){
+			}else if("Commander".equals(each.getName())){
 				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
 				commander.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(commander);
-			}else if(each.getName().equals("Medic")){
+			}else if("Medic".equals(each.getName())){
 				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
 				medic.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(medic);
-			}else if(each.getName().equals("Hacker")){
+			}else if("Hacker".equals(each.getName())){
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);

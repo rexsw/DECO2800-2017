@@ -15,6 +15,8 @@ import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +30,7 @@ import java.util.List;
  * This class is responsible for saving and loading the game
  */
 public class GameSave {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameSave.class);
 
     public Data data = new Data();
     /**
@@ -53,7 +56,9 @@ public class GameSave {
 
         try {
             Files.copy(source.toPath(), dest.toPath());
-        }catch (java.io.IOException e){}
+        }catch (java.io.IOException e){
+            LOGGER.info("Game save: No file found - " + e);
+        }
 
     }
 
@@ -175,22 +180,22 @@ public class GameSave {
      */
     public void fillBuilding(AbstractEntity b){
         BuildingEntity bE = (BuildingEntity)b;
-        if(bE.getbuilding().equals("Turret")){
+        if("Turret".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TURRET,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Base")){
+        else if ("Base".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BASE,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Barracks")){
+        else if ("Barracks".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BARRACKS,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Bunker")){
+        else if ("Bunker".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BUNKER,bE.getOwner(),bE.getHealth()));
         }
-        else if(bE.getbuilding().equals("Hero Factory")){
+        else if("Hero Factory".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner(),bE.getHealth()));
         }
-        else if(bE.getbuilding().equals("TechBuilding")){
+        else if("TechBuilding".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
         }
     }
