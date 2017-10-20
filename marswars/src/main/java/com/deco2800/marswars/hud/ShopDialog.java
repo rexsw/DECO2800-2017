@@ -12,6 +12,7 @@ import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TextureManager;
 
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class ShopDialog extends Dialog {
 	private final Table scrollTable;
 	private Skin skin;
 
+	private TechnologyManager technologyManager;
+
 	/**
 	 * Constructor of the shop dialog window class.
 	 * 
@@ -70,6 +73,28 @@ public class ShopDialog extends Dialog {
 		this.getContentTable().debugCell();
 		this.getContentTable().left();
 		this.skin = skin;
+		this.technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		if (technologyManager.armourIsUnlocked(1)) {
+			unlockArmours(1);
+		}
+		if (technologyManager.armourIsUnlocked(2)) {
+			unlockArmours(2);
+		}
+		if (technologyManager.armourIsUnlocked(3)) {
+			unlockArmours(3);
+		}
+		if (technologyManager.weaponIsUnlocked(1)) {
+			unlockWeapons(1);
+		}
+		if (technologyManager.weaponIsUnlocked(2)) {
+			unlockWeapons(2);
+		}
+		if (technologyManager.weaponIsUnlocked(3)) {
+			unlockWeapons(3);
+		}
+		if (technologyManager.specialIsUnlocked()) {
+			unlockSpecials();
+		}
 
 		status = new Label("Welcome to the shop!", skin);
 
@@ -160,42 +185,39 @@ public class ShopDialog extends Dialog {
 		this.getContentTable().add(status).expandX().center().colspan(2);
 
 		// Z, here are the functions!
-		unlockSpecials();
-		unlockWeapons();
-		unlockArmours();
+//		unlockSpecials();
+//		unlockWeapons();
+//		unlockArmours();
 	}
 
 	/**
-	 * Public method to unlock the weapons
-	 * this function should be called from the technology class
+	 * Public method to unlock the weapons. Replaces lower levelled items, if they exist, with current level items.
 	 *
 	 */
-	public void unlockWeapons() {
+	public void unlockWeapons(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (WeaponType wep : WeaponType.values()) {
-			items.add(wep);
+		for (WeaponType type : WeaponType.values()) {
+			items.add((ItemType)new Weapon(type, level));
 		}
 		updateShop(items);
 	}
 
 	/**
-	 * Public method to unlock the armours
-	 * this function should be called from the technology class
+	 * Public method to unlock the armours.  Replaces lower levelled items, if they exist, with current level items.
 	 *
 	 */
-	public void unlockArmours() {
+	public void unlockArmours(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (ArmourType armour : ArmourType.values()) {
-			items.add(armour);
+		for (ArmourType type : ArmourType.values()) {
+			items.add((ItemType)new Armour(type, level));
 		}
 		updateShop(items);
 	}
 
 	/**
-	 * Public method to unlock the specials
-	 * this function should be called from the technology class
+	 * Public method to unlock the specials.
 	 *
 	 */
 	public void unlockSpecials() {
