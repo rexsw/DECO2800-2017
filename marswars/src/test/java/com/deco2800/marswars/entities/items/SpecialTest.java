@@ -97,4 +97,35 @@ public class SpecialTest {
     	heal.getEffect().get(0).applyEffect(com);
     	Assert.assertTrue(com.getHealth() == baseHP);
     }
+    
+    /**
+     * Test some aspects of the SpecialType that is been left over by other test cases
+     */
+    @Test
+    public void specialTypeTest() {
+    	// check radius and duration
+    	SpecialType special = SpecialType.MISSILE;
+    	Assert.assertEquals(0, special.getRadius());
+    	Assert.assertEquals(0, special.getDuration());
+    	
+    	//check cost
+    	int[] cost = special.getCost();
+    	Assert.assertTrue(cost[0]==200 && cost[1] == 100 && cost[2] == 200);
+    	
+    	//check texture
+    	Assert.assertEquals(special.getTextureString(), "air_strike");
+    	
+    	// check cost string
+    	String test = "Rock: 200\n" +
+        		"Crystal: 100\n" +
+                "Biomass: 200\n";
+        Assert.assertEquals(test, special.getCostString());
+        
+        //check description
+        test = "Name: Air Strike\n" +
+        		"Type: Special\n" +
+                "Damage: 700\n" +
+                "Target: ENEMY TEAM";
+        Assert.assertEquals(test, special.getDescription());
+    }
 }
