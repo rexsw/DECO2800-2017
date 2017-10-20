@@ -28,7 +28,7 @@ import java.util.List;
  * 
  * NOTE: CURRENTLY THE SHOP DOES NOT CONSIDER TECH TREE UNLOCK CONSIDERATIONS
  * NOR RESOURCE REQUIREMENTS. NOTE2: DESIGN OF THE SHOP IS TO BE RE-DONE BASED
- * ON USER FEEDBACK.
+ * ON USER FEEDBACK.b
  * 
  * @author Mason
  *
@@ -47,6 +47,8 @@ public class ShopDialog extends Dialog {
 
 	private final Table scrollTable;
 	private Skin skin;
+	
+	private String boughtString = "Bought ";
 
 	private TechnologyManager technologyManager;
 
@@ -187,13 +189,13 @@ public class ShopDialog extends Dialog {
 						if (item instanceof WeaponType) {
 							Weapon weapon = new Weapon((WeaponType) item, 1);
 							selectedHero.addItemToInventory(weapon);
-							status.setText("Bought " + weapon.getName()
+							status.setText(boughtString + weapon.getName()
 									+ "(Weapon) for "
 									+ selectedHero.toString());
 						} else if (item instanceof ArmourType) {
 							Armour armour = new Armour((ArmourType) item, 1);
 							selectedHero.addItemToInventory(armour);
-							status.setText("Bought " + armour.getName()
+							status.setText(boughtString + armour.getName()
 									+ "(Armour) for "
 									+ selectedHero.toString());
 						} else {
@@ -202,7 +204,7 @@ public class ShopDialog extends Dialog {
 							transactSuccess = selectedHero
 									.addItemToInventory(special);
 							if (transactSuccess) {
-								status.setText("Bought " + special.getName()
+								status.setText(boughtString + special.getName()
 										+ "(Special) for "
 										+ selectedHero.toString());
 							} else {

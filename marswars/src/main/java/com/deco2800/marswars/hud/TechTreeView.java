@@ -1,7 +1,6 @@
 package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Logger;
 import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;

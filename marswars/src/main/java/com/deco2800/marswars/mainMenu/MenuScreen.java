@@ -96,6 +96,10 @@ public class MenuScreen{
 	private int mapTypeSet = 0;
 	private int mapSizeSet = 0;
 
+	
+	private String menuButtonString = "menubutton";
+	private String subtitleString = "subtitle";
+	private String totalTeamsPlayingString = "Total %d teams playing";
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
 	 * layouts to set into the Main Menu window.
@@ -137,10 +141,10 @@ public class MenuScreen{
 		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
 		//modeInfo.setVisible(false);
 		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin, "menubutton");
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "menubutton");
-		Button customizeButton = new TextButton("Customize", this.skin, "menubutton");
-		Button loadGameButton = new TextButton("Load Game", this.skin, "menubutton");
+		Button singlePlayerButton = new TextButton("Single Player", this.skin, menuButtonString);
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin, menuButtonString);
+		Button customizeButton = new TextButton("Customize", this.skin, menuButtonString);
+		Button loadGameButton = new TextButton("Load Game", this.skin, menuButtonString);
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -214,7 +218,7 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, "subtitle");
+		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, subtitleString);
 		Label moreInfo = new Label("click '>' since this feautre has not "
 				+ "yet been implemented)", skin);
 		
@@ -275,7 +279,7 @@ public class MenuScreen{
 		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
 
-		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subtitle");
+		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, subtitleString);
 		Label worldSelected = new Label("Your current selection:", skin);
 		errorWorldSelection = new Label("", skin, "error");
 		
@@ -421,26 +425,26 @@ public class MenuScreen{
 		
 		errorTeamsSelection = new Label("", skin, "error");
 
-		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, "subtitle");
-		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, "subtitle");
-		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subtitle");
+		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, subtitleString);
+		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, subtitleString);
+		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, subtitleString);
 		
-		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin);
+		Label selected = new Label(String.format(totalTeamsPlayingString, allTeams), skin);
 
 		
 		/* no of teams buttons*/
 		Table AIButtons = new Table();
-		Button AI2 = new TextButton("2", skin, "menubutton");
-		Button AI3 = new TextButton("3", skin, "menubutton");
-		Button AI4 = new TextButton("4", skin, "menubutton");
-		Button AI5 = new TextButton("5", skin, "menubutton");
+		Button AI2 = new TextButton("2", skin, menuButtonString);
+		Button AI3 = new TextButton("3", skin, menuButtonString);
+		Button AI4 = new TextButton("4", skin, menuButtonString);
+		Button AI5 = new TextButton("5", skin, menuButtonString);
 		Button[] buttonsList= {AI2, AI3, AI4, AI5};
 
 		AI2.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 2;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
@@ -448,7 +452,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 3;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
@@ -456,7 +460,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 4;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
@@ -465,7 +469,7 @@ public class MenuScreen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 5;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 		
@@ -495,7 +499,7 @@ public class MenuScreen{
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", this.skin, "subtitle");
+		Label serverInfo = new Label("Join a server or start your own!", this.skin, subtitleString);
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -509,8 +513,8 @@ public class MenuScreen{
 	 * @param status
 	 */
 	public Table addNavigationButton(ScreenMode status) {
-		this.backButton = new TextButton("<", this.skin, "menubutton");
-		this.nextButton = new TextButton(">", this.skin, "menubutton");
+		this.backButton = new TextButton("<", this.skin, menuButtonString);
+		this.nextButton = new TextButton(">", this.skin, menuButtonString);
 		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 

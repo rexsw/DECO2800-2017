@@ -311,7 +311,7 @@ public class TimeManager extends Manager implements TickableManager {
 			}
 			if (this.getHours() % dayLength > window &&
 					this.getHours() % dayLength < dayLength &&
-					this.daysIncremented == true) {
+					this.daysIncremented) {
 				this.daysIncremented = false;
 			}
 			// Some duplicated code here (also in isNight) find way to resolve

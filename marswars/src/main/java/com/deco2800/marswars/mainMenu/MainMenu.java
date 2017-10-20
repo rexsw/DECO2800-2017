@@ -171,8 +171,7 @@ public class MainMenu {
 	 * @return
 	 */
 	public boolean gameStarted(){
-		boolean started = gameStarted;
-		return started; 
+		return gameStarted; 
 	}
 	
 	/**
