@@ -413,7 +413,8 @@ public class MapContainer {
      */
     protected void generateResourcePatternFor(ResourceType resource) {
         Random r  = new Random();
-        double length, direction;
+        double length;
+        double direction;
         double xOrigin = this.length/2d;
         double yOrigin = this.width/2d;
         //maximum radial length
