@@ -10,11 +10,10 @@ import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.MultiSelection;
-import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +34,8 @@ public class Render3D implements Renderer {
     private static final boolean DEBUG = false;
 
     BitmapFont font;
+
+    private static int battleFlag = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Render3D.class);
 
@@ -104,7 +105,14 @@ public class Render3D implements Renderer {
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 
+        WeatherManager m = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
+        m.render(batch);
+
         batch.end();
+
+        if(battleFlag==1)
+            MainMenu.player.playBattleSoundTrack();
+
 
     }
 
@@ -160,6 +168,10 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
+            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
+                setBattleFlag(1);
+            }
+
             //multi selection entities
             if(entity instanceof MultiSelectionTile){
                 if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
@@ -197,8 +209,8 @@ public class Render3D implements Renderer {
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
             Texture tex = reg.getTexture(textureString);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+            float cartX = entity.getPosX()-entity.getXoff();
+            float cartY = (worldWidth-1) - (entity.getPosY()-entity.getYoff());
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
             float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();
@@ -220,5 +232,23 @@ public class Render3D implements Renderer {
                         (tex.getHeight() / aspect) * entity.getYRenderLength());
             }
         }
+    }
+
+    /**
+     * Set the new balttle flag
+     *
+     * @param battleFlag the new battle flag to use
+     */
+    public static void setBattleFlag(int battleFlag) {
+        Render3D.battleFlag = battleFlag;
+    }
+
+    /**
+     * Get the battle flag
+     *
+     * @return the battle flag
+     */
+    public static int getBattleFlag() {
+        return battleFlag;
     }
 }

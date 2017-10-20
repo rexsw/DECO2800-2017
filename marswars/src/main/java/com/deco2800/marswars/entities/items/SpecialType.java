@@ -1,6 +1,9 @@
 package com.deco2800.marswars.entities.items;
 
+import com.deco2800.marswars.entities.items.effects.AttackEffect;
+import com.deco2800.marswars.entities.items.effects.DefenceEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.items.effects.HealthEffect;
 
 import java.util.ArrayList;
@@ -26,16 +29,47 @@ import java.util.List;
 public enum SpecialType implements ItemType {
 	// name, duration(0 means instant), effect range (0 means self use), use
 	// limit, cost, effects)
-	AOEHEAL1("Heal 1", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30, 30 },
-			new HealthEffect(100, false)),
-	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50, 0 },
-			new HealthEffect(100, true)),
-	AOEHEAL2("Heal Bomb", "scope", 0, 5, 1, new int[] { 50, 100, 100, 100 },
-			new HealthEffect(100, false)),
-	NUKE("Nuke", "bullets", 0, 15, 1, new int[] { 500, 900, 50, 50 },
-			new HealthEffect(1000, true)),
-	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300, 500 },
-			new HealthEffect(9000, false));
+	HEALTHSHOT("Health Shot", "health_shot", 0, 0, 5, new int[]{30, 50, 30}, 
+			new HealthEffect(200, false, Target.SELF)),
+	HEALTHSTATION("Health Station", "health_station", 0, 4, 2, new int[]{60, 100, 60}, 
+			new HealthEffect(500, false, Target.SELF)),
+	HEALTHBLESS("Health Bless", "health_station", 0, 0, 1, new int[]{100, 100, 100}, 
+			new HealthEffect(1000, false, Target.SELF_TEAM)),
+	MISSILE("Air Strike", "air_strike", 0, 0, 1, new int[]{200, 100, 200}, 
+			new HealthEffect(700, true, Target.ENEMY_TEAM)),
+	NUKE("Nuke", "nuke", 0, 5, 1, new int[]{200, 100, 200}, 
+			new HealthEffect(1500, true, Target.ENEMY)),
+	SNIPERSHOT("Sniper shot", "snipper_shot", 0, 1, 3, new int[]{30, 50, 20}, 
+			new HealthEffect(500, true, Target.ENEMY)),
+	
+	FLOATINGBOOTS("Flooting boots", "floating_boots", 5, 3, 3, new int[]{60, 50, 60}, 
+			new DefenceEffect(200, 0, 0.4f, Target.SELF_TEAM)),
+	TELEBOOTS("Teleboots", "teleboots", 10, 0, 1, new int[]{60, 50, 60}, 
+			new DefenceEffect(200, 0, 1.5f, Target.SELF)),
+	PENETRATION("Penetration", "penetration", 10, 0, 1, new int[]{100, 150, 90}, 
+			new DefenceEffect(-500, 0, -0.03f, Target.ENEMY_TEAM)),
+	BARRIERGLOVES("Barrier Gloves", "barrier_gloves", 10, 0, 1, new int[]{100, 150, 100}, 
+			new DefenceEffect(1500, 200, 0.03f, Target.SELF_TEAM)),
+	COMMAND("Military Command", "military_command", 5, 0, 5, new int[]{50, 20, 50}, 
+			new DefenceEffect(100, 100, 0.01f, Target.SELF_TEAM), new AttackEffect(50, 20, 5, Target.SELF_TEAM));
+	
+//	SELFHEAL("SelfOnly", "heal_needle", 0, 0, 2, new int[] { 0, 10, 30 }, //maybe remove?
+//			new HealthEffect(100, false, Target.SELF)),
+//	GRAV_SHOES("Anti-Grav. Shoes", "boot", 5, 10, 1, new int[] { 200, 50, 50},
+//			new DefenceEffect(0, 0, 0.5f, Target.SELF)),
+//	INSTANTKILL("Instant kill", "scope", 0, 0, 10, new int[] { 50, 100, 100 },
+//			new HealthEffect(10000, true, Target.SELF)),
+//	
+//	REGEN_SHOT("Regen Shot", "heal_needle", 0, 2, 2, new int[] { 0, 10, 30},
+//			new HealthEffect(100, false, Target.SELF)),
+//	BOMB("Bomb", "boot", 0, 5, 1, new int[] { 200, 50, 50 },
+//			new HealthEffect(400, true, Target.ENEMY)),
+//	TEAMHEAL("Team Heal", "health_boost", 0, 0, 1, new int[] { 50, 100, 100 },
+//			new HealthEffect(1000, false, Target.SELF_TEAM)),
+//	NUKE("Nuke", "bullets", 0, 0, 1, new int[] { 500, 50, 50 },
+//			new HealthEffect(1000, true, Target.ENEMY_TEAM)),
+//	MASS1HEAL("Mass Heal1", "health_boost", 0, 1, 1, new int[] { 200, 500, 300},
+//			new HealthEffect(9000, false, Target.SELF));
 	private String name;
 	private String texture;
 	private int duration;
@@ -152,8 +186,12 @@ public enum SpecialType implements ItemType {
 	@Override
 	public String getDescription() {
 		String result = "Name: " + this.getName() + "\n";
+		result += "Type: Special\n";
 		for (Effect e : this.effects) {
 			result += e.generateDescription();
+			String mark = e.getTarget().toString();
+			mark = mark.contains("_") ? mark.replace("_", " ") : mark;
+			result += "Target: " + mark + "\n";
 		}
 		return result;
 	}
@@ -173,10 +211,7 @@ public enum SpecialType implements ItemType {
 			result += "Crystal: " + this.cost[1] + "\n";
 		}
 		if (this.cost[2] > 0) {
-			result += "Water: " + this.cost[2] + "\n";
-		}
-		if (this.cost[3] > 0) {
-			result += "Biomass: " + this.cost[3] + "\n";
+			result += "Biomass: " + this.cost[2] + "\n";
 		}
 		return result;
 	}

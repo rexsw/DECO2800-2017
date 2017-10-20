@@ -2,11 +2,8 @@ package com.deco2800.marswars.hud;
 
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +16,7 @@ public class CodeInterpreter {
     private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
     private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
     private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private WeatherManager wm = (WeatherManager)GameManager.get().getManager(WeatherManager.class);
 
 
 
@@ -127,17 +125,6 @@ public class CodeInterpreter {
 
 
     /**
-     * If the code contains "water" and digits, add the number of water indicated by the digits.
-     *  @param int the number indicated by the digits
-     */
-    public void water(int a){
-        int num = rm.getWater(-1) + a;
-        rm.setWater(num,-1);
-    }
-
-
-
-    /**
      * If the code contains "day", add the game time, so it makes it 6 am in the game.
      */
     public void day(){
@@ -180,7 +167,7 @@ public class CodeInterpreter {
      * If the code is "whosyourdaddy", set the enemies attack to be of no effect.
      */
     public void whosyourdaddy(){
-        MarsWars.invincible = 1;
+        MarsWars.setInvincible(1);
     }
 
 
@@ -203,9 +190,16 @@ public class CodeInterpreter {
 
 
 
+    public void floodon(){
+        wm.toggleFlood(true);
 
 
+    }
 
+    public void floodoff(){
+        wm.toggleFlood(false);
+
+    }
 
 
 

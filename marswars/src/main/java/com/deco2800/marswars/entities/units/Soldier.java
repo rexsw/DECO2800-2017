@@ -47,13 +47,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosX(float x) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 		super.setPosX(x);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 	}
 
@@ -66,14 +66,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosY(float y) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 
 		super.setPosY(y);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 
 
@@ -212,25 +212,35 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
-			if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
-				// we cant assign different owner yet
-				AttackableEntity target = (AttackableEntity) entities.get(0);
-				attack(target);
-
-			} else {
-				currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
-			}
+			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
-			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-			Sound loadedSound = sound.loadSound(movementSound);
-			sound.playSound(loadedSound);
+//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+//			Sound loadedSound = sound.loadSound(movementSound);
+//			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);
 		sound.playSound(loadedSound);
 	}
 	
+	/**
+	 * Helper to be inherited and changed for different right click options (mainly for commander). here simply assigns
+	 * the action when right click occurs.
+	 * @param entities  List of entities found
+	 * @param x coordinate along x axis of the mouse right click input
+	 * @param y coordinate along y axis of the mouse right click input
+	 */
+	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
+		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+			// we cant assign different owner yet
+			AttackableEntity target = (AttackableEntity) entities.get(0);
+			attack(target);
 
+		} else {
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+		}
+	}
+	
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
 		this.currentAction = currentAction;
 	}
@@ -260,7 +270,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 		}
 
 		loyalty_regeneration();
@@ -272,7 +282,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 
 			if(getHealth()<=0)
-				modifyFogOfWarMap(false,3);
+				modifyFogOfWarMap(false,getFogRange());
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -408,7 +418,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					attackDefensively(a);
 					return;
 				}
@@ -426,7 +437,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					attack(a);
 					return;
 				}
@@ -444,11 +456,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+                boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+                if (distanceEquality) {
 					float xLocation;
 					float yLocation;
 					//If xDistance and yDistance is the same increment one by random
-					if (xDistance == yDistance) {
+					boolean distanceEquality2 = (Math.abs(xDistance - yDistance) < 0.01);
+					if (distanceEquality2) {
 						Random random = new Random();
 						if (random.nextBoolean()) {
 							xDistance += 1;
@@ -480,7 +494,9 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		for (AttackableEntity a: enemy) {
 			float xDistance = a.getPosX() - this.getPosX();
 			float yDistance = a.getPosY() - this.getPosY();
-			if (Math.abs(yDistance) + Math.abs(xDistance) == this.getAttackRange()) {
+			boolean distanceEquality = (Math.abs(Math.abs(yDistance) +
+					Math.abs(xDistance) - this.getAttackRange()) < 0.01);
+			if (distanceEquality) {
 				attack(a);
 				return;
 			}
@@ -497,7 +513,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				if (Math.abs(yDistance) + Math.abs(xDistance) == i) {
+				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				if (distanceEquality) {
 					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
 					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
 					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
@@ -582,7 +599,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
 			//turn of the fog of war for this entity when it switches side
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);

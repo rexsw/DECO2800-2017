@@ -1,7 +1,6 @@
 package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,14 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.InitiateGame.Game;
-import com.deco2800.marswars.InitiateGame.GameSave;
+import com.deco2800.marswars.initiateGame.Game;
+import com.deco2800.marswars.initiateGame.GameSave;
+import com.deco2800.marswars.initiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 
@@ -45,7 +44,7 @@ public class MainMenu {
 	private MenuScreen menuScreen;
 	
 	private Window mainmenu; 
-	boolean gameStarted = false;
+	private static boolean gameStarted = false;
 	private Game game;
 	boolean status = true;
 	boolean enabled = false; 
@@ -53,9 +52,10 @@ public class MainMenu {
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
 
-	Sound openMusic = null;
-	Music defaultTheme = null;
+	public Sound openMusic = null;
 
+
+	public static final SoundTrackPlayer player = new SoundTrackPlayer();
 
 	/**
 	 * Creates the initial Main Menu instance before starting the game
@@ -78,6 +78,7 @@ public class MainMenu {
 	 * Does all the grunt work for creating the main menu
 	 */
 	private void createMenu(){
+
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
 		MenuScreen menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
@@ -107,16 +108,13 @@ public class MainMenu {
 	 * @param playerTeams
 	 */
 	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
-		gameStarted = start;
-		if (gameStarted) {
+		setGameStarted(start);
+		if (isGameStarted()) {
 			openMusic.stop();
 			openMusic.dispose();
-			defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-			defaultTheme.setVolume(0.9f);
-			defaultTheme.setLooping(true);
-			defaultTheme.play();
 			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		}
 	}
 	
@@ -130,16 +128,12 @@ public class MainMenu {
 		try {
 			loadedGame.readGame();
 		} catch (FileNotFoundException e) {}//do nothing
-			gameStarted = start;
-			if (gameStarted) {
+			setGameStarted(start);
+			if (isGameStarted()) {
 				openMusic.stop();
 				openMusic.dispose();
-				defaultTheme = Gdx.audio.newMusic(Gdx.files.internal("OriginalSoundTracks/SpacWarBattle.mp3"));
-				defaultTheme.setVolume(0.9f);
-				defaultTheme.setLooping(true);
-				defaultTheme.play();
 				try {
-					game = new Game(loadedGame.data.aITeams, loadedGame.data.playerTeams); //Start up a new game
+					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams()); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}
@@ -150,10 +144,28 @@ public class MainMenu {
 	/**
 	 * Flags the game as ended
 	 */
-	public void endGame(){
+	public static void endGame(){
 		gameStarted = false;
 	}
-	
+
+	/**
+	 * Return whether the game has started
+	 *
+	 * @return whether the game has started
+	 */
+	public static boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	/**
+	 * set the game as started
+	 *
+	 * @param gameStarted yes or no
+	 */
+	public static void setGameStarted(boolean gameStarted) {
+		MainMenu.gameStarted = gameStarted;
+	}
+
 	/**
 	 * Flags the game as started
 	 * @return
@@ -188,4 +200,6 @@ public class MainMenu {
 			game.render(batch, camera);
 		}
 	}
+
+
 }

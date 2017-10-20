@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.items;
 
 import com.deco2800.marswars.entities.items.effects.AttackEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,10 @@ public class Weapon extends Item {
     	this.effects = new ArrayList<>();
         this.type = type;
         this.level = level;
-        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange()));
+      //  this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed
+		//		(), getWeaponRange()));
+
+        this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange(), Target.SELF));
     }
 
     /**
@@ -141,13 +145,26 @@ public class Weapon extends Item {
 	 */
 	@Override
 	public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass()) || (object == null)) {
+		if ((getClass() != object.getClass())) {
 			return false;
 		}
 		return ((Weapon) object).type == this.type;
+	}
+
+	/**
+	 * The updated hashcode for this class.
+	 *
+	 * @return The updated hashcode for this class.
+	 */
+	@Override
+	public int hashCode() {
+		return type.hashCode();
 	}
 }
 

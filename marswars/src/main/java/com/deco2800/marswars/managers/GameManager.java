@@ -207,6 +207,7 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
 		this.gameWorld = null;

@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.UseSpecialAction;
 import com.deco2800.marswars.entities.items.Armour;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.entities.items.Special;
@@ -7,9 +9,15 @@ import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.util.WorldUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that defines the Inventory for a Commander. Each Commander will have their own instance of Inventory and only 
@@ -26,12 +34,14 @@ import java.util.List;
  * @author Mason
  *
  */
-public class Inventory {
+public class Inventory extends AbstractEntity implements HasAction, Tickable, Renderable{
 	
 	private Commander owner;
     private Armour armour;
     private Weapon weapon;
     private List<Special> specials;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Inventory.class);
+    private Optional<DecoAction> currentAction = Optional.empty();
 
     /**
      * Constructor of the Inventory class to make a new instance of Inventory for the provided Commander class that has
@@ -39,6 +49,7 @@ public class Inventory {
      * @param owner  The Commander that would be the owner of this instance of Inventory
      */
     public Inventory(Commander owner) {
+    	super(1, 1, 1, 1, 1, 1);
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;
@@ -164,12 +175,39 @@ public class Inventory {
     }
 
     /**
-     *  **** THIS FUNCTION HAS NOT BEEN IMPLEMENTED YET, THIS IS A PLACEHOLDER
      * Method to handle functionality of Special items when they are used via are clicked on in the inventory bar in HUD
      *  to Activate the item (i.e. actually use it).
+     *  
+     *  @param special to be used
      */
-    public void useItem() {
-    	return;
+    public void useItem(Special special) {
+    	if(this.specials.contains(special)) {
+    		WorldUtil.removeOverlay();
+    		//ItemArea a = new ItemArea(owner.getPosX(),owner.getPosY(),owner.getPosZ());
+    		currentAction = Optional.of(new UseSpecialAction(special, owner));
+    		//should not have to worry about null pointer since it was just created.
+    		
+//    		if(!special.useItem()) {
+//    			// no use limit left
+//            	this.specials.remove(special);	
+//            	this.owner.setStatsChange(true);
+//    		}
+    	} else {
+    		LOGGER.error("***** Unrecognized " + special.getName());
+    	}
     }
+    
+	@Override
+	public Optional<DecoAction> getCurrentAction() {
+		return currentAction;
+	}
 
+	@Override
+	public void onTick(int tick) {
+		if (currentAction.isPresent() && !currentAction.get().completed()) {
+			currentAction.get().doAction();
+		} else {
+			currentAction = Optional.empty();
+		}
+	}
 }

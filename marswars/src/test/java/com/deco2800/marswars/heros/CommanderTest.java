@@ -48,7 +48,7 @@ public class CommanderTest {
 		assertTrue(c.getInventory().getWeapon() == null);
 		assertTrue(c.getInventory().getSpecials().size() == 0);
 		
-		Item item = new Special(SpecialType.AOEHEAL1);
+		Item item = new Special(SpecialType.HEALTHSHOT);
 		assertTrue(c.addItemToInventory(item));
 		assertTrue(c.addItemToInventory(item));
 		assertTrue(c.addItemToInventory(item));
@@ -56,7 +56,7 @@ public class CommanderTest {
 		assertFalse(c.addItemToInventory(item));
 		
 		assertTrue(c.removeItemFromInventory(item));
-		Item item2 = new Special(SpecialType.BOMB);
+		Item item2 = new Special(SpecialType.MISSILE);
 		assertFalse(c.removeItemFromInventory(item2));
 	}
 	

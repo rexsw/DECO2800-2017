@@ -9,7 +9,7 @@ package com.deco2800.marswars.entities.items;
  * baseHealth = amount of health (max and current) it changes without any multipliers being applied 
  * baseSpeed = amount of movement speed it changes without any multipliers being applied 
  * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the
- * array is [rocks, crystals, water, biomass].
+ * array is [rocks, crystals, biomass].
  * texture = string of the saved texture for the image file that would be used for the item's icon
  * 
  * @author Mason
@@ -18,13 +18,12 @@ package com.deco2800.marswars.entities.items;
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 },
-			new float[] { 1.0f, 1.2f, 1.4f, 1.6f }),
+	HELMET("Combat Helmet", "helmet_1", 1000, 500, 0.05f, new int[] { 80, 30, 100 },
+			new float[] { 1.0f, 1.2f, 1.4f }),
 	
 	//some OP movement speed boots (texture here is a placeholder)
-	BOOTS1("BootI", "goggle", 9999, 9999, 9999, new int[] { 1000, 2000, 1000,
-			5000}, new float[] { 1.0f,
-			1.2f, 1.4f, 1.6f });
+	GOGGLE("Tactical Goggle", "goggle_1", 3000, 1500, 0.1f, new int[] { 200, 500,
+			300}, new float[] {1.0f, 1.2f, 1.4f });
 	
 	private String name;
 	private int baseArmour;
@@ -137,9 +136,9 @@ public enum ArmourType implements ItemType {
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nArmour: " + this.getArmourValue()
-				+ "\nMaxHealth: " + this.getArmourHealth() + "\nMove Speed: "
-				+ this.getMoveSpeed();
+		return "Name: " + this.getName() + "\nType: Armour\nArmour: " + 
+				this.getArmourValue() + "\nMaxHealth: " + this.getArmourHealth() 
+				+ "\nMove Speed: " + this.getMoveSpeed();
 	}
 
 	/**
@@ -156,10 +155,7 @@ public enum ArmourType implements ItemType {
 			result += "Crystal: " + this.baseCost[1] + "\n";
 		}
 		if (this.baseCost[2] > 0) {
-			result += "Water: " + this.baseCost[2] + "\n";
-		}
-		if (this.baseCost[3] > 0) {
-			result += "Biomass: " + this.baseCost[3] + "\n";
+			result += "Biomass: " + this.baseCost[2] + "\n";
 		}
 		return result;
 	}

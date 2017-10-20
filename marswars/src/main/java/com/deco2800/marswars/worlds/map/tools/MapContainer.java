@@ -2,24 +2,21 @@ package com.deco2800.marswars.worlds.map.tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.marswars.InitiateGame.GameSave;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElement;
-import com.deco2800.marswars.entities.TerrainElements.TerrainElementTypes;
+import com.deco2800.marswars.entities.TerrainElements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.html.parser.Entity;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -115,13 +112,66 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
+            /*Obstacle tree = new Obstacle(this.width-1, this.length-1, 0, 8, 8, ObstacleType.TREE1, "red");
+            world.addEntity(tree);
+            tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "blue");
+            world.addEntity(tree);
+            tree = new Obstacle(0, 10, 0, 8, 8, ObstacleType.TREE2, "red");
+            world.addEntity(tree);
+            tree = new Obstacle(10, 10, 0, 8, 8, ObstacleType.TREE3, "green");
+            world.addEntity(tree);*/
+
+            placeTrees("", true);
+
             this.generateResourcePattern();
             for (int i = 0; i < 2; i++) {
             	//I removed random entities and buildings for now, don't think they make sense in a strategy game
               // this.getRandomBuilding();
               // this.getRandomEntity();
-               this.getRandomResource();
+               //this.getRandomResource();
             }
+        }
+    }
+
+    /**
+     * places the trees on the map
+     * @param colour the colour of the tree to place (red, green, blue, yellow)
+     * @param randomColour whether to randomly choose a colour for ea tree (& disregard colour parameter)
+     */
+    private void placeTrees(String colour, boolean randomColour) {
+        Random r = new Random();
+        float rf;
+        ObstacleType type;
+        Obstacle tree;
+        for (int i = 0; i<this.length*4; i++) {
+            if (randomColour) {
+                rf = r.nextFloat();
+                if (rf<0.25) {
+                    colour = "red";
+                }
+                else if (rf<0.5) {
+                    colour = "blue";
+                }
+                else if (rf<0.75) {
+                    colour = "green";
+                }
+                else {
+                    colour= "yellow";
+                }
+            }
+            rf = r.nextFloat();
+            if (rf<0.33) {
+                type = ObstacleType.TREE1;
+            }
+            else if (rf<0.66) {
+                type = ObstacleType.TREE2;
+            }
+            else {
+                type = ObstacleType.TREE3;
+            }
+            tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
+                    type, colour);
+            world.addEntity(tree);
         }
     }
 
@@ -340,11 +390,11 @@ public class MapContainer {
      * to the size of the map, use sensibly large map sizes!
      */
     protected void generateResourcePattern(){
-        ResourceType resource = ResourceType.WATER;
+        ResourceType resource = ResourceType.ROCK;
         for (int i =0; i<4; i++){
             generateResourcePatternFor(resource);
             switch (resource) {
-                case WATER:
+                case ROCK:
                     resource = ResourceType.BIOMASS;
                     break;
                 case BIOMASS:
@@ -364,12 +414,12 @@ public class MapContainer {
     protected void generateResourcePatternFor(ResourceType resource) {
         Random r  = new Random();
         double length, direction;
-        double xOrigin = this.length/2;
-        double yOrigin = this.width/2;
+        double xOrigin = this.length/2d;
+        double yOrigin = this.width/2d;
         //maximum radial length
-        double maxLength = Math.floor(Math.sqrt(Math.pow(this.width/2,2)+Math.pow(this.width/2,2)));
+        double maxLength = Math.floor(Math.sqrt(Math.pow(this.width/2d,2)+Math.pow(this.width/2d,2)));
         int divisions = 4; //how many distinct circular divisions are used in the radial distribution
-        int frequency = (int)Math.sqrt(this.width/2+this.length/2)/4; //how many resource groups there are
+        int frequency = (int)Math.sqrt(this.width/2d+this.length/2d)/4; //how many resource groups there are
         for (int i = 0; i < divisions; i++) {
             //maximum and mininum rangle for angles in this divisions
             double radMin = ((Math.PI*2)/divisions)*i;
@@ -420,7 +470,7 @@ public class MapContainer {
         //generate clumpsize resources
         for (i = 0; (i < clumpSize)&&(tries<maxTries); i++) {
             //make sure we dont go out of bounds of our clump OR the map
-            if (newX>x+maxWidth||newX<x-maxWidth||newX>x+maxWidth||newX<x-maxWidth||newX<0||newX>=this.length||newY<0||newY>=this.width) {
+            if (newX>x+maxWidth||newX<x-maxWidth||newX<0||newX>=this.length||newY<0||newY>=this.width) {
                 newX = x;
                 newY = y;
             }
@@ -446,7 +496,7 @@ public class MapContainer {
             //increment how many attempts have been made
             tries+=1;
         }
-        System.out.printf("generated "+i+" resources taking "+tries+"tries\n");
+//        System.out.printf("generated "+i+" resources taking "+tries+"tries\n");
         if (tries!=maxTries) {
             for(i=0; i<toAdd.size(); i++) {
                 world.addEntity((BaseEntity) toAdd.get(i));
@@ -477,7 +527,6 @@ public class MapContainer {
         }
 
         world.addEntity(entity);
-        System.out.println(random + " " + entity.toString());
     }
 
     /**
@@ -513,7 +562,7 @@ public class MapContainer {
      * this will reload resource from gamesave
      */
     public void loadResourceEntities(GameSave loadedGame){
-        for(Resource each : loadedGame.data.resource){
+        for(Resource each : loadedGame.data.getResource()){
             world.addEntity(each);
         }
     }
@@ -533,9 +582,6 @@ public class MapContainer {
         }
         else if(random == ResourceType.ROCK){
             newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.ROCK);
-        }
-        else if(random == ResourceType.WATER){
-            newEntity = new Resource(x, y, 0, 1f, 1f, ResourceType.WATER);
         }
         else{
             return;

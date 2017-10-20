@@ -1,17 +1,16 @@
 package com.deco2800.marswars.hud;
 
-import com.deco2800.marswars.InitiateGame.Game;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.initiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 
@@ -46,6 +45,9 @@ public class PauseMenu extends Dialog{
 		this.hud = hud;
 		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
 		LabelStyle labelStyle = skin.get("subtitle", LabelStyle.class);
+		LOGGER.info("Instantiating the Pause menu");
+		this.align(Align.center);
+
 		LOGGER.info("Instantiating the Pause menu");
 		this.align(Align.center);
 		
@@ -84,7 +86,7 @@ public class PauseMenu extends Dialog{
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
                 try {
-                    Game.savedGame.writeGame();
+                    Game.getSavedGame().writeGame();
                 }catch (FileNotFoundException e){
                     //do nothing
                 }

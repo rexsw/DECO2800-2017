@@ -1,15 +1,15 @@
 package com.deco2800.marswars.actions;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.util.WorldUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +31,6 @@ public class BuildAction implements DecoAction{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildAction.class);
 	private boolean completed = false;
-	private int tileWidth = GameManager.get().getWorld().getMap().getProperties().get("tilewidth", Integer.class);
-	private int tileHeight = GameManager.get().getWorld().getMap().getProperties().get("tileheight", Integer.class);
 	OrthographicCamera camera;
 	private float projX;
 	private float projY;
@@ -103,38 +101,18 @@ public class BuildAction implements DecoAction{
 			if (state == State.SELECT_SPACE) {
 				relocateSelect--;
 				if (relocateSelect == 0) {
-					if (temp != null) {
-						GameManager.get().getWorld().removeEntity(temp);
-						validBuild = true;
-					}
-					camera = GameManager.get().getCamera();
-					Vector3 worldCoords = camera.unproject(new
-							Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-					projX = worldCoords.x / tileWidth;
-					projY = -(worldCoords.y - tileHeight / 2f)
-							/ tileHeight + projX;
-					projX -= projY - projX;
-					projX = (int) projX;
-					projY = (int) projY;
-					if (buildingDims % 2 == 0) {
-						fixPos = .5f;
-					}
-					if (!(projX < (((buildingDims + 1) / 2) - fixPos) || projX >
-							(GameManager.get().getWorld().getWidth() - buildingDims - fixPos)
-							|| projY < (((buildingDims + 1) / 2) - fixPos) || projY >
-							GameManager.get().getWorld().getLength() - buildingDims - fixPos)) {
-						temp = new CheckSelect(projX+fixPos-((int)((buildingDims+1)/2)), projY+fixPos, 0f,
-								buildingDims, buildingDims, 0f, building);
-						validBuild = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), buildingDims, fixPos);
-						if (validBuild) {
-							temp.setGreen();
-							GameManager.get().getWorld().addEntity(temp);
-
-						} else {
-							temp.setRed();
-							GameManager.get().getWorld().addEntity(temp);
-						}
-					}
+					float[] parse = new float[]{projX, projY, fixPos};
+					temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
+					/*
+					 * updating coordinates and parsed values into selectionStage because java passes by values unless 
+					 * it's an object.
+					 */
+					projX = parse[0];
+					projY = parse[1];
+					fixPos = parse[2];
+					//updating validBuild based on the texture of temp.
+					validBuild = temp == null ? false : temp.getTexture().contains("green") || 
+							temp.getTexture().contains("Green");
 					relocateSelect = 10;
 
 				}

@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.items;
 
 import com.deco2800.marswars.entities.items.effects.DefenceEffect;
 import com.deco2800.marswars.entities.items.effects.Effect;
+import com.deco2800.marswars.entities.items.effects.Effect.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,9 @@ public class Armour extends Item {
 		this.effects = new ArrayList<>();
 		this.type = type;
 		this.level = level;
-		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed()));
+//		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth
+//				(), getMoveSpeed()));
+		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed(), Target.SELF));
 	}
 
 	/**
@@ -73,7 +76,7 @@ public class Armour extends Item {
 	 * decrease when applied.
 	 */
 	public float getMoveSpeed() {
-		return Math.round(type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1]);
+		return type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1];
 	}
 
 	/**
@@ -148,12 +151,25 @@ public class Armour extends Item {
 	 */
 	@Override
 	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
 		if (this == object) {
 			return true;
 		}
-		if ((getClass() != object.getClass()) || (object == null)) {
+		if (getClass() != object.getClass()) {
 			return false;
 		}
 		return ((Armour) object).type == this.type;
+	}
+
+	/**
+	 * The updated hashcode for this class.
+	 *
+	 * @return The updated hashcode for this class.
+	 */
+	@Override
+	public int hashCode() {
+		return type.hashCode();
 	}
 }

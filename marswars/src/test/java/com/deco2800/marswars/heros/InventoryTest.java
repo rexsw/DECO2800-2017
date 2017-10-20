@@ -21,16 +21,16 @@ public class InventoryTest {
 	private static Commander entity; //Commander to test with and check stats.
 	private static Inventory bag; //Instance of Inventory class to test with
 	// making all the items to test with.
-	Weapon wep1 = new Weapon(WeaponType.WEAPON1, 1);
-	Weapon wep1b = new Weapon(WeaponType.WEAPON1, 1);
-	Weapon wep2 = new Weapon(WeaponType.WEAPON2, 1);
-	Armour arm1 = new Armour(ArmourType.ARMOUR1, 1);
-	Armour arm11 = new Armour(ArmourType.ARMOUR1, 1);
-	Armour arm2 = new Armour(ArmourType.BOOTS1, 1);
-	Special heal1 = new Special(SpecialType.AOEHEAL1);
-	Special heal2 = new Special(SpecialType.AOEHEAL2);
-	Special boomHeal = new Special(SpecialType.MASS1HEAL);
-	Special bomb = new Special(SpecialType.BOMB);
+	Weapon wep1 = new Weapon(WeaponType.HANDGUN, 1);
+	Weapon wep1b = new Weapon(WeaponType.HANDGUN, 1);
+	Weapon wep2 = new Weapon(WeaponType.RIFLE, 1);
+	Armour arm1 = new Armour(ArmourType.HELMET, 1);
+	Armour arm11 = new Armour(ArmourType.HELMET, 1);
+	Armour arm2 = new Armour(ArmourType.GOGGLE, 1);
+	Special heal1 = new Special(SpecialType.HEALTHSHOT);
+	Special heal2 = new Special(SpecialType.HEALTHSTATION);
+	Special boomHeal = new Special(SpecialType.HEALTHBLESS);
+	Special bomb = new Special(SpecialType.MISSILE);
 	Special nuke = new Special(SpecialType.NUKE);
 	//The base stats of the Commander before item's change the stats.
 	private static int baseArm;
@@ -153,16 +153,16 @@ public class InventoryTest {
 				baseAttackSPD + wep1.getWeaponSpeed(), baseAttackRange + wep1.getWeaponRange());
 		//adding same instance of last item.
 		assertTrue(bag.addToInventory(wep1));
-		checkOffense(baseDMG + WeaponType.WEAPON1.getWeaponDamage(), 
-				(int) (baseArmDMG  + WeaponType.WEAPON1.getWeaponDamage() * 0.25), 
-				baseAttackSPD + WeaponType.WEAPON1.getWeaponSpeed(), 
-				baseAttackRange + WeaponType.WEAPON1.getWeaponRange());
+		checkOffense(baseDMG + WeaponType.HANDGUN.getWeaponDamage(), 
+				(int) (baseArmDMG  + WeaponType.HANDGUN.getWeaponDamage() * 0.25), 
+				baseAttackSPD + WeaponType.HANDGUN.getWeaponSpeed(), 
+				baseAttackRange + WeaponType.HANDGUN.getWeaponRange());
 		//adding new different of same item.
 		assertTrue(bag.addToInventory(wep2));
-		checkOffense(baseDMG + WeaponType.WEAPON2.getWeaponDamage(), 
-				(int) (baseArmDMG  + WeaponType.WEAPON2.getWeaponDamage() * 0.25), 
-				baseAttackSPD + WeaponType.WEAPON2.getWeaponSpeed(), 
-				baseAttackRange + WeaponType.WEAPON2.getWeaponRange());
+		checkOffense(baseDMG + WeaponType.RIFLE.getWeaponDamage(), 
+				(int) (baseArmDMG  + WeaponType.RIFLE.getWeaponDamage() * 0.25), 
+				baseAttackSPD + WeaponType.RIFLE.getWeaponSpeed(), 
+				baseAttackRange + WeaponType.RIFLE.getWeaponRange());
 		//remove item from bag so other tests start off with empty bag also test removal independence from parameter
 		assertFalse(bag.removeFromInventory(wep1));
 		assertTrue(bag.removeFromInventory(wep2));
@@ -250,7 +250,7 @@ public class InventoryTest {
 	 * slot and whether if they can be removed separately.
 	 */
 	public void testAddSameSpecialItems() {
-		Special heal1b = new Special(SpecialType.AOEHEAL1);
+		Special heal1b = new Special(SpecialType.HEALTHSHOT);
 		assertTrue(bag.addToInventory(heal2));
 		assertTrue(bag.addToInventory(heal1));
 		assertTrue(bag.addToInventory(heal1b));

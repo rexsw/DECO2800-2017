@@ -3,7 +3,6 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.FireAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.Tickable;
@@ -60,7 +59,9 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 			if (find && currentAction.get().completed()) {
 				// check for the positions
-				if (this.getTarget().getPosX() == posX && this.getTarget().getPosY() == posY) {
+				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+				if (xPos && yPos) {
 					impact();
 					GameManager.get().getWorld().removeEntity(this);
 

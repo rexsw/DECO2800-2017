@@ -22,7 +22,7 @@ public class TechnologyTest {
      */
     @Test
     public void technologyConstructorTest() {
-        int[] costs = {2, 2, 2, 2};
+        int[] costs = {2, 2, 2};
         String name = "Constructor test technology";
         List<Technology> parentList = new ArrayList<>();
         String description = "Test description";
@@ -83,10 +83,10 @@ public class TechnologyTest {
     @Test
     public void techonologyToStringTest() {
         List<Technology> parentTechs = new ArrayList<>();
-        Technology parentTech = new Technology(new int[]{10, 10, 10, 10}, "Parent tech", new ArrayList<>(), "Parent technology");
+        Technology parentTech = new Technology(new int[]{10, 10, 10}, "Parent tech", new ArrayList<>(), "Parent technology");
         parentTechs.add(parentTech);
-        technology = new Technology(new int[]{1, 1, 1, 1}, "toString() tech", parentTechs, "Tests toString()");
-        String comparedString = "Technology: toString() tech" + '\n' + "Cost: 1, 1, 1, 1" + '\n' + "Parent techs: " + parentTech.getName() + ", " + '\n' + "Description: Tests toString()";
+        technology = new Technology(new int[]{1, 1, 1}, "toString() tech", parentTechs, "Tests toString()");
+        String comparedString = "Technology: toString() tech" + '\n' + "Cost: 1, 1, 1" + '\n' + "Parent techs: " + parentTech.getName() + ", " + '\n' + "Description: Tests toString()";
         System.out.println(technology.toString());
         assertEquals(technology.toString(), comparedString);
     }
@@ -94,7 +94,7 @@ public class TechnologyTest {
     /** Tests the equals() method of techonlogies */
     @Test
     public void technologyEqualsTest() {
-        Technology technology = new Technology(new int[]{10, 10, 10, 10}, "Equals technology", new ArrayList<>(), "Equals technology");
+        Technology technology = new Technology(new int[]{10, 10, 10}, "Equals technology", new ArrayList<>(), "Equals technology");
         assertEquals(technology, technology);
         Technology nullTechnology = null;
         // null
@@ -103,7 +103,7 @@ public class TechnologyTest {
         assertNotEquals(technology, "This is a string, not a technology");
         List<Technology> otherTechnologyParents = new ArrayList<>();
         otherTechnologyParents.add(technology);
-        Technology otherTechnology = new Technology(new int[]{5, 5, 5, 5}, "Other techonology", otherTechnologyParents, "Other technology");
+        Technology otherTechnology = new Technology(new int[]{5, 5, 5}, "Other techonology", otherTechnologyParents, "Other technology");
         assertNotEquals(technology, otherTechnology);
     }
 }

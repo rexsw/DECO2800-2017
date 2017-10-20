@@ -12,10 +12,10 @@ public class Technology {
 	private String description;
 
 	public Technology(int[] cost, String name, List<Technology> parents, String description) {
-		if (cost.length != 4) {
+		if (cost.length != 3) {
 			// bad resource cost length
-			throw new IllegalArgumentException("Resource costs must not be " +
-					"an array of 4 integers");
+			throw new IllegalArgumentException("Resource costs must  be " +
+					"an array of 3 integers");
 		} else if (name == null) {
 			// bad technology name
 			throw new IllegalArgumentException("Technology names cannot be " +
@@ -43,7 +43,11 @@ public class Technology {
 	}
 
 	public int[] getCost(){
-		return cost;
+		int [] result = new int[cost.length];
+		for (int i = 0; i < cost.length; i++) {
+			result[i] = cost[i];
+		}
+		return result;
 	}
 
 	public String getName(){
@@ -74,7 +78,7 @@ public class Technology {
 	@Override
 	public String toString() {
 		String str = "Technology: " + name + '\n' + "Cost: " + cost[0]
-				+ ", " + cost[1] + ", " + cost[2] + ", " + cost[3] + '\n' + "Parent techs: ";
+				+ ", " + cost[1] + ", " + cost[2]  + '\n' + "Parent techs: ";
 		for (Technology tech : parents) {
 			// add in each parent
 			str += tech.getName() + ", ";

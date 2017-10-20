@@ -51,9 +51,6 @@ public class Resource extends BaseEntity implements HasHealth{
 		case CRYSTAL:
 			this.setTexture("large_crystal"); 
 			break;
-		case WATER:
-			this.setTexture("large_water");
-			break;
 		default:
 			this.setTexture("large_biomass");
 			break;
@@ -74,9 +71,6 @@ public class Resource extends BaseEntity implements HasHealth{
 			break;
 		case CRYSTAL:
 			resetTexture("small_crystal", "medium_crystal");
-			break;
-		case WATER:
-			resetTexture("small_water", "medium_water");
 			break;
 		default:
 			resetTexture("small_biomass", "medium_biomass");

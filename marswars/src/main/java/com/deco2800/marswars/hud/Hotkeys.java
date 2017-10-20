@@ -32,6 +32,7 @@ public class Hotkeys {
 	private Skin skin;
 	private HUDView hud;
 	private GameStats stats;
+	private ChatBox chatBox;
 	
 	private boolean messageToggle = false;
 	
@@ -57,6 +58,8 @@ public class Hotkeys {
 		this.hud = hud;
 		this.stats = stats;
 		this.messageWindow = messageWindow;
+		
+		this.chatBox = this.hud.getChatWindow();
 	}
 	
 	/** 
@@ -67,10 +70,10 @@ public class Hotkeys {
 	public void checkKeys() {
 		
 		if (this.hud.getExitCheck() == 1) {
-			if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+			if(Gdx.input.isKeyJustPressed(Input.Keys.Y)&&messageToggle==false) {
 				LOGGER.info("Exits the game when the quit menu is active");
 				System.exit(0);
-			} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+			} else if (Gdx.input.isKeyJustPressed(Input.Keys.N)&&messageToggle==false) {
 				LOGGER.info("Resumes the game");
 				this.hud.setExitCheck(0);
 				this.quit.hide();
@@ -80,16 +83,22 @@ public class Hotkeys {
 		}
 		
 		//chat listener
-		if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.noActive()) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.C) && this.noActive()&&messageToggle==false) {
 			LOGGER.info("Opening the Chat Window if no other window is active");
+			this.chatBox.enableTextField();
 			hud.showChatBox();
-		} else if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+			messageToggle = true;
+		} 
+
+		if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			LOGGER.info("Closing the Chat Window");
+			this.chatBox.disableTextField();
 			hud.hideChatBox();
+			messageToggle = false;
 		}
 		
 		//pause menu listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)&&messageToggle==false) {
 			if (this.noActive()){
 				LOGGER.info("Opens the pause menu when there is no currently active menu");
 				pause = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);
@@ -103,7 +112,7 @@ public class Hotkeys {
 		
 
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.Q)&&messageToggle==false) {
 			if (this.noActive()) {
 				LOGGER.info("Open the quit menu");
 				this.hud.setExitCheck(1);
@@ -113,7 +122,7 @@ public class Hotkeys {
 
 
 		//tech tree listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.T)&&messageToggle==false) {
 			if(this.noActive()) {
 				LOGGER.info("Activate the tech tree menu");
 				this.hud.setTechCheck(1);
@@ -127,7 +136,7 @@ public class Hotkeys {
 		}
 		
 		//HUD toggle listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.E) && noActive()) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.E) && noActive()&&messageToggle==false) {
 			LOGGER.info("Toggles the HUD on and off each time the button is pressed");
 			if (this.hud.isInventoryToggle()) {
 				this.hud.actionsWindow.setVisible(true);
@@ -145,7 +154,7 @@ public class Hotkeys {
 		}
 		
 		//help button listener
-		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.H)&&messageToggle==false) {
 			if (this.noActive()) {
 				LOGGER.info("Activated the help menu");
 				this.hud.setHelpCheck(1);
@@ -175,8 +184,6 @@ public class Hotkeys {
 		} else if (this.hud.getExitCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getPauseCheck() != 0) {
-			return retBool;
-		} else if (this.hud.getChatActiveCheck() != 0) {
 			return retBool;
 		} else if (this.hud.getTechCheck() != 0) {
 			return retBool;
