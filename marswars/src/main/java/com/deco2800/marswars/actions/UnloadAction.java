@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Han Wei
  */
-public class UnloadAction implements DecoAction {
+public class UnloadAction extends AbstractPauseAction {
 
     enum State {
 	START_STATE, UNLOAD_STATE
@@ -27,7 +27,6 @@ public class UnloadAction implements DecoAction {
     // Variables for pause
     private TimeManager timeManager = (TimeManager)
             GameManager.get().getManager(TimeManager.class);
-    private boolean actionPaused = false;
 
     /**
      * Constructor for the UnloadAction
@@ -80,7 +79,7 @@ public class UnloadAction implements DecoAction {
      */
     @Override
     public boolean completed() {
-	return completed;
+    	return completed;
     }
 
     /**
@@ -90,23 +89,6 @@ public class UnloadAction implements DecoAction {
      */
     @Override
     public int actionProgress() {
-	return 100 - (ticksLoad * 2);
+    	return 100 - (ticksLoad * 2);
     }
-
-    /**
-     * Prevents the current action from progressing.
-     */
-    @Override
-    public void pauseAction() {
-	actionPaused = true;
-    }
-
-    /**
-     * Resumes the current action
-     */
-    @Override
-    public void resumeAction() {
-	actionPaused = false;
-    }
-
 }
