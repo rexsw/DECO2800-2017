@@ -33,7 +33,7 @@ public class TechnologyManagerTest {
      */
     @Test
     public void addTechnologyTest() {
-        int[] costs = {0, 0, 0, 0};
+        int[] costs = {0, 0, 0};
         String name = "Constructor test technology";
         List<Technology> parentList = new ArrayList<>();
         String description = "Test description";
