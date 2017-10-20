@@ -497,7 +497,7 @@ public class HUDView extends ApplicationAdapter{
 		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
 		actionsBgMain.setVisible(false);
 				
-		//actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
+		actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
 
 		//actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
