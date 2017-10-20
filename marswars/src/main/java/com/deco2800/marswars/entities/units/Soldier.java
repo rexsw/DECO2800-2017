@@ -290,11 +290,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			int entitiesSize = entities.size();
 			boolean waterPresent = false;
 			for (BaseEntity e: entities) {
-				if (e instanceof Soldier) {
-					if(((Soldier)e).getLoadStatus()==1){
-						isTheEntityLoaded = true;
-					}
-
+				if (e instanceof Soldier && ((Soldier)e).getLoadStatus() == 1) {
+					isTheEntityLoaded = true;
 				}
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
@@ -418,7 +415,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					attackDefensively(a);
 					return;
@@ -437,7 +434,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					attack(a);
 					return;
@@ -494,8 +491,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		for (AttackableEntity a: enemy) {
 			float xDistance = a.getPosX() - this.getPosX();
 			float yDistance = a.getPosY() - this.getPosY();
-			boolean distanceEquality = (Math.abs(Math.abs(yDistance) +
-					Math.abs(xDistance) - this.getAttackRange()) < 0.01);
+			boolean distanceEquality = Math.abs(Math.abs(yDistance) +
+					Math.abs(xDistance) - this.getAttackRange()) < 0.01;
 			if (distanceEquality) {
 				attack(a);
 				return;

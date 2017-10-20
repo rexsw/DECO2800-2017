@@ -44,16 +44,19 @@ public class ShootAction implements DecoAction {
 					cooldown();
 					return;
 				case SHOOT:
-					if (attackInterval <= 0) {
-						shoot();
-					} else {
-						state = State.COOLDOWN;
-						break;
-					}
+					checkShoot();
 					break;
 				default:
 					break;
 			}
+		}
+	}
+	
+	private void checkShoot() {
+		if (attackInterval <= 0) {
+			shoot();
+		} else {
+			state = State.COOLDOWN; 
 		}
 	}
 	
