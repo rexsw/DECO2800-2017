@@ -112,7 +112,6 @@ public class ShopDialog extends Dialog {
 
 		this.getContentTable().row();
 		this.getContentTable().add(status).expandX().center().colspan(2);
-
 	}
 
 	/**
@@ -172,53 +171,52 @@ public class ShopDialog extends Dialog {
 			button.addListener(new ClickListener() {
 				public void clicked(InputEvent event, float x, float y) {
 					status.setText(item.getName());
+					if (selectedHero == null) {
+						status.setText("Unsuccessful shopping, No hero exist.");
+						return;
+					}
 					boolean enoughResources = checkCost(selectedHero.getOwner(),
 							item);
-					if ((selectedHero != null) && (selectedHero.getHealth() > 0)
-							&& enoughResources) {
-						if ((selectedHero != null)
-								&& (selectedHero.getHealth() > 0)) {
-							if (item instanceof WeaponType) {
-								Weapon weapon = new Weapon((WeaponType) item,
-										1);
-								selectedHero.addItemToInventory(weapon);
-								status.setText("Bought " + weapon.getName()
-										+ "(Weapon) for "
-										+ selectedHero.toString());
-							} else if (item instanceof ArmourType) {
-								Armour armour = new Armour((ArmourType) item,
-										1);
-								selectedHero.addItemToInventory(armour);
-								status.setText("Bought " + armour.getName()
-										+ "(Armour) for "
+					
+					if (selectedHero.getHealth() <= 0) {
+						status.setText(
+								"Your Commander is dead. Can't buy anything.");
+						return;
+					}
+					if (enoughResources) {
+						if (item instanceof WeaponType) {
+							Weapon weapon = new Weapon((WeaponType) item, 1);
+							selectedHero.addItemToInventory(weapon);
+							status.setText("Bought " + weapon.getName()
+									+ "(Weapon) for "
+									+ selectedHero.toString());
+						} else if (item instanceof ArmourType) {
+							Armour armour = new Armour((ArmourType) item, 1);
+							selectedHero.addItemToInventory(armour);
+							status.setText("Bought " + armour.getName()
+									+ "(Armour) for "
+									+ selectedHero.toString());
+						} else {
+							boolean transactSuccess = false;
+							Special special = new Special((SpecialType) item);
+							transactSuccess = selectedHero
+									.addItemToInventory(special);
+							if (transactSuccess) {
+								status.setText("Bought " + special.getName()
+										+ "(Special) for "
 										+ selectedHero.toString());
 							} else {
-								boolean transactSuccess = false;
-								Special special = new Special(
-										(SpecialType) item);
-								transactSuccess = selectedHero
-										.addItemToInventory(special);
-								if (transactSuccess) {
-									status.setText("Bought " + special.getName()
-											+ "(Special) for "
-											+ selectedHero.toString());
-								} else {
-									status.setText(
-											"Unsuccessful Shopping, can only hold 4 specials");
-									return;
-								}
-
+								status.setText(
+										"Unsuccessful Shopping, can only hold 4 specials");
+								return;
 							}
-							selectedHero.setStatsChange(true);
-							transact(selectedHero.getOwner(), item);
-						} else {
-							String mes = selectedHero == null
-									? "unsuccessful shopping, No hero exist."
-									: (selectedHero.getHealth() > 0
-											? "Not enough resources."
-											: "Your Commander is dead. Can't buy anything.");
-							status.setText(mes);
+
 						}
+						selectedHero.setStatsChange(true);
+						transact(selectedHero.getOwner(), item);
+					} else {
+						String mes = "Not enough resources.";
+						status.setText(mes);
 					}
 				}
 			});
