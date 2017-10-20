@@ -70,9 +70,9 @@ public class TechnologyManager extends Manager{
         setUpHealthTechs();
         setUpSpecialTechs();
         setUpHeroFactoryTech();
-        setUpArmourItemLevelTechs();
-        setUpSpecialItemsTech();
         setUpWeaponLevelTechs();
+        setUpSpecialItemsTech();
+        setUpArmourItemLevelTechs();
         setUnitAttributes();
     }
 
@@ -144,8 +144,11 @@ public class TechnologyManager extends Manager{
         techMap.put(16, new Technology(new int[]{0, 0, 0, 0}, "Health 4", healthTech4Parents,
                 "An expensive technology"));
     }
+
     public void setUpSpecialTechs() {
         //Special tech Set up
+        techMap.put(17, new Technology(new int[]{0, 0, 0, 0}, "Nootropics", new ArrayList<>(),
+                "A cheap technology"));
         ArrayList<Technology> steroidsParents = new ArrayList<>();
         steroidsParents.add(techMap.get(4));
         steroidsParents.add(techMap.get(8));
@@ -171,6 +174,7 @@ public class TechnologyManager extends Manager{
                         "hero units.");
         techMap.put(21, heroFactory);
     }
+
 
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
