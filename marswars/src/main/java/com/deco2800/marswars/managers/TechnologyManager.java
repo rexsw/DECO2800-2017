@@ -5,13 +5,10 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.technology.Technology;
 
 import java.util.*;
+import com.deco2800.marswars.hud.ShopDialog;
 
 public class TechnologyManager extends Manager{
     //each tech has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
-    //private Map<Integer, Integer[], String, List<Integer>> techMap = ..
-    // .. new HashMap<Integer, Integer[], String, List<Integer>>();
-
-
     // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
     private HashMap<String, int[]> unitAttributes = new HashMap<>();
     private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
@@ -41,6 +38,16 @@ public class TechnologyManager extends Manager{
     private Technology weaponLevelThree;
     private ArrayList<Technology> weaponL3Parents = new ArrayList<Technology>();
 
+    // booleans to store unlock states
+    private boolean specialUnlocked;
+    private boolean armourL1Unlocked;
+    private boolean armourL2Unlocked;
+    private boolean armourL3Unlocked;
+    private boolean weaponL1Unlocked;
+    private boolean weaponL2Unlocked;
+    private boolean weaponL3Unlocked;
+
+
     private ArrayList<BuildingType> buildingsAvailable;
 
     private ArrayList<Technology> armourTech2Parents = new ArrayList<Technology>();
@@ -59,8 +66,9 @@ public class TechnologyManager extends Manager{
     private ArrayList<Technology> vampireParents = new ArrayList<Technology>();
 
 
-
     public TechnologyManager() {
+        setUpUnlockStates();
+
         setUpArmourTechs();
         setUpDamageTechs();
         setUpSpeedTechs();
@@ -71,6 +79,16 @@ public class TechnologyManager extends Manager{
         setUpSpecialItemsTech();
         setUpArmourItemLevelTechs();
         setUnitAttributes();
+    }
+
+    public void setUpUnlockStates() {
+        specialUnlocked = false;
+        armourL1Unlocked = false;
+        armourL2Unlocked = false;
+        armourL3Unlocked = false;
+        weaponL1Unlocked = false;
+        weaponL2Unlocked = false;
+        weaponL3Unlocked = false;
     }
 
     public void setUpArmourTechs() {
@@ -165,7 +183,7 @@ public class TechnologyManager extends Manager{
     }
 
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
+        heroFactory = new Technology(new int[]{0, 0, 0}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -176,14 +194,14 @@ public class TechnologyManager extends Manager{
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
         armourL1Parents.add(techMap.get(21));
-        armourLevelOne = new Technology(new int[]{10, 10, 10}, "Armour " +
+        armourLevelOne = new Technology(new int[]{0, 0, 0}, "Armour " +
                 "Level 1", armourL1Parents,
                 "Unlocks the ability to build Level One Armour for Hero " +
                         "units.");
         techMap.put(22, armourLevelOne);
 
         armourL2Parents.add(techMap.get(22));
-        armourLevelTwo = new Technology(new int[]{20, 20, 20}, "Armour " +
+        armourLevelTwo = new Technology(new int[]{0, 0, 0}, "Armour " +
                 "Level 2",
                 armourL2Parents,
                 "Unlocks the ability to build Level Two Armour for Hero " +
@@ -191,7 +209,7 @@ public class TechnologyManager extends Manager{
         techMap.put(23, armourLevelTwo);
 
         armourL3Parents.add(techMap.get(23));
-        armourLevelThree = new Technology(new int[]{40, 40, 40}, "Armour " +
+        armourLevelThree = new Technology(new int[]{0, 0, 0}, "Armour " +
                 "Level 3",
                 armourL3Parents,
                 "Unlocks the ability to build Level Three Armour for Hero " +
@@ -202,7 +220,7 @@ public class TechnologyManager extends Manager{
         // Special item unlock tech setup
         //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
-        special = new Technology(new int[]{20, 20, 20}, "Special " +
+        special = new Technology(new int[]{0, 0, 0}, "Special " +
                 "Items Unlock",
                 specialParents,
                 "Unlocks the ability to build Special items for Hero units");
@@ -212,7 +230,7 @@ public class TechnologyManager extends Manager{
     public void setUpWeaponLevelTechs() {
         // Weapon item level upgrades setup
         weaponL1Parents.add(techMap.get(25));
-        weaponLevelOne = new Technology(new int[]{20, 20, 0}, "Weapon " +
+        weaponLevelOne = new Technology(new int[]{0, 0, 0}, "Weapon " +
                 "Level" +
                 " 1",
                 weaponL1Parents,
@@ -221,7 +239,7 @@ public class TechnologyManager extends Manager{
         techMap.put(26, weaponLevelOne);
 
         weaponL2Parents.add(techMap.get(26));
-        weaponLevelTwo = new Technology(new int[]{30, 30, 0}, "Weapon " +
+        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, "Weapon " +
                 "Level 2",
                 weaponL2Parents,
                 "Unlocks the ability to build Level Two Weapons for Hero " +
@@ -229,7 +247,7 @@ public class TechnologyManager extends Manager{
         techMap.put(27, weaponLevelTwo);
 
         weaponL3Parents.add(techMap.get(27));
-        weaponLevelThree = new Technology(new int[]{40, 40, 0}, "Weapon " +
+        weaponLevelThree = new Technology(new int[]{0, 0, 0}, "Weapon " +
                 "Level 3",
                 weaponL3Parents,
                 "Unlocks the ability to build Level Three Weapons for Hero " +
@@ -317,51 +335,90 @@ public class TechnologyManager extends Manager{
 
 
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Unlocks Level 1 Armour for Commander units.
      */
     public void unlockArmourLevelOne() {
-
+        armourL1Unlocked = true;
     }
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Unlocks Level 2 Armour for Commander units.
      */
     public void unlockArmourLevelTwo() {
-
+        armourL2Unlocked = true;
     }
     
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Unlocks Level 3 Armour for Commander units.
      */
     public void unlockArmourLevelThree() {
-
+        armourL3Unlocked = true;
     }
 
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Returns boolean representing whether armour of a particular level has been unlocked.
+     */
+    public boolean armourIsUnlocked(int level) {
+        switch(level) {
+            case 1:
+                return armourL1Unlocked;
+            case 2:
+                return armourL2Unlocked;
+            case 3:
+                return armourL3Unlocked;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Unlocks Level 1 Weapons for Commander units.
      */
     public void unlockWeaponLevelOne() {
-
+        weaponL1Unlocked = true;
     }
     
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Unlocks Level 2 Weapons for Commander units.
      */
     public void unlockWeaponLevelTwo() {
-
+        weaponL2Unlocked = true;
     }
     
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Unlocks Level 3 Weapons for Commander units.
      */
     public void unlockWeaponLevelThree() {
-
+        weaponL3Unlocked = true;
     }
 
     /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER
+     * Returns boolean representing whether armour of a particular level has been unlocked.
+     */
+    public boolean weaponIsUnlocked(int level) {
+        switch(level) {
+            case 1:
+                return weaponL1Unlocked;
+            case 2:
+                return weaponL2Unlocked;
+            case 3:
+                return weaponL3Unlocked;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Unlocks special items for Commander units.
      */
     public void unlockSpecial() {
+        specialUnlocked = true;
+    }
 
+    /**
+     * Returns boolean representing whether special items are unlocked.
+     */
+    public boolean specialIsUnlocked() {
+        return specialUnlocked;
     }
 
 
@@ -434,7 +491,7 @@ public class TechnologyManager extends Manager{
     public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
-        resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[3], teamid);
+        resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[2], teamid);
         techMan.addActiveTech(tech);
 
         if(techID == 1 || techID == 2 || techID == 3 || techID == 4){

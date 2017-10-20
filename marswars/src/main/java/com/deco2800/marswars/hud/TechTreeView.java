@@ -108,6 +108,10 @@ public class TechTreeView extends Dialog{
 
 
 		timeManager.pause();
+
+		//exit button
+		getButtonTable().row();
+		button("EXIT TECHNOLOGY TREE", 29);
 	}
 
 	// second constructor with additional message parameter
@@ -608,7 +612,7 @@ public class TechTreeView extends Dialog{
 
 			// needs to be fixed so it closes dialog box instead of crashing game
 			case 29:
-				this.hud.setTechCheck(0);
+				this.hud.setTechCheck(1);
 				techtree.hide();
 				this.timeManager.unPause();
 		}
