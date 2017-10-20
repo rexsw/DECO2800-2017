@@ -54,7 +54,8 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONSIZE = 50; //sets size of image buttons
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
-
+	private static final int ACTIONSHEADERPAD = 160; 
+	
 	private Stage stage;
 	private Skin skin;
 	private ImageButton quitButton;
@@ -73,6 +74,7 @@ public class HUDView extends ApplicationAdapter{
 	private Image statsbg; 
 	private Image headerbg;
 	private Image actionsBg;
+	private Image actionsBgMain;
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -164,6 +166,7 @@ public class HUDView extends ApplicationAdapter{
 		addBottomPanel();
 		generateTextures(19);
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
+		this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public void generateTextures(int number) {
@@ -309,15 +312,15 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("drawing unit stats");
 		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
 		statsTable.setWidth(200);
-		statsTable.pad(5);
-		statsTable.setDebug(true);
+		statsTable.pad(15);
+		statsTable.setDebug(enabled);
 		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
 		
 		Texture statsTex = textureManager.getTexture("stats");
 		statsbg = new Image(statsTex);
 		stage.addActor(statsbg);
-		statsbg.setPosition(0, stage.getHeight()-statsbg.getHeight());
+		statsbg.setPosition(BUTTONPAD, stage.getHeight()-statsbg.getHeight()-BUTTONPAD);
 		statsbg.toBack();
 		statsbg.setVisible(false);
 	}
@@ -346,7 +349,7 @@ public class HUDView extends ApplicationAdapter{
 		addMiniMapMenu();
 		addInventoryMenu();
 		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(minimap.getWidth(), 0);
+		HUDManip.setPosition(Gdx.graphics.getWidth()-HUDManip.getWidth(), actionsWindow.getHeight());
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
@@ -480,18 +483,23 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Create inventory");
 		actionsWindow = new Window("", skin, "clear");
 		actionsWindow.pad(BUTTONPAD);
+		actionsWindow.setDebug(enabled);
 
 		Texture actionsTex = textureManager.getTexture("actions_window_cropped");
 		Texture actionsTopTex = textureManager.getTexture("actions_window_top");
-		actionsBg = new Image(actionsTopTex);
-		stage.addActor(actionsBg);
-		actionsBg.setPosition(stage.getWidth()-actionsBg.getWidth()-BUTTONPAD, actionsWindow.getHeight() + actionsWindow.getY());
 		
-		TextureRegion menuRegion = new TextureRegion(actionsTex);
-		TextureRegionDrawable menuRegionDraw = new TextureRegionDrawable(menuRegion);
-		actionsWindow.setBackground(menuRegionDraw);
+		actionsBg = new Image(actionsTopTex);
+		actionsBgMain = new Image(actionsTex);
+		
+		stage.addActor(actionsBg);
+		stage.addActor(actionsBgMain);
+		actionsBg.setPosition(ACTIONSHEADERPAD, actionsWindow.getHeight() + actionsWindow.getY());
+		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
+		actionsBgMain.setVisible(false);
+				
+		actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
 
-		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
+		//actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
@@ -963,7 +971,7 @@ public class HUDView extends ApplicationAdapter{
         LOGGER.debug("Window resized, rescaling hud");
 		statsTable.setWidth(100);
 		statsTable.align(Align.left | Align.top);
-		statsTable.setPosition(BUTTONPAD*2, stage.getHeight()-BUTTONPAD*2);
+		statsTable.setPosition( BUTTONPAD, stage.getHeight()-BUTTONPAD);
 		statsbg.setPosition(BUTTONPAD, stage.getHeight()-statsbg.getHeight()-BUTTONPAD);
 		statsbg.toBack();
 		
@@ -986,16 +994,19 @@ public class HUDView extends ApplicationAdapter{
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2 - BUTTONPAD);
-		actionsWindow.setHeight(minimap.getHeight()/2);
-		actionsWindow.setPosition(minimap.getWidth()/2, 0);
-		actionsBg.setPosition(stage.getWidth()-actionsBg.getWidth() - BUTTONPAD, actionsWindow.getHeight() + actionsWindow.getY());
+		actionsWindow.setHeight(minimap.getHeight()/2 - BUTTONPAD);
+		actionsWindow.setPosition(minimap.getWidth()/2, BUTTONPAD);
+		actionsBg.setPosition(ACTIONSHEADERPAD, actionsWindow.getHeight() + BUTTONPAD);
+		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
+		actionsBgMain.setHeight(actionsWindow.getHeight());
+		actionsBgMain.setWidth(actionsWindow.getWidth());
 
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);
-		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight() + BUTTONPAD*2);
 		//Menu manipulator
-		HUDManip.setPosition(250, 40);
+		HUDManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
 
 		//resize stats
 		stats.resizeStats(width, height);
