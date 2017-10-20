@@ -27,7 +27,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int maxArmor; // maximum armor of the entity
 	private int armor; // current armor of the entity
 	private int armorDamage; // armorDamage of the entity
-	private int attackRange; // attackrange of the entity
+	private int attackRange; // attackRange of the entity
 	private int damage; // the damage of the entity
 	private int loyalty = 100; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
@@ -36,11 +36,11 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int attackSpeed; // attack speed of the entity
 	private int loadStatus; //whether the target is loaded
 	private int areaDamage = 0; // the area of damage 
-	private boolean gotHit; // if the unit get hitted, it will be true;
+	private boolean gotHit; // if the unit is hit, it will be true
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
 	private int loyaltyRegenInterval = 1000;
-	private int enemyHackerOwner; // the owner of the last enemy who deal loyalty damage to it	]
+	private int enemyHackerOwner; // the owner of the last enemy who deal loyalty damage to it
 	private boolean ownerChanged = false;
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	private int stance = 0; // the behavior of the unit responding to enemies
@@ -54,14 +54,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.modifyCollisionMap(true);
 	}
 	
-	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength, float xRenderLength, float yRenderLength, boolean centered) {
-		super(posX, posY, posZ, xLength, yLength, zLength, xRenderLength, yRenderLength, centered);
-	}
-	
-	@SuppressWarnings("deprecation")
 	public AttackableEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
-		// TODO Auto-generated constructor stub
+	      this.setAreaDamage(0);
+	      this.modifyCollisionMap(true);
 	}
 
 
@@ -203,7 +199,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			this.health = this.getMaxHealth();
 			return;
 		}
-		if((this instanceof Soldier && ((Soldier)this).getLoadStatus() == 1)) {
+		if(this instanceof Soldier && ((Soldier) this).getLoadStatus() == 1) {
 			return;
 		} else {
 			this.health = health;
@@ -288,7 +284,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	@Override
 	public void setLoyalty(int loyalty) {
 		if (loyalty < 0) {
-			if(this instanceof Carrier) ((Carrier)this).unloadPassenger();
+			if(this instanceof Carrier) {
+			    ((Carrier)this).unloadPassenger();
+			}
 			this.loyalty = this.getMaxLoyalty();
 			this.setOwner(this.getEnemyHackerOwner());
 			this.ownerChanged = true;

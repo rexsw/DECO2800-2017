@@ -5,8 +5,6 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.GatherAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.Selectable.EntityType;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
@@ -44,8 +42,8 @@ public class BaseEntityTest {
 		GameManager.get().setWorld(new BaseWorld(20, 20));
 		t = new BaseEntity(3, 2, 2, 3, 4, 5);
 		t3 = new BaseEntity(7, 8, 2, 1, 1, 1);
-		t1 = new BaseEntity(0, 1, 2, 3, 4, 5, 1, 1, true);
-		t2 = new BaseEntity(0f, 1f, 2f, 3f, 4f, 5f, 1, 1, false);
+		t1 = new BaseEntity(new Box3D(0, 1, 2, 3, 4, 5), 1, 1, true);
+		t2 = new BaseEntity(new Box3D(0f, 1f, 2f, 3f, 4f, 5f), 1, 1, false);
 	}
 
 	@Test

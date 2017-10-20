@@ -7,6 +7,8 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.util.Box3D;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,16 +25,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		Tickable, HasProgress, HasAction, Floodable {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
-	// list of available graphic for this building
+	// list of available graphic for this building	
 	private List<String> graphics;
 	// Size of this building (must be isometric, 2x2, 3x3 etc)
 	private float buildSize;
 	private String building;
 	//The number of solider in the building
-	public int numOfSolider = 0;
+	private int numOfSolider;
 	// Current action of this building
 	protected Optional<DecoAction> currentAction = Optional.empty();
-	//Current mousehandler manager
 	// bool for weather event tracking
 	boolean isFlooded = false;
 	private String colour;
@@ -47,79 +48,45 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param posZ
 	 */
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
-		super(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
-				0f, building.getBuildSize(), building.getBuildSize(), false);
+		super(new Box3D(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
+				0f), building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
 		colour = "";
+		this.numOfSolider = 0;
+		
 		switch(building) {
 		case TURRET:
 			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(1f);
-			this.setMaxHealth(1850);
-			this.setHealth(1850);
-			this.setDamage(10);
-			this.building = "Turret";
-			setFogRange(7);
+			setBuilding("Turret", graphics.get(graphics.size()-2), 1f, 1850, 7, 10);
+			addActions(building);
 			break;
 		case BASE:
 			graphics = Arrays.asList("base1"+colour, "base2"+colour, "base3"+colour, "base4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(.5f);
-			this.setMaxHealth(2500);
-			this.setHealth(2500);
-			this.setFix(true);
-			this.building = "Base";
-			setFogRange(3);
-			this.addNewAction(EntityID.ASTRONAUT);
-			this.addNewAction(EntityID.TANK);
-			this.addNewAction(EntityID.SOLDIER);
+	        setBuilding("Base", graphics.get(graphics.size()-2), 0.5f, 2500, 3);
+	        addActions(building);
+	        this.setFix(true);
 			break;
 		case BARRACKS:
 			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(1.5f);
-			this.setMaxHealth(2000);
-			this.setHealth(2000);
-			this.setFix(true);
-			this.building = "Barracks";
-			setFogRange(3);
-			this.addNewAction(EntityID.HEALER);
-			this.addNewAction(EntityID.HACKER);
-			this.addNewAction(EntityID.CARRIER);
+			setBuilding("Barracks", graphics.get(graphics.size()-2), 1.5f, 2000, 3);
+			addActions(building);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(.5f);
-			this.setMaxHealth(800);
-			this.setHealth(800);
-			this.building = "Bunker";
-			setFogRange(2);
-			this.addNewAction(EntityID.SNIPER);
-			this.addNewAction(EntityID.TANKDESTROYER);
+			setBuilding("Bunker", graphics.get(graphics.size()-2), 0.5f, 800, 2);
+			addActions(building);
 			break;
 		case HEROFACTORY:
-			graphics = Arrays.asList("herofactory1"+colour,
-					"herofactory2"+colour, "herofactory3"+colour,
+			graphics = Arrays.asList("herofactory1"+colour, "herofactory2"+colour, "herofactory3"+colour,
 					"herofactory4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(.5f);
-			this.setMaxHealth(3000);
-			this.setHealth(3000);
-			this.building = "Hero Factory";
-			setFogRange(3);
-			this.addNewAction(EntityID.COMMANDER);
+			setBuilding("Hero Factory", graphics.get(graphics.size()-2), 0.5f, 3000, 3);
+			addActions(building);
 			break;
 		case TECHBUILDING:
 			graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
-			this.setTexture(graphics.get(graphics.size()-2));
-			this.setBuildSpeed(.5f);
-			this.setMaxHealth(800);
-			this.setHealth(800);
-			this.building = "TechBuilding";
-			setFogRange(2);
+			setBuilding("TechBuilding", graphics.get(graphics.size()-2), 0.5f, 800, 2);
+			addActions(building);
 			break;
 		default:
 			break;
@@ -313,19 +280,69 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	}
 	
 	/**
-	 * Power up the turret when solider enter it
+	 * 
+	 * @return the number of soldiers in the building
 	 */
-	
-	public void powerUpTurret(){
-	}
-	
+	public int getNumOfSolider() {
+        return numOfSolider;
+    }
+
+
 	/**
-	 * Release all solider in the turret
+	 * Sets the number of soldiers stored in the building.
+	 * 
+	 * @param numOfSolider The number of soldiers to set to be in the building.
 	 */
-	
-	public void releaseTurret(){
-	}
-	
+    public void setNumOfSolider(int numOfSolider) {
+        this.numOfSolider = numOfSolider;
+    }
+    
+    private void setBuilding(String buildingType,  String texture, float buildSpeed, int maxHealth, int fogRange) {
+        this.setTexture(texture);
+        this.setBuildSpeed(buildSpeed);
+        this.setMaxHealth(maxHealth);
+        this.setHealth(maxHealth);
+        this.building = buildingType;
+        setFogRange(fogRange);
+    }
+    
+    private void setBuilding(String buildingType, String texture, float buildSpeed, int maxHealth, int fogRange, int damage) {
+        setBuilding(buildingType, texture, buildSpeed, maxHealth, fogRange);
+        this.setDamage(damage);
+    }
+    
+    /**
+     * Adds the appropriate actions to the building based off of its type.
+     * @param type the type of the building to add the actions.
+     */
+    private void addActions(BuildingType type) {
+        switch (type) {
+        case TURRET:  
+            break;
+        case BASE:
+            this.addNewAction(EntityID.ASTRONAUT);
+            this.addNewAction(EntityID.TANK);
+            this.addNewAction(EntityID.SOLDIER);
+            break;
+        case BARRACKS:
+            this.addNewAction(EntityID.HEALER);
+            this.addNewAction(EntityID.HACKER);
+            this.addNewAction(EntityID.CARRIER);
+            break;
+        case BUNKER:
+            this.addNewAction(EntityID.SNIPER);
+            this.addNewAction(EntityID.TANKDESTROYER);
+            break;
+        case HEROFACTORY:
+            this.addNewAction(EntityID.COMMANDER);
+            break;
+        case TECHBUILDING:
+            break;
+        default:
+            break;
+        }
+    }
+
 	/**
 	 * Returns buildings name
 	 * @return String name of building
