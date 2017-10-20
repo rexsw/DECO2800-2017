@@ -106,9 +106,9 @@ public class WeatherManager extends Manager implements Tickable {
      * is returned for processing by `applyContinuousDamage()`;
      * @return ArrayList</BaseEntity> containing units caught in flood waters
      */
-    private ArrayList<BaseEntity> checkAffectedEntities() {
-        ArrayList<BaseEntity> floodableEntities = world.getFloodableEntityList();
-        ArrayList<BaseEntity> damagedUnits = new ArrayList<>();
+    private List<BaseEntity> checkAffectedEntities() {
+        List<BaseEntity> floodableEntities = world.getFloodableEntityList();
+        List<BaseEntity> damagedUnits = new ArrayList<>();
         // Iterate over list of all floodable entities in the world
         for (BaseEntity entity: floodableEntities) {
             boolean buildingFlooded = false;
