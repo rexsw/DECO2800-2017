@@ -18,7 +18,7 @@ public class AiBuilder extends Manager {
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		LOGGER.info("start");
 		LOGGER.info("Crystal count: " + rm.getCrystal(team));
-		if (rm.getCrystal(team) > 50) {
+		if (rm.getRocks(team) > 50) {
 			switch(choice) {
 			case 0:
 				if(findloc(xy, BuildingType.BASE)) {

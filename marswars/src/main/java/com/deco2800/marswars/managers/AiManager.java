@@ -16,6 +16,7 @@ import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.GameBlackBoard.Field;
 import com.deco2800.marswars.util.WorldUtil;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -43,6 +44,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private long timeAtStateChange;
 	private TimeManager tm = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	private Random rand = new Random();
+	private GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 	private int tickNumber = 0;
 	private int unitTrackRange = 10;
 	private int unitGroupRange = 3;
@@ -94,7 +96,9 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			useSpacman(x);
 		} else if(unit instanceof Base) {
 			Base x = (Base)unit;
-			generateSpacman(x);
+			if(black.count(x.getOwner(), Field.COMBAT_UNITS) < 5) {
+				generateSpacman(x);
+			}
 		} else if(unit instanceof Barracks) {
 			Barracks x = (Barracks)unit;
 			generateSolder(x);
@@ -433,7 +437,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		if(x.showProgress()) {
 			return;
 		}
-		spacmanGather(x, ResourceType.CRYSTAL); //TODO
+		spacmanGather(x, ResourceType.ROCK); //TODO
 	}
 	
 	private ResourceType resourceChoice(Astronaut x) {

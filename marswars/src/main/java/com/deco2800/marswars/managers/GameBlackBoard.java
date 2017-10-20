@@ -238,10 +238,12 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return int the count of this field
 	 */
 	public int count(int teamid, Field field) {
-		if(teams.contains(teamid)) {
+		try {
 			return values.get(teamid).get(field).get(index);
 		}
-		return -1;
+		catch(NullPointerException e) {
+			return -1;
+		}
 	}
 	
 	public int highCount(Field field) {

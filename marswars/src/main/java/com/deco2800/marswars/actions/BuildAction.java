@@ -75,8 +75,8 @@ public class BuildAction implements DecoAction{
 		float[] parse = new float[]{projX, projY, fixPos};
 		this.temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
 		temp.setGreen();
-		createBuilding();
-		doAction();
+		validBuild = true;
+		finaliseBuild();
 	}
 	
 	/**
