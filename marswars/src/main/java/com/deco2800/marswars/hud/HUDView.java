@@ -90,7 +90,7 @@ public class HUDView extends ApplicationAdapter{
 	//Action buttons
 	private List<TextButton> buttonList;
 	private ActionList currentActions;
-
+	HelpWindow help; 
 
 	//Toggles; checks if the feature is visible on-screen or not
 	private boolean inventoryToggle;
@@ -253,14 +253,27 @@ public class HUDView extends ApplicationAdapter{
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
+		help = new HelpWindow(stage, skin);
+		stage.addActor(help);
+		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
+				stage.getHeight()/2 - help.getHeight());
+		help.setVisible(false);
+
 		//Creates the help button listener
 		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new HelpWindow(stage, skin);
+				if (helpCheck == 1){
+					help.setVisible(false);
+					helpCheck = 0;
+				} else {
+					help.setVisible(true);
+					helpCheck = 1; 
+				}
 			}
 		});
+		
 		helpButton.addListener(new TextTooltip("Help", skin));
 
 		//Creates the quit button listener
@@ -981,6 +994,11 @@ public class HUDView extends ApplicationAdapter{
 
 		//resize stats
 		stats.resizeStats(width, height);
+		
+		//resize help window
+		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
+				stage.getHeight()/2 - help.getHeight());
+
     }
 
 	/**When used in the code will set the pauseCheck integer to 1 when there

@@ -32,7 +32,7 @@ import com.esotericsoftware.kryonet.Connection;
  * Multiplayer: 
  * 		start server > select world > select character > select combat 
  */
-public class MenuScreen{
+public class MenuScreen extends Table{
 	/* Constructors*/
 	private Skin skin;
 	private LobbyButton lobby;
@@ -534,7 +534,7 @@ public class MenuScreen{
 		mainmenu.add(combatSelected).align(Align.left).padBottom(LABELPAD).row();
 
 		mainmenu.add(winInfo).align(Align.left).row();
-		mainmenu.add(winConditionChecks);
+		mainmenu.add(winConditionChecks).row();
 
 		mainmenu.add(errorTeamsSelection).align(Align.left).row();
 		
