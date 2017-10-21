@@ -51,6 +51,10 @@ public class ShopDialog extends Dialog {
 	private Skin skin;
 
 	private TechnologyManager technologyManager;
+	
+	private int weapLevel = 0;
+	private int armourLevel = 0;
+	private boolean specialUnlocked = false;
 
 	/**
 	 * Constructor of the shop dialog window class.
@@ -191,6 +195,30 @@ public class ShopDialog extends Dialog {
 //		unlockWeapons();
 //		unlockArmours();
 	}
+	
+	/**
+	 * Gets the weapon level unlocked in the store
+	 * @return current weapon level in the shop
+	 */
+	public int getWeapLvl() {
+		return this.weapLevel;
+	}
+	
+	/**
+	 * Gets the armour level unlocked in the store
+	 * @return current armour level in the shop
+	 */
+	public int getArmourLvl() {
+		return this.armourLevel;
+	}
+	
+	/**
+	 * Gets boolean indicating if specials are already unlocked
+	 * @return true if already unlocked, false otherwise.
+	 */
+	public boolean getSpecialUnlocked() {
+		return this.specialUnlocked;
+	}
 
 	/**
 	 * Public method to unlock the weapons. Replaces lower levelled items, if they exist, with current level items.
@@ -202,6 +230,7 @@ public class ShopDialog extends Dialog {
 		for (WeaponType wep : WeaponType.values()){
 			items.add(wep);
 		}
+		this.weapLevel = level;
 		updateShop(items, level);
 	}
 
@@ -215,6 +244,7 @@ public class ShopDialog extends Dialog {
 		for (ArmourType armour: ArmourType.values()){
 			items.add(armour);
 		}
+		this.armourLevel = level;
 		updateShop(items, level);
 	}
 
@@ -228,6 +258,7 @@ public class ShopDialog extends Dialog {
 		for (SpecialType spec: SpecialType.values()){
 			items.add(spec);
 		}
+		this.specialUnlocked = true;
 		updateShop(items, 0);
 	}
 	/**
@@ -237,8 +268,10 @@ public class ShopDialog extends Dialog {
 	 */
 	private void updateShop(List<ItemType> items, int level) {
 		for (ItemType item : items) {
+			String text = item.getTextureString();
+			text = item instanceof SpecialType ? text : text.substring(0, text.length() - 1) + Integer.toString(level);
 			Texture texture = textureManager
-					.getTexture(item.getTextureString());
+					.getTexture(text);
 			ImageButton button = generateItemButton(texture);
 
 			button.addListener(new ClickListener() {

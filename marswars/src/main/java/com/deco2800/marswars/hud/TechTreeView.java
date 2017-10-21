@@ -26,7 +26,6 @@ public class TechTreeView extends Dialog{
 	public TechTreeView(String title, Skin skin, HUDView hud) {
 		super(title, skin);
 		this.hud = hud;
-
 		this.getContentTable().debugCell();
 		this.getButtonTable().debugCell().center();
 		getButtonTable().defaults().height(60).width(200).padTop(10).padBottom(10);
@@ -227,7 +226,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(1));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -245,7 +243,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(2));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -263,7 +260,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(1));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -281,7 +277,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(4));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -299,7 +294,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(5));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -317,7 +311,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(6));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -335,7 +328,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(7));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -353,7 +345,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(8));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -371,7 +362,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(9));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -389,7 +379,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(10));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -407,7 +396,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(11));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -425,7 +413,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(12));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -443,7 +430,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(13));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -461,7 +447,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(14));
 					this.hud.setTechCheck(0);
 					techtree.hide();
-					this.hud.updateShop();
 					timeManager.unPause();
 				}
 				break;
@@ -479,7 +464,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(15));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -497,7 +481,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(16));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -515,7 +498,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(17));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -533,7 +515,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(18));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -551,7 +532,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(19));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -569,7 +549,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(20));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -587,7 +566,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(21));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -605,7 +583,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(22));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -623,7 +600,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(23));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -641,7 +617,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(24));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -659,7 +634,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(25));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -677,7 +651,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(26));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -695,7 +668,6 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(27));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
@@ -713,10 +685,10 @@ public class TechTreeView extends Dialog{
 					this.techMan.addActiveTech(this.techMan.getTech(28));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
-					this.hud.updateShop();
 					techtree.hide();
 				}
 				break;
 		}
+		this.hud.updateShop();
 	}
 }

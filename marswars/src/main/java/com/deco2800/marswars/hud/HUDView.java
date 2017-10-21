@@ -166,25 +166,25 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	public void updateShop() {
 		TechnologyManager technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-		if (technologyManager.armourIsUnlocked(1)) {
+		if (technologyManager.armourIsUnlocked(1) && (shopDialog.getArmourLvl() < 1)) {
 			shopDialog.unlockArmours(1);
 		}
-		if (technologyManager.armourIsUnlocked(2)) {
+		if (technologyManager.armourIsUnlocked(2) && (shopDialog.getArmourLvl() < 2)) {
 			shopDialog.unlockArmours(2);
 		}
-		if (technologyManager.armourIsUnlocked(3)) {
+		if (technologyManager.armourIsUnlocked(3) && (shopDialog.getArmourLvl() < 3)) {
 			shopDialog.unlockArmours(3);
 		}
-		if (technologyManager.weaponIsUnlocked(1)) {
+		if (technologyManager.weaponIsUnlocked(1) && (shopDialog.getWeapLvl() < 1)) {
 			shopDialog.unlockWeapons(1);
 		}
-		if (technologyManager.weaponIsUnlocked(2)) {
+		if (technologyManager.weaponIsUnlocked(2) && (shopDialog.getWeapLvl() < 2)) {
 			shopDialog.unlockWeapons(2);
 		}
-		if (technologyManager.weaponIsUnlocked(3)) {
+		if (technologyManager.weaponIsUnlocked(3) && (shopDialog.getWeapLvl() < 3)) {
 			shopDialog.unlockWeapons(3);
 		}
-		if (technologyManager.specialIsUnlocked()) {
+		if (technologyManager.specialIsUnlocked()  && !(shopDialog.getSpecialUnlocked())) {
 			shopDialog.unlockSpecials();
 		}
 	}
