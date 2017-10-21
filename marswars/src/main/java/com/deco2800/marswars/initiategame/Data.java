@@ -145,7 +145,7 @@ public class Data {
      *
      * @return the fog of war array
      */
-    Array2D<Integer> getFogOfWar() {
+    public Array2D<Integer> getFogOfWar() {
         return fogOfWar;
     }
 
@@ -163,7 +163,7 @@ public class Data {
      *
      * @return the black fog of war array
      */
-    Array2D<Integer> getBlackFogOfWar() {
+    public Array2D<Integer> getBlackFogOfWar() {
         return blackFogOfWar;
     }
 
@@ -217,7 +217,7 @@ public class Data {
      *
      * @return the list of ai stats
      */
-    List<ArrayList<Integer>> getaIStats() {
+    public List<ArrayList<Integer>> getaIStats() {
         return aIStats;
     }
 
@@ -235,7 +235,7 @@ public class Data {
      *
      * @return the list of player stats
      */
-    List<ArrayList<Integer>> getPlayerStats() {
+    public List<ArrayList<Integer>> getPlayerStats() {
         return playerStats;
     }
 
