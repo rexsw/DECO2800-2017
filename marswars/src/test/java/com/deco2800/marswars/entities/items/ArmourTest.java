@@ -46,10 +46,47 @@ public class ArmourTest {
                 "MovementSpeed: 0.05";
         Assert.assertEquals(test, armour.getDescription());
     }
+    
+    /**
+     * test the get method for the description of the helmet
+     */
+    @Test
+    public void getArmourTypeDescription () {
+        ArmourType armour = ArmourType.HELMET;
+        String test = "Name: Combat Helmet\n" +
+        		"Type: Armour\n" +
+                "Armour: 1000\n" +
+                "MaxHealth: 500\n" +
+                "Move Speed: 0.05";
+        Assert.assertEquals(test, armour.getDescription());
+    }
+    
+    /**
+     * test the get method for the cost of the helmet
+     */
+    @Test
+    public void getArmourTypeCost () {
+        ArmourType armour = ArmourType.HELMET;
+        int[] cost = armour.getCost();
+        Assert.assertTrue(cost[0] == 80 && cost[1] == 30 && cost[2] == 100);
+    }
+    
+    /**
+     * test the get method string method for get the description of the helmet
+     */
+    @Test
+    public void getArmourTypeCostDescription () {
+        ArmourType armour = ArmourType.HELMET;
+        String test = "Rock: 80\n" +
+        		"Crystal: 30\n" +
+                "Biomass: 100\n";
+        Assert.assertEquals(test, armour.getCostString());
+    }
 
     @Test
     public void getArmourTexture () {
         Armour armour = new Armour(ArmourType.HELMET, 1);
         Assert.assertEquals("helmet_1", armour.getTexture().toString());
     }
+
 }

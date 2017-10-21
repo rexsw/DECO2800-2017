@@ -12,7 +12,7 @@ import com.deco2800.marswars.managers.TimeManager;
  * Created by vinsonyeung on 23/9/17.
  */
 
-public class ShootAction implements DecoAction {
+public class ShootAction extends AbstractPauseAction {
 	private State state = State.COOLDOWN;
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
@@ -20,7 +20,6 @@ public class ShootAction implements DecoAction {
 	private int attackInterval = 1000;
 	private int attackSpeed;
 
-	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 
@@ -44,16 +43,19 @@ public class ShootAction implements DecoAction {
 					cooldown();
 					return;
 				case SHOOT:
-					if (attackInterval <= 0) {
-						shoot();
-					} else {
-						state = State.COOLDOWN;
-						break;
-					}
+					checkShoot();
 					break;
 				default:
 					break;
 			}
+		}
+	}
+	
+	private void checkShoot() {
+		if (attackInterval <= 0) {
+			shoot();
+		} else {
+			state = State.COOLDOWN; 
 		}
 	}
 	
@@ -99,26 +101,4 @@ public class ShootAction implements DecoAction {
 	public boolean completed() {
 		return completed;
 	}
-
-	@Override
-	public int actionProgress() {
-		return 0;
-	}
-
-	/**
-	 * Prevents the current action from progressing.
-	 */
-	@Override
-	public void pauseAction() {
-		actionPaused = true;
-	}
-
-	/**
-	 * Resumes the current action
-	 */
-	@Override
-	public void resumeAction() {
-		actionPaused = false;
-	}
-	
 }

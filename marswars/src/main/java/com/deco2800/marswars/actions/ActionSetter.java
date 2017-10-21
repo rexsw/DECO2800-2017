@@ -3,7 +3,7 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -225,7 +225,7 @@ public final class ActionSetter {
                 target.setAction(new GenerateAction(new Commander(target
                         .getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
-            case HEALER:
+            case MEDIC:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             case SOLDIER:

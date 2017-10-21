@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Han Wei
  */
-public class LoadAction implements DecoAction {
+public class LoadAction extends AbstractPauseAction {
 
 	//this speeds up the carrier unit
 	private static final float MOVING_SPEED=0.1f;
@@ -32,7 +32,6 @@ public class LoadAction implements DecoAction {
 	// Variables for pause
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private boolean actionPaused = false;
 
 
     /**
@@ -126,7 +125,7 @@ public class LoadAction implements DecoAction {
      */
     @Override
     public boolean completed() {
-	return completed;
+    	return completed;
     }
 
     /**
@@ -136,23 +135,6 @@ public class LoadAction implements DecoAction {
      */
     @Override
     public int actionProgress() {
-	return 100 - (ticksLoad * 2);
+    	return 100 - (ticksLoad * 2);
     }
-
-    /**
-     * Prevents the current action from progressing.
-     */
-    @Override
-    public void pauseAction() {
-	actionPaused = true;
-    }
-
-    /**
-     * Resumes the current action
-     */
-    @Override
-    public void resumeAction() {
-	actionPaused = false;
-    }
-
 }

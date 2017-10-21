@@ -65,6 +65,6 @@ public class LobbyUser {
   
     @Override
     public String toString() {
-        return "| " + username + " : " + String.valueOf(ready) + " |";
+        return "| " + username + " : " + ready + " |";
     }
 }

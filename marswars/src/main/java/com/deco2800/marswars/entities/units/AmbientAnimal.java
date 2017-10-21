@@ -30,7 +30,7 @@ public class AmbientAnimal extends AttackableEntity{
 	private int waitingTime;
 	private String name;
 	
-	public static enum AmbientState {
+	public enum AmbientState {
 		DEFAULT, TRAVEL, ATTACKBACK
 	}
 	

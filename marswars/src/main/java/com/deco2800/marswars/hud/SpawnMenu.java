@@ -35,6 +35,8 @@ public class SpawnMenu {
     private static Window entitiesPicker; //window that selects available entities
 
     private BaseEntity selectedEntity;	//for differentiating the entity selected
+    
+    private String entityTypesString = "Entity Types\n (Back)";
 
     /**
      * The constructor of the spawn menu.
@@ -141,7 +143,7 @@ public class SpawnMenu {
         Table table = new Table();
         table.align(Align.left);
         if(!inGame) {
-            TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+            TextButton entitiesButton = new TextButton(entityTypesString, skin);
             entitiesButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -189,7 +191,7 @@ public class SpawnMenu {
         entitiesPicker.clear();
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        TextButton entitiesButton = new TextButton(entityTypesString,skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -261,7 +263,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -302,7 +304,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -342,7 +344,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -388,7 +390,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
