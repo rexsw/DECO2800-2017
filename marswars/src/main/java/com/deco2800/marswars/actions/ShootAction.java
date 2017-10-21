@@ -1,9 +1,11 @@
 package com.deco2800.marswars.actions;
 
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.managers.TimeManager;
 
 
@@ -70,6 +72,10 @@ public class ShootAction extends AbstractPauseAction {
 	}
 	
 	private void setUpMissile() {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound("shooting.mp3");
+		sound.playSound(loadedSound);
+
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
 				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}

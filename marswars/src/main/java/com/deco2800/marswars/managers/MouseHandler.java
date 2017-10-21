@@ -143,7 +143,10 @@ public class MouseHandler extends Manager {
 
 				for (Clickable c : listeners) {
 					c.onRightClick(projX, projY);
+					((SoundManager) GameManager.get().getManager(SoundManager.class)).blockSound();
 				}
+				((SoundManager) GameManager.get().getManager(SoundManager.class)).unblockSound();
+
 				AbstractWorld world = GameManager.get().getWorld();
 				((CustomizedWorld)world).deSelectAll();
 			}

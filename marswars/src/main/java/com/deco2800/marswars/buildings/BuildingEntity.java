@@ -192,8 +192,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		} else {
 			this.makeSelected();
 			LOGGER.info("clicked on ai base");
-			Sound loadedSound = sound.loadSound("endturn.wav");
-			sound.playSound(loadedSound);
 			
 		}
 	}

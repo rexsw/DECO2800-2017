@@ -1,6 +1,7 @@
 package com.deco2800.marswars.mainmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -112,6 +113,9 @@ public class MenuScreen{
 	 * @param stage
 	 * @param mainMenu menu
 	 */
+
+	//click sound
+    Sound click = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"));
 	
 
 	//Managers
@@ -175,6 +179,8 @@ public class MenuScreen{
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+
+                click.play();
 			    setPlayerType(0);
 				selectWorldMode();
 			}
@@ -183,6 +189,7 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
                 setPlayerType(1);
 				selectServerMode();
 			}
@@ -191,6 +198,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
@@ -209,6 +217,7 @@ public class MenuScreen{
 		quickGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mainmenu.setVisible(false);
 				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
@@ -217,6 +226,7 @@ public class MenuScreen{
 		loadGameButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mainmenu.setVisible(false);
 				menu.loadGame(true);
 			}
@@ -332,6 +342,7 @@ public class MenuScreen{
 		moon.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
 				mapTypeSet = 1;
@@ -341,6 +352,7 @@ public class MenuScreen{
 		mars.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
 				mapTypeSet= 1;
@@ -350,6 +362,7 @@ public class MenuScreen{
 		desert.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
 				mapTypeSet = 1;
@@ -374,6 +387,7 @@ public class MenuScreen{
 		tiny.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.TINY;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("tiny map selected.");
@@ -384,6 +398,7 @@ public class MenuScreen{
 		smol.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.SMALL;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("smol map selected.");
@@ -393,6 +408,7 @@ public class MenuScreen{
 		medium.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("medium map selected.");
@@ -403,6 +419,7 @@ public class MenuScreen{
 		large.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("large map selected.");
@@ -413,6 +430,7 @@ public class MenuScreen{
 		veryLarge.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.VERY_LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("very large map selected.");
@@ -458,6 +476,7 @@ public class MenuScreen{
 		ai2.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -466,6 +485,7 @@ public class MenuScreen{
 		ai3.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 3;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -474,6 +494,7 @@ public class MenuScreen{
 		ai4.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 4;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -483,6 +504,7 @@ public class MenuScreen{
 		ai5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 5;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -502,6 +524,7 @@ public class MenuScreen{
 		AIEasy.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				combatSelected.setText("Easy level selected");
 			}
 		});
@@ -509,6 +532,7 @@ public class MenuScreen{
 		AINormal.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				combatSelected.setText("Normal level selected");
 			}
@@ -517,6 +541,7 @@ public class MenuScreen{
 		AIHard.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				combatSelected.setText("Hard level selected");
 			}
@@ -585,6 +610,7 @@ public class MenuScreen{
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
+                click.play();
 				/*If single player mode*/
 				if (MenuScreen.this.playerType == 0) {
 					switch(status) {
@@ -612,6 +638,7 @@ public class MenuScreen{
 				
 				/* If multiplayer mode */
 				else if(MenuScreen.this.playerType == 1) {
+                    click.play();
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -644,6 +671,7 @@ public class MenuScreen{
 		this.nextButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
+                click.play();
 				/*If single player mode*/
 				/* Single Player: select world > select character > select combat*/
 				if (MenuScreen.this.playerType == 0) {
@@ -692,6 +720,7 @@ public class MenuScreen{
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);
 		}});
 		
@@ -741,6 +770,7 @@ public class MenuScreen{
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
+                click.play();
 				if (checkTeams()) {
 					mainmenu.setVisible(false);
 					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS);
@@ -781,6 +811,7 @@ public class MenuScreen{
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                click.play();
                 netManager.getNetworkClient().stop();
                 unSetJoinedServer();
                 selectServerMode();
