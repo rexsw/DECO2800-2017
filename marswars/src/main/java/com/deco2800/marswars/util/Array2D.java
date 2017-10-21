@@ -1,5 +1,8 @@
 package com.deco2800.marswars.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,8 @@ public class Array2D<T> {
     private int length;
 
     private Object[] arr;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Array2D.class);
 
     //NEVER DELETE THIS, THIS IS USED BY GAME LOADING FUNCTION
     Array2D(){};
@@ -40,6 +45,7 @@ public class Array2D<T> {
     @SuppressWarnings("unchecked")
     public T get(int x, int y) {
         if (x >= width || y >= length || x < 0 || y < 0) {
+            LOGGER.error("X: " + x + " Y: " + y);
             throw new IndexOutOfBoundsException();
         }
         // This cast will always be safe as set() only takes values of type T
