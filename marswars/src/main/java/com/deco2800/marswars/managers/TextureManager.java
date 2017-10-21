@@ -305,7 +305,9 @@ public class TextureManager extends Manager {
             LOGGER.info(String.format("Loading texture %s for %s from %s", 
             		textureType, unitType, path));
             String retVal = textureType + teamColour + unitType;
-            saveTexture(retVal,path);
+            if (!textureMap.containsKey(retVal)) {
+                saveTexture(retVal,path);
+            }
             return retVal;
         } else {
         	return null;
