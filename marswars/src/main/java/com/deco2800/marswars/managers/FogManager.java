@@ -94,6 +94,7 @@ public class FogManager extends Manager {
 	 * @return the fog value: 0 or 1
 	 */
 	public static int getBlackFog(int x, int y) {
+
 		if (x >= GameManager.get().getWorld().getWidth()) {
 			x = GameManager.get().getWorld().getWidth() - 1;
 		}else if(x < 0){
