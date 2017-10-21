@@ -629,31 +629,33 @@ public class MapContainer {
         }
         switch (randomType){
             case MARS:
-                tilesToAdd.add(new Integer(10));
                 tilesToAdd.add(new Integer(11));
                 tilesToAdd.add(new Integer(12));
                 tilesToAdd.add(new Integer(13));
                 tilesToAdd.add(new Integer(14));
                 tilesToAdd.add(new Integer(15));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(40));
+                tilesToAdd.add(new Integer(41));
+                tilesToAdd.add(new Integer(42));
                 mapType = MapTypes.MARS;
                 break;
             case MOON:
-                tilesToAdd.add(new Integer(29));
-                tilesToAdd.add(new Integer(30));
                 tilesToAdd.add(new Integer(31));
                 tilesToAdd.add(new Integer(32));
-                tilesToAdd.add(new Integer(33));
-                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(44));
                 tilesToAdd.add(new Integer(35));
                 tilesToAdd.add(new Integer(36));
+                tilesToAdd.add(new Integer(37));
                 mapType = MapTypes.MOON;
                 break;
             case SUN:
                 //UPDATE THESE TILES
-                tilesToAdd.add(new Integer(11));
-                tilesToAdd.add(new Integer(16));
-                tilesToAdd.add(new Integer(12));
-                tilesToAdd.add(new Integer(18));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(46));
+                tilesToAdd.add(new Integer(38));
+                tilesToAdd.add(new Integer(39));
+                tilesToAdd.add(new Integer(34));
                 mapType = MapTypes.SUN;
                 break;
             default:
@@ -709,25 +711,28 @@ public class MapContainer {
                 tilesToAdd.add(new Integer(13));
                 tilesToAdd.add(new Integer(14));
                 tilesToAdd.add(new Integer(15));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(40));
+                tilesToAdd.add(new Integer(41));
+                tilesToAdd.add(new Integer(42));
                 mapType = MapTypes.MARS;
                 break;
             case MOON:
-                tilesToAdd.add(new Integer(29));
-                tilesToAdd.add(new Integer(30));
                 tilesToAdd.add(new Integer(31));
                 tilesToAdd.add(new Integer(32));
-                tilesToAdd.add(new Integer(33));
-                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(44));
                 tilesToAdd.add(new Integer(35));
                 tilesToAdd.add(new Integer(36));
+                tilesToAdd.add(new Integer(37));
                 mapType = MapTypes.MOON;
                 break;
             case SUN:
                 //UPDATE THESE TILES
-                tilesToAdd.add(new Integer(11));
-                tilesToAdd.add(new Integer(16));
-                tilesToAdd.add(new Integer(12));
-                tilesToAdd.add(new Integer(18));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(46));
+                tilesToAdd.add(new Integer(38));
+                tilesToAdd.add(new Integer(39));
+                tilesToAdd.add(new Integer(34));
                 mapType = MapTypes.SUN;
                 break;
             default:
