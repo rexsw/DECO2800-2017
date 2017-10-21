@@ -315,9 +315,10 @@ public class TextureManager extends Manager {
     /**
      * This method takes an EntityId and returns the default sprite in the players colour
      * @param unit the unit to get sprite of
+     * @param owner  the team id of the team to load the sprite for
      * @return
      */
-    public String loadUnitSprite(EntityID unit){//use soldier as the base class
+    public String loadUnitSprite(EntityID unit, int owner){//use soldier as the base class
         String textureType = "default";
         String path;
         //Determine the unit type
@@ -325,8 +326,9 @@ public class TextureManager extends Manager {
         unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
         //find the team colour of the owner:
        // String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
-        path = String.format("resources/UnitAssets/%s/Yellow/%s.png",
-                unitType,textureType);
+        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
+        path = String.format("resources/UnitAssets/%s/%s/%s.png", unitType, teamColour,textureType);
+
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
         saveTexture(retVal,path);

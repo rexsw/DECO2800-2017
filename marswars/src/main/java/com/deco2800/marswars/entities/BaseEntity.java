@@ -240,7 +240,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	@Override
 	public boolean addNewAction(Object newAction) {
 		if (this.validActions == null) {
-			this.validActions = new ActionList();
+			this.validActions = new ActionList(this);
 		}
 		for (Object d: this.validActions) {
 			if (d == newAction) {
