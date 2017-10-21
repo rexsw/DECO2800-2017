@@ -112,7 +112,7 @@ public class Carrier extends Soldier {
      */
     @Override
     public void onTick(int tick) {
-	loyalty_regeneration();
+	regeneration();
 	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)

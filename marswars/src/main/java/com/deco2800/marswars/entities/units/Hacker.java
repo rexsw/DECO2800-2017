@@ -11,7 +11,6 @@ public class Hacker extends Soldier {
 
 	public Hacker(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		this.setLoyaltyDamage(50);
 		this.name ="Hacker";
 		this.setAttributes();
 	}

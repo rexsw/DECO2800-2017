@@ -309,8 +309,10 @@ public class TechnologyManager extends Manager{
         unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
         unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
         unitAttributes.put("Ambient", new int[]{10,1000*1000,100,50,0,30});
-        unitAttributes.put("Hacker", new int[]{10, 750, 0, 400, 0, 8, 20});
+        unitAttributes.put("Hacker", new int[]{10, 750, 50, 400, 0, 8, 20});
         unitAttributes.put("Carrier", new int[] {10, 1000, 0, 500, 0, 0, 0});
+        unitAttributes.put("Spatman", new int[] {10, 300, 2, 200, 0, 8, 5}); // attackspeed damage
+        unitAttributes.put("Spacman", new int[] {10, 300, 0, 200, 0, 8, 5});
     }
     /*
      returns the Technology with the specified ID
