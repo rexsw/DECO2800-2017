@@ -191,8 +191,8 @@ public class TextureManager extends Manager {
         //----------- MainMenu Assets:
         this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
-        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon002.png");
-        this.saveTexture("desert_map", "resources/mapAssets/tileset/tile001.png");
+        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon007.png");
+        this.saveTexture("desert_map", "resources/mapAssets/tileset/moon010.png");
         this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
         this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
         this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
