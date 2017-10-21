@@ -741,6 +741,7 @@ public class HUDView extends ApplicationAdapter{
 			buttonWidth = (actionsWindow.getWidth()/4);
 		}
 		int index = 0;
+		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
 			buttonList.get(index).clearChildren();
@@ -755,7 +756,7 @@ public class HUDView extends ApplicationAdapter{
 				Texture rockTex = textureManager.getTexture("rock_HUD");
 				rock = new Image(rockTex);
 			} else if (e instanceof EntityID) {
-				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e)));
+				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
 				cost = new Label(String.valueOf(0), skin);
 			} else if (e instanceof ActionType) {

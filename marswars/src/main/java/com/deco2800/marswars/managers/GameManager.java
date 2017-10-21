@@ -207,6 +207,7 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
@@ -216,6 +217,7 @@ public class GameManager implements TickableManager {
 		this.menu.endGame();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		black.clear();
 	}
 
 	/**
