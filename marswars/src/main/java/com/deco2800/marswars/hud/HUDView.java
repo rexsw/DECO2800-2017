@@ -635,9 +635,9 @@ public class HUDView extends ApplicationAdapter{
 					MiniMapEntity entity = miniMap.getEntity(i, j);
 					if (miniMap.entitiesOnMiniMap[i][j] == null && entity.toBeDisplayed()) {
 						// skip if there is already an icon there or if the entity is concealed by the fog
-						miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(entity.getTexture()));
-						miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
 						try {
+                            miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(entity.getTexture()));
+                            miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
 							stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
 						} catch (NullPointerException e) {
 							// entity hasn't reached that position yet so do nothing
