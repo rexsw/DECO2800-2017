@@ -1,7 +1,7 @@
-package com.deco2800.marswars.InitiateGame;
+package com.deco2800.marswars.initiategame;
 
-import com.deco2800.marswars.entities.TerrainElements.Obstacle;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;

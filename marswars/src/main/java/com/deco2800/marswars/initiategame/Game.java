@@ -1,4 +1,4 @@
-package com.deco2800.marswars.InitiateGame;
+package com.deco2800.marswars.initiategame;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,7 +9,7 @@ import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
-import com.deco2800.marswars.entities.TerrainElements.Obstacle;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
