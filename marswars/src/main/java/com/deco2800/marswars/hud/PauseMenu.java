@@ -1,17 +1,17 @@
 package com.deco2800.marswars.hud;
 
-import org.apache.log4j.BasicConfigurator;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.MarsWars;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.initiateGame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by Toby Guinea on 16/09
@@ -30,46 +30,68 @@ import com.deco2800.marswars.managers.TimeManager;
 public class PauseMenu extends Dialog{
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	private Stage stage;
-	private Skin skin;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Hotkeys.class);
+	
 	private GameStats stats;
 	private HUDView hud;
-	private MainMenu menu;
-	
 	public PauseMenu(String title, Skin skin, Stage stage, GameStats stats, HUDView hud) {
 		super(title, skin);
-		this.skin = skin;
 		this.stats = stats;
 		this.hud = hud;
-		this.stage = stage;
+		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		
+		LOGGER.info("Instantiating the Pause menu");
+		this.align(Align.center);
+
+		LOGGER.info("Instantiating the Pause menu");
 		
 		{
 			hud.setPauseCheck(1);
-			text("Game Paused");  //$NON-NLS-1$
+			//this.text("Game Paused", labelStyle);
+			button("Resume Game", 0, buttonStyle);
+			this.getButtonTable().row();
+			button("Show Stats", 1, buttonStyle);
+			this.getButtonTable().row();
+			button("Settings", 2, buttonStyle);
+			this.getButtonTable().row();
+			button("Quit to Main Menu", 3, buttonStyle);
+			this.getButtonTable().row();
+			button("Save Game", 4, buttonStyle);
+			this.getButtonTable().row();
+			button("Exit Game", 5, buttonStyle);
 			
-			button("Resume", 0); //$NON-NLS-1$
-			button("Statistics", 1); //$NON-NLS-1$
-			button("Settings", 2); //$NON-NLS-1$
-			button("Quit to Main Menu", 3); //$NON-NLS-1$
-			button("Exit Game", 4); //$NON-NLS-1$
 			this.timeManager.pause();
-		}	
+			}	
 	}
-	
-		protected void result(final Object object) {
+		/**
+		 * interprets the button press chosen by the player
+		 */
+		protected void result(final Object object)  {
 			if (object == (Object) 1) {
+				LOGGER.info("Opening Stats");
 				this.stats.showStats();
 			} else if (object == (Object) 2) {
+				LOGGER.info("Opening Settings");
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
 			} else if (object == (Object) 3) {
+				LOGGER.info("Quitting to main menu");
 				this.hud.setPauseCheck(0);
 				GameManager.get().resetGame();
 			} else if (object == (Object) 4) {
+                try {
+                    Game.getSavedGame().writeGame();
+                }catch (FileNotFoundException e){
+                    //do nothing
+                }
+            } else if (object == (Object) 5) {
+				LOGGER.info("Quitting the application");
 				System.exit(0);
 			} else {
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
 			}
 		}
+
 }

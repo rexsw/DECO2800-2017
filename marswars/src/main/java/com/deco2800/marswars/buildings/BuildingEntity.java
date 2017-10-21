@@ -1,21 +1,18 @@
 package com.deco2800.marswars.buildings;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.entities.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.audio.Sound;
-import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by grumpygandalf on 27/8/17.
@@ -35,8 +32,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public int numOfSolider = 0;
 	// Current action of this building
 	protected Optional<DecoAction> currentAction = Optional.empty();
-	//owner of this building
-	private MouseHandler currentHandler;
 	//Current mousehandler manager
 	// bool for weather event tracking
 	boolean isFlooded = false;
@@ -57,10 +52,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 				0f, building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
-		this.addNewAction(EntityID.ASTRONAUT);
-		ColourManager cm = (ColourManager) GameManager.get()
-				.getManager(ColourManager.class);
-		//colour = cm.getColour(owner); TEXTURES NOT READY
 		colour = "";
 		switch(building) {
 		case TURRET:
@@ -82,6 +73,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setFix(true);
 			this.building = "Base";
 			fogRange = 3;
+			this.addNewAction(EntityID.ASTRONAUT);
 			break;
 		case BARRACKS:
 			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
@@ -92,6 +84,11 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			this.setFix(true);
 			this.building = "Barracks";
 			fogRange = 3;
+			this.addNewAction(EntityID.ASTRONAUT);
+			this.addNewAction(EntityID.SOLDIER);
+			this.addNewAction(EntityID.CARRIER);
+			//this.addNewAction(EntityID.HEALER);
+			//this.addNewAction(EntityID.TANK);
 			break;
 		case BUNKER:
 			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
@@ -103,7 +100,16 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			fogRange = 2;
 			break;
 		case HEROFACTORY:
-			//Update this
+			graphics = Arrays.asList("herofactory1"+colour,
+					"herofactory2"+colour, "herofactory3"+colour,
+					"herofactory4"+colour);
+			this.setTexture(graphics.get(graphics.size()-2));
+			this.setBuildSpeed(.5f);
+			this.setMaxHealth(3000);
+			this.setHealth(3000);
+			this.building = "Hero Factory";
+			fogRange = 3;
+			this.addNewAction(EntityID.COMMANDER);
 			break;
 		case TECHBUILDING:
 			graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
@@ -117,7 +123,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		default:
 			break;
 		}
-		//this.setCost(building.getCost());
 		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
 	}
@@ -178,7 +183,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void setAction(DecoAction action) {
-		currentAction = Optional.of(action);
+		if (! isFlooded) {
+			currentAction = Optional.of(action);
+		}
 	}
 
 	/**
@@ -194,7 +201,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param action
 	 */
 	public void giveAction(DecoAction action) {
-		if (!currentAction.isPresent()) {
+		if (!currentAction.isPresent() && ! isFlooded) {
 			currentAction = Optional.of(action);
 		}
 	}
@@ -327,5 +334,4 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		return building;
 	}
 
-	
 }

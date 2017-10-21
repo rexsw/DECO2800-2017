@@ -17,7 +17,7 @@ public class JoinLobbyAction extends ChatAction {
     public String getUsername() {
         return this.username;
     }
-
+    
     @Override
     public String toString() {
         return "*" + this.username + "* joined the lobby.";

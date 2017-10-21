@@ -1,7 +1,10 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.GatheredResource;
+import com.deco2800.marswars.entities.HasHealth;
+import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.units.Astronaut;
@@ -34,6 +37,7 @@ public class GatherAction implements DecoAction {
 	private State state = State.SETUP_MOVE;
 	private BaseEntity entity;
 	private boolean completed = false;
+	// Variables for pause
 	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
@@ -184,9 +188,6 @@ public class GatherAction implements DecoAction {
 			ResourceType resourceType = resource.getType();
 			int amount = resource.getAmount();
 			switch (resourceType) {
-				case WATER:
-					resourceManager.setWater(resourceManager.getWater(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
-					break;
 				case ROCK:
 					resourceManager.setRocks(resourceManager.getRocks(((Astronaut) entity).getOwner()) + amount, ((Astronaut) entity).getOwner());
 					break;

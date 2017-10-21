@@ -1,6 +1,7 @@
 package com.deco2800.marswars.entities;
 
 /**
+ * this is a blue tile indicating selected area
  * Created by Treenhan on 9/20/17.
  */
 public class MultiSelectionTile extends AbstractEntity{

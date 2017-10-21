@@ -1,11 +1,16 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.mainMenu.MainMenu;
+
 /**
  * BackgroundManager: A class for managing the progression of backgrounds
  * for the game world. Changes the background according to the current In-Game
  * Time.
  */
 public class BackgroundManager extends Manager {
+
+
+
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
 
@@ -17,6 +22,10 @@ public class BackgroundManager extends Manager {
      * in MarsWars
      */
     public String getBackground() {
+        if(MainMenu.isGameStarted() && !MainMenu.player.battleTheme.isPlaying()) {
+            MainMenu.player.updateNormalSoundTrack();
+        }
+
         String background;
         if (timeManager.getHours() >= 6 && timeManager.getHours() < 9) {
             background = "dawn_Bg";

@@ -4,6 +4,12 @@ import com.deco2800.marswars.actions.DecoAction;
 
 import java.util.Optional;
 
+/**
+ * Implemented by entities that have an action. Used in TimeManager to
+ * facilitate pausing of sets of entities.
+ *
+ * @author Isaac Doidge
+ */
 public interface HasAction {
 
     /**

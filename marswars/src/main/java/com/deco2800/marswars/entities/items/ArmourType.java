@@ -9,26 +9,29 @@ package com.deco2800.marswars.entities.items;
  * baseHealth = amount of health (max and current) it changes without any multipliers being applied 
  * baseSpeed = amount of movement speed it changes without any multipliers being applied 
  * baseCost = the resource costs for the item without any multipliers being applied where order of the resources in the
- * array is [rocks, crystals, water, biomass].
+ * array is [rocks, crystals, biomass].
  * texture = string of the saved texture for the image file that would be used for the item's icon
  * 
  * @author Mason
+ * @author Z
  *
  */
 public enum ArmourType implements ItemType {
 	// organic armour
-	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0, 0 }), 
+	ARMOUR1("A1", "defence_helmet", 15, 30, 10, new int[] { 20, 20, 0 },
+			new float[] { 1.0f, 1.2f, 1.4f, 1.6f }),
 	
 	//some OP movement speed boots (texture here is a placeholder)
-	BOOTS1("BootI", "defence_helmet", 9999, 9999, 9999, new int[] { 1000, 2000, 1000, 5000});
+	BOOTS1("BootI", "goggle", 9999, 9999, 9999, new int[] { 1000, 2000,
+			5000}, new float[] { 1.0f, 1.2f, 1.4f, 1.6f });
 	
 	private String name;
 	private int baseArmour;
 	private int[] baseCost;
 	private int baseHealth;
 	private float baseSpeed;
-	// private float ratio;
 	private String texture;
+	private float[] itemLevelMultipliers;
 
 	/**
 	 * Constructor method of armour type
@@ -47,31 +50,15 @@ public enum ArmourType implements ItemType {
 	 *            cost for building it
 	 */
 	ArmourType(String name, String texture, int baseArmour, int baseHealth,
-			float baseSpeed, int[] baseCost) {
+			float baseSpeed, int[] baseCost, float[] levelMultipliers) {
 		this.name = name;
 		this.baseArmour = baseArmour;
 		this.baseHealth = baseHealth;
 		this.baseSpeed = baseSpeed;
 		this.baseCost = baseCost;
-		// this.ratio = ratio;
 		this.texture = texture;
+		this.itemLevelMultipliers = levelMultipliers;
 	}
-
-	// /**
-	// * Helper method to calculate the rounded integer stat changes or upgrade
-	// costs based on the item's current level
-	// * and the item's ratio field. Result is calculated by multiplying the
-	// stat change or cost by the ratio
-	// * level - 1 times.
-	// *
-	// * @param change The stat change or the cost to be
-	// * @param lvl the current level of the item.
-	// * @return rounded integer of the stat change or cost after applying the
-	// multiplier
-	// */
-	// private int applyUpgrateRatio(int change, int lvl) {
-	// return (int) Math.round(change * Math.pow(ratio, (lvl - 1)));
-	// }
 
 	/**
 	 * Gets the item name
@@ -80,6 +67,16 @@ public enum ArmourType implements ItemType {
 	 */
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * Gets the item level stat multipliers
+	 *
+	 * @return float array that contains the stat multipliers for
+	 * corresponding item levels
+	 */
+	public float[] getItemLevelMultipliers() {
+		return this.itemLevelMultipliers;
 	}
 
 	/**
@@ -139,9 +136,9 @@ public enum ArmourType implements ItemType {
 	 */
 	@Override
 	public String getDescription() {
-		return "Name: " + this.getName() + "\nArmour: " + this.getArmourValue()
-				+ "\nMaxHealth: " + this.getArmourHealth() + "\nMove Speed: "
-				+ this.getMoveSpeed();
+		return "Name: " + this.getName() + "\nType: Armour\nArmour: " + 
+				this.getArmourValue() + "\nMaxHealth: " + this.getArmourHealth() 
+				+ "\nMove Speed: " + this.getMoveSpeed();
 	}
 
 	/**
@@ -158,10 +155,7 @@ public enum ArmourType implements ItemType {
 			result += "Crystal: " + this.baseCost[1] + "\n";
 		}
 		if (this.baseCost[2] > 0) {
-			result += "Water: " + this.baseCost[2] + "\n";
-		}
-		if (this.baseCost[3] > 0) {
-			result += "Biomass: " + this.baseCost[3] + "\n";
+			result += "Biomass: " + this.baseCost[2] + "\n";
 		}
 		return result;
 	}

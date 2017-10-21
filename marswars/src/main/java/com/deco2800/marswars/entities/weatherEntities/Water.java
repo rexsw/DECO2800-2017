@@ -1,56 +1,64 @@
 package com.deco2800.marswars.entities.weatherEntities;
 
-import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.WeatherManager;
-import com.deco2800.marswars.worlds.AbstractWorld;
-
-import java.util.Optional;
 
 /**
- * Use Resource Class instead
- * Created by timhadwen on 29/7/17.
+ * A Water object. Used for terrain elements and WeatherManager's flooding
+ * effect. Extends BaseEntity.
+ *
+ * Created by timhadwen on 29/7/17, re-purposed by Isaac Doidge.
+ *
+ * @author Isaac Doidge
  */
 public class Water extends BaseEntity implements HasHealth, Tickable {
 
     private WeatherManager weatherManager = (WeatherManager)
             GameManager.get().getManager(WeatherManager.class);
-    private Optional<DecoAction> currentAction = Optional.empty();
     private boolean surrounded = false;
+    private int health;
 
     /**
-     * Constructor for the Water
-     * @param parent
+     * Constructor for the Water Tiles
      * @param posX
      * @param posY
      * @param posZ
      */
-    public Water(AbstractWorld parent, float posX, float posY, float posZ) {
+    public Water(float posX, float posY, float posZ) {
         super(posX, posY, posZ, 1, 1, 1f);
-        this.setTexture("water_draft");
+        this.setTexture("water_final");
+        this.setHealth(10);
         this.canWalkOver = true;
     }
 
+    /**
+     * Sets the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     */
     public void setSurrounded() {
         this.surrounded = true;
     }
 
+    /**
+     * Returns the boolean that indicates whether or not this Water entity is
+     * surrounded on all sides by other Water entities.
+     * @return boolean indicating whether or not this Water is surrounded on all
+     *         sides.
+     */
     public boolean isSurrounded() {
         return this.surrounded;
     }
 
     /**
      * Gets the current health of an entity
-     * @return
+     * @return current health of this Water entity
      */
     @Override
     public int getHealth() {
-        return 0;
+        return this.health;
     }
 
     /**
@@ -59,7 +67,7 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
      */
     @Override
     public void setHealth(int health) {
-
+        this.health = health;
     }
 
     /**
@@ -68,6 +76,6 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
      */
     @Override
     public void onTick(int tick) {
-        //weatherManager.setWeatherEvent();
+        weatherManager.setWeatherEvent();
     }
 }

@@ -1,10 +1,10 @@
 package com.deco2800.marswars.managers;
 
+import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.badlogic.gdx.graphics.Color;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class ColourManager extends Manager {
 	 * 
 	 * @param teamid int the teamid to map to a colour
 	 */
-	public void setColour(int teamid) {
+	public void   setColour(int teamid) {
 		Colours teamcolour = colour.get(index);
 		index++;
 		index %= 5;

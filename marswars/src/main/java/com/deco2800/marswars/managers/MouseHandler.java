@@ -1,14 +1,13 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.Spacman;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.CustomizedWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

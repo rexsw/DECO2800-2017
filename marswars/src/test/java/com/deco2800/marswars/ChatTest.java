@@ -98,7 +98,11 @@ public class ChatTest {
 	ServerConnectionManager servManager;
 	LoggingConnectionManager aliceManager;
 	LoggingConnectionManager bobManager;
-
+	
+    // Correct line separator for executing machine 
+    private final static String LS = System.getProperty(
+            "line.separator");
+    
 	public Connection createConnection(Listener listener) {
 		MockConnection connection = new MockConnection();
 		connection.addListener(listener);
@@ -118,8 +122,8 @@ public class ChatTest {
 		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
 
 		servManager.received(alice, aliceJoin);
-
-		String log = "*Alice* joined the lobby.";
+		LobbyAction lobby = new LobbyAction(servManager.getUserList());
+		String log = aliceJoin.toString() + LS + lobby.toString();
 		// assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
 	}
@@ -133,20 +137,19 @@ public class ChatTest {
 		JoinLobbyAction bobJoin = new JoinLobbyAction("Bob");
 
 		servManager.received(alice, aliceJoin);
+		LobbyAction aliceLobby = new LobbyAction(servManager.getUserList());
 		servManager.received(bob, bobJoin);
-
+		
 		// assertEquals(
 		// 		servManager.getLog(),
 		// 		"*Alice* joined the lobby.\n*Bob* joined the lobby."
 		// );
-		assertEquals(
-				aliceManager.getLog(),
-				"*Alice* joined the lobby.\n*Bob* joined the lobby."
-		);
-		assertEquals(
-				bobManager.getLog(),
-				"*Bob* joined the lobby."
-		);
+		LobbyAction bobLobby = new LobbyAction(servManager.getUserList());
+		String aliceLog = aliceJoin.toString() + LS + aliceLobby.toString() + LS + bobJoin.toString() + LS + bobLobby.toString();
+		String bobLog = bobJoin.toString() + LS + bobLobby.toString() ;
+		
+		assertEquals(aliceManager.getLog(), aliceLog);
+		assertEquals(bobManager.getLog(), bobLog);
 	}
 
 	@Test
@@ -158,8 +161,8 @@ public class ChatTest {
 
 		servManager.received(alice, aliceJoin);
 		servManager.received(alice, aliceMessage);
-
-		String log = "*Alice* joined the lobby.\n" + aliceMessage.toString();
+		LobbyAction lobby = new LobbyAction(servManager.getUserList());
+		String log = aliceJoin.toString() + LS + lobby.toString() + LS + aliceMessage.toString();
 
 		// assertEquals(servManager.getLog(), log);
 		assertEquals(aliceManager.getLog(), log);
@@ -174,27 +177,26 @@ public class ChatTest {
 		JoinLobbyAction bobJoin = new JoinLobbyAction("Bob");
 
 		servManager.received(alice, aliceJoin);
+		LobbyAction lobby1 = new LobbyAction(servManager.getUserList());
 		servManager.received(bob, bobJoin);
+	    LobbyAction lobby2= new LobbyAction(servManager.getUserList());
 		servManager.disconnected(alice);
-
+	    LobbyAction lobby3 = new LobbyAction(servManager.getUserList());
+	    LeaveLobbyAction dc = new LeaveLobbyAction("Alice");
+		
 		// assertEquals(
 		// 		servManager.getLog(),
 		// 		"*Alice* joined the lobby.\n" +
 		// 				"*Bob* joined the lobby.\n" +
 		// 				"*Alice* left the lobby."
 		// 		);
-
-		assertEquals(
-				aliceManager.getLog(),
-				"*Alice* joined the lobby.\n" +
-						"*Bob* joined the lobby."
-		);
-
-		assertEquals(
-				bobManager.getLog(),
-						"*Bob* joined the lobby.\n" +
-						"*Alice* left the lobby."
-		);
+		
+		String aliceLog = aliceJoin.toString() + LS + lobby1.toString() + LS + bobJoin.toString() + LS +
+		        lobby2.toString();
+		String bobLog = bobJoin.toString() + LS + lobby2.toString() + LS + dc.toString() + LS + lobby3.toString(); 
+		
+		assertEquals(aliceManager.getLog(), aliceLog);
+		assertEquals(bobManager.getLog(), bobLog);
 	}
 
 	@Test
@@ -204,18 +206,15 @@ public class ChatTest {
 		JoinLobbyAction aliceJoin = new JoinLobbyAction("Alice");
 
 		servManager.received(alice, aliceJoin);
+		LobbyAction lobby = new LobbyAction(servManager.getUserList());
 		aliceManager.disconnected(null);
-
 		// assertEquals(
 		// 		servManager.getLog(),
 		// 		"*Alice* joined the lobby."
 		// );
-
-		assertEquals(
-				aliceManager.getLog(),
-				"*Alice* joined the lobby.\n" +
-						"Server shutdown"
-		);
+		ServerShutdownAction shutdown = new ServerShutdownAction();
+		String aliceLog = aliceJoin.toString() + LS + lobby.toString() + LS + shutdown.toString();
+		assertEquals(aliceManager.getLog(), aliceLog);
 	}
 
 	@Test
@@ -231,11 +230,9 @@ public class ChatTest {
 		// 		servManager.getLog(),
 		// 		"*Alice* joined the lobby."
 		// );
-
-		assertEquals(
-				aliceManager.getLog(),
-				"*Alice* joined the lobby."
-		);
+		LobbyAction lobby = new LobbyAction(servManager.getUserList());
+		String aliceLog = aliceJoin.toString() + LS + lobby.toString();
+		assertEquals(aliceManager.getLog(), aliceLog);
 	}
 
 	@Test
@@ -247,10 +244,10 @@ public class ChatTest {
 
 		servManager.received(alice, aliceMessage);
 		servManager.received(alice, aliceJoin);
-
-		String log = "*Alice* joined the lobby.";
+		LobbyAction lobby = new LobbyAction(servManager.getUserList());
+		String aliceLog = aliceJoin.toString() + LS + lobby.toString();
 
 		// assertEquals(servManager.getLog(), log);
-		assertEquals(aliceManager.getLog(), log);
+		assertEquals(aliceManager.getLog(), aliceLog);
 	}
 }

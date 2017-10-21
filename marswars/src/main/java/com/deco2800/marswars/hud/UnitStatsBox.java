@@ -1,20 +1,14 @@
 package com.deco2800.marswars.hud;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Armour;
@@ -23,7 +17,20 @@ import com.deco2800.marswars.entities.items.Weapon;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.TextureManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
+/**
+ * This class defines the layout of unit stats display. It will consists of four tables
+ * 1. unit image and name 
+ * 2. unit health and armour bar
+ * 3. unit attack, attack range, attack speed and move speed
+ * 4. inventory display (if the unit is hero)
+ * @author Mason
+ *
+ */
 public class UnitStatsBox extends Table{
 	private TextureManager tm;
 	private Image unitImage;
@@ -85,42 +92,50 @@ public class UnitStatsBox extends Table{
 		Image rangeStats = new Image(textureManager.getTexture("range_stats"));
 		Image moveSpeedStats = new Image(textureManager.getTexture("move_speed_stats"));
 		
+		Table rightTable = new Table(); //table to store stats + bars formatted to they can be next to each other.
+		
 		barTable.add(healthStats).height(30).width(30);
-		barTable.add(healthBar).height(30).width(150);
+		barTable.add(healthBar).height(30).width(100);
 		barTable.add(healthLabel).right().height(30).expandX();
 		barTable.row();
 		barTable.add(armourStats).height(30).width(30);
-		barTable.add(armourBar).height(30).width(150);
+		barTable.add(armourBar).height(30).width(100);
 		barTable.add(armourLabel).right().height(30).expandX();
 		
-		statsTable.add(barTable);
-		statsTable.row();
+		statsTable.add(barTable).padRight(10);
 		
+		
+		// table for other stats
 		Table textTable = new Table();
 		this.atkDmgLabel = new Label("Attack", skin);
 		this.atkRngLabel = new Label("Attack Range", skin);
 		this.atkSpeedLabel = new Label("Attack Speed", skin);
 		this.moveSpeedLabel = new Label("Move Speed", skin);
-		textTable.add(attackStats).height(30).width(30);
-		textTable.add(this.atkDmgLabel).expandX().height(30);
-		textTable.add(attackSpeedStats).height(30).width(30);
-		textTable.add(this.atkSpeedLabel).expandX().height(30);
+		textTable.add(attackStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkDmgLabel).expandX().height(30).padBottom(10);
+		textTable.add(attackSpeedStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkSpeedLabel).expandX().height(30).padBottom(10);
 		textTable.row();
-		textTable.add(rangeStats).height(30).width(30);
-		textTable.add(this.atkRngLabel);
-		textTable.add(moveSpeedStats).height(30).width(30);
-		textTable.add(this.moveSpeedLabel);
+		textTable.add(rangeStats).height(30).width(30).padBottom(10);
+		textTable.add(this.atkRngLabel).padBottom(10);
+		textTable.add(moveSpeedStats).height(30).width(30).padBottom(10);
+		textTable.add(this.moveSpeedLabel).padBottom(10);
+		statsTable.add(textTable).width(150).padBottom(10);
+		statsTable.row();
 		
-		statsTable.add(textTable).width(250);
-		
-		this.add(statsTable);
-		this.row();
 		
 		// add in the hero inventory display
 		heroInventory = new Table();
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
-		this.add(heroInventory).colspan(2);
+		
+		rightTable.add(statsTable);
+		rightTable.row();
+		rightTable.add(heroInventory);
+		
+		this.add(rightTable);
+		this.row();		
+		this.setVisible(false);
     }
     
     /**
@@ -138,10 +153,15 @@ public class UnitStatsBox extends Table{
 	/**
 	 * This method will gets called when user select a hero character, this method then 
 	 * display this hero's items on the HUD
+	 * @param hero defined which hero's inventory shall we display
 	 */
 	public void updateHeroInventory(Commander hero) {	
-		ImageButton weaponBtn;
-		ImageButton armourBtn;
+		if(!hero.getStatsChange()) { // if there is no status change, do nothing
+			return;
+		}
+		hero.setStatsChange(false);
+		ImageTextButton weaponBtn;
+		ImageTextButton armourBtn;
 		heroInventory.clear();
 		
 		pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
@@ -152,63 +172,64 @@ public class UnitStatsBox extends Table{
 		Weapon weapon = inventory.getWeapon();
 		Armour armour = inventory.getArmour();
 		List<Special> specials = inventory.getSpecials();
-		//heroInventory.debugAll();
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
-			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
 		} else {
 			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
+		weaponBtn.setText("");
 		heroInventory.add(weaponBtn).width(35).height(35).pad(3);
 		
 		if(armour != null) {
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
-//			weaponBtn.addListener(new ClickListener(Buttons.RIGHT)
-//			{
-//			    @Override
-//			    public void clicked(InputEvent event, float x, float y)
-//			    {
-//			        
-//			    }
-//			});
 		} else {
 			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
 		}
+		armourBtn.setText("");
 		heroInventory.add(armourBtn).width(35).height(35).pad(3);
 		
 		int size = specials.size();
 		for(Special s : specials) {
-			ImageButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture(s.getTexture()));
+			// handler button click here
+			specialBtn.addListener( new ClickListener() {              
+			    @Override
+			    public void clicked(InputEvent event, float x, float y) {
+			       hero.getInventory().useItem(s);
+			    };
+			});
+			specialBtn.setText(String.valueOf(s.getUsage()));
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
-			// handler here
 		}
 		for(int i = 0; i < 4-size; i++) {
-			ImageButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			specialBtn.setText("");
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
-		
-		//heroInventory.setVisible(false);
 		
 	}
 	
+	/**
+	 * This method hides the inventory display. 
+	 * Should gets called when the selected unit is not hero
+	 */
 	public void hideInventory() {
 		this.heroInventory.setVisible(false);
 	}
 	
-
+	/**
+	 * This method display the inventory
+	 * Should gets called when the selected unit is hero
+	 */
 	public void showInventory() {
 		this.heroInventory.setVisible(true);
 	}
 
+	/**
+	 * This method initiate the health bar and armour bar
+	 * they will have a grey background and green foreground for health and blue for armour
+	 */
 	private void initiateProgressBar(){
 		ProgressBar.ProgressBarStyle armourBarStyle;
 		healthBarStyle = new ProgressBar.ProgressBarStyle();
@@ -294,7 +315,7 @@ public class UnitStatsBox extends Table{
 		this.atkDmgLabel.setText("" + target.getDamageDeal());
 		this.atkRngLabel.setText("" + target.getAttackRange());
 		this.atkSpeedLabel.setText(""+ target.getAttackSpeed());
-		this.moveSpeedLabel.setText("" + target.getSpeed());
+		this.moveSpeedLabel.setText(String.format("%.2f", target.getSpeed()));
 	}
 
     /**
@@ -302,9 +323,12 @@ public class UnitStatsBox extends Table{
 	 * @param image  Texture that is the desired item icon for the button
 	 * @return ImageButton object that has the provided image for the item icon
 	 */
-	private ImageButton generateItemButton(Texture image) {
+	private ImageTextButton generateItemButton(Texture image) {
 		TextureRegion imgRegion = new TextureRegion(image);
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-		return new ImageButton(imgDraw);
+		BitmapFont font = new BitmapFont();
+		font.setColor(Color.BLACK);
+		ImageTextButtonStyle style = new ImageTextButtonStyle(imgDraw, imgDraw, imgDraw, font); 
+		return new ImageTextButton("", style);
 	}
 }

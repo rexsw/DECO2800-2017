@@ -1,5 +1,6 @@
 package com.deco2800.marswars.worlds;
 
+import com.deco2800.marswars.initiateGame.GameSave;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
@@ -7,7 +8,7 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 /**
  * Creates a new World that all elements on it can be procedural or customized generated.
  */
-public final class CustomizedWorld extends BaseWorld {
+public class CustomizedWorld extends BaseWorld {
 
     // the map type
     private MapTypes mapType;
@@ -32,8 +33,15 @@ public final class CustomizedWorld extends BaseWorld {
      *
      * @param mapContainer the container to be read.
      */
-    public void loadMapContainer(MapContainer mapContainer){
+    public void loadMapContainer(MapContainer mapContainer) {
         mapContainer.generateEntities(true);
+    }
+
+    /**
+     * this function is used with game loading for loading all the resources
+     */
+    public void loadAlreadyMapContainer(MapContainer mapContainer,GameSave loadedGame) {
+        mapContainer.loadResourceEntities(loadedGame);
     }
 
     /**
