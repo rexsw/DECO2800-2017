@@ -36,7 +36,7 @@ public class SpecialTest {
 	 */
 	@Before
 	public void prepare() {
-		bomb = new Special(SpecialType.MISSILE);
+		bomb = new Special(SpecialType.NUKE);
 		com = new Commander(0, 0, 0, 1);
 		baseHP = com.getHealth();
 	}
@@ -78,7 +78,7 @@ public class SpecialTest {
      */
     @Test
     public void getDescription () {
-        String testString = "Air Strike\n" +
+        String testString = "Nuke\n" +
                 "Damage: 700\n";
         Assert.assertEquals(testString, bomb.getDescription());
     }
@@ -104,7 +104,7 @@ public class SpecialTest {
     @Test
     public void specialTypeTest() {
     	// check radius and duration
-    	SpecialType special = SpecialType.MISSILE;
+    	SpecialType special = SpecialType.NUKE;
     	Assert.assertEquals(0, special.getRadius());
     	Assert.assertEquals(0, special.getDuration());
     	
@@ -113,7 +113,7 @@ public class SpecialTest {
     	Assert.assertTrue(cost[0]==200 && cost[1] == 100 && cost[2] == 200);
     	
     	//check texture
-    	Assert.assertEquals(special.getTextureString(), "air_strike");
+    	Assert.assertEquals(special.getTextureString(), "nuke");
     	
     	// check cost string
     	String test = "Rock: 200\n" +
@@ -122,7 +122,7 @@ public class SpecialTest {
         Assert.assertEquals(test, special.getCostString());
         
         //check description
-        test = "Name: Air Strike\n" +
+        test = "Name: Nuke\n" +
         		"Type: Special\n" +
                 "Damage: 700\n" +
                 "Target: ENEMY TEAM";
