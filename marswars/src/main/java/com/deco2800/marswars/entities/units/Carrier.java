@@ -19,7 +19,7 @@ import java.util.Random;
  * A carrier unit that is able to load up to 3 other units, extends Soldier
  * class
  * 
- * @author Han Wei
+ * @author Han Wei @hwkhoo
  */
 
 public class Carrier extends Soldier {

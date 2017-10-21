@@ -16,7 +16,7 @@ import org.junit.Test;
  * Code coverage and Junit tests for the Carrier class
  * 
  * @author jdtran21
- * @co-author treenhan
+ * @co-author treenhan hwkhoo
  *
  */
 public class CarrierTest {
