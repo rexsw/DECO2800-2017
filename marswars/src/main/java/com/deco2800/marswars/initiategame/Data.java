@@ -145,7 +145,7 @@ public class Data {
      *
      * @return the fog of war array
      */
-    Array2D<Integer> getFogOfWar() {
+    public Array2D<Integer> getFogOfWar() {
         return fogOfWar;
     }
 
@@ -163,7 +163,7 @@ public class Data {
      *
      * @return the black fog of war array
      */
-    Array2D<Integer> getBlackFogOfWar() {
+    public Array2D<Integer> getBlackFogOfWar() {
         return blackFogOfWar;
     }
 
@@ -190,7 +190,7 @@ public class Data {
      *
      * @param aITeams the number of ai teams
      */
-    void setaITeams(int aITeams) {
+    public void setaITeams(int aITeams) {
         this.aITeams = aITeams;
     }
 
@@ -208,7 +208,7 @@ public class Data {
      *
      * @param playerTeams the new number of player teams
      */
-    void setPlayerTeams(int playerTeams) {
+    public void setPlayerTeams(int playerTeams) {
         this.playerTeams = playerTeams;
     }
 
@@ -217,7 +217,7 @@ public class Data {
      *
      * @return the list of ai stats
      */
-    List<ArrayList<Integer>> getaIStats() {
+    public List<ArrayList<Integer>> getaIStats() {
         return aIStats;
     }
 
@@ -226,7 +226,7 @@ public class Data {
      *
      * @param aIStats the new list of ai stats
      */
-    void setaIStats(List<ArrayList<Integer>> aIStats) {
+    public void setaIStats(List<ArrayList<Integer>> aIStats) {
         this.aIStats = aIStats;
     }
 
@@ -235,7 +235,7 @@ public class Data {
      *
      * @return the list of player stats
      */
-    List<ArrayList<Integer>> getPlayerStats() {
+    public List<ArrayList<Integer>> getPlayerStats() {
         return playerStats;
     }
 
@@ -244,7 +244,7 @@ public class Data {
      *
      * @param playerStats the new list of player stats
      */
-    void setPlayerStats(List<ArrayList<Integer>> playerStats) {
+    public void setPlayerStats(List<ArrayList<Integer>> playerStats) {
         this.playerStats = playerStats;
     }
 }
