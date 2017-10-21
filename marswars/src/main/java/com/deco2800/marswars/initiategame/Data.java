@@ -190,7 +190,7 @@ public class Data {
      *
      * @param aITeams the number of ai teams
      */
-    void setaITeams(int aITeams) {
+    public void setaITeams(int aITeams) {
         this.aITeams = aITeams;
     }
 
@@ -208,7 +208,7 @@ public class Data {
      *
      * @param playerTeams the new number of player teams
      */
-    void setPlayerTeams(int playerTeams) {
+    public void setPlayerTeams(int playerTeams) {
         this.playerTeams = playerTeams;
     }
 
@@ -226,7 +226,7 @@ public class Data {
      *
      * @param aIStats the new list of ai stats
      */
-    void setaIStats(List<ArrayList<Integer>> aIStats) {
+    public void setaIStats(List<ArrayList<Integer>> aIStats) {
         this.aIStats = aIStats;
     }
 
@@ -244,7 +244,7 @@ public class Data {
      *
      * @param playerStats the new list of player stats
      */
-    void setPlayerStats(List<ArrayList<Integer>> playerStats) {
+    public void setPlayerStats(List<ArrayList<Integer>> playerStats) {
         this.playerStats = playerStats;
     }
 }
