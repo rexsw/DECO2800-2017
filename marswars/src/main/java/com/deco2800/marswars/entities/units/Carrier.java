@@ -40,8 +40,8 @@ public class Carrier extends Soldier {
 
 	public Carrier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		setXRenderLength(1.3f);
-		setYRenderLength(1.3f);
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		this.name = "Carrier";
 		this.setAttributes();
 		this.addNewAction(ActionType.LOAD);
