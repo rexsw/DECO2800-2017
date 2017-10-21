@@ -75,6 +75,18 @@ public class ShopDialog extends Dialog {
 		this.skin = skin;
 		this.technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 
+		
+
+		status = new Label("Welcome to the shop!", skin);
+
+		scrollTable = new Table();
+		scrollTable.top();
+		scrollTable.debugCell();
+		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
+		scrollTable.add(new Label("Description", skin)).width(iconSize)
+				.expandX().top().left();
+		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
+		scrollTable.row();
 		if (technologyManager.armourIsUnlocked(1)) {
 			unlockArmours(1);
 		}
@@ -96,17 +108,6 @@ public class ShopDialog extends Dialog {
 		if (technologyManager.specialIsUnlocked()) {
 			unlockSpecials();
 		}
-
-		status = new Label("Welcome to the shop!", skin);
-
-		scrollTable = new Table();
-		scrollTable.top();
-		scrollTable.debugCell();
-		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
-		scrollTable.add(new Label("Description", skin)).width(iconSize)
-				.expandX().top().left();
-		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
-		scrollTable.row();
 		// // generating all the item icons, buttons descriptions etc.
 		// for (ItemType item : itemList) {
 		// Texture texture = textureManager
@@ -289,7 +290,7 @@ public class ShopDialog extends Dialog {
 					}
 				}
 			});
-
+			System.out.println(scrollTable);
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
 			scrollTable.add(new Label(item.getDescription(), skin))
 					.width(iconSize).top().left();
