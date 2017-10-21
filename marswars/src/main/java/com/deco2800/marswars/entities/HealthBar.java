@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.deco2800.marswars.entities.units.Soldier;
 /**
  * Created by Hayden Bird on 5/10/2017.
  */
@@ -21,10 +22,15 @@ public class HealthBar extends BaseEntity {
     }
 
     public void translateToParent() {
-        super.setPosition(parentEntity.getPosX()+parentEntity.getXRenderLength()*3, parentEntity.getPosY()-parentEntity.getYRenderLength()*3, parentEntity.getPosZ());
+        super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3);
     }
 
     public void update() {
+	if (parentEntity.getEntityType() == EntityType.UNIT) {
+	    if (((Soldier) parentEntity).getLoadStatus() == 1) {
+		setVisible(false);
+	    }
+	}
         if (!visible) {
             super.setPosition(100000, 0, -4);
             return;
