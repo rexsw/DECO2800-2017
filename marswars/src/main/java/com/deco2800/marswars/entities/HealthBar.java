@@ -21,7 +21,7 @@ public class HealthBar extends BaseEntity {
     }
 
     public void translateToParent() {
-        super.setPosition(parentEntity.getPosX()+parentEntity.getXRenderLength()*3, parentEntity.getPosY()-parentEntity.getYRenderLength()*3, parentEntity.getPosZ());
+        super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3);
     }
 
     public void update() {
