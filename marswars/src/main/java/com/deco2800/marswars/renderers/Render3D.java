@@ -74,15 +74,19 @@ public class Render3D implements Renderer {
 
         List<AbstractEntity> multiSelection = FogWorld.getMultiSelectionTile();
 
+        FogManager fogManager = (FogManager) GameManager.get().getManager(FogManager.class);
+
 
         /* Sort entities into walkables and entities */
         for (AbstractEntity r : renderables) {
-            if (r.canWalOver()) {
-                walkables.add(r);
-            } else if (r instanceof HealthBar) {
-                hpBars.add(r);
-            } else {
-                entities.add(r);
+            if (fogManager.getBlackFog((int)r.getPosX(), (int)r.getPosY()) != 0) {
+                if (r.canWalOver()) {
+                    walkables.add(r);
+                } else if (r instanceof HealthBar) {
+                    hpBars.add(r);
+                } else {
+                    entities.add(r);
+                }
             }
         }
 

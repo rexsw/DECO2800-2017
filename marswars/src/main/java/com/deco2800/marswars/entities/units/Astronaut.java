@@ -36,6 +36,7 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.setFogRange(10);
 		setAttributes();
 	}
 	
