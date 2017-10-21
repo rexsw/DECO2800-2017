@@ -196,7 +196,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			black.updateDead(this);
 
 			GameManager.get().getWorld().removeEntity(this);
-			GameManager.get().getWorld().removeEntity(this.getHealthBar());
+			if (this.getHealthBar() != null) {
+				GameManager.get().getWorld().removeEntity(this.getHealthBar());
+			}
+
 			LOGGER.info("DEAD");
 
 		}
