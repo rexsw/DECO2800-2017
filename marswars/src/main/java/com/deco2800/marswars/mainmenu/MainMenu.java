@@ -79,7 +79,8 @@ public class MainMenu {
 
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		MenuScreen menu = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		menu.align(Align.left);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		this.mainmenu.setDebug(enabled);
 		

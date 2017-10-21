@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
-public class HelpWindow {
+public class HelpWindow extends Window{
 	private static final int SIDEPANEBUTTONWIDTH = 160;
 	private static final int SIDEPANEBUTTONHEIGHT = 40;
 	private static final int WINDOWPAD = 20;
@@ -25,16 +25,14 @@ public class HelpWindow {
 	private Table sidePane;
 
 	public HelpWindow(Stage stage, Skin skin) {
+		super("", skin);
 		this.stage = stage;
 		this.skin = skin;
-
-		this.window = new Window("Help", skin);
-		window.setSize(600, 600);
-		window.setDebug(ENABLED);
-		window.align(Align.left | Align.top);
-		window.pad(WINDOWPAD);
-		this.stage.addActor(window);
-		window.setPosition(stage.getWidth()/2 - window.getWidth(), stage.getHeight()/2 - window.getHeight()/2);
+		
+		this.setSize(600, 600);
+		this.setDebug(ENABLED);
+		this.align(Align.left | Align.top);
+		this.pad(WINDOWPAD);
 		buildWindow();
 	}
 
@@ -42,7 +40,7 @@ public class HelpWindow {
 	 * Builds the help window
 	 */
 	private void buildWindow() {
-		window.add(this.sidePane()).align(Align.topLeft);
+		this.add(this.sidePane()).align(Align.topLeft);
 	}
 
 	private Table sidePane() {
@@ -53,25 +51,25 @@ public class HelpWindow {
 		Button hotKeys = new TextButton("HOTKEYS", skin);
 		Button settings = new TextButton("SETTINGS", skin);
 		Button back = new TextButton("BACK TO GAME", skin);
-		
+
 		gameGuide.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				window.clear();
+				clear();
 			}
 		});
 		
 		back.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				window.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
 		hotKeys.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				window.clear();
+				clear();
 				buildWindow();
 				hotKeysInfo();
 			}
@@ -86,7 +84,7 @@ public class HelpWindow {
 	}
 	
 	public Window getHelpWindow() {
-		return this.window;
+		return this;
 	}
 	
 	private Table hotKeysInfo() {
@@ -123,7 +121,7 @@ public class HelpWindow {
 		
 		hotKeysParent.add(hotkeysInfo).row();
 		hotKeysParent.add(hotKeysChild);
-		window.add(hotKeysParent);
+		this.add(hotKeysParent);
 		return hotKeysParent;
 	}
 }
