@@ -36,7 +36,7 @@ public class GenerateAction implements DecoAction {
 
 	/**
 	 * Completes the GenerateAction
-	 * TODO make generate check cost
+	 * 
 	 */
 	@Override
 	public void doAction() {

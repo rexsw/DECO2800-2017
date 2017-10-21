@@ -32,6 +32,8 @@ public class GameStats{
 	private static final int STATSWIDTH = (9*(BUTTONSIZE + 2 * BUTTONPAD)) + 2 * WINDOWPAD; 
 	private static final int STATSHEIGHT = 300;
 
+	private String you = "You: ";
+	private String highest = " Highest:";
 
 	/*Constructors*/
 	private Skin skin; 
@@ -110,7 +112,7 @@ public class GameStats{
 	 */
 	private void setLayout(){
 		graphPrompt = new Label("Please select which stat you would like to view", skin);
-		graphType = new Label("", skin, "statsTitle");
+		graphType = new Label("", skin, "title");
 		graphInfo = new Label("", skin, "subtitle");
 		window.add(graphPrompt).align(Align.center).row();
 		window.add(graphType).align(Align.center).expandY().row();
@@ -179,8 +181,8 @@ public class GameStats{
 				gameGraph = Field.BIOMASS;
 				graphPrompt.setText("");
 				graphType.setText("Biomass");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
@@ -189,8 +191,8 @@ public class GameStats{
 				gameGraph = Field.CRYSTAL;
 				graphPrompt.setText("");
 				graphType.setText("Crystal");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
@@ -199,8 +201,8 @@ public class GameStats{
 				gameGraph = Field.ROCKS;
 				graphPrompt.setText("");
 				graphType.setText("Rocks");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 
 			}
 		});
@@ -210,8 +212,8 @@ public class GameStats{
 				gameGraph = Field.COMBAT_UNITS;
 				graphPrompt.setText("");
 				graphType.setText("Combat Units");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 
 			}
 		});
@@ -221,8 +223,8 @@ public class GameStats{
 				gameGraph = Field.UNITS_LOST;
 				graphPrompt.setText("");
 				graphType.setText("Units Lost");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 
 			}
 		});
@@ -232,8 +234,8 @@ public class GameStats{
 				gameGraph = Field.BUILDINGS;
 				graphPrompt.setText("");
 				graphType.setText("Buildings");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 
 			}
 		});
@@ -243,8 +245,8 @@ public class GameStats{
 				gameGraph = Field.TECHNOLOGY;
 				graphPrompt.setText("");
 				graphType.setText("Technology");
-				graphInfo.setText("You: " + (black.count(-1, gameGraph))
-						+ " Highest:" + black.highCount(gameGraph));
+				graphInfo.setText(you + (black.count(-1, gameGraph))
+						+ highest + black.highCount(gameGraph));
 
 			}
 		});	

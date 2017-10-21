@@ -19,11 +19,11 @@ import static org.junit.Assert.*;
 class TestEntity extends AbstractEntity {
 
 	public TestEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength, float xRenderLength, float yRenderLength, boolean centered) {
-		super(posX, posY, posZ, xLength, yLength, zLength, xRenderLength, yRenderLength, centered);
+		super(new Box3D(posX, posY, posZ, xLength, yLength, zLength), xRenderLength, yRenderLength, centered);
 	}
 
 	public TestEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-		super(posX, posY, posZ, xLength, yLength, zLength);
+		super(new Box3D(posX, posY, posZ, xLength, yLength, zLength));
 	}
 	
 	public TestEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {

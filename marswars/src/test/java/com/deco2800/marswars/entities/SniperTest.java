@@ -23,8 +23,8 @@ public class SniperTest {
 	public void getStatTest() {
 		Sniper sniper = new Sniper(2, 1, 1, 1);
 		Assert.assertTrue(sniper.getStats() != null);
-		Assert.assertEquals(1000, sniper.getStats().getHealth());
-		Assert.assertEquals(1000, sniper.getStats().getMaxHealth());
+		Assert.assertEquals(500, sniper.getStats().getHealth());
+		Assert.assertEquals(500, sniper.getStats().getMaxHealth());
 		Assert.assertEquals("Sniper", sniper.getStats().getName());
 	}
 

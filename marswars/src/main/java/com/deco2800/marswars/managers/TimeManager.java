@@ -28,7 +28,7 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @return the in-game hour of the day
 	 */
 	public long getGameDays() {
-		return this.days;
+		return days;
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class TimeManager extends Manager implements TickableManager {
 		if (!isGamePaused) {
 			int dayLength = 24;
 			int window = 1;
-			this.addTime(2);
+			addTime(2);
 			if ((this.getHours() % dayLength > dayLength ||
 					this.getHours() % dayLength < window) &&
 					! this.daysIncremented) {
@@ -311,7 +311,7 @@ public class TimeManager extends Manager implements TickableManager {
 			}
 			if (this.getHours() % dayLength > window &&
 					this.getHours() % dayLength < dayLength &&
-					this.daysIncremented == true) {
+					this.daysIncremented) {
 				this.daysIncremented = false;
 			}
 			// Some duplicated code here (also in isNight) find way to resolve

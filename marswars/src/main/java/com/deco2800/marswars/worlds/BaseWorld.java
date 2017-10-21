@@ -8,7 +8,7 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.TerrainElements.Resource;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
@@ -225,14 +225,6 @@ public class BaseWorld extends AbstractWorld {
 		}
 	}
 
-	/**
-	 * Gets the entities currently in the game.
-	 *
-	 * @return a list of all entities currently in the game.
-	 */
-	public List<BaseEntity> getEntities() {
-		return super.getEntities();
-	}
 
 	/**
 	 * Deselects all entities

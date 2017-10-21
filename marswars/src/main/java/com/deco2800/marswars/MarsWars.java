@@ -9,21 +9,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
-import com.deco2800.marswars.initiateGame.InputProcessor;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.initiategame.InputProcessor;
+import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,8 +53,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Stage stage;
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
+	long pauseTime = 0;
 	private static int invincible = 0;
 	private Skin skin;
+	Set<Integer> downKeys = new HashSet<Integer>();
 	TextureManager reg;
 
 	private InputProcessor inputP;
@@ -70,6 +69,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 

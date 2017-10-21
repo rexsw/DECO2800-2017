@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,8 @@ public class GameManager implements TickableManager {
 	private BaseWorld gameWorld;
 
 	private Skin gameskin;
+	
+	private Skin altskin; 
 	
 	private Stage gamestage;
 
@@ -86,7 +88,7 @@ public class GameManager implements TickableManager {
 	 * @param type The class type (ie SoundManager.class)
 	 * @return A Manager component of the requested type
 	 */
-	public Manager getManager(Class<?> type) {
+	public synchronized Manager getManager(Class<?> type) {
 		/* Check if the manager exists */
 		for (Manager m : managers) {
 			if (m.getClass() == type) {
@@ -262,6 +264,16 @@ public class GameManager implements TickableManager {
 	}
 	
 	/**
+	 * sets the alternative game skin
+	 * 
+	 * @param skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setAltSkin(Skin skin) {
+		altskin = skin;
+	}
+	
+	/**
 	 * gets the currently used game skin
 	 * 
 	 * @return Skin the skin used to display the
@@ -269,6 +281,16 @@ public class GameManager implements TickableManager {
 	 */
 	public Skin getSkin() {
 		return gameskin;
+	}
+	
+	/**
+	 * gets the alternative game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getAltSkin() {
+		return altskin;
 	}
 
 	/**
