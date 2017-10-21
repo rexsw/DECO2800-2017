@@ -296,7 +296,7 @@ public class MenuScreen{
 		worldTable.align(Align.topLeft);
 
 		Label worldInfo = new Label("WORLDS", this.skin, "title");
-		Label worldPrompt = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subHeading");
+		Label worldPrompt = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subheading");
 		errorWorldSelection = new Label("", skin, "error");
 		
 		Table worldInfoTable = new Table();
