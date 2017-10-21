@@ -290,7 +290,6 @@ public class ShopDialog extends Dialog {
 					}
 				}
 			});
-			System.out.println(scrollTable);
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
 			scrollTable.add(new Label(item.getDescription(), skin))
 					.width(iconSize).top().left();

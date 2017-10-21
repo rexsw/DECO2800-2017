@@ -164,10 +164,31 @@ public class HUDView extends ApplicationAdapter{
 	/**
 	 * Updates shop when item levels are unlocked.
 	 */
-	public void updateShop(ShopDialog shop) {
-		shopDialog = shop;
+	public void updateShop() {
+		TechnologyManager technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+		if (technologyManager.armourIsUnlocked(1)) {
+			shopDialog.unlockArmours(1);
+		}
+		if (technologyManager.armourIsUnlocked(2)) {
+			shopDialog.unlockArmours(2);
+		}
+		if (technologyManager.armourIsUnlocked(3)) {
+			shopDialog.unlockArmours(3);
+		}
+		if (technologyManager.weaponIsUnlocked(1)) {
+			shopDialog.unlockWeapons(1);
+		}
+		if (technologyManager.weaponIsUnlocked(2)) {
+			shopDialog.unlockWeapons(2);
+		}
+		if (technologyManager.weaponIsUnlocked(3)) {
+			shopDialog.unlockWeapons(3);
+		}
+		if (technologyManager.specialIsUnlocked()) {
+			shopDialog.unlockSpecials();
+		}
 	}
-
+	
 
 	/**
 	 * Adds in all components of the HUD.
