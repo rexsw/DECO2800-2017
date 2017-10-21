@@ -103,11 +103,12 @@ public class Hotkeys {
 			if (this.noActive()){
 				LOGGER.info("Opens the pause menu when there is no currently active menu");
 				this.pause = new PauseMenu("Pause Menu", this.skin, this.stage, this.stats, this.hud).show(this.stage);
+				this.hud.setPauseWindow(this.pause);
 			} else if (this.hud.getPauseCheck() != 0){
 				LOGGER.info("Closes the menu and resumes the game");
 				this.timeManager.unPause();
 				this.hud.setPauseCheck(0);
-				this.pause.hide();
+				this.hud.hidePauseMenu();
 			}
 		}
 		
@@ -155,12 +156,13 @@ public class Hotkeys {
 			if (this.noActive()) {
 				LOGGER.info("Activated the help menu");
 				this.hud.setHelpCheck(1);
-				this.help = new HelpWindow(this.stage, this.skin);//$NON-NLS-1$
+				this.help = new HelpWindow(this.stage, this.skin, this.hud);//$NON-NLS-1$
+				this.hud.setHelpWindow(help);
 				this.timeManager.pause();
 			} else if (this.hud.getHelpCheck() != 0) {
 				LOGGER.info("Closed the help Menu");
 				this.hud.setHelpCheck(0);
-				this.help.getHelpWindow().remove();
+				this.hud.hideHelpWindow();
 				this.timeManager.unPause();
 			}
 		}

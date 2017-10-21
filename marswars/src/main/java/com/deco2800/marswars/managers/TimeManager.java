@@ -20,7 +20,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isGamePaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
-	private static int days = 0;
+	private static long days = 0;
 	private boolean daysIncremented = false;
 
 	/**
