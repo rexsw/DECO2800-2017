@@ -478,17 +478,19 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
         if (distanceEquality) {
 			float xLocation;
 			float yLocation;
+			float xDist = xDistance;
+			float yDist = yDistance;
 			//If xDistance and yDistance is the same increment one by random
-			boolean distanceEquality2 = Math.abs(xDistance - yDistance) < 0.01 ;
+			boolean distanceEquality2 = Math.abs(xDist - yDist) < 0.01 ;
 			if (distanceEquality2) {
 				Random random = new Random();
 				if (random.nextBoolean()) {
-					xDistance += 1;
+					xDist += 1;
 				} else {
-					yDistance += 1;
+					yDist += 1;
 				}
 			}
-			if (xDistance > yDistance) {
+			if (xDist > yDist) {
 				if (a.getPosX() - this.getPosX() > 0) {
 					xLocation = this.getPosX() - 1;
 				} else {
