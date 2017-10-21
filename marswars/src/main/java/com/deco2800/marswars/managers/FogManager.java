@@ -10,6 +10,7 @@ import com.deco2800.marswars.util.Array2D;
  * 2 = In sight (normal vision)
  */
 public class FogManager extends Manager {
+
 	/**
 	 * this array contains grayed-out fog of war
 	 */
@@ -71,6 +72,17 @@ public class FogManager extends Manager {
 	 * @return the fog value: 0 or 2
 	 */
 	public static int getFog(int x, int y) {
+		if (x >= GameManager.get().getWorld().getWidth()) {
+			x = GameManager.get().getWorld().getWidth() - 1;
+		}else if(x < 0){
+			x=0;
+		}
+
+		if (y >= GameManager.get().getWorld().getLength()) {
+			y = GameManager.get().getWorld().getLength() - 1;
+		}else if(y<0){
+			y=0;
+		}
 		return fogOfWar.get(x, y);
 	}
 
@@ -84,10 +96,14 @@ public class FogManager extends Manager {
 	public static int getBlackFog(int x, int y) {
 		if (x >= GameManager.get().getWorld().getWidth()) {
 			x = GameManager.get().getWorld().getWidth() - 1;
+		}else if(x < 0){
+			x=0;
 		}
 
 		if (y >= GameManager.get().getWorld().getLength()) {
 			y = GameManager.get().getWorld().getLength() - 1;
+		}else if(y<0){
+			y=0;
 		}
 
 		return blackFogOfWar.get(x, y);
