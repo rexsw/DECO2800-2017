@@ -11,7 +11,7 @@ public class Spatman extends Soldier {
 		this.name = "Spatman";
 		this.setAttributes();
 		this.slowMovementSpeed = 0.01f;
-		this.setAreaDamage(2);
+		this.setAreaDamage(3);
 	}
 	
 	public float getSlowMovementkSpeed() {

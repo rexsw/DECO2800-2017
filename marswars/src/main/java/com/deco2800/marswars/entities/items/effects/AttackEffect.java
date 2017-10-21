@@ -53,12 +53,30 @@ public class AttackEffect implements Effect{
 			//for below, only add stats if the resulting stat is positive, otherwise set to 1
 			hero.setDamage(hero.getDamageDeal() + this.attackDamage > 0 ? hero.getDamageDeal() + this.attackDamage :
 				1);
-			hero.setAttackSpeed(hero.getAttackSpeed() + this.attackSpeed > 0 ? 
-					hero.getAttackSpeed() + this.attackSpeed : 1);
+			hero.setAttackSpeed(setIncreaseAttackSpeed(hero));/*hero.getAttackSpeed() + this.attackSpeed > 0 ? 
+					hero.getAttackSpeed() + this.attackSpeed : 1);*/
 			hero.setAttackRange(hero.getAttackRange() + this.attackRange > 0 ? 
 					hero.getAttackRange() + this.attackRange : 1);
 			hero.setArmorDamage(hero.getArmorDamage() + this.armourDamage > 0 ?
 					hero.getArmorDamage() + this.armourDamage : 1);
+		}
+	}
+	
+	/**
+	 * Helper method for increasing the attack speed of hero
+	 * @param hero
+	 * 			The hero to apply the effect to
+	 * @return
+	 * 		The attackspeed
+	 */
+	private int setIncreaseAttackSpeed(Commander hero) {
+		if (hero.getAttackSpeed() + this.attackSpeed >= hero.getMaxAttackSpeed()) {
+			hero.setMaxAttackSpeed(hero.getAttackSpeed() + this.attackSpeed);
+			return hero.getAttackSpeed() + this.attackSpeed;
+		} else if (hero.getAttackSpeed() + this.attackSpeed < 1) {
+			return 1;
+		} else {
+			return hero.getAttackSpeed() + this.attackSpeed;
 		}
 	}
 	
@@ -73,12 +91,28 @@ public class AttackEffect implements Effect{
 			Commander hero = (Commander) entity;
 			hero.setDamage(hero.getDamageDeal() - this.attackDamage > 0 ? hero.getDamageDeal() - this.attackDamage :
 				1);
-			hero.setAttackSpeed(hero.getAttackSpeed() - this.attackSpeed > 0 ? 
-					hero.getAttackSpeed() - this.attackSpeed : 1);
+			hero.setAttackSpeed(setReduceAttackSpeed(hero));/*hero.getAttackSpeed() - this.attackSpeed > 0 ? 
+					hero.getAttackSpeed() - this.attackSpeed : 1);*/
 			hero.setAttackRange(hero.getAttackRange() - this.attackRange > 0 ? 
 					hero.getAttackRange() - this.attackRange : 1);
 			hero.setArmorDamage(hero.getArmorDamage() - this.armourDamage > 0 ?
 					hero.getArmorDamage() - this.armourDamage : 1);
+		}
+	}
+	
+	/**
+	 * Helper method for reducing the attack speed of hero
+	 * @param hero
+	 * 			The hero to apply the effect to
+	 * @return
+	 * 		The attackspeed
+	 */
+	private int setReduceAttackSpeed(Commander hero) {
+		int diff = hero.getAttackSpeed() - this.attackSpeed;
+		if (diff < 0) {
+			return 1;
+		} else {
+			return hero.getAttackSpeed() - this.attackSpeed;
 		}
 	}
 	

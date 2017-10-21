@@ -268,8 +268,8 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setAttackSpeed(int attackSpeed) {
-		if (attackSpeed <= 3) {
-			this.attackSpeed = 3;
+		if (attackSpeed <= 1) {
+			this.attackSpeed = 1;
 		} else if (attackSpeed >= getMaxAttackSpeed()) {
 			this.attackSpeed = this.getMaxAttackSpeed();
 		} else {
