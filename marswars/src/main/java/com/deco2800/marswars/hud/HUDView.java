@@ -568,7 +568,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				int index = buttonList.indexOf(actor); //Get the index of this button
-				if (index < currentActions.size()) {
+				if (index < currentActions.size() && index >= 0) {
 					Object current = currentActions.get(index);
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
