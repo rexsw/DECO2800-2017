@@ -361,9 +361,9 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 * @param the new speed of the unit
 	 */
 	public void setSpeed(float speed) {
-		if (speed <= 0.01f) {
+		if (speed < 0.01f) {
 			this.speed = 0.01f;
-		} else if (speed >= this.getMaxSpeed()) {
+		} else if (speed > this.getMaxSpeed()) {
 			speed = this.getMaxSpeed();
 		} else {
 			this.speed = speed;
