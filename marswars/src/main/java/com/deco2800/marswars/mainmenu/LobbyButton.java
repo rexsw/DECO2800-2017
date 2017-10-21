@@ -15,8 +15,7 @@ import java.net.UnknownHostException;
 
 public class LobbyButton{
 	private Skin skin; 
-	private Stage stage; 
-	private Window mainmenu; 
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(HUDView.class);
 	private Dialog ipDiag;
 
@@ -24,8 +23,6 @@ public class LobbyButton{
 	
 	public LobbyButton(Skin skin, Window mainmenu, Stage stage){
 		this.skin = skin;
-		this.stage = stage;
-		this.mainmenu = mainmenu;
 		LOGGER.info("Lobby instantiated"); 
 	}
 	

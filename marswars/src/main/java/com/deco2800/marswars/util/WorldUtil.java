@@ -39,11 +39,11 @@ public class WorldUtil {
 		BaseEntity ret = null;
 		double distance = Double.MAX_VALUE;
 		for (Renderable e : world.getEntities()) {
-			double tmp_distance = Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2));
+			double tmpDistance = Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2));
 
-			if (tmp_distance < distance) {
+			if (tmpDistance < distance) {
 				// Closer than current closest
-				distance = tmp_distance;
+				distance = tmpDistance;
 				ret = (BaseEntity) e;
 			}
 		}
@@ -152,9 +152,9 @@ public class WorldUtil {
 		BaseEntity closest = null;
 		float dist = Float.MAX_VALUE;
 		for (BaseEntity e : entities) {
-			float tmp_distance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
-			if (closest == null || dist > tmp_distance) {
-				dist = tmp_distance;
+			float tmpDistance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
+			if (closest == null || dist > tmpDistance) {
+				dist = tmpDistance;
 				closest = e;
 			}
 		}
@@ -180,9 +180,9 @@ public class WorldUtil {
 		BaseEntity closest = null;
 		float dist = Float.MAX_VALUE;
 		for (BaseEntity e : entities) {
-			float tmp_distance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
-			if ((closest == null || dist > tmp_distance) && e instanceof HasOwner && ((HasOwner) e).getOwner() == m) {
-				dist = tmp_distance;
+			float tmpDistance = (float)(Math.sqrt(Math.pow(e.getPosX() - x, 2) + Math.pow(e.getPosY() - y, 2)));
+			if ((closest == null || dist > tmpDistance) && e instanceof HasOwner && ((HasOwner) e).getOwner() == m) {
+				dist = tmpDistance;
 				closest = e;
 			}
 		}
@@ -336,7 +336,7 @@ public class WorldUtil {
 		if (proj[1] > higherY) {
 			proj[1] = higherY;
 		}
-		temp = new CheckSelect(proj[0] - 4* lower, proj[1] + (int)(lower / 2), 0f, dimensions*2, dimensions*2, 0f, false);
+		temp = new CheckSelect(proj[0] - 4* lower, proj[1] + (lower / 2), 0f, dimensions*2, dimensions*2, 0f, false);
 		temp.setGreen();
 		GameManager.get().getWorld().addEntity(temp);
 		return temp;

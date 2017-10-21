@@ -54,10 +54,8 @@ public class HUDView extends ApplicationAdapter{
 	private static final int BUTTONSIZE = 50; //sets size of image buttons
 	private static final int BUTTONPAD = 10;  //sets padding between image buttons
 	private static final int NUMBER_ACTION_BUTTONS = 10; //The maximum number of buttons
-
-	private  static final int[] INDICES = {1,2,3,4,5,6,7,8,9,10};
-
-
+	private static final int ACTIONSHEADERPAD = 160; 
+	
 	private Stage stage;
 	private Skin skin;
 	private ImageButton quitButton;
@@ -73,7 +71,10 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		         //window for containing the minimap
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
-
+	private Image statsbg; 
+	private Image headerbg;
+	private Image actionsBg;
+	private Image actionsBgMain;
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -97,11 +98,6 @@ public class HUDView extends ApplicationAdapter{
 	private boolean fogToggle = true;
 	private boolean floodToggle = true;
 	private boolean gameStarted = false;
-	//Image buttons to display/ remove lower HUD
-
-	private TextureRegionDrawable plusRegionDraw;
-	private TextureRegionDrawable minusRegionDraw;
-
 	//Time displays
 	private Label gameTimeDisp;
 	private Label gameLengthDisp;
@@ -128,6 +124,7 @@ public class HUDView extends ApplicationAdapter{
 	int chatActiveCheck = 0;
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
+	private Table selectedTable;
 
 
 	/**
@@ -170,22 +167,7 @@ public class HUDView extends ApplicationAdapter{
 		addBottomPanel();
 		generateTextures(19);
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
-	}
-
-	public void generateTextures(int number) {
-		PixmapIO pIO = new PixmapIO();
-		for (int i = 0; i <= number; i++) {
-			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
-			int width = 512;
-			int fillPoint = (width * i) /number;
-			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
-			p.setColor(Color.GRAY);
-			p.fill();
-			p.setColor(Color.GREEN);
-			p.fillRectangle(0,0,fillPoint,20);
-			pIO.writePNG(f,p);
-			p.dispose();
-		}
+		this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**
@@ -195,9 +177,15 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void topRight(){
 		overheadRight = new Table();
-		overheadRight.setWidth(stage.getWidth());
-		overheadRight.align(Align.right | Align.top);
-		overheadRight.setPosition(0, Gdx.graphics.getHeight());
+		overheadRight.setDebug(enabled);
+		overheadRight.setPosition(BUTTONPAD, Gdx.graphics.getHeight()-BUTTONPAD);
+		
+		Texture headerTex = textureManager.getTexture("header");
+		headerbg = new Image(headerTex);
+		stage.addActor(headerbg);
+		overheadRight.setPosition(Gdx.graphics.getWidth()-overheadRight.getWidth()-BUTTONPAD, 
+				Gdx.graphics.getHeight()-overheadRight.getHeight()-BUTTONPAD);
+		headerbg.toBack();
 
 		LOGGER.debug("Add help, quit and message buttons");
 
@@ -214,7 +202,6 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable helpRegionDraw = new TextureRegionDrawable(helpRegion);
 		helpButton = new ImageButton(helpRegionDraw);
 
-
 		//add quit button + image for it
 		Texture quitImage = textureManager.getTexture("quit_button");
 		TextureRegion quitRegion = new TextureRegion(quitImage);
@@ -223,8 +210,8 @@ public class HUDView extends ApplicationAdapter{
 
 		//Create + align time displays
 		LOGGER.debug("Creating time labels");
-		gameTimeDisp = new Label("0:00", skin, "seven-seg");
-		gameLengthDisp = new Label("00:00:00", skin, "seven-seg");
+		gameTimeDisp = new Label("0:00", this.skin, "seven-seg");
+		gameLengthDisp = new Label("00:00:00", skin);
 		gameTimeDisp.setAlignment(Align.center);
 		gameLengthDisp.setAlignment(Align.center);
 
@@ -257,15 +244,25 @@ public class HUDView extends ApplicationAdapter{
 
 		stage.addActor(welcomeMsg);
 		stage.addActor(overheadRight);
+		
+		//Creates the help button listener
+		LOGGER.debug("Creating main menu button listener");
+		dispMainMenu.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
+		});
+		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
 		//Creates the help button listener
 		LOGGER.debug("Creating help button listener");
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new WorkInProgress("Help  Menu", skin, hud).show(stage);
+				new HelpWindow(stage, skin);
 			}
 		});
+		helpButton.addListener(new TextTooltip("Help", skin));
 
 		//Creates the quit button listener
 		LOGGER.debug("Creating quit button listener");
@@ -274,7 +271,9 @@ public class HUDView extends ApplicationAdapter{
 			//could abstract this into another class
 			public void changed(ChangeEvent event, Actor actor) {
 				new ExitGame("Quit Game", skin, hud, true).show(stage);
-			}});
+			}
+		});
+		quitButton.addListener(new TextTooltip("Quit Game", skin));
 	}
 
 
@@ -298,9 +297,17 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("drawing unit stats");
 		this.statsTable = new UnitStatsBox(this.skin, this.textureManager);
 		statsTable.setWidth(200);
-		statsTable.pad(5);
+		statsTable.pad(15);
+		statsTable.setDebug(enabled);
 		this.statsTable.setVisible(false);
 		stage.addActor(statsTable);
+		
+		Texture statsTex = textureManager.getTexture("stats");
+		statsbg = new Image(statsTex);
+		stage.addActor(statsbg);
+		statsbg.setPosition(BUTTONPAD, stage.getHeight()-statsbg.getHeight()-BUTTONPAD);
+		statsbg.toBack();
+		statsbg.setVisible(false);
 	}
 
 	/**
@@ -327,12 +334,11 @@ public class HUDView extends ApplicationAdapter{
 		addMiniMapMenu();
 		addInventoryMenu();
 		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(minimap.getWidth(), 0);
+		HUDManip.setPosition(Gdx.graphics.getWidth()-HUDManip.getWidth(), actionsWindow.getHeight());
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
-		//remove dispActions button + image for it
 
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button");
@@ -340,12 +346,12 @@ public class HUDView extends ApplicationAdapter{
 		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
 		ImageButton dispTech = new ImageButton(techRegionDraw);
 
-
 		//add shop button (uses arrow icon for now)
 		Texture shopImage = textureManager.getTexture("shop_button");
 		TextureRegion shopRegion = new TextureRegion(shopImage);
 		TextureRegionDrawable shopRegionDraw = new TextureRegionDrawable(shopRegion);
 		ImageButton dispShop = new ImageButton(shopRegionDraw);
+		
 
 		//add toggle Fog of war (FOR DEBUGGING)
 		Button dispFog = new TextButton("Fog", skin);
@@ -372,8 +378,8 @@ public class HUDView extends ApplicationAdapter{
 			public void changed(ChangeEvent event, Actor actor){
 				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
 			}
-
 		});
+		dispTech.addListener(new TextTooltip("Open Technology", skin));
 
 		dispShop.addListener(new ChangeListener(){
 			@Override
@@ -382,6 +388,8 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
 			}
 		});
+		dispShop.addListener(new TextTooltip("Open Shop", skin));
+		
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
@@ -460,12 +468,35 @@ public class HUDView extends ApplicationAdapter{
 	 */
 	private void addInventoryMenu(){
 		LOGGER.debug("Create inventory");
-		actionsWindow = new Window("Actions", skin);
-		actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
+		actionsWindow = new Window("", skin, "clear");
+		actionsWindow.pad(BUTTONPAD);
+		actionsWindow.setDebug(enabled);
+
+		Texture actionsTex = textureManager.getTexture("actions_window_cropped");
+		Texture actionsTopTex = textureManager.getTexture("actions_window_top");
+		
+		actionsBg = new Image(actionsTopTex);
+		actionsBgMain = new Image(actionsTex);
+		
+		stage.addActor(actionsBg);
+		stage.addActor(actionsBgMain);
+		actionsBg.setPosition(ACTIONSHEADERPAD, actionsWindow.getHeight() + actionsWindow.getY());
+		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
+		actionsBgMain.setVisible(false);
+				
+		actionsWindow.setBackground(new TextureRegionDrawable(new TextureRegion(actionsTex)));
+
+		//actionsWindow.padLeft(minimap.getWidth()/2 + BUTTONSIZE*2);
 		resourceTable = new Table();
 		resourceTable.align(Align.left | Align.top);
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+
+		selectedTable = new Table();
+		selectedTable.align(Align.left | Align.top);
+		selectedTable.setHeight(40);
+		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
+
 
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
@@ -494,6 +525,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
+		stage.addActor(selectedTable);
 
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
@@ -503,7 +535,6 @@ public class HUDView extends ApplicationAdapter{
 		actionsWindow.setMovable(false);
 		actionsWindow.align(Align.topLeft);
 		actionsWindow.setWidth(stage.getWidth()-500);
-		actionsWindow.setHeight(150);
 		actionsWindow.setPosition(220, 0);
 
 		//Add action buttons
@@ -529,7 +560,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				int index = buttonList.indexOf(actor); //Get the index of this button
-				if (index < currentActions.size()) {
+				if (index < currentActions.size() && index >= 0) {
 					Object current = currentActions.get(index);
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
@@ -570,7 +601,7 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating minimap menu");
 		//the minimap wont look right until the skin is changed to something reasonable, without a title/title-bar
 		//TODO update the skin
-		minimap = new Window("", skin, "minimap");
+		minimap = new Window("", skin, "clear");
 
 		//set the properties of the minimap window
 		GameManager.get().getMiniMap().stageReference = minimap;
@@ -596,9 +627,9 @@ public class HUDView extends ApplicationAdapter{
 					MiniMapEntity entity = miniMap.getEntity(i, j);
 					if (miniMap.entitiesOnMiniMap[i][j] == null && entity.toBeDisplayed()) {
 						// skip if there is already an icon there or if the entity is concealed by the fog
-						miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(entity.getTexture()));
-						miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
 						try {
+                            miniMap.entitiesOnMiniMap[i][j] = new Image(textureManager.getTexture(entity.getTexture()));
+                            miniMap.entitiesOnMiniMap[i][j].setPosition(i, j);
 							stage.addActor(miniMap.entitiesOnMiniMap[i][j]);
 						} catch (NullPointerException e) {
 							// entity hasn't reached that position yet so do nothing
@@ -629,10 +660,13 @@ public class HUDView extends ApplicationAdapter{
 		for (int i = 0; i < NUMBER_ACTION_BUTTONS; i++) { //Disable buttons
 			disableButton(buttonList.get(i));
 		}
+		selectedTable.clear();
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
+			this.statsbg.setVisible(false);
 			return;
 		}
+		populateSelectedTable();
 		updateHealthBars();
 		selectedEntity = target;
 		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
@@ -643,6 +677,7 @@ public class HUDView extends ApplicationAdapter{
 		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
+			this.statsbg.setVisible(true);
 			this.statsTable.updateSelectedStats(((AttackableEntity) target));
 
 			// display hero inventory
@@ -705,6 +740,28 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) / number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			if (i == 0) {
+				p.dispose();
+				continue;
+			}
+			p.setColor(Color.GREEN);
+			if (i < number/2) p.setColor(Color.ORANGE);
+			if (i < number/8) p.setColor(Color.RED);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
+	}
+
     /**
      * Enables action button based on the actions avaliable to
      * the selected entity
@@ -735,12 +792,13 @@ public class HUDView extends ApplicationAdapter{
      * Sets up all buttons for available actions
      */
 	private void ActionButtons() {
-		float buttonWidth = actionsWindow.getWidth()/ currentActions.size();
+		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size();
 		float buttonHeight = actionsWindow.getHeight();
 		if (buttonWidth >= (actionsWindow.getWidth()/4)){
 			buttonWidth = (actionsWindow.getWidth()/4);
 		}
 		int index = 0;
+		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
 			buttonList.get(index).clearChildren();
@@ -755,7 +813,7 @@ public class HUDView extends ApplicationAdapter{
 				Texture rockTex = textureManager.getTexture("rock_HUD");
 				rock = new Image(rockTex);
 			} else if (e instanceof EntityID) {
-				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e)));
+				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
 				cost = new Label(String.valueOf(0), skin);
 			} else if (e instanceof ActionType) {
@@ -827,6 +885,7 @@ public class HUDView extends ApplicationAdapter{
 		addEntitiesToMiniMap();
 		this.updateMiniMapMenu();
 
+		/*
 		if (timeManager.isNight()){
 			gameTimeDisp.setColor(Color.FIREBRICK);
 			gameLengthDisp.setColor(Color.FIREBRICK);
@@ -835,6 +894,7 @@ public class HUDView extends ApplicationAdapter{
 			gameTimeDisp.setColor(Color.BLUE);
 			gameLengthDisp.setColor(Color.BLUE);
 		}
+		*/
 
 		/*Update the resources count*/
 		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
@@ -905,7 +965,7 @@ public class HUDView extends ApplicationAdapter{
 		chatbox.setVisible(false);
 		minimap.setVisible(false);
 		actionsWindow.setVisible(false);
-
+		actionsBg.setVisible(false);
 	}
 
 	/**
@@ -915,8 +975,7 @@ public class HUDView extends ApplicationAdapter{
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
 	    HUDManip.setVisible(true);
-
-		chatbox.setVisible(true);
+	    actionsBg.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
 	}
@@ -927,17 +986,20 @@ public class HUDView extends ApplicationAdapter{
 	 * @param height the stages height
 	 */
 	public void resize(int width, int height) {
-
         //Top Left
         LOGGER.debug("Window resized, rescaling hud");
 		statsTable.setWidth(100);
 		statsTable.align(Align.left | Align.top);
-		statsTable.setPosition(0, stage.getHeight());
+		statsTable.setPosition( BUTTONPAD, stage.getHeight()-BUTTONPAD);
+		statsbg.setPosition(BUTTONPAD, stage.getHeight()-statsbg.getHeight()-BUTTONPAD);
+		statsbg.toBack();
+		
         //Top of panel
-        overheadRight.setWidth(stage.getWidth());
         overheadRight.align(Align.right | Align.top);
-        overheadRight.setPosition(0, Gdx.graphics.getHeight());
+        overheadRight.setPosition(width-overheadRight.getWidth()-BUTTONPAD, Gdx.graphics.getHeight()-overheadRight.getHeight()-BUTTONPAD);
         welcomeMsg.setWidth(Gdx.graphics.getWidth());
+        headerbg.setPosition(width-headerbg.getWidth()-BUTTONPAD, height-headerbg.getHeight()-BUTTONPAD);
+        headerbg.setHeight(BUTTONSIZE +  2 * BUTTONPAD);
 
 		welcomeMsg.setPosition(0, Gdx.graphics.getHeight());
 		welcomeMsg.align(Align.center | Align.top).pad(BUTTONPAD*2);
@@ -950,15 +1012,20 @@ public class HUDView extends ApplicationAdapter{
 		minimap.setSize(220, 220);
 		//Avaliable actions
 		actionsWindow.align(Align.topLeft);
-		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2);
-		actionsWindow.setHeight(minimap.getHeight()/2);
-		actionsWindow.setPosition(minimap.getWidth()/2, 0);
+		actionsWindow.setWidth(stage.getWidth()-minimap.getWidth()/2 - BUTTONPAD);
+		actionsWindow.setHeight(minimap.getHeight()/2 - BUTTONPAD);
+		actionsWindow.setPosition(minimap.getWidth()/2, BUTTONPAD);
+		actionsBg.setPosition(ACTIONSHEADERPAD, actionsWindow.getHeight() + BUTTONPAD);
+		actionsBgMain.setPosition(Gdx.graphics.getWidth()-minimap.getWidth()/2, BUTTONPAD);
+		actionsBgMain.setHeight(actionsWindow.getHeight());
+		actionsBgMain.setWidth(actionsWindow.getWidth());
+
 		//Resources
 		resourceTable.align(Align.left | Align.center);
 		resourceTable.setHeight(60);
-		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
+		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight() + BUTTONPAD*2);
 		//Menu manipulator
-		HUDManip.setPosition(250, 40);
+		HUDManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
 
 		//resize stats
 		stats.resizeStats(width, height);
@@ -1107,6 +1174,15 @@ public class HUDView extends ApplicationAdapter{
         messageToggle = false;
         hud.setChatActiveCheck(0);
         stage.unfocusAll();
+	}
+
+
+	private void populateSelectedTable() {
+		for (BaseEntity be: selectedList) {
+			EntityPortrait ep = be.getPortrait();
+			if (ep == null) continue;
+			selectedTable.add(ep);
+		}
 	}
 
 }

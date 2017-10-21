@@ -23,6 +23,17 @@ public class MultiSelection extends Manager {
      * @return
      */
     public static Integer getSelectedTiles(int x, int y){
+        if(x >= GameManager.get().getWorld().getWidth()){
+            x=GameManager.get().getWorld().getWidth()-1;
+        }else if(x<0){
+            x=0;
+        }
+
+        if(y >= GameManager.get().getWorld().getLength()){
+            y=GameManager.get().getWorld().getLength()-1;
+        }else if(y<0){
+            y=0;
+        }
         return selectedTiles.get(x,y);
     }
 

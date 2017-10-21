@@ -207,14 +207,6 @@ public class BaseWorld extends AbstractWorld {
 		}
 	}
 
-	/**
-	 * Gets the entities currently in the game.
-	 *
-	 * @return a list of all entities currently in the game.
-	 */
-	public List<BaseEntity> getEntities() {
-		return super.getEntities();
-	}
 
 	/**
 	 * Deselects all entities

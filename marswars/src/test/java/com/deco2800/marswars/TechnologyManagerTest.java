@@ -42,7 +42,7 @@ public class TechnologyManagerTest {
         technologyManager.addActiveTech(technology);
         //should have sufficient resources
         assertTrue(technologyManager.getActive().contains(technology));
-        technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1, -1);
+        //technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1, -1);
     }
 
 }

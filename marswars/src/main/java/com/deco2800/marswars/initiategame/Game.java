@@ -9,12 +9,14 @@ import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -62,6 +64,9 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
 		savedGame = new GameSave(aITeams,playerTeams);
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		savedGame.data.setIndex(colourManager.getIndex());
 		loadGame();
 	}
 	
@@ -72,6 +77,9 @@ public class Game{
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
 	    savedGame = new GameSave(aITeams,playerTeams);
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		savedGame.data.setIndex(colourManager.getIndex());
 		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 
@@ -91,8 +99,18 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 
+		//set game time
+		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),(int)loadedGame.data.getSec());
+
+		//set colour index
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		colourManager.setIndex(loadedGame.data.getIndex());
+
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
+
+
 
 		setCameraInitialPosition();
 		//same
@@ -144,6 +162,11 @@ public class Game{
 			rm.setCrystal(playerStats.get(2), playerid);
 			rm.setMaxPopulation(10, playerid);
 			rm.setPopulation(playerStats.get(3), playerid);
+		}
+
+		//load obatacles
+		for(Obstacle each : loadedGame.data.getObstacles()){
+			GameManager.get().getWorld().addEntity(each);
 		}
 
 		//add all entities
@@ -207,31 +230,31 @@ public class Game{
 	 */
 	private void loadEntities(GameSave loadedGame){
 		for(SavedEntity each : loadedGame.data.getEntities())
-			if(each.getName().equals("Astronaut")){
+			if("Astronaut".equals(each.getName())){
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
-			}else if(each.getName().equals("Base")){
+			}else if("Base".equals(each.getName())){
 				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
 				base.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(base);
-			}else if(each.getName().equals("Tank")){
+			}else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(tank);
-			}else if(each.getName().equals("Carrier")){
+			}else if("Carrier".equals(each.getName())){
 				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
 				carrier.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(carrier);
-			}else if(each.getName().equals("Commander")){
+			}else if("Commander".equals(each.getName())){
 				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
 				commander.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(commander);
-			}else if(each.getName().equals("Medic")){
+			}else if("Medic".equals(each.getName())){
 				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
 				medic.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(medic);
-			}else if(each.getName().equals("Hacker")){
+			}else if("Hacker".equals(each.getName())){
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);

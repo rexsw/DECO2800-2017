@@ -18,6 +18,21 @@ public class ColourManager extends Manager {
 	private Map<Integer, Colours> colours = new HashMap<Integer, Colours>();
 	private ArrayList<Colours> colour = setColour();
 	private int index = 0;
+
+	/**
+	 * return index to save game
+	 */
+	public int getIndex(){
+		return index;
+	}
+
+	/**
+	 *
+	 * set index for save game
+	 */
+	public void setIndex(int index){
+		this.index = index;
+	}
 	
 	/**
 	 * maps a team to a colour only different for the first five mappings 

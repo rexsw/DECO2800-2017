@@ -34,6 +34,8 @@ public class GameManager implements TickableManager {
 
 	private Skin gameskin;
 	
+	private Skin altskin; 
+	
 	private Stage gamestage;
 
 	private BaseWorld mapWorld;
@@ -86,7 +88,7 @@ public class GameManager implements TickableManager {
 	 * @param type The class type (ie SoundManager.class)
 	 * @return A Manager component of the requested type
 	 */
-	synchronized public Manager getManager(Class<?> type) {
+	public synchronized Manager getManager(Class<?> type) {
 		/* Check if the manager exists */
 		for (Manager m : managers) {
 			if (m.getClass() == type) {
@@ -207,6 +209,7 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
@@ -216,6 +219,7 @@ public class GameManager implements TickableManager {
 		this.menu.endGame();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		black.clear();
 	}
 
 	/**
@@ -262,6 +266,16 @@ public class GameManager implements TickableManager {
 	}
 	
 	/**
+	 * sets the alternative game skin
+	 * 
+	 * @param skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setAltSkin(Skin skin) {
+		altskin = skin;
+	}
+	
+	/**
 	 * gets the currently used game skin
 	 * 
 	 * @return Skin the skin used to display the
@@ -269,6 +283,16 @@ public class GameManager implements TickableManager {
 	 */
 	public Skin getSkin() {
 		return gameskin;
+	}
+	
+	/**
+	 * gets the alternative game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getAltSkin() {
+		return altskin;
 	}
 
 	/**

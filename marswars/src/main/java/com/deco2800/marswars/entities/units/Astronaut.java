@@ -36,6 +36,7 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.setFogRange(10);
 		setAttributes();
 	}
 	
@@ -195,6 +196,7 @@ public class Astronaut extends Soldier {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this.getHealthBar());
 			LOGGER.info("DEAD");
 		}
 		if (health >= this.getMaxHealth()) {

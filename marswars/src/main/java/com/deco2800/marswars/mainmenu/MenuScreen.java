@@ -1,6 +1,9 @@
 package com.deco2800.marswars.mainmenu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -47,6 +50,7 @@ public class MenuScreen{
 	static final int BUTTONPAD = 15; 
 	static final int NAVBUTTONSIZE = 50;
 	static final int MAPBUTTONSIZE = 120;
+	static final int LABELPAD = 40;
 	
 	/*Character icon sizing*/
 	static final int ASTROWIDTH = 120;
@@ -141,10 +145,11 @@ public class MenuScreen{
 		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
 		//modeInfo.setVisible(false);
 		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin, menuButtonString);
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin, menuButtonString);
-		Button customizeButton = new TextButton("Customize", this.skin, menuButtonString);
-		Button loadGameButton = new TextButton("Load Game", this.skin, menuButtonString);
+		Button singlePlayerButton = new TextButton("Single Player", this.skin, "button2");
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "button2");
+		Button customizeButton = new TextButton("Customize", this.skin, "button2");
+		Button loadGameButton = new TextButton("Load Game", this.skin, "button2");
+		Button exitGameButton = new TextButton("Exit Game", this.skin, "button2");
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -154,11 +159,12 @@ public class MenuScreen{
 		Button quickGame = new TextButton("Quick Select", this.skin);
 				
 		/* Add in the player mode buttons to the table*/
-		playerMode.add(modeInfo).align(Align.left).padBottom(BUTTONPAD*4).row();
+		playerMode.add(modeInfo).align(Align.left).padBottom(BUTTONPAD*3).row();
 		playerMode.add(singlePlayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		playerMode.add(multiplayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		playerMode.add(customizeButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		playerMode.add(loadGameButton).align(Align.left).padBottom(BUTTONPAD*2).row();
+		playerMode.add(exitGameButton).align(Align.left).padBottom(BUTTONPAD*2).row();
 		
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).align(Align.left).row();
@@ -191,6 +197,14 @@ public class MenuScreen{
 			}
 		});
 		
+		/* Button listeners */
+		exitGameButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.exit(1);
+			}
+		});
+		
 		//TODO: remove this around week 12
 		quickGame.addListener(new ChangeListener() {
 			@Override
@@ -218,8 +232,9 @@ public class MenuScreen{
 		
 		Table playerTable = new Table(); 
 		
-		Label playerInfo = new Label("PICK YOUR CHARACTER", this.skin, subtitleString);
-		Label moreInfo = new Label("click '>' since this feautre has not "
+		Label playerInfo = new Label("CHARACTERS", this.skin, "title");
+		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, "subheading");
+		Label moreInfo = new Label("click '>' since this feature has not "
 				+ "yet been implemented)", skin);
 		
 		//TODO talk to the team looking into this 
@@ -250,6 +265,7 @@ public class MenuScreen{
 		playerTable.add(blueAstro).pad(BUTTONPAD).size(ASTROWIDTH);
 		
 		mainmenu.add(playerInfo).align(Align.left).row();
+		mainmenu.add(playerPrompt).align(Align.left).row();
 		mainmenu.add(moreInfo).row();
 		mainmenu.add(playerTable);
 		addNavigationButton(ScreenMode.CHARACTERMODE);
@@ -279,8 +295,8 @@ public class MenuScreen{
 		worldTable.setDebug(enabled);
 		worldTable.align(Align.topLeft);
 
-		Label worldInfo = new Label("SELECT A WORLD TO PLAY IN", this.skin, subtitleString);
-		Label worldSelected = new Label("Your current selection:", skin);
+		Label worldInfo = new Label("WORLDS", this.skin, "title");
+		Label worldPrompt = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subheading");
 		errorWorldSelection = new Label("", skin, "error");
 		
 		Table worldInfoTable = new Table();
@@ -405,9 +421,9 @@ public class MenuScreen{
 		});
 		
 		mainmenu.add(worldInfo).align(Align.left | Align.top).row();		
+		mainmenu.add(worldPrompt).align(Align.left | Align.top).row();
 		worldTable.add(worldTypeButtons).row();
 		worldTable.add(worldSizeButtons).row();						
-		worldTable.add(worldSelected).align(Align.left).row();
 		worldTable.add(worldInfoTable).align(Align.left).row();
 		worldTable.add(errorWorldSelection).align(Align.left);
 
@@ -421,18 +437,17 @@ public class MenuScreen{
 	 * adds it to the menu.
 	 */
 	public void selectCombat() {
-		mainmenu.clear();
-		
+		mainmenu.clear();		
 		errorTeamsSelection = new Label("", skin, "error");
 
-		Label combatInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, subtitleString);
-		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, subtitleString);
-		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, subtitleString);
+		Label combatInfo = new Label("COMBAT", this.skin, "title");
+		Label teamInfo = new Label("SELECT NUMBER OF TEAMS", this.skin, "subheading");
+		Label aiInfo = new Label("SELECT AI BEHAVIOUR", this.skin, "subheading");
+		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subheading");
 		
-		Label selected = new Label(String.format(totalTeamsPlayingString, allTeams), skin);
+		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin, "info");
+		Label combatSelected = new Label("Normal AI difficulty selected", skin, "info");
 
-		
-		/* no of teams buttons*/
 		Table aiButtons = new Table();
 		Button ai2 = new TextButton("2", skin, menuButtonString);
 		Button ai3 = new TextButton("3", skin, menuButtonString);
@@ -476,13 +491,65 @@ public class MenuScreen{
 		for (int i = 0; i < buttonsList.length; i++) {
 			aiButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
-						
+		
+		/* no of teams buttons*/
+		Table AIBehaviorButtons = new Table();
+		Button AIEasy = new TextButton("Passive", skin, "num_button");
+		Button AINormal = new TextButton("Normal", skin, "num_button");
+		Button AIHard = new TextButton("Hard", skin, "num_button");
+		Button[] behaviorButtonsList= {AIEasy, AINormal, AIHard};
+
+		AIEasy.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				combatSelected.setText("Easy level selected");
+			}
+		});
+		
+		AINormal.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 2;
+				combatSelected.setText("Normal level selected");
+			}
+		});
+		
+		AIHard.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				allTeams = 2;
+				combatSelected.setText("Hard level selected");
+			}
+		});
+		
+		for (int i = 0; i < behaviorButtonsList.length; i++) {
+			AIBehaviorButtons.add(behaviorButtonsList[i]).pad(BUTTONPAD);
+		}
+		
+		Table winConditionChecks = new Table(); 
+		winConditionChecks.align(Align.center);
+		
+		CheckBox economic = new CheckBox(" Economy", skin, "spac_check");
+		CheckBox millitary = new CheckBox(" Millitary", skin, "spac_check");
+		CheckBox population = new CheckBox(" Population", skin, "spac_check");
+		
+		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
+		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
+		winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
+								
 		mainmenu.add(combatInfo).align(Align.left).row();
+		mainmenu.add(teamInfo).align(Align.left).row();
+		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
+		
 		mainmenu.add(aiButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).row();
 		mainmenu.add(aiInfo).align(Align.left).row();
+		mainmenu.add(AIBehaviorButtons).align(Align.left).row();
+		mainmenu.add(combatSelected).align(Align.left).padBottom(LABELPAD).row();
+
 		mainmenu.add(winInfo).align(Align.left).row();
-		
+		mainmenu.add(winConditionChecks);
+
 		mainmenu.add(errorTeamsSelection).align(Align.left).row();
 		
 		addNavigationButton(ScreenMode.COMBATMODE);
@@ -499,7 +566,7 @@ public class MenuScreen{
 		
 		Table serverTable = new Table(); 
 		
-		Label serverInfo = new Label("Join a server or start your own!", this.skin, subtitleString);
+		Label serverInfo = new Label("Join a server or start your own!", this.skin, "title");
 				
 		serverTable.add(serverInfo).row();
 		serverTable.add(this.lobby.addStartServerButton(this)).pad(BUTTONPAD).height(BUTTONHEIGHT).width(BUTTONWIDTH).row();
@@ -513,9 +580,8 @@ public class MenuScreen{
 	 * @param status
 	 */
 	public Table addNavigationButton(ScreenMode status) {
-		this.backButton = new TextButton("<", this.skin, menuButtonString);
-		this.nextButton = new TextButton(">", this.skin, menuButtonString);
-		
+		this.backButton = new TextButton("<", this.skin, "pre_button");
+		this.nextButton = new TextButton(">", this.skin, "next_button");
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
@@ -622,7 +688,7 @@ public class MenuScreen{
 			}
 		});
 		
-		quitButton = new TextButton("Exit", this.skin);
+		quitButton = new TextButton("x", this.skin, "pre_button");
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -637,7 +703,6 @@ public class MenuScreen{
 		navigationButtons.setDebug(enabled);
 		navigationButtons.add(this.backButton).pad(BUTTONPAD);
 		navigationButtons.add(this.nextButton).pad(BUTTONPAD);
-		
 		actionButtons.add(this.quitButton).pad(BUTTONPAD);
 		
 		lowerPanel.add(navigationButtons);
