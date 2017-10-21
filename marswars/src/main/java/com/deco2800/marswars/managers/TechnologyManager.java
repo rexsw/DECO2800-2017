@@ -7,8 +7,22 @@ import com.deco2800.marswars.technology.Technology;
 import java.util.*;
 
 public class TechnologyManager extends Manager{
-    //each tech has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
-    // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
+
+    //UNIT STAT IDs
+    private static final int MAX_HEALTH = 1;
+    private static final int DAMAGE = 2;
+    private static final int ARMOUR = 3;
+    private static final int ARMOUR_DAMAGE = 4;
+    private static final int ATTACK_RANGE = 5;
+    private static final int ATTACK_SPEED = 6;
+
+    /*
+    *each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
+    *private Map<Integer, Integer[], String, List<Integer>> techMap = ..
+    * .. new HashMap<Integer, Integer[], String, List<Integer>>();
+    * unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
+    */
+
     private HashMap<String, int[]> unitAttributes = new HashMap<>();
     private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
@@ -95,97 +109,118 @@ public class TechnologyManager extends Manager{
         weaponL3Unlocked = false;
     }
 
+    /**
+     * Creates and organises the general Unit Armour technologies
+     */
     public void setUpArmourTechs() {
         //Armour tech set up
-        techMap.put(1, new Technology(new int[]{10, 10, 10}, "Armour 1", new ArrayList<>(),
-                "A cheap technology"));
+        techMap.put(1, new Technology(new int[]{10, 0, 0}, "Armour 1", new ArrayList<>(),
+                "1st level Armour tech"));
         ArrayList<Technology> armourTech2Parents = new ArrayList<>();
         armourTech2Parents.add(techMap.get(1));
-        techMap.put(2, new Technology(new int[]{20, 20, 20}, "Armour 2", armourTech2Parents,
-                expensiveString));
+        techMap.put(2, new Technology(new int[]{10, 0, 0}, "Armour 2", armourTech2Parents,
+                "2nd level armour tech (metapod used harden)"));
         ArrayList<Technology> armourTech3Parents = new ArrayList<>();
         armourTech3Parents.add(techMap.get(2));
-        techMap.put(3, new Technology(new int[]{30, 30, 30}, "Armour 3", armourTech3Parents,
-                expensiveString));
+        techMap.put(3, new Technology(new int[]{10, 0, 0}, "Armour 3", armourTech3Parents,
+                "3rd level Armour tech (really getting hard)"));
         ArrayList<Technology> armourTech4Parents = new ArrayList<>();
         armourTech4Parents.add(techMap.get(3));
-        techMap.put(4, new Technology(new int[]{40, 40, 40}, "Armour 4", armourTech4Parents,
-                expensiveString));
-    }
-    public void setUpDamageTechs() {
-        //Damage tech set up
-        techMap.put(5, new Technology(new int[]{15, 15, 0}, "Damage 1", new ArrayList<>(),
-                expensiveString));
-        ArrayList<Technology> attackTech2Parents = new ArrayList<>();
-        attackTech2Parents.add(techMap.get(5));
-        techMap.put(6, new Technology(new int[]{30, 30, 0}, "Damage 2", attackTech2Parents,
-                expensiveString));
-        ArrayList<Technology> attackTech3Parents = new ArrayList<>();
-        attackTech3Parents.add(techMap.get(6));
-        techMap.put(7, new Technology(new int[]{45, 45, 0}, "Damage 3", attackTech3Parents,
-                expensiveString));
-        ArrayList<Technology> attackTech4Parents = new ArrayList<>();
-        attackTech4Parents.add(techMap.get(7));
-        techMap.put(8, new Technology(new int[]{60, 60, 0}, "Damage 4", attackTech4Parents,
-                expensiveString));
-    }
-    public void setUpSpeedTechs() {
-        //Speed tech Set up
-        techMap.put(9, new Technology(new int[]{0, 10, 10}, "Speed 1", new ArrayList<>(),
-                expensiveString));
-        ArrayList<Technology> speedTech2Parents = new ArrayList<>();
-        speedTech2Parents.add(techMap.get(9));
-        techMap.put(10, new Technology(new int[]{0, 20, 20}, "Speed 2", speedTech2Parents,
-                expensiveString));
-        ArrayList<Technology> speedTech3Parents = new ArrayList<>();
-        speedTech3Parents.add(techMap.get(10));
-        techMap.put(11, new Technology(new int[]{0, 30, 30}, "Speed 3", speedTech3Parents,
-                expensiveString));
-        ArrayList<Technology> speedTech4Parents = new ArrayList<>();
-        speedTech4Parents.add(techMap.get(11));
-        techMap.put(12, new Technology(new int[]{0, 40, 40}, "Speed 4", speedTech4Parents,
-                expensiveString));
-    }
-    public void setUpHealthTechs() {
-        //Health Tech Set up
-        techMap.put(13, new Technology(new int[]{0, 0, 20}, "Health 1", new ArrayList<>(),
-                expensiveString));
-        ArrayList<Technology> healthTech2Parents = new ArrayList<>();
-        healthTech2Parents.add(techMap.get(13));
-        techMap.put(14, new Technology(new int[]{0, 0, 40}, "Health 2", healthTech2Parents,
-                expensiveString));
-        ArrayList<Technology> healthTech3Parents = new ArrayList<>();
-        healthTech3Parents.add(techMap.get(14));
-        techMap.put(15, new Technology(new int[]{0, 0, 60}, "Health 3", healthTech3Parents,
-                expensiveString));
-        ArrayList<Technology> healthTech4Parents = new ArrayList<>();
-        healthTech4Parents.add(techMap.get(15));
-        techMap.put(16, new Technology(new int[]{0, 0, 80}, "Health 4", healthTech4Parents,
-                expensiveString));
+        techMap.put(4, new Technology(new int[]{10, 0, 0}, "Armour 4", armourTech4Parents,
+                "4th level Armour tech"));
     }
 
+    /**
+     * creates and organises the general units Damage technologies
+     */
+    public void setUpDamageTechs() {
+        //Damage tech set up
+        techMap.put(5, new Technology(new int[]{0, 10, 0}, "Damage 1", new ArrayList<>(),
+                "1st level Damage tech, increased both types of damage"));
+        ArrayList<Technology> attackTech2Parents = new ArrayList<>();
+        attackTech2Parents.add(techMap.get(5));
+        techMap.put(6, new Technology(new int[]{0, 10, 0}, "Damage 2", attackTech2Parents,
+                "2nd level Damage tech, increased both types of damage"));
+        ArrayList<Technology> attackTech3Parents = new ArrayList<>();
+        attackTech3Parents.add(techMap.get(6));
+        techMap.put(7, new Technology(new int[]{0, 10, 0}, "Damage 3", attackTech3Parents,
+                "3rd level Damage tech, increased both types of damage"));
+        ArrayList<Technology> attackTech4Parents = new ArrayList<>();
+        attackTech4Parents.add(techMap.get(7));
+        techMap.put(8, new Technology(new int[]{0, 10, 0}, "Damage 4", attackTech4Parents,
+                "4th level Damage tech, increased both types of damage"));
+    }
+
+    /**
+     * Creates and organises the general unit speed technologies
+     */
+    public void setUpSpeedTechs() {
+        //Speed tech Set up
+        techMap.put(9, new Technology(new int[]{0, 0, 10}, "Speed 1", new ArrayList<>(),
+                "1st level Speed tech, increases movement and attack speed"));
+        ArrayList<Technology> speedTech2Parents = new ArrayList<>();
+        speedTech2Parents.add(techMap.get(9));
+        techMap.put(10, new Technology(new int[]{0, 0, 10}, "Speed 2", speedTech2Parents,
+                "2nd level Speed tech, increases movement and attack speed"));
+        ArrayList<Technology> speedTech3Parents = new ArrayList<>();
+        speedTech3Parents.add(techMap.get(10));
+        techMap.put(11, new Technology(new int[]{0, 0, 10}, "Speed 3", speedTech3Parents,
+                "3rd level Speed tech, increases movement and attack speed"));
+        ArrayList<Technology> speedTech4Parents = new ArrayList<>();
+        speedTech4Parents.add(techMap.get(11));
+        techMap.put(12, new Technology(new int[]{0, 0, 10}, "Speed 4", speedTech4Parents,
+                "4th level Speed tech, increases movement and attack speed"));
+    }
+
+    /**
+     * Creates and organises the general unit health technologies
+     */
+    public void setUpHealthTechs() {
+        //Health Tech Set up
+        techMap.put(13, new Technology(new int[]{5, 5, 5}, "Health 1", new ArrayList<>(),
+                "1st level Health tech"));
+        ArrayList<Technology> healthTech2Parents = new ArrayList<>();
+        healthTech2Parents.add(techMap.get(13));
+        techMap.put(14, new Technology(new int[]{5, 5, 5}, "Health 2", healthTech2Parents,
+                "2nd level Health tech"));
+        ArrayList<Technology> healthTech3Parents = new ArrayList<>();
+        healthTech3Parents.add(techMap.get(14));
+        techMap.put(15, new Technology(new int[]{5, 5, 5}, "Health 3", healthTech3Parents,
+                "3rd level Health tech"));
+        ArrayList<Technology> healthTech4Parents = new ArrayList<>();
+        healthTech4Parents.add(techMap.get(15));
+        techMap.put(16, new Technology(new int[]{5, 5, 5}, "Health 4", healthTech4Parents,
+                "4th level Health tech"));
+    }
+
+    /**
+     * Creates and organises the general units special technologies
+     */
     public void setUpSpecialTechs() {
-        //Special tech Set up
         techMap.put(17, new Technology(new int[]{10, 10, 20}, "Nootropics", new ArrayList<>(),
-                "A cheap technology"));
+                "Feed your brain"));
+
         ArrayList<Technology> steroidsParents = new ArrayList<>();
         steroidsParents.add(techMap.get(4));
         steroidsParents.add(techMap.get(8));
         steroidsParents.add(techMap.get(16));
-        techMap.put(18, new Technology(new int[]{0, 20, 30}, "Steroids", steroidsParents,
-                expensiveString));
+        techMap.put(18, new Technology(new int[]{100, 100, 100}, "Steroids", steroidsParents,
+                "Increases Everything"));
 
         armourTech3Parents = new ArrayList<>();
         armourTech3Parents.add(techMap.get(2));
-        techMap.put(19, new Technology(new int[]{0, 30, 60}, "Cow Level", new ArrayList<Technology>(),
-                expensiveString));
+        techMap.put(19, new Technology(new int[]{9999999, 9999999,9999999}, "Cow Level", new ArrayList<Technology>(),
+                "There is no secret Cow Level"));
 
         armourTech3Parents = new ArrayList<>();
         armourTech3Parents.add(techMap.get(2));
-        techMap.put(20, new Technology(new int[]{0, 40, 80}, "Vampirism", new ArrayList<Technology>(),
-                expensiveString));
+        techMap.put(20, new Technology(new int[]{300, 300, 300}, "Vampirism", new ArrayList<Technology>(),
+                "Why did I make this?"));
     }
 
+    //Below here are hero upgrades, these are for the hero shop and not for the general units.
+
+    //HERO FACTORY TECH
     public void setUpHeroFactoryTech() {
         heroFactory = new Technology(new int[]{0, 0, 0}, "Hero " +
                 "Factory", heroFactoryParents,
@@ -194,18 +229,18 @@ public class TechnologyManager extends Manager{
         techMap.put(21, heroFactory);
     }
 
-
+    //HERO ARMOUR UPGRADE
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
         armourL1Parents.add(techMap.get(21));
-        armourLevelOne = new Technology(new int[]{0, 0, 0}, armourString +
+        armourLevelOne = new Technology(new int[]{0, 0, 10}, armourString +
                 "Level 1", armourL1Parents,
                 "Unlocks the ability to build Level One Armour for Hero " +
                         unitsString);
         techMap.put(22, armourLevelOne);
 
         armourL2Parents.add(techMap.get(22));
-        armourLevelTwo = new Technology(new int[]{0, 0, 0}, armourString +
+        armourLevelTwo = new Technology(new int[]{0, 0, 20}, armourString +
                 "Level 2",
                 armourL2Parents,
                 "Unlocks the ability to build Level Two Armour for Hero " +
@@ -213,28 +248,29 @@ public class TechnologyManager extends Manager{
         techMap.put(23, armourLevelTwo);
 
         armourL3Parents.add(techMap.get(23));
-        armourLevelThree = new Technology(new int[]{0, 0, 0}, armourString +
+        armourLevelThree = new Technology(new int[]{0, 0, 40}, armourString +
                 "Level 3",
                 armourL3Parents,
                 "Unlocks the ability to build Level Three Armour for Hero " +
                         unitsString);
         techMap.put(24, armourLevelThree);
     }
+    //HERO SPECIAL UPGRADES
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
         //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
-        special = new Technology(new int[]{0, 0, 0}, "Special " +
+        special = new Technology(new int[]{20, 20, 20}, "Special " +
                 "Items Unlock",
                 specialParents,
                 "Unlocks the ability to build Special items for Hero units");
         techMap.put(25, special);
     }
-
+    //HERO WEAPON UPGRADES
     public void setUpWeaponLevelTechs() {
         // Weapon item level upgrades setup
         weaponL1Parents.add(techMap.get(25));
-        weaponLevelOne = new Technology(new int[]{0, 0, 0}, weaponString +
+        weaponLevelOne = new Technology(new int[]{20, 20, 0}, weaponString +
                 "Level" +
                 " 1",
                 weaponL1Parents,
@@ -243,7 +279,7 @@ public class TechnologyManager extends Manager{
         techMap.put(26, weaponLevelOne);
 
         weaponL2Parents.add(techMap.get(26));
-        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, weaponString +
+        weaponLevelTwo = new Technology(new int[]{30, 30, 0}, weaponString +
                 "Level 2",
                 weaponL2Parents,
                 "Unlocks the ability to build Level Two Weapons for Hero " +
@@ -251,7 +287,7 @@ public class TechnologyManager extends Manager{
         techMap.put(27, weaponLevelTwo);
 
         weaponL3Parents.add(techMap.get(27));
-        weaponLevelThree = new Technology(new int[]{0, 0, 0}, weaponString +
+        weaponLevelThree = new Technology(new int[]{40, 40, 0}, weaponString +
                 "Level 3",
                 weaponL3Parents,
                 "Unlocks the ability to build Level Three Weapons for Hero " +
@@ -259,7 +295,11 @@ public class TechnologyManager extends Manager{
         techMap.put(28, weaponLevelThree);
     }
 
+    /*
+      This sets up the stats for all the general units
+     */
     public void setUnitAttributes() {
+
         // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 800, 50, 500, 400, 10, 20});
         unitAttributes.put(soldierString, new int[]{10, 750, 100, 500, 100, 8, 20});
@@ -272,10 +312,13 @@ public class TechnologyManager extends Manager{
         unitAttributes.put("Hacker", new int[]{10, 750, 0, 400, 0, 8, 20});
         unitAttributes.put("Carrier", new int[] {10, 1000, 0, 500, 0, 0, 0});
     }
-
+    /*
+     returns the Technology with the specified ID
+     */
     public Technology getTech(int id){
         return techMap.get(id);
     }
+
     /**
      provides a function to generate a List<String> representation of all the available technologies
      */
@@ -283,6 +326,10 @@ public class TechnologyManager extends Manager{
         return 	unitAttributes.get(name)[attribute];
     }
 
+    /**
+     * Returns an array of all the Technologies
+     * @return
+     */
     public ArrayList<Technology> getAllTechs() {
         ArrayList<Technology> techList = new ArrayList<>();
         for (int j = 0; j < techMap.size(); j++) {
@@ -296,42 +343,53 @@ public class TechnologyManager extends Manager{
     public void addActiveTech(Technology tech) {activeTech.add(tech); }
 
     public void attackUpgrade(){
-        unitAttributes.get(soldierString)[2] *= 2;
-        unitAttributes.get(soldierString)[4] *= 2;
-
+        unitAttributes.get(soldierString)[DAMAGE] *= 2;
+        unitAttributes.get(soldierString)[ARMOUR_DAMAGE] *= 2;
         }
+
     public void armourUpgrade(){
 
-        unitAttributes.get(soldierString)[3] *= 2;
+        unitAttributes.get(soldierString)[ARMOUR] *= 2;
     }
 
     public void speedUpgrade() {
-        unitAttributes.get(soldierString)[6] *= 2;
-        unitAttributes.get(soldierString)[5] *= 1.4f;
+        unitAttributes.get(soldierString)[ATTACK_SPEED] *= 2;
+        unitAttributes.get(soldierString)[ATTACK_RANGE] *= 2;
     }
     public void healthUpgrade() {
 
-        unitAttributes.get(soldierString)[1] *= 2;
+        unitAttributes.get(soldierString)[MAX_HEALTH] *= 2;
+
+
+    }
+
+    public void nootropicsUpgrade(){
+        unitAttributes.get(soldierString)[MAX_HEALTH] *= .2;
+        unitAttributes.get(soldierString)[ATTACK_RANGE] *= 1.5;
+        unitAttributes.get(soldierString)[ATTACK_SPEED] *= 1.5;
+        unitAttributes.get(soldierString)[DAMAGE] *= 1.5;
+        unitAttributes.get(soldierString)[ARMOUR] *= 1.5;
+        unitAttributes.get(soldierString)[ARMOUR_DAMAGE] *= 1.5;
 
     }
     public void cowLevelUpgrade() {
-
     }
+
     public void steroidsUpgrade() {
-        unitAttributes.get(soldierString)[1] *= .5;
-        unitAttributes.get(soldierString)[2] *= 3;
-        unitAttributes.get(soldierString)[3] *= 3;
-        unitAttributes.get(soldierString)[4] *= 3;
-        unitAttributes.get(soldierString)[5] *= 3;
-        unitAttributes.get(soldierString)[6] *= 3;
+        unitAttributes.get(soldierString)[MAX_HEALTH] *= .5;
+        unitAttributes.get(soldierString)[ATTACK_RANGE] *= 3;
+        unitAttributes.get(soldierString)[ATTACK_SPEED] *= 3;
+        unitAttributes.get(soldierString)[DAMAGE] *= 3;
+        unitAttributes.get(soldierString)[ARMOUR] *= 3;
+        unitAttributes.get(soldierString)[ARMOUR_DAMAGE] *= 3;
     }
     public void vampirismUpgrade() {
-        unitAttributes.get(soldierString)[1] *= 9999;
-        unitAttributes.get(soldierString)[2] *= 9999;
-        unitAttributes.get(soldierString)[3] *= 9999;
-        unitAttributes.get(soldierString)[4] *= 9999;
-        unitAttributes.get(soldierString)[5] *= 9999;
-        unitAttributes.get(soldierString)[6] *= 9999;
+        unitAttributes.get(soldierString)[MAX_HEALTH] *= 9999;
+        unitAttributes.get(soldierString)[DAMAGE] *= 9999;
+        unitAttributes.get(soldierString)[ATTACK_SPEED] *= 9999;
+        unitAttributes.get(soldierString)[ATTACK_RANGE] *= 9999;
+        unitAttributes.get(soldierString)[ARMOUR_DAMAGE] *= 9999;
+        unitAttributes.get(soldierString)[ARMOUR] *= 9999;
     }
 
 
@@ -444,17 +502,14 @@ public class TechnologyManager extends Manager{
      * Provides a method to check that the requirements for researching a Technology exists, if they are
      * all satisfied then this function will adjust your resources to reflect the research costs
      * and return a message.
-     * @param techMan
-     * @param tech
+     * @param techMan The Associated technologyManager Class used
+     * @param tech The Tech attempting to activate
      * @param teamid - the team researching this tech
      * @return String with message about whether or not the research was okay and why
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        resourceManager.setBiomass(80, teamid);
-//        resourceManager.setWater(80, teamid);
-//        System.out.println("prereqs are: " + tech.getParents());
-//        System.out.println("active tech is: " + getActive());
+        //resourceManager.setBiomass(80, teamid);
 
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
@@ -464,18 +519,6 @@ public class TechnologyManager extends Manager{
         if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-//        for (int i = 0; i < 10000; i++) {
-//            System.out.println("ROCKS NEEDED: " + tech.getCost()[0]);
-//            System.out.println("CRYSTAL NEEDED: " + tech.getCost()[1]);
-//            System.out.println("WATER NEEDED: " + tech.getCost()[2]);
-//            System.out.println("BIOMASS NEEDED: " + tech.getCost()[3]);
-//
-//            System.out.println("ROCK STOCKPILE: " + resourceManager.getRocks(teamid));
-//            System.out.println("CRYSTAL STOCKPILE: " + resourceManager.getCrystal(teamid));
-//            System.out.println("WATER STOCKPILE: " + resourceManager.getWater(teamid));
-//            System.out.println("BIOMASS STOCKPILE: " + resourceManager.getBiomass(teamid));
-//
-//        }
         if (tech.getCost()[0] > resourceManager.getRocks(teamid)) {
             return "Insufficient Rocks";
         }
@@ -485,11 +528,20 @@ public class TechnologyManager extends Manager{
         if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
             return "Insufficient Biomass";
         }
+        activateTech(techMan, tech, resourceManager, techID, teamid);
         return "Activating Technology!";
- //       return activateTech(techMan, tech, resourceManager, techID, teamid);
     }
 
-    public String activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
+    /**
+     * Checks the ID of the requested technology and executes the functionality of it
+     * and reduces resource levels but the cost.
+     * @param techMan The Associated technologyManager
+     * @param tech The Requested Technology
+     * @param resourceManager The ResourceManager being used
+     * @param techID The ID tag of the technology
+     * @param teamid the ID of the team attempting to upgrade their tech
+     */
+    public void activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[2], teamid);
@@ -508,7 +560,7 @@ public class TechnologyManager extends Manager{
             healthUpgrade();
         }
         if(techID == 17){
-            // needs something here, used to be HF tech, now moved to 21
+            nootropicsUpgrade();
         }
         if(techID == 18){
             steroidsUpgrade();
@@ -543,9 +595,58 @@ public class TechnologyManager extends Manager{
         if(techID == 28){
             unlockArmourLevelThree();
         }
-        return "Technology successfully researched";
     }
     
+    /**
+     * Sets up the dependencies of the items' levels (research)
+     */
+    private void setUpHeroTechs() {
+        heroFactory = new Technology(new int[]{0, 0, 20}, "Hero " +
+                "Factory", new ArrayList<Technology>(), "Unlocks the ability" +
+                " to build factories to manufacture hero units.");
+
+        ArrayList<Technology> armourL1Parents = new ArrayList<Technology>();
+        armourL1Parents.add(heroFactory);
+        armourLevelOne = new Technology(new int[]{20, 20, 0}, "Armour " +
+                "Level One", armourL1Parents, "Unlocks the " +
+                "ability to build Level One Armour for Hero units.");
+
+        this.armourL2Parents = new ArrayList<Technology>();
+        armourL2Parents.add(armourLevelOne);
+        armourLevelTwo = new Technology(new int[]{40, 40, 0}, "Armour " +
+                "Level Two", armourL2Parents, "Unlocks the " +
+                "ability to build Level Two Armour for Hero units.");
+
+        this.armourL3Parents = new ArrayList<Technology>();
+        armourL3Parents.add(armourLevelTwo);
+        armourLevelThree = new Technology(new int[]{60, 60, 0}, "Armour " +
+                "Level Three", armourL3Parents, "Unlocks the " +
+                "ability to build Level Three Armour for Hero units.");
+
+        this.weaponL1Parents = new ArrayList<Technology>();
+        weaponL1Parents.add(heroFactory);
+        weaponLevelOne = new Technology(new int[]{20, 20, 0}, "Weapons " +
+                "Level One", weaponL1Parents, "Unlocks the " +
+                "ability to build Level One Weapons for Hero units.");
+
+        this.weaponL2Parents = new ArrayList<Technology>();
+        weaponL2Parents.add(weaponLevelOne);
+        weaponLevelTwo = new Technology(new int[]{40, 40, 0}, "Weapon " +
+                "Level Two", weaponL2Parents, "Unlocks the " +
+                "ability to build Level Two Weapons for Hero units.");
+
+        this.weaponL3Parents = new ArrayList<Technology>();
+        weaponL3Parents.add(weaponLevelTwo);
+        weaponLevelThree = new Technology(new int[]{60, 60, 0}, "Weapons " +
+                "Level Three", weaponL3Parents, "Unlocks the " +
+                "ability to build Level Three Weapons for Hero units.");
+
+        this.specialParents = new ArrayList<Technology>();
+        specialParents.add(heroFactory);
+        special = new Technology(new int[]{20, 20, 20}, "Armour " +
+                "Level One", specialParents, "Unlocks the " +
+                "ability to build Special items for Hero units..");
+    }
 
     /**
      * Gets the buildings available for specified team 

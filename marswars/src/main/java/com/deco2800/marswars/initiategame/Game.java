@@ -16,6 +16,7 @@ import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
+import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;

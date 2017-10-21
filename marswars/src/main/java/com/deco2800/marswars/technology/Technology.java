@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Technology {
-	//each tech thingo has id, Cost(r,c,w,b), Name, parent(list) and a description
+	//each tech thingo has id, Cost(r,c,b), Name, parent(list) and a description
 	private int id = 0;
 	private int[] cost;
 	private String name;
@@ -14,7 +14,7 @@ public class Technology {
 	public Technology(int[] cost, String name, List<Technology> parents, String description) {
 		if (cost.length != 3) {
 			// bad resource cost length
-			throw new IllegalArgumentException("Resource costs must  be " +
+			throw new IllegalArgumentException("Resource costs must be " +
 					"an array of 3 integers");
 		} else if (name == null) {
 			// bad technology name
@@ -78,7 +78,7 @@ public class Technology {
 	@Override
 	public String toString() {
 		String str = "Technology: " + name + '\n' + "Cost: " + cost[0]
-				+ ", " + cost[1] + ", " + cost[2]  + '\n' + "Parent techs: ";
+				+ ", " + cost[1] + ", " + cost[2] + '\n' + "Parent techs: ";
 		for (Technology tech : parents) {
 			// add in each parent
 			str += tech.getName() + ", ";

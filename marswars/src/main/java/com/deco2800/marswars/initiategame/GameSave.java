@@ -45,15 +45,18 @@ public class GameSave {
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
 
-        File delete = new File("./resources/mapAssets/loadmap.tmx");
+        File delete = new File("./resources/mapAssets/temp.tmx");
         delete.delete();
 
         //copying the map
         File source = new File("./resources/mapAssets/tmap.tmx");
-        File dest = new File("./resources/mapAssets/loadmap.tmx");
+
+
+        //temp file created everytime a new map is created
+        File temp = new File("./resources/mapAssets/temp.tmx");
 
         try {
-            Files.copy(source.toPath(), dest.toPath());
+            Files.copy(source.toPath(), temp.toPath());
         }catch (java.io.IOException e){
             LOGGER.info("Game save: No file found - " + e);
         }
@@ -68,6 +71,17 @@ public class GameSave {
         Kryo kryo = new Kryo();
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
+
+        //write the map file
+        File delete = new File("./resources/mapAssets/loadmap.tmx");
+        delete.delete();
+        File temp = new File("./resources/mapAssets/temp.tmx");
+        File dest = new File("./resources/mapAssets/loadmap.tmx");
+        try {
+            Files.copy(temp.toPath(), dest.toPath());
+        }catch (java.io.IOException e){
+            LOGGER.info("Game save: No file found - " + e);
+        }
 
         kryo.writeClassAndObject(output, data.getFogOfWar());
         kryo.writeClassAndObject(output, data.getBlackFogOfWar());
