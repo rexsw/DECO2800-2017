@@ -3,6 +3,7 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -42,18 +43,19 @@ public class HelpWindow {
 	 * Builds the help window
 	 */
 	private void buildWindow() {
-		window.add(this.sidePane());
+		window.add(this.sidePane()).align(Align.topLeft);
 	}
 
 	private Table sidePane() {
 		sidePane = new Table();
 		sidePane.setDebug(enabled);
+		sidePane.align(Align.topLeft);
 		Button gameGuide = new TextButton("GAME GUIDE", skin);
 		Button hotKeys = new TextButton("HOTKEYS", skin);
 		Button settings = new TextButton("SETTINGS", skin);
 		Button back = new TextButton("BACK TO GAME", skin);
 		
-		hotKeys.addListener(new ChangeListener() {
+		gameGuide.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				window.clear();
@@ -82,6 +84,10 @@ public class HelpWindow {
 		sidePane.add(back).size(SIDEPANEBUTTONWIDTH, SIDEPANEBUTTONHEIGHT).row();
 				
 		return sidePane;
+	}
+	
+	public Window getHelpWindow() {
+		return this.window;
 	}
 	
 	private Table hotKeysInfo() {
@@ -119,5 +125,4 @@ public class HelpWindow {
 		window.add(hotKeysParent);
 		return hotKeysParent;
 	}
-
 }

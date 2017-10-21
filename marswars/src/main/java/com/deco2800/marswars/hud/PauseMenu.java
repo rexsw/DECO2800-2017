@@ -1,5 +1,7 @@
 package com.deco2800.marswars.hud;
 
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -39,7 +41,10 @@ public class PauseMenu extends Dialog{
 		super(title, skin);
 		this.stats = stats;
 		this.hud = hud;
-		TextButtonStyle buttonStyle = skin.get("pausemenubutton", TextButtonStyle.class);			
+		this.setSize(400, 600);
+
+		TextButtonStyle buttonStyle = skin.get("default", TextButtonStyle.class);
+		buttonStyle.fontColor = Color.WHITE;
 		
 		LOGGER.info("Instantiating the Pause menu");
 		this.align(Align.center);
@@ -48,8 +53,8 @@ public class PauseMenu extends Dialog{
 		
 		{
 			hud.setPauseCheck(1);
-			//this.text("Game Paused", labelStyle);
-			button("Resume Game", 0, buttonStyle);
+			button("Resume Game", 0, buttonStyle).setSize(300, 40);
+			
 			this.getButtonTable().row();
 			button("Show Stats", 1, buttonStyle);
 			this.getButtonTable().row();

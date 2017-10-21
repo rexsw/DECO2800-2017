@@ -91,7 +91,7 @@ public class MainMenu {
 	    TextureRegionDrawable backgroundRegionDraw = new TextureRegionDrawable(backgroundRegion);
 	    mainmenu.setBackground(backgroundRegionDraw);
 	    
-		mainmenu.align(Align.left | Align.top).pad(100);
+		mainmenu.align(Align.left | Align.top).pad(80);
 		this.stage.addActor(mainmenu);
 
 		openMusic = Gdx.audio.newSound(Gdx.files.internal("OriginalSoundTracks/OpeningTheme.mp3"));
@@ -199,6 +199,4 @@ public class MainMenu {
 			game.render(batch, camera);
 		}
 	}
-
-
 }

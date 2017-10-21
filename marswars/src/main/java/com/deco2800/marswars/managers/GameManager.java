@@ -34,6 +34,8 @@ public class GameManager implements TickableManager {
 
 	private Skin gameskin;
 	
+	private Skin altskin; 
+	
 	private Stage gamestage;
 
 	private BaseWorld mapWorld;
@@ -264,6 +266,16 @@ public class GameManager implements TickableManager {
 	}
 	
 	/**
+	 * sets the alternative game skin
+	 * 
+	 * @param skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setAltSkin(Skin skin) {
+		altskin = skin;
+	}
+	
+	/**
 	 * gets the currently used game skin
 	 * 
 	 * @return Skin the skin used to display the
@@ -271,6 +283,16 @@ public class GameManager implements TickableManager {
 	 */
 	public Skin getSkin() {
 		return gameskin;
+	}
+	
+	/**
+	 * gets the alternative game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getAltSkin() {
+		return altskin;
 	}
 
 	/**

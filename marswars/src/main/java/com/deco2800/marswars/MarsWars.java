@@ -21,8 +21,9 @@ import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Moos
@@ -52,8 +53,10 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	Stage stage;
 	private BackgroundManager bgManager = (BackgroundManager)
 			GameManager.get().getManager(BackgroundManager.class);
+	long pauseTime = 0;
 	private static int invincible = 0;
 	private Skin skin;
+	Set<Integer> downKeys = new HashSet<Integer>();
 	TextureManager reg;
 
 	private InputProcessor inputP;
@@ -66,6 +69,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 

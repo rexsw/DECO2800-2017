@@ -112,7 +112,7 @@ public class GameStats{
 	 */
 	private void setLayout(){
 		graphPrompt = new Label("Please select which stat you would like to view", skin);
-		graphType = new Label("", skin, "statsTitle");
+		graphType = new Label("", skin, "title");
 		graphInfo = new Label("", skin, "subtitle");
 		window.add(graphPrompt).align(Align.center).row();
 		window.add(graphType).align(Align.center).expandY().row();

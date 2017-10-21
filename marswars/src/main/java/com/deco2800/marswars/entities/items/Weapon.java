@@ -35,7 +35,6 @@ public class Weapon extends Item {
     	this.effects = new ArrayList<>();
         this.type = type;
         this.level = level;
-
         this.effects.add(new AttackEffect(getWeaponDamage(), getWeaponSpeed(), getWeaponRange(), Target.SELF));
     }
 
