@@ -26,9 +26,7 @@ import java.util.List;
  * selected (by clicking on their icon) before an item can be bought (by click
  * on the item icon). To escape the window, simple click outside of the window.
  * 
- * NOTE: CURRENTLY THE SHOP DOES NOT CONSIDER TECH TREE UNLOCK CONSIDERATIONS
- * NOR RESOURCE REQUIREMENTS. NOTE2: DESIGN OF THE SHOP IS TO BE RE-DONE BASED
- * ON USER FEEDBACK.
+ *
  * 
  * @author Mason
  *
@@ -189,11 +187,6 @@ public class ShopDialog extends Dialog {
 
 		this.getContentTable().row();
 		this.getContentTable().add(status).expandX().center().colspan(2);
-
-		// Z, here are the functions!
-//		unlockSpecials();
-//		unlockWeapons();
-//		unlockArmours();
 	}
 	
 	/**
@@ -324,9 +317,48 @@ public class ShopDialog extends Dialog {
 				}
 			});
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
-			scrollTable.add(new Label(item.getDescription(), skin))
+			// gets item stats
+			Item createdItem;
+			String stats = "";
+			float multiplier = 0;
+			if (item instanceof WeaponType) {
+				createdItem = new Weapon((WeaponType) item, level);
+				stats = createdItem.getDescription();
+				multiplier = ((WeaponType) item).getItemLevelMultipliers()[level-1];
+			} else if (item instanceof ArmourType) {
+				createdItem = new Armour((ArmourType) item, level);
+				stats = createdItem.getDescription();
+				multiplier = ((ArmourType) item).getItemLevelMultipliers()[level-1];
+			} else if (item instanceof SpecialType) {
+				stats = item.getDescription();
+			}
+			// gets item cost
+			int[] baseCosts = item.getCost();
+			float[] costs = new float[3];
+			if (item instanceof WeaponType || item instanceof ArmourType) {
+				for (int i = 0; i < 3; i++) {
+					costs[i] = baseCosts[i] * multiplier;
+				}
+			} else if (item instanceof SpecialType) {
+				for (int i = 0; i < 3; i++) {
+					costs[i] = baseCosts[i] * 1.0f;
+				}
+			}
+			// creates cost string
+			String costString = "";
+			if (baseCosts[0] > 0) {
+				costString += "Rock: " + costs[0] + "\n";
+			}
+			if (baseCosts[1] > 0) {
+				costString += "Crystal: " + costs[1] + "\n";
+			}
+			if (baseCosts[2] > 0) {
+				costString += "Biomass: " + costs[2] + "\n";
+			}
+
+			scrollTable.add(new Label(stats, skin))
 					.width(iconSize).top().left();
-			scrollTable.add(new Label(item.getCostString(), skin))
+			scrollTable.add(new Label(costString, skin))
 					.width(iconSize).top().left();
 			scrollTable.row();
 		}
