@@ -211,6 +211,7 @@ public class TechTreeView extends Dialog{
 
 		//exit button
 
+
 		text(message);
 		timeManager.pause();
 	}

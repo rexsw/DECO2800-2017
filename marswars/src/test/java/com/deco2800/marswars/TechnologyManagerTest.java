@@ -33,7 +33,7 @@ public class TechnologyManagerTest {
      */
     @Test
     public void addTechnologyTest() {
-        int[] costs = {0, 0, 0, 0};
+        int[] costs = {0, 0, 0};
         String name = "Constructor test technology";
         List<Technology> parentList = new ArrayList<>();
         String description = "Test description";
@@ -42,7 +42,7 @@ public class TechnologyManagerTest {
         technologyManager.addActiveTech(technology);
         //should have sufficient resources
         assertTrue(technologyManager.getActive().contains(technology));
-        technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1, -1);
+        //technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1, -1);
     }
 
 }
