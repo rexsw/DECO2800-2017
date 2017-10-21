@@ -124,6 +124,7 @@ public class HUDView extends ApplicationAdapter{
 	int chatActiveCheck = 0;
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
+	private Table selectedTable;
 
 
 	/**
@@ -167,22 +168,6 @@ public class HUDView extends ApplicationAdapter{
 		generateTextures(19);
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
 		this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	}
-
-	public void generateTextures(int number) {
-		PixmapIO pIO = new PixmapIO();
-		for (int i = 0; i <= number; i++) {
-			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
-			int width = 512;
-			int fillPoint = (width * i) /number;
-			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
-			p.setColor(Color.GRAY);
-			p.fill();
-			p.setColor(Color.GREEN);
-			p.fillRectangle(0,0,fillPoint,20);
-			pIO.writePNG(f,p);
-			p.dispose();
-		}
 	}
 
 	/**
@@ -507,6 +492,12 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 
+		selectedTable = new Table();
+		selectedTable.align(Align.left | Align.top);
+		selectedTable.setHeight(40);
+		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
+
+
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
@@ -534,6 +525,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
+		stage.addActor(selectedTable);
 
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
@@ -668,11 +660,13 @@ public class HUDView extends ApplicationAdapter{
 		for (int i = 0; i < NUMBER_ACTION_BUTTONS; i++) { //Disable buttons
 			disableButton(buttonList.get(i));
 		}
+		selectedTable.clear();
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
 			this.statsbg.setVisible(false);
 			return;
 		}
+		populateSelectedTable();
 		updateHealthBars();
 		selectedEntity = target;
 		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
@@ -745,6 +739,28 @@ public class HUDView extends ApplicationAdapter{
 		});
 	}
 
+
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) / number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			if (i == 0) {
+				p.dispose();
+				continue;
+			}
+			p.setColor(Color.GREEN);
+			if (i < number/2) p.setColor(Color.ORANGE);
+			if (i < number/8) p.setColor(Color.RED);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
+	}
 
     /**
      * Enables action button based on the actions avaliable to
@@ -1158,6 +1174,13 @@ public class HUDView extends ApplicationAdapter{
         messageToggle = false;
         hud.setChatActiveCheck(0);
         stage.unfocusAll();
+	}
+
+
+	private void populateSelectedTable() {
+		for (BaseEntity be: selectedList) {
+			selectedTable.add(be.getPortrait());
+		}
 	}
 
 }
