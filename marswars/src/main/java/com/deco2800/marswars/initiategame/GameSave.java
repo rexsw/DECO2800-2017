@@ -1,11 +1,12 @@
-package com.deco2800.marswars.initiateGame;
+package com.deco2800.marswars.initiategame;
 
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -15,6 +16,8 @@ import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +31,7 @@ import java.util.List;
  * This class is responsible for saving and loading the game
  */
 public class GameSave {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameSave.class);
 
     public Data data = new Data();
     /**
@@ -53,7 +57,9 @@ public class GameSave {
 
         try {
             Files.copy(source.toPath(), dest.toPath());
-        }catch (java.io.IOException e){}
+        }catch (java.io.IOException e){
+            LOGGER.info("Game save: No file found - " + e);
+        }
 
     }
 
@@ -71,6 +77,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getEntities());
         kryo.writeClassAndObject(output, data.getResource());
         kryo.writeClassAndObject(output, data.getBuilding());
+        kryo.writeClassAndObject(output, data.getObstacles());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
@@ -94,6 +101,7 @@ public class GameSave {
         data.setEntities((ArrayList<SavedEntity>)kryo.readClassAndObject(input));
         data.setResource((ArrayList<Resource>)kryo.readClassAndObject(input));
         data.setBuilding((ArrayList<SavedBuilding>)kryo.readClassAndObject(input));
+        data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
@@ -114,12 +122,12 @@ public class GameSave {
         data.setBlackFogOfWar(FogManager.getBlackFog());
 
         //getting all the entities
-        List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
+        List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();
 
         //converting these base entities to abstract entities
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
-        for (BaseEntity e : renderables_be) {
+        for (BaseEntity e : renderablesBe) {
             renderables.add(e);
         }
 
@@ -131,6 +139,9 @@ public class GameSave {
             else if(r instanceof BuildingEntity){
                 fillBuilding(r);
             }
+            else if(r instanceof Obstacle){
+                 data.getObstacles().add((Obstacle)r);
+             }
             else {
                 fillEntities(r);
             }
@@ -175,22 +186,22 @@ public class GameSave {
      */
     public void fillBuilding(AbstractEntity b){
         BuildingEntity bE = (BuildingEntity)b;
-        if(bE.getbuilding().equals("Turret")){
+        if("Turret".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TURRET,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Base")){
+        else if ("Base".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BASE,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Barracks")){
+        else if ("Barracks".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BARRACKS,bE.getOwner(),bE.getHealth()));
         }
-        else if (bE.getbuilding().equals("Bunker")){
+        else if ("Bunker".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.BUNKER,bE.getOwner(),bE.getHealth()));
         }
-        else if(bE.getbuilding().equals("Hero Factory")){
+        else if("Hero Factory".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner(),bE.getHealth()));
         }
-        else if(bE.getbuilding().equals("TechBuilding")){
+        else if("TechBuilding".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
         }
     }

@@ -21,15 +21,13 @@ public class Turret extends BuildingEntity {
 		super(posX, posY, posZ, BuildingType.TURRET, owner);
 	}
 	
-	@Override
 	public void powerUpTurret(){
 		this.setDamage(this.getDamageDeal()*2);
 	}
 	
-	@Override
 	public void releaseTurret(){
-		if(this.numOfSolider > 0){
-			this.numOfSolider = this.numOfSolider - 1;
+		if(this.getNumOfSolider() > 0){
+			this.setNumOfSolider(this.getNumOfSolider() - 1);
 		}		
 	}
 }

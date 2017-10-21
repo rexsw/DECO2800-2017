@@ -6,9 +6,9 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.*;
+import com.deco2800.marswars.entities.terrainelements.*;
 import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.initiateGame.GameSave;
+import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -413,7 +413,8 @@ public class MapContainer {
      */
     protected void generateResourcePatternFor(ResourceType resource) {
         Random r  = new Random();
-        double length, direction;
+        double length;
+        double direction;
         double xOrigin = this.length/2d;
         double yOrigin = this.width/2d;
         //maximum radial length

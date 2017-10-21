@@ -1,6 +1,7 @@
-package com.deco2800.marswars.initiateGame;
+package com.deco2800.marswars.initiategame;
 
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -28,6 +29,17 @@ public class Data {
 
     //list of entities
     private List<SavedEntity> entities = new ArrayList<>();
+
+    //list of obstacles
+    private List<Obstacle> obstacles = new ArrayList<>();
+
+    public List<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
+    public void setObstacles(List<Obstacle> obstacles) {
+        this.obstacles = obstacles;
+    }
 
     private int aITeams;
     private int playerTeams;

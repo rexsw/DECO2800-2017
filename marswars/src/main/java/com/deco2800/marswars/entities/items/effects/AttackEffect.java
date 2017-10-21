@@ -1,6 +1,5 @@
 package com.deco2800.marswars.entities.items.effects;
 
-import com.deco2800.marswars.entities.items.effects.Effect.Target;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 

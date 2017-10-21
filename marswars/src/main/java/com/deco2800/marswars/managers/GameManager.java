@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +88,7 @@ public class GameManager implements TickableManager {
 	 * @param type The class type (ie SoundManager.class)
 	 * @return A Manager component of the requested type
 	 */
-	public Manager getManager(Class<?> type) {
+	public synchronized Manager getManager(Class<?> type) {
 		/* Check if the manager exists */
 		for (Manager m : managers) {
 			if (m.getClass() == type) {

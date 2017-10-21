@@ -24,12 +24,14 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 
 	protected boolean canWalkOver = false;
 
-	float Xoff = 0;
-	float Yoff = 0;
-	float Zoff = 0;
+	float xOff = 0;
+	float yOff = 0;
+	float zOff = 0;
 
-	//NEVER DELETE THIS
-	public AbstractEntity(){}
+	
+	public AbstractEntity(){
+	  //NEVER DELETE THIS
+	}
 
 	/**
 	 * Constructor for the abstract entity
@@ -40,35 +42,8 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @param yLength
 	 * @param zLength
 	 */
-	public AbstractEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-		this(posX, posY, posZ, xLength, yLength, zLength, xLength, yLength, false);
-	}
-
-	/**
-	 * Full blown constructor for the abstract entity
-	 * @param
-	 * @param posY
-	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
-	 * @param xRenderLength
-	 * @param yRenderLength
-	 * @param centered
-	 */
-	public AbstractEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
-						  float xRenderLength, float yRenderLength, boolean centered) {
-		this.xRenderLength = xRenderLength;
-		this.yRenderLength = yRenderLength;
-		this.centered = centered;
-		float centeredPosX = posX;
-		float centeredPosY = posY;
-
-		if (centered) {
-			centeredPosX = posX + (1-xLength/2);
-			centeredPosY = posY + (1-yLength/2);
-		}
-		this.position = new Box3D(centeredPosX, centeredPosY, posZ, xLength, yLength, zLength);
+	public AbstractEntity(Box3D position) {
+		this(position, position.getXLength(), position.getYLength(), false);
 	}
 
 	/**
@@ -83,6 +58,10 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 		this.xRenderLength = xRenderLength;
 		this.yRenderLength = yRenderLength;
 		this.centered = centered;
+	    if (centered) {
+	        this.setPosX(this.getPosX() + (1-this.getXLength()/2)); 
+	        this.setPosY(this.getPosY() + (1-this.getYLength()/2));
+	    }
 	}
 
 	/**
@@ -281,14 +260,16 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 */
 	@Override
 	public int compareTo(AbstractEntity o) {
+	    AbstractWorld parent = GameManager.get().getWorld();
+	    
 		float cartX = this.position.getX();
-		float cartY = this.getParent().getLength() - this.position.getY();
+		float cartY = parent.getLength() - this.position.getY();
 
 		float isoX = (cartX - cartY) / 2.0f;
 		float isoY = (cartX + cartY) / 2.0f;
 
 		float oCartX = o.getPosX();
-		float oCartY = o.getParent().getLength() - o.getPosY();
+		float oCartY = parent.getLength() - o.getPosY();
 
 		float oIsoX = (oCartX - oCartY) / 2.0f;
 		float oIsoY = (oCartX + oCartY) / 2.0f;
@@ -342,6 +323,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	}
 
 	/**
+<<<<<<< HEAD
 	 * gets the parent world for this entity
 	 * NOTE: This is useless now that we have GameManager
 	 *
@@ -354,6 +336,8 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	}
 
 	/**
+=======
+>>>>>>> master
 	 * Returns the distance between two entities
 	 *
 	 * @param e the end point.
@@ -378,7 +362,7 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @return te X offset
 	 */
 	public float getXoff() {
-		return Xoff;
+		return xOff;
 	}
 
 	/**
@@ -386,20 +370,20 @@ public abstract class AbstractEntity implements Renderable, Comparable<AbstractE
 	 * @return te y offset
 	 */
 	public float getYoff() {
-		return Yoff;
+		return yOff;
 	}
 
 	/**
 	 * setss the x offset for rendering
 	 */
 	public void setXoff(float x) {
-		this.Xoff = x;
+		this.xOff = x;
 	}
 
 	/**
 	 * setss the y offset for rendering
 	 */
 	public void setYoff(float y) {
-		this.Yoff = y;
+		this.yOff = y;
 	}
 }

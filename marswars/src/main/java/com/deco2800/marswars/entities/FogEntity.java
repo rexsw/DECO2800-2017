@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.util.Box3D;
+
 /**
  * @author Treenhan
  * Created by Treenhan on 8/24/17.
@@ -13,15 +15,11 @@ public class FogEntity extends AbstractEntity {
 
     /**
      * the constructor for the Fog Entity
-     * @param posX
-     * @param posY
-     * @param posZ
-     * @param xLength
-     * @param yLength
-     * @param zLength
+     * 
+     * @param position The position of the fog tile.
      */
-    public FogEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-        super(posX, posY, posZ, xLength, yLength, zLength);
+    public FogEntity(Box3D position) {
+        super(position);
     }
 
 

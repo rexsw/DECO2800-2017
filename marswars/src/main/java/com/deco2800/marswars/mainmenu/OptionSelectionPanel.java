@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainMenu;
+package com.deco2800.marswars.mainmenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -36,8 +36,8 @@ public class OptionSelectionPanel extends Table {
     private Skin skin;
     
     // Arrays of map sizes and types, to be displayed in select boxes.
-    private final Array<MapTypes> MAPS = getMaps();
-    private final Array<MapSizeTypes> SIZES = getSizes();
+    private final Array<MapTypes> maps = getMaps();
+    private final Array<MapSizeTypes> sizesArray = getSizes();
     
     // Strings for messages
     private static final String MAP_SELECT_TEXT = "Select a map to play on:";
@@ -51,8 +51,8 @@ public class OptionSelectionPanel extends Table {
         mapSelect = new SelectBox<MapTypes>(this.skin);
         sizeSelect = new SelectBox<MapSizeTypes>(this.skin);
             
-        mapSelect.setItems(MAPS);
-        sizeSelect.setItems(SIZES);
+        mapSelect.setItems(maps);
+        sizeSelect.setItems(sizesArray);
         
         setupMapSelectionHandler();
         setupMapSizeSelectionHandler();

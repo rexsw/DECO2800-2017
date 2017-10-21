@@ -907,7 +907,8 @@ public class HUDView extends ApplicationAdapter{
 				}
 			}
 		}
-		if (selectedList.size() > 0)	selectedEntity = selectedList.get(0);
+		if (selectedList.size() > 0)
+		    selectedEntity = selectedList.get(0);
 		//Get the details from the selected entity
 	    setEnitity(selectedEntity);
 

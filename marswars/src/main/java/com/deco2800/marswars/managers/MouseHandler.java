@@ -87,10 +87,12 @@ public class MouseHandler extends Manager {
 				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
 				
 				if (entities.isEmpty()) {
-					if(skipChecking) return;//this line is for multiselection
+					if(skipChecking) 
+					    return;//this line is for multiselection
 					LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 					for (Clickable c : listeners) {
-						if (c instanceof Soldier) ((Soldier)c).resetTexture();
+						if (c instanceof Soldier) 
+						    ((Soldier)c).resetTexture();
 					}
 					((CustomizedWorld)world).deSelectAll();
 					listeners.clear();//Deselect all the entities selected before

@@ -1,21 +1,15 @@
 package com.deco2800.marswars.entities.units;
 
-import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.UseSpecialAction;
-import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
-import com.deco2800.marswars.entities.items.Special;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.WorldUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Optional;
 
 // A reminder for coder, the connectHero function should called when hero has been spawned! like bind to hero factory
@@ -198,25 +192,6 @@ public class Commander extends Soldier {
 			super.onRightClick(x, y);
 		}
 	}
-	
-//	/**
-//	 * Method to allow execution/usage of Special items via right click (in cases where the special item requires the 
-//	 * player to choose an area) without interrupting 
-//	 */
-//	@Override
-//	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
-//		if (itemInUse && inventory.getCurrentAction().isPresent()) {
-//			UseSpecialAction action = (UseSpecialAction) inventory.getCurrentAction().get();
-//			action.execute();
-//			itemInUse = false;
-//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-//			Sound loadedSound = sound.loadSound(movementSound);
-//			sound.playSound(loadedSound);
-//			return;
-//		} else {
-//			super.moveOrAttack(entities, x, y);
-//		}
-//	}
 	
 	@Override
 	public void deselect() {

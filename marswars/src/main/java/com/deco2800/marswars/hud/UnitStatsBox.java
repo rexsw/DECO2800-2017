@@ -53,6 +53,8 @@ public class UnitStatsBox extends Table{
 	private Label atkSpeedLabel;
 	private Label armourLabel;
 	private Label moveSpeedLabel;
+	
+	private String lockedInventoryString = "locked_inventory";
 		
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UnitStatsBox.class);
@@ -181,7 +183,7 @@ public class UnitStatsBox extends Table{
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
 		} else {
-			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			weaponBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 		}
 		weaponBtn.setText("");
 		heroInventory.add(weaponBtn).width(35).height(35).pad(3);
@@ -190,7 +192,7 @@ public class UnitStatsBox extends Table{
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
 		} else {
-			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			armourBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 		}
 		armourBtn.setText("");
 		heroInventory.add(armourBtn).width(35).height(35).pad(3);
@@ -209,7 +211,7 @@ public class UnitStatsBox extends Table{
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		for(int i = 0; i < 4-size; i++) {
-			ImageTextButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 			specialBtn.setText("");
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}

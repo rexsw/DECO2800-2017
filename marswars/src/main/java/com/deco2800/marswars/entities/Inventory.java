@@ -10,6 +10,7 @@ import com.deco2800.marswars.entities.items.effects.Effect;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.renderers.Renderable;
+import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.util.WorldUtil;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * immediately when the items are removed from the Inventory. Adding more than 4 Special items to the inventoey will not
  * be allowed.
  * 
- * owner = the Instance of the COmander class that this instacnce of the Inventory class belongs to
+ * owner = the Instance of the Commander class that this instance of the Inventory class belongs to
  * armour = the Armour item that is currently equipped.
  * weapon = the Weapon item that is currently equipped.
  * specials = List of instances of the Special items that are currently equipped.
@@ -49,7 +50,7 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
      * @param owner  The Commander that would be the owner of this instance of Inventory
      */
     public Inventory(Commander owner) {
-    	super(1, 1, 1, 1, 1, 1);
+    	super(new Box3D(1, 1, 1, 1, 1, 1));
     	this.owner = owner;
         this.armour = null;
         this.weapon = null;
@@ -104,22 +105,38 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
     public boolean removeFromInventory(Item item) {
         switch (item.getItemType()) {
             case WEAPON:
-                if ((weapon != null) && (weapon.equals(item))) {
-                	this.removeEffect(this.weapon, owner);
-                    this.weapon = null;
-                    return true;
-                }
-                return false;
+                return removeWeapon(item);
             case ARMOUR:
-                if ((armour != null) && (armour.equals(item))) {
-                	this.removeEffect(this.armour, owner);
-                    this.armour = null;
-                    return true;
-                }
-                return false;
+                return removeArmour(item);
             default: //which should be SPECIAL, just fix code smell
                 return this.specials.remove(item);
         }
+    }
+    
+    /**
+     * Tries to remove the given item as if it was a weapon.
+     * @return true if the item was removed, false otherwise.
+     */
+    private boolean removeWeapon(Item item) {
+        if ((weapon != null) && (weapon.equals(item))) {
+            this.removeEffect(this.weapon, owner);
+            this.weapon = null;
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Tries to remove the given item as if it was armour.
+     * @return true if the item was removed, false otherwise.
+     */
+    private boolean removeArmour(Item item) {
+        if ((armour != null) && (armour.equals(item))) {
+            this.removeEffect(this.armour, owner);
+            this.armour = null;
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -184,7 +201,6 @@ public class Inventory extends AbstractEntity implements HasAction, Tickable, Re
     	if(this.specials.contains(special)) {
     		WorldUtil.removeOverlay();
     		currentAction = Optional.of(new UseSpecialAction(special, owner));
-    		//should not have to worry about null pointer since it was just created.
     	} else {
     		LOGGER.error("***** Unrecognized " + special.getName());
     	}

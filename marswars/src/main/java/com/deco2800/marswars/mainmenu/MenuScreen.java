@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainMenu;
+package com.deco2800.marswars.mainmenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -100,6 +100,10 @@ public class MenuScreen{
 	private int mapTypeSet = 0;
 	private int mapSizeSet = 0;
 
+	
+	private String menuButtonString = "menubutton";
+	private String subtitleString = "subtitle";
+	private String totalTeamsPlayingString = "Total %d teams playing";
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
 	 * layouts to set into the Main Menu window.
@@ -146,7 +150,6 @@ public class MenuScreen{
 		Button customizeButton = new TextButton("Customize", this.skin, "button2");
 		Button loadGameButton = new TextButton("Load Game", this.skin, "button2");
 		Button exitGameButton = new TextButton("Exit Game", this.skin, "button2");
-
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -445,49 +448,48 @@ public class MenuScreen{
 		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin, "info");
 		Label combatSelected = new Label("Normal AI difficulty selected", skin, "info");
 
-		/* no of teams buttons*/
-		Table AIButtons = new Table();
-		Button AI2 = new TextButton("2", skin, "num_button");
-		Button AI3 = new TextButton("3", skin, "num_button");
-		Button AI4 = new TextButton("4", skin, "num_button");
-		Button AI5 = new TextButton("5", skin, "num_button");
-		Button[] buttonsList= {AI2, AI3, AI4, AI5};
+		Table aiButtons = new Table();
+		Button ai2 = new TextButton("2", skin, menuButtonString);
+		Button ai3 = new TextButton("3", skin, menuButtonString);
+		Button ai4 = new TextButton("4", skin, menuButtonString);
+		Button ai5 = new TextButton("5", skin, menuButtonString);
+		Button[] buttonsList= {ai2, ai3, ai4, ai5};
 
-		AI2.addListener(new ChangeListener() {
+		ai2.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 2;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
-		AI3.addListener(new ChangeListener() {
+		ai3.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 3;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
-		AI4.addListener(new ChangeListener() {
+		ai4.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 4;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 
 		
-		AI5.addListener(new ChangeListener() {
+		ai5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				allTeams = 5;
-				selected.setText(String.format("Total %d teams playing", allTeams));
+				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
 		});
 		
 		for (int i = 0; i < buttonsList.length; i++) {
-			AIButtons.add(buttonsList[i]).pad(BUTTONPAD);
+			aiButtons.add(buttonsList[i]).pad(BUTTONPAD);
 		}
 		
 		/* no of teams buttons*/
@@ -537,9 +539,10 @@ public class MenuScreen{
 								
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(teamInfo).align(Align.left).row();
-		mainmenu.add(AIButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
 		
+		mainmenu.add(aiButtons).align(Align.center).row();
+		mainmenu.add(selected).align(Align.left).row();
 		mainmenu.add(aiInfo).align(Align.left).row();
 		mainmenu.add(AIBehaviorButtons).align(Align.left).row();
 		mainmenu.add(combatSelected).align(Align.left).padBottom(LABELPAD).row();
@@ -579,7 +582,6 @@ public class MenuScreen{
 	public Table addNavigationButton(ScreenMode status) {
 		this.backButton = new TextButton("<", this.skin, "pre_button");
 		this.nextButton = new TextButton(">", this.skin, "next_button");
-		
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
