@@ -1,7 +1,6 @@
 package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,9 +30,6 @@ public class GameStats{
 	
 	private static final int STATSWIDTH = (9*(BUTTONSIZE + 2 * BUTTONPAD)) + 2 * WINDOWPAD; 
 	private static final int STATSHEIGHT = 300;
-
-	private String you = "You: ";
-	private String highest = " Highest:";
 
 	/*Constructors*/
 	private Skin skin; 
