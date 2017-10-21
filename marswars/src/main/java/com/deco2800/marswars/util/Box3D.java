@@ -201,15 +201,15 @@ public class Box3D {
 	 * @return
 	 */
 	public boolean equals(Object object) {
-		final double EPSILON = 0.00001;
+		final double epsilon = 0.00001;
 		if (!(object instanceof Box3D)) {
 			return false;
 		}
 		Box3D other = (Box3D) object;
-		if (Math.abs(this.x - other.x) > EPSILON && Math.abs(this.y - other.y) > EPSILON && Math.abs(this.z - other.z) > EPSILON) {
+		if (Math.abs(this.x - other.x) > epsilon && Math.abs(this.y - other.y) > epsilon && Math.abs(this.z - other.z) > epsilon) {
 			return false;
 		}
-			return Math.abs(this.x - other.x) < EPSILON && Math.abs(this.y - other.y) < EPSILON && Math.abs(this.z - other.z) < EPSILON;
+			return Math.abs(this.x - other.x) < epsilon && Math.abs(this.y - other.y) < epsilon && Math.abs(this.z - other.z) < epsilon;
 		}
 
 	/**

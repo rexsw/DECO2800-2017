@@ -2,7 +2,7 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.managers.WeatherManager;

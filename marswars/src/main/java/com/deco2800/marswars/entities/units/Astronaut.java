@@ -9,7 +9,7 @@ import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -36,6 +36,7 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.setFogRange(10);
 		setAttributes();
 	}
 	

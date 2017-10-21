@@ -11,18 +11,9 @@ public class Tank extends Soldier {
 	
 	public Tank(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		//this.movementSound = "tankMovementSound";
-		
-		// set all the attack attributes
-		this.setMaxHealth(10000);
-		this.setHealth(10000);
-		this.setDamage(1);
-		this.setArmor(500);
-		this.setArmorDamage(150);
-		this.setAttackRange(10);
-		this.setAttackSpeed(20);
-		//setAttributes();
 		this.setAreaDamage(1);
+		this.name = "Tank";
+		this.setAttributes();
 		
 	}
 	/*

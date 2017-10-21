@@ -44,8 +44,7 @@ public class SoundManager extends Manager {
 			return 0;
 		}
 		try {
-			long id = sound.play(1f);
-			return id;
+			return sound.play(1f);
 		} catch (GdxRuntimeException e) {
 			LOGGER.error("Could not play sound effect");
 		}

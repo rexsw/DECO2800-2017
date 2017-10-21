@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.FogWorld;
 import com.deco2800.marswars.entities.FogEntity;
 
@@ -85,7 +86,7 @@ public class FogWarTest {
 		FogWorld.initializeFogWorld(5, 5);
 		FogWorld.getFogMap();
 		FogWorld.getBlackFogMap();
-		FogEntity fogEntity = new FogEntity(0, 0, 0, 1, 1, 1);
+		FogEntity fogEntity = new FogEntity(new Box3D(0, 0, 0, 1, 1, 1));
 		fogEntity.setPosX(1);
 		fogEntity.setPosY(1);
 		fogEntity.setPosZ(1);

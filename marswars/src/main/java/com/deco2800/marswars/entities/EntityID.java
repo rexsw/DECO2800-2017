@@ -11,10 +11,13 @@ public enum EntityID {
     ASTRONAUT,
     COMMANDER,
     CARRIER,
-    HEALER,
+    MEDIC,
     SOLDIER,
     TANK,
-    SPACMAN
+    SPACMAN,
+    HACKER,
+    SNIPER,
+    TANKDESTROYER
 
 }
 

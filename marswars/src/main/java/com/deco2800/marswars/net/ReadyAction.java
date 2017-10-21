@@ -46,6 +46,6 @@ public class ReadyAction implements Action {
     
     @Override
     public String toString() {
-        return "Set ready to " + String.valueOf(ready);
+        return "Set ready to " + ready;
     }
 }

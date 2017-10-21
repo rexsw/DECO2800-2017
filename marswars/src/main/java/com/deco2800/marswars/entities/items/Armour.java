@@ -35,8 +35,6 @@ public class Armour extends Item {
 		this.effects = new ArrayList<>();
 		this.type = type;
 		this.level = level;
-//		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth
-//				(), getMoveSpeed()));
 		this.effects.add(new DefenceEffect(getArmourValue(), getArmourHealth(), getMoveSpeed(), Target.SELF));
 	}
 
@@ -76,7 +74,7 @@ public class Armour extends Item {
 	 * decrease when applied.
 	 */
 	public float getMoveSpeed() {
-		return Math.round(type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1]);
+		return type.getMoveSpeed()*type.getItemLevelMultipliers()[level - 1];
 	}
 
 	/**
