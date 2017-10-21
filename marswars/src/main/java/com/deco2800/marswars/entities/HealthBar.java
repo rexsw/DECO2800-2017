@@ -55,8 +55,12 @@ public class HealthBar extends BaseEntity {
             p.setColor(Color.GRAY);
             p.fill();
             p.setColor(Color.GREEN);
-            if (number*100/i < 50) p.setColor(Color.ORANGE);
-            if (number*100/i < 10) p.setColor(Color.RED);
+            if (number*100/i < 50) {
+            	p.setColor(Color.ORANGE);
+            }
+            if (number*100/i < 10) {
+            	p.setColor(Color.RED);
+            }
             p.fillRectangle(0,0,fillPoint,20);
             pIO.writePNG(f,p);
             p.dispose();

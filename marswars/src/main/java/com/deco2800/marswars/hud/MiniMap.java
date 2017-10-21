@@ -24,8 +24,8 @@ public class MiniMap {
     private int width; //the width of the minimap in pixels
     private int height; //the height of the minimap in pixels
     private List<MiniMapEntity> entitiesOnMap; //a list of every entity displayed on the minimap
-    public int miniMapDisplay[][]; //every 'pixel' on the minimap and whether it has something on it, 0 is empty. (x,y)
-    public Image entitiesOnMiniMap[][]; // grid of the entities on the minimap, (x,y)
+    public int[][] miniMapDisplay; //every 'pixel' on the minimap and whether it has something on it, 0 is empty. (x,y)
+    public Image[][] entitiesOnMiniMap; // grid of the entities on the minimap, (x,y)
     public Window stageReference;
 
     /**
@@ -122,9 +122,9 @@ public class MiniMap {
      * @return Vector2 of the minimap coordinates. return.x < width, return.y < height
      */
     private Vector2 convertCoordinates(BaseEntity entity) {
-        float posY =(entity.getPosY());
+        float posY = entity.getPosY();
         int gameY = GameManager.get().getWorld().getLength();
-        float posX = (entity.getPosX());
+        float posX = entity.getPosX();
         int gameX = GameManager.get().getWorld().getWidth();
         float newX = (posX / gameX) * width;
         float newY = height - ((posY / gameY) * height);

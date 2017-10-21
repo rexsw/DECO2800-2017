@@ -45,7 +45,9 @@ public class GameSave {
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
 
-        File delete = new File("./resources/mapAssets/temp.tmx");
+        String tempFile = "./resources/mapAssets/temp.tmx";
+        
+        File delete = new File(tempFile);
         delete.delete();
 
         //copying the map
@@ -53,7 +55,7 @@ public class GameSave {
 
 
         //temp file created everytime a new map is created
-        File temp = new File("./resources/mapAssets/temp.tmx");
+        File temp = new File(tempFile);
 
         try {
             Files.copy(source.toPath(), temp.toPath());

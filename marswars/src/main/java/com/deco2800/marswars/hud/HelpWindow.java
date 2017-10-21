@@ -3,7 +3,6 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,7 +17,7 @@ public class HelpWindow {
 	private static final int WINDOWPAD = 20;
 	private static final int HOTKEYBUTTON = 40;
 
-	private static final boolean enabled = true; 
+	private static final boolean ENABLED = true; 
 
 	private Stage stage;
 	private Window window;
@@ -31,7 +30,7 @@ public class HelpWindow {
 
 		this.window = new Window("Help", skin);
 		window.setSize(600, 600);
-		window.setDebug(enabled);
+		window.setDebug(ENABLED);
 		window.align(Align.left | Align.top);
 		window.pad(WINDOWPAD);
 		stage.addActor(window);
@@ -48,7 +47,7 @@ public class HelpWindow {
 
 	private Table sidePane() {
 		sidePane = new Table();
-		sidePane.setDebug(enabled);
+		sidePane.setDebug(ENABLED);
 		sidePane.align(Align.topLeft);
 		Button gameGuide = new TextButton("GAME GUIDE", skin);
 		Button hotKeys = new TextButton("HOTKEYS", skin);

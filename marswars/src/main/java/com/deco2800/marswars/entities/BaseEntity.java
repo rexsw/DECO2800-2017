@@ -8,10 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.weatherentities.Water;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.hud.EntityPortrait;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
@@ -560,7 +558,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	}
 
     public EntityPortrait getPortrait() {
-		if (this.entityType != EntityType.UNIT) return null;
+		if (this.entityType != EntityType.UNIT) {
+			return null;
+		}
 		if (this.portrait == null) {
 			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
 		}
