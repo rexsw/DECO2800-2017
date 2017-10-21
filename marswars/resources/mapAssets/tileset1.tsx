@@ -61,4 +61,25 @@
  <tile id="38">
   <image width="58" height="36" source="tileset/moon010.png"/>
  </tile>
+ <tile id="39">
+  <image width="58" height="36" source="tileset/MARSgrasstileLIGHT.png"/>
+ </tile>
+ <tile id="40">
+  <image width="58" height="36" source="tileset/MARSgrasstileMID.png"/>
+ </tile>
+ <tile id="41">
+  <image width="58" height="36" source="tileset/MARSgrassDARK.png"/>
+ </tile>
+ <tile id="42">
+  <image width="58" height="36" source="tileset/MOONgrassLIGHT.png"/>
+ </tile>
+ <tile id="43">
+  <image width="58" height="36" source="tileset/MOONgrassDARK.png"/>
+ </tile>
+ <tile id="44">
+  <image width="58" height="36" source="tileset/sungrass001.png"/>
+ </tile>
+ <tile id="45">
+  <image width="58" height="36" source="tileset/sungrass002.png"/>
+ </tile>
 </tileset>

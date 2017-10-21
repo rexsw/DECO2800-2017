@@ -10,13 +10,13 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.weatherentities.Water;
+import com.deco2800.marswars.hud.EntityPortrait;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +38,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
+	private EntityPortrait portrait;
 
 	public BaseEntity(){
 	  //NEVER DELETE THIS
@@ -556,4 +557,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 
+    public EntityPortrait getPortrait() {
+		if (this.entityType != EntityType.UNIT) {
+			return null;
+		}
+		if (this.portrait == null) {
+			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
+		}
+		portrait.updateHealth();
+		return portrait;
+    }
 }

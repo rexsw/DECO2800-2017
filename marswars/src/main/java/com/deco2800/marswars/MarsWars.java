@@ -69,7 +69,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 	public void create () {
 		this.stage = new Stage(new ScreenViewport());
 		this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-		
+
 		GameManager.get().setSkin(this.skin);
 		GameManager.get().setStage(this.stage);
 
@@ -121,11 +121,11 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		batch.draw(background, this.camera.position.x -
 						this.camera.viewportWidth*this.camera.zoom/2 ,
 				this.camera.position.y -
-				this.camera.viewportHeight*this.camera.zoom/2,
+						this.camera.viewportHeight*this.camera.zoom/2,
 				this.camera.viewportWidth*this.camera.zoom,
 				this.camera.viewportHeight*this.camera.zoom);
 		batch.end();
-		
+
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 

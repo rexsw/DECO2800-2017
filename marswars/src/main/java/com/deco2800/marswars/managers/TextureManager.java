@@ -191,8 +191,8 @@ public class TextureManager extends Manager {
         //----------- MainMenu Assets:
         this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
-        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon002.png");
-        this.saveTexture("desert_map", "resources/mapAssets/tileset/tile001.png");
+        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon007.png");
+        this.saveTexture("desert_map", "resources/mapAssets/tileset/moon010.png");
         this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
         this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
         this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
@@ -268,6 +268,7 @@ public class TextureManager extends Manager {
         for (int i = 0; i < 21; i++) {
             this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
         }
+        
     }
     /*
      *
@@ -304,7 +305,9 @@ public class TextureManager extends Manager {
             LOGGER.info(String.format("Loading texture %s for %s from %s", 
             		textureType, unitType, path));
             String retVal = textureType + teamColour + unitType;
-            saveTexture(retVal,path);
+            if (!textureMap.containsKey(retVal)) {
+                saveTexture(retVal,path);
+            }
             return retVal;
         } else {
         	return null;
@@ -331,7 +334,10 @@ public class TextureManager extends Manager {
 
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
-        saveTexture(retVal,path);
+        if (!textureMap.containsKey(retVal)) {
+            saveTexture(retVal,path);
+        }
+
         return retVal;
     }
     

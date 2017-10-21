@@ -196,6 +196,7 @@ public class Astronaut extends Soldier {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this.getHealthBar());
 			LOGGER.info("DEAD");
 		}
 		if (health >= this.getMaxHealth()) {

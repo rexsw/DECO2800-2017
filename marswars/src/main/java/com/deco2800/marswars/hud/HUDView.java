@@ -64,7 +64,7 @@ public class HUDView extends ApplicationAdapter{
 	//HUD elements
 	private Table overheadRight; //contains all basic quit/help/chat buttons
 	Table resourceTable;         //contains table of resource images + count
-    Table HUDManip;		         //contains buttons for toggling HUD + old menu
+    Table hudManip;		         //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
@@ -124,6 +124,7 @@ public class HUDView extends ApplicationAdapter{
 	int chatActiveCheck = 0;
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
+	private Table selectedTable;
 
 
 	/**
@@ -167,22 +168,6 @@ public class HUDView extends ApplicationAdapter{
 		generateTextures(19);
 		this.hotkeys = new Hotkeys(stage, skin, this, this.stats, this.chatbox);
 		this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	}
-
-	public void generateTextures(int number) {
-		PixmapIO pIO = new PixmapIO();
-		for (int i = 0; i <= number; i++) {
-			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
-			int width = 512;
-			int fillPoint = (width * i) /number;
-			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
-			p.setColor(Color.GRAY);
-			p.fill();
-			p.setColor(Color.GREEN);
-			p.fillRectangle(0,0,fillPoint,20);
-			pIO.writePNG(f,p);
-			p.dispose();
-		}
 	}
 
 	/**
@@ -348,8 +333,8 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addMiniMapMenu();
 		addInventoryMenu();
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(Gdx.graphics.getWidth()-HUDManip.getWidth(), actionsWindow.getHeight());
+		hudManip = new Table(); //adding buttons into a table
+		hudManip.setPosition(Gdx.graphics.getWidth()-hudManip.getWidth(), actionsWindow.getHeight());
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
@@ -374,7 +359,7 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle for flood effect (FOR DEBUGGING)
 		Button dispFlood = new TextButton("Flood", skin);
 
-		HUDManip.setDebug(enabled);
+		hudManip.setDebug(enabled);
 		Table debugToggles = new Table();
 		debugToggles.setDebug(enabled);
 		debugToggles.add(dispFog).size(BUTTONSIZE).row();
@@ -385,8 +370,8 @@ public class HUDView extends ApplicationAdapter{
 		options.add(dispShop).width(50).height(50);
 		options.add(dispTech);
 
-		HUDManip.add(options, debugToggles);
-		stage.addActor(HUDManip);
+		hudManip.add(options, debugToggles);
+		stage.addActor(hudManip);
 
 		dispTech.addListener(new ChangeListener() {
 			@Override
@@ -400,7 +385,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				shopDialog.show(stage);
-				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
+				shopDialog.setPosition(stage.getWidth(), 0, Align.right | Align.bottom);
 			}
 		});
 		dispShop.addListener(new TextTooltip("Open Shop", skin));
@@ -507,6 +492,12 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(40);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 
+		selectedTable = new Table();
+		selectedTable.align(Align.left | Align.top);
+		selectedTable.setHeight(40);
+		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
+
+
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
 		crystalCount = new Label("Crystal: 0", skin);
@@ -534,6 +525,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.add(maxPopCount);
 
 		stage.addActor(resourceTable);
+		stage.addActor(selectedTable);
 
 		peonButton = new TextButton("Select a Unit", skin);
 		helpText = new Label("Welcome to SpacWars!", skin);
@@ -668,11 +660,13 @@ public class HUDView extends ApplicationAdapter{
 		for (int i = 0; i < NUMBER_ACTION_BUTTONS; i++) { //Disable buttons
 			disableButton(buttonList.get(i));
 		}
+		selectedTable.clear();
 		if (selectedEntity == null) { //If there is not selected entity hide the stats then return
 			this.statsTable.setVisible(false);
 			this.statsbg.setVisible(false);
 			return;
 		}
+		populateSelectedTable();
 		updateHealthBars();
 		selectedEntity = target;
 		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
@@ -745,6 +739,28 @@ public class HUDView extends ApplicationAdapter{
 		});
 	}
 
+
+	public void generateTextures(int number) {
+		PixmapIO pIO = new PixmapIO();
+		for (int i = 0; i <= number; i++) {
+			FileHandle f = new FileHandle("resources/UnitAssets/HealthBar/Health" + i + ".png");
+			int width = 512;
+			int fillPoint = (width * i) / number;
+			Pixmap p = new Pixmap(width, 20, Pixmap.Format.RGBA8888);
+			p.setColor(Color.GRAY);
+			p.fill();
+			if (i == 0) {
+				p.dispose();
+				continue;
+			}
+			p.setColor(Color.GREEN);
+			if (i < number/2) p.setColor(Color.ORANGE);
+			if (i < number/8) p.setColor(Color.RED);
+			p.fillRectangle(0,0,fillPoint,20);
+			pIO.writePNG(f,p);
+			p.dispose();
+		}
+	}
 
     /**
      * Enables action button based on the actions avaliable to
@@ -944,7 +960,7 @@ public class HUDView extends ApplicationAdapter{
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
-	    HUDManip.setVisible(false);
+	    hudManip.setVisible(false);
 
 		chatbox.setVisible(false);
 		minimap.setVisible(false);
@@ -958,7 +974,7 @@ public class HUDView extends ApplicationAdapter{
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
-	    HUDManip.setVisible(true);
+	    hudManip.setVisible(true);
 	    actionsBg.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
@@ -1009,7 +1025,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(60);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight() + BUTTONPAD*2);
 		//Menu manipulator
-		HUDManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
+		hudManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
 
 		//resize stats
 		stats.resizeStats(width, height);
@@ -1158,6 +1174,15 @@ public class HUDView extends ApplicationAdapter{
         messageToggle = false;
         hud.setChatActiveCheck(0);
         stage.unfocusAll();
+	}
+
+
+	private void populateSelectedTable() {
+		for (BaseEntity be: selectedList) {
+			EntityPortrait ep = be.getPortrait();
+			if (ep == null) continue;
+			selectedTable.add(ep);
+		}
 	}
 
 }
