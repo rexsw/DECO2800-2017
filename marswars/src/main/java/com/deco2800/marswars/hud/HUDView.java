@@ -1179,7 +1179,9 @@ public class HUDView extends ApplicationAdapter{
 
 	private void populateSelectedTable() {
 		for (BaseEntity be: selectedList) {
-			selectedTable.add(be.getPortrait());
+			EntityPortrait ep = be.getPortrait();
+			if (ep == null) continue;
+			selectedTable.add(ep);
 		}
 	}
 

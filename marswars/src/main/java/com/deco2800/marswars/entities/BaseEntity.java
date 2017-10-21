@@ -560,6 +560,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	}
 
     public EntityPortrait getPortrait() {
+		if (this.entityType != EntityType.UNIT) return null;
 		if (this.portrait == null) {
 			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
 		}
