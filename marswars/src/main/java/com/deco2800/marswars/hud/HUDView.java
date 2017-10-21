@@ -73,6 +73,7 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		         //window for containing the minimap
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
+	private TechTreeView techTree; //view for tech tree
 
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
@@ -159,6 +160,14 @@ public class HUDView extends ApplicationAdapter{
 		createLayout();
 		GameManager.get().setGui(this);
 	}
+
+	/**
+	 * Updates shop when item levels are unlocked.
+	 */
+	public void updateShop(ShopDialog shop) {
+		shopDialog = shop;
+	}
+
 
 	/**
 	 * Adds in all components of the HUD.
@@ -367,10 +376,12 @@ public class HUDView extends ApplicationAdapter{
 		HUDManip.add(options, debugToggles);
 		stage.addActor(HUDManip);
 
-		dispTech.addListener(new ChangeListener() {
+		techTree = new TechTreeView("TechTree", skin, hud);
+
+		dispTech.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				techTree.show(stage);
 			}
 
 		});
@@ -382,6 +393,29 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
 			}
 		});
+
+		techTree.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (techCheck == 0) {
+					techTree.show(stage);
+				}
+				if (techCheck == 1) {
+					techTree.hide();
+				}
+				if (x < 0 || x > techTree.getWidth() || y < 0 || y > techTree.getHeight()){
+					techTree.hide();
+					return true;
+				}
+				return false;
+			}
+		});
+
+
+
+
+
+
+
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.

@@ -375,6 +375,9 @@ public class TechnologyManager extends Manager{
      */
     public void unlockWeaponLevelOne() {
         weaponL1Unlocked = true;
+
+
+
     }
     
     /**
@@ -463,18 +466,6 @@ public class TechnologyManager extends Manager{
         if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-//        for (int i = 0; i < 10000; i++) {
-//            System.out.println("ROCKS NEEDED: " + tech.getCost()[0]);
-//            System.out.println("CRYSTAL NEEDED: " + tech.getCost()[1]);
-//            System.out.println("WATER NEEDED: " + tech.getCost()[2]);
-//            System.out.println("BIOMASS NEEDED: " + tech.getCost()[3]);
-//
-//            System.out.println("ROCK STOCKPILE: " + resourceManager.getRocks(teamid));
-//            System.out.println("CRYSTAL STOCKPILE: " + resourceManager.getCrystal(teamid));
-//            System.out.println("WATER STOCKPILE: " + resourceManager.getWater(teamid));
-//            System.out.println("BIOMASS STOCKPILE: " + resourceManager.getBiomass(teamid));
-//
-//        }
         if (tech.getCost()[0] > resourceManager.getRocks(teamid)) {
             return "Insufficient Rocks";
         }
@@ -542,6 +533,7 @@ public class TechnologyManager extends Manager{
         if(techID == 28){
             unlockArmourLevelThree();
         }
+
         return "Technology successfully researched";
     }
     

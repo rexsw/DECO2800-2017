@@ -74,6 +74,7 @@ public class ShopDialog extends Dialog {
 		this.getContentTable().left();
 		this.skin = skin;
 		this.technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
+
 		if (technologyManager.armourIsUnlocked(1)) {
 			unlockArmours(1);
 		}
@@ -197,10 +198,10 @@ public class ShopDialog extends Dialog {
 	public void unlockWeapons(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (WeaponType type : WeaponType.values()) {
-			items.add((ItemType)new Weapon(type, level));
+		for (WeaponType wep : WeaponType.values()){
+			items.add(wep);
 		}
-		updateShop(items);
+		updateShop(items, level);
 	}
 
 	/**
@@ -210,10 +211,10 @@ public class ShopDialog extends Dialog {
 	public void unlockArmours(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (ArmourType type : ArmourType.values()) {
-			items.add((ItemType)new Armour(type, level));
+		for (ArmourType armour: ArmourType.values()){
+			items.add(armour);
 		}
-		updateShop(items);
+		updateShop(items, level);
 	}
 
 	/**
@@ -223,20 +224,17 @@ public class ShopDialog extends Dialog {
 	public void unlockSpecials() {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined special items in SpecialType enumerate class
-		for (SpecialType spec : SpecialType.values()) {
+		for (SpecialType spec: SpecialType.values()){
 			items.add(spec);
 		}
-		updateShop(items);
+		updateShop(items, 0);
 	}
-
 	/**
-	 * Private method to update the items in the shop,
-	 * this function will also add handler to these items for user shopping
-	 * 
-	 * @param items
-	 *            The items to be added
+	 * Private method to update the items in the shop.
+	 * @param items The items to be added
+	 * @param level The level of the item
 	 */
-	private void updateShop(List<ItemType> items) {
+	private void updateShop(List<ItemType> items, int level) {
 		for (ItemType item : items) {
 			Texture texture = textureManager
 					.getTexture(item.getTextureString());
@@ -252,13 +250,13 @@ public class ShopDialog extends Dialog {
 					if ((selectedHero != null)
 							&& (selectedHero.getHealth() > 0)) {
 						if (item instanceof WeaponType) {
-							Weapon weapon = new Weapon((WeaponType) item, 1);
+							Weapon weapon = new Weapon((WeaponType) item, level);
 							selectedHero.addItemToInventory(weapon);
 							status.setText("Bought " + weapon.getName()
 									+ "(Weapon) for "
 									+ selectedHero.toString());
 						} else if (item instanceof ArmourType) {
-							Armour armour = new Armour((ArmourType) item, 1);
+							Armour armour = new Armour((ArmourType) item, level);
 							selectedHero.addItemToInventory(armour);
 							status.setText("Bought " + armour.getName()
 									+ "(Armour) for "
@@ -285,8 +283,8 @@ public class ShopDialog extends Dialog {
 						String mes = selectedHero == null
 								? "unsuccessful shopping, No hero exist."
 								: (selectedHero.getHealth() > 0
-										? "Not enough resources."
-										: "Your Commander is dead. Can't buy anything.");
+								? "Not enough resources."
+								: "Your Commander is dead. Can't buy anything.");
 						status.setText(mes);
 					}
 				}
@@ -300,6 +298,77 @@ public class ShopDialog extends Dialog {
 			scrollTable.row();
 		}
 	}
+//	/**
+//	 * Private method to update the items in the shop,
+//	 * this function will also add handler to these items for user shopping
+//	 *
+//	 * @param items
+//	 *            The items to be added
+//	 */
+//	private void updateShop(List<ItemType> items) {
+//		for (ItemType item : items) {
+//			Texture texture = textureManager
+//					.getTexture(item.getTextureString());
+//			ImageButton button = generateItemButton(texture);
+//
+//			button.addListener(new ClickListener() {
+//				public void clicked(InputEvent event, float x, float y) {
+//					status.setText(item.getName());
+//					// boolean enoughResources =
+//					// checkCost(selectedHero.getOwner(), item);
+//					// if ((selectedHero != null) && (selectedHero.getHealth() >
+//					// 0) && enoughResources) {
+//					if ((selectedHero != null)
+//							&& (selectedHero.getHealth() > 0)) {
+//						if (item instanceof WeaponType) {
+//							Weapon weapon = new Weapon((WeaponType) item, 1);
+//							selectedHero.addItemToInventory(weapon);
+//							status.setText("Bought " + weapon.getName()
+//									+ "(Weapon) for "
+//									+ selectedHero.toString());
+//						} else if (item instanceof ArmourType) {
+//							Armour armour = new Armour((ArmourType) item, 1);
+//							selectedHero.addItemToInventory(armour);
+//							status.setText("Bought " + armour.getName()
+//									+ "(Armour) for "
+//									+ selectedHero.toString());
+//						} else {
+//							boolean transactSuccess = false;
+//							Special special = new Special((SpecialType) item);
+//							transactSuccess = selectedHero
+//									.addItemToInventory(special);
+//							if (transactSuccess) {
+//								status.setText("Bought " + special.getName()
+//										+ "(Special) for "
+//										+ selectedHero.toString());
+//							} else {
+//								status.setText(
+//										"Unsuccessful Shopping, can only hold 4 specials");
+//								return;
+//							}
+//
+//						}
+//						selectedHero.setStatsChange(true);
+//						transact(selectedHero.getOwner(), item);
+//					} else {
+//						String mes = selectedHero == null
+//								? "unsuccessful shopping, No hero exist."
+//								: (selectedHero.getHealth() > 0
+//										? "Not enough resources."
+//										: "Your Commander is dead. Can't buy anything.");
+//						status.setText(mes);
+//					}
+//				}
+//			});
+//
+//			scrollTable.add(button).width(iconSize).height(iconSize).top();
+//			scrollTable.add(new Label(item.getDescription(), skin))
+//					.width(iconSize).top().left();
+//			scrollTable.add(new Label(item.getCostString(), skin))
+//					.width(iconSize).top().left();
+//			scrollTable.row();
+//		}
+//	}
 
 	/**
 	 * Private method to check if the owner of the Commander has enough

@@ -117,7 +117,7 @@ public class Hotkeys {
 			if (this.noActive()) {
 				LOGGER.info("Open the quit menu");
 				this.hud.setExitCheck(1);
-				this.quit = new ExitGame("Quit Game", this.skin, this.hud, true).show(this.stage); //$NON-NLS-1$
+				this.quit = new ExitGame("Quit Game", this.skin, this.hud, true).show(this.stage);
 			}
 		}
 
@@ -127,7 +127,7 @@ public class Hotkeys {
 			if(this.noActive()) {
 				LOGGER.info("Activate the tech tree menu");
 				this.hud.setTechCheck(1);
-				this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage); //$NON-NLS-1$
+				this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage);
 			} else if (this.hud.getTechCheck() != 0){
 				LOGGER.info("Hides the tech tree and continues the game");
 				this.hud.setTechCheck(0);
