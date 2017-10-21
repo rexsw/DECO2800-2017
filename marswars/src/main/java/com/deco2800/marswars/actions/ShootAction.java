@@ -2,6 +2,7 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
+import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -22,7 +23,7 @@ public class ShootAction extends AbstractPauseAction {
 
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-
+	
 	
 	enum State {
 		COOLDOWN,
@@ -82,7 +83,7 @@ public class ShootAction extends AbstractPauseAction {
 	
 	private void shoot() {
 		//If the enemy is converted while being attacked
-		if (entity.sameOwner(enemy)) {
+		if (entity.sameOwner(enemy) && !(entity instanceof Medic)) {
 			completed = true;
 			return;
 		}
