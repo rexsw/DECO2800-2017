@@ -64,7 +64,6 @@ public class MenuScreen{
 	private Button backButton; 
 	private Button nextButton;
 	private Label errorWorldSelection;
-	private Label errorPlayerSelection;
 	private Label errorTeamsSelection;
 	
 	/* To ensure 'saving' of the old state*/
@@ -92,14 +91,8 @@ public class MenuScreen{
 	
 	private static boolean enabled = false; //FOR DEBUGGING
 
-	// To keep track of whether a map type and size have been selected, 1 is
-	// true, 0 is false
-	private int mapTypeSet = 0;
-	private int mapSizeSet = 0;
-
 	
 	private String menuButtonString = "menubutton";
-	private String subtitleString = "subtitle";
 	private String totalTeamsPlayingString = "Total %d teams playing";
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
@@ -120,7 +113,7 @@ public class MenuScreen{
 		this.skin = skin;
 		this.menu = mainMenu;
 		this.stage = stage; 
-		this.mainmenu = window;
+		MenuScreen.mainmenu = window;
 		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		
 		/* UI prompts */
@@ -143,7 +136,6 @@ public class MenuScreen{
 		String button2 = "button2";
 		
 		Label modeInfo = new Label("MAIN MENU", this.skin, title);
-		//modeInfo.setVisible(false);
 		
 		Button singlePlayerButton = new TextButton("Single Player", this.skin, button2);
 		Button multiplayerButton = new TextButton("Multiplayer", this.skin, button2);
@@ -279,7 +271,7 @@ public class MenuScreen{
 	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
 	    mainmenu.add(lobby).expand().align(Align.topLeft);
 	    mainmenu.row();
-	    mainmenu.add(setupExitLobbyButton(mainmenu, stage)).left();
+	    mainmenu.add(setupExitLobbyButton(stage)).left();
 	}
 	
 	/**
@@ -296,7 +288,7 @@ public class MenuScreen{
 		worldTable.align(Align.topLeft);
 
 		Label worldInfo = new Label("WORLDS", this.skin, "title");
-		Label worldPrompt = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subHeading");
+		Label worldPrompt = new Label("SELECT A WORLD TO PLAY IN", this.skin, "subheading");
 		errorWorldSelection = new Label("", skin, "error");
 		
 		Table worldInfoTable = new Table();
@@ -334,7 +326,6 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
-				mapTypeSet = 1;
 			}
 		});	
 		
@@ -343,7 +334,6 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
-				mapTypeSet= 1;
 			}
 		});	
 		
@@ -352,7 +342,6 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor) {
 				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
-				mapTypeSet = 1;
 			}
 		});	
 		
@@ -377,7 +366,6 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.TINY;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("tiny map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
@@ -396,7 +384,6 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("medium map selected.");
-				mapSizeSet = 1;
 			}
 		});
 
@@ -406,7 +393,6 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("large map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
@@ -416,7 +402,6 @@ public class MenuScreen{
 				mapSize = MapSizeTypes.VERY_LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("very large map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
@@ -587,23 +572,17 @@ public class MenuScreen{
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
 				/*If single player mode*/
-				if (MenuScreen.this.playerType == 0) {
+				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to previous state
 					case WORLDMODE:
 						mainmenu.clear(); 
 						playerModeSelect();
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						break; 
 					case CHARACTERMODE:
 						selectWorldMode();
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						break;
 					case COMBATMODE:
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						selectCharacter();
 						break;
 					default:
@@ -612,7 +591,7 @@ public class MenuScreen{
 				}
 				
 				/* If multiplayer mode */
-				else if(MenuScreen.this.playerType == 1) {
+				else if(MenuScreen.playerType == 1) {
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -647,7 +626,7 @@ public class MenuScreen{
 			public void changed(ChangeEvent event, Actor actor){
 				/*If single player mode*/
 				/* Single Player: select world > select character > select combat*/
-				if (MenuScreen.this.playerType == 0) {
+				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
@@ -662,7 +641,7 @@ public class MenuScreen{
 					default:
 						break;
 					}
-				} else if(MenuScreen.this.playerType == 1) {
+				} else if(MenuScreen.playerType == 1) {
 					/* If multiplayer mode
 					 * 		join server > select character 
 					 * 		start server > select world > select character > select combat 
@@ -776,7 +755,7 @@ public class MenuScreen{
 	 * @return A button that takes them back from the lobby screen to the server selection screen, also disconnects
 	 *     the user when they do.
 	 */
-	private Button setupExitLobbyButton(Window mainmenu, Stage stage) {
+	private Button setupExitLobbyButton(Stage stage) {
 	    TextButton exitButton = new TextButton("Exit Lobby", skin);
 	    // Add BAck button 
         exitButton.addListener(new ChangeListener() {

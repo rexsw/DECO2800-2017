@@ -196,7 +196,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		background: default-rect,
+		background: clear,
 		hScroll: default-scroll,
 		hScrollKnob: default-round-large,
 		vScroll: default-scroll,

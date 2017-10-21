@@ -33,7 +33,7 @@ public class HelpWindow {
 		window.setDebug(ENABLED);
 		window.align(Align.left | Align.top);
 		window.pad(WINDOWPAD);
-		stage.addActor(window);
+		this.stage.addActor(window);
 		window.setPosition(stage.getWidth()/2 - window.getWidth(), stage.getHeight()/2 - window.getHeight()/2);
 		buildWindow();
 	}
@@ -112,6 +112,8 @@ public class HelpWindow {
 		hotKeysChild.add(escInfo).row();
 		hotKeysChild.add(chatButton).size(HOTKEYBUTTON);
 		hotKeysChild.add(chatInfo).row();
+		hotKeysChild.add(techTree).size(HOTKEYBUTTON);
+		hotKeysChild.add(techInfo).row();
 		hotKeysChild.add(quit).size(HOTKEYBUTTON);
 		hotKeysChild.add(quitInfo).row();
 		hotKeysChild.add(displayHUD).size(HOTKEYBUTTON);
