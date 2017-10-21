@@ -63,6 +63,9 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
 		savedGame = new GameSave(aITeams,playerTeams);
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		savedGame.data.setIndex(colourManager.getIndex());
 		loadGame();
 	}
 	
@@ -73,6 +76,9 @@ public class Game{
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
 	    savedGame = new GameSave(aITeams,playerTeams);
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		savedGame.data.setIndex(colourManager.getIndex());
 		startGame(mapType, mapSize, aITeams, playerTeams);
 	}
 
@@ -92,8 +98,18 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 
+		//set game time
+		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),(int)loadedGame.data.getSec());
+
+		//set colour index
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		colourManager.setIndex(loadedGame.data.getIndex());
+
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
+
+
 
 		setCameraInitialPosition();
 		//same
