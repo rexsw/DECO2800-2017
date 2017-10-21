@@ -125,6 +125,7 @@ public class HUDView extends ApplicationAdapter{
 	int cheatActiveCheck = 0;
 	int exitCheck = 0;
 
+	private Dialog tech;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -391,7 +392,9 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				if (hud.getTechCheck() == 0) {
+					tech = new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				}
 			}
 		});
 		dispTech.addListener(new TextTooltip("Open Technology", skin));
@@ -1013,6 +1016,14 @@ public class HUDView extends ApplicationAdapter{
 		//resize stats
 		stats.resizeStats(width, height);
     }
+	
+	public void hideTechTree() {
+		this.tech.hide();
+	}
+	
+	public void setTechTree(Dialog techTree){
+	    this.tech = techTree;
+	}
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
