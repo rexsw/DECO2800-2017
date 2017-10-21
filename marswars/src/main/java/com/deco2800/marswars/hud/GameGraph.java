@@ -16,12 +16,12 @@ public class GameGraph{
 	private static float GRAPHSIZE = 400; 
 	
 	private ShapeRenderer renderer;
-	private Field Graphtype;
+	private Field graphType;
 	private float[] vertices;
 	
 	public GameGraph(Field graphtype){
 		renderer = new ShapeRenderer();
-		Graphtype = graphtype;
+		graphType = graphtype;
 	}
 	
 	/**
@@ -31,15 +31,15 @@ public class GameGraph{
 		//renderer.setProjectionMatrix((new OrthographicCamera(1920, 1080)).combined);
 		renderer.begin(ShapeType.Line);
 		//fix up the position
-		if(Graphtype == null) {
+		if(graphType == null) {
 		}
 		else {
 			for(int i: ((AiManager) GameManager.get().getManager(AiManager.class)).getAiTeam()) {
-				vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(i, Graphtype);
+				vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(i, graphType);
 				//renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(i));
 				renderer.polyline(vertices);
 			}
-			vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(-1, Graphtype);
+			vertices = ((GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class)).getHistory(-1, graphType);
 			//renderer.setColor(((ColourManager) GameManager.get().getManager(ColourManager.class)).getLibColour(-1));
 			renderer.polyline(vertices);
 		}

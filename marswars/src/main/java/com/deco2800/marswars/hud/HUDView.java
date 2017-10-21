@@ -64,7 +64,7 @@ public class HUDView extends ApplicationAdapter{
 	//HUD elements
 	private Table overheadRight; //contains all basic quit/help/chat buttons
 	Table resourceTable;         //contains table of resource images + count
-    Table HUDManip;		         //contains buttons for toggling HUD + old menu
+    Table hudManip;		         //contains buttons for toggling HUD + old menu
     private Table welcomeMsg; 	 //contains welcome message
 	private UnitStatsBox statsTable; //contains player icon, health and game stats
 	private ChatBox chatbox;	 //table for the chat
@@ -333,8 +333,8 @@ public class HUDView extends ApplicationAdapter{
 	private void addBottomPanel(){
 		addMiniMapMenu();
 		addInventoryMenu();
-		HUDManip = new Table(); //adding buttons into a table
-		HUDManip.setPosition(Gdx.graphics.getWidth()-HUDManip.getWidth(), actionsWindow.getHeight());
+		hudManip = new Table(); //adding buttons into a table
+		hudManip.setPosition(Gdx.graphics.getWidth()-hudManip.getWidth(), actionsWindow.getHeight());
 
 		LOGGER.debug("Creating HUD manipulation buttons");
 
@@ -359,7 +359,7 @@ public class HUDView extends ApplicationAdapter{
 		//add toggle for flood effect (FOR DEBUGGING)
 		Button dispFlood = new TextButton("Flood", skin);
 
-		HUDManip.setDebug(enabled);
+		hudManip.setDebug(enabled);
 		Table debugToggles = new Table();
 		debugToggles.setDebug(enabled);
 		debugToggles.add(dispFog).size(BUTTONSIZE).row();
@@ -370,8 +370,8 @@ public class HUDView extends ApplicationAdapter{
 		options.add(dispShop).width(50).height(50);
 		options.add(dispTech);
 
-		HUDManip.add(options, debugToggles);
-		stage.addActor(HUDManip);
+		hudManip.add(options, debugToggles);
+		stage.addActor(hudManip);
 
 		dispTech.addListener(new ChangeListener() {
 			@Override
@@ -385,7 +385,7 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
 				shopDialog.show(stage);
-				shopDialog.setPosition(stage.getWidth(), 0, (Align.right | Align.bottom));
+				shopDialog.setPosition(stage.getWidth(), 0, Align.right | Align.bottom);
 			}
 		});
 		dispShop.addListener(new TextTooltip("Open Shop", skin));
@@ -960,7 +960,7 @@ public class HUDView extends ApplicationAdapter{
 	public void disableHUD() {
 		overheadRight.setVisible(false);
 		resourceTable.setVisible(false);
-	    HUDManip.setVisible(false);
+	    hudManip.setVisible(false);
 
 		chatbox.setVisible(false);
 		minimap.setVisible(false);
@@ -974,7 +974,7 @@ public class HUDView extends ApplicationAdapter{
 	public void enableHUD() {
 		overheadRight.setVisible(true);
 		resourceTable.setVisible(true);
-	    HUDManip.setVisible(true);
+	    hudManip.setVisible(true);
 	    actionsBg.setVisible(true);
 		minimap.setVisible(true);
 		actionsWindow.setVisible(true);
@@ -1025,7 +1025,7 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setHeight(60);
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight() + BUTTONPAD*2);
 		//Menu manipulator
-		HUDManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
+		hudManip.setPosition(Gdx.graphics.getWidth()-BUTTONSIZE*2 - BUTTONPAD, resourceTable.getY()+40);
 
 		//resize stats
 		stats.resizeStats(width, height);
