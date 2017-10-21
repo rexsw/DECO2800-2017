@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.weatherentities;
+package com.deco2800.marswars.entities.weatherEntities;
 
 /**
  * Type definitions for future dynamic weather entities.

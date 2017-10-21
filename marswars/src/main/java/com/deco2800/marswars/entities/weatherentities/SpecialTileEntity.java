@@ -1,4 +1,4 @@
-package com.deco2800.marswars.entities.weatherentities;
+package com.deco2800.marswars.entities.weatherEntities;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;

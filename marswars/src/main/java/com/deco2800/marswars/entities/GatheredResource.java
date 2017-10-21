@@ -3,7 +3,7 @@
  */
 package com.deco2800.marswars.entities;
 
-import com.deco2800.marswars.entities.terrainelements.ResourceType;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 
 /**
  * This class is used for resource carried by a unit (farmer)

@@ -1,8 +1,8 @@
 package com.deco2800.marswars.worlds;
 
 import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.terrainelements.Resource;
-import com.deco2800.marswars.entities.terrainelements.ResourceType;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.renderers.Renderable;
 

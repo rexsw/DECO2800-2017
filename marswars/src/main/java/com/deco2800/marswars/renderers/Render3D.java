@@ -12,7 +12,7 @@ import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.mainmenu.MainMenu;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;

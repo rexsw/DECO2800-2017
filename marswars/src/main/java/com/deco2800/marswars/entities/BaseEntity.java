@@ -9,7 +9,7 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.weatherentities.Water;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;

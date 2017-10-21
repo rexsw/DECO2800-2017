@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainmenu;
+package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

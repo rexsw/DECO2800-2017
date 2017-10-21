@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainmenu;
+package com.deco2800.marswars.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -11,9 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.deco2800.marswars.initiategame.Game;
-import com.deco2800.marswars.initiategame.GameSave;
-import com.deco2800.marswars.initiategame.SoundTrackPlayer;
+import com.deco2800.marswars.InitiateGame.Game;
+import com.deco2800.marswars.InitiateGame.GameSave;
+import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;

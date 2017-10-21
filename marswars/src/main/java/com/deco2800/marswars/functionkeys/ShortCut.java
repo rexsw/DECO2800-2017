@@ -1,4 +1,4 @@
-package com.deco2800.marswars.functionkeys;
+package com.deco2800.marswars.functionKeys;
 
 import java.util.ArrayList;
 import java.util.HashSet;

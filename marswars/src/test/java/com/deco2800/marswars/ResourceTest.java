@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.deco2800.marswars.entities.terrainelements.Resource;
-import com.deco2800.marswars.entities.terrainelements.ResourceType;
+import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.TerrainElements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 public class ResourceTest {

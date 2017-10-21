@@ -1,4 +1,4 @@
-package com.deco2800.marswars.initiategame;
+package com.deco2800.marswars.InitiateGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;

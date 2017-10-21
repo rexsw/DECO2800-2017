@@ -1,6 +1,6 @@
 package com.deco2800.marswars.managers;
 
-import com.deco2800.marswars.mainmenu.MainMenu;
+import com.deco2800.marswars.mainMenu.MainMenu;
 
 /**
  * BackgroundManager: A class for managing the progression of backgrounds

@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.mainmenu.MainMenu;
+import com.deco2800.marswars.mainMenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -7,7 +7,7 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.weatherentities.Water;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 

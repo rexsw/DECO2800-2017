@@ -1,4 +1,4 @@
-package com.deco2800.marswars.mainmenu;
+package com.deco2800.marswars.mainMenu;
 
 import java.util.ArrayList;
 import java.util.List;

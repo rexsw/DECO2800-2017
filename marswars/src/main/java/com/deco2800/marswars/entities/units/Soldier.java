@@ -5,7 +5,7 @@ import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.weatherentities.Water;
+import com.deco2800.marswars.entities.weatherEntities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;

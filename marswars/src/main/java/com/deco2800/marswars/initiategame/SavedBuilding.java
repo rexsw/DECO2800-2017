@@ -1,4 +1,4 @@
-package com.deco2800.marswars.initiategame;
+package com.deco2800.marswars.InitiateGame;
 
 import com.deco2800.marswars.buildings.BuildingType;
 

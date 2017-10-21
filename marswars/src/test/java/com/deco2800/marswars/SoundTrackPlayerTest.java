@@ -1,6 +1,6 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.initiategame.SoundTrackPlayer;
+import com.deco2800.marswars.InitiateGame.SoundTrackPlayer;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import org.junit.Before;

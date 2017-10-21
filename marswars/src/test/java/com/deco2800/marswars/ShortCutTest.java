@@ -10,7 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.functionkeys.ShortCut;
+import com.deco2800.marswars.functionKeys.ShortCut;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;

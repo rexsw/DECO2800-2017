@@ -1,4 +1,4 @@
-package com.deco2800.marswars.initiategame;
+package com.deco2800.marswars.InitiateGame;
 
 /**
  * Created by Treenhan on 10/13/17.
