@@ -42,13 +42,13 @@ public class Carrier extends Soldier {
 		super(posX, posY, posZ, owner);
 		setXRenderLength(1.3f);
 		setYRenderLength(1.3f);
-		this.isCarrier();
 		this.name = "Carrier";
 		this.setAttributes();
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
+		this.isCarrier();
     }
 
     /**
