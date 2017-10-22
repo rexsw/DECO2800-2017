@@ -81,7 +81,9 @@ public class Render3D implements Renderer {
         for (AbstractEntity r : renderables) {
             int x = (int) Math.floor(r.getPosX());
             int y = (int) Math.floor(r.getPosY());
-            if (fogManager.getBlackFog((int)Math.round(r.getPosX()), (int)Math.round(r.getPosY())) != 0) {
+            if (fogManager.getBlackFog((int)Math.round(r.getPosX()),
+                    (int)Math.round(r.getPosY())) != 0 ||
+                    ! fogManager.getToggleFog()) {
                 if (r.canWalOver()) {
                     walkables.add(r);
                 } else if (r instanceof HealthBar) {
