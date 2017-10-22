@@ -1,11 +1,19 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.SoundManager;
+
+import java.util.Optional;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.*;
 
 //import com.deco2800.marswars.managers.GameManager;
 //import com.deco2800.marswars.worlds.BaseWorld;
@@ -28,7 +36,7 @@ public class CarrierTest {
 //		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
 //	}
 
-	@Test
+    	@Test
 	public void constructorTest() {
 	    Carrier carrier = new Carrier(1, 0, 0 , 1);
 	    Assert.assertTrue(carrier != null);
@@ -44,13 +52,21 @@ public class CarrierTest {
             Assert.assertEquals("Carrier", carrier.getStats().getName());
         }
         
-	@Test @Ignore
+        @Test
+        public void emptyCarrier() {
+            Carrier carrier = new Carrier(0, 0, 0, 1);
+            Assert.assertTrue(carrier.getPassengers()[0] == null);
+            Assert.assertTrue(carrier.getPassengers()[1] == null);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+        }
+        
+	@Test
 	public void loadTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
 	    Soldier soldier1 = new Soldier(1, 1, 1, 0);
-	    carrier.loadPassengers(soldier1);
-	    System.out.println(soldier1.getLoadStatus());
-	    Assert.assertTrue(soldier1.getLoadStatus() == 1);
+	    carrier.load(soldier1);
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	}
 	
 	@Test @Ignore

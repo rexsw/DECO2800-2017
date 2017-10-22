@@ -86,7 +86,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 		//Accessing the technology manager which contains unit Attributes
 
-
+		
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
@@ -95,7 +95,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
 		setAttributes();
-		setStance(2); // Default stance for soldier is aggressive
+		setStance(2); // Default stance for soldier is aggressive		
 	}
 
 
