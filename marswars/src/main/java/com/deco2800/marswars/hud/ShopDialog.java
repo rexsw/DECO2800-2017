@@ -215,7 +215,7 @@ public class ShopDialog extends Dialog {
 									+ "(Armour) for "
 									+ selectedHero.toString());
 						} else {
-							boolean transactSuccess = false;
+							boolean transactSuccess;
 							Special special = new Special((SpecialType) item);
 							transactSuccess = selectedHero
 									.addItemToInventory(special);

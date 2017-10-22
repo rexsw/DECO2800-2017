@@ -154,7 +154,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 1, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 1, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(1));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -171,7 +171,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 2, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 2, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(2));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -188,7 +188,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(3), resourceManager, 3, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(3), resourceManager, 3, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(1));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -205,7 +205,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(4), resourceManager, 4, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(4), resourceManager, 4, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(4));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -222,7 +222,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(5), resourceManager, 5, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(5), resourceManager, 5, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(5));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -239,7 +239,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(6), resourceManager, 6, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(6), resourceManager, 6, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(6));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -256,7 +256,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(7), resourceManager, 7, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(7), resourceManager, 7, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(7));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -273,7 +273,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(8), resourceManager, 8, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(8), resourceManager, 8, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(8));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -290,7 +290,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(9), resourceManager, 9, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(9), resourceManager, 9, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(9));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -307,7 +307,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(10), resourceManager, 10, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(10), resourceManager, 10, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(10));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -324,7 +324,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(11), resourceManager, 11, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(11), resourceManager, 11, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(11));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -341,7 +341,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(12), resourceManager, 12, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(12), resourceManager, 12, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(12));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -358,7 +358,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(13), resourceManager, 13, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(13), resourceManager, 13, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(13));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -375,7 +375,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(14), resourceManager, 14, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(14), resourceManager, 14, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(14));
 					this.hud.setTechCheck(0);
 					techtree.hide();
@@ -392,7 +392,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(15), resourceManager, 15, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(15), resourceManager, 15, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(15));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -409,7 +409,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(16), resourceManager, 16, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(16), resourceManager, 16, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(16));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -426,7 +426,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(17), resourceManager, 17, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(17), resourceManager, 17, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(17));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -443,7 +443,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(18), resourceManager, 18, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(18), resourceManager, 18, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(18));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -460,7 +460,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(19), resourceManager, 19, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(19), resourceManager, 19, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(19));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -477,7 +477,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(20), resourceManager, 20, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(20), resourceManager, 20, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(20));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -494,7 +494,7 @@ public class TechTreeView extends Dialog{
 						(this
 						.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(21), resourceManager, 21, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(21), resourceManager, 21, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(21));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -511,7 +511,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(22), resourceManager, 22, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(22), resourceManager, 22, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(22));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -528,7 +528,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(23), resourceManager, 23, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(23), resourceManager, 23, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(23));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -545,7 +545,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(24), resourceManager, 24, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(24), resourceManager, 24, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(24));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -562,7 +562,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(25), resourceManager, 25, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(25), resourceManager, 25, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(25));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -579,7 +579,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(26), resourceManager, 26, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(26), resourceManager, 26, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(26));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -596,7 +596,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(27), resourceManager, 27, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(27), resourceManager, 27, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(27));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
@@ -613,7 +613,7 @@ public class TechTreeView extends Dialog{
 						(this
 								.getStage());
 				if(message == "Activating Technology!") {
-					this.techMan.activateTech(techMan, this.techMan.getTech(28), resourceManager, 28, 1);
+					this.techMan.activateTech(techMan, this.techMan.getTech(28), resourceManager, 28, -1);
 					this.techMan.addActiveTech(this.techMan.getTech(28));
 					this.hud.setTechCheck(0);
 					timeManager.unPause();
