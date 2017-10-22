@@ -7,10 +7,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -45,9 +42,10 @@ public class GameSave {
      * the constructor to save map type and size
      * only used when initiate game saving instance
      */
-    public GameSave(int aITeams, int playerTeams, boolean isLoadedGame){
+    public GameSave(int aITeams, int playerTeams, AiManager.Difficulty diff, boolean isLoadedGame){
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
+        data.setAiDifficulty(diff);
 
         String tempFile = "./resources/mapAssets/temp.tmx";
         
@@ -95,6 +93,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getObstacles());
         kryo.writeClassAndObject(output, data.getAnimals());
         kryo.writeClassAndObject(output, data.getIndex());
+        kryo.writeClassAndObject(output, data.getAiDifficulty());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
@@ -139,6 +138,7 @@ public class GameSave {
         data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
         data.setAnimals((ArrayList<SavedAnimal>)kryo.readClassAndObject(input));
         data.setIndex((int)kryo.readClassAndObject(input));
+        data.setAiDifficulty((AiManager.Difficulty)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));

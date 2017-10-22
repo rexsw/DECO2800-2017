@@ -13,10 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WinManager;
+import com.deco2800.marswars.managers.WinManager.WINS;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -88,7 +92,7 @@ public class MenuScreen extends Table{
 	
 	/* Always at most two teams*/
 	private int allTeams = 0; 
-	
+		
 	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
@@ -520,6 +524,7 @@ public class MenuScreen extends Table{
                 click.play();
 				combatSelected.setText("Easy AI difficulty selected");
 				aiDifficulty = Difficulty.EASY;
+				
 			}
 		});
 		
@@ -552,19 +557,52 @@ public class MenuScreen extends Table{
 		
 		CheckBox economic = new CheckBox(" Economy", skin, "spac_check");
 		CheckBox millitary = new CheckBox(" Millitary", skin, "spac_check");
-		//CheckBox population = new CheckBox(" Population", skin, "spac_check");
-		economic.addListener(new ChangeListener() {
-			public void changed(ChangeEvent event, Actor actor) { //TODO
-				victoryEconomic = !victoryEconomic;
-		}});
-		millitary.addListener(new ChangeListener() {
-			public void changed(ChangeEvent event, Actor actor) { //TODO
-				victoryMilitary = !victoryMilitary;
-		}});
+		
 		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
 		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
-		//winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
 		
+		/*Win conditions*/
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		win.setwinconditions(WINS.BOTH);
+		economic.setChecked(true);
+		millitary.setChecked(true);
+		
+		economic.addListener(new ChangeListener(){
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (economic.isChecked()){
+					win.setwinconditions(WINS.ECON);
+				} else if (economic.isChecked() && millitary.isChecked()){
+					win.setwinconditions(WINS.BOTH);
+				} else if (! economic.isChecked() && ! millitary.isChecked()) {
+					win.setwinconditions(WINS.BOTH);
+					economic.setChecked(true);
+					millitary.setChecked(true);
+				} else {
+					win.setwinconditions(WINS.MIL);
+				}
+			}			
+		});
+		
+		millitary.addListener(new ChangeListener(){
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (economic.isChecked()){
+					win.setwinconditions(WINS.MIL);
+				}  else if (economic.isChecked() && millitary.isChecked()){
+					win.setwinconditions(WINS.BOTH);
+				} else if (!economic.isChecked() && !millitary.isChecked()) {
+					win.setwinconditions(WINS.BOTH);
+					economic.setChecked(true);
+					millitary.setChecked(true);
+				} else {
+					win.setwinconditions(WINS.ECON);
+				}
+			}			
+		});
+								
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(teamInfo).align(Align.left).row();
 		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
@@ -768,7 +806,7 @@ public class MenuScreen extends Table{
 	}
 	
 	private boolean checkVictoryConditions() {
-		if (!(victoryEconomic && victoryMilitary)) {
+		if (!(victoryEconomic || victoryMilitary)) {
 			errorTeamsSelection.setText("Choose a victory setting!");
 			return false;
 		}
@@ -785,7 +823,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
                 click.play();
-				if (checkTeams() && checkDifficulty() && checkVictoryConditions()) {
+				if (checkTeams() && checkDifficulty()) {
 					mainmenu.setVisible(false);
 					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS, aiDifficulty);
 				}
