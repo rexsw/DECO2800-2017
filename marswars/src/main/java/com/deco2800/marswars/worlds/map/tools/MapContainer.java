@@ -116,14 +116,7 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
-            /*Obstacle tree = new Obstacle(this.width-1, this.length-1, 0, 8, 8, ObstacleType.TREE1, "red");
-            world.addEntity(tree);
-            tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "blue");
-            world.addEntity(tree);
-            tree = new Obstacle(0, 10, 0, 8, 8, ObstacleType.TREE2, "red");
-            world.addEntity(tree);
-            tree = new Obstacle(10, 10, 0, 8, 8, ObstacleType.TREE3, "green");
-            world.addEntity(tree);*/
+            if (this.length>15) placeCliffs("grey");
 
             placeTrees("", true);
 
@@ -137,6 +130,48 @@ public class MapContainer {
         }
     }
 
+
+    /**
+     * populate the world with cliffs
+     * @param colour grey or red cliffs, null for random
+     */
+    private void placeCliffs(String colour) {
+        Random r = new Random();
+        for(int i =0; i<this.length/5; i++) {
+            try {
+                placeCliff(r.nextInt(this.length), r.nextInt(this.width), r.nextFloat() > 0.5, colour);
+            } catch (Exception e) {}
+        }
+
+    }
+
+    /**
+     * place a series of cliff entities to create a cliff
+     * @param x start x
+     * @param y start y
+     * @param direction 0 is up-left, 1 is up-right
+     * @param colour colour of the cliff "grey" or "red"
+     */
+    private void placeCliff(int x, int y, boolean direction, String colour) {
+        Random r = new Random();
+        int maxCliffLength = 10;
+        float linearTerminateFactor = 0.05f; //how much more likely a cliff is to end after each segment
+        boolean cont = true;
+        for (int i = 0; i < maxCliffLength && cont; i++) {
+            cont = r.nextFloat()>(linearTerminateFactor*i);
+            if (x<0||x>this.length||y<0||y>this.width) {
+                cont = false;
+            } else {
+                Obstacle cliff;
+                cliff = new Obstacle(x, y, 0, 2, 2,
+                        direction?ObstacleType.CLIFF_R:ObstacleType.CLIFF_L, colour, true);
+                world.addEntity(cliff);
+            }
+            x += direction?1:0;
+            y += direction?0:1;
+        }
+    }
+
     /**
      * places the trees on the map
      * @param colour the colour of the tree to place (red, green, blue, yellow)
@@ -147,7 +182,7 @@ public class MapContainer {
         float rf;
         ObstacleType type;
         Obstacle tree;
-        for (int i = 0; i<this.length*4; i++) {
+        for (int i = 0; i<this.length*1.5; i++) {
             if (randomColour) {
                 rf = r.nextFloat();
                 if (rf<0.25) {
@@ -174,7 +209,7 @@ public class MapContainer {
                 type = ObstacleType.TREE3;
             }
             tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
-                    type, colour);
+                    type, colour, false);
             if(r.nextInt(200) < 20) {
             	int x = r.nextInt(101);
             	AmbientAnimal animal;
