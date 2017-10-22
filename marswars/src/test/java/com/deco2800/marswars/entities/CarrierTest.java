@@ -57,13 +57,117 @@ public class CarrierTest {
         }
         
 	@Test
-	public void loadTest() {
+	public void loadandunloadTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
 	    Soldier soldier1 = new Soldier(1, 1, 1, 0);
 	    carrier.load(soldier1);
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	    carrier.unloadIndividual();
+	    carrier.unload();
 	}
         
+	@Test
+	public void loadPassengerTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 2, 0);
+	    Soldier soldier2 = new Soldier(1, 2, 1, 0);
+	    Soldier soldier3 = new Soldier(1, 1, 3, 0);
+	    Soldier soldier4 = new Soldier(1, 3, 1, 0);
+	    Soldier soldier5 = new Soldier(1, 3, 1, 0);
+	    carrier.loadPassengers(soldier1);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == null);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+	    carrier.loadPassengers(soldier2);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+	    carrier.loadPassengers(soldier3);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == soldier3);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+	    carrier.loadPassengers(soldier4);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == soldier3);
+            Assert.assertTrue(carrier.getPassengers()[3] == soldier4);
+            Assert.assertFalse(carrier.loadPassengers(soldier5));
+	}
+	
+	@Test
+	public void unloadAllTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 2, 0);
+	    Soldier soldier2 = new Soldier(1, 2, 1, 0);
+	    Soldier soldier3 = new Soldier(1, 1, 3, 0);
+	    Soldier soldier4 = new Soldier(1, 3, 1, 0);
+	    carrier.loadPassengers(soldier1);
+	    carrier.loadPassengers(soldier2);
+	    carrier.loadPassengers(soldier3);
+	    carrier.loadPassengers(soldier4);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == soldier3);
+            Assert.assertTrue(carrier.getPassengers()[3] == soldier4);
+            carrier.unloadPassenger();
+            Assert.assertTrue(carrier.getPassengers()[0] == null);
+            Assert.assertTrue(carrier.getPassengers()[1] == null);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+	}
+	
+	@Test
+	public void unloadAllEmptyTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Assert.assertFalse(carrier.unloadPassenger());
+	}
+	
+	@Test 
+	public void unloadSingleEmptyTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Assert.assertFalse(carrier.unloadPassengerIndividual());
+	}
+	
+	@Test
+	public void unloadSingleTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 2, 0);
+	    Soldier soldier2 = new Soldier(1, 2, 1, 0);
+	    Soldier soldier3 = new Soldier(1, 1, 3, 0);
+	    Soldier soldier4 = new Soldier(1, 3, 1, 0);
+	    carrier.loadPassengers(soldier1);
+	    carrier.loadPassengers(soldier2);
+	    carrier.loadPassengers(soldier3);
+	    carrier.loadPassengers(soldier4);
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == soldier3);
+            Assert.assertTrue(carrier.getPassengers()[3] == soldier4);
+            carrier.unloadPassengerIndividual();
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == soldier3);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+            carrier.unloadPassengerIndividual();
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == soldier2);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+            carrier.unloadPassengerIndividual();
+            Assert.assertTrue(carrier.getPassengers()[0] == soldier1);
+            Assert.assertTrue(carrier.getPassengers()[1] == null);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+            carrier.unloadPassengerIndividual();
+            Assert.assertTrue(carrier.getPassengers()[0] == null);
+            Assert.assertTrue(carrier.getPassengers()[1] == null);
+            Assert.assertTrue(carrier.getPassengers()[2] == null);
+            Assert.assertTrue(carrier.getPassengers()[3] == null);
+	}
+	
 	@Test
 	public void loadTestDifferentTeam() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);

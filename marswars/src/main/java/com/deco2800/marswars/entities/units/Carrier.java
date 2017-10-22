@@ -218,10 +218,14 @@ public class Carrier extends Soldier {
      * @return true if able to load the target, false otherwise
      */
     public boolean loadPassengers(Soldier target) {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+			.getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error("no sound");
+	}
 	for (int i = 0; i < CAPACITY; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
@@ -249,10 +253,14 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassenger() {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+		    .getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error("no sound");
+	}
 	LOGGER.info("Everyone off!");
 	int empty = 0;
 	boolean flag;
@@ -279,10 +287,14 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassengerIndividual() {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+		    .getManager(SoundManager.class);
+	    Sound loadedSound = sound.loadSound(loadSound);
+	    sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error("no sound");
+	}
 	LOGGER.info("Last in first out!");
 	int empty = 0;
 	boolean flag;
