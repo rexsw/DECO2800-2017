@@ -98,7 +98,6 @@ public class MenuScreen extends Table{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
 		COMBATMODE,     // chose combat, go back to select character 
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
-		CHARACTERMODE;  // choosing character, goes back to select world
 	}
 	
 	private static boolean enabled = false; //FOR LAYOUT DEBUGGING
@@ -215,56 +214,6 @@ public class MenuScreen extends Table{
 		});
 	}
 	
-	/**
-	 * Creates a 'Select Character' layout for the main menu and 
-	 * adds it to the menu.
-	 */
-	public void selectCharacter() {
-		mainmenu.clear(); 
-		
-		Table playerTable = new Table(); 
-		String subHeading = "subheading";
-		Label playerInfo = new Label("CHARACTERS", this.skin, "title");
-		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, subHeading);
-		Label moreInfo = new Label("click '>' since this feature has not "
-				+ "yet been implemented)", skin);
-		
-		//Finally wasn't implemented 
-		/*Just some solider colours, has no actual functionality just yet*/
-		Texture blueTex =  this.textureManager.getTexture("astro_blue");
-		Image blueAstro = new Image(blueTex);
-		
-		Texture yellowTex =  this.textureManager.getTexture("astro_yellow");
-		Image yellowAstro = new Image(yellowTex);
-		
-		Texture pinkTex =  this.textureManager.getTexture("astro_pink");
-		Image pinkAstro = new Image(pinkTex);
-		
-		Texture greenTex =  this.textureManager.getTexture("astro_green");
-		Image greenAstro = new Image(greenTex);
-		
-		Texture redTex =  this.textureManager.getTexture("astro_red");
-		Image redAstro = new Image(redTex);
-		
-		Texture purpleTex =  this.textureManager.getTexture("astro_purple");
-		Image purpleAstro = new Image(purpleTex);
-		
-		playerTable.add(greenAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(yellowAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(redAstro).pad(BUTTONPAD).size(ASTROWIDTH).row();
-		playerTable.add(pinkAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(purpleAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(blueAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		
-		mainmenu.add(playerInfo).align(Align.left).row();
-		mainmenu.add(playerPrompt).align(Align.left).row();
-		mainmenu.add(moreInfo).row();
-		mainmenu.add(playerTable);
-		addNavigationButton(ScreenMode.CHARACTERMODE);
-		if (this.joinedServer){
-			this.addPlayButton();
-		}
-	}
 	
 	public void multiplayerLobby(String hostIP, boolean host){
 	    mainmenu.clear();
@@ -606,21 +555,16 @@ public class MenuScreen extends Table{
 						mainmenu.clear(); 
 						playerModeSelect();
 						break; 
-					case CHARACTERMODE:
-						selectWorldMode();
-						break;
 					case COMBATMODE:
-						selectCharacter();
+						selectWorldMode();
 						break;
 					default:
 						break;
 					}
 				}
-				
 				/* If multiplayer mode */
 				else if(MenuScreen.this.playerType == 1) {
                     click.play();
-
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -630,22 +574,17 @@ public class MenuScreen extends Table{
 						break; 
 					case COMBATMODE:
 						mainmenu.clear(); 
-						selectCharacter();
+						if (MenuScreen.this.joinedServer){
+							selectServerMode();
+						} else {
+							selectWorldMode();
+						}
 						break;
 					case WORLDMODE:
 						mainmenu.clear(); 
 						selectServerMode(); 
 						break;
-					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer){
-							selectServerMode();
-						}
-						else{
-							selectWorldMode();
-						}
-						break; 
 					}
-					
 				}
 			}
 		});
@@ -655,42 +594,30 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor){
                 click.play();
 				/*If single player mode*/
-				/* Single Player: select world > select character > select combat*/
+				/* Single Player: select world >  select combat*/
 				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
 						if (checkWorld(mapType, mapSize)) {
 							mainmenu.clear();
-							selectCharacter();
+							selectCombat();
 						}
 						break; 
-					case CHARACTERMODE:
-						selectCombat();
-						break;
 					default:
 						break;
 					}
 				} else if(MenuScreen.playerType == 1) {
 					/* If multiplayer mode
-					 * 		join server > select character 
-					 * 		start server > select world > select character > select combat 
+					 * 		join server >  
+					 * 		start server > select world >  select combat 
 					 */				
 					switch(status) {
 					case WORLDMODE:
 						if (checkWorld(mapType, mapSize)) {
-							mainmenu.clear(); 
-							selectCharacter(); 
-						}
-						break;
-					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer){
-							;
-						}
-						else{
+							mainmenu.clear();
 							selectCombat();
 						}
-						break;
 					default:
 						break; 
 					}
@@ -718,8 +645,7 @@ public class MenuScreen extends Table{
 		
 		lowerPanel.add(navigationButtons);
 		lowerPanel.add(actionButtons).expandX().align(Align.right);
-		mainmenu.add(lowerPanel).expandY().align(Align.left | Align.bottom);
-		
+		mainmenu.add(lowerPanel).expandY().align(Align.left | Align.bottom);		
 		return lowerPanel; 
 	}
 	
