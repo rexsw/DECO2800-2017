@@ -11,6 +11,7 @@ import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.hud.GameStats;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Render3D;
@@ -63,10 +64,7 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
 		savedGame = new GameSave(aITeams,playerTeams,true);
-		ColourManager colourManager = (ColourManager)GameManager.get()
-				.getManager(ColourManager.class);
-		savedGame.data.setIndex(colourManager.getIndex());
-		loadGame();
+		loadGame(savedGame);
 	}
 	
 	/**
@@ -89,7 +87,7 @@ public class Game{
 	 * this function load the game
 	 * @throws java.io.FileNotFoundException
 	 */
-	private void loadGame() throws java.io.FileNotFoundException {
+	private void loadGame(GameSave savedGame) throws java.io.FileNotFoundException {
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
 
@@ -101,12 +99,14 @@ public class Game{
 		this.timeManager.unPause();
 
 		//set game time
-		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),(int)loadedGame.data.getSec());
+		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),0);
 
 		//set colour index
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		colourManager.setIndex(loadedGame.data.getIndex());
+
+		savedGame.data.setIndex(loadedGame.data.getIndex());
 
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
