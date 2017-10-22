@@ -5,12 +5,12 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.technology.Technology;
 import org.junit.Test;
-import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @Author Bosco Bartilomo
@@ -51,50 +51,6 @@ public class TechnologyManagerTest {
     }
 
     @Test
-    public void setUpUnlockStates() throws Exception {
-    }
-
-    @Test
-    public void setUpArmourTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpDamageTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpeedTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpHealthTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpecialTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpHeroFactoryTech() throws Exception {
-    }
-
-    @Test
-    public void setUpArmourItemLevelTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpecialItemsTech() throws Exception {
-    }
-
-    @Test
-    public void setUpWeaponLevelTechs() throws Exception {
-    }
-
-    @Test
-    public void setUnitAttributes() throws Exception {
-    }
-
-    @Test
     public void getTech() throws Exception {
         assertTrue(technologyManager.getTech(1).equals(tech1));
     }
@@ -110,82 +66,41 @@ public class TechnologyManagerTest {
 
     @Test
     public void getActive() throws Exception {
+        assertTrue(technologyManager.getActive().isEmpty());
+        technologyManager.addActiveTech(tech1);
+        assertTrue(technologyManager.getActive().contains(tech1));
     }
 
     @Test
-    public void addActiveTech() throws Exception {
-    }
+    public void armourUnlocks() throws Exception {
+        technologyManager.setUpUnlockStates();
 
-    @Test
-    public void attackUpgrade() throws Exception {
-    }
+        //Test Armors
+        assertFalse(technologyManager.armourIsUnlocked(1));
+        assertFalse(technologyManager.armourIsUnlocked(2));
+        assertFalse(technologyManager.armourIsUnlocked(3));
+        technologyManager.unlockArmourLevelOne();
+        technologyManager.unlockArmourLevelTwo();
+        technologyManager.unlockArmourLevelThree();
+        assertTrue(technologyManager.armourIsUnlocked(1));
+        assertTrue(technologyManager.armourIsUnlocked(2));
+        assertTrue(technologyManager.armourIsUnlocked(3));
 
-    @Test
-    public void armourUpgrade() throws Exception {
-    }
+        //Test Weapons
+        assertFalse(technologyManager.weaponIsUnlocked(1));
+        assertFalse(technologyManager.weaponIsUnlocked(2));
+        assertFalse(technologyManager.weaponIsUnlocked(3));
+        technologyManager.unlockWeaponLevelOne();
+        technologyManager.unlockWeaponLevelTwo();
+        technologyManager.unlockWeaponLevelThree();
+        assertTrue(technologyManager.weaponIsUnlocked(1));
+        assertTrue(technologyManager.weaponIsUnlocked(2));
+        assertTrue(technologyManager.weaponIsUnlocked(3));
 
-    @Test
-    public void speedUpgrade() throws Exception {
-    }
-
-    @Test
-    public void healthUpgrade() throws Exception {
-    }
-
-    @Test
-    public void nootropicsUpgrade() throws Exception {
-    }
-
-    @Test
-    public void cowLevelUpgrade() throws Exception {
-    }
-
-    @Test
-    public void steroidsUpgrade() throws Exception {
-    }
-
-    @Test
-    public void vampirismUpgrade() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelOne() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelTwo() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelThree() throws Exception {
-    }
-
-    @Test
-    public void armourIsUnlocked() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelOne() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelTwo() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelThree() throws Exception {
-    }
-
-    @Test
-    public void weaponIsUnlocked() throws Exception {
-    }
-
-    @Test
-    public void unlockSpecial() throws Exception {
-    }
-
-    @Test
-    public void specialIsUnlocked() throws Exception {
+        //Test Special
+        assertFalse(technologyManager.specialIsUnlocked());
+        technologyManager.unlockSpecial();
+        assertTrue(technologyManager.specialIsUnlocked());
     }
 
     @Test

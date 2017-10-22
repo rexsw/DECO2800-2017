@@ -1,19 +1,17 @@
 package com.deco2800.marswars.heros;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.*;
 import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class InventoryTest {
 	//Necessary instances to be made/defined.

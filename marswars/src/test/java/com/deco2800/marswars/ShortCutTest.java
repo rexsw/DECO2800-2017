@@ -1,23 +1,16 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
+import com.badlogic.gdx.Input;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.functionkeys.ShortCut;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Tank;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.functionkeys.ShortCut;
-import com.deco2800.marswars.hud.HUDView;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.worlds.BaseWorld;
-
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 /**
  * 

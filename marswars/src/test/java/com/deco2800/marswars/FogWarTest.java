@@ -1,18 +1,16 @@
 package com.deco2800.marswars;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
+import com.deco2800.marswars.entities.FogEntity;
+import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.util.Box3D;
+import com.deco2800.marswars.worlds.FogWorld;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.util.Box3D;
-import com.deco2800.marswars.worlds.FogWorld;
-import com.deco2800.marswars.entities.FogEntity;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * test for all affiliations of fog of war:

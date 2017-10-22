@@ -1,8 +1,8 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.GatherAction;
-import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.Barracks;
 import com.deco2800.marswars.buildings.Base;
@@ -12,15 +12,8 @@ import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.terrainelements.ResourceType;
-import com.deco2800.marswars.entities.units.AmbientAnimal;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.managers.GameBlackBoard.Field;
-import com.deco2800.marswars.actions.ActionSetter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,6 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.entities.units.Sniper;
-import com.deco2800.marswars.entities.units.Sniper;
-
 import org.junit.Assert;
 import org.junit.Test;
 

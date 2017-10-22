@@ -1,13 +1,12 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 public class ResourceTest {
 	private int initialStorage = 100;// 100 here is the default capacity
 	@Test

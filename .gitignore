@@ -9,6 +9,8 @@ lib/
 
 marswars/resources/HUDAssets/minimap.png
 marswars/resources/mapAssets/tmap.tmx
+marswars/resources/mapAssets/temp.tmx
+marswars/save.bin
 
 # Gradle
 build

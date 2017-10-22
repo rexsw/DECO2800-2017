@@ -1,16 +1,15 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.actions.ActionType;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 //import com.deco2800.marswars.managers.GameManager;
 //import com.deco2800.marswars.worlds.BaseWorld;
-
-import org.junit.Assert;
 //import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Code coverage and Junit tests for the Carrier class

@@ -3,7 +3,8 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 
 import java.util.Optional;
 
