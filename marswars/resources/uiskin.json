@@ -52,13 +52,14 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		pressedOffsetX: 5
 	},
 	default: {
-		font: default-font,
+		font: font_consola_18pt,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
 		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		disabledFontColor: { a: 1, b: 0.2, r: 0.8 },
 		up: btn1,
 		down: btn1
+		pressedOffsetX: 5
 	},
 	pausemenubutton: {
 		font: font_a_rialn_30pt_italic,
@@ -149,6 +150,12 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		stageBackground: clear
 	},
+	help: {
+		background: window_even_smoller,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		stageBackground: clear
+	},
 	statusbar_back: {
 		background: 22551521_10156161181053676_1441206058_n,
 		titleFont: default-font,
@@ -214,6 +221,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	},
 	subheading: {
 		font: font_arial_18pt,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
+	},
+	menusubheading: {
+		font: 	font_airstrike_42pt
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	error: {

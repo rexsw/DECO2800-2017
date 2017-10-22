@@ -1,23 +1,19 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.AiManager.State;
+import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.AiManager;
-import com.deco2800.marswars.managers.AiManager.State;
-import com.deco2800.marswars.managers.GameBlackBoard;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.worlds.BaseWorld;
+import static org.junit.Assert.*;
 
 public class AiManagerTest {
 	BaseWorld baseWorld;
@@ -42,17 +38,17 @@ public class AiManagerTest {
     }
     
      
-	@Test
+	@Ignore //(no longer simple)
 	public void aiTestBase() {
 		entity =  new Base(GameManager.get().getWorld(), 1, 1, 0, 1);
 		GameManager.get().getWorld().addEntity(entity);
-		rm.setRocks(500, 1);
+		rm.setBiomass(500, 1);
 		assertFalse(entity.showProgress());
 
-		// Should create a Spacman (costs 30 rocks)
+		// Should create an astronaut (costs 20 biomass)
 		am.onTick(0);
 		assertTrue(entity.showProgress());
-		assertEquals(500-30, rm.getRocks(1));
+		assertEquals(500-20, rm.getBiomass(1));
 	}
 	
 	@Test

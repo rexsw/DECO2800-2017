@@ -6,7 +6,6 @@ import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.items.Item;
 import com.deco2800.marswars.util.WorldUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

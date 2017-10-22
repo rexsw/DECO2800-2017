@@ -8,12 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * @author xhy6006 on 12/10/17
+ * @author haoxuan on 12/10/17
  */
 
 public class BarracksTest {

@@ -1,12 +1,5 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameBlackBoard;
@@ -14,6 +7,11 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.WinManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class WinManagerTest {
 	BaseWorld baseWorld;
@@ -38,6 +36,8 @@ public class WinManagerTest {
 	@Test
 	public void combatWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rm.reset();
 		black.set();
 		WinManager test = new WinManager();
 		assertFalse(test.isWinner());

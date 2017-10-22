@@ -53,6 +53,7 @@ public class AttackMoveAction implements DecoAction {
 				case SETUP_MOVE:
 					action = new MoveAction(goalX, goalY, entity);
 					state = State.MOVE_TOWARDS;
+					return;
 				case MOVE_TOWARDS:
 					moveTowardsAction();
 					return;

@@ -1,6 +1,5 @@
 package com.deco2800.marswars.initiategame;
 
-import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.AbstractEntity;
@@ -20,7 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +28,7 @@ import java.util.List;
  */
 public class GameSave {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSave.class);
+
 
 
     public Data data = new Data();
@@ -43,17 +42,25 @@ public class GameSave {
      * the constructor to save map type and size
      * only used when initiate game saving instance
      */
-    public GameSave(int aITeams, int playerTeams){
+    public GameSave(int aITeams, int playerTeams, AiManager.Difficulty diff, boolean isLoadedGame){
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
+        data.setAiDifficulty(diff);
 
         String tempFile = "./resources/mapAssets/temp.tmx";
         
         File delete = new File(tempFile);
         delete.delete();
 
-        //copying the map
-        File source = new File("./resources/mapAssets/tmap.tmx");
+        File source;
+        if(isLoadedGame){
+            //copying the load map
+            source =new File("./resources/mapAssets/loadmap.tmx");
+        }
+        else {
+            //copying the map
+            source = new File("./resources/mapAssets/tmap.tmx");
+        }
 
 
         //temp file created everytime a new map is created
@@ -78,23 +85,22 @@ public class GameSave {
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-
-
-
         kryo.writeClassAndObject(output, data.getFogOfWar());
         kryo.writeClassAndObject(output, data.getBlackFogOfWar());
         kryo.writeClassAndObject(output, data.getEntities());
         kryo.writeClassAndObject(output, data.getResource());
         kryo.writeClassAndObject(output, data.getBuilding());
         kryo.writeClassAndObject(output, data.getObstacles());
+        kryo.writeClassAndObject(output, data.getAnimals());
         kryo.writeClassAndObject(output, data.getIndex());
+        kryo.writeClassAndObject(output, data.getAiDifficulty());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
         kryo.writeClassAndObject(output, data.getPlayerStats());
         kryo.writeClassAndObject(output, data.getHour());
         kryo.writeClassAndObject(output, data.getMin());
-        kryo.writeClassAndObject(output, data.getSec());
+        kryo.writeClassAndObject(output, data.getWinCondition());
         output.close();
 
         //write the map file
@@ -131,14 +137,17 @@ public class GameSave {
         data.setResource((ArrayList<Resource>)kryo.readClassAndObject(input));
         data.setBuilding((ArrayList<SavedBuilding>)kryo.readClassAndObject(input));
         data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
+        data.setAnimals((ArrayList<SavedAnimal>)kryo.readClassAndObject(input));
         data.setIndex((int)kryo.readClassAndObject(input));
+        data.setAiDifficulty((AiManager.Difficulty)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setPlayerStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setHour((long)kryo.readClassAndObject(input));
         data.setMin((long)kryo.readClassAndObject(input));
-        data.setSec((long)kryo.readClassAndObject(input));
+        data.setWinCondition((WinManager.WINS)kryo.readClassAndObject(input));
+
         input.close();
     }
 
@@ -148,8 +157,19 @@ public class GameSave {
      * this function will get all the entities and fills in the arrays
      */
     public void fillData(){
+
+        //fill the time
+        TimeManager timeManager = (TimeManager)
+                GameManager.get().getManager(TimeManager.class);
+        data.setHour(timeManager.getHours());
+        data.setMin(timeManager.getMinutes());
+
         data.setFogOfWar(FogManager.getFog());
         data.setBlackFogOfWar(FogManager.getBlackFog());
+
+        //get win condition
+        WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+        data.setWinCondition(win.getWinCondition());
 
         //getting all the entities
         List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();
@@ -171,6 +191,9 @@ public class GameSave {
             }
             else if(r instanceof Obstacle){
                  data.getObstacles().add((Obstacle)r);
+             }
+             else if(r instanceof AmbientAnimal){
+                 fillAnimals(r);
              }
             else {
                 fillEntities(r);
@@ -202,12 +225,7 @@ public class GameSave {
         }
 
 
-        //fill the time
-        TimeManager timeManager = (TimeManager)
-                GameManager.get().getManager(TimeManager.class);
-        data.setHour(timeManager.getPlayHours());
-        data.setMin(timeManager.getPlayMinutes());
-        data.setSec(timeManager.getPlaySeconds());
+
 
     }
 
@@ -234,6 +252,22 @@ public class GameSave {
         }
         else if("TechBuilding".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
+        }
+    }
+
+    /**
+     * fill in the animals
+     */
+    public void fillAnimals(AbstractEntity aE){
+        AmbientAnimal a = (AmbientAnimal)aE;
+        if(a instanceof Snail){
+            data.getAnimals().add(new SavedAnimal("Snail",a.getPosX(),a.getPosY(),a.getHealth()));
+        }
+        else if(a instanceof Corn){
+            data.getAnimals().add(new SavedAnimal("Corn",a.getPosX(),a.getPosY(),a.getHealth()));
+        }
+        else if (a instanceof Dino ){
+            data.getAnimals().add(new SavedAnimal("Dino",a.getPosX(),a.getPosY(),a.getHealth()));
         }
     }
 

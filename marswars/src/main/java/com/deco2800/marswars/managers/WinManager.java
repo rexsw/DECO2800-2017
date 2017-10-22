@@ -23,6 +23,7 @@ public class WinManager extends Manager implements TickableManager {
 	private boolean gamewin = false;
 	private boolean econwin = true;
 	private boolean milwin = true;
+	private WINS winCondition = null;
 	
 	public static enum WINS {
 		ECON, MIL, BOTH
@@ -65,6 +66,7 @@ public class WinManager extends Manager implements TickableManager {
 	}
 	
 	public void setwinconditions(WINS condtion) {
+		this.winCondition = condtion;
 		switch(condtion){
 			case ECON:
 				econwin = true;
@@ -76,6 +78,14 @@ public class WinManager extends Manager implements TickableManager {
 				econwin = true;
 				milwin = true;
 		}
+	}
+
+	/**
+	 * return win condition for gamesave
+	 * @return
+	 */
+	public WINS getWinCondition(){
+		return winCondition;
 	}
 	
 	/**

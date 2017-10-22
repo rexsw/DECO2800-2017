@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Logger;
 import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.initiategame.SoundTrackPlayer;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -50,6 +50,7 @@ public class MainMenu {
 	private Game game;
 	boolean status = true;
 	boolean enabled = false; 
+	private Difficulty aiDifficulty;
 	
 	/* Managers */
 	private TextureManager textureManager; //for loading in resource images
@@ -110,12 +111,13 @@ public class MainMenu {
 	 * @param aITeams
 	 * @param playerTeams
 	 */
-	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
+	public void startGame(boolean start, MapTypes mapType, MapSizeTypes mapSize, int aITeams,
+			int playerTeams, Difficulty aiDifficulty) {
 		setGameStarted(start);
 		if (isGameStarted()) {
 			openMusic.stop();
 			openMusic.dispose();
-			game = new Game(mapType, mapSize, aITeams, playerTeams); //Start up a new game
+			game = new Game(mapType, mapSize, aITeams, playerTeams, aiDifficulty); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		}
@@ -139,7 +141,7 @@ public class MainMenu {
 				openMusic.stop();
 				openMusic.dispose();
 				try {
-					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams()); //Start up a new game
+					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams(), loadedGame.data.getAiDifficulty()); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}

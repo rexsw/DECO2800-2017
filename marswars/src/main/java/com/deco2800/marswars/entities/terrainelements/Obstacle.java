@@ -13,8 +13,9 @@ public class Obstacle extends BaseEntity {
      */
     public Obstacle(){}
 
-    public Obstacle(float posX, float posY, float posZ, float height, float width, ObstacleType type, String colour){
-        super(new Box3D(posX, posY, posZ, 1, 1, 1f), height, width, false);
+    public Obstacle(float posX, float posY, float posZ, float height, float width, ObstacleType type, String colour, boolean centered){
+
+        super(new Box3D(posX, posY, posZ, 1f, 1f, 1f), height, width, centered);
         switch (type) {
             case TREE1:
                 this.setTexture("tree1_"+ colour);
@@ -25,15 +26,24 @@ public class Obstacle extends BaseEntity {
             case TREE3:
                 this.setTexture("tree3_"+ colour);
                 break;
+            case CLIFF_L:
+                this.setTexture("cliff_left_"+ colour);
+                break;
+            case CLIFF_R:
+                this.setTexture("cliff_right_"+ colour);
+                break;
             default: // If for some reason wrong tree type is given, give it tree texture one
                 this.setTexture("tree1_" + colour);
                 break;
         }
         this.canWalkOver = false;
-        this.setCost(Integer.MAX_VALUE); //pathfinding should never go through this
+        this.setCost(100000); //pathfinding should never go through this
         if (type==ObstacleType.TREE1||type==ObstacleType.TREE2||type==ObstacleType.TREE3) {
-            this.setXoff(width*0.775f);
-            this.setYoff(width*0.1f);
+            this.setXoff(width*0.7f);
+            this.setYoff(width*0.15f);
+        } else {
+            this.setXoff(width*0.7f);
+            this.setYoff(width*0.05f);
         }
     }
 

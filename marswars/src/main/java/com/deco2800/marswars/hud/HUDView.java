@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -35,6 +34,7 @@ import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import com.deco2800.marswars.hud.EntityPortrait;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,11 +72,14 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		         //window for containing the minimap
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
+
+	private Dialog techTree; //view for tech tree
+	private Dialog pauseMenu;
+
 	private Image statsbg; 
 	private Image headerbg;
 	private Image actionsBg;
 	private Image actionsBgMain;
-	private TechTreeView techTree; //view for tech tree
 	private SpawnMenu spawnMenu; // customized menu that displays available entities to be spawned
 
 	private Button peonButton;
@@ -163,22 +166,22 @@ public class HUDView extends ApplicationAdapter{
 	 * Updates shop when item levels are unlocked.
 	 */
 	public void updateShop() {
-		if (technologyManager.armourIsUnlocked(1) && (shopDialog.getArmourLvl() < 1)) {
+		if (technologyManager.armourIsUnlocked(1)) {
 			shopDialog.unlockArmours(1);
 		}
-		if (technologyManager.armourIsUnlocked(2) && (shopDialog.getArmourLvl() < 2)) {
+		if (technologyManager.armourIsUnlocked(2)) {
 			shopDialog.unlockArmours(2);
 		}
-		if (technologyManager.armourIsUnlocked(3) && (shopDialog.getArmourLvl() < 3)) {
+		if (technologyManager.armourIsUnlocked(3)) {
 			shopDialog.unlockArmours(3);
 		}
-		if (technologyManager.weaponIsUnlocked(1) && (shopDialog.getWeapLvl() < 1)) {
+		if (technologyManager.weaponIsUnlocked(1)) {
 			shopDialog.unlockWeapons(1);
 		}
-		if (technologyManager.weaponIsUnlocked(2) && (shopDialog.getWeapLvl() < 2)) {
+		if (technologyManager.weaponIsUnlocked(2)) {
 			shopDialog.unlockWeapons(2);
 		}
-		if (technologyManager.weaponIsUnlocked(3) && (shopDialog.getWeapLvl() < 3)) {
+		if (technologyManager.weaponIsUnlocked(3)) {
 			shopDialog.unlockWeapons(3);
 		}
 		if (technologyManager.specialIsUnlocked()  && !(shopDialog.getSpecialUnlocked())) {
@@ -279,14 +282,22 @@ public class HUDView extends ApplicationAdapter{
 		dispMainMenu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
+				if (getPauseCheck() == 0) {
+					setPauseCheck(1);
+					pauseMenu = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			
+					setPause(pauseMenu);
+				} else {
+					setPauseCheck(0);
+					hidePause();
+				}
+			}
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
-		help = new HelpWindow(stage, skin);
+		help = new HelpWindow(stage, skin, "help");
 		stage.addActor(help);
-		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
-				stage.getHeight()/2 - help.getHeight());
+		help.setPosition(Gdx.graphics.getWidth()/2 - help.getWidth()/2, 
+				Gdx.graphics.getHeight()/2 - help.getHeight()/2);
 		help.setVisible(false);
 
 		//Creates the help button listener
@@ -403,13 +414,20 @@ public class HUDView extends ApplicationAdapter{
 
 		hudManip.add(options);
 		stage.addActor(hudManip);
-
+		
 		techTree = new TechTreeView("TechTree", skin, hud);
-
 		dispTech.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				techTree.show(stage);
+				if (getTechCheck() == 0) {
+					setTechCheck(1);
+					techTree = new TechTreeView("TechTree", skin, hud).show(HUDView.this.stage);
+					setTechTree(techTree);
+				} else {
+					setTechCheck(0);
+					timeManager.pause();
+					hideTechTree();
+				}
 			}
 		});
 		dispTech.addListener(new TextTooltip("Open Technology", skin));
@@ -421,7 +439,6 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, Align.right | Align.bottom);
 			}
 		});
-
 
 		techTree.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -439,11 +456,7 @@ public class HUDView extends ApplicationAdapter{
 			}
 		});
 
-
-
-
-
-
+		dispShop.addListener(new TextTooltip("Open Shop", skin));
 
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
@@ -547,11 +560,11 @@ public class HUDView extends ApplicationAdapter{
 		Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
-		resourceTable.add(rockCount).padRight(60);
+		resourceTable.add(rockCount).padRight(50);
 		resourceTable.add(crystal).width(40).height(40).pad(10);
-		resourceTable.add(crystalCount).padRight(60);
+		resourceTable.add(crystalCount).padRight(50);
 		resourceTable.add(biomass).width(40).height(40).pad(10);
-		resourceTable.add(biomassCount).padRight(60);
+		resourceTable.add(biomassCount).padRight(50);
 		resourceTable.add(popCount).padRight(10);
 		resourceTable.add(maxPopCount);
 
@@ -845,46 +858,79 @@ public class HUDView extends ApplicationAdapter{
 			buttonList.get(index).setVisible(true);
 			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
-			Label cost = new Label("", skin);
-			Label secondCost = new Label("", skin);
-			Image resource = null;
-			Image secondResource = null;
+			Label costRocks = new Label("", skin);
+			Label costCrystal = new Label("", skin);
+			Label costBiomass = new Label("", skin);
+			Image rock = new Image(textureManager.getTexture("rock_HUD"));
+			Image biomass = new Image(textureManager.getTexture("biomass_HUD"));
+			Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 			Texture entity = textureManager.getTexture("PLACEHOLDER");
+			boolean dispRock = false;
+			boolean dispCrystal = false;
+			boolean dispBiomass = false;
 			if (e instanceof BuildingType) {
 				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
 				name = new Label(e.toString(), skin);
-				cost = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
-				Texture rockTex = textureManager.getTexture("rock_HUD");
-				resource = new Image(rockTex);
+				costRocks = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
+				dispRock = true;
 			} else if (e instanceof EntityID) {
 				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
-				cost = new Label(String.valueOf(((EntityID) e).getCostBiomass()), skin);
-				secondCost = new Label(String.valueOf(((EntityID) e).getCostRocks()), skin);
-				Texture bioTex = textureManager.getTexture("biomass_HUD");
-				resource = new Image(bioTex);
-				Texture cryTex = textureManager.getTexture("crystal_HUD");
-				secondResource = new Image(cryTex);
-				
+
+				int valRock = ((EntityID) e).getCostRocks();
+				int valCrystal = ((EntityID) e).getCostCrystals();
+				int valBiomass = ((EntityID) e).getCostBiomass();
+				costRocks = new Label(String.valueOf(valRock), skin);
+				costCrystal = new Label(String.valueOf(valCrystal), skin);
+				costBiomass = new Label(String.valueOf(valBiomass), skin);
+				costCrystal.setColor(Color.PURPLE);
+				costBiomass.setColor(Color.GREEN);
+				if (valRock>0) {
+					dispRock = true;
+				}
+				if (valBiomass>0) {
+					dispBiomass = true;
+				}
+				if (valCrystal>0) {
+					dispCrystal = true;
+				}
+
 			} else if (e instanceof ActionType) {
 				entity = textureManager.getTexture("PLACEHOLDER");
 				name = new Label(e.toString(), skin);
 			}
 			name.setFontScale(.9f);
-			cost.setFontScale(.9f);
+			costRocks.setFontScale(.9f);
+			costCrystal.setFontScale(.9f);
+			costBiomass.setFontScale(.9f);
 			TextureRegion entityRegion = new TextureRegion(entity);
 			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
 			ImageButton addPane = new ImageButton(buildPreview);
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(resource).width(30).height(30).align(Align.right).padTop(-75).padLeft(15).padRight(-15);
-			buttonList.get(index).add(cost).width(buttonList.get(index).getWidth()*.125f).height(30).align(Align.right).padLeft(14).padTop(-75);
-			if (e instanceof EntityID) {
-				buttonList.get(index).add(secondResource).width(30).height(30).align(Align.right).padLeft(-50).padTop(-20).padRight(10);
-				buttonList.get(index).add(secondCost).width(buttonList.get(index).getWidth()*.125f).height(30).align(Align.left).padTop(-20).padLeft(-10);
+			buttonList.get(index).add(rock).width(buttonWidth * .2f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
+			//buttonList.get(index).add(costBiomass).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
+			buttonList.get(index).add(name).width(buttonWidth * .2f).align(Align.right).height(buttonHeight * .2f)
+			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
+			if (dispRock) {
+				buttonList.get(index).add(rock).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costRocks).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
 			}
-			buttonList.get(index).add(name).width(buttonWidth * .4f).align(Align.left).height(buttonHeight * .2f)
-			.padLeft(buttonList.get(index).getWidth()*-.7f);
+			if (dispCrystal) {
+				buttonList.get(index).add(crystal).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costCrystal).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+			if (dispBiomass) {
+				buttonList.get(index).add(biomass).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costBiomass).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+
 			index++;
 		}
 	}
@@ -1073,10 +1119,25 @@ public class HUDView extends ApplicationAdapter{
 		stats.resizeStats(width, height);
 		
 		//resize help window
-		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
-				stage.getHeight()/2 - help.getHeight());
+		help.setPosition(width/2 - help.getWidth()/2, height/2 - help.getHeight()/2);
 
     }
+	
+	public void setTechTree(Dialog techtree) {
+		this.techTree = techtree;
+	}
+	
+	public void hideTechTree() {
+		this.techTree.hide();
+	}
+	
+	public void setPause(Dialog pause) {
+		this.pauseMenu = pause;
+	}
+	
+	public void hidePause() {
+		this.pauseMenu.hide();
+	}
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise

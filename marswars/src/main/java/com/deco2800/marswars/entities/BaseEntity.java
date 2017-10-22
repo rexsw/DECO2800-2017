@@ -17,6 +17,9 @@ import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
 	private EntityPortrait portrait;
+	private EntityPortrait babyPortrait;
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseEntity.class);
 
 	public BaseEntity(){
 	  //NEVER DELETE THIS
@@ -61,18 +66,13 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	/**
 	 * Full blown constructor for the base entity
-	 * @param posX
-	 * @param posY
-	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
 	 * @param xRenderLength
 	 * @param yRenderLength
 	 * @param centered
 	 */
 	public BaseEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
+		this.modifyCollisionMap(true);
 	}
 
 	/**
@@ -161,12 +161,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
-		//fog of war: delete the previous line of sight position
+
 		modifyCollisionMap(false);
 
 		super.setPosX(x);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -176,12 +174,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
-		//fog of war: delete the previous line of sight position
+
 		modifyCollisionMap(false);
-
 		super.setPosY(y);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -191,12 +186,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
-		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
-
 		super.setPosZ(z);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -372,9 +363,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
-					baseWorld.getCollisionMap().get(x, y).add(this);
+						baseWorld.getCollisionMap().get(x, y).add(this);
 				} else {
-					baseWorld.getCollisionMap().get(x, y).remove(this);
+						baseWorld.getCollisionMap().get(x, y).remove(this);
+
 				}
 			}
 		}
@@ -557,14 +549,33 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 
+	/**
+	 * This method returns the entity portrait that is displayed when the unit is selected
+	 * @return the entity portrait
+	 */
     public EntityPortrait getPortrait() {
-		if (this.entityType != EntityType.UNIT) {
+		if (this.entityType != EntityType.UNIT) {//Non units don't have entity portraits
 			return null;
 		}
-		if (this.portrait == null) {
+		if (this.portrait == null) {//If there is not an existing portrait then create one
 			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
 		}
-		portrait.updateHealth();
+		portrait.updateHealth();//Update the health
 		return portrait;
     }
+
+	/**
+	 * This method returns a child portrait, used to show that the unit is in a carrier that is selected
+	 * @param parent the parent of the portrait, for example the carrier
+	 * @return The child portrait
+	 */
+	public EntityPortrait getPortrait(BaseEntity parent) {
+		if (this.entityType != EntityType.UNIT) {//Non units don't have portraits
+			return null;
+		}
+		if (this.babyPortrait == null) {//If there is not one then make one
+			babyPortrait = new EntityPortrait(GameManager.get().getSkin(),this, parent.getPortrait(), parent.getPortrait().getWidth(),parent.getPortrait().getHeight()*2);
+		}
+		return babyPortrait;
+	}
 }

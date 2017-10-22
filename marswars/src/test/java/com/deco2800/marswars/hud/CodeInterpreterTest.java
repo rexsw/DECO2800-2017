@@ -1,23 +1,13 @@
 package com.deco2800.marswars.hud;
-import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.hud.CodeInterpreter;
+
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.deco2800.marswars.MarsWars;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
-import com.deco2800.marswars.technology.Technology;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test is used to test the CodeInterpreter class.

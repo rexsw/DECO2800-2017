@@ -8,7 +8,6 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.util.Box3D;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

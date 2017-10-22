@@ -4,7 +4,6 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.ColourManager;
-import com.deco2800.marswars.managers.Colours;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.BaseWorld;

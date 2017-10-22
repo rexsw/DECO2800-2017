@@ -9,6 +9,8 @@ import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +59,8 @@ public class GameManager implements TickableManager {
 	private boolean gameStarted = false;
 	
 	private boolean costsFree = false;
+	
+	private MapTypes map;
 
 	/**
 	 * Returns an instance of the GM
@@ -212,6 +216,7 @@ public class GameManager implements TickableManager {
 	
 	public void resetGame(){
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		WeatherManager wm = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
@@ -220,7 +225,9 @@ public class GameManager implements TickableManager {
 		this.miniMap = null;
 		TimeManager.resetInGameTime();
 		this.menu.endGame();
-		WeatherManager.water.dispose();
+		try {
+			wm.water.dispose();
+		}catch(NullPointerException e){}
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		black.clear();
@@ -351,6 +358,14 @@ public class GameManager implements TickableManager {
 	 */
 	public void setCostsFree(boolean isFree) {
 		costsFree = isFree;
+	}
+	
+	public void setMapType(MapTypes world) {
+		this.map = world;
+	}
+	
+	public MapTypes getMapType() {
+		return this.map;
 	}
 
 }
