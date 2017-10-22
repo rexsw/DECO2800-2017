@@ -324,7 +324,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
-		this.weatherManager.setWeatherEvent();
+		//this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);

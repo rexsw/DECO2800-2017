@@ -37,6 +37,7 @@ public class WeatherManager extends Manager implements Tickable {
     private ParticleEffect effect;
     private boolean isWaterSoundPlaying = false;
     public Sound water;
+    private boolean gracePeriod = true;
 
     /**
      * Sets the toggle value for the UI flood toggle button. The toggle either
@@ -61,7 +62,8 @@ public class WeatherManager extends Manager implements Tickable {
         currentTime = timeManager.getGlobalTime();
         if (! timeManager.isPaused()) {
             // Generate floodwaters if raining
-            if (timeManager.getHours() < 3 && floodOn) {
+            if (this.isRaining() && floodOn) {
+                floodWatersExist = true;
                 status = true;
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
@@ -82,7 +84,7 @@ public class WeatherManager extends Manager implements Tickable {
                     this.setInterval();
                 }
             }
-            if ((timeManager.getHours() >= 3 && floodWatersExist) || ! floodOn) {
+            if ((! this.isRaining() && floodWatersExist) || ! floodOn) {
                 status = true;
                 // +10 a good time for actual condition
                 if (currentTime > interval + 2) {
@@ -110,7 +112,12 @@ public class WeatherManager extends Manager implements Tickable {
      * Sets the relevant weather even according to the current in game time.
      */
     public boolean isRaining() {
-        return timeManager.getHours() > 0 && timeManager.getHours() < 15;
+        // Prevent the flood from occurring until 12 hours into the first day
+        if (timeManager.getHours() > 12) {
+            gracePeriod = false;
+        }
+        // Flood every 4 hours, for one hour following this
+        return timeManager.getHours() % 4 == 0 && ! gracePeriod;
     }
 
     /**
@@ -170,7 +177,7 @@ public class WeatherManager extends Manager implements Tickable {
             for (BaseEntity e: damagedUnits) {
                 if (((Soldier) e).getLoadStatus() == 0) {
 		            ((Soldier) e).setHealth(((Soldier) e).getHealth()
-			                - ((Soldier) e).getMaxHealth() / 10);
+			                - ((Soldier) e).getMaxHealth() / 20);
 		        }
             }
             damaged = true;
@@ -372,6 +379,7 @@ public class WeatherManager extends Manager implements Tickable {
             }
         } else {
             floodWatersExist = false;
+            waterEntities = 0;
         }
         removeEntities.clear();
         return floodWatersExist;
