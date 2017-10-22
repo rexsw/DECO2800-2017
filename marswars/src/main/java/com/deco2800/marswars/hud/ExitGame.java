@@ -44,7 +44,9 @@ public class ExitGame extends Dialog{
 				if(object == (Object) 1){
 					System.exit(0);
 				} else {
-					this.hud.setExitCheck(0);
+					if(this.hud != null) {
+						this.hud.setExitCheck(0);
+					}
 					if(this.started) {
 						this.timeManager.unPause();
 					}
