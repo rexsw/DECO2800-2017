@@ -51,6 +51,7 @@ public class Carrier extends Soldier {
 		this.removeActions(ActionType.DAMAGE);
 		this.removeActions(ActionType.ATTACKMOVE);
 		this.isCarrier();
+		setStance(0); // Default stance for carrier is passive
     }
 	
     /**

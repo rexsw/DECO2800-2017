@@ -41,6 +41,7 @@ public class Astronaut extends Soldier {
 		this.removeActions(ActionType.ATTACKMOVE);
 		this.setFogRange(10);
 		setAttributes();
+		setStance(0); // Default stance for astronaut is passive
 	}
 	
 	

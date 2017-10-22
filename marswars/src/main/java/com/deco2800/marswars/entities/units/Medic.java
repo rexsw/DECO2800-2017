@@ -15,6 +15,7 @@ public class Medic extends Soldier {
 		this.setAttributes();
 		this.removeActions(ActionType.DAMAGE);
 		this.removeActions(ActionType.ATTACKMOVE);
+		setStance(4); // Default stance for medic is timid
 	}
 	
 	@Override

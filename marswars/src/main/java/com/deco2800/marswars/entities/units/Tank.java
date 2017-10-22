@@ -18,6 +18,7 @@ public class Tank extends Soldier {
 		this.setMaxSpeed(0.025f);
 		this.setMoveSpeed(0.025f);
 		this.setAreaDamage(2);
+		setStance(1); // Default stance for tank is defensive
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the

@@ -13,6 +13,7 @@ public class Hacker extends Soldier {
 		super(posX, posY, posZ, owner);
 		this.name ="Hacker";
 		this.setAttributes();
+		setStance(1); // Default stance for hacker is defensive
 	}
 
 	

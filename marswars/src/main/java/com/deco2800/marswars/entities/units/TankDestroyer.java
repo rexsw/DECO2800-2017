@@ -15,6 +15,7 @@ public class TankDestroyer extends Soldier {
 		this.setAttributes();
 		setXRenderLength(2.2f);
 		setYRenderLength(2.2f);
+		setStance(3); // Default stance for tank destroyer is skirmishing
 		
 	}
 	/*
