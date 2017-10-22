@@ -206,7 +206,7 @@ public class TechnologyManager extends Manager{
 
     //HERO FACTORY TECH
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
+        heroFactory = new Technology(new int[]{0, 50, 0}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -503,6 +503,16 @@ public class TechnologyManager extends Manager{
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
         //resourceManager.setBiomass(80, teamid);
+        System.out.println("ROCK COST IS " + tech.getCost()[0]);
+        System.out.println("CRYSTAL COST IS " + tech.getCost()[1]);
+        System.out.println("BIOMASS COST IS " + tech.getCost()[2]);
+
+      //  System.out.println("ROCK RESERVE IS " + resourceManager.getRock(teamid));
+
+        System.out.println("CRYSTAL RESERVE IS " + resourceManager.getCrystal(teamid));
+        System.out.println("BIOMASS RESERVE IS " + resourceManager.getBiomass(teamid));
+
+        System.out.println("ROCK RESERVE IS " + resourceManager.getRocks(teamid));
 
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
@@ -512,16 +522,15 @@ public class TechnologyManager extends Manager{
         if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-        if (tech.getCost()[0] > resourceManager.getRocks(teamid)) {
+        if (tech.getCost()[0] > resourceManager.getRocks(-1)) {
             return "Insufficient Rocks";
         }
-        if (tech.getCost()[1] > resourceManager.getCrystal(teamid)) {
+        if (tech.getCost()[1] > resourceManager.getCrystal(-1)) {
             return "Insufficient Crystals";
         }
-        if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
+        if (tech.getCost()[2] > resourceManager.getBiomass(-1)) {
             return "Insufficient Biomass";
         }
-        activateTech(techMan, tech, resourceManager, techID, teamid);
         return "Activating Technology!";
     }
 
@@ -535,6 +544,15 @@ public class TechnologyManager extends Manager{
      * @param teamid the ID of the team attempting to upgrade their tech
      */
     public void activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
+        System.out.println("ROCKS FOR TEAM " + teamid + " ARE " + resourceManager.getRocks(teamid));
+        System.out.println("CRYSTAL FOR TEAM " + teamid + " ARE " + resourceManager.getCrystal(teamid));
+        System.out.println("BIOMASS FOR TEAM " + teamid + " ARE " + resourceManager.getBiomass(teamid));
+
+        System.out.println("ROCKS COST IS " + tech.getCost()[0]);
+        System.out.println("CRYSTAL COST IS " + tech.getCost()[1]);
+        System.out.println("BIOMASS COST IS " + tech.getCost()[2]);
+
+
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[2], teamid);
