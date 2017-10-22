@@ -78,20 +78,23 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			decideChangeState();
 		}
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-			if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
+			if(e instanceof AttackableEntity && ((HasOwner) e).isAi()) {
 				if(e instanceof AmbientAnimal){
 					animalController((AmbientAnimal)e);
 				} else {
 					// run decider functions
-					decider(e);
+					decider((AttackableEntity) e);
 				}
 			}
 		}
 	}
 	
-	private void decider(HasOwner unit) {
+	private void decider(AttackableEntity unit) {
+		if (!unit.isAi()) {
+			return;
+		}
 		int team = unit.getOwner();
-		State state = State.ECONOMIC;//getState(team);
+		State state = getState(team);
 		if(unit instanceof Astronaut) {
 			// send astronauts to work
 			Astronaut x = (Astronaut)unit;
@@ -101,12 +104,12 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			if(state == State.ECONOMIC) {
 				generateEntity(x, EntityID.ASTRONAUT);
 			} else {
-				generateEntity(x, EntityID.ASTRONAUT);
+				generateEntity(x, EntityID.SOLDIER);
 			}
 		} else if(unit instanceof Barracks) {
 			Barracks x = (Barracks)unit;
 			if(state != State.ECONOMIC) {
-				generateEntity(x, EntityID.HACKER);
+				//generateEntity(x, EntityID.HACKER);
 			}
 		}
 		else if(unit instanceof Soldier) {

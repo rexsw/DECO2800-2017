@@ -514,7 +514,7 @@ public class Game{
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
 		int initResource = 0;
-		if(teamid<0){
+		if(teamid<10){
 			initResource = 100;
 		}
 
@@ -523,10 +523,12 @@ public class Game{
 		rm.setCrystal(initResource, teamid);
 		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);		
+		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
+		GameManager.get().getWorld().addEntity(ai2);
 		GameManager.get().getWorld().addEntity(base);
 		
 		LOGGER.info("Team units successfully set");
