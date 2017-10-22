@@ -556,7 +556,6 @@ public class HUDView extends ApplicationAdapter{
 									heroExist.setPosition(selectedEntity.getPosX(), selectedEntity.getPosY(), 0);
 									heroExist.setEmptyAction();
 									GameManager.get().getWorld().addEntity(heroExist);
-									
 								}
 								return;
 							}
@@ -1145,6 +1144,9 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 
+	/**
+	 * This function generates the entity portraits of the selected units
+	 */
 	private void populateSelectedTable() {
 		for (BaseEntity be: selectedList) {
 			EntityPortrait ep = be.getPortrait();
