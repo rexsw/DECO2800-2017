@@ -206,7 +206,7 @@ public class TechnologyManager extends Manager{
 
     //HERO FACTORY TECH
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{0, 0, 0}, "Hero " +
+        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -216,7 +216,7 @@ public class TechnologyManager extends Manager{
     public void setUpWeaponLevelTechs() {
         // Weapon item level upgrades setup
         weaponL1Parents.add(techMap.get(21));
-        weaponLevelOne = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        weaponLevelOne = new Technology(new int[]{40, 40, 0}, "Weapon " +
                 "Level" +
                 " 1",
                 weaponL1Parents,
@@ -225,7 +225,7 @@ public class TechnologyManager extends Manager{
         techMap.put(22, weaponLevelOne);
 
         weaponL2Parents.add(techMap.get(22));
-        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        weaponLevelTwo = new Technology(new int[]{70, 70, 0}, "Weapon " +
                 "Level 2",
                 weaponL2Parents,
                 "Unlocks the ability to build Level Two Weapons for Hero " +
@@ -256,14 +256,14 @@ public class TechnologyManager extends Manager{
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
         armourL1Parents.add(techMap.get(25));
-        armourLevelOne = new Technology(new int[]{0, 0, 0}, "Armour " +
+        armourLevelOne = new Technology(new int[]{20, 30, 30}, "Armour " +
                 "Level 1", armourL1Parents,
                 "Unlocks the ability to build Level One Armour for Hero " +
                         "units.");
         techMap.put(26, armourLevelOne);
 
         armourL2Parents.add(techMap.get(26));
-        armourLevelTwo = new Technology(new int[]{0, 0, 0}, "Armour " +
+        armourLevelTwo = new Technology(new int[]{20, 60, 60}, "Armour " +
                 "Level 2",
                 armourL2Parents,
                 "Unlocks the ability to build Level Two Armour for Hero " +
