@@ -1,15 +1,15 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.deco2800.marswars.util.Array2D;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.deco2800.marswars.util.Array2D;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Array2DTest {
 	@Rule

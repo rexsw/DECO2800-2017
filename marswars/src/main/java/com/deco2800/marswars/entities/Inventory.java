@@ -12,13 +12,12 @@ import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.util.WorldUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class that defines the Inventory for a Commander. Each Commander will have their own instance of Inventory and only 

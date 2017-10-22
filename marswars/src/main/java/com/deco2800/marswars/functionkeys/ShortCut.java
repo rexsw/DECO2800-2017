@@ -1,11 +1,5 @@
 package com.deco2800.marswars.functionkeys;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.List;
-import java.util.Set;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.Base;

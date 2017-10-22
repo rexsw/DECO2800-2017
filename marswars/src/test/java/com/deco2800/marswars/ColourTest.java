@@ -1,14 +1,11 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import com.badlogic.gdx.graphics.Color;
 import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.Colours;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
 public class ColourTest {

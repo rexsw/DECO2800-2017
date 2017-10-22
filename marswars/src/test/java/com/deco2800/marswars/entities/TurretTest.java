@@ -3,13 +3,12 @@ package com.deco2800.marswars.entities;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.worlds.BaseWorld;
-import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
 
 /**
  * @author xhy6006 on 17/10/17

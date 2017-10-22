@@ -1,15 +1,14 @@
 package com.deco2800.marswars.managers;
 
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.AiManager.State;
 import com.deco2800.marswars.managers.GameBlackBoard.Field;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 
 public class AiBuilder extends Manager {

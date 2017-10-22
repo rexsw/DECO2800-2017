@@ -1,14 +1,13 @@
 package com.deco2800.marswars.hud;
 
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.deco2800.marswars.entities.items.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TimeManager;
-
-import com.deco2800.marswars.technology.*;
-
+import com.deco2800.marswars.technology.Technology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

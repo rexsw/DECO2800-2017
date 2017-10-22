@@ -1,10 +1,5 @@
 package com.deco2800.marswars.heros;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.Inventory;
 import com.deco2800.marswars.entities.Selectable;
@@ -13,6 +8,11 @@ import com.deco2800.marswars.entities.items.Special;
 import com.deco2800.marswars.entities.items.SpecialType;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.entities.units.Soldier;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CommanderTest {
 	Commander c;

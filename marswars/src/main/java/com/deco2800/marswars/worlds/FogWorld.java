@@ -1,6 +1,9 @@
 package com.deco2800.marswars.worlds;
 
-import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.AbstractEntity;
+import com.deco2800.marswars.entities.BlackTile;
+import com.deco2800.marswars.entities.GrayTile;
+import com.deco2800.marswars.entities.MultiSelectionTile;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,24 +1,19 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.AiManager.State;
+import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.AiManager;
-import com.deco2800.marswars.managers.AiManager.State;
-import com.deco2800.marswars.managers.GameBlackBoard;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.worlds.BaseWorld;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class AiManagerTest {
 	BaseWorld baseWorld;

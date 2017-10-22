@@ -4,14 +4,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.WorldUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

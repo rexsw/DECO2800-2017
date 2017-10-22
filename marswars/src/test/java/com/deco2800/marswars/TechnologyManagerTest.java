@@ -5,12 +5,11 @@ import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.technology.Technology;
 import org.junit.Test;
-import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @Author Bosco Bartilomo
