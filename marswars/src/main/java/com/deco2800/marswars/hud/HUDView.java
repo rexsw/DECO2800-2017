@@ -786,20 +786,40 @@ public class HUDView extends ApplicationAdapter{
 			Label costRocks = new Label("", skin);
 			Label costCrystal = new Label("", skin);
 			Label costBiomass = new Label("", skin);
-			Image rock = null;
+			Image rock = new Image(textureManager.getTexture("rock_HUD"));
+			Image biomass = new Image(textureManager.getTexture("biomass_HUD"));
+			Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 			Texture entity = textureManager.getTexture("PLACEHOLDER");
+			boolean dispRock = false;
+			boolean dispCrystal = false;
+			boolean dispBiomass = false;
 			if (e instanceof BuildingType) {
 				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
 				name = new Label(e.toString(), skin);
 				costRocks = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
-				Texture rockTex = textureManager.getTexture("rock_HUD");
-				rock = new Image(rockTex);
+				dispRock = true;
 			} else if (e instanceof EntityID) {
 				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
-				costRocks = new Label(String.valueOf(((EntityID) e).getCostRocks()), skin);
-				costCrystal = new Label(String.valueOf(((EntityID) e).getCostCrystals()), skin);
-				costBiomass = new Label(String.valueOf(((EntityID) e).getCostBiomass()), skin);
+
+				int valRock = ((EntityID) e).getCostRocks();
+				int valCrystal = ((EntityID) e).getCostCrystals();
+				int valBiomass = ((EntityID) e).getCostBiomass();
+				costRocks = new Label(String.valueOf(valRock), skin);
+				costCrystal = new Label(String.valueOf(valCrystal), skin);
+				costBiomass = new Label(String.valueOf(valBiomass), skin);
+
+				if (valRock>0) {
+					dispRock = true;
+				}
+				if (valBiomass>0) {
+					dispBiomass = true;
+				}
+				if (valCrystal>0) {
+					dispCrystal = true;
+				}
+
+
 			} else if (e instanceof ActionType) {
 				entity = textureManager.getTexture("PLACEHOLDER");
 				name = new Label(e.toString(), skin);
@@ -817,13 +837,25 @@ public class HUDView extends ApplicationAdapter{
 			//buttonList.get(index).add(costBiomass).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
 			buttonList.get(index).add(name).width(buttonWidth * .2f).align(Align.right).height(buttonHeight * .2f)
 			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
-			
-			buttonList.get(index).add(costRocks).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-			.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
-			buttonList.get(index).add(costCrystal).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-			.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
-			buttonList.get(index).add(costBiomass).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-			.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			if (dispRock) {
+				buttonList.get(index).add(rock).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costRocks).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+			if (dispCrystal) {
+				buttonList.get(index).add(crystal).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costCrystal).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+			if (dispBiomass) {
+				buttonList.get(index).add(biomass).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costBiomass).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+
 			index++;
 		}
 	}
