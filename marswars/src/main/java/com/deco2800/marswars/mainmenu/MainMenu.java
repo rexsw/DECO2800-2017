@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Logger;
 import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.initiategame.SoundTrackPlayer;
@@ -18,6 +19,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 
@@ -36,6 +38,8 @@ import java.io.FileNotFoundException;
  *
  */
 public class MainMenu {
+
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 	private static final int MENUHEIGHT = 700; 
 	private static final int MENUWIDTH = 1300;
 	private Skin skin;
@@ -126,7 +130,10 @@ public class MainMenu {
 		GameSave loadedGame = new GameSave();
 		try {
 			loadedGame.readGame();
-		} catch (FileNotFoundException e) {}//do nothing
+		} catch (FileNotFoundException e) {
+			LOGGER.info("Error reading saved file");
+			return;
+		}
 			setGameStarted(start);
 			if (isGameStarted()) {
 				openMusic.stop();
