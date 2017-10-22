@@ -9,6 +9,8 @@ import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.worlds.map.tools.MapTypes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +59,8 @@ public class GameManager implements TickableManager {
 	private boolean gameStarted = false;
 	
 	private boolean costsFree = false;
+	
+	private MapTypes map;
 
 	/**
 	 * Returns an instance of the GM
@@ -354,6 +358,14 @@ public class GameManager implements TickableManager {
 	 */
 	public void setCostsFree(boolean isFree) {
 		costsFree = isFree;
+	}
+	
+	public void setMapType(MapTypes world) {
+		this.map = world;
+	}
+	
+	public MapTypes getMapType() {
+		return this.map;
 	}
 
 }

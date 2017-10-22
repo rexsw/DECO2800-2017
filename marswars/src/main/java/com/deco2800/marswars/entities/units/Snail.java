@@ -1,5 +1,6 @@
 package com.deco2800.marswars.entities.units;
 
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
 
 public class Snail extends AmbientAnimal{
 
@@ -17,7 +18,9 @@ public class Snail extends AmbientAnimal{
 		this.setArmorDamage(40);
 		this.setAttackRange(1);
 		this.setAttackSpeed(1);
-		
+		this.setDrop(ResourceType.ROCK);
 		this.setSpeed(0.05f);
 	}
+	
+	
 }

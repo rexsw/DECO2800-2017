@@ -13,6 +13,18 @@ public enum MapTypes {
             result = result.substring(0, 1).toUpperCase() + result.substring(1);
             return result;
     }
+    public String toSColour() {
+    	switch(this){
+    		case MARS:
+    			return "red";
+    		case MOON:
+    			return "black";
+    		case SUN:
+    			return "white";
+    		default:
+    			return "white";
+    	}
+    }
 }
 
 
