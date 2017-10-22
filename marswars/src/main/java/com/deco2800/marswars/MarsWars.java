@@ -133,9 +133,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
 				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
-		this.stage.act();
-		this.stage.draw();
-		GameManager.get().setCamera(this.camera);
+		//trying to eliminate render crashes in the most naive way possible:
+		//will likely cause frames to drop, if the problem is present in sequential frames then
+		//this will imporve nothing
+		try {
+			this.stage.act();
+			this.stage.draw();
+			GameManager.get().setCamera(this.camera);
+		} catch(NullPointerException e){
+			LOGGER.error("Failed to render frame due to NullPointerException");
+		}
 		batch.dispose();
 
 		setInvincible();
