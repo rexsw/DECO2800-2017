@@ -212,6 +212,7 @@ public class GameManager implements TickableManager {
 	
 	public void resetGame(){
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		WeatherManager wm = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
@@ -220,7 +221,7 @@ public class GameManager implements TickableManager {
 		this.miniMap = null;
 		TimeManager.resetInGameTime();
 		this.menu.endGame();
-		WeatherManager.water.dispose();
+		wm.water.dispose();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		black.clear();

@@ -34,7 +34,7 @@ public class WeatherManager extends Manager implements Tickable {
     private boolean floodOn = true;
     private ParticleEffect effect;
     private boolean isWaterSoundPlaying = false;
-    public static Sound water;
+    public Sound water;
 
     /**
      * Sets the toggle value for the UI flood toggle button. The toggle either
