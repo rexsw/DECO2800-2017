@@ -16,20 +16,9 @@ public class TechnologyManager extends Manager{
     private static final int ATTACK_RANGE = 5;
     private static final int ATTACK_SPEED = 6;
 
-    /*
-    *each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
-    *private Map<Integer, Integer[], String, List<Integer>> techMap = ..
-    * .. new HashMap<Integer, Integer[], String, List<Integer>>();
-    * unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
-    */
-
     private HashMap<String, int[]> unitAttributes = new HashMap<>();
     private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
-    /*
-     * item system integration into techtree not implemented yet, still in progress. So lines from here to
-     * "private Technology special;" are placeholder at the moment.
-     */
     // hero factory tech
     private ArrayList<Technology> heroFactoryParents = new ArrayList<Technology>();
     private Technology heroFactory;
@@ -61,11 +50,7 @@ public class TechnologyManager extends Manager{
     private boolean weaponL2Unlocked;
     private boolean weaponL3Unlocked;
 
-    private String expensiveString = "An expensive technology";
-    private String armourString = "Armour ";
     private String soldierString = "Soldier";
-    private String weaponString = "Weapon ";
-    private String unitsString = "units.";
     
     public TechnologyManager() {
         setUpUnlockStates();
@@ -244,7 +229,6 @@ public class TechnologyManager extends Manager{
     //HERO SPECIAL UPGRADES
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
-        //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
         special = new Technology(new int[]{20, 20, 20}, "Special " +
                 "Items Unlock",
@@ -502,17 +486,6 @@ public class TechnologyManager extends Manager{
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        //resourceManager.setBiomass(80, teamid);
-        System.out.println("ROCK COST IS " + tech.getCost()[0]);
-        System.out.println("CRYSTAL COST IS " + tech.getCost()[1]);
-        System.out.println("BIOMASS COST IS " + tech.getCost()[2]);
-
-      //  System.out.println("ROCK RESERVE IS " + resourceManager.getRock(teamid));
-
-        System.out.println("CRYSTAL RESERVE IS " + resourceManager.getCrystal(teamid));
-        System.out.println("BIOMASS RESERVE IS " + resourceManager.getBiomass(teamid));
-
-        System.out.println("ROCK RESERVE IS " + resourceManager.getRocks(teamid));
 
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
@@ -544,15 +517,6 @@ public class TechnologyManager extends Manager{
      * @param teamid the ID of the team attempting to upgrade their tech
      */
     public void activateTech(TechnologyManager techMan, Technology tech, ResourceManager resourceManager, int techID, int teamid){
-        System.out.println("ROCKS FOR TEAM " + teamid + " ARE " + resourceManager.getRocks(teamid));
-        System.out.println("CRYSTAL FOR TEAM " + teamid + " ARE " + resourceManager.getCrystal(teamid));
-        System.out.println("BIOMASS FOR TEAM " + teamid + " ARE " + resourceManager.getBiomass(teamid));
-
-        System.out.println("ROCKS COST IS " + tech.getCost()[0]);
-        System.out.println("CRYSTAL COST IS " + tech.getCost()[1]);
-        System.out.println("BIOMASS COST IS " + tech.getCost()[2]);
-
-
         resourceManager.setRocks(resourceManager.getRocks(teamid) - tech.getCost()[0], teamid);
         resourceManager.setCrystal(resourceManager.getCrystal(teamid) - tech.getCost()[1], teamid);
         resourceManager.setBiomass(resourceManager.getBiomass(teamid) - tech.getCost()[2], teamid);
@@ -664,7 +628,7 @@ public class TechnologyManager extends Manager{
          *      [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
          */
     public ArrayList<BuildingType> getAvailableBuildings() {
-        ArrayList buildingsAvailable = new ArrayList<BuildingType>();
+        ArrayList<BuildingType> buildingsAvailable = new ArrayList<>();
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
                     BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
