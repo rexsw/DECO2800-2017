@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -24,13 +25,17 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import com.deco2800.marswars.hud.EntityPortrait;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +72,10 @@ public class HUDView extends ApplicationAdapter{
 	Window minimap;		         //window for containing the minimap
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
+
+	private TechTreeView techTree; //view for tech tree
+
+
 	private Image statsbg; 
 	private Image headerbg;
 	private Image actionsBg;
@@ -102,7 +111,7 @@ public class HUDView extends ApplicationAdapter{
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	private TextureManager textureManager; //for loading in resource images
-
+	private TechnologyManager technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	private List<BaseEntity> selectedList = new ArrayList<>();
 	// hero manage
@@ -122,8 +131,6 @@ public class HUDView extends ApplicationAdapter{
 	int exitCheck = 0;
 	private Table selectedTable;
 
-	private Dialog tech;
-	private Dialog pause;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -154,6 +161,34 @@ public class HUDView extends ApplicationAdapter{
 		createLayout();
 		GameManager.get().setGui(this);
 	}
+
+	/**
+	 * Updates shop when item levels are unlocked.
+	 */
+	public void updateShop() {
+		if (technologyManager.armourIsUnlocked(1)) {
+			shopDialog.unlockArmours(1);
+		}
+		if (technologyManager.armourIsUnlocked(2)) {
+			shopDialog.unlockArmours(2);
+		}
+		if (technologyManager.armourIsUnlocked(3)) {
+			shopDialog.unlockArmours(3);
+		}
+		if (technologyManager.weaponIsUnlocked(1)) {
+			shopDialog.unlockWeapons(1);
+		}
+		if (technologyManager.weaponIsUnlocked(2)) {
+			shopDialog.unlockWeapons(2);
+		}
+		if (technologyManager.weaponIsUnlocked(3)) {
+			shopDialog.unlockWeapons(3);
+		}
+		if (technologyManager.specialIsUnlocked()  && !(shopDialog.getSpecialUnlocked())) {
+			shopDialog.unlockSpecials();
+		}
+	}
+	
 
 	/**
 	 * Adds in all components of the HUD.
@@ -247,9 +282,7 @@ public class HUDView extends ApplicationAdapter{
 		dispMainMenu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				pause = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			
-			    setPauseWindow(pause);	
-			}
+				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
@@ -265,11 +298,9 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (helpCheck == 1){
-					timeManager.unPause();
 					help.setVisible(false);
 					helpCheck = 0;
 				} else {
-					timeManager.pause();
 					help.setVisible(true);
 					helpCheck = 1; 
 				}
@@ -376,12 +407,12 @@ public class HUDView extends ApplicationAdapter{
 		hudManip.add(options);
 		stage.addActor(hudManip);
 
-		dispTech.addListener(new ChangeListener() {
+		techTree = new TechTreeView("TechTree", skin, hud);
+
+		dispTech.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				if (hud.getTechCheck() == 0) {
-					tech = new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
-				}
+				techTree.show(stage);
 			}
 		});
 		dispTech.addListener(new TextTooltip("Open Technology", skin));
@@ -393,8 +424,25 @@ public class HUDView extends ApplicationAdapter{
 				shopDialog.setPosition(stage.getWidth(), 0, Align.right | Align.bottom);
 			}
 		});
+
+		techTree.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (techCheck == 0) {
+					techTree.show(stage);
+				}
+				if (techCheck == 1) {
+					techTree.hide();
+				}
+				if (x < 0 || x > techTree.getWidth() || y < 0 || y > techTree.getHeight()){
+					techTree.hide();
+					return true;
+				}
+				return false;
+			}
+		});
+
 		dispShop.addListener(new TextTooltip("Open Shop", skin));
-		
+
 		/*
 		 * listener for to determine whether shop should remain enabled. Is disabled if player clicks outside the shop
 		 * window.
@@ -480,9 +528,9 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 
 		selectedTable = new Table();
-		selectedTable.align(Align.left | Align.top).padBottom(20);
+		selectedTable.align(Align.left | Align.top);
 		selectedTable.setHeight(40);
-		selectedTable.setPosition(0, minimap.getHeight()+50);
+		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
 
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
@@ -491,7 +539,7 @@ public class HUDView extends ApplicationAdapter{
 		popCount = new Label("0 ", skin);
 		maxPopCount = new Label(" / 10", skin);
 
-		//add resource images
+		//add resource images 
 		Image rock = new Image(textureManager.getTexture("rock_HUD"));
 		Image biomass = new Image(textureManager.getTexture("biomass_HUD"));
 		Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
@@ -562,6 +610,7 @@ public class HUDView extends ApplicationAdapter{
 									heroExist.setPosition(selectedEntity.getPosX(), selectedEntity.getPosY(), 0);
 									heroExist.setEmptyAction();
 									GameManager.get().getWorld().addEntity(heroExist);
+									
 								}
 								return;
 							}
@@ -1048,30 +1097,6 @@ public class HUDView extends ApplicationAdapter{
 		help.setPosition(width/2 - help.getWidth()/2, height/2 - help.getHeight()/2);
 
     }
-	
-	public void hideTechTree() {
-		this.tech.hide();
-	}
-	
-	public void setTechTree(Dialog techTree){
-	    this.tech = techTree;
-	}
-	
-	public void hideHelpWindow() {
-		this.help.getHelpWindow().remove();
-	}
-	
-	public void setHelpWindow(HelpWindow helpWindow) {
-		this.help = helpWindow;
-	}
-	
-	public void hidePauseMenu() {
-		this.pause.hide();
-	}
-	
-	public void setPauseWindow(Dialog pauseWindow) {
-		this.pause = pauseWindow;
-	}
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
@@ -1219,29 +1244,11 @@ public class HUDView extends ApplicationAdapter{
 	}
 
 
-	/**
-	 * This function generates the entity portraits of the selected units
-	 */
 	private void populateSelectedTable() {
 		for (BaseEntity be: selectedList) {
 			EntityPortrait ep = be.getPortrait();
 			if (ep == null) continue;
 			selectedTable.add(ep);
-			if (be instanceof Carrier) {
-				if (((Carrier) be).getPassengers().length > 0) {
-					for (int i = 0; i < ((Carrier)be).getPassengers().length; i++) {
-						Soldier carried =  ((Carrier)be).getPassengers()[i];
-						EntityPortrait carriedPortrait = null;
-						if (carried != null) {
-								carriedPortrait =carried.getPortrait(be);
-						}
-						if (carriedPortrait != null) {
-							selectedTable.add(carriedPortrait).align(Align.top).padTop(-100);
-						}
-					}
-				}
-
-			}
 		}
 	}
 

@@ -190,7 +190,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private void generateEntity(BuildingEntity x, EntityID entityID) {
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if(!x.showProgress() && ActionSetter.canAfford(x.getOwner(), true, entityID, rm)) {
-			LOGGER.info("ai - set base to make spacman");
+			LOGGER.info("ai - set base to make " + entityID);
 			ActionSetter.payForEntity(x.getOwner(), true, entityID, rm);
 			//Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
 			//x.setAction(new GenerateAction(r));
@@ -566,8 +566,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 				getManager(GameBlackBoard.class);
 		// test if GameBlackBoard exists
 		if (blackboard != null) {
-			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
-					- teamCountBuildings(teamID) - teamCountCombatUnits(teamID);
+			return blackboard.count(teamID, GameBlackBoard.Field.ASTRONAUTS);
 		}
 		// if blackboard does not exist, return -1
 		return -1;
@@ -658,6 +657,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		LOGGER.info("AI [" + teamID + "] military ratio is [" + ratioMilitary + "]");
 		LOGGER.info("AI [" + teamID + "] structure ratio is [" + ratioStructure + "]");
+		//
+		LOGGER.info("AI [" + teamID + "] military count is [" + numSoldiers + "]");
+		LOGGER.info("AI [" + teamID + "] astro count is [" + numAstronauts + "]");
+		LOGGER.info("AI [" + teamID + "] building count is [" + numBuildings + "]");
 		// Depending on AiType, ratio and minimums, decide state
 		// If few astronauts or buildings, then get more
 		if (numAstronauts < 3 || numBuildings < 1) {
@@ -687,7 +690,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		case PROTECTIVE:
 			return 0.85;
 		case EXPANSIVE:
-			return 0.3;
+			return 0.2;
 		default: //case: STANDARD
 			return 0.6;
 		}
@@ -701,13 +704,13 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private int maximumMilitaryCount(AiType aiType) {
 		switch (aiType) {
 		case HOSTILE:
-			return 5;
+			return 2;
 		case PROTECTIVE:
-			return 30;
+			return 15;
 		case EXPANSIVE:
-			return 10;
+			return 7;
 		default: //case: STANDARD
-			return 10;
+			return 6;
 		}
 	}
 	
