@@ -808,7 +808,8 @@ public class HUDView extends ApplicationAdapter{
 				costRocks = new Label(String.valueOf(valRock), skin);
 				costCrystal = new Label(String.valueOf(valCrystal), skin);
 				costBiomass = new Label(String.valueOf(valBiomass), skin);
-
+				costCrystal.setColor(Color.PURPLE);
+				costBiomass.setColor(Color.GREEN);
 				if (valRock>0) {
 					dispRock = true;
 				}
