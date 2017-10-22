@@ -81,7 +81,7 @@ public class SoldierTest {
 		soldier.getStats();
 		assertThat("Wrong MissileName", soldier.getMissileTexture(), is(equalTo(null)));
 		soldier.checkOwnerChange();
-		soldier.loyalty_regeneration();
+		soldier.regeneration();
 		ActionType nextAction = ActionType.MOVE;
 		soldier.setNextAction(nextAction);
 		Optional<DecoAction> decoAction = null;

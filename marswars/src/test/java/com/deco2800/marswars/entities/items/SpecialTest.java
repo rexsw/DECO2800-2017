@@ -36,7 +36,7 @@ public class SpecialTest {
 	 */
 	@Before
 	public void prepare() {
-		bomb = new Special(SpecialType.BOMB);
+		bomb = new Special(SpecialType.NUKE);
 		com = new Commander(0, 0, 0, 1);
 		baseHP = com.getHealth();
 	}
@@ -50,7 +50,7 @@ public class SpecialTest {
     }
     
     public void enumTest() {
-    	Assert.assertTrue(SpecialType.BOMB == bomb.getEnum());
+    	Assert.assertTrue(SpecialType.MISSILE == bomb.getEnum());
     }
 
     /**
@@ -60,7 +60,7 @@ public class SpecialTest {
     @Test
     public void getUse () {
         Assert.assertEquals(false, bomb.useItem());
-        Special aoeHeal = new Special(SpecialType.REGEN_SHOT);
+        Special aoeHeal = new Special(SpecialType.HEALTHSHOT);
         Assert.assertEquals(true, aoeHeal.useItem());
     }
     
@@ -78,8 +78,8 @@ public class SpecialTest {
      */
     @Test
     public void getDescription () {
-        String testString = "Bomb\n" +
-                "Damage: 400\n";
+        String testString = "Nuke\n" +
+                "Damage: 700\n";
         Assert.assertEquals(testString, bomb.getDescription());
     }
     
@@ -92,10 +92,40 @@ public class SpecialTest {
     	//should normally run useItem method, but for testing it is not needed here.
     	HealthEffect bombEff = (HealthEffect) bomb.getEffect().get(0);
     	bombEff.applyEffect(com);
-    	
-    	Assert.assertTrue(com.getHealth() == baseHP - 400);
-    	Special heal = new Special(SpecialType.MASS1HEAL);
+    	Assert.assertTrue(com.getHealth() == baseHP - 700);
+    	Special heal = new Special(SpecialType.HEALTHBLESS);
     	heal.getEffect().get(0).applyEffect(com);
     	Assert.assertTrue(com.getHealth() == baseHP);
+    }
+    
+    /**
+     * Test some aspects of the SpecialType that is been left over by other test cases
+     */
+    @Test
+    public void specialTypeTest() {
+    	// check radius and duration
+    	SpecialType special = SpecialType.NUKE;
+    	Assert.assertEquals(0, special.getRadius());
+    	Assert.assertEquals(0, special.getDuration());
+    	
+    	//check cost
+    	int[] cost = special.getCost();
+    	Assert.assertTrue(cost[0]==200 && cost[1] == 100 && cost[2] == 200);
+    	
+    	//check texture
+    	Assert.assertEquals(special.getTextureString(), "nuke");
+    	
+    	// check cost string
+    	String test = "Rock: 200\n" +
+        		"Crystal: 100\n" +
+                "Biomass: 200\n";
+        Assert.assertEquals(test, special.getCostString());
+        
+        //check description
+        test = "Name: Nuke\n" +
+        		"Type: Special\n" +
+                "Damage: 700\n" +
+                "Target: ENEMY TEAM";
+        Assert.assertEquals(test, special.getDescription());
     }
 }

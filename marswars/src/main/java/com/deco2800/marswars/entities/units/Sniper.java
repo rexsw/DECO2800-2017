@@ -11,17 +11,8 @@ public class Sniper extends Soldier {
 	
 	public Sniper(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		//this.movementSound = "tankMovementSound";
-		
-		// set all the attack attributes
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(200);
-		this.setArmor(200);
-		this.setArmorDamage(200);
-		this.setAttackRange(20);
-		this.setAttackSpeed(5);
-		this.setAreaDamage(0);
+		this.name = "Sniper";
+		this.setAttributes();
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the

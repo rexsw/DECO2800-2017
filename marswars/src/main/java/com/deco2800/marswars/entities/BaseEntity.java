@@ -9,14 +9,14 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.BuildingType;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
+import com.deco2800.marswars.hud.EntityPortrait;
 import com.deco2800.marswars.managers.FogManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +38,11 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
+	private EntityPortrait portrait;
 
-	//NEVER DELETE THIS
-	public BaseEntity(){};
+	public BaseEntity(){
+	  //NEVER DELETE THIS
+	};
 
 	/**
 	 * Constructor for the base entity
@@ -52,7 +54,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param zLength
 	 */
 	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-		super(posX, posY, posZ, xLength, yLength, zLength);
+		super(new Box3D(posX, posY, posZ, xLength, yLength, zLength));
 		this.modifyCollisionMap(true);
 
 	}
@@ -69,19 +71,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param yRenderLength
 	 * @param centered
 	 */
-	public BaseEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength, float xRenderLength, float yRenderLength, boolean centered) {
-		super(posX, posY, posZ, xLength, yLength, zLength, xRenderLength, yRenderLength, centered);
-	}
-
-	/**
-	 * Outdated constructor for the base entity
-	 * @deprecated
-	 * @param position
-	 * @param xRenderLength
-	 * @param yRenderLength
-	 * @param centered
-	 */
-	@Deprecated
 	public BaseEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
 	}
@@ -229,7 +218,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void deselect() {
 		this.selected = false;
-		if (this.healthBar != null) this.healthBar.setVisible(false);
+		if (this.healthBar != null) {
+		    this.healthBar.setVisible(false);
+		}
 	}
 
 	/**
@@ -242,15 +233,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	}
 
 	/**
-	 * Instantiates the list of actions
-	 * @deprecated addNewActions will now automatically instantiate the list if it does not exist
-	 */
-	@Deprecated
-	public void initActions() {
-		this.validActions = new ActionList();
-	}
-
-	/**
 	 *Adds a new valid action to the entity
 	 * @param newAction The new action that is valid for the unit to perform
 	 * @return True if successful, false if the action was not added or if it was already in the list
@@ -259,7 +241,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	@Override
 	public boolean addNewAction(Object newAction) {
 		if (this.validActions == null) {
-			this.validActions = new ActionList();
+			this.validActions = new ActionList(this);
 		}
 		for (Object d: this.validActions) {
 			if (d == newAction) {
@@ -540,11 +522,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	}
 
 	/**
-	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the unit as long as you are zoomed in
+	 * This function returns a progressbar representing the entities health, and makes a health bar appear above the
+	 * unit as long as you are zoomed in
 	 * @return the healthbar if the entity is a building, unit or hero and has the stat properly set, null otherwise
 	 */
 	public HealthBar getHealthBar() {
-		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| this.getStats().getMaxHealth() == 0) return null; //Check if is valid type
+		if (!(entityType == EntityType.BUILDING || entityType == EntityType.UNIT || entityType == EntityType.HERO)|| 
+		        this.getStats().getMaxHealth() == 0) {
+		    return null; //Check if is valid type
+		}
 		if (healthBar != null) {//If there is a health bar
 			if (camera.zoom > 2) { //Disable health bar if too far zoomed out
 				healthBar.setVisible(false);
@@ -571,4 +557,14 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 
+    public EntityPortrait getPortrait() {
+		if (this.entityType != EntityType.UNIT) {
+			return null;
+		}
+		if (this.portrait == null) {
+			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
+		}
+		portrait.updateHealth();
+		return portrait;
+    }
 }

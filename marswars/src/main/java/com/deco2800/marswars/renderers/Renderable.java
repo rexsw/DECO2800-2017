@@ -38,6 +38,17 @@ public interface Renderable {
     float getPosZ();
 
     /**
+     * gets the x offset for rendering
+     * @return the x offset
+     */
+    float getXoff();
+
+    /**
+     * gets the y offset for rendering
+     * @return te y offset
+     */
+    float getYoff();
+    /**
      * Gets the X render length of the entity
      * @return the x render length of the entity
      */

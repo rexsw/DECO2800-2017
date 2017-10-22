@@ -1,6 +1,6 @@
 package com.deco2800.marswars.worlds;
 
-import com.deco2800.marswars.initiateGame.GameSave;
+import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 

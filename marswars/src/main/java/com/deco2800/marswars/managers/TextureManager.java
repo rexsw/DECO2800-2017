@@ -23,7 +23,10 @@ import java.util.Scanner;
  * @Author Tim Hadwen
  */
 public class TextureManager extends Manager {
-
+    
+    private String spacmandedString = "spacman_ded";
+    private String nighbgString = "resources/Backgrounds/nighbg.png";
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
 
     /**
@@ -93,7 +96,20 @@ public class TextureManager extends Manager {
 	        //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
-        textureMap.put("tree", new Texture("resources/placeholderassets/spacman.png"));
+        //environmental obstacles
+        textureMap.put("tree1_blue", new Texture("resources/EnvironmentalAssets/treestyle1-blue.png"));
+        textureMap.put("tree1_green", new Texture("resources/EnvironmentalAssets/treestyle1-green.png"));
+        textureMap.put("tree1_yellow", new Texture("resources/EnvironmentalAssets/treestyle1-yellow.png"));
+        textureMap.put("tree1_red", new Texture("resources/EnvironmentalAssets/treestyle1-red.png"));
+        textureMap.put("tree2_blue", new Texture("resources/EnvironmentalAssets/treestyle3-blue.png"));
+        textureMap.put("tree2_green", new Texture("resources/EnvironmentalAssets/treestyle3-green.png"));
+        textureMap.put("tree2_yellow", new Texture("resources/EnvironmentalAssets/treestyle3-yellow.png"));
+        textureMap.put("tree2_red", new Texture("resources/EnvironmentalAssets/treestyle3-red.png"));
+        textureMap.put("tree3_blue", new Texture("resources/EnvironmentalAssets/treestyle4-blue.png"));
+        textureMap.put("tree3_green", new Texture("resources/EnvironmentalAssets/treestyle4-green.png"));
+        textureMap.put("tree3_yellow", new Texture("resources/EnvironmentalAssets/treestyle4-yellow.png"));
+        textureMap.put("tree3_red", new Texture("resources/EnvironmentalAssets/treestyle4-red.png"));
+
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
@@ -104,7 +120,7 @@ public class TextureManager extends Manager {
         textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
         textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
         textureMap.put("spacman_green", new Texture("resources/placeholderassets/spacman_green.png"));
-        textureMap.put("spacman_ded", new Texture("resources/placeholderassets/spacman_ded.png"));
+        textureMap.put(spacmandedString, new Texture("resources/placeholderassets/spacman_ded.png"));
         textureMap.put("memetank", new Texture("resources/placeholderassets/memetank.png"));
         this.saveTexture("memetank", "resources/placeholderassets/memetank.png");
         textureMap.put("tree1", new Texture("resources/placeholderassets/tree1.png"));
@@ -118,7 +134,7 @@ public class TextureManager extends Manager {
         this.saveTexture("spacman_red", "resources/placeholderassets/spacman_red.png");
         this.saveTexture("spacman_blue", "resources/placeholderassets/spacman_blue.png");
         this.saveTexture("spacman_green", "resources/placeholderassets/spacman_green.png");
-        this.saveTexture("spacman_ded", "resources/placeholderassets/spacman_ded.png");
+        this.saveTexture(spacmandedString, "resources/placeholderassets/spacman_ded.png");
         this.saveTexture("spatman_blue", "resources/placeholderassets/spatman_blue.png");
         //everything above here must be replaced
         this.saveTexture("small_water", "resources/resourceAssets/water_S.png");
@@ -164,14 +180,19 @@ public class TextureManager extends Manager {
         this.saveTexture("friendly_unit", "resources/HUDAssets/friendlyMinimapUnit.png");
         this.saveTexture("clock", "resources/HUDAssets/clock_label.png");
         this.saveTexture("AI_unit", "resources/HUDAssets/AIMiniMapUnit.png");
+        this.saveTexture("actions_window", "resources/HUDAssets/actions_window.png");
+        this.saveTexture("actions_window_cropped", "resources/HUDAssets/actions_window_cropped.png");
+        this.saveTexture("actions_window_top", "resources/HUDAssets/actions_window_top.png");
+        this.saveTexture("stats", "resources/HUDAssets/stats.png");
+        this.saveTexture("header", "resources/HUDAssets/header.png");
 
         //----------- Technology Assets:
 
         //----------- MainMenu Assets:
         this.saveTexture("menubackground", "resources/Mainmenu/background.png");   
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
-        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon002.png");
-        this.saveTexture("desert_map", "resources/mapAssets/tileset/tile001.png");
+        this.saveTexture("moon_map", "resources/mapAssets/tileset/moon007.png");
+        this.saveTexture("desert_map", "resources/mapAssets/tileset/moon010.png");
         this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
         this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
         this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
@@ -202,29 +223,36 @@ public class TextureManager extends Manager {
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/daybg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/daybg.png");
-        this.saveTexture("dusk_Bg", "resources/Backgrounds/nighbg.png");
-        this.saveTexture("night_Bg1", "resources/Backgrounds/nighbg.png");
-        this.saveTexture("night_Bg2", "resources/Backgrounds/nighbg.png");
+        this.saveTexture("dusk_Bg", nighbgString);
+        this.saveTexture("night_Bg1", nighbgString);
+        this.saveTexture("night_Bg2", nighbgString);
 
         //Tiles:
         this.saveTexture("water_draft", "resources/tileAssets/water_draft.png");
-        this.saveTexture("water_final", "resources/tileAssets/water_final.png");
+        this.saveTexture("water_final", "resources/tileAssets/water_final80.png");
         this.saveTexture("lava_final", "resources/tileAssets/lava_final.png");
         this.saveTexture("multi_selection", "resources/placeholderassets/multiselection.png");
 
 
         // Item icon in shop dialog
-        this.saveTexture("hero_button", "resources/shopAssets/items/hero_button.png");
+        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
+        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
+        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
+        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        this.saveTexture("helmet_1", "resources/shopAssets/items/helmet_1.png");
+        this.saveTexture("gun_1", "resources/shopAssets/items/gun_1.png");
+        this.saveTexture("rifle_1", "resources/shopAssets/items/rifle_1.png");
+        this.saveTexture("goggle_1", "resources/shopAssets/items/goggle_1.png");
+        this.saveTexture("teleboots", "resources/shopAssets/items/teleboots.png");
+        this.saveTexture("penetration", "resources/shopAssets/items/penetration.png");
+        this.saveTexture("health_shot", "resources/shopAssets/items/health_shot.png");
+        this.saveTexture("health_station", "resources/shopAssets/items/health_station.png");
+        this.saveTexture("barrier_gloves", "resources/shopAssets/items/barrier_gloves.png");
+        this.saveTexture("snipper_shot", "resources/shopAssets/items/snipper_shot.png");
+        
+        this.saveTexture("military_command", "resources/shopAssets/items/hero_button.png");
         this.saveTexture("hero_button_off", "resources/shopAssets/items/hero_button_off.png");
-        this.saveTexture("power_gloves", "resources/shopAssets/items/power_gloves.png");
-        this.saveTexture("heal_needle", "resources/shopAssets/items/heal_needle.png");
-        this.saveTexture("defence_helmet", "resources/shopAssets/items/defence_helmet.png");
-        this.saveTexture("boot", "resources/shopAssets/items/boot.png");
-        this.saveTexture("bullets", "resources/shopAssets/items/bullet.png");
-        this.saveTexture("goggle", "resources/shopAssets/items/goggle.png");
-        this.saveTexture("hand_gun", "resources/shopAssets/items/hand_gun.png");
-        this.saveTexture("health_boost", "resources/shopAssets/items/health_boost.png");
-        this.saveTexture("scope", "resources/shopAssets/items/scope.png");
+        
         this.saveTexture("locked_inventory", "resources/shopAssets/items/lock.png");
         
         
@@ -240,6 +268,7 @@ public class TextureManager extends Manager {
         for (int i = 0; i < 21; i++) {
             this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
         }
+        
     }
     /*
      *
@@ -276,7 +305,9 @@ public class TextureManager extends Manager {
             LOGGER.info(String.format("Loading texture %s for %s from %s", 
             		textureType, unitType, path));
             String retVal = textureType + teamColour + unitType;
-            saveTexture(retVal,path);
+            if (!textureMap.containsKey(retVal)) {
+                saveTexture(retVal,path);
+            }
             return retVal;
         } else {
         	return null;
@@ -287,9 +318,10 @@ public class TextureManager extends Manager {
     /**
      * This method takes an EntityId and returns the default sprite in the players colour
      * @param unit the unit to get sprite of
+     * @param owner  the team id of the team to load the sprite for
      * @return
      */
-    public String loadUnitSprite(EntityID unit){//use soldier as the base class
+    public String loadUnitSprite(EntityID unit, int owner){//use soldier as the base class
         String textureType = "default";
         String path;
         //Determine the unit type
@@ -297,11 +329,15 @@ public class TextureManager extends Manager {
         unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
         //find the team colour of the owner:
        // String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
-        path = String.format("resources/UnitAssets/%s/Yellow/%s.png",
-                unitType,textureType);
+        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
+        path = String.format("resources/UnitAssets/%s/%s/%s.png", unitType, teamColour,textureType);
+
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;
-        saveTexture(retVal,path);
+        if (!textureMap.containsKey(retVal)) {
+            saveTexture(retVal,path);
+        }
+
         return retVal;
     }
     
@@ -314,7 +350,7 @@ public class TextureManager extends Manager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else {
-            return textureMap.get("spacman_ded");
+            return textureMap.get(spacmandedString);
         }
 
     }

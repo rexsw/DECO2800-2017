@@ -41,10 +41,12 @@ private static final String CLOSED = "closed.wav";
 	 */
 	public void setRocks(int rocks, int team) {
 		if(this.rocks.containsKey(team)) {
-			if (this.rocks.get(team) < rocks) {
-				SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-				Sound loadedSound = sound.loadSound(CLOSED);
-				sound.playSound(loadedSound);
+			if (this.rocks.get(team) < rocks && team <0) {
+
+					SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+					Sound loadedSound = sound.loadSound(CLOSED);
+					sound.playSound(loadedSound);
+
 			}
 			this.rocks.put(team, rocks);
 		}
@@ -73,7 +75,7 @@ private static final String CLOSED = "closed.wav";
 	 */
 	public void setCrystal(int crystal, int team) {
 		if(this.crystal.containsKey(team)) {
-			if (this.crystal.get(team) < crystal) {
+			if (this.crystal.get(team) < crystal && team<0) {
 				SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 				Sound loadedSound = sound.loadSound(CLOSED);
 				sound.playSound(loadedSound);
@@ -105,7 +107,7 @@ private static final String CLOSED = "closed.wav";
 	 */
 	public void setBiomass(int biomass, int team) {
 		if(this.biomass.containsKey(team)) {
-			if (this.biomass.get(team) < biomass) {
+			if (this.biomass.get(team) < biomass && team <0) {
 				SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 				Sound loadedSound = sound.loadSound(CLOSED);
 				sound.playSound(loadedSound);
@@ -158,7 +160,7 @@ private static final String CLOSED = "closed.wav";
 	 */
 	public void setPopulation(int population, int team) {
 		if(this.population.containsKey(team)) {
-		if (this.population.get(team) < population) {
+		if (this.population.get(team) < population && team < 0) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			Sound loadedSound = sound.loadSound(CLOSED);
 			sound.playSound(loadedSound);
@@ -189,7 +191,7 @@ private static final String CLOSED = "closed.wav";
 	 */
 	public void setMaxPopulation(int population, int team) {
 		if(this.maxPopulation.containsKey(team)) {
-		if (this.maxPopulation.get(team) < population) {
+		if (this.maxPopulation.get(team) < population && team<0) {
 			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 			Sound loadedSound = sound.loadSound(CLOSED);
 			sound.playSound(loadedSound);

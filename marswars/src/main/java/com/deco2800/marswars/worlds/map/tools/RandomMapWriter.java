@@ -20,7 +20,8 @@ import java.util.Map;
  */
 public class RandomMapWriter {
     //width and height of the map
-    private int width, height;
+    private int width;
+    private int height;
     /*contains height-order tiles for placement with simplex noise
         placed in order from 0 to length-1. Water tiles or other tiles that represent low terrain would be at the bottom
         of the list.
@@ -29,10 +30,10 @@ public class RandomMapWriter {
     //List that affects the ratio of one tile piece to another, in same order as orderTiles
     private NoiseMap noiseMap;
     //output file
-    public final static String FILENAME = "resources/mapAssets/tmap.tmx";
+    public static final String FILENAME = "resources/mapAssets/tmap.tmx";
     //some hard coded constants
-    private final int tileHeight = 32;
-    private final int tileWidth = 55;
+    private static final int TILEHEIGHT = 32;
+    private static final int TILEWIDTH = 55;
     //add tiles
     private Map<pointInt, String> tileOverride = new HashMap<pointInt, String>();
 
@@ -66,15 +67,16 @@ public class RandomMapWriter {
         //fill the header info
         writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<map version=\"1.0\" tiledversion=\"1.0.2\" orientation=\"isometric\" " +
-                "renderorder=\"right-down\" width=\""+width+"\" height=\""+height+"\" tilewidth=\""+tileWidth+"\" " +
-                "tileheight=\""+tileHeight+"\" nextobjectid=\"1\">\n" +
+                "renderorder=\"right-down\" width=\""+width+"\" height=\""+height+"\" tilewidth=\""+TILEWIDTH+"\" " +
+                "tileheight=\""+TILEHEIGHT+"\" nextobjectid=\"1\">\n" +
                 " <tileset firstgid=\"1\" source=\"tileset1.tsx\"/>\n" +
                 " <layer name=\"Tile Layer 1\" width=\""+width+"\" height=\""+width+"\">\n" +
                 "  <data encoding=\"csv\">");
 
         //fill from noisemap
         double noise=0;
-        int ix,iy;
+        int ix;
+        int iy;
         for(iy=0; iy<height; iy++){
             for(ix=0; ix<width; ix++){
                 //check if this cell is to be overridden
@@ -149,12 +151,15 @@ public class RandomMapWriter {
          */
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) 
+        	return true;
+            if (o == null || getClass() != o.getClass()) 
+        	return false;
 
             pointInt pointInt = (pointInt) o;
 
-            if (getX() != pointInt.getX()) return false;
+            if (getX() != pointInt.getX()) 
+        	return false;
             return getY() == pointInt.getY();
         }
     }
