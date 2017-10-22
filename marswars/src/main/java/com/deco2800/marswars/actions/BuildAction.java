@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
@@ -235,6 +236,8 @@ public class BuildAction implements DecoAction{
 			base.setHealth(currentHealth);
 			state = State.SETUP_MOVE;
 			LOGGER.info("BUILDING NEW " + building.toString());
+			GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
+			gbb.updateunit(base);
 		}
 		else {
 			LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
