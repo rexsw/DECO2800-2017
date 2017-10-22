@@ -372,6 +372,7 @@ public class TechnologyManager extends Manager{
 
     }
     public void cowLevelUpgrade() {
+        //There is no cow level ;)
     }
 
     public void steroidsUpgrade() {

@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -65,86 +66,41 @@ public class TechnologyManagerTest {
 
     @Test
     public void getActive() throws Exception {
+        assertTrue(technologyManager.getActive().isEmpty());
+        technologyManager.addActiveTech(tech1);
+        assertTrue(technologyManager.getActive().contains(tech1));
     }
 
     @Test
-    public void addActiveTech() throws Exception {
-    }
+    public void armourUnlocks() throws Exception {
+        technologyManager.setUpUnlockStates();
 
-    @Test
-    public void attackUpgrade() throws Exception {
-        technologyManager.attackUpgrade();
-    }
+        //Test Armors
+        assertFalse(technologyManager.armourIsUnlocked(1));
+        assertFalse(technologyManager.armourIsUnlocked(2));
+        assertFalse(technologyManager.armourIsUnlocked(3));
+        technologyManager.unlockArmourLevelOne();
+        technologyManager.unlockArmourLevelTwo();
+        technologyManager.unlockArmourLevelThree();
+        assertTrue(technologyManager.armourIsUnlocked(1));
+        assertTrue(technologyManager.armourIsUnlocked(2));
+        assertTrue(technologyManager.armourIsUnlocked(3));
 
-    @Test
-    public void armourUpgrade() throws Exception {
-        technologyManager.armourUpgrade();
-    }
+        //Test Weapons
+        assertFalse(technologyManager.weaponIsUnlocked(1));
+        assertFalse(technologyManager.weaponIsUnlocked(2));
+        assertFalse(technologyManager.weaponIsUnlocked(3));
+        technologyManager.unlockWeaponLevelOne();
+        technologyManager.unlockWeaponLevelTwo();
+        technologyManager.unlockWeaponLevelThree();
+        assertTrue(technologyManager.weaponIsUnlocked(1));
+        assertTrue(technologyManager.weaponIsUnlocked(2));
+        assertTrue(technologyManager.weaponIsUnlocked(3));
 
-    @Test
-    public void speedUpgrade() throws Exception {
-        technologyManager.speedUpgrade();
-    }
-
-    @Test
-    public void healthUpgrade() throws Exception {
-        technologyManager.healthUpgrade();
-    }
-
-    @Test
-    public void nootropicsUpgrade() throws Exception {
-    }
-
-    @Test
-    public void cowLevelUpgrade() throws Exception {
-    }
-
-    @Test
-    public void steroidsUpgrade() throws Exception {
-    }
-
-    @Test
-    public void vampirismUpgrade() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelOne() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelTwo() throws Exception {
-    }
-
-    @Test
-    public void unlockArmourLevelThree() throws Exception {
-    }
-
-    @Test
-    public void armourIsUnlocked() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelOne() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelTwo() throws Exception {
-    }
-
-    @Test
-    public void unlockWeaponLevelThree() throws Exception {
-    }
-
-    @Test
-    public void weaponIsUnlocked() throws Exception {
-    }
-
-    @Test
-    public void unlockSpecial() throws Exception {
-    }
-
-    @Test
-    public void specialIsUnlocked() throws Exception {
+        //Test Special
+        assertFalse(technologyManager.specialIsUnlocked());
+        technologyManager.unlockSpecial();
+        assertTrue(technologyManager.specialIsUnlocked());
     }
 
     @Test
