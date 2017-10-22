@@ -115,13 +115,11 @@ public class Render3D implements Renderer {
 
         WeatherManager weather = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
-        weather.setWeatherEvent();
         if (weather.isRaining()) {
             weather.render(batch);
         }
-        weather.renderOverlay();
-
         batch.end();
+        weather.renderOverlay();
 
         if(battleFlag==1)
             MainMenu.player.playBattleSoundTrack();

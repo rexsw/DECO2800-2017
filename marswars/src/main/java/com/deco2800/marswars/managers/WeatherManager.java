@@ -3,12 +3,12 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.util.Point;
@@ -25,7 +25,7 @@ import java.util.Random;
  *
  * @author Isaac Doidge
  */
-public class WeatherManager extends Manager implements Tickable {
+public class WeatherManager extends Manager implements TickableManager {
     private TimeManager timeManager =
             (TimeManager) GameManager.get().getManager(TimeManager.class);
     private BaseWorld world = GameManager.get().getWorld();
@@ -79,7 +79,6 @@ public class WeatherManager extends Manager implements Tickable {
                         	water.play();
                         }
                         catch (NullPointerException e){
-                        	;
                         }
                     }
 
@@ -94,7 +93,9 @@ public class WeatherManager extends Manager implements Tickable {
                     world = GameManager.get().getWorld();
                     this.setInterval();
                     this.retreatWaters();
-                    water.dispose();
+                    if (water != null) {
+                        water.dispose();
+                    }
                     isWaterSoundPlaying = false;
                     // While water still exists, continue to apply effects
                     this.applyContinuousDamage(this.checkAffectedEntities());
@@ -306,7 +307,7 @@ public class WeatherManager extends Manager implements Tickable {
      * multiplied.
      */
     private void generateFlood() {
-        if (waterEntities < (world.getWidth() * world.getLength()) / 3 * 2 / 6) {
+        if (waterEntities < (world.getWidth() * world.getLength()) / 7 * 4) {
             List<BaseEntity> entities = world.getEntities();
             Boolean waterFound = false;
             // Find existing water entities
@@ -415,30 +416,42 @@ public class WeatherManager extends Manager implements Tickable {
     }
 
 
+    /**
+     * Decreases the level of light in the game by rendering a dark overlay
+     * of a degree of opacity that depends on the hour as well as the weather
+     * conditions.
+     */
     public void renderOverlay() {
-        Color shade = new Color(0, 0, 0, .5f);
-        if (isRaining() || timeManager.isNight()) {
-            if (isRaining() && timeManager.isNight()) {
-                shade = new Color(0, 0, 255, .5f);
-            } else if (timeManager.isNight() && !isRaining()) {
-                shade = new Color(0, 255, 0, .5f);
-            } else if (isRaining() && !timeManager.isNight()) {
-                shade = new Color(255, 0, 0, .5f);
-            }
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(shade);
-            shapeRenderer.rect(0, 0, 5000, 5000);
-            shapeRenderer.end();
+        if (shapeRenderer == null) {
+            shapeRenderer = new ShapeRenderer();
         }
+        Color shade = new Color(0, 0, 0, (float) 0);
+        if (isRaining() || timeManager.isNight() &&
+                timeManager.getGameSeconds() > 0) {
+            if (isRaining() && timeManager.isNight()) {
+                shade = new Color(0, 0, 0, (float) 0.6);
+            } else if (timeManager.isNight() && ! isRaining()) {
+                shade = new Color(0, 0, 0, (float) 0.4);
+            } else if (isRaining() && ! timeManager.isNight()) {
+                shade = new Color(0, 0, 0, (float) 0.2);
+            }
+        }
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(shade);
+        shapeRenderer.rect(0, 0, 5000, 5000);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     /**
-     * Stub method. Water's onTick controls the weather effect.
+     * Runs the manager and causes events to occur at the specified times.
      * @param tick Current game tick
      */
     @Override
-    public void onTick(int tick) {
-        return;
+    public void onTick(long tick) {
+        setWeatherEvent();
     }
 }
 

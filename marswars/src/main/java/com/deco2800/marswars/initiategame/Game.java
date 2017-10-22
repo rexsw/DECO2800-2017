@@ -49,9 +49,6 @@ public class Game{
 	private OrthographicCamera camera;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	// Please don't delete
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -179,8 +176,6 @@ public class Game{
 		loadBuildings(loadedGame);
 		loadAnimals(loadedGame);
 
-
-		this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
