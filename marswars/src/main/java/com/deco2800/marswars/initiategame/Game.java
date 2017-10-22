@@ -62,7 +62,7 @@ public class Game{
 	 * @param aITeams
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
-		savedGame = new GameSave(aITeams,playerTeams);
+		savedGame = new GameSave(aITeams,playerTeams,true);
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		savedGame.data.setIndex(colourManager.getIndex());
@@ -78,10 +78,10 @@ public class Game{
 
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
-
+		int currentColorIndex = colourManager.getIndex();
 		startGame(mapType, mapSize, aITeams, playerTeams);
-		savedGame = new GameSave(aITeams,playerTeams);
-		savedGame.data.setIndex(colourManager.getIndex());
+		savedGame = new GameSave(aITeams,playerTeams,false);
+		savedGame.data.setIndex(currentColorIndex);
 	}
 
 
