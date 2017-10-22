@@ -1,10 +1,10 @@
 package com.deco2800.marswars.actions;
 
 import com.badlogic.gdx.audio.Sound;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
