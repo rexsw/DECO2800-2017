@@ -232,7 +232,7 @@ public final class ActionSetter {
 	}
     
     /**
-     * checks if there are enough resources to pay for the selected entity
+     * checks if there are enough resources to pay for the selected entity (and pop limit)
      * @param owner
      * @param c
      * @param resourceManager
@@ -241,6 +241,9 @@ public final class ActionSetter {
     public static boolean canAfford(int owner, boolean isAi, EntityID c, ResourceManager resourceManager) {
     	if (GameManager.get().areCostsFree() && !isAi) {
     		return true;
+    	}
+    	if (resourceManager.getPopulation(owner) > resourceManager.getMaxPopulation(owner)) {
+    		return false;
     	}
     	if (!isAi) {
 	    	if (resourceManager.getRocks(owner) >= c.getCostRocks()
