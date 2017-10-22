@@ -13,10 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WinManager;
+import com.deco2800.marswars.managers.WinManager.WINS;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -88,7 +92,7 @@ public class MenuScreen extends Table{
 	
 	/* Always at most two teams*/
 	private int allTeams = 0; 
-	
+		
 	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
@@ -520,6 +524,7 @@ public class MenuScreen extends Table{
                 click.play();
 				combatSelected.setText("Easy AI difficulty selected");
 				aiDifficulty = Difficulty.EASY;
+				
 			}
 		});
 		
@@ -527,7 +532,6 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
 				combatSelected.setText("Normal AI difficulty selected");
 				aiDifficulty = Difficulty.NORMAL;
 			}
@@ -537,7 +541,6 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
 				combatSelected.setText("Hard AI difficulty selected");
 				aiDifficulty = Difficulty.HARD;
 			}
@@ -552,19 +555,22 @@ public class MenuScreen extends Table{
 		
 		CheckBox economic = new CheckBox(" Economy", skin, "spac_check");
 		CheckBox millitary = new CheckBox(" Millitary", skin, "spac_check");
-		//CheckBox population = new CheckBox(" Population", skin, "spac_check");
-		economic.addListener(new ChangeListener() {
-			public void changed(ChangeEvent event, Actor actor) { //TODO
-				victoryEconomic = !victoryEconomic;
-		}});
-		millitary.addListener(new ChangeListener() {
-			public void changed(ChangeEvent event, Actor actor) { //TODO
-				victoryMilitary = !victoryMilitary;
-		}});
+		
 		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
 		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
-		//winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
 		
+		economic.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				victoryEconomic = !victoryEconomic;
+			}			
+		});
+		
+		millitary.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				victoryMilitary = !victoryMilitary;
+			}			
+		});
+								
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(teamInfo).align(Align.left).row();
 		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
@@ -759,7 +765,7 @@ public class MenuScreen extends Table{
 		return true;
 	}
 	
-	private boolean checkDifficulty() { //TODO
+	private boolean checkDifficulty() {
 		if (aiDifficulty == null) {
 			errorTeamsSelection.setText("Choose a difficulty setting!");
 			return false;
@@ -768,7 +774,7 @@ public class MenuScreen extends Table{
 	}
 	
 	private boolean checkVictoryConditions() {
-		if (!(victoryEconomic && victoryMilitary)) {
+		if (!(victoryEconomic || victoryMilitary)) {
 			errorTeamsSelection.setText("Choose a victory setting!");
 			return false;
 		}
