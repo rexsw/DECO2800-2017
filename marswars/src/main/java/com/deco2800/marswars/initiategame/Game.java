@@ -507,9 +507,9 @@ public class Game{
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(0, teamid);
-		rm.setRocks(0, teamid);
-		rm.setCrystal(0, teamid);
+		rm.setBiomass(100, teamid);
+		rm.setRocks(100, teamid);
+		rm.setCrystal(100, teamid);
 		rm.setMaxPopulation(10, teamid);
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
