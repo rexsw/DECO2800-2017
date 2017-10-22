@@ -246,8 +246,10 @@ public class BuildAction implements DecoAction{
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
-		if (temp != null && validBuild) {
-			GameManager.get().getWorld().removeEntity(temp);
+		if (validBuild) {
+			if (temp != null){
+				GameManager.get().getWorld().removeEntity(temp);
+			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			if (canAfford(actor.getOwner(), resourceManager)) {
 				createBuilding();

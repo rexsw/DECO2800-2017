@@ -159,10 +159,12 @@ public class BuildWallAction implements DecoAction{
 					if (currentAction != null) {
 						if (index == wallProject.size()) {
 							completed = true;
+							LOGGER.debug("COMPLETE");
 						}
 						if (currentAction.completed()) {
 							currentAction = null;
-							index ++;
+							index = index + 1;
+							LOGGER.debug("INDEX" + index);
 						}
 						if (currentAction != null) {
 							currentAction.doAction();
