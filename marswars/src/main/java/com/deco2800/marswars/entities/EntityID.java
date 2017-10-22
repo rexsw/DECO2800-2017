@@ -9,14 +9,14 @@ package com.deco2800.marswars.entities;
 /*A more suitable name will be appreciated*/
 public enum EntityID {
     ASTRONAUT(0, 0, 20),
-    COMMANDER(0, 0, 0),
+    COMMANDER(50, 50, 50),
     CARRIER(20, 20, 0),
     MEDIC(0, 15, 40),
     SOLDIER(0, 25, 10),
     TANK(50, 40, 0),
     SPACMAN(0, 10, 15),
     HACKER(10, 50, 10),
-    SNIPER(0, 0, 0),
+    SNIPER(0, 50, 5),
     TANKDESTROYER(30, 30, 0),
     SPATMAN(0, 15, 10);
 	
