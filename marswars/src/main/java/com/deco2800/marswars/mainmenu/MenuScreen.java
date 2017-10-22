@@ -768,7 +768,7 @@ public class MenuScreen extends Table{
 	}
 	
 	private boolean checkVictoryConditions() {
-		if (!(victoryEconomic && victoryMilitary)) {
+		if (!(victoryEconomic || victoryMilitary)) {
 			errorTeamsSelection.setText("Choose a victory setting!");
 			return false;
 		}
