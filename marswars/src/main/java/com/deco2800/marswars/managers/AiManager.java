@@ -99,9 +99,9 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		} else if(unit instanceof Base) {
 			Base x = (Base)unit;
 			if(state == State.ECONOMIC) {
-				generateEntity(x, EntityID.SOLDIER);
+				generateEntity(x, EntityID.ASTRONAUT);
 			} else {
-				generateEntity(x, EntityID.SOLDIER);
+				generateEntity(x, EntityID.ASTRONAUT);
 			}
 		} else if(unit instanceof Barracks) {
 			Barracks x = (Barracks)unit;
