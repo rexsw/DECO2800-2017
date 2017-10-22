@@ -206,7 +206,7 @@ public class MapContainer {
             }
             tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
                     type, colour, false);
-            if(r.nextInt(200) < 20) {
+            if(r.nextInt(200) < 30) {
             	int x = r.nextInt(101);
             	AmbientAnimal animal;
             	if(x == 42) {

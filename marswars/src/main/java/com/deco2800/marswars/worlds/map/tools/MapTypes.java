@@ -22,7 +22,7 @@ public enum MapTypes {
     		case SUN:
     			return "white";
     		default:
-    			return "red";
+    			return "white";
     	}
     }
 }
