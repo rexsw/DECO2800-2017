@@ -8,11 +8,12 @@ import org.junit.Test;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
+import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.units.*;
 
 /**
  * Junit Tests for code in package initiateGame
- * includes: gameSave, game
+ * includes: gameSave, game, SavedEntity, SavedBuilding
  * 
  * Created by jdtran21 on 10/22/2017
  *
@@ -27,7 +28,6 @@ public class GameTest {
 	@Test
 	public void emptyTest() throws FileNotFoundException {
 		GameSave testSave = new GameSave();
-		//Game testGame = new Game(1, 1);
 	}
 	
 	@Test
@@ -36,6 +36,21 @@ public class GameTest {
 		testSave.fillData();
 		testSave.writeGame();
 		testSave.readGame();
+		
+		Turret turret = new Turret(null, 0, 0, 0, 1);
+		Base base = new Base(null, 0, 0, 0, 1);
+		Barracks barracks = new Barracks(null, 0, 0, 0, 1);
+		Bunker bunker = new Bunker(null, 0, 0, 0, 1);
+		HeroFactory heroFact = new HeroFactory(null, 0, 0, 0, 1);
+		TechBuilding techBuild = new TechBuilding(null, 0, 0, 0, 1);
+		
+		testSave.fillBuilding(turret);
+		testSave.fillBuilding(base);
+		testSave.fillBuilding(barracks);
+		testSave.fillBuilding(bunker);
+		testSave.fillBuilding(heroFact);
+		testSave.fillBuilding(techBuild);
+		
 		Astronaut astronaut = new Astronaut(0, 0, 0, 1);
 		Tank tank = new Tank(0, 0, 0, 1);
 		Carrier carrier = new Carrier(0, 0, 0, 1);
@@ -47,6 +62,7 @@ public class GameTest {
 		Medic medic = new Medic(0, 0, 0, 1);
 		Hacker hacker = new Hacker(0, 0, 0, 1);
 		Soldier soldier = new Soldier(0, 0, 0, 1);
+		
 		testSave.fillEntities(astronaut);
 		testSave.fillEntities(tank);
 		testSave.fillEntities(carrier);
@@ -58,6 +74,5 @@ public class GameTest {
 		testSave.fillEntities(medic);
 		testSave.fillEntities(hacker);
 		testSave.fillEntities(soldier);
-
 	}	
 }

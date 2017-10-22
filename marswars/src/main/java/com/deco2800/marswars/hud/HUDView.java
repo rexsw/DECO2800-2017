@@ -124,6 +124,8 @@ public class HUDView extends ApplicationAdapter{
 	int exitCheck = 0;
 	private Table selectedTable;
 
+	private Dialog tech;
+	private Dialog pause;
 
 	/**
 	 * Creates a 'view' instance for the HUD. This includes all the graphics
@@ -247,7 +249,9 @@ public class HUDView extends ApplicationAdapter{
 		dispMainMenu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
+				pause = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			
+			    setPauseWindow(pause);	
+			}
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
@@ -375,7 +379,9 @@ public class HUDView extends ApplicationAdapter{
 		dispTech.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				if (hud.getTechCheck() == 0) {
+					tech = new TechTreeView("TechTree", skin, hud).show(stage); //$NON-NLS-1$
+				}
 			}
 		});
 		dispTech.addListener(new TextTooltip("Open Technology", skin));
@@ -997,6 +1003,30 @@ public class HUDView extends ApplicationAdapter{
 				stage.getHeight()/2 - help.getHeight());
 
     }
+	
+	public void hideTechTree() {
+		this.tech.hide();
+	}
+	
+	public void setTechTree(Dialog techTree){
+	    this.tech = techTree;
+	}
+	
+	public void hideHelpWindow() {
+		this.help.getHelpWindow().remove();
+	}
+	
+	public void setHelpWindow(HelpWindow helpWindow) {
+		this.help = helpWindow;
+	}
+	
+	public void hidePauseMenu() {
+		this.pause.hide();
+	}
+	
+	public void setPauseWindow(Dialog pauseWindow) {
+		this.pause = pauseWindow;
+	}
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise
