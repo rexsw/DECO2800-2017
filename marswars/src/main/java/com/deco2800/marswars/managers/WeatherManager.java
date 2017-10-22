@@ -2,8 +2,10 @@ package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Tickable;
@@ -35,6 +37,7 @@ public class WeatherManager extends Manager implements Tickable {
     private int waterEntities = 0;
     private boolean floodOn = true;
     private ParticleEffect effect;
+    ShapeRenderer shapeRenderer;
     private boolean isWaterSoundPlaying = false;
     public Sound water;
     private boolean gracePeriod = true;
@@ -409,6 +412,24 @@ public class WeatherManager extends Manager implements Tickable {
                         GameManager.get().getCamera().viewportHeight *
                                 GameManager.get().getCamera().zoom/2);
         effect.draw(batch,  Gdx.graphics.getDeltaTime());
+    }
+
+
+    public void renderOverlay() {
+        Color shade = new Color(0, 0, 0, .5f);
+        if (isRaining() || timeManager.isNight()) {
+            if (isRaining() && timeManager.isNight()) {
+                shade = new Color(0, 0, 255, .5f);
+            } else if (timeManager.isNight() && !isRaining()) {
+                shade = new Color(0, 255, 0, .5f);
+            } else if (isRaining() && !timeManager.isNight()) {
+                shade = new Color(255, 0, 0, .5f);
+            }
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(shade);
+            shapeRenderer.rect(0, 0, 5000, 5000);
+            shapeRenderer.end();
+        }
     }
 
     /**

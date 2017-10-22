@@ -119,6 +119,7 @@ public class Render3D implements Renderer {
         if (weather.isRaining()) {
             weather.render(batch);
         }
+        weather.renderOverlay();
 
         batch.end();
 
