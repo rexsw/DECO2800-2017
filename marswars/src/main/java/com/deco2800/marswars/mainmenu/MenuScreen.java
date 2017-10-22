@@ -1,9 +1,9 @@
 package com.deco2800.marswars.mainmenu;
 
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,7 +35,7 @@ import com.esotericsoftware.kryonet.Connection;
  * Multiplayer: 
  * 		start server > select world > select character > select combat 
  */
-public class MenuScreen{
+public class MenuScreen extends Table{
 	/* Constructors*/
 	private Skin skin;
 	private LobbyButton lobby;
@@ -67,7 +67,6 @@ public class MenuScreen{
 	private Button backButton; 
 	private Button nextButton;
 	private Label errorWorldSelection;
-	private Label errorPlayerSelection;
 	private Label errorTeamsSelection;
 	
 	/* To ensure 'saving' of the old state*/
@@ -95,14 +94,8 @@ public class MenuScreen{
 	
 	private static boolean enabled = false; //FOR DEBUGGING
 
-	// To keep track of whether a map type and size have been selected, 1 is
-	// true, 0 is false
-	private int mapTypeSet = 0;
-	private int mapSizeSet = 0;
-
 	
 	private String menuButtonString = "menubutton";
-	private String subtitleString = "subtitle";
 	private String totalTeamsPlayingString = "Total %d teams playing";
 	/**
 	 * Creates a menu screen instance. Responsible for loading up 
@@ -112,6 +105,9 @@ public class MenuScreen{
 	 * @param stage
 	 * @param mainMenu menu
 	 */
+
+	//click sound
+    Sound click = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"));
 	
 
 	//Managers
@@ -123,7 +119,7 @@ public class MenuScreen{
 		this.skin = skin;
 		this.menu = mainMenu;
 		this.stage = stage; 
-		this.mainmenu = window;
+		MenuScreen.mainmenu = window;
 		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
 		
 		/* UI prompts */
@@ -142,14 +138,16 @@ public class MenuScreen{
 	public void playerModeSelect() {
 		Table playerMode = new Table();
 		playerMode.setDebug(enabled);		
-		Label modeInfo = new Label("MAIN MENU", this.skin, "title");
-		//modeInfo.setVisible(false);
+		String title = "title";
+		String button2 = "button2";
 		
-		Button singlePlayerButton = new TextButton("Single Player", this.skin, "button2");
-		Button multiplayerButton = new TextButton("Multiplayer", this.skin, "button2");
-		Button customizeButton = new TextButton("Customize", this.skin, "button2");
-		Button loadGameButton = new TextButton("Load Game", this.skin, "button2");
-		Button exitGameButton = new TextButton("Exit Game", this.skin, "button2");
+		Label modeInfo = new Label("MAIN MENU", this.skin, title);
+		
+		Button singlePlayerButton = new TextButton("Single Player", this.skin, button2);
+		Button multiplayerButton = new TextButton("Multiplayer", this.skin, button2);
+		Button customizeButton = new TextButton("Customize", this.skin, button2);
+		Button loadGameButton = new TextButton("Load Game", this.skin, button2);
+		Button exitGameButton = new TextButton("Exit Game", this.skin, button2);
 		
 		/*TODO: Remove later since this is only for debugging*/
 		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
@@ -175,6 +173,8 @@ public class MenuScreen{
 		singlePlayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+
+                click.play();
 			    setPlayerType(0);
 				selectWorldMode();
 			}
@@ -183,6 +183,7 @@ public class MenuScreen{
 		multiplayerButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
                 setPlayerType(1);
 				selectServerMode();
 			}
@@ -191,6 +192,7 @@ public class MenuScreen{
 		customizeButton.addListener(new ChangeListener()  {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
@@ -209,6 +211,7 @@ public class MenuScreen{
 		quickGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mainmenu.setVisible(false);
 				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
 			}
@@ -217,6 +220,7 @@ public class MenuScreen{
 		loadGameButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mainmenu.setVisible(false);
 				menu.loadGame(true);
 			}
@@ -231,9 +235,9 @@ public class MenuScreen{
 		mainmenu.clear(); 
 		
 		Table playerTable = new Table(); 
-		
+		String subHeading = "subheading";
 		Label playerInfo = new Label("CHARACTERS", this.skin, "title");
-		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, "subheading");
+		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, subHeading);
 		Label moreInfo = new Label("click '>' since this feature has not "
 				+ "yet been implemented)", skin);
 		
@@ -279,7 +283,7 @@ public class MenuScreen{
 	    MultiplayerLobby lobby = new MultiplayerLobby(skin, hostIP, host);
 	    mainmenu.add(lobby).expand().align(Align.topLeft);
 	    mainmenu.row();
-	    mainmenu.add(setupExitLobbyButton(mainmenu, stage)).left();
+	    mainmenu.add(setupExitLobbyButton(stage)).left();
 	}
 	
 	/**
@@ -332,27 +336,27 @@ public class MenuScreen{
 		moon.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.MOON;
 				currentWorldSelection.setText("Moon map selected, ");
-				mapTypeSet = 1;
 			}
 		});	
 		
 		mars.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.MARS;
 				currentWorldSelection.setText("Mars map selected, ");
-				mapTypeSet= 1;
 			}
 		});	
 		
 		desert.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapType = MapTypes.SUN;
 				currentWorldSelection.setText("Desert terrain selected, ");
-				mapTypeSet = 1;
 			}
 		});	
 		
@@ -374,16 +378,17 @@ public class MenuScreen{
 		tiny.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.TINY;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("tiny map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
 		smol.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.SMALL;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("smol map selected.");
@@ -393,30 +398,30 @@ public class MenuScreen{
 		medium.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.MEDIUM;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("medium map selected.");
-				mapSizeSet = 1;
 			}
 		});
 
 		large.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("large map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
 		veryLarge.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				mapSize = MapSizeTypes.VERY_LARGE;
 				currentSizeSelection.setVisible(true);
 				currentSizeSelection.setText("very large map selected.");
-				mapSizeSet = 1;
 			}
 		});
 		
@@ -458,6 +463,7 @@ public class MenuScreen{
 		ai2.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -466,6 +472,7 @@ public class MenuScreen{
 		ai3.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 3;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -474,6 +481,7 @@ public class MenuScreen{
 		ai4.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 4;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -483,6 +491,7 @@ public class MenuScreen{
 		ai5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 5;
 				selected.setText(String.format(totalTeamsPlayingString, allTeams));
 			}
@@ -493,37 +502,41 @@ public class MenuScreen{
 		}
 		
 		/* no of teams buttons*/
-		Table AIBehaviorButtons = new Table();
-		Button AIEasy = new TextButton("Passive", skin, "num_button");
-		Button AINormal = new TextButton("Normal", skin, "num_button");
-		Button AIHard = new TextButton("Hard", skin, "num_button");
-		Button[] behaviorButtonsList= {AIEasy, AINormal, AIHard};
+		String numButton = "num_button";
+		Table aiBehaviorButtons = new Table();
+		Button aiEasy = new TextButton("Passive", skin, numButton);
+		Button aiNormal = new TextButton("Normal", skin, numButton);
+		Button aiHard = new TextButton("Hard", skin, numButton);
+		Button[] behaviorButtonsList= {aiEasy, aiNormal, aiHard};
 
-		AIEasy.addListener(new ChangeListener() {
+		aiEasy.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				combatSelected.setText("Easy level selected");
 			}
 		});
 		
-		AINormal.addListener(new ChangeListener() {
+		aiNormal.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				combatSelected.setText("Normal level selected");
 			}
 		});
 		
-		AIHard.addListener(new ChangeListener() {
+		aiHard.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				allTeams = 2;
 				combatSelected.setText("Hard level selected");
 			}
 		});
 		
 		for (int i = 0; i < behaviorButtonsList.length; i++) {
-			AIBehaviorButtons.add(behaviorButtonsList[i]).pad(BUTTONPAD);
+			aiBehaviorButtons.add(behaviorButtonsList[i]).pad(BUTTONPAD);
 		}
 		
 		Table winConditionChecks = new Table(); 
@@ -544,11 +557,11 @@ public class MenuScreen{
 		mainmenu.add(aiButtons).align(Align.center).row();
 		mainmenu.add(selected).align(Align.left).row();
 		mainmenu.add(aiInfo).align(Align.left).row();
-		mainmenu.add(AIBehaviorButtons).align(Align.left).row();
+		mainmenu.add(aiBehaviorButtons).align(Align.left).row();
 		mainmenu.add(combatSelected).align(Align.left).padBottom(LABELPAD).row();
 
 		mainmenu.add(winInfo).align(Align.left).row();
-		mainmenu.add(winConditionChecks);
+		mainmenu.add(winConditionChecks).row();
 
 		mainmenu.add(errorTeamsSelection).align(Align.left).row();
 		
@@ -585,24 +598,19 @@ public class MenuScreen{
 		this.backButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
+                click.play();
 				/*If single player mode*/
-				if (MenuScreen.this.playerType == 0) {
+				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to previous state
 					case WORLDMODE:
 						mainmenu.clear(); 
 						playerModeSelect();
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						break; 
 					case CHARACTERMODE:
 						selectWorldMode();
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						break;
 					case COMBATMODE:
-						mapTypeSet = 0;
-						mapSizeSet = 0;
 						selectCharacter();
 						break;
 					default:
@@ -612,6 +620,8 @@ public class MenuScreen{
 				
 				/* If multiplayer mode */
 				else if(MenuScreen.this.playerType == 1) {
+                    click.play();
+
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -644,9 +654,10 @@ public class MenuScreen{
 		this.nextButton.addListener(new ChangeListener() {
 			@Override 
 			public void changed(ChangeEvent event, Actor actor){
+                click.play();
 				/*If single player mode*/
 				/* Single Player: select world > select character > select combat*/
-				if (MenuScreen.this.playerType == 0) {
+				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
@@ -661,7 +672,7 @@ public class MenuScreen{
 					default:
 						break;
 					}
-				} else if(MenuScreen.this.playerType == 1) {
+				} else if(MenuScreen.playerType == 1) {
 					/* If multiplayer mode
 					 * 		join server > select character 
 					 * 		start server > select world > select character > select combat 
@@ -692,6 +703,7 @@ public class MenuScreen{
 		quitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+                click.play();
 				new ExitGame("Quit Game", GameManager.get().getSkin(), hud, false).show(stage);
 		}});
 		
@@ -741,6 +753,7 @@ public class MenuScreen{
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
+                click.play();
 				if (checkTeams()) {
 					mainmenu.setVisible(false);
 					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS);
@@ -775,12 +788,13 @@ public class MenuScreen{
 	 * @return A button that takes them back from the lobby screen to the server selection screen, also disconnects
 	 *     the user when they do.
 	 */
-	private Button setupExitLobbyButton(Window mainmenu, Stage stage) {
+	private Button setupExitLobbyButton(Stage stage) {
 	    TextButton exitButton = new TextButton("Exit Lobby", skin);
 	    // Add BAck button 
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                click.play();
                 netManager.getNetworkClient().stop();
                 unSetJoinedServer();
                 selectServerMode();

@@ -3,7 +3,6 @@ package com.deco2800.marswars.hud;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,13 +13,13 @@ import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
-public class HelpWindow {
+public class HelpWindow extends Window{
 	private static final int SIDEPANEBUTTONWIDTH = 160;
 	private static final int SIDEPANEBUTTONHEIGHT = 40;
 	private static final int WINDOWPAD = 20;
 	private static final int HOTKEYBUTTON = 40;
 
-	private static final boolean enabled = true; 
+	private static final boolean ENABLED = true; 
 
 	private Stage stage;
 	private Window window;
@@ -31,19 +30,15 @@ public class HelpWindow {
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 
-	public HelpWindow(Stage stage, Skin skin, HUDView hud) {
+	public HelpWindow(Stage stage, Skin skin) {
+		super("", skin);
 		this.stage = stage;
 		this.skin = skin;
-		this.hud = hud;
-		this.timeManager = timeManager;
-
-		this.window = new Window("Help", skin);
-		window.setSize(600, 600);
-		window.setDebug(enabled);
-		window.align(Align.left | Align.top);
-		window.pad(WINDOWPAD);
-		stage.addActor(window);
-		window.setPosition(stage.getWidth()/2 - window.getWidth(), stage.getHeight()/2 - window.getHeight()/2);
+		
+		this.setSize(600, 600);
+		this.setDebug(ENABLED);
+		this.align(Align.left | Align.top);
+		this.pad(WINDOWPAD);
 		buildWindow();
 	}
 
@@ -51,24 +46,22 @@ public class HelpWindow {
 	 * Builds the help window
 	 */
 	private void buildWindow() {
-		window.add(this.sidePane()).align(Align.topLeft);
-		this.timeManager.pause();
-		this.hud.setHelpCheck(1);
+		this.add(this.sidePane()).align(Align.topLeft);
 	}
 
 	private Table sidePane() {
 		sidePane = new Table();
-		sidePane.setDebug(enabled);
+		sidePane.setDebug(ENABLED);
 		sidePane.align(Align.topLeft);
 		Button gameGuide = new TextButton("GAME GUIDE", skin);
 		Button hotKeys = new TextButton("HOTKEYS", skin);
 		Button settings = new TextButton("SETTINGS", skin);
 		Button back = new TextButton("BACK TO GAME", skin);
-		
+
 		gameGuide.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				window.clear();
+				clear();
 			}
 		});
 		
@@ -76,15 +69,14 @@ public class HelpWindow {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				timeManager.unPause();
-			    hud.setHelpCheck(0);
-				window.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
 		hotKeys.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				window.clear();
+				clear();
 				buildWindow();
 				hotKeysInfo();
 			}
@@ -99,7 +91,7 @@ public class HelpWindow {
 	}
 	
 	public Window getHelpWindow() {
-		return this.window;
+		return this;
 	}
 	
 	private Table hotKeysInfo() {
@@ -125,6 +117,8 @@ public class HelpWindow {
 		hotKeysChild.add(escInfo).row();
 		hotKeysChild.add(chatButton).size(HOTKEYBUTTON);
 		hotKeysChild.add(chatInfo).row();
+		hotKeysChild.add(techTree).size(HOTKEYBUTTON);
+		hotKeysChild.add(techInfo).row();
 		hotKeysChild.add(quit).size(HOTKEYBUTTON);
 		hotKeysChild.add(quitInfo).row();
 		hotKeysChild.add(displayHUD).size(HOTKEYBUTTON);
@@ -134,7 +128,7 @@ public class HelpWindow {
 		
 		hotKeysParent.add(hotkeysInfo).row();
 		hotKeysParent.add(hotKeysChild);
-		window.add(hotKeysParent);
+		this.add(hotKeysParent);
 		return hotKeysParent;
 	}
 }

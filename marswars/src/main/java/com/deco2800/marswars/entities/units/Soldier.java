@@ -109,11 +109,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setArmor(t.getUnitAttribute(this.name, 3));
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
+		this.setMaxAttackSpeed(t.getUnitAttribute(this.name, 6));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
 		/*
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
+		this.setMaxSpeed(0.05f);
 		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
@@ -214,9 +216,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}else {
 			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
-//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-//			Sound loadedSound = sound.loadSound(movementSound);
-//			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);
@@ -237,7 +236,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			attack(target);
 
 		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));//, this.getSpeed()));
 		}
 	}
 	
@@ -273,7 +272,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			modifyFogOfWarMap(true,getFogRange());
 		}
 
-		loyalty_regeneration();
+		regeneration();
 		checkOwnerChange();
 		if (!currentAction.isPresent()) {
 			
@@ -478,17 +477,19 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
         if (distanceEquality) {
 			float xLocation;
 			float yLocation;
+			float xDist = xDistance;
+			float yDist = yDistance;
 			//If xDistance and yDistance is the same increment one by random
-			boolean distanceEquality2 = Math.abs(xDistance - yDistance) < 0.01 ;
+			boolean distanceEquality2 = Math.abs(xDist - yDist) < 0.01 ;
 			if (distanceEquality2) {
 				Random random = new Random();
 				if (random.nextBoolean()) {
-					xDistance += 1;
+					xDist += 1;
 				} else {
-					yDistance += 1;
+					yDist += 1;
 				}
 			}
-			if (xDistance > yDistance) {
+			if (xDist > yDist) {
 				if (a.getPosX() - this.getPosX() > 0) {
 					xLocation = this.getPosX() - 1;
 				} else {
@@ -588,11 +589,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	/**
 	 * Increase the loyalty of the entity in a certain period. Please include this to your unit if you override ontick
 	 */
-	public void loyalty_regeneration() {
-		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
-		if ((this.getLoyaltyRegenInterval()) <= 0) {
-			this.setLoyalty(this.getLoyalty() + 0);
-			this.resetLoyaltyRegenInterval();
+	public void regeneration() {
+		this.setRegenInterval(this.getRegenInterval() - 10);
+		if ((this.getRegenInterval()) <= 0) {
+			this.setLoyalty(this.getLoyalty() + 15);
+			this.setSpeed(this.getSpeed() + 0.01f);
+			this.setAttackSpeed(this.getAttackSpeed() + 2);
+			this.resetRegenInterval();
 			return;
 		}
 	}

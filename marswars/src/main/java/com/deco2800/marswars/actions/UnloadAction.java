@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An UnloadAction for Unloading units from a carrier unit
  * 
- * @author Han Wei
+ * @author Han Wei @hwkhoo
  */
 public class UnloadAction extends AbstractPauseAction {
 

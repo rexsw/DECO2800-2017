@@ -33,12 +33,25 @@ public class Data {
     //list of obstacles
     private List<Obstacle> obstacles = new ArrayList<>();
 
+
+
     public List<Obstacle> getObstacles() {
         return obstacles;
     }
 
     public void setObstacles(List<Obstacle> obstacles) {
         this.obstacles = obstacles;
+    }
+
+    //index for team colouring
+    private int index;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     private int aITeams;

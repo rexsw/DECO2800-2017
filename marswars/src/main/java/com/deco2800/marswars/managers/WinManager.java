@@ -21,12 +21,18 @@ public class WinManager extends Manager implements TickableManager {
 	private String winner;
 	private Dialog winnermsn;
 	private boolean gamewin = false;
+	private boolean econwin = true;
+	private boolean milwin = true;
+	
+	public static enum WINS {
+		ECON, MIL, BOTH
+	}
 
 	@Override
 	public void onTick(long i) {
 		//on tick checks in someone has won
 		teams = black.teamsAlive();
-		if (teams == 1) {
+		if (teams == 1 && milwin) {
 			//combat win for a team
 			LOGGER.info("tick winner " + teams);
 			gamewin = true;
@@ -37,7 +43,7 @@ public class WinManager extends Manager implements TickableManager {
 			}
 		}
 		teams = ((ResourceManager) GameManager.get().getManager(ResourceManager.class)).CappedTeam();
-		if(teams != 0) {
+		if(teams != 0 && econwin) {
 			//economic win for a team
 			gamewin = true;
 			if(GameManager.get().getSkin() != null) {
@@ -56,6 +62,20 @@ public class WinManager extends Manager implements TickableManager {
 	 */
 	public boolean isWinner() {
 		return gamewin;
+	}
+	
+	public void setwinconditions(WINS condtion) {
+		switch(condtion){
+			case ECON:
+				econwin = true;
+				milwin = false;
+			case MIL:
+				econwin = false;
+				milwin = true;
+			case BOTH:
+				econwin = true;
+				milwin = true;
+		}
 	}
 	
 	/**

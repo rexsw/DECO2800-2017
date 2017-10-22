@@ -266,6 +266,19 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
+	 * Adds the given 24 hour time values (hours, minutes, seconds), to the
+	 * in-game clock.
+	 * @param hours - the number of hours to be added
+	 * @param minutes - the number of minutes to be added
+	 * @param seconds - the number of seconds to be added
+	 */
+	public static void setGameTime(int hours, int minutes, int seconds) {
+		int hourLength = 3600;
+		int minuteLength = 60;
+		addTime(hours * hourLength + minutes * minuteLength + seconds);
+	}
+
+	/**
 	 * Sets the In-Game Time to be 0 (Resets current clock)
 	 */
 	public static void resetInGameTime() {

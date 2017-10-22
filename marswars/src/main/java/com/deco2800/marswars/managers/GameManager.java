@@ -55,6 +55,8 @@ public class GameManager implements TickableManager {
 	private TextureManager gameTexture;
 	
 	private boolean gameStarted = false;
+	
+	private boolean costsFree = false;
 
 	/**
 	 * Returns an instance of the GM
@@ -209,15 +211,19 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
 		this.gameWorld = null;
 		this.gui = null;
 		this.miniMap = null;
+		TimeManager.resetInGameTime();
 		this.menu.endGame();
+		WeatherManager.water.dispose();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		black.clear();
 	}
 
 	/**
@@ -331,6 +337,20 @@ public class GameManager implements TickableManager {
 		}
 	}
 
-
+	/**
+	 * returns if unit and building costs are free
+	 * @param isFree
+	 */
+	public boolean areCostsFree() {
+		return costsFree;
+	}
+	
+	/**
+	 * Cheat to toggle free unit and building costs
+	 * @param isFree
+	 */
+	public void setCostsFree(boolean isFree) {
+		costsFree = isFree;
+	}
 
 }

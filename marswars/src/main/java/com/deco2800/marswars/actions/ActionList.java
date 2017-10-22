@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
  */
 
 public class ActionList extends ArrayList<Object> {
+	BaseEntity actor;
 
-    public ActionList() {
+    public ActionList(BaseEntity actor) {
         super();
+        this.actor = actor;
     }
 
     /**
@@ -62,5 +65,13 @@ public class ActionList extends ArrayList<Object> {
     
     public List<Object> getallActions() {
     	return this;
+    }
+    
+    /**
+     * Gets the Base Entity that is the actor of these actions.
+     * @return BaseEntity that owns these actions.
+     */
+    public BaseEntity getActor() {
+    	return this.actor;
     }
 }

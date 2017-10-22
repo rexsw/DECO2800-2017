@@ -19,7 +19,7 @@ import java.util.Random;
  * A carrier unit that is able to load up to 3 other units, extends Soldier
  * class
  * 
- * @author Han Wei
+ * @author Han Wei @hwkhoo
  */
 
 public class Carrier extends Soldier {
@@ -40,15 +40,15 @@ public class Carrier extends Soldier {
 
 	public Carrier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		setXRenderLength(1.3f);
-		setYRenderLength(1.3f);
-		this.isCarrier();
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		this.name = "Carrier";
 		this.setAttributes();
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
+		this.isCarrier();
     }
 
     /**
@@ -112,7 +112,7 @@ public class Carrier extends Soldier {
      */
     @Override
     public void onTick(int tick) {
-	loyalty_regeneration();
+	regeneration();
 	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)

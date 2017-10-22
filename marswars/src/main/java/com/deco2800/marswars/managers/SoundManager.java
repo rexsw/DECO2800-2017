@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
  */
 public class SoundManager extends Manager {
 
+	private static boolean blockSound = false;
+
+	public static void blockSound(){blockSound = true;}
+	public static void unblockSound(){blockSound = false;}
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
 	/**
@@ -38,17 +44,22 @@ public class SoundManager extends Manager {
 	 * @return returns the ID of the sound being played
 	 */
 	public long playSound(Sound sound) {
-		LOGGER.info("Playing sound effect");
-		if (sound == null) {
-			LOGGER.error("Sound effect not found");
+			if(!blockSound){
+			LOGGER.info("Playing sound effect");
+			if (sound == null) {
+				LOGGER.error("Sound effect not found");
+				return 0;
+			}
+			try {
+				return sound.play(1f);
+			} catch (GdxRuntimeException e) {
+				LOGGER.error("Could not play sound effect");
+			}
+
+		}
+
 			return 0;
-		}
-		try {
-			return sound.play(1f);
-		} catch (GdxRuntimeException e) {
-			LOGGER.error("Could not play sound effect");
-		}
-		return 0;
+
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -18,7 +19,7 @@ public class AttackAction implements DecoAction {
 	// Variables for pause
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-
+	
 	/**
 	 * Possible states of the AttackAction
 	 */
@@ -97,7 +98,7 @@ public class AttackAction implements DecoAction {
 
 	private void attackingAction() {
 		//If the enemy is converted while being attacked
-		if (entity.sameOwner(enemy)) {
+		if (entity.sameOwner(enemy) && !(entity instanceof Medic)) {
 			completed = true;
 			return;
 		}

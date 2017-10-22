@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A LoadAction for loading units into a carrier unit
  * 
- * @author Han Wei
+ * @author Han Wei @hwkhoo
  */
 public class LoadAction extends AbstractPauseAction {
 

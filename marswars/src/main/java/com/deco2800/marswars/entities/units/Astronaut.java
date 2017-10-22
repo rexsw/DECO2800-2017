@@ -36,6 +36,7 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.setFogRange(10);
 		setAttributes();
 	}
 	
@@ -64,6 +65,9 @@ public class Astronaut extends Soldier {
 	
 	@Override
 	public void onRightClick(float x, float y) {
+		if (!this.isSelected()) {
+			return;
+		}
 		List<BaseEntity> entities;
 		try {
 			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
@@ -75,12 +79,12 @@ public class Astronaut extends Soldier {
 			this.deselect();
 			return;
 		}
-		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
-
-				build.finaliseBuild();
-				this.setTexture(defaultTextureName);
-				this.deselect();
-				return;
+		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get()
+				instanceof BuildAction) {
+			build.finaliseBuild();
+			this.setTexture(defaultTextureName);
+			this.deselect();
+			return;
 
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
@@ -195,6 +199,7 @@ public class Astronaut extends Soldier {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this.getHealthBar());
 			LOGGER.info("DEAD");
 		}
 		if (health >= this.getMaxHealth()) {

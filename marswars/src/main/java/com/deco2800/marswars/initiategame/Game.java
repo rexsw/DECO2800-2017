@@ -63,6 +63,9 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
 		savedGame = new GameSave(aITeams,playerTeams);
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		savedGame.data.setIndex(colourManager.getIndex());
 		loadGame();
 	}
 	
@@ -72,8 +75,13 @@ public class Game{
 	 * @param aITeams 
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
-	    savedGame = new GameSave(aITeams,playerTeams);
+
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+
 		startGame(mapType, mapSize, aITeams, playerTeams);
+		savedGame = new GameSave(aITeams,playerTeams);
+		savedGame.data.setIndex(colourManager.getIndex());
 	}
 
 
@@ -92,8 +100,18 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 
+		//set game time
+		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),(int)loadedGame.data.getSec());
+
+		//set colour index
+		ColourManager colourManager = (ColourManager)GameManager.get()
+				.getManager(ColourManager.class);
+		colourManager.setIndex(loadedGame.data.getIndex());
+
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
+
+
 
 		setCameraInitialPosition();
 		//same
@@ -217,27 +235,52 @@ public class Game{
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
-			}else if("Base".equals(each.getName())){
-				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
-				base.setHealth(each.getHealth());
-				GameManager.get().getWorld().addEntity(base);
-			}else if("Tank".equals(each.getName())){
+			}
+//			else if("Base".equals(each.getName())){
+//				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
+//				base.setHealth(each.getHealth());
+//				GameManager.get().getWorld().addEntity(base);
+			else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(tank);
-			}else if("Carrier".equals(each.getName())){
+			}
+			else if("Carrier".equals(each.getName())){
 				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
 				carrier.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(carrier);
-			}else if("Commander".equals(each.getName())){
+			}
+			else if("Spacman".equals(each.getName())){
+				Spacman spacman = new Spacman(each.getX(), each.getY(), 0, each.getTeamId());
+				spacman.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(spacman);
+			}
+			else if("Sniper".equals(each.getName())){
+				Sniper sniper = new Sniper(each.getX(), each.getY(), 0, each.getTeamId());
+				sniper.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(sniper);
+			}
+			else if("TankDestroyer".equals(each.getName())){
+				TankDestroyer tankDestroyer = new TankDestroyer(each.getX(), each.getY(), 0, each.getTeamId());
+				tankDestroyer.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(tankDestroyer);
+			}
+			else if("Spatman".equals(each.getName())){
+				Spatman spatman = new Spatman(each.getX(), each.getY(), 0, each.getTeamId());
+				spatman.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(spatman);
+			}
+			else if("Commander".equals(each.getName())){
 				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
 				commander.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(commander);
-			}else if("Medic".equals(each.getName())){
+			}
+			else if("Medic".equals(each.getName())){
 				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
 				medic.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(medic);
-			}else if("Hacker".equals(each.getName())){
+			}
+			else if("Hacker".equals(each.getName())){
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);
@@ -451,19 +494,26 @@ public class Game{
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+		//
+		Spatman spatman = new Spatman(x, y, 0, teamid);
+		Soldier soldier = new Soldier(x, y, 0, teamid);
+		Sniper sniper = new Sniper(x, y, 0, teamid);
+		Carrier carrier = new Carrier(x, y, 0, teamid);
+		Hacker hacker = new Hacker(x, y, 0, teamid);
+		Medic medic = new Medic(x, y, 0, teamid);
+		Tank tank = new Tank(x, y, 0, teamid);
+		TankDestroyer tankDestroyer = new TankDestroyer(x, y, 0, teamid);
+		GameManager.get().getWorld().addEntity(spatman);
+		GameManager.get().getWorld().addEntity(soldier);
+		GameManager.get().getWorld().addEntity(sniper);
+		GameManager.get().getWorld().addEntity(carrier);
+		GameManager.get().getWorld().addEntity(hacker);
+		GameManager.get().getWorld().addEntity(medic);
+		GameManager.get().getWorld().addEntity(tank);
+		GameManager.get().getWorld().addEntity(tankDestroyer);
+		//
+		
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
-//		Soldier soldier = new Soldier(x, y, 0, teamid);
-//		GameManager.get().getWorld().addEntity(soldier);
-//		Tank tank = new Tank(x, y, 0, teamid);
-//		Carrier carrier = new Carrier(2, 2, 0, teamid);
-//		Commander commander = new Commander(x,y,0,teamid);
-//		Medic medic = new Medic(x, y, 0, teamid);
-//		Hacker hacker = new Hacker(x, y, 0, teamid);
-//		GameManager.get().getWorld().addEntity(medic);
-//		GameManager.get().getWorld().addEntity(commander);
-//		GameManager.get().getWorld().addEntity(hacker);
-//		GameManager.get().getWorld().addEntity(carrier);
-//		GameManager.get().getWorld().addEntity(tank);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(base);

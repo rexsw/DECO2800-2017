@@ -7,7 +7,11 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.terrainelements.*;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Corn;
+import com.deco2800.marswars.entities.units.Dino;
+import com.deco2800.marswars.entities.units.Snail;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -112,14 +116,7 @@ public class MapContainer {
      */
     public void generateEntities(boolean random){
         if(random) {
-            /*Obstacle tree = new Obstacle(this.width-1, this.length-1, 0, 8, 8, ObstacleType.TREE1, "red");
-            world.addEntity(tree);
-            tree = new Obstacle(0, 0, 0, 8, 8, ObstacleType.TREE1, "blue");
-            world.addEntity(tree);
-            tree = new Obstacle(0, 10, 0, 8, 8, ObstacleType.TREE2, "red");
-            world.addEntity(tree);
-            tree = new Obstacle(10, 10, 0, 8, 8, ObstacleType.TREE3, "green");
-            world.addEntity(tree);*/
+            if (this.length>15) placeCliffs("grey");
 
             placeTrees("", true);
 
@@ -133,6 +130,48 @@ public class MapContainer {
         }
     }
 
+
+    /**
+     * populate the world with cliffs
+     * @param colour grey or red cliffs, null for random
+     */
+    private void placeCliffs(String colour) {
+        Random r = new Random();
+        for(int i =0; i<this.length/5; i++) {
+            try {
+                placeCliff(r.nextInt(this.length), r.nextInt(this.width), r.nextFloat() > 0.5, colour);
+            } catch (Exception e) {}
+        }
+
+    }
+
+    /**
+     * place a series of cliff entities to create a cliff
+     * @param x start x
+     * @param y start y
+     * @param direction 0 is up-left, 1 is up-right
+     * @param colour colour of the cliff "grey" or "red"
+     */
+    private void placeCliff(int x, int y, boolean direction, String colour) {
+        Random r = new Random();
+        int maxCliffLength = 10;
+        float linearTerminateFactor = 0.05f; //how much more likely a cliff is to end after each segment
+        boolean cont = true;
+        for (int i = 0; i < maxCliffLength && cont; i++) {
+            cont = r.nextFloat()>(linearTerminateFactor*i);
+            if (x<0||x>this.length||y<0||y>this.width) {
+                cont = false;
+            } else {
+                Obstacle cliff;
+                cliff = new Obstacle(x, y, 0, 2, 2,
+                        direction?ObstacleType.CLIFF_R:ObstacleType.CLIFF_L, colour, true);
+                world.addEntity(cliff);
+            }
+            x += direction?1:0;
+            y += direction?0:1;
+        }
+    }
+
     /**
      * places the trees on the map
      * @param colour the colour of the tree to place (red, green, blue, yellow)
@@ -143,7 +182,7 @@ public class MapContainer {
         float rf;
         ObstacleType type;
         Obstacle tree;
-        for (int i = 0; i<this.length*4; i++) {
+        for (int i = 0; i<this.length*1.5; i++) {
             if (randomColour) {
                 rf = r.nextFloat();
                 if (rf<0.25) {
@@ -170,7 +209,19 @@ public class MapContainer {
                 type = ObstacleType.TREE3;
             }
             tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
-                    type, colour);
+                    type, colour, false);
+            if(r.nextInt(200) < 20) {
+            	int x = r.nextInt(101);
+            	AmbientAnimal animal;
+            	if(x == 42) {
+            		animal = new Corn(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	} else if (x > 42) {
+            		animal = new Dino(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	} else {
+            		animal = new Snail(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	}
+            	world.addEntity(animal);
+            }
             world.addEntity(tree);
         }
     }
@@ -629,31 +680,33 @@ public class MapContainer {
         }
         switch (randomType){
             case MARS:
-                tilesToAdd.add(new Integer(10));
                 tilesToAdd.add(new Integer(11));
                 tilesToAdd.add(new Integer(12));
                 tilesToAdd.add(new Integer(13));
                 tilesToAdd.add(new Integer(14));
                 tilesToAdd.add(new Integer(15));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(40));
+                tilesToAdd.add(new Integer(41));
+                tilesToAdd.add(new Integer(42));
                 mapType = MapTypes.MARS;
                 break;
             case MOON:
-                tilesToAdd.add(new Integer(29));
-                tilesToAdd.add(new Integer(30));
                 tilesToAdd.add(new Integer(31));
                 tilesToAdd.add(new Integer(32));
-                tilesToAdd.add(new Integer(33));
-                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(44));
                 tilesToAdd.add(new Integer(35));
                 tilesToAdd.add(new Integer(36));
+                tilesToAdd.add(new Integer(37));
                 mapType = MapTypes.MOON;
                 break;
             case SUN:
                 //UPDATE THESE TILES
-                tilesToAdd.add(new Integer(11));
-                tilesToAdd.add(new Integer(16));
-                tilesToAdd.add(new Integer(12));
-                tilesToAdd.add(new Integer(18));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(46));
+                tilesToAdd.add(new Integer(38));
+                tilesToAdd.add(new Integer(39));
+                tilesToAdd.add(new Integer(34));
                 mapType = MapTypes.SUN;
                 break;
             default:
@@ -709,25 +762,28 @@ public class MapContainer {
                 tilesToAdd.add(new Integer(13));
                 tilesToAdd.add(new Integer(14));
                 tilesToAdd.add(new Integer(15));
+                tilesToAdd.add(new Integer(16));
+                tilesToAdd.add(new Integer(40));
+                tilesToAdd.add(new Integer(41));
+                tilesToAdd.add(new Integer(42));
                 mapType = MapTypes.MARS;
                 break;
             case MOON:
-                tilesToAdd.add(new Integer(29));
-                tilesToAdd.add(new Integer(30));
                 tilesToAdd.add(new Integer(31));
                 tilesToAdd.add(new Integer(32));
-                tilesToAdd.add(new Integer(33));
-                tilesToAdd.add(new Integer(34));
+                tilesToAdd.add(new Integer(44));
                 tilesToAdd.add(new Integer(35));
                 tilesToAdd.add(new Integer(36));
+                tilesToAdd.add(new Integer(37));
                 mapType = MapTypes.MOON;
                 break;
             case SUN:
                 //UPDATE THESE TILES
-                tilesToAdd.add(new Integer(11));
-                tilesToAdd.add(new Integer(16));
-                tilesToAdd.add(new Integer(12));
-                tilesToAdd.add(new Integer(18));
+                tilesToAdd.add(new Integer(33));
+                tilesToAdd.add(new Integer(46));
+                tilesToAdd.add(new Integer(38));
+                tilesToAdd.add(new Integer(39));
+                tilesToAdd.add(new Integer(34));
                 mapType = MapTypes.SUN;
                 break;
             default:

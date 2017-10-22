@@ -72,7 +72,11 @@ public class BuildAction implements DecoAction{
 		this.projX = x;
 		this.projY = y;
 		this.state = State.SETUP_MOVE;
-		createBuilding();
+		float[] parse = new float[]{projX, projY, fixPos};
+		this.temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
+		temp.setGreen();
+		validBuild = true;
+		finaliseBuild();
 	}
 	
 	/**
@@ -175,15 +179,45 @@ public class BuildAction implements DecoAction{
 	}
 	
 	/**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    private boolean canAfford(int owner, ResourceManager resourceManager) {
+    	if (resourceManager.getRocks(owner) >= building.getCost()
+    			|| GameManager.get().areCostsFree()) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    private void payForEntity(int owner, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree()) {
+    		// no payment
+    	} else {
+    		resourceManager.setRocks(resourceManager.getRocks(owner) - building.getCost(), owner);
+    	}
+    }
+	
+	/**
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
 		if (temp != null && validBuild) {
 			GameManager.get().getWorld().removeEntity(temp);
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			if (resourceManager.getRocks(actor.getOwner()) >= building.getCost()) {
+			if (canAfford(actor.getOwner(), resourceManager)) {
 				createBuilding();
-				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
+				payForEntity(actor.getOwner(), resourceManager);
 				GameManager.get().getWorld().addEntity(base);
 				this.buildingSpeed = base.getBuildSpeed();
 				maxHealth = base.getMaxHealth();

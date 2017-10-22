@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -38,7 +37,6 @@ public class Hotkeys {
 	private boolean messageToggle = false;
 	
 	private Dialog pause;
-	private HelpWindow help;
 	private Dialog techTree;
 	private Dialog quit;
 	
@@ -156,13 +154,12 @@ public class Hotkeys {
 			if (this.noActive()) {
 				LOGGER.info("Activated the help menu");
 				this.hud.setHelpCheck(1);
-				this.help = new HelpWindow(this.stage, this.skin, this.hud);//$NON-NLS-1$
-				this.hud.setHelpWindow(help);
+				this.hud.help.setVisible(true);
 				this.timeManager.pause();
 			} else if (this.hud.getHelpCheck() != 0) {
 				LOGGER.info("Closed the help Menu");
 				this.hud.setHelpCheck(0);
-				this.hud.hideHelpWindow();
+				this.hud.help.setVisible(false);;
 				this.timeManager.unPause();
 			}
 		}

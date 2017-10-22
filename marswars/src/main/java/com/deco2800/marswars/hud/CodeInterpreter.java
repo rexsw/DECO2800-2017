@@ -200,6 +200,20 @@ public class CodeInterpreter {
         wm.toggleFlood(false);
 
     }
+    
+    /**
+     * Gets whether or not costs of buildings and units are free
+     */
+    public void costsFree(){
+        GameManager.get().setCostsFree(true);
+    }
+    
+    /**
+     * Sets costs of buildings and units to be free or not
+     */
+    public void costsPaid(){
+        GameManager.get().setCostsFree(false);
+    }
 
 
 

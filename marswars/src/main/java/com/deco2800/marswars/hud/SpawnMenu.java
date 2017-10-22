@@ -1,5 +1,7 @@
 package com.deco2800.marswars.hud;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,6 +24,9 @@ import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 public class SpawnMenu {
+
+    //hover sound
+    Sound hover = Gdx.audio.newSound(Gdx.files.internal("sounds/hover.mp3"));
 
     private static final int NUMBER_OF_MENU_OPTIONS = 6; // the maximum number of buttons in a row
 

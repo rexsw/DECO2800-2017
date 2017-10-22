@@ -140,7 +140,11 @@ public class TechTreeView extends Dialog{
 		button(String.format("Level 1 Armour \n %d R, %d C, %d B", this.techMan.getTech(26).getCost()[0], this.techMan.getTech(26).getCost()[1], this.techMan.getTech(26).getCost()[2]), 26);
 		button(String.format("Level 2 Armour \n %d R, %d C, %d B", this.techMan.getTech(27).getCost()[0], this.techMan.getTech(27).getCost()[1], this.techMan.getTech(27).getCost()[2]), 27);
 		button(String.format("Level 3  Armour \n %d R, %d C, %d B", this.techMan.getTech(28).getCost()[0], this.techMan.getTech(28).getCost()[1], this.techMan.getTech(28).getCost()[2]), 28);
+		//exit button
 
+
+		text(message);
+		timeManager.pause();
 	}
 
 	/**
