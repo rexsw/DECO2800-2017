@@ -638,7 +638,7 @@ public class TechnologyManager extends Manager{
          *
          */
     public ArrayList<BuildingType> getAvailableBuildings() {
-        ArrayList<BuildingType> buildingsAvailable = new ArrayList<>();
+        ArrayList<BuildingType> buildingsAvailable;
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
                     BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
