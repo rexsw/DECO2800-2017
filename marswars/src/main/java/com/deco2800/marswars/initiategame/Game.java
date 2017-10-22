@@ -66,7 +66,7 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams, Difficulty aiDifficulty) throws java.io.FileNotFoundException{
 		this.aiDifficulty = aiDifficulty;
-		savedGame = new GameSave(aITeams,playerTeams,true);
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,true);
 		loadGame(savedGame);
 	}
 	
@@ -81,7 +81,7 @@ public class Game{
 				.getManager(ColourManager.class);
 		int currentColorIndex = colourManager.getIndex();
 		startGame(mapType, mapSize, aITeams, playerTeams);
-		savedGame = new GameSave(aITeams,playerTeams,false);
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,false);
 		savedGame.data.setIndex(currentColorIndex);
 	}
 
@@ -139,7 +139,7 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 
-
+		aiDifficulty = loadedGame.data.getAiDifficulty();
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);

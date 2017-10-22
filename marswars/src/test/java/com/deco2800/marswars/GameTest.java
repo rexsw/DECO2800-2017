@@ -3,6 +3,7 @@ package com.deco2800.marswars;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.initiategame.GameSave;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class GameTest {
 	 */
 	@Test
 	public void testGameSave() throws FileNotFoundException {
-		GameSave testSave = new GameSave(1, 1,true);
+		GameSave testSave = new GameSave(1, 1, AiManager.Difficulty.EASY,true);
 		testSave.fillData();
 		testSave.writeGame();
 		testSave.readGame();
