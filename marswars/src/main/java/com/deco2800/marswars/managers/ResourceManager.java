@@ -15,12 +15,23 @@ import java.util.Map;
  */
 public class ResourceManager extends Manager implements TickableManager{
 private static final String CLOSED = "closed.wav";
-	private Map<Integer, Integer> rocks = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> crystal = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> biomass = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> population = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> maxPopulation = new HashMap<Integer, Integer>();
-	
+	private Map<Integer, Integer> rocks = new HashMap<>();
+	private Map<Integer, Integer> crystal = new HashMap<>();
+	private Map<Integer, Integer> biomass = new HashMap<>();
+	private Map<Integer, Integer> population = new HashMap<>();
+	private Map<Integer, Integer> maxPopulation = new HashMap<>();
+
+	/**
+	 * Reset ResourceManager
+	 */
+	public void reset() {
+		rocks = new HashMap<>();
+		crystal = new HashMap<>();
+		biomass = new HashMap<>();
+		population = new HashMap<>();
+		maxPopulation = new HashMap<>();
+	}
+
 	/**
 	 * Gets the number of rocks if the team is apart of the resource manager else -1
 	 * 
