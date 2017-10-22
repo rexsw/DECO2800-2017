@@ -4,7 +4,9 @@ package com.deco2800.marswars.entities.units;
 public class Dino extends AmbientAnimal{
 
 	public Dino(float posX, float posY, float posZ, int onwer) {
-		super(posX, posY, posZ);		
+		super(posX, posY, posZ);
+		this.setXRenderLength(3.2f);
+		this.setYRenderLength(3.2f);
 	}
 	
 	@Override 
