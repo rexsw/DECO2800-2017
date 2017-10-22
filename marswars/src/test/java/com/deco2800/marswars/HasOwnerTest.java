@@ -1,16 +1,15 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Optional;
-
-import org.junit.Test;
-
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.util.Box3D;
+import org.junit.Test;
+
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 class TestOnwerEntity extends AbstractEntity implements HasOwner {
 

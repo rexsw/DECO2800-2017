@@ -1,8 +1,5 @@
 package com.deco2800.marswars.mainmenu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,6 +11,9 @@ import com.deco2800.marswars.net.LobbyAction;
 import com.deco2800.marswars.net.LobbyRequestAction;
 import com.deco2800.marswars.net.LobbyUser;
 import com.esotericsoftware.kryonet.Connection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A UI element that displays all the current players connected to a multiplayer lobby and their ready status.

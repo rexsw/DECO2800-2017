@@ -1,8 +1,11 @@
 package com.deco2800.marswars.heros;
 
 
-import static org.junit.Assert.*;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.deco2800.marswars.BaseTest;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.buildings.HeroFactory;
 import com.deco2800.marswars.entities.units.Commander;
 import com.deco2800.marswars.managers.GameManager;
@@ -14,10 +17,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.deco2800.marswars.BaseTest;
-import com.deco2800.marswars.actions.*;
+import static org.junit.Assert.*;
 
 public class HeroFactoryTest extends BaseTest{
 

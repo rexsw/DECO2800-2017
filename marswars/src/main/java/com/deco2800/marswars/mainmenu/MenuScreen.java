@@ -13,9 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.BackgroundManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WinManager;
+import com.deco2800.marswars.managers.WinManager.WINS;
 import com.deco2800.marswars.net.ConnectionManager;
 import com.deco2800.marswars.net.ServerShutdownAction;
 import com.deco2800.marswars.worlds.MapSizeTypes;
@@ -43,6 +48,10 @@ public class MenuScreen extends Table{
 	private MainMenu menu;
 	private Stage stage;
 	private static Window mainmenu;
+	private Difficulty aiDifficulty;
+	private boolean victoryEconomic = false;
+	private boolean victoryMilitary = false;
+	
 
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
@@ -83,18 +92,16 @@ public class MenuScreen extends Table{
 	
 	/* Always at most two teams*/
 	private int allTeams = 0; 
-	
+		
 	/* For keeping track of the menu stage and allowing for switching back*/
 	enum ScreenMode{
 		SERVERMODE,     // select choose server or join server, go back to playerMode 
 		COMBATMODE,     // chose combat, go back to select character 
 		WORLDMODE,      // choosing the world, go back to select playerMode/start server
-		CHARACTERMODE;  // choosing character, goes back to select world
 	}
 	
-	private static boolean enabled = false; //FOR DEBUGGING
+	private static boolean enabled = false; //FOR LAYOUT DEBUGGING
 
-	
 	private String menuButtonString = "menubutton";
 	private String totalTeamsPlayingString = "Total %d teams playing";
 	/**
@@ -108,7 +115,6 @@ public class MenuScreen extends Table{
 
 	//click sound
     Sound click = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"));
-	
 
 	//Managers
     // The Net Manager so you can communicate with the server
@@ -149,13 +155,6 @@ public class MenuScreen extends Table{
 		Button loadGameButton = new TextButton("Load Game", this.skin, button2);
 		Button exitGameButton = new TextButton("Exit Game", this.skin, button2);
 		
-		/*TODO: Remove later since this is only for debugging*/
-		Label menuInfo = new Label("Click 'Quick Select' to fast forward \n"
-				+ "to playing a set map of a mars type, medium sized \n"
-				+ "map with 1 of each AI and player team \n (for quicker debugging)", this.skin);
-		menuInfo.setWrap(true);
-		Button quickGame = new TextButton("Quick Select", this.skin);
-				
 		/* Add in the player mode buttons to the table*/
 		playerMode.add(modeInfo).align(Align.left).padBottom(BUTTONPAD*3).row();
 		playerMode.add(singlePlayerButton).align(Align.left).padBottom(BUTTONPAD*2).row();
@@ -166,8 +165,6 @@ public class MenuScreen extends Table{
 		
 		/* Add in tables to window*/
 		mainmenu.add(playerMode).align(Align.left).row();
-		mainmenu.add(quickGame);
-		mainmenu.add(menuInfo).row();
 		
 		/* Button listeners */
 		singlePlayerButton.addListener(new ChangeListener() {
@@ -193,7 +190,7 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
+				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS, aiDifficulty);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
@@ -206,17 +203,7 @@ public class MenuScreen extends Table{
 				System.exit(1);
 			}
 		});
-		
-		//TODO: remove this around week 12
-		quickGame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-                click.play();
-				mainmenu.setVisible(false);
-				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
-			}
-		});
-		
+				
 		loadGameButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -227,56 +214,6 @@ public class MenuScreen extends Table{
 		});
 	}
 	
-	/**
-	 * Creates a 'Select Character' layout for the main menu and 
-	 * adds it to the menu.
-	 */
-	public void selectCharacter() {
-		mainmenu.clear(); 
-		
-		Table playerTable = new Table(); 
-		String subHeading = "subheading";
-		Label playerInfo = new Label("CHARACTERS", this.skin, "title");
-		Label playerPrompt = new Label("SELECT YOUR CHARACTER", this.skin, subHeading);
-		Label moreInfo = new Label("click '>' since this feature has not "
-				+ "yet been implemented)", skin);
-		
-		//TODO talk to the team looking into this 
-		/*Just some solider colours, has no actual functionality just yet*/
-		Texture blueTex =  this.textureManager.getTexture("astro_blue");
-		Image blueAstro = new Image(blueTex);
-		
-		Texture yellowTex =  this.textureManager.getTexture("astro_yellow");
-		Image yellowAstro = new Image(yellowTex);
-		
-		Texture pinkTex =  this.textureManager.getTexture("astro_pink");
-		Image pinkAstro = new Image(pinkTex);
-		
-		Texture greenTex =  this.textureManager.getTexture("astro_green");
-		Image greenAstro = new Image(greenTex);
-		
-		Texture redTex =  this.textureManager.getTexture("astro_red");
-		Image redAstro = new Image(redTex);
-		
-		Texture purpleTex =  this.textureManager.getTexture("astro_purple");
-		Image purpleAstro = new Image(purpleTex);
-		
-		playerTable.add(greenAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(yellowAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(redAstro).pad(BUTTONPAD).size(ASTROWIDTH).row();
-		playerTable.add(pinkAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(purpleAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		playerTable.add(blueAstro).pad(BUTTONPAD).size(ASTROWIDTH);
-		
-		mainmenu.add(playerInfo).align(Align.left).row();
-		mainmenu.add(playerPrompt).align(Align.left).row();
-		mainmenu.add(moreInfo).row();
-		mainmenu.add(playerTable);
-		addNavigationButton(ScreenMode.CHARACTERMODE);
-		if (this.joinedServer){
-			this.addPlayButton();
-		}
-	}
 	
 	public void multiplayerLobby(String hostIP, boolean host){
 	    mainmenu.clear();
@@ -361,11 +298,12 @@ public class MenuScreen extends Table{
 		});	
 		
 		/*BUTTONS FOR SELECTING MAP SIZE*/
-		Button tiny = new TextButton("XS", skin);
-		Button smol = new TextButton("S", skin);
-		Button medium = new TextButton("M", skin);
-		Button large = new TextButton("L", skin);
-		Button veryLarge = new TextButton("XL", skin);
+		String numButton = "num_button";
+		Button tiny = new TextButton("XS", skin, numButton);
+		Button smol = new TextButton("S", skin, numButton);
+		Button medium = new TextButton("M", skin, numButton);
+		Button large = new TextButton("L", skin, numButton);
+		Button veryLarge = new TextButton("XL", skin, numButton);
 		
 		Table worldSizeButtons = new Table();
 		worldSizeButtons.add(tiny).size(NAVBUTTONSIZE).pad(BUTTONPAD);
@@ -451,7 +389,7 @@ public class MenuScreen extends Table{
 		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subheading");
 		
 		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin, "info");
-		Label combatSelected = new Label("Normal AI difficulty selected", skin, "info");
+		Label combatSelected = new Label("Choose AI difficulty ", skin, "info");
 
 		Table aiButtons = new Table();
 		Button ai2 = new TextButton("2", skin, menuButtonString);
@@ -513,7 +451,9 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				combatSelected.setText("Easy level selected");
+				combatSelected.setText("Easy AI difficulty selected");
+				aiDifficulty = Difficulty.EASY;
+				
 			}
 		});
 		
@@ -521,8 +461,8 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
-				combatSelected.setText("Normal level selected");
+				combatSelected.setText("Normal AI difficulty selected");
+				aiDifficulty = Difficulty.NORMAL;
 			}
 		});
 		
@@ -530,8 +470,8 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
-				combatSelected.setText("Hard level selected");
+				combatSelected.setText("Hard AI difficulty selected");
+				aiDifficulty = Difficulty.HARD;
 			}
 		});
 		
@@ -544,18 +484,26 @@ public class MenuScreen extends Table{
 		
 		CheckBox economic = new CheckBox(" Economy", skin, "spac_check");
 		CheckBox millitary = new CheckBox(" Millitary", skin, "spac_check");
-		CheckBox population = new CheckBox(" Population", skin, "spac_check");
 		
 		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
 		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
-		winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
+		
+		economic.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				victoryEconomic = !victoryEconomic;
+			}			
+		});
+		
+		millitary.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				victoryMilitary = !victoryMilitary;
+			}			
+		});
 								
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(teamInfo).align(Align.left).row();
-		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
-		
 		mainmenu.add(aiButtons).align(Align.center).row();
-		mainmenu.add(selected).align(Align.left).row();
+		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
 		mainmenu.add(aiInfo).align(Align.left).row();
 		mainmenu.add(aiBehaviorButtons).align(Align.left).row();
 		mainmenu.add(combatSelected).align(Align.left).padBottom(LABELPAD).row();
@@ -607,21 +555,16 @@ public class MenuScreen extends Table{
 						mainmenu.clear(); 
 						playerModeSelect();
 						break; 
-					case CHARACTERMODE:
-						selectWorldMode();
-						break;
 					case COMBATMODE:
-						selectCharacter();
+						selectWorldMode();
 						break;
 					default:
 						break;
 					}
 				}
-				
 				/* If multiplayer mode */
 				else if(MenuScreen.this.playerType == 1) {
                     click.play();
-
 					switch(status) {
 					//go back to previous page 
 					case SERVERMODE:
@@ -631,22 +574,17 @@ public class MenuScreen extends Table{
 						break; 
 					case COMBATMODE:
 						mainmenu.clear(); 
-						selectCharacter();
+						if (MenuScreen.this.joinedServer){
+							selectServerMode();
+						} else {
+							selectWorldMode();
+						}
 						break;
 					case WORLDMODE:
 						mainmenu.clear(); 
 						selectServerMode(); 
 						break;
-					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer){
-							selectServerMode();
-						}
-						else{
-							selectWorldMode();
-						}
-						break; 
 					}
-					
 				}
 			}
 		});
@@ -656,42 +594,30 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor){
                 click.play();
 				/*If single player mode*/
-				/* Single Player: select world > select character > select combat*/
+				/* Single Player: select world >  select combat*/
 				if (MenuScreen.playerType == 0) {
 					switch(status) {
 					//go back to next state
 					case WORLDMODE:
 						if (checkWorld(mapType, mapSize)) {
 							mainmenu.clear();
-							selectCharacter();
+							selectCombat();
 						}
 						break; 
-					case CHARACTERMODE:
-						selectCombat();
-						break;
 					default:
 						break;
 					}
 				} else if(MenuScreen.playerType == 1) {
 					/* If multiplayer mode
-					 * 		join server > select character 
-					 * 		start server > select world > select character > select combat 
+					 * 		join server >  
+					 * 		start server > select world >  select combat 
 					 */				
 					switch(status) {
 					case WORLDMODE:
 						if (checkWorld(mapType, mapSize)) {
-							mainmenu.clear(); 
-							selectCharacter(); 
-						}
-						break;
-					case CHARACTERMODE:
-						if (MenuScreen.this.joinedServer){
-							;
-						}
-						else{
+							mainmenu.clear();
 							selectCombat();
 						}
-						break;
 					default:
 						break; 
 					}
@@ -719,8 +645,7 @@ public class MenuScreen extends Table{
 		
 		lowerPanel.add(navigationButtons);
 		lowerPanel.add(actionButtons).expandX().align(Align.right);
-		mainmenu.add(lowerPanel).expandY().align(Align.left | Align.bottom);
-		
+		mainmenu.add(lowerPanel).expandY().align(Align.left | Align.bottom);		
 		return lowerPanel; 
 	}
 	
@@ -743,20 +668,49 @@ public class MenuScreen extends Table{
 		}
 		return true;
 	}
+	
+	private boolean checkDifficulty() {
+		if (aiDifficulty == null) {
+			errorTeamsSelection.setText("Choose a difficulty setting!");
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean checkVictoryConditions() {
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		if (!(victoryEconomic || victoryMilitary)) {
+			errorTeamsSelection.setText("Choose a victory setting!");
+			return false;
+		} 
+		if (victoryEconomic) {
+			win.setwinconditions(WINS.ECON);
+		} 
+		if (victoryMilitary) {
+			win.setwinconditions(WINS.MIL);
+		}
+		if (victoryMilitary &&  victoryEconomic){
+			win.setwinconditions(WINS.BOTH);
+		}
+		return true;
+	}
 		
 	/**
 	 * Adds in a play button
 	 */
-	private void addPlayButton(){
-		Button playButton = new TextButton("Play!", this.skin);
-		playButton.pad(BUTTONPAD);
+	private void addPlayButton(){	
+		//PlayButton
+		TextureRegionDrawable marsRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("play_button")));
+		ImageButton playButton = new ImageButton(marsRegionDraw);
+		playButton.pad(BUTTONPAD).setSize(40, 40);
 		playButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
                 click.play();
-				if (checkTeams()) {
+				if (checkTeams() && checkDifficulty() && checkVictoryConditions()) {
 					mainmenu.setVisible(false);
-					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS);
+					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS, aiDifficulty);
 				}
 		}});
 		

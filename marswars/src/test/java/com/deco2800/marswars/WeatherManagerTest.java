@@ -2,6 +2,7 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -9,9 +10,7 @@ import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -38,9 +37,7 @@ public class WeatherManagerTest {
         timeManager.resetInGameTime();
     }
 
-    // CREATING A SOLDIER CURRENTLY ADDS IT TO COLLISION MAP, BUT NOT TO THE ENTITY LIST
-    // ADDING AN ENTITY TO THE LIST SEEMS TO ALSO ADD IT TO THE MAP
-    @Test @Ignore
+    @Test
     public void testSetWeatherEvent() {
     /* Set weatherManager in each class in case unforseen changes occur to
         class variables in WeatherManager (prevent build errors) */
@@ -48,7 +45,10 @@ public class WeatherManagerTest {
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
         GameManager.get().setWorld(world);
+        timeManager.resetInGameTime();
+        timeManager.addTime(57600);
         // check flood is in effect
+        weatherManager.toggleFlood(true);
         assertTrue(weatherManager.setWeatherEvent());
         // initalise building for testing
         Turret affectedBuilding = new Turret(world, 2,
@@ -59,8 +59,6 @@ public class WeatherManagerTest {
 
         // set up entities to be affected by flood
         for (int i = 0; i < 5; i++) {
-            /* Astronauts cannot be added to the entity list without minimap
-            throwing errors, so create Spacmen to represent their positions */
         	Astronaut placeHolderUnit = new Astronaut(i, i, 0, -1);
             GameManager.get().getWorld().addEntity(placeHolderUnit);
             /* Astronauts are added to the collision map on construction  and as
@@ -69,30 +67,19 @@ public class WeatherManagerTest {
             affectedUnit.setMaxHealth(1000);
         }
 
+        Soldier soldier1 = new Soldier(4, 3, 0, -1);
+        Soldier soldier2 = new Soldier(2, 3, 0, -1);
+        GameManager.get().getWorld().addEntity(soldier1);
+        GameManager.get().getWorld().addEntity(soldier2);
+        soldier2.setLoaded();
+
         /* Generate multiple water entities in order to test efficacy of private
         methods and their various conditions: Covers checking for existing water
         and bad water placement. */
 
-        while (GameManager.get().getWorld().getEntities().size() < 22) {
-            // Filling world currently causes loop to continue endlessly for
-            // some reason 16 allows for maximum coverage
+        while (GameManager.get().getWorld().getEntities().size() < 14) {
             assertTrue(weatherManager.setWeatherEvent());
         }
-
-        // DO NOT DELETE
-        /* For testing the test (leaving in due to probable need for future
-        changes) */
-        /* for (BaseEntity e: GameManager.get().getWorld().getEntities()) {
-            System.out.println(e.getPosX() + " " + e.getPosY() + " " +
-                    e.getXLength() + " " + e.getYLength());
-            if (e instanceof BuildingEntity) {
-                System.out.println("BUILDING");
-            } else if (e instanceof Soldier) {
-                System.out.println("ASTRO");
-            } else if (e instanceof Water) {
-                System.out.println("WATER");
-            }
-        } */
 
         assertTrue(affectedBuilding.isFlooded());
 
@@ -129,6 +116,8 @@ public class WeatherManagerTest {
     @Test
     public void testGenerateFirstDrop() {
         world.removeEntity(testDrop);
+        timeManager.resetInGameTime();
+        timeManager.addTime(57600);
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
         assertTrue(weatherManager.setWeatherEvent());
@@ -136,6 +125,8 @@ public class WeatherManagerTest {
 
     @Test
     public void testIsRaining() {
+        timeManager.resetInGameTime();
+        timeManager.addTime(3700);
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
         assertFalse(weatherManager.isRaining());
@@ -148,7 +139,6 @@ public class WeatherManagerTest {
         BaseWorld testWorld = GameManager.get().getWorld();
         int width = testWorld.getWidth();
         int length = testWorld.getLength();
-        testDrop.onTick(0);
         Point validPoint = new Point(width - 1, length - 1);
         Point boundary1 = new Point(0, length);
         Point boundary2 = new Point(width, 0);
@@ -170,8 +160,10 @@ public class WeatherManagerTest {
     public void testOnTick() {
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);
+        timeManager.resetInGameTime();
+        timeManager.addTime(3700);
         weatherManager.onTick(0);
-        assertTrue(true);
+        assertFalse(weatherManager.isRaining());
     }
 
 

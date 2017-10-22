@@ -12,6 +12,8 @@ public class Tank extends Soldier {
 	public Tank(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Tank";
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		this.setAttributes();
 		this.setMaxSpeed(0.025f);
 		this.setMoveSpeed(0.025f);

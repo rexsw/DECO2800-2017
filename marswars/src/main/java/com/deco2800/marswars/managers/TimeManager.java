@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,16 +21,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isGamePaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
-	private static int days = 0;
 	private boolean daysIncremented = false;
-
-	/**
-	 * Calculate the number of passed in-game days
-	 * @return the in-game hour of the day
-	 */
-	public long getGameDays() {
-		return days;
-	}
 
 	/**
 	 * Calculate the current in-game hour
@@ -273,8 +265,8 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @param seconds - the number of seconds to be added
 	 */
 	public static void setGameTime(int hours, int minutes, int seconds) {
-		int hourLength = 3600;
-		int minuteLength = 60;
+		long hourLength = 3600;
+		long minuteLength = 60;
 		addTime(hours * hourLength + minutes * minuteLength + seconds);
 	}
 
@@ -283,7 +275,6 @@ public class TimeManager extends Manager implements TickableManager {
 	 */
 	public static void resetInGameTime() {
 		time = 0;
-		days = 0;
 	}
 
 	/**
@@ -315,18 +306,6 @@ public class TimeManager extends Manager implements TickableManager {
 			int dayLength = 24;
 			int window = 1;
 			addTime(2);
-			if ((this.getHours() % dayLength > dayLength ||
-					this.getHours() % dayLength < window) &&
-					! this.daysIncremented) {
-				incrementDays(1);
-				setDay();
-				this.daysIncremented = true;
-			}
-			if (this.getHours() % dayLength > window &&
-					this.getHours() % dayLength < dayLength &&
-					this.daysIncremented) {
-				this.daysIncremented = false;
-			}
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
@@ -346,12 +325,4 @@ public class TimeManager extends Manager implements TickableManager {
 		return getHours() + ":" + getMinutes();
 	}
 
-	/**
-	 * Increment the number of days.
-	 *
-	 * @param days how many days to increment
-	 */
-	private static void incrementDays(int days) {
-		TimeManager.days += days;
-	}
 }

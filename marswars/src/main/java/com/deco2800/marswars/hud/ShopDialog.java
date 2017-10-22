@@ -25,10 +25,8 @@ import java.util.List;
  * would have all the player's Commanders' icons. A Commander needs to be
  * selected (by clicking on their icon) before an item can be bought (by click
  * on the item icon). To escape the window, simple click outside of the window.
- * 
- * NOTE: CURRENTLY THE SHOP DOES NOT CONSIDER TECH TREE UNLOCK CONSIDERATIONS
- * NOR RESOURCE REQUIREMENTS. NOTE2: DESIGN OF THE SHOP IS TO BE RE-DONE BASED
- * ON USER FEEDBACK.b
+ * Note that checks for resources are conducted by the tech view before any
+ * functions from this class are called.
  * 
  * @author Mason
  *
@@ -47,10 +45,14 @@ public class ShopDialog extends Dialog {
 
 	private final Table scrollTable;
 	private Skin skin;
-	
+
 	private String boughtString = "Bought ";
 
 	private TechnologyManager technologyManager;
+
+	private boolean specialUnlocked = false;
+	private int weaponLevel = 0; //indicator of level of weapons the shop currently has loaded
+	private int armourLevel = 0; //indicator of level of armour the shop currently has loaded
 
 	/**
 	 * Constructor of the shop dialog window class.
@@ -72,6 +74,19 @@ public class ShopDialog extends Dialog {
 		this.getContentTable().debugCell();
 		this.getContentTable().left();
 		this.skin = skin;
+		this.technologyManager = (TechnologyManager) GameManager.get()
+				.getManager(TechnologyManager.class);
+
+		status = new Label("Welcome to the shop!", skin);
+
+		scrollTable = new Table();
+		scrollTable.top();
+		scrollTable.debugCell();
+		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
+		scrollTable.add(new Label("Description", skin)).width(iconSize)
+				.expandX().top().left();
+		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
+		scrollTable.row();
 		this.technologyManager = (TechnologyManager) GameManager.get()
 				.getManager(TechnologyManager.class);
 		if (technologyManager.armourIsUnlocked(1)) {
@@ -96,17 +111,6 @@ public class ShopDialog extends Dialog {
 			unlockSpecials();
 		}
 
-		status = new Label("Welcome to the shop!", skin);
-
-		scrollTable = new Table();
-		scrollTable.top();
-		scrollTable.debugCell();
-		scrollTable.add(new Label("Item", skin)).width(iconSize).top().center();
-		scrollTable.add(new Label("Description", skin)).width(iconSize)
-				.expandX().top().left();
-		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
-		scrollTable.row();
-
 		// making the right side table for the Commander icons.
 		final ScrollPane scroller = new ScrollPane(scrollTable);
 
@@ -117,31 +121,48 @@ public class ShopDialog extends Dialog {
 	}
 
 	/**
-	 * Public method to unlock the weapons. Replaces lower levelled items, if
-	 * they exist, with current level items.
-	 *
+	 * Gets boolean indicating if specials are already unlocked
+	 * 
+	 * @return true if already unlocked, false otherwise.
 	 */
-	public void unlockWeapons(int level) {
-		List<ItemType> items = new ArrayList<>();
-		// Adding all the defined weapons in WeaponType enumerate class
-		for (WeaponType type : WeaponType.values()) {
-			items.add((ItemType) new Weapon(type, level));
-		}
-		updateShop(items);
+	public boolean getSpecialUnlocked() {
+		return this.specialUnlocked;
 	}
 
 	/**
-	 * Public method to unlock the armours. Replaces lower levelled items, if
-	 * they exist, with current level items.
+	 * Public method to unlock the weapons. Does not replace lower level items,
+	 * but adds to them.
+	 *
+	 */
+	public void unlockWeapons(int level) {
+		if (level <= weaponLevel) {
+			return;
+		}
+		List<ItemType> items = new ArrayList<>();
+		// Adding all the defined weapons in WeaponType enumerate class
+		for (WeaponType wep : WeaponType.values()) {
+			items.add(wep);
+		}
+		updateShop(items, level);
+		weaponLevel = level;
+	}
+
+	/**
+	 * Public method to unlock the armours. Does not replace lower level items,
+	 * but adds to them.
 	 *
 	 */
 	public void unlockArmours(int level) {
+		if (level <= armourLevel) {
+			return;
+		}
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (ArmourType type : ArmourType.values()) {
-			items.add((ItemType) new Armour(type, level));
+		for (ArmourType armour : ArmourType.values()) {
+			items.add(armour);
 		}
-		updateShop(items);
+		updateShop(items, level);
+		armourLevel = level;
 	}
 
 	/**
@@ -149,12 +170,16 @@ public class ShopDialog extends Dialog {
 	 *
 	 */
 	public void unlockSpecials() {
+		if (specialUnlocked) {
+			return;
+		}
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined special items in SpecialType enumerate class
 		for (SpecialType spec : SpecialType.values()) {
 			items.add(spec);
 		}
-		updateShop(items);
+		this.specialUnlocked = true;
+		updateShop(items, 0);
 	}
 
 	/**
@@ -164,10 +189,13 @@ public class ShopDialog extends Dialog {
 	 * @param items
 	 *            The items to be added
 	 */
-	private void updateShop(List<ItemType> items) {
+	private void updateShop(List<ItemType> items, int level) {
 		for (ItemType item : items) {
-			Texture texture = textureManager
-					.getTexture(item.getTextureString());
+			String text = item.getTextureString();
+			text = item instanceof SpecialType ? text
+					: text.substring(0, text.length() - 1)
+							+ Integer.toString(level);
+			Texture texture = textureManager.getTexture(text);
 			ImageButton button = generateItemButton(texture);
 
 			button.addListener(new ClickListener() {
@@ -177,29 +205,30 @@ public class ShopDialog extends Dialog {
 						status.setText("Unsuccessful shopping, No hero exist.");
 						return;
 					}
-					boolean enoughResources = checkCost(selectedHero.getOwner(),
-							item);
-					
 					if (selectedHero.getHealth() <= 0) {
 						status.setText(
 								"Your Commander is dead. Can't buy anything.");
 						return;
 					}
+					boolean enoughResources = checkCost(selectedHero.getOwner(),
+							item);
 					if (enoughResources) {
 						if (item instanceof WeaponType) {
-							Weapon weapon = new Weapon((WeaponType) item, 1);
+							Weapon weapon = new Weapon((WeaponType) item,
+									level);
 							selectedHero.addItemToInventory(weapon);
 							status.setText(boughtString + weapon.getName()
 									+ "(Weapon) for "
 									+ selectedHero.toString());
 						} else if (item instanceof ArmourType) {
-							Armour armour = new Armour((ArmourType) item, 1);
+							Armour armour = new Armour((ArmourType) item,
+									level);
 							selectedHero.addItemToInventory(armour);
 							status.setText(boughtString + armour.getName()
 									+ "(Armour) for "
 									+ selectedHero.toString());
 						} else {
-							boolean transactSuccess = false;
+							boolean transactSuccess;
 							Special special = new Special((SpecialType) item);
 							transactSuccess = selectedHero
 									.addItemToInventory(special);
@@ -212,7 +241,6 @@ public class ShopDialog extends Dialog {
 										"Unsuccessful Shopping, can only hold 4 specials");
 								return;
 							}
-
 						}
 						selectedHero.setStatsChange(true);
 						transact(selectedHero.getOwner(), item);
@@ -222,26 +250,61 @@ public class ShopDialog extends Dialog {
 					}
 				}
 			});
-
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
-			scrollTable.add(new Label(item.getDescription(), skin))
-					.width(iconSize).top().left();
-			scrollTable.add(new Label(item.getCostString(), skin))
-					.width(iconSize).top().left();
+			String stats = getItemStats(item, level);
+			String cost = getItemCost(item, level);
+			scrollTable.add(new Label(stats, skin)).width(iconSize).top()
+					.left();
+			scrollTable.add(new Label(cost, skin)).width(iconSize).top().left();
 			scrollTable.row();
 		}
 	}
 
 	/**
-	 * Private method to check if the owner of the Commander has enough
-	 * resources to buy the item.
-	 * 
-	 * @param owner
-	 *            The team id of the owner of the Commander to buy the item for.
+	 * Private helper method to get the cost of an item of a particular level.
+	 *
 	 * @param item
-	 *            The item type enumerate value to get the cost from.
-	 * @return true if transaction was successful. false if not enough
-	 *         resources.
+	 * @param level
+	 * @return cost of item in Rocks, Crystal and Biomass, as a string
+	 */
+	private String getItemCost(ItemType item, int level) {
+		// gets item cost
+		int[] baseCosts = item.getCost();
+		float[] costs = new float[3];
+		if (item instanceof WeaponType) {
+			float multiplier = ((WeaponType) item)
+					.getItemLevelMultipliers()[level - 1];
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * multiplier;
+			}
+		} else if (item instanceof ArmourType) {
+			float multiplier = ((ArmourType) item)
+					.getItemLevelMultipliers()[level - 1];
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * multiplier;
+			}
+		} else if (item instanceof SpecialType) {
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * 1.0f;
+			}
+		}
+		// creates cost string
+		String costString = "";
+		if (baseCosts[0] > 0) {
+			costString += "Rock: " + (int) costs[0] + "\n";
+		}
+		if (baseCosts[1] > 0) {
+			costString += "Crystal: " + (int) costs[1] + "\n";
+		}
+		if (baseCosts[2] > 0) {
+			costString += "Biomass: " + (int) costs[2] + "\n";
+		}
+		return costString;
+	}
+
+	/**
+	 * Private helper function to check cost of an item
+	 *
 	 */
 	private boolean checkCost(int owner, ItemType item) {
 		int[] cost = item.getCost();
@@ -249,14 +312,45 @@ public class ShopDialog extends Dialog {
 				.getManager(ResourceManager.class);
 		if (rm.getRocks(owner) < cost[0]) {
 			return false;
-		}
-		if (rm.getCrystal(owner) < cost[1]) {
+		} else if (rm.getCrystal(owner) < cost[1]) {
 			return false;
-		}
-		if (rm.getBiomass(owner) < cost[2]) {
+		} else if (rm.getBiomass(owner) < cost[2]) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Private helper method to get the stats of an item of a particular level
+	 *
+	 * @param item
+	 * @param level
+	 * @return stats of item as a string
+	 */
+	private String getItemStats(ItemType item, int level) {
+		String stats = "";
+		if (item instanceof WeaponType) {
+			float multipler = ((WeaponType) item)
+					.getItemLevelMultipliers()[level - 1];
+			stats = "Name: " + item.getName() + "\nType: Weapon\nDamage: "
+					+ (int) (((WeaponType) item).getWeaponDamage() * multipler)
+					+ "\nSpeed: "
+					+ (int) (((WeaponType) item).getWeaponSpeed() * multipler)
+					+ "\nRange: "
+					+ (int) (((WeaponType) item).getWeaponRange() * multipler);
+		} else if (item instanceof ArmourType) {
+			float multiplier = ((ArmourType) item)
+					.getItemLevelMultipliers()[level - 1];
+			stats = "Name: " + this.getName() + "\nType: Armour\nArmour: "
+					+ (int) (((ArmourType) item).getArmourValue() * multiplier)
+					+ "\nMaxHealth: "
+					+ (int) (((ArmourType) item).getArmourHealth() * multiplier)
+					+ "\nMove Speed: "
+					+ (int) (((ArmourType) item).getMoveSpeed() * multiplier);
+		} else if (item instanceof SpecialType) {
+			stats = item.getDescription();
+		}
+		return stats;
 	}
 
 	/**
@@ -315,5 +409,22 @@ public class ShopDialog extends Dialog {
 	public float getPrefHeight() {
 		return windowSize * 0.6f;
 	}
+	
+	/**
+	 * Get the level of weapons that are currently loaded in the shop
+	 * @return int that is the level of weapons that are currently loaded
+	 */
+	public int getWeapLvl() {
+		return weaponLevel;
+	}
+	
+	/**
+	 * Get the level of armours that are currently loaded in the shop
+	 * @return int that is the level of armours that are currently loaded
+	 */
+	public int getArmLvl() {
+		return armourLevel;
+	}
+
 
 }

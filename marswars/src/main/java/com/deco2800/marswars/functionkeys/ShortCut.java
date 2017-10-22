@@ -1,19 +1,11 @@
 package com.deco2800.marswars.functionkeys;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.List;
-import java.util.Set;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.units.Tank;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.renderers.Renderable;
@@ -29,6 +21,7 @@ import java.util.*;
  * command of the game and it might have some special functions.
  * 
  * @author Matthew Lee
+ * @co-author haoxuan
  */
 public class ShortCut {
 
@@ -70,6 +63,11 @@ public class ShortCut {
 	private boolean aiSpac = false;
 	private boolean tank = false;
 	private boolean soldier = false;
+	private boolean sniper = false;
+	private boolean carrier = false;
+	private boolean hacker = false;
+	private boolean medic = false;
+	private boolean tankdes = false;
 	private boolean select = false;
 	private boolean moveToEntity = false;
 	private boolean delete = false;
@@ -89,7 +87,12 @@ public class ShortCut {
 		addExtraSpacMan();
 		addExtraAiSpacMan();
 		addExtraTank();
+		addExtraTankDestroyer();
+		addExtraCarrier();
 		addExtraSoldier();
+		addExtraSniper();
+		addExtraHacker();
+		addExtraMedic();
 		storeTeam();
 		teamOnClick();
 		//moveCameraToBase(camera);
@@ -462,7 +465,7 @@ public class ShortCut {
 	 * 
 	 */
 	public void addExtraTank() {
-		if (inputKeys.contains(Input.Keys.T)) {
+		if (inputKeys.contains(Input.Keys.K)) {
 			if(!tank){
 				tank = true;
 				Tank t = new Tank(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,-1);
@@ -486,6 +489,86 @@ public class ShortCut {
 			}
 		} else {
 			soldier = false;
+		}
+	}
+	
+	/**
+	 * This method will create a Sniper that owned by user into the game world.
+	 * 
+	 */
+	public void addExtraSniper() {
+		if (inputKeys.contains(Input.Keys.I)) {
+			if(!sniper){
+				sniper = true;
+				Sniper sniper1 = new Sniper(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
+				GameManager.get().getWorld().addEntity(sniper1);
+			}
+		} else {
+			sniper = false;
+		}
+	}
+	
+	/**
+	 * This method will create a Hacker that owned by user into the game world.
+	 * 
+	 */
+	public void addExtraHacker() {
+		if (inputKeys.contains(Input.Keys.L)) {
+			if(!hacker){
+				hacker = true;
+				Hacker hacker1 = new Hacker(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
+				GameManager.get().getWorld().addEntity(hacker1);
+			}
+		} else {
+			hacker = false;
+		}
+	}
+	
+	/**
+	 * This method will create a Medic that owned by user into the game world.
+	 * 
+	 */
+	public void addExtraMedic() {
+		if (inputKeys.contains(Input.Keys.P)) {
+			if(!medic){
+				medic = true;
+				Medic medic1 = new Medic(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
+				GameManager.get().getWorld().addEntity(medic1);
+			}
+		} else {
+			medic = false;
+		}
+	}
+	
+	/**
+	 * This method will create a Carrier that owned by user into the game world.
+	 * 
+	 */
+	public void addExtraCarrier() {
+		if (inputKeys.contains(Input.Keys.R)) {
+			if(!carrier){
+				carrier = true;
+				Carrier c1 = new Carrier(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/3,0,-1);
+				GameManager.get().getWorld().addEntity(c1);
+			}
+		} else {
+			carrier = false;
+		}
+	}
+	
+	/**
+	 * This method will create a TankDestroyer that owned by user into the game world.
+	 * 
+	 */
+	public void addExtraTankDestroyer() {
+		if (inputKeys.contains(Input.Keys.O)) {
+			if(!tankdes){
+				tankdes = true;
+				TankDestroyer t1 = new TankDestroyer(GameManager.get().getWorld().getLength()/3, GameManager.get().getWorld().getWidth()/2,0,-1);
+				GameManager.get().getWorld().addEntity(t1);
+			}
+		} else {
+			tankdes = false;
 		}
 	}
 }

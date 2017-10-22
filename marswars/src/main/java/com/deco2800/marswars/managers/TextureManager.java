@@ -3,6 +3,7 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Soldier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,6 +111,11 @@ public class TextureManager extends Manager {
         textureMap.put("tree3_yellow", new Texture("resources/EnvironmentalAssets/treestyle4-yellow.png"));
         textureMap.put("tree3_red", new Texture("resources/EnvironmentalAssets/treestyle4-red.png"));
 
+        textureMap.put("cliff_left_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left-MARS.png"));
+        textureMap.put("cliff_right_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right-MARS.png"));
+        textureMap.put("cliff_right_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right.png"));
+        textureMap.put("cliff_left_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left.png"));
+
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
@@ -199,7 +205,8 @@ public class TextureManager extends Manager {
         this.saveTexture("astro_purple", "resources/UnitAssets/Astronaut/Purple/default.png");
         this.saveTexture("astro_red", "resources/UnitAssets/Astronaut/Red/default.png");
         this.saveTexture("astro_yellow", "resources/UnitAssets/Astronaut/Yellow/default.png");
-        
+        this.saveTexture("play_button", "resources/MainMenu/playButton.png");        
+        this.saveTexture("back_button", "resources/MainMenu/backButton.png");
         
         //----------Unit Assets:
         //Soldier:
@@ -235,14 +242,24 @@ public class TextureManager extends Manager {
 
 
         // Item icon in shop dialog
-        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
-        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
-        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
-        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        	//Weapons and Armour
         this.saveTexture("helmet_1", "resources/shopAssets/items/helmet_1.png");
         this.saveTexture("gun_1", "resources/shopAssets/items/gun_1.png");
         this.saveTexture("rifle_1", "resources/shopAssets/items/rifle_1.png");
         this.saveTexture("goggle_1", "resources/shopAssets/items/goggle_1.png");
+        this.saveTexture("helmet_2", "resources/shopAssets/items/helmet_2.png");
+        this.saveTexture("gun_2", "resources/shopAssets/items/gun_2.png");
+        this.saveTexture("rifle_2", "resources/shopAssets/items/rifle_2.png");
+        this.saveTexture("goggle_2", "resources/shopAssets/items/goggle_2.png");
+        this.saveTexture("helmet_3", "resources/shopAssets/items/helmet_3.png");
+        this.saveTexture("gun_3", "resources/shopAssets/items/gun_3.png");
+        this.saveTexture("rifle_3", "resources/shopAssets/items/rifle_3.png");
+        this.saveTexture("goggle_3", "resources/shopAssets/items/goggle_3.png");
+        	//specials
+        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
+        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
+        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
         this.saveTexture("teleboots", "resources/shopAssets/items/teleboots.png");
         this.saveTexture("penetration", "resources/shopAssets/items/penetration.png");
         this.saveTexture("health_shot", "resources/shopAssets/items/health_shot.png");
@@ -290,6 +307,14 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (soldier instanceof AmbientAnimal) {
+            	String mapcolour = GameManager.get().getMapType().toSColour();
+            	 path = String.format("resources/UnitAssets/%s/%s/%s.png",
+                         unitType,mapcolour,textureType);
+            	String retVal = textureType  + unitType + mapcolour;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             if (textureType.equals("missile")) {
             	 path = String.format("resources/UnitAssets/%s/%s.png",
                          unitType,textureType);

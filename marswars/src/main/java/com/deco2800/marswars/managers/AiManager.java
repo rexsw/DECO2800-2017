@@ -1,23 +1,19 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.GatherAction;
-import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.Barracks;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.HasOwner;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.terrainelements.ResourceType;
-import com.deco2800.marswars.entities.units.AmbientAnimal;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.entities.units.AmbientAnimal.AmbientState;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;
-import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.managers.GameBlackBoard.Field;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +56,17 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	}
 	
 	public enum Difficulty {
-		EASY, NORMAL, HARD
+		EASY(0),
+		NORMAL(1),
+		HARD(2);
+		
+		private final int difficultValue;
+		Difficulty(int difficultValue) {
+	        this.difficultValue = difficultValue;
+	    }
+	    public int getDifficultValue() {
+	    	return difficultValue;
+	    }
 	}
 
 	@Override
@@ -72,33 +78,39 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			decideChangeState();
 		}
 		for( BaseEntity e : GameManager.get().getWorld().getEntities()) {
-			if(e instanceof HasOwner && ((HasOwner) e).isAi()) {
+			if(e instanceof AttackableEntity && ((HasOwner) e).isAi()) {
 				if(e instanceof AmbientAnimal){
 					animalController((AmbientAnimal)e);
 				} else {
 					// run decider functions
-					decider(e);
+					decider((AttackableEntity) e);
 				}
 			}
 		}
 	}
 	
-	private void decider(HasOwner unit) {
-		//int unitOwner = unit.getOwner();
-		//State unitState = getState(unitOwner);
-		//AiType unitAiType = getAiType(unitOwner);
+	private void decider(AttackableEntity unit) {
+		if (!unit.isAi()) {
+			return;
+		}
+		int team = unit.getOwner();
+		State state = getState(team);
 		if(unit instanceof Astronaut) {
 			// send astronauts to work
 			Astronaut x = (Astronaut)unit;
 			useSpacman(x);
 		} else if(unit instanceof Base) {
 			Base x = (Base)unit;
-			if(black.count(x.getOwner(), Field.COMBAT_UNITS) < 5) {
-				generateSpacman(x);
+			if(state == State.ECONOMIC) {
+				generateEntity(x, EntityID.ASTRONAUT);
+			} else {
+				generateEntity(x, EntityID.SOLDIER);
 			}
 		} else if(unit instanceof Barracks) {
 			Barracks x = (Barracks)unit;
-			generateSolder(x);
+			if(state != State.ECONOMIC) {
+				//generateEntity(x, EntityID.HACKER);
+			}
 		}
 		else if(unit instanceof Soldier) {
 			Soldier x = (Soldier)unit;
@@ -176,27 +188,17 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	}
 	
 	/**
-	 * generate new spacman when a base has more than 30 rocks
+	 * generate new entity if a base can afford it
 	 */
-	private void generateSpacman(Base x) {
+	private void generateEntity(BuildingEntity x, EntityID entityID) {
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if(!x.showProgress() && rm.getRocks(x.getOwner()) > 30) {
-			//sets the ai base to make more spacman if possible
-			LOGGER.info("ai - set base to make spacman");
-			rm.setRocks(rm.getRocks(x.getOwner()) - 30, x.getOwner());
-			Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
-			x.setAction(new GenerateAction(r));
-		}
-	}
-	
-	private void generateSolder(Barracks x) {
-		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if(!x.showProgress() && rm.getBiomass(x.getOwner()) > 30) {
-			//sets the ai base to make more spacman if possible
-			LOGGER.info("ai - set base to make spacman");
-			rm.setBiomass(rm.getBiomass(x.getOwner()) - 30, x.getOwner());
-			Soldier r = new Soldier(x.getPosX(), x.getPosY(), 0, x.getOwner());
-			x.setAction(new GenerateAction(r));
+		if(!x.showProgress() && ActionSetter.canAfford(x.getOwner(), true, entityID, rm)) {
+			LOGGER.info("ai - set base to make " + entityID);
+			//ActionSetter.payForEntity(x.getOwner(), true, entityID, rm);
+			//Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
+			//x.setAction(new GenerateAction(r));
+			ActionSetter.setGenerate(x, entityID);
+			LOGGER.info("ai - base has an action: " + x.showProgress());
 		}
 	}
 	
@@ -434,7 +436,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		if(x.showProgress()) {
 			return;
 		}
-		spacmanGather(x, ResourceType.ROCK); //TODO
+		spacmanGather(x, resourceChoice(x));
 	}
 	
 	private ResourceType resourceChoice(Astronaut x) {
@@ -442,16 +444,22 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		if (rand.nextInt(2) == 0) {
 			switch(getState(x.getOwner())) {
 			case ECONOMIC:
-				return ResourceType.CRYSTAL;
+				return ResourceType.BIOMASS;
 			case AGGRESSIVE:
 				return ResourceType.CRYSTAL;
-			case DEFENSIVE:
-				return ResourceType.CRYSTAL;
+			default:	//case DEFENSIVE:
+				return ResourceType.ROCK;
 			}
-			
+		} else { // otherwise pick random
+			switch(rand.nextInt(3)) {
+			case 0:
+				return ResourceType.BIOMASS;
+			case 1:
+				return ResourceType.CRYSTAL;
+			default:	//2
+				return ResourceType.ROCK;
+			}
 		}
-		// otherwise pick random
-		return ResourceType.CRYSTAL;
 	}
 	
 	/**
@@ -501,7 +509,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	public void addTeam(Integer id) {
 		teamid.add(id);
 		state.add(State.ECONOMIC);
-		switch(rand.nextInt(4)) {
+		switch(rand.nextInt(2) + aiDifficulty.getDifficultValue()) {
 		case 0:
 			aiType.add(AiType.STANDARD);
 			break;
@@ -509,10 +517,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 			aiType.add(AiType.EXPANSIVE);
 			break;
 		case 2:
-			aiType.add(AiType.HOSTILE);
-			break;
-		case 3:
 			aiType.add(AiType.PROTECTIVE);
+			break;
+		case 3:	// Hardest
+			aiType.add(AiType.HOSTILE);
 			break;
 		}
 		
@@ -562,8 +570,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 				getManager(GameBlackBoard.class);
 		// test if GameBlackBoard exists
 		if (blackboard != null) {
-			return blackboard.count(teamID, GameBlackBoard.Field.UNITS)
-					- teamCountBuildings(teamID) - teamCountCombatUnits(teamID);
+			return blackboard.count(teamID, GameBlackBoard.Field.ASTRONAUTS);
 		}
 		// if blackboard does not exist, return -1
 		return -1;
@@ -654,6 +661,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		}
 		LOGGER.info("AI [" + teamID + "] military ratio is [" + ratioMilitary + "]");
 		LOGGER.info("AI [" + teamID + "] structure ratio is [" + ratioStructure + "]");
+		//
+		LOGGER.info("AI [" + teamID + "] military count is [" + numSoldiers + "]");
+		LOGGER.info("AI [" + teamID + "] astro count is [" + numAstronauts + "]");
+		LOGGER.info("AI [" + teamID + "] building count is [" + numBuildings + "]");
 		// Depending on AiType, ratio and minimums, decide state
 		// If few astronauts or buildings, then get more
 		if (numAstronauts < 3 || numBuildings < 1) {
@@ -683,7 +694,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		case PROTECTIVE:
 			return 0.85;
 		case EXPANSIVE:
-			return 0.3;
+			return 0.2;
 		default: //case: STANDARD
 			return 0.6;
 		}
@@ -697,13 +708,13 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	private int maximumMilitaryCount(AiType aiType) {
 		switch (aiType) {
 		case HOSTILE:
-			return 5;
+			return 2;
 		case PROTECTIVE:
-			return 30;
+			return 15;
 		case EXPANSIVE:
-			return 10;
+			return 7;
 		default: //case: STANDARD
-			return 10;
+			return 6;
 		}
 	}
 	
@@ -786,6 +797,10 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 	 */
 	public long getTimeSinceStateChange() {
 		return tm.getGameSeconds() - timeAtStateChange;
+	}
+	
+	public Difficulty getDifficulty() {
+		return aiDifficulty;
 	}
 	
 	public void setDifficulty(Difficulty dif) {

@@ -1,21 +1,15 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.GatherAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -218,34 +212,6 @@ public class TimeManagerTest {
 	}
 
 	@Test
-	public void testGetGameDays() {
-		timeManager.getGameDays();
-		timeManager.onTick(0);
-		timeManager.onTick(0);
-		timeManager.addTime(86500);
-		timeManager.onTick(0);
-		timeManager.onTick(0);
-		timeManager.getGameDays();
-		timeManager.onTick(0);
-		timeManager.onTick(0);
-		timeManager.addTime(86500);
-		timeManager.onTick(0);
-		timeManager.onTick(0);
-		timeManager.getGameDays();
-		assertTrue(true);
-		/* Cancerous fucking thing
-		timeManager.resetInGameTime();
-		System.out.println(timeManager.getGameDays());
-		assertTrue(timeManager.getGameDays() == 0);
-		timeManager.addTime(86500);
-		timeManager.onTick(0);
-		timeManager.onTick(0);
-		assertTrue(timeManager.getGameDays() == 1);
-		// Still not working properly when calling for day
-		*/
-	}
-
-	@Test
 	public void testUnpause() {
 		List<BaseEntity> pausedEntities = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
@@ -264,5 +230,13 @@ public class TimeManagerTest {
 		timeManager.pause();
 		timeManager.unPause();
 		assertTrue(true);
+	}
+
+	@Test
+	public void testSetGameTime() {
+		timeManager.resetInGameTime();
+		timeManager.setGameTime(3, 1, 1);
+		assertTrue(timeManager.getGameSeconds() >= 10861
+		&& timeManager.getGameSeconds() < 10863);
 	}
 }

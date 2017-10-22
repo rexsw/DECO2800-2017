@@ -11,8 +11,10 @@ import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.hud.GameStats;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.renderers.Render3D;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.renderers.Renderer;
@@ -47,26 +49,22 @@ public class Game{
 	private OrthographicCamera camera;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	// Please don't delete
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
 	private HUDView view; 
 	private static GameSave savedGame;
+	private Difficulty aiDifficulty;
 
 	/**
 	 * start a loaded game
 	 * @param playerTeams
 	 * @param aITeams
 	 */
-	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
-		savedGame = new GameSave(aITeams,playerTeams);
-		ColourManager colourManager = (ColourManager)GameManager.get()
-				.getManager(ColourManager.class);
-		savedGame.data.setIndex(colourManager.getIndex());
-		loadGame();
+	public Game(int aITeams, int playerTeams, Difficulty aiDifficulty) throws java.io.FileNotFoundException{
+		this.aiDifficulty = aiDifficulty;
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,true);
+		loadGame(savedGame);
 	}
 	
 	/**
@@ -74,14 +72,15 @@ public class Game{
 	 * @param playerTeams 
 	 * @param aITeams 
 	 */
-	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
-
+	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, Difficulty aiDifficulty) {
+		this.aiDifficulty = aiDifficulty;
+		GameManager.get().setMapType(mapType);
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
-
+		int currentColorIndex = colourManager.getIndex();
 		startGame(mapType, mapSize, aITeams, playerTeams);
-		savedGame = new GameSave(aITeams,playerTeams);
-		savedGame.data.setIndex(colourManager.getIndex());
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,false);
+		savedGame.data.setIndex(currentColorIndex);
 	}
 
 
@@ -89,7 +88,7 @@ public class Game{
 	 * this function load the game
 	 * @throws java.io.FileNotFoundException
 	 */
-	private void loadGame() throws java.io.FileNotFoundException {
+	private void loadGame(GameSave savedGame) throws java.io.FileNotFoundException {
 		GameSave loadedGame = new GameSave();
 		loadedGame.readGame();
 
@@ -100,13 +99,19 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 
+		//set win condition
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		win.setwinconditions(loadedGame.data.getWinCondition());
+
 		//set game time
-		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),(int)loadedGame.data.getSec());
+		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),0);
 
 		//set colour index
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		colourManager.setIndex(loadedGame.data.getIndex());
+
+		savedGame.data.setIndex(loadedGame.data.getIndex());
 
 		//different
 		this.addEntitiesFromLoadGame(loadedGame.data.getaITeams(),loadedGame.data.getPlayerTeams(),loadedGame);
@@ -136,12 +141,13 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 
-
+		aiDifficulty = loadedGame.data.getAiDifficulty();
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
+			aim.setDifficulty(aiDifficulty);
 			aim.addTeam(teamid);
 
 			ArrayList<Integer> aIStats = loadedGame.data.getaIStats().get(teamid-1);
@@ -173,16 +179,38 @@ public class Game{
 		//add all entities
 		loadEntities(loadedGame);
 		loadBuildings(loadedGame);
+		loadAnimals(loadedGame);
 
-
-		this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
 	}
 
 	/**
-	 * this functions laods all the saved buildings
+	 * this function loads all the animals
+	 */
+	private void loadAnimals(GameSave loadedGame){
+		for(SavedAnimal e : loadedGame.data.getAnimals()){
+			if("Snail".equals(e.getName())){
+				AmbientAnimal animal = new Snail(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+			else if("Corn".equals(e.getName())){
+				AmbientAnimal animal = new Corn(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+			else if("Dino".equals(e.getName())){
+				AmbientAnimal animal = new Dino(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+		}
+	}
+
+	/**
+	 * this functions loads all the saved buildings
 	 * @param loadedGame
 	 */
 	private void loadBuildings(GameSave loadedGame){
@@ -236,10 +264,6 @@ public class Game{
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
 			}
-//			else if("Base".equals(each.getName())){
-//				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
-//				base.setHealth(each.getHealth());
-//				GameManager.get().getWorld().addEntity(base);
 			else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());
@@ -304,7 +328,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
-		this.weatherManager.setWeatherEvent();
+		//this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
@@ -456,6 +480,7 @@ public class Game{
 			setUnit(teamid, x, y, rm);
 			AiManager aim = (AiManager) GameManager.get()
 					.getManager(AiManager.class);
+			aim.setDifficulty(aiDifficulty);
 			aim.addTeam(teamid);
 		}
 		LOGGER.info("Entities for the AI successfully added");
@@ -487,18 +512,22 @@ public class Game{
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(0, teamid);
-		rm.setRocks(0, teamid);
-		rm.setCrystal(0, teamid);
-		rm.setMaxPopulation(10, teamid);
+		int initResource = 0;
+		if(teamid<10){
+			initResource = 100;
+		}
 
+		rm.setBiomass(initResource, teamid);
+		rm.setRocks(initResource, teamid);
+		rm.setCrystal(initResource, teamid);
+		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Spatman spatman = new Spatman(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(spatman);
+		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
+		GameManager.get().getWorld().addEntity(ai2);
 		GameManager.get().getWorld().addEntity(base);
 		
 		LOGGER.info("Team units successfully set");

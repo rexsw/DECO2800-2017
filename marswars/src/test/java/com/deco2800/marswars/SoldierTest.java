@@ -1,20 +1,19 @@
 package com.deco2800.marswars;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Soldier;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Soldier;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 
 /**
