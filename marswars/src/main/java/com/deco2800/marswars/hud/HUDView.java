@@ -689,10 +689,16 @@ public class HUDView extends ApplicationAdapter{
 	 * then updates the image from the texture manager.
 	 */
 	public void updateMiniMapMenu() {
-		//clear the current image
-		minimap.clearChildren();
-		//get the new image
-		minimap.add(GameManager.get().getMiniMap().getBackground());
+		try {
+			//clear the current image
+			minimap.clearChildren();
+			//get the new image
+			minimap.add(GameManager.get().getMiniMap().getBackground());
+		}
+		catch(NullPointerException NPE){
+			LOGGER.error("NULL child in minimap table");
+			return;
+		}
 	}
 
 	/**
