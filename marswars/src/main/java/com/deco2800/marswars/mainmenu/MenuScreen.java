@@ -774,9 +774,19 @@ public class MenuScreen extends Table{
 	}
 	
 	private boolean checkVictoryConditions() {
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
 		if (!(victoryEconomic || victoryMilitary)) {
 			errorTeamsSelection.setText("Choose a victory setting!");
 			return false;
+		} 
+		if (victoryEconomic) {
+			win.setwinconditions(WINS.ECON);
+		} 
+		if (victoryMilitary) {
+			win.setwinconditions(WINS.MIL);
+		}
+		if (victoryMilitary &&  victoryEconomic){
+			win.setwinconditions(WINS.BOTH);
 		}
 		return true;
 	}
