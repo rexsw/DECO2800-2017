@@ -134,7 +134,9 @@ public class MapContainer {
     private void placeCliffs(String colour) {
         Random r = new Random();
         for(int i =0; i<this.length/5; i++) {
-            placeCliff(r.nextInt(this.length),r.nextInt(this.width),r.nextFloat()>0.5,colour);
+            try {
+                placeCliff(r.nextInt(this.length), r.nextInt(this.width), r.nextFloat() > 0.5, colour);
+            } catch (Exception e) {}
         }
 
     }
