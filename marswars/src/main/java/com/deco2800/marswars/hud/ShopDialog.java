@@ -25,6 +25,8 @@ import java.util.List;
  * would have all the player's Commanders' icons. A Commander needs to be
  * selected (by clicking on their icon) before an item can be bought (by click
  * on the item icon). To escape the window, simple click outside of the window.
+ * Note that checks for resources are conducted by the tech view before any functions
+ * from this class are called.
  * 
  *
  * 
@@ -110,69 +112,6 @@ public class ShopDialog extends Dialog {
 		if (technologyManager.specialIsUnlocked()) {
 			unlockSpecials();
 		}
-		// // generating all the item icons, buttons descriptions etc.
-		// for (ItemType item : itemList) {
-		// Texture texture = textureManager
-		// .getTexture(item.getTextureString());
-		// ImageButton button = generateItemButton(texture);
-		//
-		// button.addListener(new ClickListener() {
-		// public void clicked(InputEvent event, float x, float y) {
-		// status.setText(item.getName());
-		// // boolean enoughResources =
-		// // checkCost(selectedHero.getOwner(), item);
-		// // if ((selectedHero != null) && (selectedHero.getHealth() >
-		// // 0) && enoughResources) {
-		// if ((selectedHero != null)
-		// && (selectedHero.getHealth() > 0)) {
-		// if (item instanceof WeaponType) {
-		// Weapon weapon = new Weapon((WeaponType) item, 1);
-		// selectedHero.addItemToInventory(weapon);
-		// status.setText("Bought " + weapon.getName()
-		// + "(Weapon) for "
-		// + selectedHero.toString());
-		// } else if (item instanceof ArmourType) {
-		// Armour armour = new Armour((ArmourType) item, 1);
-		// selectedHero.addItemToInventory(armour);
-		// status.setText("Bought " + armour.getName()
-		// + "(Armour) for "
-		// + selectedHero.toString());
-		// } else {
-		// boolean transactSuccess = false;
-		// Special special = new Special((SpecialType) item);
-		// transactSuccess = selectedHero
-		// .addItemToInventory(special);
-		// if (transactSuccess) {
-		// status.setText("Bought " + special.getName()
-		// + "(Special) for "
-		// + selectedHero.toString());
-		// } else {
-		// status.setText(
-		// "Unsuccessful Shopping, can only hold 4 specials");
-		// return;
-		// }
-		//
-		// }
-		// selectedHero.setStatsChange(true);
-		// transact(selectedHero.getOwner(), item);
-		// } else {
-		// String mes = selectedHero == null
-		// ? "unsuccessful shopping, No hero exist."
-		// : (selectedHero.getHealth() > 0
-		// ? "Not enough resources."
-		// : "Your Commander is dead. Can't buy anything.");
-		// status.setText(mes);
-		// }
-		// }
-		// });
-		//
-		// scrollTable.add(button).width(iconSize).height(iconSize).top();
-		// scrollTable.add(new Label(item.getDescription(), skin))
-		// .width(iconSize).top().left();
-		// scrollTable.add(new Label(item.getCostString(), skin))
-		// .width(iconSize).top().left();
-		// scrollTable.row();
-		// }
 
 		// making the right side table for the Commander icons.
 		final ScrollPane scroller = new ScrollPane(scrollTable);
@@ -308,159 +247,87 @@ public class ShopDialog extends Dialog {
 						transact(selectedHero.getOwner(), item);
 					} else {
 						String mes = selectedHero == null
-								? "unsuccessful shopping, No hero exist."
+								? "Unsuccessful shopping. You need a hero to buy items."
 								: (selectedHero.getHealth() > 0
 								? "Not enough resources."
-								: "Your Commander is dead. Can't buy anything.");
+								: "Your Commander is dead. You can't buy anything.");
 						status.setText(mes);
 					}
 				}
 			});
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
-			// gets item stats
-			Item createdItem;
-			String stats = "";
-			float multiplier = 0;
-			if (item instanceof WeaponType) {
-				createdItem = new Weapon((WeaponType) item, level);
-				stats = createdItem.getDescription();
-				multiplier = ((WeaponType) item).getItemLevelMultipliers()[level-1];
-			} else if (item instanceof ArmourType) {
-				createdItem = new Armour((ArmourType) item, level);
-				stats = createdItem.getDescription();
-				multiplier = ((ArmourType) item).getItemLevelMultipliers()[level-1];
-			} else if (item instanceof SpecialType) {
-				stats = item.getDescription();
-			}
-			// gets item cost
-			int[] baseCosts = item.getCost();
-			float[] costs = new float[3];
-			if (item instanceof WeaponType || item instanceof ArmourType) {
-				for (int i = 0; i < 3; i++) {
-					costs[i] = baseCosts[i] * multiplier;
-				}
-			} else if (item instanceof SpecialType) {
-				for (int i = 0; i < 3; i++) {
-					costs[i] = baseCosts[i] * 1.0f;
-				}
-			}
-			// creates cost string
-			String costString = "";
-			if (baseCosts[0] > 0) {
-				costString += "Rock: " + costs[0] + "\n";
-			}
-			if (baseCosts[1] > 0) {
-				costString += "Crystal: " + costs[1] + "\n";
-			}
-			if (baseCosts[2] > 0) {
-				costString += "Biomass: " + costs[2] + "\n";
-			}
-
+			String stats = getItemStats(item, level);
+			String cost = getItemCost(item, level);
 			scrollTable.add(new Label(stats, skin))
 					.width(iconSize).top().left();
-			scrollTable.add(new Label(costString, skin))
+			scrollTable.add(new Label(cost, skin))
 					.width(iconSize).top().left();
 			scrollTable.row();
 		}
 	}
-//	/**
-//	 * Private method to update the items in the shop,
-//	 * this function will also add handler to these items for user shopping
-//	 *
-//	 * @param items
-//	 *            The items to be added
-//	 */
-//	private void updateShop(List<ItemType> items) {
-//		for (ItemType item : items) {
-//			Texture texture = textureManager
-//					.getTexture(item.getTextureString());
-//			ImageButton button = generateItemButton(texture);
-//
-//			button.addListener(new ClickListener() {
-//				public void clicked(InputEvent event, float x, float y) {
-//					status.setText(item.getName());
-//					// boolean enoughResources =
-//					// checkCost(selectedHero.getOwner(), item);
-//					// if ((selectedHero != null) && (selectedHero.getHealth() >
-//					// 0) && enoughResources) {
-//					if ((selectedHero != null)
-//							&& (selectedHero.getHealth() > 0)) {
-//						if (item instanceof WeaponType) {
-//							Weapon weapon = new Weapon((WeaponType) item, 1);
-//							selectedHero.addItemToInventory(weapon);
-//							status.setText("Bought " + weapon.getName()
-//									+ "(Weapon) for "
-//									+ selectedHero.toString());
-//						} else if (item instanceof ArmourType) {
-//							Armour armour = new Armour((ArmourType) item, 1);
-//							selectedHero.addItemToInventory(armour);
-//							status.setText("Bought " + armour.getName()
-//									+ "(Armour) for "
-//									+ selectedHero.toString());
-//						} else {
-//							boolean transactSuccess = false;
-//							Special special = new Special((SpecialType) item);
-//							transactSuccess = selectedHero
-//									.addItemToInventory(special);
-//							if (transactSuccess) {
-//								status.setText("Bought " + special.getName()
-//										+ "(Special) for "
-//										+ selectedHero.toString());
-//							} else {
-//								status.setText(
-//										"Unsuccessful Shopping, can only hold 4 specials");
-//								return;
-//							}
-//
-//						}
-//						selectedHero.setStatsChange(true);
-//						transact(selectedHero.getOwner(), item);
-//					} else {
-//						String mes = selectedHero == null
-//								? "unsuccessful shopping, No hero exist."
-//								: (selectedHero.getHealth() > 0
-//										? "Not enough resources."
-//										: "Your Commander is dead. Can't buy anything.");
-//						status.setText(mes);
-//					}
-//				}
-//			});
-//
-//			scrollTable.add(button).width(iconSize).height(iconSize).top();
-//			scrollTable.add(new Label(item.getDescription(), skin))
-//					.width(iconSize).top().left();
-//			scrollTable.add(new Label(item.getCostString(), skin))
-//					.width(iconSize).top().left();
-//			scrollTable.row();
-//		}
-//	}
 
-	/**
-	 * Private method to check if the owner of the Commander has enough
-	 * resources to buy the item.
-	 * 
-	 * @param owner
-	 *            The team id of the owner of the Commander to buy the item for.
+	/** Private helper method to get the cost of an item of a particular level.
+	 *
 	 * @param item
-	 *            The item type enumerate value to get the cost from.
-	 * @return true if transaction was successful. false if not enough
-	 *         resources.
+	 * @param level
+	 * @return cost of item in Rocks, Crystal and Biomass, as a string
 	 */
-	private boolean checkCost(int owner, ItemType item) {
-		int[] cost = item.getCost();
-		ResourceManager rm = (ResourceManager) GameManager.get()
-				.getManager(ResourceManager.class);
-		if (rm.getRocks(owner) < cost[0]) {
-			return false;
+	private String getItemCost(ItemType item, int level) {
+		// gets item cost
+		int[] baseCosts = item.getCost();
+		float[] costs = new float[3];
+		if (item instanceof WeaponType) {
+			float multiplier = ((WeaponType) item).getItemLevelMultipliers()[level - 1];
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * multiplier;
+			}
+		} else if (item instanceof ArmourType) {
+			float multiplier = ((ArmourType) item).getItemLevelMultipliers()[level - 1];
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * multiplier;
+			}
+		} else if (item instanceof SpecialType) {
+			for (int i = 0; i < 3; i++) {
+				costs[i] = baseCosts[i] * 1.0f;
+			}
 		}
-		if (rm.getCrystal(owner) < cost[1]) {
-			return false;
+		// creates cost string
+		String costString = "";
+		if (baseCosts[0] > 0) {
+			costString += "Rock: " + (int) costs[0] + "\n";
 		}
-		if (rm.getBiomass(owner) < cost[2]) {
-			return false;
+		if (baseCosts[1] > 0) {
+			costString += "Crystal: " + (int) costs[1] + "\n";
 		}
-		return true;
+		if (baseCosts[2] > 0) {
+			costString += "Biomass: " + (int) costs[2] + "\n";
+		}
+		return costString;
 	}
+
+	/** Private helper method to get the stats of an item of a particular level
+	 *
+	 * @param item
+	 * @param level
+	 * @return stats of item as a string
+	 */
+	private String getItemStats(ItemType item, int level) {
+		String stats = "";
+		if (item instanceof WeaponType) {
+			float multipler = ((WeaponType) item).getItemLevelMultipliers()[level - 1];
+			stats = "Name: " + item.getName() + "\nType: Weapon\nDamage: " +
+					(int)(((WeaponType) item).getWeaponDamage() * multipler) + "\nSpeed: " + (int)(((WeaponType) item).getWeaponSpeed() * multipler)
+					+ "\nRange: " + (int)(((WeaponType) item).getWeaponRange() * multipler);
+		} else if (item instanceof ArmourType) {
+			float multiplier = ((ArmourType) item).getItemLevelMultipliers()[level - 1];
+			stats = "Name: " + this.getName() + "\nType: Armour\nArmour: " +
+					(int) (((ArmourType) item).getArmourValue() * multiplier) + "\nMaxHealth: " + (int) (((ArmourType) item).getArmourHealth() * multiplier)
+					+ "\nMove Speed: " + (int)(((ArmourType) item).getMoveSpeed() * multiplier);
+		} else if (item instanceof SpecialType) {
+			stats = item.getDescription();
+		}
+		return stats;
+		}
 
 	/**
 	 * Private method to handle the resource transaction to buy an item.

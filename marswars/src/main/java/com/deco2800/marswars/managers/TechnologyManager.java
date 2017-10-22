@@ -190,32 +190,35 @@ public class TechnologyManager extends Manager{
         techMap.put(21, heroFactory);
     }
 
-
-    public void setUpArmourItemLevelTechs() {
-        // Armour item level upgrades setup
-        armourL1Parents.add(techMap.get(21));
-        armourLevelOne = new Technology(new int[]{0, 0, 0}, "Armour " +
-                "Level 1", armourL1Parents,
-                "Unlocks the ability to build Level One Armour for Hero " +
+    public void setUpWeaponLevelTechs() {
+        // Weapon item level upgrades setup
+        weaponL1Parents.add(techMap.get(21));
+        weaponLevelOne = new Technology(new int[]{0, 0, 0}, "Weapon " +
+                "Level" +
+                " 1",
+                weaponL1Parents,
+                "Unlocks the ability to build Level One Weapons for Hero " +
                         "units.");
-        techMap.put(22, armourLevelOne);
+        techMap.put(22, weaponLevelOne);
 
-        armourL2Parents.add(techMap.get(22));
-        armourLevelTwo = new Technology(new int[]{0, 0, 0}, "Armour " +
+        weaponL2Parents.add(techMap.get(22));
+        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, "Weapon " +
                 "Level 2",
-                armourL2Parents,
-                "Unlocks the ability to build Level Two Armour for Hero " +
+                weaponL2Parents,
+                "Unlocks the ability to build Level Two Weapons for Hero " +
                         "units.");
-        techMap.put(23, armourLevelTwo);
+        techMap.put(23, weaponLevelTwo);
 
-        armourL3Parents.add(techMap.get(23));
-        armourLevelThree = new Technology(new int[]{0, 0, 0}, "Armour " +
+        weaponL3Parents.add(techMap.get(23));
+        weaponLevelThree = new Technology(new int[]{0, 0, 0}, "Weapon " +
                 "Level 3",
-                armourL3Parents,
-                "Unlocks the ability to build Level Three Armour for Hero " +
+                weaponL3Parents,
+                "Unlocks the ability to build Level Three Weapons for Hero " +
                         "units.");
-        techMap.put(24, armourLevelThree);
+        techMap.put(24, weaponLevelThree);
     }
+
+
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
         //specialParents = new ArrayList<Technology>();
@@ -227,32 +230,30 @@ public class TechnologyManager extends Manager{
         techMap.put(25, special);
     }
 
-    public void setUpWeaponLevelTechs() {
-        // Weapon item level upgrades setup
-        weaponL1Parents.add(techMap.get(25));
-        weaponLevelOne = new Technology(new int[]{0, 0, 0}, "Weapon " +
-                "Level" +
-                " 1",
-                weaponL1Parents,
-                "Unlocks the ability to build Level One Weapons for Hero " +
+    public void setUpArmourItemLevelTechs() {
+        // Armour item level upgrades setup
+        armourL1Parents.add(techMap.get(25));
+        armourLevelOne = new Technology(new int[]{0, 0, 0}, "Armour " +
+                "Level 1", armourL1Parents,
+                "Unlocks the ability to build Level One Armour for Hero " +
                         "units.");
-        techMap.put(26, weaponLevelOne);
+        techMap.put(26, armourLevelOne);
 
-        weaponL2Parents.add(techMap.get(26));
-        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        armourL2Parents.add(techMap.get(26));
+        armourLevelTwo = new Technology(new int[]{0, 0, 0}, "Armour " +
                 "Level 2",
-                weaponL2Parents,
-                "Unlocks the ability to build Level Two Weapons for Hero " +
+                armourL2Parents,
+                "Unlocks the ability to build Level Two Armour for Hero " +
                         "units.");
-        techMap.put(27, weaponLevelTwo);
+        techMap.put(27, armourLevelTwo);
 
-        weaponL3Parents.add(techMap.get(27));
-        weaponLevelThree = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        armourL3Parents.add(techMap.get(27));
+        armourLevelThree = new Technology(new int[]{0, 0, 0}, "Armour " +
                 "Level 3",
-                weaponL3Parents,
-                "Unlocks the ability to build Level Three Weapons for Hero " +
+                armourL3Parents,
+                "Unlocks the ability to build Level Three Armour for Hero " +
                         "units.");
-        techMap.put(28, weaponLevelThree);
+        techMap.put(28, armourLevelThree);
     }
 
     public void setUnitAttributes() {
