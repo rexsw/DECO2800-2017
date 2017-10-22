@@ -216,7 +216,9 @@ public class GameManager implements TickableManager {
 		this.gameWorld = null;
 		this.gui = null;
 		this.miniMap = null;
+		TimeManager.resetInGameTime();
 		this.menu.endGame();
+		WeatherManager.water.dispose();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		black.clear();

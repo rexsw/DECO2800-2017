@@ -17,7 +17,8 @@ public enum EntityID {
     SPACMAN,
     HACKER,
     SNIPER,
-    TANKDESTROYER
+    TANKDESTROYER,
+    SPATMAN
 
 }
 

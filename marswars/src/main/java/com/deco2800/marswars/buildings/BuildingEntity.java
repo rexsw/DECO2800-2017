@@ -192,8 +192,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		} else {
 			this.makeSelected();
 			LOGGER.info("clicked on ai base");
-			Sound loadedSound = sound.loadSound("endturn.wav");
-			sound.playSound(loadedSound);
 			
 		}
 	}
@@ -332,6 +330,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         case BUNKER:
             this.addNewAction(EntityID.SNIPER);
             this.addNewAction(EntityID.TANKDESTROYER);
+            this.addNewAction(EntityID.SPATMAN);
             break;
         case HEROFACTORY:
             this.addNewAction(EntityID.COMMANDER);

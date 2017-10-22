@@ -243,6 +243,9 @@ public final class ActionSetter {
             case TANKDESTROYER:
             	target.setAction(new GenerateAction(new TankDestroyer(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
+            case SPATMAN:
+            	target.setAction(new GenerateAction(new Spatman(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
             default:
                 break;
 

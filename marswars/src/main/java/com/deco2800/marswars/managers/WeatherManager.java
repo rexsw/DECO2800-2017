@@ -1,6 +1,8 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.deco2800.marswars.buildings.BuildingEntity;
@@ -31,6 +33,8 @@ public class WeatherManager extends Manager implements Tickable {
     private int waterEntities = 0;
     private boolean floodOn = true;
     private ParticleEffect effect;
+    private boolean isWaterSoundPlaying = false;
+    public static Sound water;
 
     /**
      * Sets the toggle value for the UI flood toggle button. The toggle either
@@ -60,6 +64,13 @@ public class WeatherManager extends Manager implements Tickable {
                 if (currentTime > interval + 10) {
                     world = GameManager.get().getWorld();
                     this.generateFlood();
+
+                    if(!isWaterSoundPlaying) {
+                        isWaterSoundPlaying = true;
+                        water = Gdx.audio.newSound(Gdx.files.internal("sounds/WaterSound.mp3"));
+                        water.play();
+                    }
+
                     this.applyContinuousDamage(this.checkAffectedEntities());
                     this.setInterval();
                 }
@@ -71,6 +82,8 @@ public class WeatherManager extends Manager implements Tickable {
                     world = GameManager.get().getWorld();
                     this.setInterval();
                     this.retreatWaters();
+                    water.dispose();
+                    isWaterSoundPlaying = false;
                     // While water still exists, continue to apply effects
                     this.applyContinuousDamage(this.checkAffectedEntities());
                 }

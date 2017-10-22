@@ -1,7 +1,6 @@
 package com.deco2800.marswars.hud;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,9 +30,6 @@ public class GameStats{
 	
 	private static final int STATSWIDTH = (9*(BUTTONSIZE + 2 * BUTTONPAD)) + 2 * WINDOWPAD; 
 	private static final int STATSHEIGHT = 300;
-
-	private String you = "You: ";
-	private String highest = " Highest:";
 
 	/*Constructors*/
 	private Skin skin; 
@@ -133,45 +129,38 @@ public class GameStats{
 		pStatsTable.setDebug(enabled);
 		
 		//Rock image button
-		Texture rockImage = textureManager.getTexture("rock_HUD");
-		TextureRegion rockRegion = new TextureRegion(rockImage);
-		TextureRegionDrawable rockRegionDraw = new TextureRegionDrawable(rockRegion);
+		TextureRegionDrawable rockRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("rock_HUD")));
 		ImageButton rockButton = new ImageButton(rockRegionDraw);
 		
 		//Biomass image button
-		Texture bioImage = textureManager.getTexture("biomass_HUD");
-		TextureRegion bioRegion = new TextureRegion(bioImage);
-		TextureRegionDrawable bioRegionDraw = new TextureRegionDrawable(bioRegion);
+		TextureRegionDrawable bioRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("biomass_HUD")));
 		ImageButton bioButton = new ImageButton(bioRegionDraw);
 		
 		//Crystal image button
-		Texture crystalImage = textureManager.getTexture("crystal_HUD");
-		TextureRegion crystalRegion = new TextureRegion(crystalImage);
-		TextureRegionDrawable crystalRegionDraw = new TextureRegionDrawable(crystalRegion);
+		TextureRegionDrawable crystalRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("crystal_HUD")));
 		ImageButton crystalButton = new ImageButton(crystalRegionDraw);
 		
 		//Buildings button 
-		Texture baseImage = textureManager.getTexture("base3");
-		TextureRegion baseRegion = new TextureRegion(baseImage);
-		TextureRegionDrawable baseRegionDraw = new TextureRegionDrawable(baseRegion);
+		TextureRegionDrawable baseRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("base3")));
 		ImageButton baseButton = new ImageButton(baseRegionDraw);
 		
 		//Units Lost
-		Texture unitImage = textureManager.getTexture("soldier");
-		TextureRegion unitRegion = new TextureRegion(unitImage);
-		TextureRegionDrawable unitRegionDraw = new TextureRegionDrawable(unitRegion);
+		TextureRegionDrawable unitRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("soldier")));
 		ImageButton unitButton = new ImageButton(unitRegionDraw);
 		
 		//Combat Units
-		Texture combatImage = textureManager.getTexture("tank");
-		TextureRegion combatRegion = new TextureRegion(combatImage);
-		TextureRegionDrawable combatRegionDraw = new TextureRegionDrawable(combatRegion);
+		TextureRegionDrawable combatRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("tank")));
 		ImageButton combatButton = new ImageButton(combatRegionDraw);
 		
 		//Technology
-		Texture techImage = textureManager.getTexture("power_gloves");
-		TextureRegion techRegion = new TextureRegion(techImage);
-		TextureRegionDrawable techRegionDraw = new TextureRegionDrawable(techRegion);
+		TextureRegionDrawable techRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("power_gloves")));
 		ImageButton techButton = new ImageButton(techRegionDraw);
 		
 		/*All the button listeners*/
@@ -181,8 +170,8 @@ public class GameStats{
 				gameGraph = Field.BIOMASS;
 				graphPrompt.setText("");
 				graphType.setText("Biomass");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});
 		crystalButton.addListener(new ChangeListener() {
@@ -191,8 +180,8 @@ public class GameStats{
 				gameGraph = Field.CRYSTAL;
 				graphPrompt.setText("");
 				graphType.setText("Crystal");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});
 		rockButton.addListener(new ChangeListener() {
@@ -201,8 +190,8 @@ public class GameStats{
 				gameGraph = Field.ROCKS;
 				graphPrompt.setText("");
 				graphType.setText("Rocks");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 
 			}
 		});
@@ -212,9 +201,8 @@ public class GameStats{
 				gameGraph = Field.COMBAT_UNITS;
 				graphPrompt.setText("");
 				graphType.setText("Combat Units");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
-
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});
 		unitButton.addListener(new ChangeListener() {
@@ -223,9 +211,8 @@ public class GameStats{
 				gameGraph = Field.UNITS_LOST;
 				graphPrompt.setText("");
 				graphType.setText("Units Lost");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
-
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});
 		baseButton.addListener(new ChangeListener() {
@@ -234,9 +221,8 @@ public class GameStats{
 				gameGraph = Field.BUILDINGS;
 				graphPrompt.setText("");
 				graphType.setText("Buildings");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
-
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});
 		techButton.addListener(new ChangeListener() {
@@ -245,9 +231,8 @@ public class GameStats{
 				gameGraph = Field.TECHNOLOGY;
 				graphPrompt.setText("");
 				graphType.setText("Technology");
-				graphInfo.setText(you + (black.count(-1, gameGraph))
-						+ highest + black.highCount(gameGraph));
-
+				graphInfo.setText(String.format("You: %d Highest: %d", 
+						black.count(-1, gameGraph), black.highCount(gameGraph)));
 			}
 		});	
 
@@ -295,9 +280,6 @@ public class GameStats{
 		window.align(Align.center);
 		window.pad(WINDOWPAD);
 		window.padTop(WINDOWPAD*3);
-		//Label statsText = new Label("YOUR GAME ACHIEVMENTS THUS FAR", skin, "subtitle");
-		//window.add(statsText).align(Align.left | Align.top).row();
-				
 		setLayout();
 		window.row();
 

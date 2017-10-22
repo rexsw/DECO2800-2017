@@ -41,8 +41,6 @@ public class MainMenu {
 	private Skin skin;
 	private Stage stage;
 	
-	private MenuScreen menuScreen;
-	
 	private Window mainmenu; 
 	private static boolean gameStarted = false;
 	private Game game;
@@ -81,7 +79,8 @@ public class MainMenu {
 
 		/*Creates the screens for the menu that walk the player 
 		 * through setting up their customized game */
-		MenuScreen menuScreen = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		MenuScreen menu = new MenuScreen(this.skin, this.mainmenu, this.stage, this);
+		menu.align(Align.left);
 		this.mainmenu.setSize(MENUWIDTH, MENUHEIGHT);
 		this.mainmenu.setDebug(enabled);
 		
