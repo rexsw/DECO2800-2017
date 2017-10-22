@@ -75,11 +75,13 @@ public class Game{
 	 * @param aITeams 
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams) {
-	    savedGame = new GameSave(aITeams,playerTeams);
+
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
-		savedGame.data.setIndex(colourManager.getIndex());
+
 		startGame(mapType, mapSize, aITeams, playerTeams);
+		savedGame = new GameSave(aITeams,playerTeams);
+		savedGame.data.setIndex(colourManager.getIndex());
 	}
 
 
