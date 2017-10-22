@@ -552,25 +552,33 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		return FogManager.getFog((int) getPosX(), (int) getPosY()) != 2;
 	}
 
+	/**
+	 * This method returns the entity portrait that is displayed when the unit is selected
+	 * @return the entity portrait
+	 */
     public EntityPortrait getPortrait() {
-		if (this.entityType != EntityType.UNIT) {
+		if (this.entityType != EntityType.UNIT) {//Non units don't have entity portraits
 			return null;
 		}
-		if (this.portrait == null) {
+		if (this.portrait == null) {//If there is not an existing portrait then create one
 			portrait = new EntityPortrait(GameManager.get().getSkin(), this, 25,45);
 		}
-		portrait.updateHealth();
+		portrait.updateHealth();//Update the health
 		return portrait;
     }
 
+	/**
+	 * This method returns a child portrait, used to show that the unit is in a carrier that is selected
+	 * @param parent the parent of the portrait, for example the carrier
+	 * @return The child portrait
+	 */
 	public EntityPortrait getPortrait(BaseEntity parent) {
-		if (this.entityType != EntityType.UNIT) {
+		if (this.entityType != EntityType.UNIT) {//Non units don't have portraits
 			return null;
 		}
-		if (this.babyPortrait == null) {
+		if (this.babyPortrait == null) {//If there is not one then make one
 			babyPortrait = new EntityPortrait(GameManager.get().getSkin(),this, parent.getPortrait(), parent.getPortrait().getWidth(),parent.getPortrait().getHeight()*2);
 		}
-		babyPortrait.updateHealth();
 		return babyPortrait;
 	}
 }
