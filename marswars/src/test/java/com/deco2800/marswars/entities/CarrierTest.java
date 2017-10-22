@@ -16,21 +16,19 @@ import org.junit.Test;
 
 /**
  * Code coverage and Junit tests for the Carrier class
+ * Unable to test onRightClick and onTick but these are the same as
+ * that in the Soldier superclass
  * 
- * @author jdtran21
- * @co-author treenhan hwkhoo
+ * @author hwkhoo
+ * @co-author treenhan jdtran21
  *
  */
 public class CarrierTest {
 
-	/**
-	 * initialize everything needed by the tests
-	 */
-//	@Before
-//	public void init(){
-//		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
-//	}
-
+    
+    	/**
+    	 *  Checks that carrier unit is correctly initialised
+    	 */
     	@Test
 	public void constructorTest() {
 	    Carrier carrier = new Carrier(1, 0, 0 , 1);
@@ -38,6 +36,9 @@ public class CarrierTest {
 	    Assert.assertTrue(carrier.getLoadStatus() == 2);
 	}
 	
+    	/**
+    	 * Checks that carrier unit has correct stats
+    	 */
         @Test
         public void getStatTest() {
             Carrier carrier = new Carrier(0, 0, 0, 1);
@@ -47,6 +48,9 @@ public class CarrierTest {
             Assert.assertEquals("Carrier", carrier.getStats().getName());
         }
         
+        /**
+         * Checks that carrier units start empty
+         */
         @Test
         public void emptyCarrier() {
             Carrier carrier = new Carrier(0, 0, 0, 1);
@@ -56,6 +60,9 @@ public class CarrierTest {
             Assert.assertTrue(carrier.getPassengers()[3] == null);
         }
         
+        /**
+         * Checks that carrier unit assigns action on load
+         */
 	@Test
 	public void loadandunloadTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -64,8 +71,12 @@ public class CarrierTest {
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	    carrier.unloadIndividual();
 	    carrier.unload();
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	}
 	
+	/**
+	 * Checks that carrier unit assigns MOVE action on loading different team unit
+	 */
 	@Test
 	public void loadTestDifferentTeam() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -73,11 +84,10 @@ public class CarrierTest {
 	    carrier.load(soldier1);
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	}
-	@Test
-	public void unloadTest() {
-	    
-	}
         
+	/**
+	 * Checks that carrier is able to load units
+	 */
 	@Test
 	public void loadPassengerTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -109,6 +119,9 @@ public class CarrierTest {
             Assert.assertFalse(carrier.loadPassengers(soldier5));
 	}
 	
+	/**
+	 * Checks that carrier is able to unload all units
+	 */
 	@Test
 	public void unloadAllTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -131,18 +144,27 @@ public class CarrierTest {
             Assert.assertTrue(carrier.getPassengers()[3] == null);
 	}
 	
+	/**
+	 * Checks carrier unloads empty carrier correctly
+	 */
 	@Test
 	public void unloadAllEmptyTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
 	    Assert.assertFalse(carrier.unloadPassenger());
 	}
 	
+	/**
+	 * Checks carrier unloads empty carrier correctly
+	 */
 	@Test 
 	public void unloadSingleEmptyTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
 	    Assert.assertFalse(carrier.unloadPassengerIndividual());
 	}
 	
+	/**
+	 * Checks carrier unloads single units correctly
+	 */
 	@Test
 	public void unloadSingleTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -178,9 +200,12 @@ public class CarrierTest {
             Assert.assertTrue(carrier.getPassengers()[1] == null);
             Assert.assertTrue(carrier.getPassengers()[2] == null);
             Assert.assertTrue(carrier.getPassengers()[3] == null);
+            Assert.assertFalse(carrier.unloadPassengerIndividual());
 	}
 	
-	
+	/**
+	 * Checks carrier sets action correctly
+	 */
 	@Test
 	public void setActionTest() {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
@@ -198,31 +223,6 @@ public class CarrierTest {
 	    Carrier carrier3 = new Carrier(0, 1, 2, 2);
 	    carrier.setNextAction(ActionType.UNLOAD);
 	    Assert.assertFalse(carrier3.getCurrentAction().isPresent());
-	}
-	
-	@Test @Ignore
-	public void carrier() {
-		Carrier carry = new Carrier(0, 0, 0, 0);	
-		Soldier soljaBoy = new Soldier(1, 1, 1, 1);
-		carry.load(soljaBoy);
-		carry.getPassengers();		
-		carry.getStats();		
-		ActionType nextAction = ActionType.MOVE;
-		carry.setNextAction(nextAction);
-	}
-
-	@Test @Ignore
-	public void onRightClickTest(){
-		Carrier carry = new Carrier(0, 0, 0, 0);
-		carry.onRightClick(1f,1f);
-		carry.onRightClick(200f,200f);
-	}
-
-	@Test @Ignore
-	public void unloadAction(){
-		Carrier carry = new Carrier(0, 0, 0, 0);
-		carry.unload();
-		carry.unloadPassenger();
 	}
 
 
