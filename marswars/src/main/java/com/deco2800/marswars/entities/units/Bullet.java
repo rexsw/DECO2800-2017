@@ -49,33 +49,29 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		GameManager.get().getWorld().removeEntity(this);
     	}
     	/* If the action is completed, remove it otherwise keep doing that action */
-    	try {
-    		// check if the target still exists in the world
-    		float posX = this.getPosX();
-			float posY = this.getPosY();
-    		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
-			if (find && currentAction.get().completed()) {
-				// check for the positions
-				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
-				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
-				if (xPos && yPos) {
-					impact();
-					GameManager.get().getWorld().removeEntity(this);
 
-				} else {
-					GameManager.get().getWorld().removeEntity(this);
-				}
-			} else if (find) { // if target is still existing then continue the action
-				currentAction.get().doAction();
-			} else { // either the target is not existing anymore or the action is completed
+		// check if the target still exists in the world
+		float posX = this.getPosX();
+		float posY = this.getPosY();
+		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
+		if (find && currentAction.get().completed()) {
+			// check for the positions
+			boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+			boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+			if (xPos && yPos) {
+				impact();
+				GameManager.get().getWorld().removeEntity(this);
 
-				currentAction = Optional.empty();
+			} else {
 				GameManager.get().getWorld().removeEntity(this);
 			}
-    	} catch (Exception e) {
-    		//Bullets are freezing for an unknown reason fix needed
-    		GameManager.get().getWorld().removeEntity(this);
-    	} 
+		} else if (find) { // if target is still existing then continue the action
+			currentAction.get().doAction();
+		} else { // either the target is not existing anymore or the action is completed
+
+			currentAction = Optional.empty();
+			GameManager.get().getWorld().removeEntity(this);
+		}
     }
     
     /**

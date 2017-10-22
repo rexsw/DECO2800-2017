@@ -102,11 +102,12 @@ public class Hotkeys {
 			if (this.noActive()){
 				LOGGER.info("Opens the pause menu when there is no currently active menu");
 				pause = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);
+				this.hud.setPause(pause);
 			} else if (this.hud.getPauseCheck() != 0){
 				LOGGER.info("Closes the menu and resumes the game");
 				timeManager.unPause();
-				hud.setPauseCheck(0);
-				pause.hide();
+				this.hud.setPauseCheck(0);
+				this.hud.hidePause();
 			}
 		}
 		
@@ -121,11 +122,13 @@ public class Hotkeys {
 			if(this.noActive()) {
 				LOGGER.info("Activate the tech tree menu");
 				this.hud.setTechCheck(1);
+				this.timeManager.pause();
 				this.techTree = new TechTreeView("TechTree", this.skin, this.hud).show(this.stage);
+				this.hud.setTechTree((TechTreeView) this.techTree);
 			} else if (this.hud.getTechCheck() != 0){
 				LOGGER.info("Hides the tech tree and continues the game");
 				this.hud.setTechCheck(0);
-				this.techTree.hide();
+				this.hud.hideTechTree();
 				this.timeManager.unPause();
 			}
 		}
