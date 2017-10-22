@@ -572,7 +572,7 @@ public class TechnologyManager extends Manager{
 
     /**
      * Gets the buildings available for specified team 
-     * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
+     *      [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
         return new ArrayList<>(Arrays.asList(
