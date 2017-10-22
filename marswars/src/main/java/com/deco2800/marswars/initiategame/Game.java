@@ -308,6 +308,10 @@ public class Game{
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);
+			}else if("Soldier".equals(each.getName())) {
+				Soldier soldier = new Soldier(each.getX(), each.getY(), 0, each.getTeamId());
+				soldier.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(soldier);
 			}
 
 	}
