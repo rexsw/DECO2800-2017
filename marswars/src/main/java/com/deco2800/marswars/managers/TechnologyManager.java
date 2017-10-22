@@ -511,7 +511,6 @@ public class TechnologyManager extends Manager{
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        //resourceManager.setBiomass(80, teamid);
 
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
