@@ -532,7 +532,6 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
 				combatSelected.setText("Normal AI difficulty selected");
 				aiDifficulty = Difficulty.NORMAL;
 			}
@@ -542,7 +541,6 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				allTeams = 2;
 				combatSelected.setText("Hard AI difficulty selected");
 				aiDifficulty = Difficulty.HARD;
 			}
@@ -561,45 +559,15 @@ public class MenuScreen extends Table{
 		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
 		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
 		
-		/*Win conditions*/
-		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
-		win.setwinconditions(WINS.BOTH);
-		economic.setChecked(true);
-		millitary.setChecked(true);
-		
 		economic.addListener(new ChangeListener(){
-
-			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (economic.isChecked()){
-					win.setwinconditions(WINS.ECON);
-				} else if (economic.isChecked() && millitary.isChecked()){
-					win.setwinconditions(WINS.BOTH);
-				} else if (! economic.isChecked() && ! millitary.isChecked()) {
-					win.setwinconditions(WINS.BOTH);
-					economic.setChecked(true);
-					millitary.setChecked(true);
-				} else {
-					win.setwinconditions(WINS.MIL);
-				}
+				victoryEconomic = !victoryEconomic;
 			}			
 		});
 		
 		millitary.addListener(new ChangeListener(){
-
-			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (economic.isChecked()){
-					win.setwinconditions(WINS.MIL);
-				}  else if (economic.isChecked() && millitary.isChecked()){
-					win.setwinconditions(WINS.BOTH);
-				} else if (!economic.isChecked() && !millitary.isChecked()) {
-					win.setwinconditions(WINS.BOTH);
-					economic.setChecked(true);
-					millitary.setChecked(true);
-				} else {
-					win.setwinconditions(WINS.ECON);
-				}
+				victoryMilitary = !victoryMilitary;
 			}			
 		});
 								
@@ -797,7 +765,7 @@ public class MenuScreen extends Table{
 		return true;
 	}
 	
-	private boolean checkDifficulty() { //TODO
+	private boolean checkDifficulty() {
 		if (aiDifficulty == null) {
 			errorTeamsSelection.setText("Choose a difficulty setting!");
 			return false;
@@ -823,7 +791,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
                 click.play();
-				if (checkTeams() && checkDifficulty()) {
+				if (checkTeams() && checkDifficulty() && checkVictoryConditions()) {
 					mainmenu.setVisible(false);
 					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS, aiDifficulty);
 				}
