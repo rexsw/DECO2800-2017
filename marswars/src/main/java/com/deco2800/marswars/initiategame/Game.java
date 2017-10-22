@@ -494,8 +494,25 @@ public class Game{
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+		//
 		Spatman spatman = new Spatman(x, y, 0, teamid);
+		Soldier soldier = new Soldier(x, y, 0, teamid);
+		Sniper sniper = new Sniper(x, y, 0, teamid);
+		Carrier carrier = new Carrier(x, y, 0, teamid);
+		Hacker hacker = new Hacker(x, y, 0, teamid);
+		Medic medic = new Medic(x, y, 0, teamid);
+		Tank tank = new Tank(x, y, 0, teamid);
+		TankDestroyer tankDestroyer = new TankDestroyer(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(spatman);
+		GameManager.get().getWorld().addEntity(soldier);
+		GameManager.get().getWorld().addEntity(sniper);
+		GameManager.get().getWorld().addEntity(carrier);
+		GameManager.get().getWorld().addEntity(hacker);
+		GameManager.get().getWorld().addEntity(medic);
+		GameManager.get().getWorld().addEntity(tank);
+		GameManager.get().getWorld().addEntity(tankDestroyer);
+		//
+		
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
