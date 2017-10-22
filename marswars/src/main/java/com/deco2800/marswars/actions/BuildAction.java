@@ -225,30 +225,20 @@ public class BuildAction implements DecoAction{
     }
 	
     public void finaliseBuildAI() {
-		if (true) { //TODO
-			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			if (canAfford(actor.getOwner(), resourceManager)) {
-				createBuilding();
-				payForEntity(actor.getOwner(), resourceManager);
-				GameManager.get().getWorld().addEntity(base);
-				this.buildingSpeed = base.getBuildSpeed();
-				maxHealth = base.getMaxHealth();
-				base.setHealth(currentHealth);
-				state = State.SETUP_MOVE;
-				LOGGER.info("BUILDING NEW " + building.toString());
-			}
-			else {
-				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
-				completed = true;
-			}
-
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if (canAfford(actor.getOwner(), resourceManager)) {
+			createBuilding();
+			payForEntity(actor.getOwner(), resourceManager);
+			GameManager.get().getWorld().addEntity(base);
+			this.buildingSpeed = base.getBuildSpeed();
+			maxHealth = base.getMaxHealth();
+			base.setHealth(currentHealth);
+			state = State.SETUP_MOVE;
+			LOGGER.info("BUILDING NEW " + building.toString());
 		}
 		else {
-			LOGGER.error("CANNOT BUILD HERE");
-			if (temp != null) {
-				GameManager.get().getWorld().removeEntity(temp);
-				completed = true;
-			}
+			LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
+			completed = true;
 		}
 	}
     
