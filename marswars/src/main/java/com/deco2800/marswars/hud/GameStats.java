@@ -254,7 +254,11 @@ public class GameStats{
 	 * @return exit button
 	 */
 	private Button getExitButton(){
-		Button exitStats = new TextButton("Back to game", skin);
+		TextureRegionDrawable exitRegionDraw = 
+				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("back_button")));
+		ImageButton exitStats = new ImageButton(exitRegionDraw);
+		exitStats.pad(BUTTONPAD).setSize(40, 40);
+
 		exitStats.setSize(BUTTONSIZE, BUTTONSIZE);
 		exitStats.setPosition(STATSWIDTH- exitStats.getWidth(), 0);
 		
@@ -265,6 +269,7 @@ public class GameStats{
 				removeStats(); 
 			}
 		});
+		exitStats.addListener(new TextTooltip("Back to game", skin));
 	
 		return exitStats;
 	}
