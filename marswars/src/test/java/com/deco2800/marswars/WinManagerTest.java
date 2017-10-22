@@ -36,6 +36,8 @@ public class WinManagerTest {
 	@Test
 	public void combatWinTest() {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		rm.reset();
 		black.set();
 		WinManager test = new WinManager();
 		assertFalse(test.isWinner());

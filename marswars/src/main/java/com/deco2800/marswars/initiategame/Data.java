@@ -79,7 +79,7 @@ public class Data {
     //gameTime
     private long hour;
     private long min;
-    private long sec;
+
 
     public long getHour() {
         return hour;
@@ -97,13 +97,6 @@ public class Data {
         this.min = min;
     }
 
-    public long getSec() {
-        return sec;
-    }
-
-    public void setSec(long sec) {
-        this.sec = sec;
-    }
 
 
 
