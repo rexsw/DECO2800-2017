@@ -100,6 +100,7 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getPlayerStats());
         kryo.writeClassAndObject(output, data.getHour());
         kryo.writeClassAndObject(output, data.getMin());
+        kryo.writeClassAndObject(output, data.getWinCondition());
         output.close();
 
         //write the map file
@@ -145,6 +146,8 @@ public class GameSave {
         data.setPlayerStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setHour((long)kryo.readClassAndObject(input));
         data.setMin((long)kryo.readClassAndObject(input));
+        data.setWinCondition((WinManager.WINS)kryo.readClassAndObject(input));
+
         input.close();
     }
 
@@ -154,6 +157,7 @@ public class GameSave {
      * this function will get all the entities and fills in the arrays
      */
     public void fillData(){
+
         //fill the time
         TimeManager timeManager = (TimeManager)
                 GameManager.get().getManager(TimeManager.class);
@@ -162,6 +166,10 @@ public class GameSave {
 
         data.setFogOfWar(FogManager.getFog());
         data.setBlackFogOfWar(FogManager.getBlackFog());
+
+        //get win condition
+        WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+        data.setWinCondition(win.getWinCondition());
 
         //getting all the entities
         List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();

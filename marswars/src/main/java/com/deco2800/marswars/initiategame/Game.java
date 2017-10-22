@@ -102,6 +102,10 @@ public class Game{
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
 
+		//set win condition
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		win.setwinconditions(loadedGame.data.getWinCondition());
+
 		//set game time
 		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),0);
 
