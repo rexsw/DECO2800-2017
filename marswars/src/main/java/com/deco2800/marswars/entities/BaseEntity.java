@@ -39,6 +39,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
 	private EntityPortrait portrait;
+	private EntityPortrait babyPortrait;
 
 	public BaseEntity(){
 	  //NEVER DELETE THIS
@@ -61,12 +62,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 
 	/**
 	 * Full blown constructor for the base entity
-	 * @param posX
-	 * @param posY
-	 * @param posZ
-	 * @param xLength
-	 * @param yLength
-	 * @param zLength
 	 * @param xRenderLength
 	 * @param yRenderLength
 	 * @param centered
@@ -567,4 +562,15 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		portrait.updateHealth();
 		return portrait;
     }
+
+	public EntityPortrait getPortrait(BaseEntity parent) {
+		if (this.entityType != EntityType.UNIT) {
+			return null;
+		}
+		if (this.babyPortrait == null) {
+			babyPortrait = new EntityPortrait(GameManager.get().getSkin(),this, parent.getPortrait(), parent.getPortrait().getWidth(),parent.getPortrait().getHeight()*2);
+		}
+		babyPortrait.updateHealth();
+		return babyPortrait;
+	}
 }
