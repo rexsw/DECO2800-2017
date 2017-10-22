@@ -783,34 +783,80 @@ public class HUDView extends ApplicationAdapter{
 			buttonList.get(index).setVisible(true);
 			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
-			Label cost = new Label("", skin);
-			Image rock = null;
+			Label costRocks = new Label("", skin);
+			Label costCrystal = new Label("", skin);
+			Label costBiomass = new Label("", skin);
+			Image rock = new Image(textureManager.getTexture("rock_HUD"));
+			Image biomass = new Image(textureManager.getTexture("biomass_HUD"));
+			Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 			Texture entity = textureManager.getTexture("PLACEHOLDER");
+			boolean dispRock = false;
+			boolean dispCrystal = false;
+			boolean dispBiomass = false;
 			if (e instanceof BuildingType) {
 				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
 				name = new Label(e.toString(), skin);
-				cost = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
-				Texture rockTex = textureManager.getTexture("rock_HUD");
-				rock = new Image(rockTex);
+				costRocks = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
+				dispRock = true;
 			} else if (e instanceof EntityID) {
 				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
-				cost = new Label(String.valueOf(0), skin);
+
+				int valRock = ((EntityID) e).getCostRocks();
+				int valCrystal = ((EntityID) e).getCostCrystals();
+				int valBiomass = ((EntityID) e).getCostBiomass();
+				costRocks = new Label(String.valueOf(valRock), skin);
+				costCrystal = new Label(String.valueOf(valCrystal), skin);
+				costBiomass = new Label(String.valueOf(valBiomass), skin);
+				costCrystal.setColor(Color.PURPLE);
+				costBiomass.setColor(Color.GREEN);
+				if (valRock>0) {
+					dispRock = true;
+				}
+				if (valBiomass>0) {
+					dispBiomass = true;
+				}
+				if (valCrystal>0) {
+					dispCrystal = true;
+				}
+
+
 			} else if (e instanceof ActionType) {
 				entity = textureManager.getTexture("PLACEHOLDER");
 				name = new Label(e.toString(), skin);
 			}
 			name.setFontScale(.9f);
-			cost.setFontScale(.9f);
+			costRocks.setFontScale(.9f);
+			costCrystal.setFontScale(.9f);
+			costBiomass.setFontScale(.9f);
 			TextureRegion entityRegion = new TextureRegion(entity);
 			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
 			ImageButton addPane = new ImageButton(buildPreview);
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
 			buttonList.get(index).add(rock).width(buttonWidth * .2f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
-			buttonList.get(index).add(cost).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
-			buttonList.get(index).add(name).width(buttonWidth * .7f).align(Align.right).height(buttonHeight * .2f)
+			//buttonList.get(index).add(costBiomass).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
+			buttonList.get(index).add(name).width(buttonWidth * .2f).align(Align.right).height(buttonHeight * .2f)
 			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
+			if (dispRock) {
+				buttonList.get(index).add(rock).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costRocks).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+			if (dispCrystal) {
+				buttonList.get(index).add(crystal).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costCrystal).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+			if (dispBiomass) {
+				buttonList.get(index).add(biomass).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costBiomass).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
+						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+			}
+
 			index++;
 		}
 	}

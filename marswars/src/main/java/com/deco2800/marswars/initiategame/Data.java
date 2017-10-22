@@ -33,7 +33,16 @@ public class Data {
     //list of obstacles
     private List<Obstacle> obstacles = new ArrayList<>();
 
+    //list of animals
+    private List<SavedAnimal> animals = new ArrayList<>();
 
+    public List<SavedAnimal> getAnimals() {
+        return animals;
+    }
+
+    public void setAnimals(List<SavedAnimal> animals) {
+        this.animals = animals;
+    }
 
     public List<Obstacle> getObstacles() {
         return obstacles;

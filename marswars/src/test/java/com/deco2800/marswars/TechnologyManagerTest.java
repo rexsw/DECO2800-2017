@@ -79,6 +79,7 @@ public class TechnologyManagerTest {
         assertFalse(technologyManager.armourIsUnlocked(1));
         assertFalse(technologyManager.armourIsUnlocked(2));
         assertFalse(technologyManager.armourIsUnlocked(3));
+        assertFalse(technologyManager.armourIsUnlocked(100));
         technologyManager.unlockArmourLevelOne();
         technologyManager.unlockArmourLevelTwo();
         technologyManager.unlockArmourLevelThree();
@@ -86,10 +87,12 @@ public class TechnologyManagerTest {
         assertTrue(technologyManager.armourIsUnlocked(2));
         assertTrue(technologyManager.armourIsUnlocked(3));
 
+
         //Test Weapons
         assertFalse(technologyManager.weaponIsUnlocked(1));
         assertFalse(technologyManager.weaponIsUnlocked(2));
         assertFalse(technologyManager.weaponIsUnlocked(3));
+        assertFalse(technologyManager.weaponIsUnlocked(100));
         technologyManager.unlockWeaponLevelOne();
         technologyManager.unlockWeaponLevelTwo();
         technologyManager.unlockWeaponLevelThree();
