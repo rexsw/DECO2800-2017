@@ -328,7 +328,7 @@ public class Game{
 		this.setThread();
 		this.fogOfWar();
 		// Please don't delete
-		this.weatherManager.setWeatherEvent();
+		//this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
@@ -512,11 +512,10 @@ public class Game{
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(100, teamid);
-		rm.setRocks(100, teamid);
-		rm.setCrystal(100, teamid);
+		rm.setBiomass(200, teamid);
+		rm.setRocks(200, teamid);
+		rm.setCrystal(200, teamid);
 		rm.setMaxPopulation(10, teamid);
-
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);		
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);

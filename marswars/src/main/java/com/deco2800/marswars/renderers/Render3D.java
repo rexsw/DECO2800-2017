@@ -113,8 +113,12 @@ public class Render3D implements Renderer {
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 
-        WeatherManager m = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
-        m.render(batch);
+        WeatherManager weather = (WeatherManager)
+                GameManager.get().getManager(WeatherManager.class);
+        weather.setWeatherEvent();
+        if (weather.isRaining()) {
+            weather.render(batch);
+        }
 
         batch.end();
 

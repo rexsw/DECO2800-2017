@@ -16,20 +16,9 @@ public class TechnologyManager extends Manager{
     private static final int ATTACK_RANGE = 5;
     private static final int ATTACK_SPEED = 6;
 
-    /*
-    *each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
-    *private Map<Integer, Integer[], String, List<Integer>> techMap = ..
-    * .. new HashMap<Integer, Integer[], String, List<Integer>>();
-    * unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
-    */
-
     private HashMap<String, int[]> unitAttributes = new HashMap<>();
     private Map<Integer, Technology> techMap = new HashMap<Integer, Technology>();
     private Set<Technology> activeTech = new HashSet<Technology>();
-    /*
-     * item system integration into techtree not implemented yet, still in progress. So lines from here to
-     * "private Technology special;" are placeholder at the moment.
-     */
     // hero factory tech
     private ArrayList<Technology> heroFactoryParents = new ArrayList<Technology>();
     private Technology heroFactory;
@@ -61,11 +50,7 @@ public class TechnologyManager extends Manager{
     private boolean weaponL2Unlocked;
     private boolean weaponL3Unlocked;
 
-    private String expensiveString = "An expensive technology";
-    private String armourString = "Armour ";
     private String soldierString = "Soldier";
-    private String weaponString = "Weapon ";
-    private String unitsString = "units.";
     
     public TechnologyManager() {
         setUpUnlockStates();
@@ -206,7 +191,7 @@ public class TechnologyManager extends Manager{
 
     //HERO FACTORY TECH
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
+        heroFactory = new Technology(new int[]{0, 50, 0}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -244,7 +229,6 @@ public class TechnologyManager extends Manager{
     //HERO SPECIAL UPGRADES
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
-        //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
         special = new Technology(new int[]{20, 20, 20}, "Special " +
                 "Items Unlock",
@@ -502,7 +486,6 @@ public class TechnologyManager extends Manager{
      */
     public String checkPrereqs(TechnologyManager techMan, Technology tech, int techID, int teamid){
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        //resourceManager.setBiomass(80, teamid);
 
         for (Technology techX : tech.getParents()) {
             if (!(getActive().contains(techX))) {
@@ -512,16 +495,15 @@ public class TechnologyManager extends Manager{
         if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-        if (tech.getCost()[0] > resourceManager.getRocks(teamid)) {
+        if (tech.getCost()[0] > resourceManager.getRocks(-1)) {
             return "Insufficient Rocks";
         }
-        if (tech.getCost()[1] > resourceManager.getCrystal(teamid)) {
+        if (tech.getCost()[1] > resourceManager.getCrystal(-1)) {
             return "Insufficient Crystals";
         }
-        if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
+        if (tech.getCost()[2] > resourceManager.getBiomass(-1)) {
             return "Insufficient Biomass";
         }
-        activateTech(techMan, tech, resourceManager, techID, teamid);
         return "Activating Technology!";
     }
 
@@ -646,7 +628,7 @@ public class TechnologyManager extends Manager{
          *      [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
          */
     public ArrayList<BuildingType> getAvailableBuildings() {
-        ArrayList buildingsAvailable = new ArrayList<BuildingType>();
+        ArrayList<BuildingType> buildingsAvailable = new ArrayList<>();
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
                     BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
