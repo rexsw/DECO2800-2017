@@ -137,6 +137,7 @@ public class TechTreeView extends Dialog{
 	 * @param object
 	 */
 	@Override
+
 	protected void result(final Object object) {
 		timeManager.pause();
 		this.hud.setTechCheck(1);

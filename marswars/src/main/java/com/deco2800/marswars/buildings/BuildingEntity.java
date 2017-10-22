@@ -55,9 +55,14 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		this.numOfSolider = 0;
 		
 		switch(building) {
+		case WALL:
+			graphics = Arrays.asList("wall1"+colour, "wall1"+colour, "wall1"+colour, "wall1"+colour);
+			setBuilding("Wall", graphics.get(graphics.size()-2), 3f, 1550, 5, 10);
+			addActions(building);
+			break;
 		case TURRET:
 			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
-			setBuilding("Turret", graphics.get(graphics.size()-2), 1f, 1850, 7, 10);
+			setBuilding("Turret", graphics.get(graphics.size()-2), 1f, 1850, 12, 10);
 			addActions(building);
 			break;
 		case BASE:
@@ -314,6 +319,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
      */
     private void addActions(BuildingType type) {
         switch (type) {
+        case WALL:  
+            break;
         case TURRET:  
             break;
         case BASE:
@@ -349,5 +356,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public String toString(){
 		return building;
 	}
-
+	
+	/**
+	 * @return The stats of the entity
+	 */
+	@Override
+	public EntityStats getStats() {
+		return new EntityStats(building,this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+	}
 }

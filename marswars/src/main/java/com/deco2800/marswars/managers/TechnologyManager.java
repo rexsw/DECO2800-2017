@@ -199,6 +199,7 @@ public class TechnologyManager extends Manager{
                         "hero units.");
         techMap.put(21, heroFactory);
     }
+
     /** Sets up weapon item level technologies, including costs and parents.
      *  Note that each preceding weapon item tech must be unlocked before
      *  the next and that the Hero Factory must be unlocked before the level
@@ -641,10 +642,10 @@ public class TechnologyManager extends Manager{
         ArrayList<BuildingType> buildingsAvailable;
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-                    BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
+            		BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
         } else {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-                    BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+            		BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
         }
     	return buildingsAvailable;
     }

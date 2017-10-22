@@ -20,6 +20,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param lengthX
 	 * @param lengthY
 	 * @param LengthZ
+	 * @param building
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ, BuildingType building) {
 		this(posX, posY, posZ, lengthX, lengthY, lengthZ);
@@ -64,6 +65,9 @@ public class CheckSelect extends BaseEntity{
 			return;
 		}
 		switch(buildingType) {
+		case WALL:
+			invalidSelect = "tileSelectRed";
+			break;
 		case TURRET:
 			validSelect = "greenSelect4";
 			break;
@@ -90,7 +94,14 @@ public class CheckSelect extends BaseEntity{
 	 *Sets the build area to be red (invalid)
 	 */
 	public void setRed() {
+		if (buildingType == null) { //should find a better way to do this
+			this.setTexture("redSelect6");
+			return;
+		}
 		switch(buildingType) {
+		case WALL:
+			invalidSelect = "tileSelectRed";
+			break;
 		case TURRET:
 			invalidSelect = "redSelect4";
 			break;
@@ -107,7 +118,7 @@ public class CheckSelect extends BaseEntity{
 			invalidSelect = "redSelect6";
 			break;
 		default:
-			validSelect = "tileSelectRed";
+			invalidSelect = "tileSelectRed";
 			break;
 		}
 		this.setTexture(invalidSelect);

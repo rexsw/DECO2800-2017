@@ -25,8 +25,14 @@ import java.util.List;
  * would have all the player's Commanders' icons. A Commander needs to be
  * selected (by clicking on their icon) before an item can be bought (by click
  * on the item icon). To escape the window, simple click outside of the window.
+<<<<<<< HEAD
+ * Note that checks for resources are conducted by the tech view before any functions
+ * from this class are called.
+ * 
+=======
  * Note that checks for resources are conducted by the tech view before any
  * functions from this class are called.
+>>>>>>> bc1e0d5a031604cebb0b1c8b3461754cc720af67
  * 
  * @author Mason
  *
@@ -74,6 +80,7 @@ public class ShopDialog extends Dialog {
 		this.getContentTable().debugCell();
 		this.getContentTable().left();
 		this.skin = skin;
+
 		this.technologyManager = (TechnologyManager) GameManager.get()
 				.getManager(TechnologyManager.class);
 
@@ -87,6 +94,7 @@ public class ShopDialog extends Dialog {
 				.expandX().top().left();
 		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
 		scrollTable.row();
+
 		this.technologyManager = (TechnologyManager) GameManager.get()
 				.getManager(TechnologyManager.class);
 		if (technologyManager.armourIsUnlocked(1)) {
@@ -118,6 +126,7 @@ public class ShopDialog extends Dialog {
 
 		this.getContentTable().row();
 		this.getContentTable().add(status).expandX().center().colspan(2);
+
 	}
 
 	/**
@@ -183,11 +192,18 @@ public class ShopDialog extends Dialog {
 	}
 
 	/**
+<<<<<<< HEAD
+
+	 * Private method to update the items in the shop.
+	 * @param items The items to be added
+	 * @param level The level of the item
+=======
 	 * Private method to update the items in the shop, this function will also
 	 * add handler to these items for user shopping
 	 * 
 	 * @param items
 	 *            The items to be added
+>>>>>>> bc1e0d5a031604cebb0b1c8b3461754cc720af67
 	 */
 	private void updateShop(List<ItemType> items, int level) {
 		for (ItemType item : items) {
@@ -248,6 +264,11 @@ public class ShopDialog extends Dialog {
 						String mes = "Not enough resources.";
 						status.setText(mes);
 					}
+				}
+
+				private boolean checkCost(int owner, ItemType item) {
+					// TODO Auto-generated method stub
+					return false;
 				}
 			});
 			scrollTable.add(button).width(iconSize).height(iconSize).top();

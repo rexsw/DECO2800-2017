@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.Astronaut;
@@ -235,7 +236,11 @@ public class SpawnMenu {
                         // needs to be changed. Shouldn't need an entity selected to be able  to place a building
                         return;
                     }
-                    if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+                    if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildWallAction) {
+                        BuildWallAction cancelBuild = (BuildWallAction)selectedEntity.getAction().get();
+                        cancelBuild.cancelBuild();
+                        cancelBuild.doAction();
+                    }else if(selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
                         BuildAction cancelBuild = (BuildAction)selectedEntity.getAction().get();
                         cancelBuild.cancelBuild();
                         cancelBuild.doAction();
