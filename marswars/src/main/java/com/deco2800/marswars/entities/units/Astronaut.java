@@ -65,6 +65,9 @@ public class Astronaut extends Soldier {
 	
 	@Override
 	public void onRightClick(float x, float y) {
+		if (!this.isSelected()) {
+			return;
+		}
 		List<BaseEntity> entities;
 		try {
 			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
@@ -76,12 +79,12 @@ public class Astronaut extends Soldier {
 			this.deselect();
 			return;
 		}
-		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
-
-				build.finaliseBuild();
-				this.setTexture(defaultTextureName);
-				this.deselect();
-				return;
+		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get()
+				instanceof BuildAction) {
+			build.finaliseBuild();
+			this.setTexture(defaultTextureName);
+			this.deselect();
+			return;
 
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
