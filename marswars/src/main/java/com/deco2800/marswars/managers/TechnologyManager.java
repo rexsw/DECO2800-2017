@@ -189,7 +189,9 @@ public class TechnologyManager extends Manager{
 
     //Below here are hero upgrades, these are for the hero shop and not for the general units.
 
-    //HERO FACTORY TECH
+    /** Sets up the hero factory technology, including costs and parents.
+     *
+     * */
     public void setUpHeroFactoryTech() {
         heroFactory = new Technology(new int[]{0, 50, 0}, "Hero " +
                 "Factory", heroFactoryParents,
@@ -197,7 +199,11 @@ public class TechnologyManager extends Manager{
                         "hero units.");
         techMap.put(21, heroFactory);
     }
-
+    /** Sets up weapon item level technologies, including costs and parents.
+     *  Note that each preceding weapon item tech must be unlocked before
+     *  the next and that the Hero Factory must be unlocked before the level
+     *  1 weapon can be unlocked.
+     */
     public void setUpWeaponLevelTechs() {
         // Weapon item level upgrades setup
         weaponL1Parents.add(techMap.get(21));
@@ -226,7 +232,9 @@ public class TechnologyManager extends Manager{
         techMap.put(24, weaponLevelThree);
     }
 
-    //HERO SPECIAL UPGRADES
+    /** Sets up special item technology, including costs and parents.
+     *
+     */
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
         specialParents.add(heroFactory);
@@ -237,6 +245,11 @@ public class TechnologyManager extends Manager{
         techMap.put(25, special);
     }
 
+    /** Sets up armour item level technologies, including costs and parents.
+     *  Note that each preceding armour item tech must be unlocked before
+     *  the next and that Special items must be unlocked before the level
+     *  1 armour can be unlocked.
+     */
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
         armourL1Parents.add(techMap.get(25));
@@ -265,8 +278,7 @@ public class TechnologyManager extends Manager{
 
 
 
-    /*
-      This sets up the stats for all the general units
+    /** Sets up the stats for all the general units
      */
     public void setUnitAttributes() {
 
@@ -284,15 +296,13 @@ public class TechnologyManager extends Manager{
         unitAttributes.put("Spatman", new int[] {10, 300, 2, 200, 0, 8, 5}); // attackspeed damage
         unitAttributes.put("Spacman", new int[] {10, 300, 0, 200, 0, 8, 5});
     }
-    /*
-     returns the Technology with the specified ID
+    /** Returns the Technology with the specified ID
      */
     public Technology getTech(int id){
         return techMap.get(id);
     }
 
-    /**
-     provides a function to generate a List<String> representation of all the available technologies
+    /** Provides a function to generate a List<String> representation of all the available technologies
      */
     public int getUnitAttribute(String name, int attribute){
         return 	unitAttributes.get(name)[attribute];
@@ -625,7 +635,7 @@ public class TechnologyManager extends Manager{
 
         /**
          * Gets the buildings available for specified team
-         *      [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
+         *
          */
     public ArrayList<BuildingType> getAvailableBuildings() {
         ArrayList<BuildingType> buildingsAvailable = new ArrayList<>();
