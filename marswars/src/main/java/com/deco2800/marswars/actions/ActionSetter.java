@@ -71,6 +71,8 @@ public final class ActionSetter {
                 return doUnload((Soldier) performer);
             case UNLOADINDIVIDUAL:
                 return doUnloadIndividual((Soldier) performer);
+            case ATTACKMOVE:
+            	return doAttackMove(performer, x, y);
             default:
                 return false;
         }
@@ -186,6 +188,18 @@ public final class ActionSetter {
         performer.setAction(processBuild);
         return processBuild;
     }
+    
+    /**
+     * Assigns the attack move action to the entity
+     * @param performer the entity to be assigned the action
+     * @param x the x co-ordinates of the action
+     * @param y the y co-ordinates of the action
+     * @return true
+     */
+    private static boolean doAttackMove(BaseEntity performer, float x, float y) {
+        performer.setAction(new AttackMoveAction((int)x, (int)y, (AttackableEntity) performer));
+        return true;
+    }
 
     /**
      * This function is used to get the string for the name of the action denoted by the enumerated type
@@ -205,11 +219,13 @@ public final class ActionSetter {
             case BUILD:
                 return "Construct";
             case LOAD:
-        	return "Load";
+            	return "Load";
             case UNLOAD:
-        	return "Unload";
+            	return "Unload";
             case UNLOADINDIVIDUAL:
-        	return "Unload Individual";
+            	return "Unload Individual";
+            case ATTACKMOVE:
+            	return "Attack Move";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }

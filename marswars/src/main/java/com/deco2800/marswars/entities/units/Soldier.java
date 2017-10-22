@@ -94,10 +94,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
+		this.addNewAction(ActionType.ATTACKMOVE);
 		setAttributes();
 		setStance(2); // Default stance for soldier is aggressive		
 	}
-
 
 	//sets all attack attributes
 	public void setAttributes(){
@@ -175,16 +175,28 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void faceTowards(float x, float y) {
 		if(this.getPosX()>=x && this.getPosY()>=y) {
-			this.setTexture(downleftTextureName);
+			if(this.getPosX()-x >= this.getPosY()-y) {
+			this.setTexture(downleftTextureName);}
+			else if(this.getPosX()-x < this.getPosY()-y)
+			{this.setTexture(upleftTextureName);}
 		}
 		else if(this.getPosX()>=x && this.getPosY()<y) {
-			this.setTexture(downrightTextureName);
+			if(y-this.getPosY() >= this.getPosX()-x) {
+			this.setTexture(downrightTextureName);}
+			else if(y-this.getPosY() < this.getPosX()-x) {
+			this.setTexture(downleftTextureName);}			
 		}
 		else if(this.getPosX()<x && this.getPosY()>=y) {
-			this.setTexture(upleftTextureName);
+			if(x-this.getPosX() >= this.getPosY()-y) {				
+			this.setTexture(uprightTextureName);}
+			else if (x-this.getPosX() < this.getPosY()-y) {
+		    this.setTexture(upleftTextureName);}
 		}
 		else if(this.getPosX()<x && this.getPosY()<y) {
-			this.setTexture(uprightTextureName);
+			if(x-this.getPosX() >= y-this.getPosY()) {
+			this.setTexture(uprightTextureName);}
+			else if(x-this.getPosX() < y-this.getPosY()) {
+				this.setTexture(downrightTextureName);}
 		}
 		else {
 			this.setTexture(defaultTextureName);

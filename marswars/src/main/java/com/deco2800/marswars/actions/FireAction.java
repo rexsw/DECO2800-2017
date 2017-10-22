@@ -3,6 +3,7 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -90,21 +91,24 @@ public class FireAction extends AbstractPauseAction {
 	@Override
 	public void doAction() {
 		if (! timeManager.isPaused() && ! actionPaused) {
-			
+            /* The new position */
+			float newX = entity.getPosX() + movementX;
+			float newY = entity.getPosY() + movementY;
 			/* Check if entity has reached the target square or surpassed it */
-			if ((directionX == 1 && entity.getPosX() <= goalX) || 
-					(directionX == -1 && entity.getPosX() >= goalX) || 
-					(directionY == 1 && entity.getPosY() <= goalY) || 
-					(directionY == -1 && entity.getPosY() >= goalY)) {
+			boolean reachedTarget =(directionX == 1 && entity.getPosX() <= goalX) ||
+					(directionX == -1 && entity.getPosX() >= goalX) ||
+					(directionY == 1 && entity.getPosY() <= goalY) ||
+					(directionY == -1 && entity.getPosY() >= goalY);
+			boolean offMap = newX<0 || newY<0 || newX> GameManager.get().getWorld().getWidth()||
+					newY>GameManager.get().getWorld().getLength();
+			if (reachedTarget || offMap) {
 				entity.setPosX(goalX);
 				entity.setPosY(goalY);
 				completed = true;
 				return;
 			}
 			
-			/* The new position */
-			float newX = entity.getPosX() + movementX;
-			float newY = entity.getPosY() + movementY;
+
 			
 			/* Apply these values to the entity */
 			entity.setPosX(newX);

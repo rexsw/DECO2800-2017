@@ -15,6 +15,7 @@ public class Sniper extends Soldier {
 		this.setAttributes();		
 		setXRenderLength(2.2f);
 		setYRenderLength(2.2f);
+		setStance(3); // Default stance for sniper is skirmishing
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the
