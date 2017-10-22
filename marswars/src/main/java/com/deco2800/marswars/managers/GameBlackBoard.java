@@ -202,11 +202,13 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 */
 	public int teamsAlive() {
 		int count = 0;
-		for(int t: values.keySet()) {
-			if(values.get(t).get(Field.UNITS).get(index) != 0) {
-				alive = t;
-				count++;
-				
+		if(values!=null) {
+			for (int t : values.keySet()) {
+				if (values.get(t).get(Field.UNITS).get(index) != 0) {
+					alive = t;
+					count++;
+
+				}
 			}
 		}
 		return count;
