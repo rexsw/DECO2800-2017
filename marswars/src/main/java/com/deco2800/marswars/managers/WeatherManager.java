@@ -296,7 +296,7 @@ public class WeatherManager extends Manager implements Tickable {
      * multiplied.
      */
     private void generateFlood() {
-        if (waterEntities < (world.getWidth() * world.getLength()) / 3 * 2) {
+        if (waterEntities < (world.getWidth() * world.getLength()) / 3 * 2 / 6) {
             List<BaseEntity> entities = world.getEntities();
             Boolean waterFound = false;
             // Find existing water entities
