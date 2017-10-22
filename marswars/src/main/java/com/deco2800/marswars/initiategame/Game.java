@@ -233,27 +233,52 @@ public class Game{
 				Astronaut astronaut = new Astronaut(each.getX(), each.getY(), 0, each.getTeamId());
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
-			}else if("Base".equals(each.getName())){
-				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
-				base.setHealth(each.getHealth());
-				GameManager.get().getWorld().addEntity(base);
-			}else if("Tank".equals(each.getName())){
+			}
+//			else if("Base".equals(each.getName())){
+//				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
+//				base.setHealth(each.getHealth());
+//				GameManager.get().getWorld().addEntity(base);
+			else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(tank);
-			}else if("Carrier".equals(each.getName())){
+			}
+			else if("Carrier".equals(each.getName())){
 				Carrier carrier = new Carrier(each.getX(), each.getY(), 0, each.getTeamId());
 				carrier.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(carrier);
-			}else if("Commander".equals(each.getName())){
+			}
+			else if("Spacman".equals(each.getName())){
+				Spacman spacman = new Spacman(each.getX(), each.getY(), 0, each.getTeamId());
+				spacman.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(spacman);
+			}
+			else if("Sniper".equals(each.getName())){
+				Sniper sniper = new Sniper(each.getX(), each.getY(), 0, each.getTeamId());
+				sniper.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(sniper);
+			}
+			else if("TankDestroyer".equals(each.getName())){
+				TankDestroyer tankDestroyer = new TankDestroyer(each.getX(), each.getY(), 0, each.getTeamId());
+				tankDestroyer.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(tankDestroyer);
+			}
+			else if("Spatman".equals(each.getName())){
+				Spatman spatman = new Spatman(each.getX(), each.getY(), 0, each.getTeamId());
+				spatman.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(spatman);
+			}
+			else if("Commander".equals(each.getName())){
 				Commander commander = new Commander(each.getX(), each.getY(), 0, each.getTeamId());
 				commander.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(commander);
-			}else if("Medic".equals(each.getName())){
+			}
+			else if("Medic".equals(each.getName())){
 				Medic medic = new Medic(each.getX(), each.getY(), 0, each.getTeamId());
 				medic.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(medic);
-			}else if("Hacker".equals(each.getName())){
+			}
+			else if("Hacker".equals(each.getName())){
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);

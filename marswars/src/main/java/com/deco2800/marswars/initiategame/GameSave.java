@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import java.util.List;
  */
 public class GameSave {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSave.class);
+
 
     public Data data = new Data();
     /**
@@ -70,20 +72,14 @@ public class GameSave {
      * @throws java.io.FileNotFoundException
      */
     public void writeGame() throws java.io.FileNotFoundException{
+        LOGGER.info("Start saving game - DO NOT CLICK ANYTHING");
+
         Kryo kryo = new Kryo();
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-        //write the map file
-        File delete = new File("./resources/mapAssets/loadmap.tmx");
-        delete.delete();
-        File temp = new File("./resources/mapAssets/temp.tmx");
-        File dest = new File("./resources/mapAssets/loadmap.tmx");
-        try {
-            Files.copy(temp.toPath(), dest.toPath());
-        }catch (java.io.IOException e){
-            LOGGER.info("Game save: No file found - " + e);
-        }
+
+
 
         kryo.writeClassAndObject(output, data.getFogOfWar());
         kryo.writeClassAndObject(output, data.getBlackFogOfWar());
@@ -100,6 +96,25 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getMin());
         kryo.writeClassAndObject(output, data.getSec());
         output.close();
+
+        //write the map file
+        File delete = new File("./resources/mapAssets/loadmap.tmx");
+        delete.delete();
+
+
+        File temp = new File("./resources/mapAssets/temp.tmx");
+        File dest = new File("./resources/mapAssets/loadmap.tmx");
+        try {
+            LOGGER.info("Copying map file");
+            Files.copy(temp.toPath(), dest.toPath());
+
+        }catch (java.io.IOException e){
+            LOGGER.info("Game save: No file found - " + e);
+        }
+
+
+
+        LOGGER.info("DONE Saving Game!");
     }
 
     /**
@@ -229,12 +244,18 @@ public class GameSave {
     public void fillEntities(AbstractEntity e){
         if(e instanceof Astronaut){
             data.getEntities().add(new SavedEntity("Astronaut",e.getPosX(),e.getPosY(),((Astronaut) e).getOwner(),((Astronaut) e).getHealth()));
-        }else if(e instanceof Base){
-            data.getEntities().add(new SavedEntity("Base",e.getPosX(),e.getPosY(),((Base) e).getOwner(),((Base) e).getHealth()));
         }else if(e instanceof Tank){
             data.getEntities().add(new SavedEntity("Tank",e.getPosX(),e.getPosY(),((Tank) e).getOwner(),((Tank) e).getHealth()));
         }else if(e instanceof Carrier){
             data.getEntities().add(new SavedEntity("Carrier",e.getPosX(),e.getPosY(),((Carrier) e).getOwner(),((Carrier) e).getHealth()));
+        }else if(e instanceof Spacman) {
+            data.getEntities().add(new SavedEntity("Spacman",e.getPosX(),e.getPosY(),((Spacman) e).getOwner(),((Spacman) e).getHealth()));
+        }else if(e instanceof Sniper) {
+            data.getEntities().add(new SavedEntity("Sniper",e.getPosX(),e.getPosY(),((Sniper) e).getOwner(),((Sniper) e).getHealth()));
+        }else if(e instanceof TankDestroyer) {
+            data.getEntities().add(new SavedEntity("TankDestroyer",e.getPosX(),e.getPosY(),((TankDestroyer) e).getOwner(),((TankDestroyer) e).getHealth()));
+        }else if(e instanceof Spatman){
+            data.getEntities().add(new SavedEntity("Spatman",e.getPosX(),e.getPosY(),((Spatman) e).getOwner(),((Spatman) e).getHealth()));
         }else if(e instanceof Commander){
             data.getEntities().add(new SavedEntity("Commander",e.getPosX(),e.getPosY(),((Commander) e).getOwner(),((Commander) e).getHealth()));
         }else if(e instanceof Medic){
