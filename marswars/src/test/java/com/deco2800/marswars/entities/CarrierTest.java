@@ -1,19 +1,14 @@
 package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.DecoAction;
-import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.managers.SoundManager;
 
-import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.*;
 
 //import com.deco2800.marswars.managers.GameManager;
 //import com.deco2800.marswars.worlds.BaseWorld;
@@ -66,6 +61,27 @@ public class CarrierTest {
 	    Carrier carrier = new Carrier(0, 0, 0 , 0);
 	    Soldier soldier1 = new Soldier(1, 1, 1, 0);
 	    carrier.load(soldier1);
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	}
+        
+	@Test
+	public void loadTestDifferentTeam() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 1, 2);
+	    carrier.load(soldier1);
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	}
+	
+	@Test
+	public void setActionTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 1, 2);
+	    carrier.setNextAction(ActionType.MOVE);
+	    Assert.assertFalse(carrier.getCurrentAction().isPresent());
+	    carrier.load(soldier1);
+	    carrier.setNextAction(ActionType.LOAD);
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	    carrier.setNextAction(ActionType.UNLOAD);
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	}
 	
