@@ -75,7 +75,8 @@ public class WeatherManager extends Manager implements TickableManager {
                     if(!isWaterSoundPlaying) {
                         isWaterSoundPlaying = true;
                         try {
-                        	water = Gdx.audio.newSound(Gdx.files.internal("sounds/WaterSound.mp3"));
+                        	water = Gdx.audio.newSound(Gdx.files.internal(
+                        	        "sounds/WaterSound.mp3"));
                         	water.play();
                         }
                         catch (NullPointerException e){
