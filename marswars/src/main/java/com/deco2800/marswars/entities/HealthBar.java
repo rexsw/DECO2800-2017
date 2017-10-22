@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.deco2800.marswars.entities.units.Soldier;
+
 /**
  * Created by Hayden Bird on 5/10/2017.
  */
@@ -21,10 +22,16 @@ public class HealthBar extends BaseEntity {
 
     }
 
+    /**
+     * This method moves the health bar to its parents location
+     */
     public void translateToParent() {
         super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3);
     }
 
+    /**
+     * This method updates both the location and the health bars state
+     */
     public void update() {
 	if (parentEntity.getEntityType() == EntityType.UNIT) {
 	    if (((Soldier) parentEntity).getLoadStatus() == 1) {
@@ -41,16 +48,25 @@ public class HealthBar extends BaseEntity {
         this.setTexture("Health" + state);
     }
 
+    /**
+     *This method sets the health bar to be visible or not
+     * @param visible the visibility state to set it to
+     */
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
+    /**
+     * This method returns the state of the health bar, the state is a number from 1 to 20 that represents how full the bar is
+     * @return the state the health bar is in
+     */
     public int getState() {return state;}
 
+
+    /**
+     * This method creates the textures for the health bar
+     * @param number how many steps should the bar have
+     */
     public void generateTextures(int number) {
         PixmapIO pIO = new PixmapIO();
         for (int i = 0; i <= number; i++) {
@@ -76,7 +92,7 @@ public class HealthBar extends BaseEntity {
     @Override
     public boolean isCollidable() {return false;}
 
-    /*Disable all of the methods that are not needed for health bars*/
+    /*Disable all of the methods that will cause issues if the health bar can use*/
 
     @Override
     public HealthBar getHealthBar() {

@@ -30,6 +30,8 @@ public class EntityPortrait extends TextButton {
      * Creates the portrait using just a unit. This is the general use case
      * @param skin The HUD skin to use
      * @param unit The entity that will be represented with the portrait
+     * @param width the width of the button
+     * @param height the width of the button
      */
     public EntityPortrait(Skin skin, BaseEntity unit, float width, float height) {
         super("", skin);
@@ -43,12 +45,15 @@ public class EntityPortrait extends TextButton {
      * @param skin The HUD skin to use
      * @param unit The entity that will be represented with the portrait
      * @param parent The parent entity of this portrait
+     * @param width the width of the button
+     * @param height the width of the button
      */
     public EntityPortrait(Skin skin, BaseEntity unit, EntityPortrait parent, float width, float height) {
         super("", skin);
         this.unit = unit;
         this.setWidth(width);
         this.setHeight(height);
+        parent.addChild(this);
         initiateButton(width, height, true);
         createListener();
     }
@@ -82,21 +87,23 @@ public class EntityPortrait extends TextButton {
      * Sets up the portrait visually
      * @param width the width of the button
      * @param height the height of the button
+     * @param  child if this is a child portrait
      */
     private void initiateButton(float width, float height, boolean child) {
         super.setWidth(width);
         super.setHeight(height);
+        //Set up the sprites
         this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
         Texture unitTexture = textureManager.getTexture(unit.getTexture());
         Texture healthBar = textureManager.getTexture("Health" + unit.getHealthBar().getState());
         Image unitSprite = new Image(unitTexture);
         this.healthBarSprite = new Image(healthBar);
         this.add(unitSprite).align(Align.top).width(width).height(height);
-        if (!child) {
+
+        if (!child) { //Children don't have enough space for health bars, so don't give them one
             this.add(healthBarSprite).align(Align.top).bottom().width(width).height(height*0.2f);
         }
-        super.setWidth(width);
-        super.setHeight(height);
+        //Scale the button down if its a child
         if (child) {
             this.setTransform(true);
             this.setScale(0.2f);
