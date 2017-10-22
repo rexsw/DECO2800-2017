@@ -13,6 +13,8 @@ public class TankDestroyer extends Soldier {
 		super(posX, posY, posZ, owner);
 		this.name = "TankDestroyer";
 		this.setAttributes();
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		
 	}
 	/*

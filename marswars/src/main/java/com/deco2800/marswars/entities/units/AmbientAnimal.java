@@ -6,6 +6,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ import java.util.Random;
  * @author Michelle Mo
  *
  */
-public class AmbientAnimal extends AttackableEntity{
+public class AmbientAnimal extends Soldier{
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	private AmbientState state;
 	private int maxTravelTime;
@@ -35,8 +36,8 @@ public class AmbientAnimal extends AttackableEntity{
 	}
 	
 	
-	public AmbientAnimal(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
-		super(posX, posY, posZ, 1, 1, 1);
+	public AmbientAnimal(float posX, float posY, float posZ) {
+		super(posX, posY, posZ, 0);
 		maxTravelTime = 5;
 		traveledTime = 0;
 		state = AmbientState.DEFAULT;
@@ -53,14 +54,14 @@ public class AmbientAnimal extends AttackableEntity{
 	 */
 	public void setDefaultAttributes() {
 		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
-		this.setMaxHealth(t.getUnitAttribute(this.name, 1));
-		this.setHealth(t.getUnitAttribute(this.name, 1));
-		this.setDamage(t.getUnitAttribute(this.name, 2));
-		this.setArmor(t.getUnitAttribute(this.name, 3));
-		this.setMaxArmor(t.getUnitAttribute(this.name, 3));
-		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
-		this.setAttackRange(t.getUnitAttribute(this.name, 5));
-		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
+		this.setMaxHealth(300);
+		this.setHealth(300);
+		this.setDamage(20);
+		this.setArmor(0);
+		this.setMaxArmor(0);
+		this.setArmorDamage(20);
+		this.setAttackRange(1);
+		this.setAttackSpeed(1);
 		
 		this.setSpeed(0.01f);
 	}
@@ -184,6 +185,25 @@ public class AmbientAnimal extends AttackableEntity{
 	 */
 	public EntityStats getStats() {
 		return new EntityStats("Ambient Animal", this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+	}
+	
+	@Override
+	public void setAllTextture() {
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		try {
+			this.selectedTextureName = null;
+			this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
+			this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
+			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
+			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
+			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = null;
+			this.movementSound = "endturn.wav";
+		}
+		catch(NullPointerException n){
+			LOGGER.error("setAlltexture has error");
+			return;
+		}
 	}
 	
 

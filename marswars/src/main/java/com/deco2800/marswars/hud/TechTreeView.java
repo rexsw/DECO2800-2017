@@ -9,12 +9,17 @@ import com.deco2800.marswars.managers.TimeManager;
 
 import com.deco2800.marswars.technology.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Creates the tech tree dialog view to be used by the player
  *
  */
 public class TechTreeView extends Dialog{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(TechTreeView.class);
 
 	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
@@ -22,7 +27,7 @@ public class TechTreeView extends Dialog{
 			GameManager.get().getManager(TimeManager.class);
 	HUDView hud;
 	String message;
-	Dialog techtree;
+	private Dialog techtree;
 	private String sleightOfHandString = "Sleight of Hand \n %d R, %d C, %d B";
 	
 	public TechTreeView(String title, Skin skin, HUDView hud) {
@@ -36,7 +41,8 @@ public class TechTreeView extends Dialog{
 
 		getButtonText(skin);
 
-		timeManager.pause();
+		this.timeManager.pause();
+		this.hud.setTechCheck(1);
 
 		//exit button
 		getButtonTable().row();
@@ -59,7 +65,8 @@ public class TechTreeView extends Dialog{
 		button("EXIT TECHNOLOGY TREE", 29);
 
 		text(message);
-		timeManager.pause();
+		this.timeManager.pause();
+		this.hud.setTechCheck(1);
 	}
 
 	private void getButtonText(Skin skin) {
@@ -78,8 +85,8 @@ public class TechTreeView extends Dialog{
 
 		button(String.format("Anger \n %d R, %d C, %d B", this.techMan.getTech(5).getCost()[0], this.techMan.getTech(5).getCost()[1], this.techMan.getTech(5).getCost()[2]), 5);
 		button(String.format("Rage \n %d R, %d C, %d B", this.techMan.getTech(6).getCost()[0], this.techMan.getTech(6).getCost()[1], this.techMan.getTech(6).getCost()[2]), 6);
-		button(String.format(sleightOfHandString, this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
-		button(String.format(sleightOfHandString, this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
+		button(String.format(this.sleightOfHandString, this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
+		button(String.format(this.sleightOfHandString, this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
 
 		getButtonTable().row();
 
@@ -87,7 +94,7 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().add(new Label("Attack Speed Tech", skin));
 
-		button(String.format(sleightOfHandString, this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2]), 9);
+		button(String.format(this.sleightOfHandString, this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2]), 9);
 		button(String.format("Unnatural Dexterity \n %d R, %d C, %d B", this.techMan.getTech(10).getCost()[0], this.techMan.getTech(10).getCost()[1], this.techMan.getTech(10).getCost()[2]), 10);
 		button(String.format("120 WPM \n %d R, %d C, %d B", this.techMan.getTech(11).getCost()[0], this.techMan.getTech(11).getCost()[1], this.techMan.getTech(11).getCost()[2]), 11);
 		button(String.format("Korean Starcraft Pro \n %d R, %d C, %d B", this.techMan.getTech(12).getCost()[0], this.techMan.getTech(12).getCost()[1], this.techMan.getTech(12).getCost()[2]), 12);
@@ -148,31 +155,42 @@ public class TechTreeView extends Dialog{
 	 */
 	@Override
 	protected void result(final Object object){
-		timeManager.unPause();
-		this.hud.setTechCheck(0);
+		this.timeManager.unPause();
 		int techID = (int) object;
 		final String techTree = "TechTree";
 		final String activateTech = "Activating Technology!";
+		this.hud.setTechCheck(1);
 		if (techID < 29) {
 			int x = (int) object;
-			message = this.techMan.checkPrereqs(techMan, this.techMan.getTech(x), x, 1);
-			techtree = new TechTreeView(techTree, this.getSkin(), this.hud,message).show(this.getStage());
-			if(message == activateTech) {
-				this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, x, 1);
+			this.message = this.techMan.checkPrereqs(this.techMan, this.techMan.getTech(x), x, 1);
+			this.techtree = new TechTreeView(techTree, this.getSkin(), this.hud,this.message).show(this.getStage());
+			this.hud.setTechTree(this.techtree);
+			if(this.message == activateTech) {
+				this.techMan.activateTech(this.techMan, this.techMan.getTech(1), this.resourceManager, x, 1);
 				this.techMan.addActiveTech(this.techMan.getTech(x));
 			}
 		} else {
-			this.hud.setTechCheck(1);
-			techtree.hide();
-			this.timeManager.unPause();
+			this.hideTechTree(techtree);
 		}
 
 		if (techID == 0) {
 			return;
 		}
 		Technology tech = this.techMan.getTech(techID);
-		String message = this.techMan.checkPrereqs(this.techMan, tech, techID, -1);
+		//String message = this.techMan.checkPrereqs(this.techMan, tech, techID, -1);
 		//Need to find a way to print this to the dialogue box
-		System.out.println(message);
+		//LOGGER.info(message);
+	}
+	
+	
+	/** 
+	 * Hides the tech tree from the screen.  
+	 * This function is called when the player chooses to exit the technology tree
+	 * 
+	 */
+	public void hideTechTree(Dialog techTree) {
+		LOGGER.info("Hides the tech tree and continues the game");
+		this.hud.setTechCheck(0);
+		this.timeManager.unPause();	
 	}
 }

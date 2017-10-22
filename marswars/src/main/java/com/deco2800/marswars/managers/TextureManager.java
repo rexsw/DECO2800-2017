@@ -3,6 +3,7 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Soldier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +110,11 @@ public class TextureManager extends Manager {
         textureMap.put("tree3_green", new Texture("resources/EnvironmentalAssets/treestyle4-green.png"));
         textureMap.put("tree3_yellow", new Texture("resources/EnvironmentalAssets/treestyle4-yellow.png"));
         textureMap.put("tree3_red", new Texture("resources/EnvironmentalAssets/treestyle4-red.png"));
+
+        textureMap.put("cliff_left_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left-MARS.png"));
+        textureMap.put("cliff_right_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right-MARS.png"));
+        textureMap.put("cliff_right_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right.png"));
+        textureMap.put("cliff_left_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left.png"));
 
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
@@ -290,6 +296,13 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (soldier instanceof AmbientAnimal) {
+            	 path = String.format("resources/UnitAssets/%s/%s.png",
+                         unitType,textureType);
+            	String retVal = textureType + unitType;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             if (textureType.equals("missile")) {
             	 path = String.format("resources/UnitAssets/%s/%s.png",
                          unitType,textureType);

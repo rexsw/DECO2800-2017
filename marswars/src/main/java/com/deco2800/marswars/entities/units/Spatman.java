@@ -8,6 +8,8 @@ public class Spatman extends Soldier {
 	
 	public Spatman(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		this.name = "Spatman";
 		this.setAttributes();
 		this.slowMovementSpeed = 0.01f;

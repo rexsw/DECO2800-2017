@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TimeManager;
 
 public class HelpWindow extends Window{
 	private static final int SIDEPANEBUTTONWIDTH = 160;
@@ -23,6 +25,10 @@ public class HelpWindow extends Window{
 	private Window window;
 	private Skin skin;
 	private Table sidePane;
+	private HUDView hud;
+	
+	private TimeManager timeManager = (TimeManager)
+			GameManager.get().getManager(TimeManager.class);
 
 	public HelpWindow(Stage stage, Skin skin) {
 		super("", skin);
@@ -62,6 +68,7 @@ public class HelpWindow extends Window{
 		back.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				timeManager.unPause();
 				setVisible(false);
 			}
 		});
