@@ -32,7 +32,7 @@ public class GameTest {
 	
 	@Test
 	public void testGameSave() throws FileNotFoundException {
-		GameSave testSave = new GameSave(1, 1);
+		GameSave testSave = new GameSave(1, 1,true);
 		testSave.fillData();
 		testSave.writeGame();
 		testSave.readGame();

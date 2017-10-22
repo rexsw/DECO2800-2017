@@ -32,6 +32,7 @@ public class GameSave {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSave.class);
 
 
+
     public Data data = new Data();
     /**
      * blank constructor to correctly load game
@@ -43,7 +44,7 @@ public class GameSave {
      * the constructor to save map type and size
      * only used when initiate game saving instance
      */
-    public GameSave(int aITeams, int playerTeams){
+    public GameSave(int aITeams, int playerTeams, boolean isLoadedGame){
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
 
@@ -52,8 +53,15 @@ public class GameSave {
         File delete = new File(tempFile);
         delete.delete();
 
-        //copying the map
-        File source = new File("./resources/mapAssets/tmap.tmx");
+        File source;
+        if(isLoadedGame){
+            //copying the load map
+            source =new File("./resources/mapAssets/loadmap.tmx");
+        }
+        else {
+            //copying the map
+            source = new File("./resources/mapAssets/tmap.tmx");
+        }
 
 
         //temp file created everytime a new map is created
