@@ -2,6 +2,7 @@ package com.deco2800.marswars.initiategame;
 
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.terrainelements.Resource;
+import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -79,6 +80,17 @@ public class Data {
     //gameTime
     private long hour;
     private long min;
+
+    public AiManager.Difficulty getAiDifficulty() {
+        return aiDifficulty;
+    }
+
+    public void setAiDifficulty(AiManager.Difficulty aiDifficulty) {
+        this.aiDifficulty = aiDifficulty;
+    }
+
+    //aiDifficulties
+    AiManager.Difficulty aiDifficulty;
 
 
     public long getHour() {

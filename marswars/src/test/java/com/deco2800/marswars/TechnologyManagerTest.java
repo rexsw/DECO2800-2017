@@ -131,8 +131,6 @@ public class TechnologyManagerTest {
         rs.setBiomass(100,-1);
         assertTrue(technologyManager.checkPrereqs(technologyManager, tech1, 1,
                 -1).equals("Activating Technology!"));
-        assertFalse(technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1,
-               -1).equals("You have not researched the required technology for this upgrade"));
     }
 
     @Test
