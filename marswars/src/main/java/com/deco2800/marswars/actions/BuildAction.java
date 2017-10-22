@@ -72,7 +72,11 @@ public class BuildAction implements DecoAction{
 		this.projX = x;
 		this.projY = y;
 		this.state = State.SETUP_MOVE;
-		createBuilding();
+		float[] parse = new float[]{projX, projY, fixPos};
+		this.temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
+		temp.setGreen();
+		validBuild = true;
+		finaliseBuild();
 	}
 	
 	/**

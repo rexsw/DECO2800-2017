@@ -1,6 +1,7 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -44,6 +45,8 @@ public class GenerateAction implements DecoAction {
 				progress--;
 			} else {
 				this.world.addEntity(actionResult);
+				GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+				black.updateunit(actionResult);
 				actionResult = null;
 			}
 		}
