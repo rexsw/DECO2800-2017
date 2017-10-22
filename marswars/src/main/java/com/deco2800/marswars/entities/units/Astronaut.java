@@ -2,6 +2,7 @@ package com.deco2800.marswars.entities.units;
 
 
 import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
@@ -36,9 +37,12 @@ public class Astronaut extends Soldier {
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.removeActions(ActionType.DAMAGE);
+		this.removeActions(ActionType.ATTACKMOVE);
 		this.setFogRange(10);
 		setAttributes();
 	}
+	
 	
 	/**
 	 * Overrides Left click and checks if build action is in progress and handles appropriately

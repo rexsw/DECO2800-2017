@@ -1,5 +1,8 @@
 package com.deco2800.marswars.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
@@ -16,6 +19,9 @@ import com.deco2800.marswars.managers.TimeManager;
  */
 
 public class ShootAction extends AbstractPauseAction {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShootAction.class);
+	
 	private State state = State.COOLDOWN;
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
@@ -73,10 +79,14 @@ public class ShootAction extends AbstractPauseAction {
 	}
 	
 	private void setUpMissile() {
+		try {
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound("shooting.mp3");
 		sound.playSound(loadedSound);
-
+		} catch (Exception e) {
+			LOGGER.error("Sound shootaction error");
+		}
+		
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
 				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}

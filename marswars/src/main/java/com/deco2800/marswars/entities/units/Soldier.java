@@ -94,10 +94,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
+		this.addNewAction(ActionType.ATTACKMOVE);
 		setAttributes();
 		setStance(2); // Default stance for soldier is aggressive		
 	}
-
 
 	//sets all attack attributes
 	public void setAttributes(){

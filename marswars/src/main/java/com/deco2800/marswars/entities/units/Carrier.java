@@ -49,9 +49,10 @@ public class Carrier extends Soldier {
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
+		this.removeActions(ActionType.ATTACKMOVE);
 		this.isCarrier();
     }
-
+	
     /**
      * On rightclick method for carrier. If clicked on an allied unit that is
      * loadable, it will load the unit if theres space, else it will move to
