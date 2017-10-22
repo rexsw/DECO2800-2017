@@ -1,5 +1,8 @@
 package com.deco2800.marswars.entities.units;
 
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
+import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.GameManager;
 
 public class Dino extends AmbientAnimal{
 
@@ -19,7 +22,12 @@ public class Dino extends AmbientAnimal{
 		this.setArmorDamage(20);
 		this.setAttackRange(1);
 		this.setAttackSpeed(1);
-		
+		this.setDrop(ResourceType.BIOMASS);
 		this.setSpeed(0.01f);
+	}
+	
+	@Override 
+	public void move(){
+		((AiManager) GameManager.get().getManager(AiManager.class)).soldierGroupAttack(this);
 	}
 }

@@ -307,9 +307,10 @@ public class TextureManager extends Manager {
             unitType=sc.next();
             sc.close();
             if (soldier instanceof AmbientAnimal) {
-            	 path = String.format("resources/UnitAssets/%s/%s.png",
-                         unitType,textureType);
-            	String retVal = textureType + unitType;
+            	String mapcolour = GameManager.get().getMapType().toSColour();
+            	 path = String.format("resources/UnitAssets/%s/%s/%s.png",
+                         unitType,mapcolour,textureType);
+            	String retVal = textureType  + unitType + mapcolour;
             	saveTexture(retVal, path);
             	return retVal;
             }

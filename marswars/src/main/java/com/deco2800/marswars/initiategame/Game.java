@@ -63,7 +63,7 @@ public class Game{
 	 */
 	public Game(int aITeams, int playerTeams, Difficulty aiDifficulty) throws java.io.FileNotFoundException{
 		this.aiDifficulty = aiDifficulty;
-		savedGame = new GameSave(aITeams,playerTeams,true);
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,true);
 		loadGame(savedGame);
 	}
 	
@@ -74,11 +74,12 @@ public class Game{
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, Difficulty aiDifficulty) {
 		this.aiDifficulty = aiDifficulty;
+		GameManager.get().setMapType(mapType);
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		int currentColorIndex = colourManager.getIndex();
 		startGame(mapType, mapSize, aITeams, playerTeams);
-		savedGame = new GameSave(aITeams,playerTeams,false);
+		savedGame = new GameSave(aITeams,playerTeams,aiDifficulty,false);
 		savedGame.data.setIndex(currentColorIndex);
 	}
 
@@ -97,6 +98,10 @@ public class Game{
 		this.camera = GameManager.get().getCamera();
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
+
+		//set win condition
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		win.setwinconditions(loadedGame.data.getWinCondition());
 
 		//set game time
 		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),0);
@@ -136,7 +141,7 @@ public class Game{
 		ResourceManager rm = (ResourceManager) GameManager.get()
 				.getManager(ResourceManager.class);
 
-
+		aiDifficulty = loadedGame.data.getAiDifficulty();
 
 		for (int teamid = 1; teamid < aiteams + 1; teamid++) {
 			cm.setColour(teamid);
@@ -507,11 +512,15 @@ public class Game{
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(100, teamid);
-		rm.setRocks(100, teamid);
-		rm.setCrystal(100, teamid);
-		rm.setMaxPopulation(10, teamid);
+		int initResource = 0;
+		if(teamid<0){
+			initResource = 100;
+		}
 
+		rm.setBiomass(initResource, teamid);
+		rm.setRocks(initResource, teamid);
+		rm.setCrystal(initResource, teamid);
+		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);		
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);

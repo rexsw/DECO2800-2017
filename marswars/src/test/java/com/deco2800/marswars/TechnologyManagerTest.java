@@ -113,28 +113,24 @@ public class TechnologyManagerTest {
     @Test
     public void checkPrereqs() throws Exception {
         ResourceManager rs = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        rs.setRocks(0,1);
+        rs.setRocks(0,-1);
         assertTrue(technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(2), 2,
-                1).equals("You have not researched the required technology for this upgrade"));
+                -1).equals("You have not researched the required technology for this upgrade"));
 
         assertTrue(technologyManager.checkPrereqs(technologyManager, tech1, 1,
-                1).equals("Insufficient Rocks"));
-        rs.setRocks(100,1);
+                -1).equals("Insufficient Rocks"));
+        rs.setRocks(100,-1);
 
-        rs.setCrystal(0,1);
+        rs.setCrystal(0,-1);
         assertTrue(technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(5), 5,
-                1).equals("Insufficient Crystals"));
-        rs.setCrystal(100,1);
-        rs.setBiomass(0,1);
+                -1).equals("Insufficient Crystals"));
+        rs.setCrystal(100,-1);
+        rs.setBiomass(0,-1);
         assertTrue(technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(9), 9,
-                1).equals("Insufficient Biomass"));
-        rs.setBiomass(100,1);
+                -1).equals("Insufficient Biomass"));
+        rs.setBiomass(100,-1);
         assertTrue(technologyManager.checkPrereqs(technologyManager, tech1, 1,
-                1).equals("Activating Technology!"));
-        assertFalse(technologyManager.checkPrereqs(technologyManager, technologyManager.getTech(1), 1,
-                1).equals("You have not researched the required technology for this upgrade"));
-        assertTrue(technologyManager.checkPrereqs(technologyManager, tech1, 1,
-                1).equals("You have already researched this upgrade"));
+                -1).equals("Activating Technology!"));
     }
 
     @Test

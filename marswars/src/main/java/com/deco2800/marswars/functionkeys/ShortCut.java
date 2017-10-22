@@ -15,19 +15,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-/**
- * 
- * @author 
- * @co-author haoxuan
- *
- */
-
 
 /**
  * This Class is used to deal with different keyboard inputs as
  * command of the game and it might have some special functions.
  * 
  * @author Matthew Lee
+ * @co-author haoxuan
  */
 public class ShortCut {
 

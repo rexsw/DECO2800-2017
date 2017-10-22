@@ -51,6 +51,8 @@ public class ShopDialog extends Dialog {
 	private TechnologyManager technologyManager;
 
 	private boolean specialUnlocked = false;
+	private int weaponLevel = 0; //indicator of level of weapons the shop currently has loaded
+	private int armourLevel = 0; //indicator of level of armour the shop currently has loaded
 
 	/**
 	 * Constructor of the shop dialog window class.
@@ -133,12 +135,16 @@ public class ShopDialog extends Dialog {
 	 *
 	 */
 	public void unlockWeapons(int level) {
+		if (level <= weaponLevel) {
+			return;
+		}
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
 		for (WeaponType wep : WeaponType.values()) {
 			items.add(wep);
 		}
 		updateShop(items, level);
+		weaponLevel = level;
 	}
 
 	/**
@@ -147,12 +153,16 @@ public class ShopDialog extends Dialog {
 	 *
 	 */
 	public void unlockArmours(int level) {
+		if (level <= armourLevel) {
+			return;
+		}
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
 		for (ArmourType armour : ArmourType.values()) {
 			items.add(armour);
 		}
 		updateShop(items, level);
+		armourLevel = level;
 	}
 
 	/**
@@ -160,6 +170,9 @@ public class ShopDialog extends Dialog {
 	 *
 	 */
 	public void unlockSpecials() {
+		if (specialUnlocked) {
+			return;
+		}
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined special items in SpecialType enumerate class
 		for (SpecialType spec : SpecialType.values()) {
@@ -215,7 +228,7 @@ public class ShopDialog extends Dialog {
 									+ "(Armour) for "
 									+ selectedHero.toString());
 						} else {
-							boolean transactSuccess = false;
+							boolean transactSuccess;
 							Special special = new Special((SpecialType) item);
 							transactSuccess = selectedHero
 									.addItemToInventory(special);
@@ -396,5 +409,22 @@ public class ShopDialog extends Dialog {
 	public float getPrefHeight() {
 		return windowSize * 0.6f;
 	}
+	
+	/**
+	 * Get the level of weapons that are currently loaded in the shop
+	 * @return int that is the level of weapons that are currently loaded
+	 */
+	public int getWeapLvl() {
+		return weaponLevel;
+	}
+	
+	/**
+	 * Get the level of armours that are currently loaded in the shop
+	 * @return int that is the level of armours that are currently loaded
+	 */
+	public int getArmLvl() {
+		return armourLevel;
+	}
+
 
 }

@@ -7,10 +7,7 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TimeManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Array2D;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -45,9 +42,10 @@ public class GameSave {
      * the constructor to save map type and size
      * only used when initiate game saving instance
      */
-    public GameSave(int aITeams, int playerTeams, boolean isLoadedGame){
+    public GameSave(int aITeams, int playerTeams, AiManager.Difficulty diff, boolean isLoadedGame){
         data.setaITeams(aITeams);
         data.setPlayerTeams(playerTeams);
+        data.setAiDifficulty(diff);
 
         String tempFile = "./resources/mapAssets/temp.tmx";
         
@@ -95,12 +93,14 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getObstacles());
         kryo.writeClassAndObject(output, data.getAnimals());
         kryo.writeClassAndObject(output, data.getIndex());
+        kryo.writeClassAndObject(output, data.getAiDifficulty());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
         kryo.writeClassAndObject(output, data.getaIStats());
         kryo.writeClassAndObject(output, data.getPlayerStats());
         kryo.writeClassAndObject(output, data.getHour());
         kryo.writeClassAndObject(output, data.getMin());
+        kryo.writeClassAndObject(output, data.getWinCondition());
         output.close();
 
         //write the map file
@@ -139,12 +139,15 @@ public class GameSave {
         data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
         data.setAnimals((ArrayList<SavedAnimal>)kryo.readClassAndObject(input));
         data.setIndex((int)kryo.readClassAndObject(input));
+        data.setAiDifficulty((AiManager.Difficulty)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
         data.setaIStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setPlayerStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setHour((long)kryo.readClassAndObject(input));
         data.setMin((long)kryo.readClassAndObject(input));
+        data.setWinCondition((WinManager.WINS)kryo.readClassAndObject(input));
+
         input.close();
     }
 
@@ -154,6 +157,7 @@ public class GameSave {
      * this function will get all the entities and fills in the arrays
      */
     public void fillData(){
+
         //fill the time
         TimeManager timeManager = (TimeManager)
                 GameManager.get().getManager(TimeManager.class);
@@ -162,6 +166,10 @@ public class GameSave {
 
         data.setFogOfWar(FogManager.getFog());
         data.setBlackFogOfWar(FogManager.getBlackFog());
+
+        //get win condition
+        WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+        data.setWinCondition(win.getWinCondition());
 
         //getting all the entities
         List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();

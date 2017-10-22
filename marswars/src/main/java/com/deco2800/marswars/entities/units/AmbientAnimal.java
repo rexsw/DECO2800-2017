@@ -4,6 +4,8 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
+import com.deco2800.marswars.entities.terrainelements.Resource;
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -30,6 +32,7 @@ public class AmbientAnimal extends Soldier{
 	private int traveledTime;
 	private int waitingTime;
 	private String name;
+	private ResourceType drop = ResourceType.BIOMASS;
 	
 	public enum AmbientState {
 		DEFAULT, TRAVEL, ATTACKBACK
@@ -71,6 +74,26 @@ public class AmbientAnimal extends Soldier{
 	 */
 	public void attack() {
 		
+	}
+	
+	@Override
+	public void setHealth(int health) {
+		if (this.health > health) {
+			this.setGotHit(true);
+		}
+		if (health <= 0) {
+			GameManager.get().getWorld().removeEntity(this);
+			if (this.getHealthBar() != null) {
+				GameManager.get().getWorld().removeEntity(this.getHealthBar());
+			}
+			LOGGER.info("DEAD");
+			GameManager.get().getWorld().addEntity(new Resource(this.getPosX(), this.getPosY(), 0, 1f, 1f, getDrop()));
+
+		}
+		if (health >= this.getMaxHealth()) {
+			this.health = this.getMaxHealth();
+			return;
+		}
 	}
 	
 	/**
@@ -204,6 +227,16 @@ public class AmbientAnimal extends Soldier{
 			LOGGER.error("setAlltexture has error");
 			return;
 		}
+	}
+
+
+	public ResourceType getDrop() {
+		return drop;
+	}
+
+
+	public void setDrop(ResourceType drop) {
+		this.drop = drop;
 	}
 	
 

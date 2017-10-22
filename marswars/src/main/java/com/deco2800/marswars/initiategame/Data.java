@@ -2,6 +2,8 @@ package com.deco2800.marswars.initiategame;
 
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.terrainelements.Resource;
+import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.WinManager;
 import com.deco2800.marswars.util.Array2D;
 
 import java.util.ArrayList;
@@ -66,8 +68,19 @@ public class Data {
     private int aITeams;
     private int playerTeams;
 
+    private WinManager.WINS winCondition;
+
 
     //stats are saved in this order
+
+    public WinManager.WINS getWinCondition() {
+        return winCondition;
+    }
+
+    public void setWinCondition(WinManager.WINS winCondition) {
+        this.winCondition = winCondition;
+    }
+
     //biomass-rocks-crystal-water-population
 
     //aiStats
@@ -79,6 +92,17 @@ public class Data {
     //gameTime
     private long hour;
     private long min;
+
+    public AiManager.Difficulty getAiDifficulty() {
+        return aiDifficulty;
+    }
+
+    public void setAiDifficulty(AiManager.Difficulty aiDifficulty) {
+        this.aiDifficulty = aiDifficulty;
+    }
+
+    //aiDifficulties
+    AiManager.Difficulty aiDifficulty;
 
 
     public long getHour() {
