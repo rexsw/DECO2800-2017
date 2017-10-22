@@ -191,7 +191,7 @@ public class TechnologyManager extends Manager{
 
     //HERO FACTORY TECH
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
+        heroFactory = new Technology(new int[]{0, 50, 0}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -495,16 +495,15 @@ public class TechnologyManager extends Manager{
         if(techMan.getActive().contains(tech)) {
             return "You have already researched this upgrade";
         }
-        if (tech.getCost()[0] > resourceManager.getRocks(teamid)) {
+        if (tech.getCost()[0] > resourceManager.getRocks(-1)) {
             return "Insufficient Rocks";
         }
-        if (tech.getCost()[1] > resourceManager.getCrystal(teamid)) {
+        if (tech.getCost()[1] > resourceManager.getCrystal(-1)) {
             return "Insufficient Crystals";
         }
-        if (tech.getCost()[2] > resourceManager.getBiomass(teamid)) {
+        if (tech.getCost()[2] > resourceManager.getBiomass(-1)) {
             return "Insufficient Biomass";
         }
-        activateTech(techMan, tech, resourceManager, techID, teamid);
         return "Activating Technology!";
     }
 
