@@ -646,7 +646,6 @@ public class TechnologyManager extends Manager{
          *      [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
          */
     public ArrayList<BuildingType> getAvailableBuildings() {
-<<<<<<< HEAD
         ArrayList buildingsAvailable = new ArrayList<BuildingType>();
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
@@ -656,10 +655,6 @@ public class TechnologyManager extends Manager{
                     BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
         }
     	return buildingsAvailable;
-=======
-        return new ArrayList<>(Arrays.asList(
-                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
->>>>>>> 0f04222ff462f12d2bad3c7f10e45bbae0ed643c
     }
 
 
