@@ -99,7 +99,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		} else if(unit instanceof Base) {
 			Base x = (Base)unit;
 			if(state == State.ECONOMIC) {
-				generateEntity(x, EntityID.ASTRONAUT);
+				generateEntity(x, EntityID.SOLDIER);
 			} else {
 				generateEntity(x, EntityID.SOLDIER);
 			}
@@ -191,10 +191,11 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		if(!x.showProgress() && ActionSetter.canAfford(x.getOwner(), true, entityID, rm)) {
 			LOGGER.info("ai - set base to make " + entityID);
-			ActionSetter.payForEntity(x.getOwner(), true, entityID, rm);
+			//ActionSetter.payForEntity(x.getOwner(), true, entityID, rm);
 			//Astronaut r = new Astronaut(x.getPosX(), x.getPosY(), 0, x.getOwner());
 			//x.setAction(new GenerateAction(r));
 			ActionSetter.setGenerate(x, entityID);
+			LOGGER.info("ai - base has an action: " + x.showProgress());
 		}
 	}
 	
