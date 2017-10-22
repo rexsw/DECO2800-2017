@@ -273,8 +273,8 @@ public class TimeManager extends Manager implements TickableManager {
 	 * @param seconds - the number of seconds to be added
 	 */
 	public static void setGameTime(int hours, int minutes, int seconds) {
-		int hourLength = 3600;
-		int minuteLength = 60;
+		long hourLength = 3600;
+		long minuteLength = 60;
 		addTime(hours * hourLength + minutes * minuteLength + seconds);
 	}
 
