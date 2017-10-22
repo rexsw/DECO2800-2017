@@ -267,9 +267,11 @@ public class HUDView extends ApplicationAdapter{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (helpCheck == 1){
+					timeManager.unPause();
 					help.setVisible(false);
 					helpCheck = 0;
 				} else {
+					timeManager.pause();
 					help.setVisible(true);
 					helpCheck = 1; 
 				}

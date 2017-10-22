@@ -62,7 +62,7 @@ public class Game{
 	 * @param aITeams
 	 */
 	public Game(int aITeams, int playerTeams) throws java.io.FileNotFoundException{
-		savedGame = new GameSave(aITeams,playerTeams);
+		savedGame = new GameSave(aITeams,playerTeams,true);
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		savedGame.data.setIndex(colourManager.getIndex());
@@ -78,10 +78,10 @@ public class Game{
 
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
-
+		int currentColorIndex = colourManager.getIndex();
 		startGame(mapType, mapSize, aITeams, playerTeams);
-		savedGame = new GameSave(aITeams,playerTeams);
-		savedGame.data.setIndex(colourManager.getIndex());
+		savedGame = new GameSave(aITeams,playerTeams,false);
+		savedGame.data.setIndex(currentColorIndex);
 	}
 
 
@@ -493,26 +493,7 @@ public class Game{
 		rm.setMaxPopulation(10, teamid);
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		//
-		Spatman spatman = new Spatman(x, y, 0, teamid);
-		Soldier soldier = new Soldier(x, y, 0, teamid);
-		Sniper sniper = new Sniper(x, y, 0, teamid);
-		Carrier carrier = new Carrier(x, y, 0, teamid);
-		Hacker hacker = new Hacker(x, y, 0, teamid);
-		Medic medic = new Medic(x, y, 0, teamid);
-		Tank tank = new Tank(x, y, 0, teamid);
-		TankDestroyer tankDestroyer = new TankDestroyer(x, y, 0, teamid);
-		GameManager.get().getWorld().addEntity(spatman);
-		GameManager.get().getWorld().addEntity(soldier);
-		GameManager.get().getWorld().addEntity(sniper);
-		GameManager.get().getWorld().addEntity(carrier);
-		GameManager.get().getWorld().addEntity(hacker);
-		GameManager.get().getWorld().addEntity(medic);
-		GameManager.get().getWorld().addEntity(tank);
-		GameManager.get().getWorld().addEntity(tankDestroyer);
-		//
-		
+		Astronaut ai1 = new Astronaut(x, y, 0, teamid);		
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
