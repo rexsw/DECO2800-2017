@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import static org.junit.Assert.*;
 
 /**
- * @author xhy6006 on 12/10/17
+ * @author haoxuan on 12/10/17
  */
 
 public class BarracksTest {
