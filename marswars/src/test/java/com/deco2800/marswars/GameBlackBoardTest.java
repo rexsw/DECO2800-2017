@@ -36,7 +36,6 @@ public class GameBlackBoardTest {
 	@Test
 	public void setUpTest() {
 		GameBlackBoard test = new GameBlackBoard();
-		assertFalse(test.isSet());
 		test.set();
 		assertTrue(test.isSet());
 		Assert.assertEquals(1,test.count(1, Field.UNITS));
