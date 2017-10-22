@@ -87,15 +87,13 @@ public class GameSave {
         Output output = new Output(new FileOutputStream("save.bin"));
         fillData();
 
-
-
-
         kryo.writeClassAndObject(output, data.getFogOfWar());
         kryo.writeClassAndObject(output, data.getBlackFogOfWar());
         kryo.writeClassAndObject(output, data.getEntities());
         kryo.writeClassAndObject(output, data.getResource());
         kryo.writeClassAndObject(output, data.getBuilding());
         kryo.writeClassAndObject(output, data.getObstacles());
+        kryo.writeClassAndObject(output, data.getAnimals());
         kryo.writeClassAndObject(output, data.getIndex());
         kryo.writeClassAndObject(output, data.getaITeams());
         kryo.writeClassAndObject(output, data.getPlayerTeams());
@@ -140,6 +138,7 @@ public class GameSave {
         data.setResource((ArrayList<Resource>)kryo.readClassAndObject(input));
         data.setBuilding((ArrayList<SavedBuilding>)kryo.readClassAndObject(input));
         data.setObstacles((ArrayList<Obstacle>)kryo.readClassAndObject(input));
+        data.setAnimals((ArrayList<SavedAnimal>)kryo.readClassAndObject(input));
         data.setIndex((int)kryo.readClassAndObject(input));
         data.setaITeams((int)kryo.readClassAndObject(input));
         data.setPlayerTeams((int)kryo.readClassAndObject(input));
@@ -180,6 +179,9 @@ public class GameSave {
             }
             else if(r instanceof Obstacle){
                  data.getObstacles().add((Obstacle)r);
+             }
+             else if(r instanceof AmbientAnimal){
+                 fillAnimals(r);
              }
             else {
                 fillEntities(r);
@@ -243,6 +245,22 @@ public class GameSave {
         }
         else if("TechBuilding".equals(bE.getbuilding())){
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
+        }
+    }
+
+    /**
+     * fill in the animals
+     */
+    public void fillAnimals(AbstractEntity aE){
+        AmbientAnimal a = (AmbientAnimal)aE;
+        if(a instanceof Snail){
+            data.getAnimals().add(new SavedAnimal("Snail",a.getPosX(),a.getPosY(),a.getHealth()));
+        }
+        else if(a instanceof Corn){
+            data.getAnimals().add(new SavedAnimal("Corn",a.getPosX(),a.getPosY(),a.getHealth()));
+        }
+        else if (a instanceof Dino ){
+            data.getAnimals().add(new SavedAnimal("Dino",a.getPosX(),a.getPosY(),a.getHealth()));
         }
     }
 

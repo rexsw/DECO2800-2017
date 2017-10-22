@@ -175,10 +175,6 @@ public class TechTreeView extends Dialog{
 		if (techID == 0) {
 			return;
 		}
-		Technology tech = this.techMan.getTech(techID);
-		//String message = this.techMan.checkPrereqs(this.techMan, tech, techID, -1);
-		//Need to find a way to print this to the dialogue box
-		//LOGGER.info(message);
 	}
 	
 	
