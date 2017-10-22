@@ -33,7 +33,7 @@ public enum SpecialType implements ItemType {
 			new HealthEffect(200, false, Target.SELF)),
 	HEALTHSTATION("Health Station", "health_station", 0, 4, 2, new int[]{60, 100, 60}, 
 			new HealthEffect(500, false, Target.SELF)),
-	HEALTHBLESS("Health Bless", "health_station", 0, 0, 1, new int[]{100, 100, 100}, 
+	HEALTHBLESS("Health Bless", "healing_bless", 0, 0, 1, new int[]{100, 100, 100}, 
 			new HealthEffect(1000, false, Target.SELF_TEAM)),
 	NUKE("Nuke", "nuke", 0, 0, 1, new int[]{200, 100, 200}, 
 			new HealthEffect(700, true, Target.ENEMY_TEAM)),
