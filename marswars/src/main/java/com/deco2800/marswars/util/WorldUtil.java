@@ -276,10 +276,31 @@ public class WorldUtil {
 		proj[0] = (int) proj[0];
 		proj[1] = (int) proj[1];
 		int dimensionsInt = (int)dimensions;
-		if (dimensionsInt % 2 == 0) {
+		if (dimensionsInt == 0) {
 			proj[2] = .5f;
 		}
-		if (!(proj[0] < (((dimensions + 1) / 2) - proj[2]) || proj[0] >
+		if ((int)dimensions == 1) {
+			if(!(proj[0] < 0 || proj[0] >
+			GameManager.get().getWorld().getWidth()
+			|| proj[1] < 0 || proj[1] > GameManager.get().getWorld().getLength())) {
+				if (building == null) {
+					temp = new CheckSelect(proj[0], proj[1], 0f, dimensions, 
+							dimensions, 0f);
+					temp.setGreen();
+				} else {
+					temp = new CheckSelect(proj[0], proj[1], 0f, dimensions, dimensions, 
+							0f,	building);
+					validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), 
+							dimensions, 0);
+					if (validSelect[0]) {
+						temp.setGreen();
+					} else {
+						temp.setRed();
+					}
+				}
+				GameManager.get().getWorld().addEntity(temp);
+			}
+		} else if(!(proj[0] < (((dimensions + 1) / 2) - proj[2]) || proj[0] >
 				(GameManager.get().getWorld().getWidth() - dimensions - proj[2])
 				|| proj[1] < (((dimensions + 1) / 2) - proj[2]) || proj[1] >
 				GameManager.get().getWorld().getLength() - dimensions - proj[2])) {

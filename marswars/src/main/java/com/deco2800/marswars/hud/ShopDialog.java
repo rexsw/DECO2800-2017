@@ -259,6 +259,11 @@ public class ShopDialog extends Dialog {
 						status.setText(mes);
 					}
 				}
+
+				private boolean checkCost(int owner, ItemType item) {
+					// TODO Auto-generated method stub
+					return false;
+				}
 			});
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
 			String stats = getItemStats(item, level);

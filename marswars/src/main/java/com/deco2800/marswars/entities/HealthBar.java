@@ -22,7 +22,7 @@ public class HealthBar extends BaseEntity {
     }
 
     public void translateToParent() {
-        super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3);
+        super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3.35f);
     }
 
     public void update() {

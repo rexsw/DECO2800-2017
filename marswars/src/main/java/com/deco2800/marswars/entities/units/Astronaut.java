@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
@@ -31,7 +32,7 @@ public class Astronaut extends Soldier {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Astronaut.class);
 	private GatheredResource gatheredResource = null;
-	private BuildAction build;
+	private DecoAction build;
 
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
@@ -49,7 +50,7 @@ public class Astronaut extends Soldier {
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
+		if (this.getCurrentAction().isPresent() && (this.getCurrentAction().get() instanceof BuildAction || this.getCurrentAction().get() instanceof BuildWallAction)) {
 			return;
 		}
 		if(!this.isAi() & this.getLoadStatus() != 1) {
@@ -81,11 +82,15 @@ public class Astronaut extends Soldier {
 		}
 		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get()
 				instanceof BuildAction) {
-			build.finaliseBuild();
+			((BuildAction)build).finaliseBuild();
 			this.setTexture(defaultTextureName);
 			this.deselect();
 			return;
 
+		}else if(this.getCurrentAction().isPresent() && this.getCurrentAction().get()
+				instanceof BuildWallAction) {
+				((BuildWallAction)build).beginWall(x, y);
+				return;
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
 		boolean gatherResource = !entities.isEmpty() && entities.get(0) instanceof Resource;
@@ -153,14 +158,15 @@ public class Astronaut extends Soldier {
 		currentAction = Optional.of(action);
 		if (action instanceof BuildAction) {
 			build = (BuildAction)action;
-		}
-	}
+		}else if (action instanceof BuildWallAction) {
+			build = (BuildWallAction)action;
+		}}
 	
 	/**
 	 * Gets the current build action of this entity
 	 * @return current BuildAction, null if not currently building
 	 */
-	public BuildAction getBuild() {
+	public DecoAction getBuild() {
 		if (currentAction.isPresent()) {
 			return build;
 		}

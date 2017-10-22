@@ -21,6 +21,7 @@ import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionSetter;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
@@ -595,14 +596,23 @@ public class HUDView extends ApplicationAdapter{
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
 					} else if (currentActions.get(index) instanceof BuildingType) {
-						LOGGER.info("Is entity");
 						LOGGER.info("Try to build");
-						if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
-							BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
-							cancelBuild.cancelBuild();
-							cancelBuild.doAction();
+						if (currentActions.get(index) == BuildingType.WALL) {
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildWallAction) {
+								BuildWallAction cancelBuild = (BuildWallAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
+							selectedEntity.setAction(new BuildWallAction(selectedEntity));
 						}
-						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
+						else {
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+								BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
+							selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
+						}
 					} else {
 						if((EntityID) currentActions.get(index) == EntityID.COMMANDER) {
 							if(heroExist != null) {
@@ -702,8 +712,6 @@ public class HUDView extends ApplicationAdapter{
 		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
 			selectedEntity.giveAllBuilding();
 		}
-		currentActions = target.getValidActions();
-		enterActions(true); //Set up the buttons
 		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
@@ -721,6 +729,10 @@ public class HUDView extends ApplicationAdapter{
 					this.statsTable.updateHeroInventory((Commander) target);
 				}
 			}
+		}
+		if (!target.isAi()) {
+			currentActions = target.getValidActions();
+			enterActions(true); //Set up the buttons
 		}
 	}
 
@@ -822,7 +834,7 @@ public class HUDView extends ApplicationAdapter{
      * Sets up all buttons for available actions
      */
 	private void actionsButtons() {
-		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size();
+		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size() *.7f;
 		float buttonHeight = actionsWindow.getHeight();
 		if (buttonWidth >= (actionsWindow.getWidth()/4)){
 			buttonWidth = (actionsWindow.getWidth()/4);
@@ -834,18 +846,26 @@ public class HUDView extends ApplicationAdapter{
 			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
 			Label cost = new Label("", skin);
-			Image rock = null;
+			Label secondCost = new Label("", skin);
+			Image resource = null;
+			Image secondResource = null;
 			Texture entity = textureManager.getTexture("PLACEHOLDER");
 			if (e instanceof BuildingType) {
 				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
 				name = new Label(e.toString(), skin);
 				cost = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
 				Texture rockTex = textureManager.getTexture("rock_HUD");
-				rock = new Image(rockTex);
+				resource = new Image(rockTex);
 			} else if (e instanceof EntityID) {
 				entity = textureManager.getTexture((textureManager.loadUnitSprite((EntityID) e, owner)));
 				name = new Label(((EntityID) e).name(), skin);
-				cost = new Label(String.valueOf(0), skin);
+				cost = new Label(String.valueOf(((EntityID) e).getCostBiomass()), skin);
+				secondCost = new Label(String.valueOf(((EntityID) e).getCostRocks()), skin);
+				Texture bioTex = textureManager.getTexture("biomass_HUD");
+				resource = new Image(bioTex);
+				Texture cryTex = textureManager.getTexture("crystal_HUD");
+				secondResource = new Image(cryTex);
+				
 			} else if (e instanceof ActionType) {
 				entity = textureManager.getTexture("PLACEHOLDER");
 				name = new Label(e.toString(), skin);
@@ -857,10 +877,14 @@ public class HUDView extends ApplicationAdapter{
 			ImageButton addPane = new ImageButton(buildPreview);
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(rock).width(buttonWidth * .2f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
-			buttonList.get(index).add(cost).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
-			buttonList.get(index).add(name).width(buttonWidth * .7f).align(Align.right).height(buttonHeight * .2f)
-			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
+			buttonList.get(index).add(resource).width(30).height(30).align(Align.right).padTop(-75).padLeft(15).padRight(-15);
+			buttonList.get(index).add(cost).width(buttonList.get(index).getWidth()*.125f).height(30).align(Align.right).padLeft(14).padTop(-75);
+			if (e instanceof EntityID) {
+				buttonList.get(index).add(secondResource).width(30).height(30).align(Align.right).padLeft(-50).padTop(-20).padRight(10);
+				buttonList.get(index).add(secondCost).width(buttonList.get(index).getWidth()*.125f).height(30).align(Align.left).padTop(-20).padLeft(-10);
+			}
+			buttonList.get(index).add(name).width(buttonWidth * .4f).align(Align.left).height(buttonHeight * .2f)
+			.padLeft(buttonList.get(index).getWidth()*-.7f);
 			index++;
 		}
 	}

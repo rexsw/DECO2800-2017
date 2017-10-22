@@ -246,6 +246,10 @@ public class BuildAction implements DecoAction{
 	 */
 	private void createBuilding() {
 		switch(building) {
+		case WALL:
+			base = new Wall(GameManager.get().getWorld(), 
+					(int)projX, (int)projY, 0f, actor.getOwner());
+			break;
 		case TURRET:
 			base = new Turret(GameManager.get().getWorld(), 
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
