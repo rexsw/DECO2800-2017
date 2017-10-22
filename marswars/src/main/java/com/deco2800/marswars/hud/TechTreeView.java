@@ -624,23 +624,21 @@ public class TechTreeView extends Dialog{
 		this.hud.updateShop();
 
 		timeManager.unPause();
-		this.hud.setTechCheck(0);
 
-
-//		} else {
-//			this.hud.setTechCheck(1);
-//			techtree.hide();
-//			this.timeManager.unPause();
-//		}
-
-//		if (techID == 0) {
-//			return;
-//		}
-//		Technology tech = this.techMan.getTech(techID);
-//		String message = this.techMan.checkPrereqs(this.techMan, tech, techID, -1);
-//		//Need to find a way to print this to the dialogue box
-//		System.out.println(message);
 		}
+
+	/**
+	 * Hides the tech tree from the screen.
+	 * This function is called when the player chooses to exit the technology tree
+	 *
+	 */
+	public void hideTechTree(Dialog techTree) {
+		this.hud.setTechCheck(0);
 	}
+	}
+	
+	
+
+
 
 

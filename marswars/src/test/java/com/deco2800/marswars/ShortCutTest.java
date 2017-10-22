@@ -63,9 +63,9 @@ public class ShortCutTest {
 	
 	@Test
 	public void testAddExtraTank() {
-		shortCut.addKey(Input.Keys.T);
+		shortCut.addKey(Input.Keys.K);
 		shortCut.addExtraTank();
-		shortCut.removeKey(Input.Keys.T);
+		shortCut.removeKey(Input.Keys.K);
 		Tank t = new Tank(GameManager.get().getWorld().getLength()/2, GameManager.get().getWorld().getWidth()/2,0,-1);
 		assertEquals(true, GameManager.get().getWorld().getEntities().contains(t));
 		assertEquals(-1, ((Tank) GameManager.get().getWorld().getEntities().get(0)).getOwner());

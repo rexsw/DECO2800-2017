@@ -173,6 +173,7 @@ public class Game{
 		//add all entities
 		loadEntities(loadedGame);
 		loadBuildings(loadedGame);
+		loadAnimals(loadedGame);
 
 
 		this.weatherManager.setWeatherEvent();
@@ -182,7 +183,30 @@ public class Game{
 	}
 
 	/**
-	 * this functions laods all the saved buildings
+	 * this function loads all the animals
+	 */
+	private void loadAnimals(GameSave loadedGame){
+		for(SavedAnimal e : loadedGame.data.getAnimals()){
+			if("Snail".equals(e.getName())){
+				AmbientAnimal animal = new Snail(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+			else if("Corn".equals(e.getName())){
+				AmbientAnimal animal = new Corn(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+			else if("Dino".equals(e.getName())){
+				AmbientAnimal animal = new Dino(e.getX(), e.getY(), 0, 0);
+				animal.setHealth(e.getHealth());
+				GameManager.get().getWorld().addEntity(animal);
+			}
+		}
+	}
+
+	/**
+	 * this functions loads all the saved buildings
 	 * @param loadedGame
 	 */
 	private void loadBuildings(GameSave loadedGame){
@@ -236,10 +260,6 @@ public class Game{
 				astronaut.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(astronaut);
 			}
-//			else if("Base".equals(each.getName())){
-//				Base base = new Base(GameManager.get().getWorld(),each.getX(), each.getY(), 0, each.getTeamId());
-//				base.setHealth(each.getHealth());
-//				GameManager.get().getWorld().addEntity(base);
 			else if("Tank".equals(each.getName())){
 				Tank tank = new Tank(each.getX(), each.getY(), 0, each.getTeamId());
 				tank.setHealth(each.getHealth());

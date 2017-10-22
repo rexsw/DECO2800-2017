@@ -61,24 +61,6 @@ public class TechnologyManager extends Manager{
     private boolean weaponL2Unlocked;
     private boolean weaponL3Unlocked;
 
-
-    private ArrayList<BuildingType> buildingsAvailable;
-
-    private ArrayList<Technology> armourTech2Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> armourTech3Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> armourTech4Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> attackTech2Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> attackTech3Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> attackTech4Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> speedTech2Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> speedTech3Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> speedTech4Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> healthTech2Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> healthTech3Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> healthTech4Parents = new ArrayList<Technology>();
-    private ArrayList<Technology> cowTechParents = new ArrayList<Technology>();
-    private ArrayList<Technology> vampireParents = new ArrayList<Technology>();
-
     private String expensiveString = "An expensive technology";
     private String armourString = "Armour ";
     private String soldierString = "Soldier";
@@ -209,7 +191,7 @@ public class TechnologyManager extends Manager{
         techMap.put(18, new Technology(new int[]{100, 100, 100}, "Steroids", steroidsParents,
                 "Increases Everything"));
 
-        armourTech3Parents = new ArrayList<>();
+        ArrayList<Technology> armourTech3Parents = new ArrayList<>();
         armourTech3Parents.add(techMap.get(2));
         techMap.put(19, new Technology(new int[]{9999999, 9999999,9999999}, "Cow Level", new ArrayList<Technology>(),
                 "There is no secret Cow Level"));
@@ -491,7 +473,6 @@ public class TechnologyManager extends Manager{
      */
     public void unlockHeroFactory() {
         heroFactoryUnlocked = true;
-        System.out.println("\n Hero Factory unlocked \n");
     }
 
     /**
@@ -502,7 +483,6 @@ public class TechnologyManager extends Manager{
     }
 
 
-
     public void buildingArmorUpgrade(){
 
     }
@@ -510,10 +490,6 @@ public class TechnologyManager extends Manager{
     public void buildingConstructionTimeUpgrade(){
 
     }
-
-
-
-
 
     /**
      * Provides a method to check that the requirements for researching a Technology exists, if they are
@@ -670,6 +646,7 @@ public class TechnologyManager extends Manager{
      * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
+        ArrayList buildingsAvailable = new ArrayList<BuildingType>();
         if (heroFactoryIsUnlocked()) {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
                     BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
