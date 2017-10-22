@@ -19,7 +19,7 @@ import java.util.Random;
  * A carrier unit that is able to load up to 3 other units, extends Soldier
  * class
  * 
- * @author Han Wei
+ * @author Han Wei @hwkhoo
  */
 
 public class Carrier extends Soldier {
@@ -32,6 +32,7 @@ public class Carrier extends Soldier {
     private Optional<DecoAction> currentAction = Optional.empty();
 
     private String loadSound = "carrier-loading-sound.mp3";
+    private String unableLoad = "cant unload while doing something else";
 
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
@@ -39,23 +40,15 @@ public class Carrier extends Soldier {
 
 	public Carrier(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		setXRenderLength(1.3f);
-		setYRenderLength(1.3f);
-
-		// set all the attack attributes
-		this.setMaxHealth(1000);
-		this.setHealth(1000);
-		this.setDamage(0);
-		this.setArmor(500);
-		this.setArmorDamage(0);
-		this.setAttackRange(0);
-		this.setAttackSpeed(0);
-		this.isCarrier();
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
 		this.name = "Carrier";
+		this.setAttributes();
 		this.addNewAction(ActionType.LOAD);
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
+		this.isCarrier();
     }
 
     /**
@@ -119,7 +112,7 @@ public class Carrier extends Soldier {
      */
     @Override
     public void onTick(int tick) {
-	loyalty_regeneration();
+	regeneration();
 	checkOwnerChange();
 	if (!currentAction.isPresent()) {
 	    if (this.getOwner() == -1)
@@ -206,7 +199,7 @@ public class Carrier extends Soldier {
 	if (!currentAction.isPresent()) {
 	    unloadPassenger();
 	} else {
-	    LOGGER.error("cant unload while doing something else");
+	    LOGGER.error(unableLoad);
 	}
     }
     
@@ -214,7 +207,7 @@ public class Carrier extends Soldier {
 	if (!currentAction.isPresent()) {
 	    unloadPassengerIndividual();
 	} else {
-	    LOGGER.error("cant unload while doing something else");
+	    LOGGER.error(unableLoad);
 	}
     }
 
@@ -295,7 +288,6 @@ public class Carrier extends Soldier {
 	boolean flag;
 	if(totalLoaded > 0) {
 	    if (!(loadedUnits[totalLoaded - 1] == null)) {
-		LOGGER.info("Unloading last!!!!");
 		loadedUnits[totalLoaded - 1].setUnloaded();
 		LOGGER.error("Unit unloaded.");
 		loadedUnits[totalLoaded - 1] = null;
@@ -329,14 +321,14 @@ public class Carrier extends Soldier {
 		LOGGER.info("Starting to unload");
 		unloadPassenger();
 	    } else {
-		LOGGER.error("cant unload while doing something else");
+		LOGGER.error(unableLoad);
 	    }
 	} else if (a == ActionType.UNLOADINDIVIDUAL) {
 	    if (!currentAction.isPresent()) {
 		LOGGER.info("Starting to unload last unit");
 		unloadPassengerIndividual();
 	    } else {
-		LOGGER.error("cant unload while doing something else");
+		LOGGER.error(unableLoad);
 	    }
 	} else {
 	    LOGGER.info("Assigned action " + ActionSetter.getActionName(a));

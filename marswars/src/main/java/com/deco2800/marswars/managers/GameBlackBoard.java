@@ -7,11 +7,7 @@ import com.deco2800.marswars.entities.units.AttackableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,6 +24,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	private int alive;
 	private int timer;
 	private int index = 0;
+	private boolean enableCheck = false;
 	
 	/**
 	 * acceptable fields for use in the blackboard used for type safety 
@@ -39,6 +36,9 @@ public class GameBlackBoard extends Manager implements TickableManager {
 
 	@Override
 	public void onTick(long i) {
+		if (!enableCheck) {
+			return;
+		}
 		//adds to the history of each field every few ticks
 		timer++;
 		if(timer % 10 == 0) {
@@ -67,6 +67,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		values = new HashMap<Integer,Map<Field, List<Integer>>>();
 		teams = new ArrayList<Integer>();
 		index = 0;
+		rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
@@ -81,6 +82,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				}
 			}
 		}
+		enableCheck = true;
 	}
 	
 	/**
@@ -236,10 +238,12 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return int the count of this field
 	 */
 	public int count(int teamid, Field field) {
-		if(teams.contains(teamid)) {
+		try {
 			return values.get(teamid).get(field).get(index);
 		}
-		return -1;
+		catch(NullPointerException e) {
+			return -1;
+		}
 	}
 	
 	public int highCount(Field field) {
@@ -250,5 +254,25 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		return ret;
 	}
 	
+	/**
+	 * Sets the control variable to allow checking
+	 * * @param set
+	 */
+	public void setCheck(boolean set) {
+		this.enableCheck = set;
+	}
+
+	/**
+	 * Clears the board entirely back to nulls/0's. Should only be used when resetting a game.
+	 */
+	public void clear() {
+		teams = null;
+		values = null;
+		rm = null;
+		alive = 0;
+		timer = 0;
+		index = 0;
+		enableCheck  = false;
+	}
 
 }

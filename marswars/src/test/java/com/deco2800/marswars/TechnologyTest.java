@@ -2,6 +2,7 @@ package com.deco2800.marswars;
 
 import com.deco2800.marswars.technology.Technology;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class TechnologyTest {
     @Test (expected = IllegalArgumentException.class)
     public void negativeTechnologyResourceCostTest() {
         // the resource costs are negative
-        technology = new Technology(new int[]{-1, -1, -1, -1}, "Bad resource" +
+        technology = new Technology(new int[]{-1, -1, -1}, "Bad resource" +
                 " cost technology", new ArrayList<>(), "Description");
     }
 
@@ -59,7 +60,7 @@ public class TechnologyTest {
     @Test (expected = IllegalArgumentException.class)
     public void nullTechnologyNameTest() {
         // null name
-        technology = new Technology(new int[]{1, 1, 1 ,1}, null,
+        technology = new Technology(new int[]{1, 1, 1}, null,
                 new ArrayList<>(), "Description");
     }
 
@@ -67,7 +68,7 @@ public class TechnologyTest {
     @Test (expected = IllegalArgumentException.class)
     public void nullTechnologyParentsTest() {
         // null parents
-        technology = new Technology(new int[]{1, 1, 1, 1}, "No parents :(",
+        technology = new Technology(new int[]{1, 1, 1}, "No parents :(",
                 null, "Description");
     }
 
@@ -75,7 +76,7 @@ public class TechnologyTest {
     @Test (expected = IllegalArgumentException.class)
     public void nullTechonologyDescriptionTest() {
         // null name
-        technology = new Technology(new int[]{1, 1, 1 ,1}, "Null description",
+        technology = new Technology(new int[]{1, 1, 1}, "Null description",
                 new ArrayList<>(), null);
     }
 

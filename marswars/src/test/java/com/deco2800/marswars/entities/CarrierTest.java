@@ -1,21 +1,21 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
-
-import com.deco2800.marswars.actions.ActionType;
-
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.worlds.BaseWorld;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+
+//import com.deco2800.marswars.managers.GameManager;
+//import com.deco2800.marswars.worlds.BaseWorld;
+//import org.junit.Before;
 
 /**
  * Code coverage and Junit tests for the Carrier class
  * 
  * @author jdtran21
- * @co-author treenhan
+ * @co-author treenhan hwkhoo
  *
  */
 public class CarrierTest {
@@ -23,12 +23,36 @@ public class CarrierTest {
 	/**
 	 * initialize everything needed by the tests
 	 */
-	@Before
-	public void init(){
-		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
+//	@Before
+//	public void init(){
+//		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
+//	}
+
+	@Test
+	public void constructorTest() {
+	    Carrier carrier = new Carrier(1, 0, 0 , 1);
+	    Assert.assertTrue(carrier != null);
+	    Assert.assertTrue(carrier.getLoadStatus() == 2);
 	}
-
-
+	
+        @Test
+        public void getStatTest() {
+            Carrier carrier = new Carrier(0, 0, 0, 1);
+            Assert.assertTrue(carrier.getStats() != null);
+            Assert.assertEquals(1000, carrier.getStats().getHealth());
+            Assert.assertEquals(1000, carrier.getStats().getMaxHealth());
+            Assert.assertEquals("Carrier", carrier.getStats().getName());
+        }
+        
+	@Test @Ignore
+	public void loadTest() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 1, 0);
+	    carrier.loadPassengers(soldier1);
+	    System.out.println(soldier1.getLoadStatus());
+	    Assert.assertTrue(soldier1.getLoadStatus() == 1);
+	}
+	
 	@Test @Ignore
 	public void carrier() {
 		Carrier carry = new Carrier(0, 0, 0, 0);	

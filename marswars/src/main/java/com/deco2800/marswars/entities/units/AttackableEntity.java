@@ -27,20 +27,22 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private int maxArmor; // maximum armor of the entity
 	private int armor; // current armor of the entity
 	private int armorDamage; // armorDamage of the entity
-	private int attackRange; // attackrange of the entity
+	private int attackRange; // attackRange of the entity
 	private int damage; // the damage of the entity
 	private int loyalty = 100; // the loyalty of the entity
 	private int loyaltyDamage; // the loyalty damage of the entity
 	private int maxLoyalty = 100; // the max loyalty of the entity
 	private float speed; // the movement speed of the entity
+	private float maxSpeed = 0.05f; // the maximum speed of the entity
 	private int attackSpeed; // attack speed of the entity
+	private int maxAttackSpeed = 20; // maximum attack speed of the entity
 	private int loadStatus; //whether the target is loaded
 	private int areaDamage = 0; // the area of damage 
-	private boolean gotHit; // if the unit get hitted, it will be true;
+	private boolean gotHit; // if the unit is hit, it will be true
 	private int maxGotHitInterval = 1000; // the maximum value of gotHitInterval
 	private int gotHitInterval = maxGotHitInterval; // the interval determine if the entity get hit
-	private int loyaltyRegenInterval = 1000;
-	private int enemyHackerOwner; // the owner of the last enemy who deal loyalty damage to it	]
+	private int loyaltyRegenInterval = 10000;
+	private int enemyHackerOwner; // the owner of the last enemy who deal loyalty damage to it
 	private boolean ownerChanged = false;
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	private int stance = 0; // the behavior of the unit responding to enemies
@@ -54,16 +56,11 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		this.modifyCollisionMap(true);
 	}
 	
-	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength, float xRenderLength, float yRenderLength, boolean centered) {
-		super(posX, posY, posZ, xLength, yLength, zLength, xRenderLength, yRenderLength, centered);
-	}
-	
-	@SuppressWarnings("deprecation")
 	public AttackableEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
-		// TODO Auto-generated constructor stub
+	      this.setAreaDamage(0);
+	      this.modifyCollisionMap(true);
 	}
-
 
     /**
      * Return the fog range
@@ -196,6 +193,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			black.updateDead(this);
 
 			GameManager.get().getWorld().removeEntity(this);
+			if (this.getHealthBar() != null) {
+				GameManager.get().getWorld().removeEntity(this.getHealthBar());
+			}
+
 			LOGGER.info("DEAD");
 
 		}
@@ -203,7 +204,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 			this.health = this.getMaxHealth();
 			return;
 		}
-		if((this instanceof Soldier && ((Soldier)this).getLoadStatus() == 1)) {
+		if(this instanceof Soldier && ((Soldier) this).getLoadStatus() == 1) {
 			return;
 		} else {
 			this.health = health;
@@ -253,13 +254,27 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		return armorDamage;
 	}
 
+	public void setMaxAttackSpeed(int maxAttackSpeed) {
+		this.maxAttackSpeed = maxAttackSpeed;
+	}
+	
+	public int getMaxAttackSpeed() {
+		return this.maxAttackSpeed;
+	}
+	
 	/**
 	 * Set the attack speed of the entity
 	 * @param the new attack speed of the entity
 	 */
 	@Override
 	public void setAttackSpeed(int attackSpeed) {
-		this.attackSpeed = attackSpeed;
+		if (attackSpeed <= 1) {
+			this.attackSpeed = 1;
+		} else if (attackSpeed >= getMaxAttackSpeed()) {
+			this.attackSpeed = this.getMaxAttackSpeed();
+		} else {
+			this.attackSpeed = attackSpeed;
+		}
 	}
 
 	/**
@@ -287,16 +302,19 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setLoyalty(int loyalty) {
-		if (loyalty < 0) {
-			if(this instanceof Carrier) ((Carrier)this).unloadPassenger();
+		if (loyalty <= 0) {
+			if(this instanceof Carrier) {
+			    ((Carrier)this).unloadPassenger();
+			}
 			this.loyalty = this.getMaxLoyalty();
 			this.setOwner(this.getEnemyHackerOwner());
 			this.ownerChanged = true;
 		} else if (loyalty > getMaxLoyalty()) {
 			this.loyalty = getMaxLoyalty();
 		} else {
-			if(((Soldier)this).getLoadStatus()!=1)
-			this.loyalty = loyalty;
+			if (((Soldier)this).getLoadStatus()!=1) {
+				this.loyalty = loyalty;
+			}
 		}
 	}
 
@@ -330,12 +348,26 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		return maxLoyalty;
 	}
 	
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+	
+	public float getMaxSpeed() {
+		return this.maxSpeed;
+	}
+	
 	/**
 	 * Set the movement speed of the entity
 	 * @param the new speed of the unit
 	 */
 	public void setSpeed(float speed) {
-		this.speed = speed;
+		if (speed < 0.01f) {
+			this.speed = 0.01f;
+		} else if (speed > this.getMaxSpeed()) {
+			speed = this.getMaxSpeed();
+		} else {
+			this.speed = speed;
+		}
 	}
 	
 	/**
@@ -479,16 +511,16 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 		}
 	}
 	
-	public int getLoyaltyRegenInterval() {
+	public int getRegenInterval() {
 		return this.loyaltyRegenInterval;
 	}
 	
-	public void setLoyaltyRegenInterval(int interval) {
+	public void setRegenInterval(int interval) {
 		this.loyaltyRegenInterval = interval;
 	}
 	
-	public void resetLoyaltyRegenInterval() {
-		this.loyaltyRegenInterval = 1000;
+	public void resetRegenInterval() {
+		this.loyaltyRegenInterval = 10000;
 	}
 	
 	/**

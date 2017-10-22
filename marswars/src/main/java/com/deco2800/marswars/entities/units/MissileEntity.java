@@ -3,9 +3,8 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
-import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 
 import java.util.Optional;
 
@@ -27,9 +26,7 @@ public class MissileEntity extends BaseEntity implements HasAction{
     protected String downrightMissileTexture;
     private int areaDamage;
     private AttackableEntity ownerEntity;
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(MissileEntity.class);
-
+   
     public MissileEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength,
                          AttackableEntity target, int damage, int armorDamage, String missileTexture, int areaDamage, int owner, AttackableEntity ownerEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);

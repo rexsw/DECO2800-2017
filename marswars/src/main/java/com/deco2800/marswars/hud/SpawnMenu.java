@@ -1,5 +1,7 @@
 package com.deco2800.marswars.hud;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -23,6 +25,9 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 public class SpawnMenu {
 
+    //hover sound
+    Sound hover = Gdx.audio.newSound(Gdx.files.internal("sounds/hover.mp3"));
+
     private static final int NUMBER_OF_MENU_OPTIONS = 6; // the maximum number of buttons in a row
 
     private static Stage stage; // the stage of the game
@@ -35,6 +40,8 @@ public class SpawnMenu {
     private static Window entitiesPicker; //window that selects available entities
 
     private BaseEntity selectedEntity;	//for differentiating the entity selected
+    
+    private String entityTypesString = "Entity Types\n (Back)";
 
     /**
      * The constructor of the spawn menu.
@@ -141,7 +148,7 @@ public class SpawnMenu {
         Table table = new Table();
         table.align(Align.left);
         if(!inGame) {
-            TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+            TextButton entitiesButton = new TextButton(entityTypesString, skin);
             entitiesButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -189,7 +196,7 @@ public class SpawnMenu {
         entitiesPicker.clear();
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)",skin);
+        TextButton entitiesButton = new TextButton(entityTypesString,skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -261,7 +268,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -302,7 +309,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -342,7 +349,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -388,7 +395,7 @@ public class SpawnMenu {
 
         Table table = new Table();
         table.align(Align.left);
-        TextButton entitiesButton = new TextButton("Entity Types\n (Back)", skin);
+        TextButton entitiesButton = new TextButton(entityTypesString, skin);
         entitiesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

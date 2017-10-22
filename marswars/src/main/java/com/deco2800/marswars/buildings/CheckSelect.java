@@ -1,6 +1,7 @@
 package com.deco2800.marswars.buildings;
 
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.util.Box3D;
 
 /**
  * Created by grumpygandalf on 26/8/17.
@@ -35,7 +36,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param lengthZ  The length of the overlaying image in the z coordinate direction
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ) {
-		super(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ, lengthX, lengthY, false);
+		super(new Box3D(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ), lengthX, lengthY, false);
 		super.canWalkOver = true;
 	}
 	
@@ -50,7 +51,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param centered  whether so spawn centered.
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ, boolean centered) {
-		super(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ, lengthX, lengthY, centered);
+		super(new Box3D(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ), lengthX, lengthY, centered);
 		super.canWalkOver = true;
 	}
 	

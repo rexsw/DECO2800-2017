@@ -1,6 +1,8 @@
 package com.deco2800.marswars.net;
 
-import com.deco2800.marswars.worlds.MapSizeTypes;;
+import com.deco2800.marswars.worlds.MapSizeTypes;
+
+;
 
 /**
  * An action to send the client selected mapSize to the server.

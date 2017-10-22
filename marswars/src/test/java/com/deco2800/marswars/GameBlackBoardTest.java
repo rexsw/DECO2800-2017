@@ -1,21 +1,19 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameBlackBoard;
+import com.deco2800.marswars.managers.GameBlackBoard.Field;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.deco2800.marswars.buildings.Base;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.managers.GameBlackBoard;
-import com.deco2800.marswars.managers.GameBlackBoard.Field;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.worlds.BaseWorld;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class GameBlackBoardTest {

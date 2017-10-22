@@ -109,4 +109,29 @@ public class WeaponTest {
         Assert.assertEquals("rifle_1", rifle1.getTexture().toString());
 
     }
+    
+    /**
+     * Test some aspects of the WeaponType that is been left over by other test cases
+     */
+    @Test
+    public void weaponTypeTest() {
+    	WeaponType weapon = WeaponType.RIFLE;
+    	// test cost
+    	int[] cost = weapon.getCost();
+    	Assert.assertTrue(cost[0] == 400 && cost[1] == 300 && cost[2] == 300);
+    	
+    	//test cost string
+    	String test = "Rock: 400\n" +
+        		"Crystal: 300\n" +
+                "Biomass: 300\n";
+        Assert.assertEquals(test, weapon.getCostString());
+        
+        //test get description
+        test = "Name: Rifle\n" +
+        		"Type: Weapon\n" +
+                "Damage: 300\n" +
+        		"Speed: 50\n" +
+                "Range: 10";
+        Assert.assertEquals(test, weapon.getDescription());
+    }
 }

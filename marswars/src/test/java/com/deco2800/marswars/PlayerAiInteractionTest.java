@@ -1,11 +1,10 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import com.deco2800.marswars.managers.AiManager;
 import com.deco2800.marswars.managers.PlayerManager;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PlayerAiInteractionTest {
 	

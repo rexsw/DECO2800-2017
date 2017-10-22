@@ -28,8 +28,6 @@ import java.util.List;
  * Note that checks for resources are conducted by the tech view before any functions
  * from this class are called.
  * 
- *
- * 
  * @author Mason
  *
  */
@@ -40,8 +38,6 @@ public class ShopDialog extends Dialog {
 											// icons
 	private int iconSize = (int) (windowSize / 3); // getting the standard icon
 													// size for the window
-	// private List<ItemType> itemList; // list of items to be put into the shop
-	// private Table heroTable; //table of the player's Commander units.
 	private Label status; // Essentially a label that acts as a log specifically
 							// for the shop
 	private Commander selectedHero; // variable for the Commander that needs to
@@ -49,11 +45,11 @@ public class ShopDialog extends Dialog {
 
 	private final Table scrollTable;
 	private Skin skin;
+	
+	private String boughtString = "Bought ";
 
 	private TechnologyManager technologyManager;
-	
-	private int weapLevel = 0;
-	private int armourLevel = 0;
+
 	private boolean specialUnlocked = false;
 
 	/**
@@ -72,7 +68,6 @@ public class ShopDialog extends Dialog {
 		super(title, skin);
 		this.getTitleLabel().setAlignment(Align.center);
 		this.textureManager = manager;
-		// this.itemList = new ArrayList<>();
 		// Making the items table to buy from
 		this.getContentTable().debugCell();
 		this.getContentTable().left();
@@ -91,6 +86,8 @@ public class ShopDialog extends Dialog {
 				.expandX().top().left();
 		scrollTable.add(new Label("Cost", skin)).width(iconSize).top();
 		scrollTable.row();
+		this.technologyManager = (TechnologyManager) GameManager.get()
+				.getManager(TechnologyManager.class);
 		if (technologyManager.armourIsUnlocked(1)) {
 			unlockArmours(1);
 		}
@@ -116,32 +113,10 @@ public class ShopDialog extends Dialog {
 		// making the right side table for the Commander icons.
 		final ScrollPane scroller = new ScrollPane(scrollTable);
 
-		// heroTable = new Table();
-		// heroTable.top();
-		// heroTable.add(new Label("Commander", skin)).width(iconSize);
-		// heroTable.row();
-
 		this.getContentTable().add(scroller).fill().expand().top();
-		// this.getContentTable().add(heroTable).width(iconSize).top();
 
 		this.getContentTable().row();
 		this.getContentTable().add(status).expandX().center().colspan(2);
-	}
-	
-	/**
-	 * Gets the weapon level unlocked in the store
-	 * @return current weapon level in the shop
-	 */
-	public int getWeapLvl() {
-		return this.weapLevel;
-	}
-	
-	/**
-	 * Gets the armour level unlocked in the store
-	 * @return current armour level in the shop
-	 */
-	public int getArmourLvl() {
-		return this.armourLevel;
 	}
 	
 	/**
@@ -153,30 +128,30 @@ public class ShopDialog extends Dialog {
 	}
 
 	/**
-	 * Public method to unlock the weapons. Replaces lower levelled items, if they exist, with current level items.
+	 * Public method to unlock the weapons. Does not replace lower level
+	 * items, but adds to them.
 	 *
 	 */
 	public void unlockWeapons(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (WeaponType wep : WeaponType.values()){
+		for (WeaponType wep : WeaponType.values()) {
 			items.add(wep);
 		}
-		this.weapLevel = level;
 		updateShop(items, level);
 	}
 
 	/**
-	 * Public method to unlock the armours.  Replaces lower levelled items, if they exist, with current level items.
+	 * Public method to unlock the armours. Does not replace lower level
+	 * items, but adds to them.
 	 *
 	 */
 	public void unlockArmours(int level) {
 		List<ItemType> items = new ArrayList<>();
 		// Adding all the defined weapons in WeaponType enumerate class
-		for (ArmourType armour: ArmourType.values()){
+		for (ArmourType armour: ArmourType.values()) {
 			items.add(armour);
 		}
-		this.armourLevel = level;
 		updateShop(items, level);
 	}
 
@@ -194,9 +169,11 @@ public class ShopDialog extends Dialog {
 		updateShop(items, 0);
 	}
 	/**
-	 * Private method to update the items in the shop.
-	 * @param items The items to be added
-	 * @param level The level of the item
+	 * Private method to update the items in the shop, this function will also
+	 * add handler to these items for user shopping
+	 * 
+	 * @param items
+	 *            The items to be added
 	 */
 	private void updateShop(List<ItemType> items, int level) {
 		for (ItemType item : items) {
@@ -207,54 +184,48 @@ public class ShopDialog extends Dialog {
 			ImageButton button = generateItemButton(texture);
 
 			button.addListener(new ClickListener() {
-				public void clicked(InputEvent event, float x, float y) {
-					status.setText(item.getName());
-					// boolean enoughResources =
-					// checkCost(selectedHero.getOwner(), item);
-					// if ((selectedHero != null) && (selectedHero.getHealth() >
-					// 0) && enoughResources) {
-					if ((selectedHero != null)
-							&& (selectedHero.getHealth() > 0)) {
-						if (item instanceof WeaponType) {
-							Weapon weapon = new Weapon((WeaponType) item, level);
-							selectedHero.addItemToInventory(weapon);
-							status.setText("Bought " + weapon.getName()
-									+ "(Weapon) for "
-									+ selectedHero.toString());
-						} else if (item instanceof ArmourType) {
-							Armour armour = new Armour((ArmourType) item, level);
-							selectedHero.addItemToInventory(armour);
-							status.setText("Bought " + armour.getName()
-									+ "(Armour) for "
-									+ selectedHero.toString());
-						} else {
-							boolean transactSuccess = false;
-							Special special = new Special((SpecialType) item);
-							transactSuccess = selectedHero
-									.addItemToInventory(special);
-							if (transactSuccess) {
-								status.setText("Bought " + special.getName()
-										+ "(Special) for "
-										+ selectedHero.toString());
-							} else {
-								status.setText(
-										"Unsuccessful Shopping, can only hold 4 specials");
-								return;
-							}
-
-						}
-						selectedHero.setStatsChange(true);
-						transact(selectedHero.getOwner(), item);
-					} else {
-						String mes = selectedHero == null
-								? "Unsuccessful shopping. You need a hero to buy items."
-								: (selectedHero.getHealth() > 0
-								? "Not enough resources."
-								: "Your Commander is dead. You can't buy anything.");
-						status.setText(mes);
-					}
-				}
-			});
+								   public void clicked(InputEvent event, float x, float y) {
+									   status.setText(item.getName());
+									   if (selectedHero == null) {
+										   status.setText("Unsuccessful shopping, No hero exist.");
+										   return;
+									   }
+									   if (selectedHero.getHealth() <= 0) {
+										   status.setText(
+												   "Your Commander is dead. Can't buy anything.");
+										   return;
+									   }
+									   if (item instanceof WeaponType) {
+										   Weapon weapon = new Weapon((WeaponType) item, level);
+										   selectedHero.addItemToInventory(weapon);
+										   status.setText(boughtString + weapon.getName()
+												   + "(Weapon) for "
+												   + selectedHero.toString());
+									   } else if (item instanceof ArmourType) {
+										   Armour armour = new Armour((ArmourType) item, level);
+										   selectedHero.addItemToInventory(armour);
+										   status.setText(boughtString + armour.getName()
+												   + "(Armour) for "
+												   + selectedHero.toString());
+									   } else {
+										   boolean transactSuccess = false;
+										   Special special = new Special((SpecialType) item);
+										   transactSuccess = selectedHero
+												   .addItemToInventory(special);
+										   if (transactSuccess) {
+											   status.setText(boughtString + special.getName()
+													   + "(Special) for "
+													   + selectedHero.toString());
+										   } else {
+											   status.setText(
+													   "Unsuccessful Shopping, can only hold 4 specials");
+											   return;
+										   }
+									   }
+									   selectedHero.setStatsChange(true);
+									   transact(selectedHero.getOwner(), item);
+								   }
+							   });
 			scrollTable.add(button).width(iconSize).height(iconSize).top();
 			String stats = getItemStats(item, level);
 			String cost = getItemCost(item, level);
@@ -304,6 +275,24 @@ public class ShopDialog extends Dialog {
 		}
 		return costString;
 	}
+
+	/**Private helper function to check cost of an item
+	 *
+	 */
+	private boolean checkCost(int owner, ItemType item) {
+		int[] cost = item.getCost();
+		ResourceManager rm = (ResourceManager) GameManager.get()
+				.getManager(ResourceManager.class);
+		if (rm.getRocks(owner) < cost[0]) {
+			return false;
+		} else if (rm.getCrystal(owner) < cost[1]) {
+			return false;
+		} else if (rm.getBiomass(owner) < cost[2]) {
+			return false;
+		}
+		return true;
+	}
+
 
 	/** Private helper method to get the stats of an item of a particular level
 	 *
@@ -359,62 +348,6 @@ public class ShopDialog extends Dialog {
 		TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
 		return new ImageButton(imgDraw);
 	}
-
-	// /**
-	// * Private helper method to make image buttons for the commanders with the
-	// provided texture (the Commander icon
-	// * image). Thi button will have 2 icon looks, 1 for when it is selected
-	// and another for when it is not selected.
-	// * @param image Texture that is the desired Commander icon for the button
-	// for when the commander is selected.
-	// * @param offImage Texture that is the desired Commander icon for the
-	// button for when the commander is not
-	// * selected.
-	// * @return ImageButton object that has the provided images for the
-	// selected and deselected icons.
-	// */
-	// @Deprecated
-	// private ImageButton generateHeroButton(Texture image, Texture offImage) {
-	// TextureRegion imgRegion = new TextureRegion(image);
-	// TextureRegionDrawable imgDraw = new TextureRegionDrawable(imgRegion);
-	// TextureRegion offImgRegion = new TextureRegion(offImage);
-	// TextureRegionDrawable offImgDraw = new
-	// TextureRegionDrawable(offImgRegion);
-	//
-	// ImageButton button = new ImageButton(offImgDraw);
-	// button.getStyle().imageChecked = imgDraw;
-	//
-	// return button;
-	// }
-
-	// /**
-	// * Method to add Commander Hero icons to the right side table of the shop
-	// dialog window.
-	// * @param hero Commander unit to get/make an icon for.
-	// */
-	// @Deprecated
-	// public void addHeroIcon(Commander hero) {
-	// //making the button object
-	// Texture heroImage = textureManager.getTexture("hero_button");
-	// Texture heroOffImage = textureManager.getTexture("hero_button_off");
-	// ImageButton heroButton = generateHeroButton(heroImage, heroOffImage);
-	//// heroTable.add(heroButton).width(iconSize).height(iconSize).top();
-	// //adding the listener to the button created
-	// heroButton.addListener(new ClickListener(){
-	// public void clicked(InputEvent event, float x, float y){
-	// if(heroButton.isChecked()) {
-	// heroButton.setChecked(true);
-	// status.setText("Selected " + hero.toString());
-	// selectedHero = hero;
-	// } else {
-	// heroButton.setChecked(false);
-	// status.setText("Unselected "+ hero.toString());
-	// selectedHero = null;
-	// }
-	// }
-	// });
-	//// heroTable.row();
-	// }
 
 	public void connectHero(Commander hero) {
 		this.selectedHero = hero;
