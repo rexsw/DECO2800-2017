@@ -1,14 +1,12 @@
 package com.deco2800.marswars;
 
 
-import org.junit.Before;
-import org.junit.Test;
-
-
 import com.deco2800.marswars.entities.MultiSelectionTile;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**

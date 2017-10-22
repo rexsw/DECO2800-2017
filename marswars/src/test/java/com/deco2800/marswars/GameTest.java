@@ -1,15 +1,14 @@
 package com.deco2800.marswars;
 
-import java.io.FileNotFoundException;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import com.deco2800.marswars.buildings.*;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
-import com.deco2800.marswars.buildings.*;
-import com.deco2800.marswars.entities.units.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.FileNotFoundException;
 
 /**
  * Junit Tests for code in package initiateGame

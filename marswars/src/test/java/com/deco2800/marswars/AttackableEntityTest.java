@@ -1,9 +1,6 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
-import java.util.Optional;
-
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
@@ -12,13 +9,15 @@ import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
-import java.util.List;
-import com.deco2800.marswars.actions.AttackAction;
-
-import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 public class AttackableEntityTest {
 	AttackableEntity test;
