@@ -570,9 +570,9 @@ public class TechnologyManager extends Manager{
         }
     }
     
-    /**
+    /*
      * Sets up the dependencies of the items' levels (research)
-     */
+     *
     private void setUpHeroTechs() {
         heroFactory = new Technology(new int[]{0, 0, 20}, "Hero " +
                 "Factory", new ArrayList<Technology>(), "Unlocks the ability" +
@@ -619,25 +619,16 @@ public class TechnologyManager extends Manager{
         special = new Technology(new int[]{20, 20, 20}, "Armour " +
                 "Level One", specialParents, "Unlocks the " +
                 "ability to build Special items for Hero units..");
-    }
+    }*/
 
     /**
      * Gets the buildings available for specified team 
      * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
-        ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+        return new ArrayList<>(Arrays.asList(
                 BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
-    	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
-    	return buildingsAvailable;
     }
 
-    public Set<Technology> getAllTech() {
-        Set<Technology> techSet = new HashSet<Technology>();
-        for (int i = 1; i<9;i++){
-            techSet.add(this.getTech(i));
-        }
-        return techSet;
-    }
 
 }
