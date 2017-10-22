@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.util.Box3D;
+
 /**
  * Created by Treenhan on 9/6/17.
  * This is an entity of FogOfWar indicating the black out area
@@ -18,7 +20,7 @@ public class BlackTile extends FogEntity {
      */
     //the constructor for it
     public BlackTile(float posX, float posY, float posZ, float height, float width) {
-        super(posX, posY, posZ, height, width, 1f);
+        super(new Box3D(posX, posY, posZ, height, width, 1f));
         this.setTexture("black_tile");
         this.canWalkOver = true;
     }

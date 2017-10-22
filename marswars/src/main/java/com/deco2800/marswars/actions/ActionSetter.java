@@ -3,9 +3,10 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,8 +213,52 @@ public final class ActionSetter {
         }
     }
 
+    /**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    private static boolean canAfford(int owner, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree()) {
+    		return true;
+    	}
+    	if (resourceManager.getRocks(owner) >= c.getCostRocks()
+    			&& resourceManager.getCrystal(owner) >= c.getCostCrystals()
+    			&& resourceManager.getBiomass(owner) >= c.getCostBiomass()) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    private static void payForEntity(int owner, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree()) {
+    		// no payment
+    	} else {
+			resourceManager.setRocks(resourceManager.getRocks(owner) - c.getCostRocks(), owner);
+			resourceManager.setCrystal(resourceManager.getCrystal(owner) - c.getCostCrystals(), owner);
+			resourceManager.setBiomass(resourceManager.getBiomass(owner) - c.getCostBiomass(), owner);
+		}
+    }
+    
     public static void setGenerate(BaseEntity target, EntityID c) {
-        LOGGER.info("Building " + c.name());
+        // entity costs
+        ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+        if (canAfford(target.getOwner(), c, resourceManager)) {
+        	LOGGER.info("Building " + c.name());
+			payForEntity(target.getOwner(), c, resourceManager);
+        } else {
+        	LOGGER.info("CAN'T AFFORD ENTITY!");
+        	return;
+        }
         switch (c) {
             case ASTRONAUT:
                 target.setAction(new GenerateAction(new Astronaut(target.getPosX(), target.getPosY(), 0, target.getOwner())));
@@ -225,7 +270,7 @@ public final class ActionSetter {
                 target.setAction(new GenerateAction(new Commander(target
                         .getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
-            case HEALER:
+            case MEDIC:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             case SOLDIER:
@@ -233,6 +278,18 @@ public final class ActionSetter {
                 break;
             case TANK:
                 target.setAction(new GenerateAction(new Tank(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case HACKER:
+            	target.setAction(new GenerateAction(new Hacker(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SNIPER:
+            	target.setAction(new GenerateAction(new Sniper(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case TANKDESTROYER:
+            	target.setAction(new GenerateAction(new TankDestroyer(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SPATMAN:
+            	target.setAction(new GenerateAction(new Spatman(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             default:
                 break;

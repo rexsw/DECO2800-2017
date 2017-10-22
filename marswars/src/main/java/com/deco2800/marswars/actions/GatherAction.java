@@ -5,9 +5,10 @@ import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.GatheredResource;
 import com.deco2800.marswars.entities.HasHealth;
 import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import com.deco2800.marswars.entities.terrainelements.Resource;
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
@@ -150,7 +151,11 @@ public class GatherAction implements DecoAction {
 	}
 	private void returnToBase() {
 		if (action.completed()) {
-			state = State.SETUP_MOVE;
+			if (!((HasOwner) entity).isAi()) {
+				state = State.SETUP_MOVE;
+			} else {
+				((AttackableEntity) entity).setEmptyAction();
+			}
 			if (entity instanceof HasOwner && ((HasOwner) entity).isAi()) {
 				//if controlled by the ai added the resources to the ai's pile
 				ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);;

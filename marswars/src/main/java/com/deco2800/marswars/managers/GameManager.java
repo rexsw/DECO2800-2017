@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.hud.MiniMap;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +34,8 @@ public class GameManager implements TickableManager {
 
 	private Skin gameskin;
 	
+	private Skin altskin; 
+	
 	private Stage gamestage;
 
 	private BaseWorld mapWorld;
@@ -53,6 +55,8 @@ public class GameManager implements TickableManager {
 	private TextureManager gameTexture;
 	
 	private boolean gameStarted = false;
+	
+	private boolean costsFree = false;
 
 	/**
 	 * Returns an instance of the GM
@@ -86,7 +90,7 @@ public class GameManager implements TickableManager {
 	 * @param type The class type (ie SoundManager.class)
 	 * @return A Manager component of the requested type
 	 */
-	public Manager getManager(Class<?> type) {
+	public synchronized Manager getManager(Class<?> type) {
 		/* Check if the manager exists */
 		for (Manager m : managers) {
 			if (m.getClass() == type) {
@@ -207,15 +211,19 @@ public class GameManager implements TickableManager {
 	}
 	
 	public void resetGame(){
+		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		MainMenu.player.stopSoundTrack();
 		gamestage.clear();
 		this.gameWorld.getEntities().clear();
 		this.gameWorld = null;
 		this.gui = null;
 		this.miniMap = null;
+		TimeManager.resetInGameTime();
 		this.menu.endGame();
+		WeatherManager.water.dispose();
 		this.menu = new MainMenu(this.gameskin, this.gamestage);
 		menu.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		black.clear();
 	}
 
 	/**
@@ -262,6 +270,16 @@ public class GameManager implements TickableManager {
 	}
 	
 	/**
+	 * sets the alternative game skin
+	 * 
+	 * @param skin setskin the skin used to display the
+	 * games gui
+	 */
+	public void setAltSkin(Skin skin) {
+		altskin = skin;
+	}
+	
+	/**
 	 * gets the currently used game skin
 	 * 
 	 * @return Skin the skin used to display the
@@ -269,6 +287,16 @@ public class GameManager implements TickableManager {
 	 */
 	public Skin getSkin() {
 		return gameskin;
+	}
+	
+	/**
+	 * gets the alternative game skin
+	 * 
+	 * @return Skin the skin used to display the
+	 * games gui 
+	 */
+	public Skin getAltSkin() {
+		return altskin;
 	}
 
 	/**
@@ -309,6 +337,20 @@ public class GameManager implements TickableManager {
 		}
 	}
 
-
+	/**
+	 * returns if unit and building costs are free
+	 * @param isFree
+	 */
+	public boolean areCostsFree() {
+		return costsFree;
+	}
+	
+	/**
+	 * Cheat to toggle free unit and building costs
+	 * @param isFree
+	 */
+	public void setCostsFree(boolean isFree) {
+		costsFree = isFree;
+	}
 
 }

@@ -5,7 +5,7 @@ import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.*;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -47,13 +47,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosX(float x) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 		super.setPosX(x);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 	}
 
@@ -66,14 +66,14 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setPosY(float y) {
 		//remove the old line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 
 		super.setPosY(y);
 
 		//set the new line of sight
 		if(this.getOwner()==-1)
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 
 
 
@@ -105,15 +105,17 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setMaxHealth(t.getUnitAttribute(this.name, 1));
 		this.setHealth(t.getUnitAttribute(this.name, 1));
 		this.setDamage(t.getUnitAttribute(this.name, 2));
-		this.setArmor(t.getUnitAttribute(this.name, 3));
 		this.setMaxArmor(t.getUnitAttribute(this.name, 3));
+		this.setArmor(t.getUnitAttribute(this.name, 3));
 		this.setArmorDamage(t.getUnitAttribute(this.name, 4));
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
+		this.setMaxAttackSpeed(t.getUnitAttribute(this.name, 6));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
 		/*
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
 		 */
+		this.setMaxSpeed(0.05f);
 		this.setSpeed(0.05f); 
 		this.setUnloaded(); //default load status = 0
 	}
@@ -206,7 +208,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			nextAction = null;
 		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
 			Turret turret = (Turret) entities.get(0);
-			turret.numOfSolider += 1;
+			turret.setNumOfSolider(turret.getNumOfSolider() + 1);
 			turret.powerUpTurret();
 			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
 			turret.addNewAction(EntityID.SOLDIER);
@@ -215,9 +217,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}else {
 			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
-//			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-//			Sound loadedSound = sound.loadSound(movementSound);
-//			sound.playSound(loadedSound);
 		}
 		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
 		Sound loadedSound = sound.loadSound(movementSound);
@@ -238,7 +237,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			attack(target);
 
 		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));//, this.getSpeed()));
 		}
 	}
 	
@@ -271,10 +270,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		}
 		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
-			modifyFogOfWarMap(true,3);
+			modifyFogOfWarMap(true,getFogRange());
 		}
 
-		loyalty_regeneration();
+		regeneration();
 		checkOwnerChange();
 		if (!currentAction.isPresent()) {
 			
@@ -283,7 +282,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 
 
 			if(getHealth()<=0)
-				modifyFogOfWarMap(false,3);
+				modifyFogOfWarMap(false,getFogRange());
 			// make stances here.
 			int xPosition = (int) this.getPosX();
 			int yPosition = (int) this.getPosY();
@@ -291,11 +290,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			int entitiesSize = entities.size();
 			boolean waterPresent = false;
 			for (BaseEntity e: entities) {
-				if (e instanceof Soldier) {
-					if(((Soldier)e).getLoadStatus()==1){
-						isTheEntityLoaded = true;
-					}
-
+				if (e instanceof Soldier && ((Soldier)e).getLoadStatus() == 1) {
+					isTheEntityLoaded = true;
 				}
 				if (e instanceof MissileEntity) {
 					entitiesSize--;
@@ -419,7 +415,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					attackDefensively(a);
 					return;
@@ -438,7 +434,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					attack(a);
 					return;
@@ -453,54 +449,64 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 */
 	public void skirmishingBehaviour(List<AttackableEntity> enemy) {
 		//Run away from closest enemy until just within attack range
-		for (int i=1; i<getAttackRange(); i++) { 
+		for (int i = 1; i < getAttackRange(); i++) { 
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-                boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
-                if (distanceEquality) {
-					float xLocation;
-					float yLocation;
-					//If xDistance and yDistance is the same increment one by random
-					boolean distanceEquality2 = (Math.abs(xDistance - yDistance) < 0.01);
-					if (distanceEquality2) {
-						Random random = new Random();
-						if (random.nextBoolean()) {
-							xDistance += 1;
-						} else {
-							yDistance += 1;
-						}
-					}
-					if (xDistance > yDistance) {
-						if (a.getPosX() - this.getPosX() > 0) {
-							xLocation = this.getPosX() - 1;
-						} else {
-							xLocation = this.getPosX() + 1;
-						} 
-						yLocation = this.getPosY();
-					} else {
-						if (a.getPosY() - this.getPosY() > 0) {
-							yLocation = this.getPosY() - 1;
-						} else {
-							yLocation = this.getPosY() + 1;
-						}
-						xLocation = this.getPosX();
-					}
-					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
-					return;
-				}
+                boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
+                performSkirmishingbehaviour(distanceEquality, xDistance, yDistance, a);
 			}
 		}
 		//Consider attacking at maximum range
 		for (AttackableEntity a: enemy) {
 			float xDistance = a.getPosX() - this.getPosX();
 			float yDistance = a.getPosY() - this.getPosY();
-			boolean distanceEquality = (Math.abs(Math.abs(yDistance) +
-					Math.abs(xDistance) - this.getAttackRange()) < 0.01);
+			boolean distanceEquality = Math.abs(Math.abs(yDistance) +
+					Math.abs(xDistance) - this.getAttackRange()) < 0.01;
 			if (distanceEquality) {
 				attack(a);
 				return;
 			}
+		}
+	}
+	
+	/**
+	 * Helper method for skirmishing behavior.
+	 * 
+	 */
+	private void performSkirmishingbehaviour(boolean distanceEquality, float xDistance, float yDistance, AttackableEntity a) {
+        if (distanceEquality) {
+			float xLocation;
+			float yLocation;
+			float xDist = xDistance;
+			float yDist = yDistance;
+			//If xDistance and yDistance is the same increment one by random
+			boolean distanceEquality2 = Math.abs(xDist - yDist) < 0.01 ;
+			if (distanceEquality2) {
+				Random random = new Random();
+				if (random.nextBoolean()) {
+					xDist += 1;
+				} else {
+					yDist += 1;
+				}
+			}
+			if (xDist > yDist) {
+				if (a.getPosX() - this.getPosX() > 0) {
+					xLocation = this.getPosX() - 1;
+				} else {
+					xLocation = this.getPosX() + 1;
+				} 
+				yLocation = this.getPosY();
+			} else {
+				if (a.getPosY() - this.getPosY() > 0) {
+					yLocation = this.getPosY() - 1;
+				} else {
+					yLocation = this.getPosY() + 1;
+				}
+				xLocation = this.getPosX();
+			}
+			currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+			return;
 		}
 	}
 	
@@ -514,7 +520,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			for (AttackableEntity a: enemy) {
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
 				if (distanceEquality) {
 					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
 					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
@@ -551,6 +557,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){
+			LOGGER.error("setAlltexture has error");
 			return;
 		}
 	}
@@ -583,12 +590,13 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	/**
 	 * Increase the loyalty of the entity in a certain period. Please include this to your unit if you override ontick
 	 */
-	public void loyalty_regeneration() {
-		this.setLoyaltyRegenInterval(this.getLoyaltyRegenInterval() - 10);
-		if ((this.getLoyaltyRegenInterval()) <= 0) {
-			//LOGGER.info("Regen loyalty");
-			this.setLoyalty(this.getLoyalty() + 0);
-			this.resetLoyaltyRegenInterval();
+	public void regeneration() {
+		this.setRegenInterval(this.getRegenInterval() - 10);
+		if ((this.getRegenInterval()) <= 0) {
+			this.setLoyalty(this.getLoyalty() + 15);
+			this.setSpeed(this.getSpeed() + 0.01f);
+			this.setAttackSpeed(this.getAttackSpeed() + 2);
+			this.resetRegenInterval();
 			return;
 		}
 	}
@@ -600,7 +608,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void checkOwnerChange() {
 		if (this.getOwnerChangedStatus()) {
 			//turn of the fog of war for this entity when it switches side
-			modifyFogOfWarMap(false,3);
+			modifyFogOfWarMap(false,getFogRange());
 
 			this.setAllTextture();
 			this.setOwnerChangedStatus(false);

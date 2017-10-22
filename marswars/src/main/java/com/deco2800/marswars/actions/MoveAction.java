@@ -175,13 +175,11 @@ public class MoveAction implements DecoAction {
 	 */
 
 	public float getTempx() {
-		float tmpgoalX = path.get(0).getX();
-		return tmpgoalX;
+		return path.get(0).getX();
 	}
 
 	public float getTempy() {
-		float tmpgoalY = path.get(0).getY();
-		return tmpgoalY;
+		return path.get(0).getY();
 	}
 	
 	

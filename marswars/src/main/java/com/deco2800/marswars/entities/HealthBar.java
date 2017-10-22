@@ -4,10 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.util.Box3D;
-
 /**
  * Created by Hayden Bird on 5/10/2017.
  */
@@ -16,18 +13,20 @@ public class HealthBar extends BaseEntity {
     private BaseEntity parentEntity;
     private int state;
     private boolean visible = true;
+    private boolean finished = false;
 
     public HealthBar(float posX, float posY, float posZ, float xLength, float yLength, float zLength, BaseEntity parentEntity) {
         super(posX, posY, posZ, xLength, yLength, zLength);
         this.parentEntity = parentEntity;
+
     }
 
     public void translateToParent() {
-        super.setPosition(parentEntity.getPosX()+parentEntity.getXRenderLength()*3, parentEntity.getPosY()-parentEntity.getYRenderLength()*3, parentEntity.getPosZ());
+        super.setPosition(parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ()+3);
     }
 
     public void update() {
-	if(parentEntity.getEntityType() == EntityType.UNIT) {
+	if (parentEntity.getEntityType() == EntityType.UNIT) {
 	    if (((Soldier) parentEntity).getLoadStatus() == 1) {
 		setVisible(false);
 	    }
@@ -46,6 +45,12 @@ public class HealthBar extends BaseEntity {
         this.visible = visible;
     }
 
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public int getState() {return state;}
+
     public void generateTextures(int number) {
         PixmapIO pIO = new PixmapIO();
         for (int i = 0; i <= number; i++) {
@@ -56,6 +61,12 @@ public class HealthBar extends BaseEntity {
             p.setColor(Color.GRAY);
             p.fill();
             p.setColor(Color.GREEN);
+            if (number*100/i < 50) {
+            	p.setColor(Color.ORANGE);
+            }
+            if (number*100/i < 10) {
+            	p.setColor(Color.RED);
+            }
             p.fillRectangle(0,0,fillPoint,20);
             pIO.writePNG(f,p);
             p.dispose();
