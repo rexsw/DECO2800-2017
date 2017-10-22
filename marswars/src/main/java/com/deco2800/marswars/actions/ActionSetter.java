@@ -7,6 +7,8 @@ import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -213,22 +215,51 @@ public final class ActionSetter {
         }
     }
 
+    private static double setDifficultyMultiplier(Difficulty difficulty) {
+		double difficultyMultiplier;
+    	switch(difficulty) {
+		case EASY:
+			difficultyMultiplier = 2.0;
+			break;
+		case HARD:
+			difficultyMultiplier = 0.8;
+			break;
+		default: //NORMAL
+			difficultyMultiplier = 1.0;
+			break;
+		}
+		return difficultyMultiplier;
+	}
+    
     /**
-     * checks if there are enough resources to pay for the selected entity
+     * checks if there are enough resources to pay for the selected entity (and pop limit)
      * @param owner
      * @param c
      * @param resourceManager
      * @return
      */
-    private static boolean canAfford(int owner, EntityID c, ResourceManager resourceManager) {
-    	if (GameManager.get().areCostsFree()) {
+    public static boolean canAfford(int owner, boolean isAi, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree() && !isAi) {
     		return true;
     	}
-    	if (resourceManager.getRocks(owner) >= c.getCostRocks()
-    			&& resourceManager.getCrystal(owner) >= c.getCostCrystals()
-    			&& resourceManager.getBiomass(owner) >= c.getCostBiomass()) {
-    		return true;
+    	if (resourceManager.getPopulation(owner) > resourceManager.getMaxPopulation(owner)) {
+    		return false;
     	}
+    	if (!isAi) {
+	    	if (resourceManager.getRocks(owner) >= c.getCostRocks()
+	    			&& resourceManager.getCrystal(owner) >= c.getCostCrystals()
+	    			&& resourceManager.getBiomass(owner) >= c.getCostBiomass()) {
+	    		return true;
+	    	}
+    	} else {
+    		AiManager am = (AiManager) GameManager.get().getManager(AiManager.class);
+			double difficultyMultiplier = setDifficultyMultiplier(am.getDifficulty());
+			if (resourceManager.getRocks(owner) >= (int)(c.getCostRocks()*difficultyMultiplier)
+	    			&& resourceManager.getCrystal(owner) >= (int)(c.getCostCrystals()*difficultyMultiplier)
+	    			&& resourceManager.getBiomass(owner) >= (int)(c.getCostBiomass()*difficultyMultiplier)) {
+	    		return true;
+	    	}
+		}
     	return false;
     }
     
@@ -239,22 +270,29 @@ public final class ActionSetter {
      * @param resourceManager
      * @return
      */
-    private static void payForEntity(int owner, EntityID c, ResourceManager resourceManager) {
-    	if (GameManager.get().areCostsFree()) {
+    public static void payForEntity(int owner, boolean isAi, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree() && !isAi) {
     		// no payment
-    	} else {
+    	} else if (!isAi) {
 			resourceManager.setRocks(resourceManager.getRocks(owner) - c.getCostRocks(), owner);
 			resourceManager.setCrystal(resourceManager.getCrystal(owner) - c.getCostCrystals(), owner);
 			resourceManager.setBiomass(resourceManager.getBiomass(owner) - c.getCostBiomass(), owner);
+		} else {
+			AiManager am = (AiManager) GameManager.get().getManager(AiManager.class);
+			double difficultyMultiplier = setDifficultyMultiplier(am.getDifficulty());
+			
+			resourceManager.setRocks(resourceManager.getRocks(owner) - (int)(c.getCostRocks()*difficultyMultiplier), owner);
+			resourceManager.setCrystal(resourceManager.getCrystal(owner) - (int)(c.getCostCrystals()*difficultyMultiplier), owner);
+			resourceManager.setBiomass(resourceManager.getBiomass(owner) - (int)(c.getCostBiomass()*difficultyMultiplier), owner);
 		}
     }
     
     public static void setGenerate(BaseEntity target, EntityID c) {
         // entity costs
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-        if (canAfford(target.getOwner(), c, resourceManager)) {
+        if (canAfford(target.getOwner(), target.isAi(), c, resourceManager)) {
         	LOGGER.info("Building " + c.name());
-			payForEntity(target.getOwner(), c, resourceManager);
+			payForEntity(target.getOwner(), target.isAi(), c, resourceManager);
         } else {
         	LOGGER.info("CAN'T AFFORD ENTITY!");
         	return;
