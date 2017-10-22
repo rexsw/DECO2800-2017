@@ -54,19 +54,8 @@ public class AiBuilder extends Manager {
 		AiManager ai = (AiManager) GameManager.get().getManager(AiManager.class);
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		State state = ai.getState(team);
-		int buildingNum = black.count(team, Field.BUILDINGS) % 5;
-		// with 1-in-3 chance choose based on state
-		if (rand.nextInt(3) == 0) {
-			switch(state){
-			case AGGRESSIVE:
-				return BuildingType.BARRACKS;
-			case DEFENSIVE:
-				return BuildingType.TURRET;
-			case ECONOMIC:
-				return BuildingType.BUNKER;
-			}
-		}
-		// otherwise follow this build pattern
+		int buildingNum = black.count(team, Field.BUILDINGS);
+		// follow this build pattern
 		switch(buildingNum - 1){
 		case 0:
 			return BuildingType.BUNKER;
@@ -76,8 +65,15 @@ public class AiBuilder extends Manager {
 			return BuildingType.BUNKER;
 		case 3:
 			return BuildingType.TURRET;
-		default:	//case 4:
-			return BuildingType.BASE;
+		default:	// from then on choose based on state
+			switch(state){
+			case AGGRESSIVE:
+				return BuildingType.BARRACKS;
+			case DEFENSIVE:
+				return BuildingType.TURRET;
+			default:	//case ECONOMIC:
+				return BuildingType.BUNKER;
+			}
 		}
 	}
 	

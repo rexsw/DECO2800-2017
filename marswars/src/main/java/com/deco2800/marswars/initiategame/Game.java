@@ -49,9 +49,6 @@ public class Game{
 	private OrthographicCamera camera;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-	// Please don't delete
-	private WeatherManager weatherManager = (WeatherManager)
-			GameManager.get().getManager(WeatherManager.class);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarsWars.class);
 	
@@ -101,6 +98,10 @@ public class Game{
 		this.camera = GameManager.get().getCamera();
 		this.timeManager.setGameStartTime();
 		this.timeManager.unPause();
+
+		//set win condition
+		WinManager win = (WinManager) GameManager.get().getManager(WinManager.class);
+		win.setwinconditions(loadedGame.data.getWinCondition());
 
 		//set game time
 		this.timeManager.setGameTime((int)loadedGame.data.getHour(),(int)loadedGame.data.getMin(),0);
@@ -180,8 +181,6 @@ public class Game{
 		loadBuildings(loadedGame);
 		loadAnimals(loadedGame);
 
-
-		this.weatherManager.setWeatherEvent();
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		black.set();
 		GameManager.get().getManager(WinManager.class);
@@ -513,15 +512,22 @@ public class Game{
 	 *            ResourceManager the ResourceManager of the game to set
 	 */
 	private void setUnit(int teamid, int x, int y, ResourceManager rm) {
-		rm.setBiomass(200, teamid);
-		rm.setRocks(200, teamid);
-		rm.setCrystal(200, teamid);
+		int initResource = 0;
+		if(teamid<10){
+			initResource = 100;
+		}
+
+		rm.setBiomass(initResource, teamid);
+		rm.setRocks(initResource, teamid);
+		rm.setCrystal(initResource, teamid);
 		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
-		Astronaut ai1 = new Astronaut(x, y, 0, teamid);		
+		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
+		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
+		GameManager.get().getWorld().addEntity(ai2);
 		GameManager.get().getWorld().addEntity(base);
 		
 		LOGGER.info("Team units successfully set");

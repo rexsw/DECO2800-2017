@@ -162,6 +162,12 @@ public class CodeInterpreter {
 
     }
 
+    /**
+     * If the code contains "hurryup", increase the in-game time by three hours.
+     */
+    public void hurryup() {
+        tm.addTime(10800);
+    }
 
     /**
      * If the code is "whosyourdaddy", set the enemies attack to be of no effect.
@@ -189,16 +195,20 @@ public class CodeInterpreter {
     }
 
 
-
+    /**
+     * Turns the flood effect on when floodon is typed into the chat window
+     * during a single player game.
+     */
     public void floodon(){
         wm.toggleFlood(true);
-
-
     }
 
+    /**
+     * Turns the flood effect off when "floodoff" is typed into the chat window
+     * during a single player game.
+     */
     public void floodoff(){
         wm.toggleFlood(false);
-
     }
     
     /**
