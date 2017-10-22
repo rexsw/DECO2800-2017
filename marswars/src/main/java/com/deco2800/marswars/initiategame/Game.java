@@ -77,6 +77,7 @@ public class Game{
 	 */
 	public Game(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams, Difficulty aiDifficulty) {
 		this.aiDifficulty = aiDifficulty;
+		GameManager.get().setMapType(mapType);
 		ColourManager colourManager = (ColourManager)GameManager.get()
 				.getManager(ColourManager.class);
 		int currentColorIndex = colourManager.getIndex();
