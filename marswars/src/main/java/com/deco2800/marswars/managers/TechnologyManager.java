@@ -18,8 +18,6 @@ public class TechnologyManager extends Manager{
 
     /*
     *each tech thingo has id, Cost(Rocks, Crystal, Biomass), Name, parent(list)
-    *private Map<Integer, Integer[], String, List<Integer>> techMap = ..
-    * .. new HashMap<Integer, Integer[], String, List<Integer>>();
     * unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
     */
 
@@ -258,7 +256,6 @@ public class TechnologyManager extends Manager{
     //HERO SPECIAL UPGRADES
     public void setUpSpecialItemsTech() {
         // Special item unlock tech setup
-        //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
         special = new Technology(new int[]{20, 20, 20}, "Special " +
                 "Items Unlock",
@@ -332,7 +329,7 @@ public class TechnologyManager extends Manager{
      * Returns an array of all the Technologies
      * @return
      */
-    public ArrayList<Technology> getAllTechs() {
+    public List<Technology> getAllTechs() {
         ArrayList<Technology> techList = new ArrayList<>();
         for (int j = 0; j < techMap.size(); j++) {
             techList.add(getTech(j));
@@ -482,14 +479,6 @@ public class TechnologyManager extends Manager{
         return specialUnlocked;
     }
 
-
-    public void buildingArmorUpgrade(){
-
-    }
- 
-    public void buildingConstructionTimeUpgrade(){
-
-    }
     /**
      * NOT IMPLEMENTED YET. PLACEHOLDER. IN PROGRESS.
      */

@@ -51,50 +51,6 @@ public class TechnologyManagerTest {
     }
 
     @Test
-    public void setUpUnlockStates() throws Exception {
-    }
-
-    @Test
-    public void setUpArmourTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpDamageTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpeedTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpHealthTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpecialTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpHeroFactoryTech() throws Exception {
-    }
-
-    @Test
-    public void setUpArmourItemLevelTechs() throws Exception {
-    }
-
-    @Test
-    public void setUpSpecialItemsTech() throws Exception {
-    }
-
-    @Test
-    public void setUpWeaponLevelTechs() throws Exception {
-    }
-
-    @Test
-    public void setUnitAttributes() throws Exception {
-    }
-
-    @Test
     public void getTech() throws Exception {
         assertTrue(technologyManager.getTech(1).equals(tech1));
     }
@@ -118,18 +74,22 @@ public class TechnologyManagerTest {
 
     @Test
     public void attackUpgrade() throws Exception {
+        technologyManager.attackUpgrade();
     }
 
     @Test
     public void armourUpgrade() throws Exception {
+        technologyManager.armourUpgrade();
     }
 
     @Test
     public void speedUpgrade() throws Exception {
+        technologyManager.speedUpgrade();
     }
 
     @Test
     public void healthUpgrade() throws Exception {
+        technologyManager.healthUpgrade();
     }
 
     @Test
