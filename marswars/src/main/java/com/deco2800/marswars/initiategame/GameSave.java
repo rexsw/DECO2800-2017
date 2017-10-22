@@ -101,7 +101,6 @@ public class GameSave {
         kryo.writeClassAndObject(output, data.getPlayerStats());
         kryo.writeClassAndObject(output, data.getHour());
         kryo.writeClassAndObject(output, data.getMin());
-        kryo.writeClassAndObject(output, data.getSec());
         output.close();
 
         //write the map file
@@ -146,7 +145,6 @@ public class GameSave {
         data.setPlayerStats((ArrayList<ArrayList<Integer>>)kryo.readClassAndObject(input));
         data.setHour((long)kryo.readClassAndObject(input));
         data.setMin((long)kryo.readClassAndObject(input));
-        data.setSec((long)kryo.readClassAndObject(input));
         input.close();
     }
 
@@ -156,6 +154,12 @@ public class GameSave {
      * this function will get all the entities and fills in the arrays
      */
     public void fillData(){
+        //fill the time
+        TimeManager timeManager = (TimeManager)
+                GameManager.get().getManager(TimeManager.class);
+        data.setHour(timeManager.getHours());
+        data.setMin(timeManager.getMinutes());
+
         data.setFogOfWar(FogManager.getFog());
         data.setBlackFogOfWar(FogManager.getBlackFog());
 
@@ -213,12 +217,7 @@ public class GameSave {
         }
 
 
-        //fill the time
-        TimeManager timeManager = (TimeManager)
-                GameManager.get().getManager(TimeManager.class);
-        data.setHour(timeManager.getPlayHours());
-        data.setMin(timeManager.getPlayMinutes());
-        data.setSec(timeManager.getPlaySeconds());
+
 
     }
 

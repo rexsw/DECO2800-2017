@@ -3,6 +3,7 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,8 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * acceptable fields for use in the blackboard used for type safety 
 	 */
 	public enum Field {
-		BIOMASS, CRYSTAL, ROCKS, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY
+		BIOMASS, CRYSTAL, ROCKS, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY,
+		ASTRONAUTS,
 	}
 	
 
@@ -49,6 +51,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get(Field.UNITS).add(this.count(teamid, Field.UNITS));
 				values.get(teamid).get(Field.UNITS_LOST).add(this.count(teamid, Field.UNITS_LOST));
 				values.get(teamid).get(Field.COMBAT_UNITS).add(this.count(teamid, Field.COMBAT_UNITS));
+				values.get(teamid).get(Field.ASTRONAUTS).add(this.count(teamid, Field.ASTRONAUTS));
 				values.get(teamid).get(Field.BUILDINGS).add(this.count(teamid, Field.BUILDINGS));
 				//currentlly not counting techology so this is for graph testing on ui
 				values.get(teamid).get(Field.TECHNOLOGY).add(ThreadLocalRandom.current().nextInt(1, 50));
@@ -100,6 +103,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		setmap.put(Field.UNITS,  new ArrayList<Integer>(base));
 		setmap.put(Field.UNITS_LOST,  new ArrayList<Integer>(base));
 		setmap.put(Field.COMBAT_UNITS,  new ArrayList<Integer>(base));
+		setmap.put(Field.ASTRONAUTS,  new ArrayList<Integer>(base));
 		setmap.put(Field.BUILDINGS,  new ArrayList<Integer>(base));
 		setmap.put(Field.TECHNOLOGY,  new ArrayList<Integer>(base));
 		values.put(teamid, setmap);
@@ -144,6 +148,11 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 			return;
 		}
+		else if(enity instanceof Astronaut) {
+			count = values.get(teamid).get(Field.ASTRONAUTS).get(index);
+			count++;
+			values.get(teamid).get(Field.ASTRONAUTS).set(index, count);
+		}
 		else if(enity instanceof AttackableEntity) {
 			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count++;
@@ -173,6 +182,11 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			count--;
 			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 			return;
+		}
+		else if(enity instanceof Astronaut) {
+			count = values.get(teamid).get(Field.ASTRONAUTS).get(index);
+			count++;
+			values.get(teamid).get(Field.ASTRONAUTS).set(index, count);
 		}
 		else if(enity instanceof AttackableEntity) {
 			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);

@@ -23,7 +23,6 @@ public class DataTest {
 
         data.getHour();
         data.getMin();
-        data.getSec();
         data.getResource();
         data.getBuilding();
         data.getEntities();
@@ -45,7 +44,6 @@ public class DataTest {
 
         data.setHour(1l);
         data.setMin(1l);
-        data.setSec(1l);
         data.setResource(resource);
         data.setBuilding(building);
         data.setEntities(entities);

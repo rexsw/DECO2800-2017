@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.hud.ExitGame;
 import com.deco2800.marswars.hud.HUDView;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.NetManager;
 import com.deco2800.marswars.managers.TextureManager;
@@ -43,6 +44,7 @@ public class MenuScreen extends Table{
 	private MainMenu menu;
 	private Stage stage;
 	private static Window mainmenu;
+	private Difficulty aiDifficulty;
 
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
@@ -193,7 +195,7 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS);
+				menu.startGame(true, mapType, mapSize, allTeams, PLAYERTEAMS, aiDifficulty);
 				GameManager.get().getGui().getSpawnMenu().showEntitiesPicker(true, false);
 				mainmenu.setVisible(false);
 			}
@@ -213,7 +215,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
 				mainmenu.setVisible(false);
-				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1);
+				menu.startGame(true, MapTypes.MARS, MapSizeTypes.MEDIUM, 1, 1, Difficulty.NORMAL);
 			}
 		});
 		
@@ -514,6 +516,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
 				combatSelected.setText("Easy level selected");
+				aiDifficulty = Difficulty.EASY;
 			}
 		});
 		
@@ -523,6 +526,7 @@ public class MenuScreen extends Table{
                 click.play();
 				allTeams = 2;
 				combatSelected.setText("Normal level selected");
+				aiDifficulty = Difficulty.NORMAL;
 			}
 		});
 		
@@ -532,6 +536,7 @@ public class MenuScreen extends Table{
                 click.play();
 				allTeams = 2;
 				combatSelected.setText("Hard level selected");
+				aiDifficulty = Difficulty.HARD;
 			}
 		});
 		
@@ -756,7 +761,7 @@ public class MenuScreen extends Table{
                 click.play();
 				if (checkTeams()) {
 					mainmenu.setVisible(false);
-					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS);
+					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS, aiDifficulty);
 				}
 		}});
 		

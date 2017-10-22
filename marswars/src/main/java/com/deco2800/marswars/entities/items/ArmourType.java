@@ -17,11 +17,10 @@ package com.deco2800.marswars.entities.items;
  *
  */
 public enum ArmourType implements ItemType {
-	// organic armour
+
 	HELMET("Combat Helmet", "helmet_1", 1000, 500, 0.05f, new int[] { 80, 30, 100 },
 			new float[] { 1.0f, 1.2f, 1.4f }),
-	
-	//some OP movement speed boots (texture here is a placeholder)
+
 	GOGGLE("Tactical Goggle", "goggle_1", 3000, 1500, 0.1f, new int[] { 200, 500,
 			300}, new float[] {1.0f, 1.2f, 1.4f });
 	

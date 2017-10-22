@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AttackableEntityTest {
 	AttackableEntity test;
@@ -166,6 +168,12 @@ public class AttackableEntityTest {
 		test.setEmptyAction();
 		assertEquals(test.getCurrentAction(), Optional.empty());
 		assertEquals(test.showProgress(), false);
+	}
+
+	@Test public void testAttackAction(){
+		AttackAction act = new AttackAction(test, enemy);
+		assertTrue(act.actionProgress()==0);
+		assertFalse(act.completed());
 	}
 
 	@Test
