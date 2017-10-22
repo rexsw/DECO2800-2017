@@ -39,6 +39,7 @@ public class TechnologyManager extends Manager{
     private ArrayList<Technology> weaponL3Parents = new ArrayList<Technology>();
 
     // booleans to store unlock states
+    private boolean heroFactoryUnlocked;
     private boolean specialUnlocked;
     private boolean armourL1Unlocked;
     private boolean armourL2Unlocked;
@@ -82,6 +83,7 @@ public class TechnologyManager extends Manager{
     }
 
     public void setUpUnlockStates() {
+        heroFactoryUnlocked = false;
         specialUnlocked = false;
         armourL1Unlocked = false;
         armourL2Unlocked = false;
@@ -183,7 +185,7 @@ public class TechnologyManager extends Manager{
     }
 
     public void setUpHeroFactoryTech() {
-        heroFactory = new Technology(new int[]{0, 0, 0}, "Hero " +
+        heroFactory = new Technology(new int[]{30, 30, 30}, "Hero " +
                 "Factory", heroFactoryParents,
                 "Unlocks the ability to build factories to manufacture " +
                         "hero units.");
@@ -193,7 +195,7 @@ public class TechnologyManager extends Manager{
     public void setUpWeaponLevelTechs() {
         // Weapon item level upgrades setup
         weaponL1Parents.add(techMap.get(21));
-        weaponLevelOne = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        weaponLevelOne = new Technology(new int[]{40, 40, 0}, "Weapon " +
                 "Level" +
                 " 1",
                 weaponL1Parents,
@@ -202,7 +204,7 @@ public class TechnologyManager extends Manager{
         techMap.put(22, weaponLevelOne);
 
         weaponL2Parents.add(techMap.get(22));
-        weaponLevelTwo = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        weaponLevelTwo = new Technology(new int[]{70, 70, 0}, "Weapon " +
                 "Level 2",
                 weaponL2Parents,
                 "Unlocks the ability to build Level Two Weapons for Hero " +
@@ -210,7 +212,7 @@ public class TechnologyManager extends Manager{
         techMap.put(23, weaponLevelTwo);
 
         weaponL3Parents.add(techMap.get(23));
-        weaponLevelThree = new Technology(new int[]{0, 0, 0}, "Weapon " +
+        weaponLevelThree = new Technology(new int[]{100, 100, 0}, "Weapon " +
                 "Level 3",
                 weaponL3Parents,
                 "Unlocks the ability to build Level Three Weapons for Hero " +
@@ -223,7 +225,7 @@ public class TechnologyManager extends Manager{
         // Special item unlock tech setup
         //specialParents = new ArrayList<Technology>();
         specialParents.add(heroFactory);
-        special = new Technology(new int[]{0, 0, 0}, "Special " +
+        special = new Technology(new int[]{30, 30, 30}, "Special " +
                 "Items Unlock",
                 specialParents,
                 "Unlocks the ability to build Special items for Hero units");
@@ -233,14 +235,14 @@ public class TechnologyManager extends Manager{
     public void setUpArmourItemLevelTechs() {
         // Armour item level upgrades setup
         armourL1Parents.add(techMap.get(25));
-        armourLevelOne = new Technology(new int[]{0, 0, 0}, "Armour " +
+        armourLevelOne = new Technology(new int[]{0, 40, 40}, "Armour " +
                 "Level 1", armourL1Parents,
                 "Unlocks the ability to build Level One Armour for Hero " +
                         "units.");
         techMap.put(26, armourLevelOne);
 
         armourL2Parents.add(techMap.get(26));
-        armourLevelTwo = new Technology(new int[]{0, 0, 0}, "Armour " +
+        armourLevelTwo = new Technology(new int[]{20, 60, 60}, "Armour " +
                 "Level 2",
                 armourL2Parents,
                 "Unlocks the ability to build Level Two Armour for Hero " +
@@ -248,7 +250,7 @@ public class TechnologyManager extends Manager{
         techMap.put(27, armourLevelTwo);
 
         armourL3Parents.add(techMap.get(27));
-        armourLevelThree = new Technology(new int[]{0, 0, 0}, "Armour " +
+        armourLevelThree = new Technology(new int[]{40, 80, 80}, "Armour " +
                 "Level 3",
                 armourL3Parents,
                 "Unlocks the ability to build Level Three Armour for Hero " +
@@ -376,9 +378,6 @@ public class TechnologyManager extends Manager{
      */
     public void unlockWeaponLevelOne() {
         weaponL1Unlocked = true;
-
-
-
     }
     
     /**
@@ -425,6 +424,22 @@ public class TechnologyManager extends Manager{
         return specialUnlocked;
     }
 
+    /**
+     * Unlocks the Hero Factory building.
+     */
+    public void unlockHeroFactory() {
+        heroFactoryUnlocked = true;
+        System.out.println("\n Hero Factory unlocked \n");
+    }
+
+    /**
+     * Returns boolean representing whether Hero Factory is unlocked.
+     */
+    public boolean heroFactoryIsUnlocked() {
+        return heroFactoryUnlocked;
+    }
+
+
 
     public void buildingArmorUpgrade(){
 
@@ -433,12 +448,7 @@ public class TechnologyManager extends Manager{
     public void buildingConstructionTimeUpgrade(){
 
     }
-    /**
-     * NOT IMPLEMENTED YET. PLACEHOLDER. IN PROGRESS.
-     */
-    public void unlockHeroFactory() {
-        System.out.println("\n Hero Factory unlocked \n");
-    }
+
 
 
 
@@ -544,9 +554,13 @@ public class TechnologyManager extends Manager{
      * [IMPORTANT NOTE] I can't see a way to check tech for each team based on team ID yet
      */
     public ArrayList<BuildingType> getAvailableBuildings() {
-        ArrayList<BuildingType> buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-                BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
-    	// ADD HEROFACTORY to buildingsAvailable if the tech is unlocked (NOT IMPLEMENTED)
+        if (heroFactoryIsUnlocked()) {
+            buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+                    BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
+        } else {
+            buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
+                    BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+        }
     	return buildingsAvailable;
     }
 

@@ -111,7 +111,7 @@ public class HUDView extends ApplicationAdapter{
 	private GameManager gameManager;
 	private TimeManager timeManager = (TimeManager) GameManager.get().getManager(TimeManager.class);
 	private TextureManager textureManager; //for loading in resource images
-
+	private TechnologyManager technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 	private BaseEntity selectedEntity;	//for differentiating the entity selected
 	private List<BaseEntity> selectedList = new ArrayList<>();
 	// hero manage
@@ -165,7 +165,6 @@ public class HUDView extends ApplicationAdapter{
 	 * Updates shop when item levels are unlocked.
 	 */
 	public void updateShop() {
-		TechnologyManager technologyManager = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		if (technologyManager.armourIsUnlocked(1) && (shopDialog.getArmourLvl() < 1)) {
 			shopDialog.unlockArmours(1);
 		}
@@ -362,7 +361,6 @@ public class HUDView extends ApplicationAdapter{
 		LOGGER.debug("Creating HUD manipulation buttons");
 
 		shopDialog = new ShopDialog("Shop", skin, textureManager);
-		//remove dispActions button + image for it
 
 		//add dispTech image
 		Texture techImage = textureManager.getTexture("tech_button");
