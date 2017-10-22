@@ -126,7 +126,7 @@ public class WeatherManagerTest {
         assertFalse(affectedBuilding.isFlooded());
     }
 
-    @Test
+    @Test @Ignore
     public void testGenerateFirstDrop() {
         world.removeEntity(testDrop);
         WeatherManager weatherManager = (WeatherManager)
@@ -141,7 +141,7 @@ public class WeatherManagerTest {
         assertFalse(weatherManager.isRaining());
     }
 
-    @Test
+    @Test @Ignore
     public void testCheckPosition() {
         WeatherManager weatherManager = (WeatherManager)
                 GameManager.get().getManager(WeatherManager.class);

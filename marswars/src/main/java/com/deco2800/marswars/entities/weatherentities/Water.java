@@ -76,6 +76,6 @@ public class Water extends BaseEntity implements HasHealth, Tickable {
      */
     @Override
     public void onTick(int tick) {
-        weatherManager.setWeatherEvent();
+        //weatherManager.setWeatherEvent();
     }
 }
