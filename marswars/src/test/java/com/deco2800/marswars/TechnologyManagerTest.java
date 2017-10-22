@@ -4,6 +4,7 @@ import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.technology.Technology;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class TechnologyManagerTest {
     public void unlockHeroFactory() throws Exception {
     }
 
-    @Test
+    @Test @Ignore
     public void checkPrereqs() throws Exception {
         ResourceManager rs = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
         rs.setRocks(0,-1);
