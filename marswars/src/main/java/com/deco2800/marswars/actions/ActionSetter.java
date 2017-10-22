@@ -221,6 +221,9 @@ public final class ActionSetter {
      * @return
      */
     private static boolean canAfford(int owner, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree()) {
+    		return true;
+    	}
     	if (resourceManager.getRocks(owner) >= c.getCostRocks()
     			&& resourceManager.getCrystal(owner) >= c.getCostCrystals()
     			&& resourceManager.getBiomass(owner) >= c.getCostBiomass()) {
@@ -237,9 +240,13 @@ public final class ActionSetter {
      * @return
      */
     private static void payForEntity(int owner, EntityID c, ResourceManager resourceManager) {
-    	resourceManager.setRocks(resourceManager.getRocks(owner) - c.getCostRocks(), owner);
-    	resourceManager.setCrystal(resourceManager.getCrystal(owner) - c.getCostCrystals(), owner);
-    	resourceManager.setBiomass(resourceManager.getBiomass(owner) - c.getCostBiomass(), owner);
+    	if (GameManager.get().areCostsFree()) {
+    		// no payment
+    	} else {
+			resourceManager.setRocks(resourceManager.getRocks(owner) - c.getCostRocks(), owner);
+			resourceManager.setCrystal(resourceManager.getCrystal(owner) - c.getCostCrystals(), owner);
+			resourceManager.setBiomass(resourceManager.getBiomass(owner) - c.getCostBiomass(), owner);
+		}
     }
     
     public static void setGenerate(BaseEntity target, EntityID c) {

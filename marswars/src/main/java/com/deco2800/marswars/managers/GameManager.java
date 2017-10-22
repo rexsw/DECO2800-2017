@@ -55,6 +55,8 @@ public class GameManager implements TickableManager {
 	private TextureManager gameTexture;
 	
 	private boolean gameStarted = false;
+	
+	private boolean costsFree = false;
 
 	/**
 	 * Returns an instance of the GM
@@ -335,6 +337,20 @@ public class GameManager implements TickableManager {
 		}
 	}
 
-
+	/**
+	 * returns if unit and building costs are free
+	 * @param isFree
+	 */
+	public boolean areCostsFree() {
+		return costsFree;
+	}
+	
+	/**
+	 * Cheat to toggle free unit and building costs
+	 * @param isFree
+	 */
+	public void setCostsFree(boolean isFree) {
+		costsFree = isFree;
+	}
 
 }
