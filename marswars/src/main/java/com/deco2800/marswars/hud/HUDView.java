@@ -253,10 +253,10 @@ public class HUDView extends ApplicationAdapter{
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
-		help = new HelpWindow(stage, skin);
+		help = new HelpWindow(stage, skin, "help");
 		stage.addActor(help);
-		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
-				stage.getHeight()/2 - help.getHeight());
+		help.setPosition(Gdx.graphics.getWidth()/2 - help.getWidth()/2, 
+				Gdx.graphics.getHeight()/2 - help.getHeight()/2);
 		help.setVisible(false);
 
 		//Creates the help button listener
@@ -1045,8 +1045,7 @@ public class HUDView extends ApplicationAdapter{
 		stats.resizeStats(width, height);
 		
 		//resize help window
-		help.setPosition(stage.getWidth()/2 - help.getWidth()-2, 
-				stage.getHeight()/2 - help.getHeight());
+		help.setPosition(width/2 - help.getWidth()/2, height/2 - help.getHeight()/2);
 
     }
 	
