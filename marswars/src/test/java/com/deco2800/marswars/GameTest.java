@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 
 /**
  * Junit Tests for code in package initiateGame
- * includes: gameSave, game, SavedEntity, SavedBuilding
+ * includes: gameSave, game, SavedEntity, SavedBuilding, SavedAnimal
  * 
  * Created by jdtran21 on 10/22/2017
  *
@@ -29,6 +29,11 @@ public class GameTest {
 		GameSave testSave = new GameSave();
 	}
 	
+	/**
+	 * Tests gameSave and saving all types of entities upon saving.
+	 * 
+	 * @throws FileNotFoundException when savefile is not found
+	 */
 	@Test
 	public void testGameSave() throws FileNotFoundException {
 		GameSave testSave = new GameSave(1, 1,true);
@@ -73,5 +78,18 @@ public class GameTest {
 		testSave.fillEntities(medic);
 		testSave.fillEntities(hacker);
 		testSave.fillEntities(soldier);
+		
+		Corn corn = new Corn(0, 0, 0, 1);
+		Snail snail = new Snail(0, 0, 0, 1);
+		Dino dino = new Dino(0, 0, 0, 1);
+		
+		testSave.fillAnimals(corn);
+		testSave.fillAnimals(snail);
+		testSave.fillAnimals(dino);
 	}	
+	
+	@Test
+	public void testGame() {
+		
+	}
 }

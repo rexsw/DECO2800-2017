@@ -295,6 +295,7 @@ public final class ActionSetter {
 			payForEntity(target.getOwner(), target.isAi(), c, resourceManager);
         } else {
         	LOGGER.info("CAN'T AFFORD ENTITY!");
+        	LOGGER.info("Biomass: " + resourceManager.getBiomass(target.getOwner()) + " | Cost: " + (int)(c.getCostBiomass()*1.0));
         	return;
         }
         switch (c) {
