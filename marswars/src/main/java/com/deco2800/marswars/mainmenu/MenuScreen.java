@@ -45,6 +45,9 @@ public class MenuScreen extends Table{
 	private Stage stage;
 	private static Window mainmenu;
 	private Difficulty aiDifficulty;
+	private boolean victoryEconomic = false;
+	private boolean victoryMilitary = false;
+	
 
 	/* Navigation button styling*/
 	static final int BUTTONWIDTH = 150; 
@@ -453,7 +456,7 @@ public class MenuScreen extends Table{
 		Label winInfo = new Label("SELECT WIN CONDITIONS", this.skin, "subheading");
 		
 		Label selected = new Label(String.format("Total %d teams playing", allTeams), skin, "info");
-		Label combatSelected = new Label("Normal AI difficulty selected", skin, "info");
+		Label combatSelected = new Label("Choose AI difficulty ", skin, "info");
 
 		Table aiButtons = new Table();
 		Button ai2 = new TextButton("2", skin, menuButtonString);
@@ -515,7 +518,7 @@ public class MenuScreen extends Table{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
-				combatSelected.setText("Easy level selected");
+				combatSelected.setText("Easy AI difficulty selected");
 				aiDifficulty = Difficulty.EASY;
 			}
 		});
@@ -525,7 +528,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
 				allTeams = 2;
-				combatSelected.setText("Normal level selected");
+				combatSelected.setText("Normal AI difficulty selected");
 				aiDifficulty = Difficulty.NORMAL;
 			}
 		});
@@ -535,7 +538,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
                 click.play();
 				allTeams = 2;
-				combatSelected.setText("Hard level selected");
+				combatSelected.setText("Hard AI difficulty selected");
 				aiDifficulty = Difficulty.HARD;
 			}
 		});
@@ -549,12 +552,19 @@ public class MenuScreen extends Table{
 		
 		CheckBox economic = new CheckBox(" Economy", skin, "spac_check");
 		CheckBox millitary = new CheckBox(" Millitary", skin, "spac_check");
-		CheckBox population = new CheckBox(" Population", skin, "spac_check");
-		
+		//CheckBox population = new CheckBox(" Population", skin, "spac_check");
+		economic.addListener(new ChangeListener() {
+			public void changed(ChangeEvent event, Actor actor) { //TODO
+				victoryEconomic = !victoryEconomic;
+		}});
+		millitary.addListener(new ChangeListener() {
+			public void changed(ChangeEvent event, Actor actor) { //TODO
+				victoryMilitary = !victoryMilitary;
+		}});
 		winConditionChecks.add(economic).align(Align.left).pad(BUTTONPAD);
 		winConditionChecks.add(millitary).align(Align.left).pad(BUTTONPAD);
-		winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
-								
+		//winConditionChecks.add(population).align(Align.left).pad(BUTTONPAD);
+		
 		mainmenu.add(combatInfo).align(Align.left).row();
 		mainmenu.add(teamInfo).align(Align.left).row();
 		mainmenu.add(selected).align(Align.left).padBottom(LABELPAD).row();
@@ -748,6 +758,22 @@ public class MenuScreen extends Table{
 		}
 		return true;
 	}
+	
+	private boolean checkDifficulty() { //TODO
+		if (aiDifficulty == null) {
+			errorTeamsSelection.setText("Choose a difficulty setting!");
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean checkVictoryConditions() {
+		if (!(victoryEconomic && victoryMilitary)) {
+			errorTeamsSelection.setText("Choose a victory setting!");
+			return false;
+		}
+		return true;
+	}
 		
 	/**
 	 * Adds in a play button
@@ -759,7 +785,7 @@ public class MenuScreen extends Table{
 			public void changed(ChangeEvent event, Actor actor) {
 				/* If the final 'select combat' features not selected*/
                 click.play();
-				if (checkTeams()) {
+				if (checkTeams() && checkDifficulty() && checkVictoryConditions()) {
 					mainmenu.setVisible(false);
 					menu.startGame(true, mapType, mapSize, allTeams-PLAYERTEAMS, PLAYERTEAMS, aiDifficulty);
 				}
