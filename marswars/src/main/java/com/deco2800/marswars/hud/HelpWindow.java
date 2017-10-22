@@ -14,6 +14,12 @@ import com.badlogic.gdx.utils.Align;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
+/**
+ * Creates a Help Window instance 
+ * @author Naziah Siddique
+ * 23/10/17
+ *
+ */
 public class HelpWindow extends Window{
 	private static final int SIDEPANEBUTTONWIDTH = 160;
 	private static final int SIDEPANEBUTTONHEIGHT = 40;
@@ -130,7 +136,7 @@ public class HelpWindow extends Window{
 		gameRules.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				Gdx.net.openURI("https://github.com/UQdeco2800/deco2800-2017-spacwars/wiki");
+				Gdx.net.openURI("https://github.com/UQdeco2800/deco2800-2017-spacwars/wiki/SpacWars:-The-Player-Guide");
 			}
 		});
 		

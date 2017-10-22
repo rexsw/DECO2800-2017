@@ -545,11 +545,11 @@ public class HUDView extends ApplicationAdapter{
 		Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
-		resourceTable.add(rockCount).padRight(60);
+		resourceTable.add(rockCount).padRight(50);
 		resourceTable.add(crystal).width(40).height(40).pad(10);
-		resourceTable.add(crystalCount).padRight(60);
+		resourceTable.add(crystalCount).padRight(50);
 		resourceTable.add(biomass).width(40).height(40).pad(10);
-		resourceTable.add(biomassCount).padRight(60);
+		resourceTable.add(biomassCount).padRight(50);
 		resourceTable.add(popCount).padRight(10);
 		resourceTable.add(maxPopCount);
 

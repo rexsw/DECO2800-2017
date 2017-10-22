@@ -205,7 +205,8 @@ public class TextureManager extends Manager {
         this.saveTexture("astro_purple", "resources/UnitAssets/Astronaut/Purple/default.png");
         this.saveTexture("astro_red", "resources/UnitAssets/Astronaut/Red/default.png");
         this.saveTexture("astro_yellow", "resources/UnitAssets/Astronaut/Yellow/default.png");
-        
+        this.saveTexture("play_button", "resources/MainMenu/playButton.png");        
+        this.saveTexture("back_button", "resources/MainMenu/backButton.png");
         
         //----------Unit Assets:
         //Soldier:
