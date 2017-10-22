@@ -110,6 +110,11 @@ public class TextureManager extends Manager {
         textureMap.put("tree3_yellow", new Texture("resources/EnvironmentalAssets/treestyle4-yellow.png"));
         textureMap.put("tree3_red", new Texture("resources/EnvironmentalAssets/treestyle4-red.png"));
 
+        textureMap.put("cliff_left_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left-MARS.png"));
+        textureMap.put("cliff_right_red", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right-MARS.png"));
+        textureMap.put("cliff_right_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-right.png"));
+        textureMap.put("cliff_left_grey", new Texture("resources/EnvironmentalAssets/CLIFF-bottom-left.png"));
+
         textureMap.put("real_tree", new Texture("resources/placeholderassets/tree.png"));
         textureMap.put("ground_1", new Texture("resources/placeholderassets/ground-1.png"));
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
