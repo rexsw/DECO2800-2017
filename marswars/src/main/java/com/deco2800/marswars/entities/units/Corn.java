@@ -2,14 +2,10 @@ package com.deco2800.marswars.entities.units;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.util.Point;
-import com.deco2800.marswars.worlds.BaseWorld;
 
 public class Corn extends AmbientAnimal{
 
@@ -27,9 +23,10 @@ public class Corn extends AmbientAnimal{
 		this.setArmorDamage(0);
 		this.setAttackRange(20);
 		this.setAttackSpeed(1);
-		
+		this.setDrop(ResourceType.CRYSTAL);
 		this.setSpeed(0.05f);
 	}
+	
 	
 	@Override 
 	public void move(){

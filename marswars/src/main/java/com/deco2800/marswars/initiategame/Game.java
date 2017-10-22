@@ -317,6 +317,7 @@ public class Game{
 	 * Loads in other game components and initialises Game private variables.
 	 */
 	private void startGame(MapTypes mapType, MapSizeTypes mapSize, int aITeams, int playerTeams){
+		GameManager.get().setMapType(mapType);
 		this.createMap(mapType, mapSize);
 		this.view = new HUDView(GameManager.get().getStage(), 
 				GameManager.get().getSkin(), GameManager.get());
