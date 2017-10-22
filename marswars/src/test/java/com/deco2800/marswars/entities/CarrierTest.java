@@ -65,6 +65,18 @@ public class CarrierTest {
 	    carrier.unloadIndividual();
 	    carrier.unload();
 	}
+	
+	@Test
+	public void loadTestDifferentTeam() {
+	    Carrier carrier = new Carrier(0, 0, 0 , 0);
+	    Soldier soldier1 = new Soldier(1, 1, 1, 2);
+	    carrier.load(soldier1);
+	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	}
+	@Test
+	public void unloadTest() {
+	    
+	}
         
 	@Test
 	public void loadPassengerTest() {
@@ -168,13 +180,6 @@ public class CarrierTest {
             Assert.assertTrue(carrier.getPassengers()[3] == null);
 	}
 	
-	@Test
-	public void loadTestDifferentTeam() {
-	    Carrier carrier = new Carrier(0, 0, 0 , 0);
-	    Soldier soldier1 = new Soldier(1, 1, 1, 2);
-	    carrier.load(soldier1);
-	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
-	}
 	
 	@Test
 	public void setActionTest() {
@@ -187,6 +192,12 @@ public class CarrierTest {
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
 	    carrier.setNextAction(ActionType.UNLOAD);
 	    Assert.assertTrue(carrier.getCurrentAction().isPresent());
+	    Carrier carrier2 = new Carrier(0, 1, 1, 1);
+	    carrier.setNextAction(ActionType.LOAD);
+	    Assert.assertFalse(carrier2.getCurrentAction().isPresent());
+	    Carrier carrier3 = new Carrier(0, 1, 2, 2);
+	    carrier.setNextAction(ActionType.UNLOAD);
+	    Assert.assertFalse(carrier3.getCurrentAction().isPresent());
 	}
 	
 	@Test @Ignore

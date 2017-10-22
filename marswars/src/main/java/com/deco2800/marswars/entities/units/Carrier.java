@@ -33,6 +33,7 @@ public class Carrier extends Soldier {
 
     private String loadSound = "carrier-loading-sound.mp3";
     private String unableLoad = "cant unload while doing something else";
+    private String noSound = "no sound";
 
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
@@ -224,7 +225,7 @@ public class Carrier extends Soldier {
 		Sound loadedSound = sound.loadSound(loadSound);
 		sound.playSound(loadedSound);
 	} catch (NullPointerException e) {
-	    LOGGER.error("no sound");
+	    LOGGER.error(noSound);
 	}
 	for (int i = 0; i < CAPACITY; i++) {
 	    if (loadedUnits[i] == null) {
@@ -259,7 +260,7 @@ public class Carrier extends Soldier {
 		Sound loadedSound = sound.loadSound(loadSound);
 		sound.playSound(loadedSound);
 	} catch (NullPointerException e) {
-	    LOGGER.error("no sound");
+	    LOGGER.error(noSound);
 	}
 	LOGGER.info("Everyone off!");
 	int empty = 0;
@@ -293,7 +294,7 @@ public class Carrier extends Soldier {
 	    Sound loadedSound = sound.loadSound(loadSound);
 	    sound.playSound(loadedSound);
 	} catch (NullPointerException e) {
-	    LOGGER.error("no sound");
+	    LOGGER.error(noSound);
 	}
 	LOGGER.info("Last in first out!");
 	int empty = 0;
