@@ -25,9 +25,7 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.Selectable;
-import com.deco2800.marswars.entities.units.Astronaut;
-import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.*;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -476,9 +474,9 @@ public class HUDView extends ApplicationAdapter{
 		resourceTable.setPosition(minimap.getWidth(), actionsWindow.getHeight());
 
 		selectedTable = new Table();
-		selectedTable.align(Align.left | Align.top);
+		selectedTable.align(Align.left | Align.top).padBottom(20);
 		selectedTable.setHeight(40);
-		selectedTable.setPosition(minimap.getWidth(), actionsWindow.getHeight()+resourceTable.getHeight());
+		selectedTable.setPosition(0, minimap.getHeight()+50);
 
 		LOGGER.debug("Creating resource labels");
 		rockCount = new Label("Rock: 0", skin);
@@ -487,7 +485,7 @@ public class HUDView extends ApplicationAdapter{
 		popCount = new Label("0 ", skin);
 		maxPopCount = new Label(" / 10", skin);
 
-		//add resource images 
+		//add resource images
 		Image rock = new Image(textureManager.getTexture("rock_HUD"));
 		Image biomass = new Image(textureManager.getTexture("biomass_HUD"));
 		Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
@@ -1152,6 +1150,21 @@ public class HUDView extends ApplicationAdapter{
 			EntityPortrait ep = be.getPortrait();
 			if (ep == null) continue;
 			selectedTable.add(ep);
+			if (be instanceof Carrier) {
+				if (((Carrier) be).getPassengers().length > 0) {
+					for (int i = 0; i < ((Carrier)be).getPassengers().length; i++) {
+						Soldier carried =  ((Carrier)be).getPassengers()[i];
+						EntityPortrait carriedPortrait = null;
+						if (carried != null) {
+								carriedPortrait =carried.getPortrait(be);
+						}
+						if (carriedPortrait != null) {
+							selectedTable.add(carriedPortrait).align(Align.top).padTop(-100);
+						}
+					}
+				}
+
+			}
 		}
 	}
 

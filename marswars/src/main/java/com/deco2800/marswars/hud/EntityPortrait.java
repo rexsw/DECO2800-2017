@@ -34,7 +34,7 @@ public class EntityPortrait extends TextButton {
     public EntityPortrait(Skin skin, BaseEntity unit, float width, float height) {
         super("", skin);
         this.unit = unit;
-        initiateButton(width, height);
+        initiateButton(width, height, false);
         createListener();
     }
 
@@ -47,7 +47,9 @@ public class EntityPortrait extends TextButton {
     public EntityPortrait(Skin skin, BaseEntity unit, EntityPortrait parent, float width, float height) {
         super("", skin);
         this.unit = unit;
-        initiateButton(width, height);
+        this.setWidth(width);
+        this.setHeight(height);
+        initiateButton(width, height, true);
         createListener();
     }
 
@@ -81,7 +83,7 @@ public class EntityPortrait extends TextButton {
      * @param width the width of the button
      * @param height the height of the button
      */
-    private void initiateButton(float width, float height) {
+    private void initiateButton(float width, float height, boolean child) {
         super.setWidth(width);
         super.setHeight(height);
         this.textureManager = (TextureManager) GameManager.get().getManager(TextureManager.class);
@@ -90,9 +92,15 @@ public class EntityPortrait extends TextButton {
         Image unitSprite = new Image(unitTexture);
         this.healthBarSprite = new Image(healthBar);
         this.add(unitSprite).align(Align.top).width(width).height(height);
-        this.add(healthBarSprite).align(Align.top).bottom().width(width).height(height*0.2f);
+        if (!child) {
+            this.add(healthBarSprite).align(Align.top).bottom().width(width).height(height*0.2f);
+        }
         super.setWidth(width);
         super.setHeight(height);
+        if (child) {
+            this.setTransform(true);
+            this.setScale(0.2f);
+        }
     }
 
     /**
