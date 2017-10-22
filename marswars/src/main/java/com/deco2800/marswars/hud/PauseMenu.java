@@ -87,6 +87,8 @@ public class PauseMenu extends Dialog{
 			} else if (object == (Object) 4) {
                 try {
                     Game.getSavedGame().writeGame();
+                    this.hud.setPauseCheck(0);
+                    this.timeManager.unPause();
                 }catch (FileNotFoundException e){
                     //do nothing
                 }
