@@ -185,7 +185,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		}
 		else if(enity instanceof Astronaut) {
 			count = values.get(teamid).get(Field.ASTRONAUTS).get(index);
-			count++;
+			count--;
 			values.get(teamid).get(Field.ASTRONAUTS).set(index, count);
 		}
 		else if(enity instanceof AttackableEntity) {
