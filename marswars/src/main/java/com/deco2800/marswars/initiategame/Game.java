@@ -493,11 +493,13 @@ public class Game{
 		rm.setMaxPopulation(10, teamid);
 
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
+		Dino di = new Dino(x, y, 0, 0);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Spatman spatman = new Spatman(x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(spatman);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		GameManager.get().getWorld().addEntity(ai);
+		GameManager.get().getWorld().addEntity(di);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(base);
 		

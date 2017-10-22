@@ -7,7 +7,11 @@ import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.terrainelements.*;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Corn;
+import com.deco2800.marswars.entities.units.Dino;
+import com.deco2800.marswars.entities.units.Snail;
 import com.deco2800.marswars.initiategame.GameSave;
 import com.deco2800.marswars.worlds.CivilizationTypes;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -171,6 +175,18 @@ public class MapContainer {
             }
             tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
                     type, colour);
+            if(r.nextInt(100) < 10) {
+            	int x = r.nextInt(101);
+            	AmbientAnimal animal;
+            	if(x == 42) {
+            		animal = new Corn(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	} else if (x > 42) {
+            		animal = new Dino(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	} else {
+            		animal = new Snail(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+            	}
+            	world.addEntity(animal);
+            }
             world.addEntity(tree);
         }
     }

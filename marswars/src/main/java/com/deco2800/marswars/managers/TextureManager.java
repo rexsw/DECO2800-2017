@@ -3,6 +3,7 @@ package com.deco2800.marswars.managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
+import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Soldier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -290,6 +291,13 @@ public class TextureManager extends Manager {
             sc.useDelimiter("units.").next();
             unitType=sc.next();
             sc.close();
+            if (soldier instanceof AmbientAnimal) {
+            	 path = String.format("resources/UnitAssets/%s/%s.png",
+                         unitType,textureType);
+            	String retVal = textureType + unitType;
+            	saveTexture(retVal, path);
+            	return retVal;
+            }
             if (textureType.equals("missile")) {
             	 path = String.format("resources/UnitAssets/%s/%s.png",
                          unitType,textureType);
