@@ -60,7 +60,7 @@ public class TechTreeView extends Dialog{
 		button(String.format("Extra Padding \n %d R, %d C, %d B", this.techMan.getTech(1).getCost()[0], this.techMan.getTech(1).getCost()[1], this.techMan.getTech(1).getCost()[2]), 1);
 		button(String.format("Hard Shell \n %d R, %d C, %d B", this.techMan.getTech(2).getCost()[0], this.techMan.getTech(2).getCost()[1], this.techMan.getTech(2).getCost()[2]), 2);
 		button(String.format("Spiky Armour \n %d R, %d C, %d B", this.techMan.getTech(3).getCost()[0], this.techMan.getTech(3).getCost()[1], this.techMan.getTech(3).getCost()[2]), 3);
-		button(String.format("Cloister Mode \n %d R, %d C, %d B", this.techMan.getTech(4).getCost()[0], this.techMan.getTech(4).getCost()[1], this.techMan.getTech(4).getCost()[2]), 4);
+		button(String.format("Cloyster Mode \n %d R, %d C, %d B", this.techMan.getTech(4).getCost()[0], this.techMan.getTech(4).getCost()[1], this.techMan.getTech(4).getCost()[2]), 4);
 
 		getButtonTable().row();
 
@@ -69,8 +69,9 @@ public class TechTreeView extends Dialog{
 
 		button(String.format("Anger \n %d R, %d C, %d B", this.techMan.getTech(5).getCost()[0], this.techMan.getTech(5).getCost()[1], this.techMan.getTech(5).getCost()[2]), 5);
 		button(String.format("Rage \n %d R, %d C, %d B", this.techMan.getTech(6).getCost()[0], this.techMan.getTech(6).getCost()[1], this.techMan.getTech(6).getCost()[2]), 6);
-		button(String.format(sleightOfHandString, this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
-		button(String.format(sleightOfHandString, this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
+
+		button(String.format("Fury \n %d R, %d C, %d B", this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
+		button(String.format("Lobsters for Hands S\n %d R, %d C, %d B", this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
 
 		getButtonTable().row();
 

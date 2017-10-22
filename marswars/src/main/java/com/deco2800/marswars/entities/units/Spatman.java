@@ -12,7 +12,7 @@ public class Spatman extends Soldier {
 		setYRenderLength(2.2f);
 		this.name = "Spatman";
 		this.setAttributes();
-		this.slowMovementSpeed = 0.01f;
+		this.slowMovementSpeed = 0.02f;
 		this.setAreaDamage(3);
 	}
 	

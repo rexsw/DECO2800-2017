@@ -55,6 +55,7 @@ public class AiBuilder extends Manager {
 		GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 		State state = ai.getState(team);
 		int buildingNum = black.count(team, Field.BUILDINGS);
+		LOGGER.info("Building count: " + buildingNum);
 		// follow this build pattern
 		switch(buildingNum - 1){
 		case 0:
