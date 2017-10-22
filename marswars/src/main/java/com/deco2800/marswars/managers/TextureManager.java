@@ -241,14 +241,24 @@ public class TextureManager extends Manager {
 
 
         // Item icon in shop dialog
-        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
-        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
-        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
-        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        	//Weapons and Armour
         this.saveTexture("helmet_1", "resources/shopAssets/items/helmet_1.png");
         this.saveTexture("gun_1", "resources/shopAssets/items/gun_1.png");
         this.saveTexture("rifle_1", "resources/shopAssets/items/rifle_1.png");
         this.saveTexture("goggle_1", "resources/shopAssets/items/goggle_1.png");
+        this.saveTexture("helmet_2", "resources/shopAssets/items/helmet_2.png");
+        this.saveTexture("gun_2", "resources/shopAssets/items/gun_2.png");
+        this.saveTexture("rifle_2", "resources/shopAssets/items/rifle_2.png");
+        this.saveTexture("goggle_2", "resources/shopAssets/items/goggle_2.png");
+        this.saveTexture("helmet_3", "resources/shopAssets/items/helmet_3.png");
+        this.saveTexture("gun_3", "resources/shopAssets/items/gun_3.png");
+        this.saveTexture("rifle_3", "resources/shopAssets/items/rifle_3.png");
+        this.saveTexture("goggle_3", "resources/shopAssets/items/goggle_3.png");
+        	//specials
+        this.saveTexture("floating_boots", "resources/shopAssets/items/floating_boots.png");
+        this.saveTexture("air_strike", "resources/shopAssets/items/missile.png");
+        this.saveTexture("nuke", "resources/shopAssets/items/nuke.png");
+        this.saveTexture("healing_bless", "resources/shopAssets/items/healing_bless.png");
         this.saveTexture("teleboots", "resources/shopAssets/items/teleboots.png");
         this.saveTexture("penetration", "resources/shopAssets/items/penetration.png");
         this.saveTexture("health_shot", "resources/shopAssets/items/health_shot.png");

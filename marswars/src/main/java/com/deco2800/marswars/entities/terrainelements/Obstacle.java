@@ -15,7 +15,7 @@ public class Obstacle extends BaseEntity {
 
     public Obstacle(float posX, float posY, float posZ, float height, float width, ObstacleType type, String colour, boolean centered){
 
-        super(new Box3D(posX, posY, posZ, 1, 1, 1f), height, width, centered);
+        super(new Box3D(posX, posY, posZ, 1f, 1f, 1f), height, width, centered);
         switch (type) {
             case TREE1:
                 this.setTexture("tree1_"+ colour);
@@ -37,7 +37,7 @@ public class Obstacle extends BaseEntity {
                 break;
         }
         this.canWalkOver = false;
-        this.setCost(Integer.MAX_VALUE); //pathfinding should never go through this
+        this.setCost(100000); //pathfinding should never go through this
         if (type==ObstacleType.TREE1||type==ObstacleType.TREE2||type==ObstacleType.TREE3) {
             this.setXoff(width*0.7f);
             this.setYoff(width*0.15f);

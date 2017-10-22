@@ -1,15 +1,10 @@
 package com.deco2800.marswars.hud;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.ResourceManager;
-import com.deco2800.marswars.managers.TechnologyManager;
-import com.deco2800.marswars.managers.TimeManager;
-import com.deco2800.marswars.technology.Technology;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.deco2800.marswars.entities.items.*;
+import com.deco2800.marswars.managers.*;
+
+import com.deco2800.marswars.technology.*;
 
 
 /**
@@ -17,8 +12,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class TechTreeView extends Dialog{
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(TechTreeView.class);
 
 	ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	TechnologyManager techMan = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
@@ -26,26 +19,22 @@ public class TechTreeView extends Dialog{
 			GameManager.get().getManager(TimeManager.class);
 	HUDView hud;
 	String message;
-	private Dialog techtree;
+	Dialog techtree;
 	private String sleightOfHandString = "Sleight of Hand \n %d R, %d C, %d B";
 	
 	public TechTreeView(String title, Skin skin, HUDView hud) {
 		super(title, skin);
 		this.hud = hud;
-
 		this.getContentTable().debugCell();
 		this.getButtonTable().debugCell().center();
 		getButtonTable().defaults().height(60).width(200).padTop(10).padBottom(10);
-
-
 		getButtonText(skin);
-
-		this.timeManager.pause();
-		this.hud.setTechCheck(1);
 
 		//exit button
 		getButtonTable().row();
 		button("EXIT TECHNOLOGY TREE", 29);
+
+		timeManager.pause();
 	}
 
 	// second constructor with additional message parameter
@@ -64,8 +53,7 @@ public class TechTreeView extends Dialog{
 		button("EXIT TECHNOLOGY TREE", 29);
 
 		text(message);
-		this.timeManager.pause();
-		this.hud.setTechCheck(1);
+		timeManager.pause();
 	}
 
 	private void getButtonText(Skin skin) {
@@ -84,8 +72,8 @@ public class TechTreeView extends Dialog{
 
 		button(String.format("Anger \n %d R, %d C, %d B", this.techMan.getTech(5).getCost()[0], this.techMan.getTech(5).getCost()[1], this.techMan.getTech(5).getCost()[2]), 5);
 		button(String.format("Rage \n %d R, %d C, %d B", this.techMan.getTech(6).getCost()[0], this.techMan.getTech(6).getCost()[1], this.techMan.getTech(6).getCost()[2]), 6);
-		button(String.format(this.sleightOfHandString, this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
-		button(String.format(this.sleightOfHandString, this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
+		button(String.format(sleightOfHandString, this.techMan.getTech(7).getCost()[0], this.techMan.getTech(7).getCost()[1], this.techMan.getTech(7).getCost()[2]), 7);
+		button(String.format(sleightOfHandString, this.techMan.getTech(8).getCost()[0], this.techMan.getTech(8).getCost()[1], this.techMan.getTech(8).getCost()[2]), 8);
 
 		getButtonTable().row();
 
@@ -93,7 +81,7 @@ public class TechTreeView extends Dialog{
 
 		getButtonTable().add(new Label("Attack Speed Tech", skin));
 
-		button(String.format(this.sleightOfHandString, this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2]), 9);
+		button(String.format(sleightOfHandString, this.techMan.getTech(9).getCost()[0], this.techMan.getTech(9).getCost()[1], this.techMan.getTech(9).getCost()[2]), 9);
 		button(String.format("Unnatural Dexterity \n %d R, %d C, %d B", this.techMan.getTech(10).getCost()[0], this.techMan.getTech(10).getCost()[1], this.techMan.getTech(10).getCost()[2]), 10);
 		button(String.format("120 WPM \n %d R, %d C, %d B", this.techMan.getTech(11).getCost()[0], this.techMan.getTech(11).getCost()[1], this.techMan.getTech(11).getCost()[2]), 11);
 		button(String.format("Korean Starcraft Pro \n %d R, %d C, %d B", this.techMan.getTech(12).getCost()[0], this.techMan.getTech(12).getCost()[1], this.techMan.getTech(12).getCost()[2]), 12);
@@ -139,7 +127,6 @@ public class TechTreeView extends Dialog{
 		button(String.format("Level 1 Armour \n %d R, %d C, %d B", this.techMan.getTech(26).getCost()[0], this.techMan.getTech(26).getCost()[1], this.techMan.getTech(26).getCost()[2]), 26);
 		button(String.format("Level 2 Armour \n %d R, %d C, %d B", this.techMan.getTech(27).getCost()[0], this.techMan.getTech(27).getCost()[1], this.techMan.getTech(27).getCost()[2]), 27);
 		button(String.format("Level 3  Armour \n %d R, %d C, %d B", this.techMan.getTech(28).getCost()[0], this.techMan.getTech(28).getCost()[1], this.techMan.getTech(28).getCost()[2]), 28);
-		//exit button
 
 
 		text(message);
@@ -153,39 +140,505 @@ public class TechTreeView extends Dialog{
 	 * @param object
 	 */
 	@Override
-	protected void result(final Object object){
-		this.timeManager.unPause();
-		int techID = (int) object;
-		final String techTree = "TechTree";
-		final String activateTech = "Activating Technology!";
+	protected void result(final Object object) {
+		timeManager.pause();
 		this.hud.setTechCheck(1);
-		if (techID < 29) {
-			int x = (int) object;
-			this.message = this.techMan.checkPrereqs(this.techMan, this.techMan.getTech(x), x, 1);
-			this.techtree = new TechTreeView(techTree, this.getSkin(), this.hud,this.message).show(this.getStage());
-			this.hud.setTechTree(this.techtree);
-			if(this.message == activateTech) {
-				this.techMan.activateTech(this.techMan, this.techMan.getTech(1), this.resourceManager, x, 1);
-				this.techMan.addActiveTech(this.techMan.getTech(x));
-			}
-		} else {
-			this.hideTechTree(techtree);
+		switch((int)object) {
+			case 1:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(1),
+						1, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 1, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(1));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 2:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(2),
+						2, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(1), resourceManager, 2, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(2));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 3:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(3),
+						3, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(3), resourceManager, 3, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(1));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 4:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(4),
+						4, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(4), resourceManager, 4, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(4));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 5:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(5),
+						5, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(5), resourceManager, 5, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(5));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 6:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(6),
+						6, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(6), resourceManager, 6, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(6));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 7:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(7),
+						7, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(7), resourceManager, 7, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(7));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 8:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(8),
+						8, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(8), resourceManager, 8, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(8));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 9:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(9),
+						9, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(9), resourceManager, 9, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(9));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 10:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(10),
+						10, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(10), resourceManager, 10, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(10));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 11:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(11),
+						11, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(11), resourceManager, 11, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(11));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 12:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(12),
+						12, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(12), resourceManager, 12, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(12));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 13:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(13),
+						13, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(13), resourceManager, 13, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(13));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 14:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(14),
+						14, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(14), resourceManager, 14, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(14));
+					this.hud.setTechCheck(0);
+					techtree.hide();
+					timeManager.unPause();
+				}
+				break;
+			case 15:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(15),
+						15, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(15), resourceManager, 15, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(15));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 16:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(16),
+						16, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(16), resourceManager, 16, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(16));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 17:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(17),
+						17, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(17), resourceManager, 17, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(17));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 18:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(18),
+						18, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(18), resourceManager, 18, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(18));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 19:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(19),
+						19, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(19), resourceManager, 19, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(19));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 20:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(20),
+						20, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(20), resourceManager, 20, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(20));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 21:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+							.getTech
+								(21),
+						21, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+						.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(21), resourceManager, 21, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(21));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 22:
+				 message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(22),
+						22, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(22), resourceManager, 22, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(22));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 23:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(23),
+						23, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(23), resourceManager, 23, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(23));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 24:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(24),
+						24, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(24), resourceManager, 24, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(24));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 25:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(25),
+						25, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(25), resourceManager, 25, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(25));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 26:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(26),
+						26, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(26), resourceManager, 26, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(26));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 27:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(27),
+						27, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(27), resourceManager, 27, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(27));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+			case 28:
+				message = this.techMan.checkPrereqs(techMan, this.techMan
+								.getTech
+										(28),
+						28, 1);
+				techtree = new TechTreeView("TechTree", this.getSkin(), this.hud,
+						message).show
+						(this
+								.getStage());
+				if(message == "Activating Technology!") {
+					this.techMan.activateTech(techMan, this.techMan.getTech(28), resourceManager, 28, 1);
+					this.techMan.addActiveTech(this.techMan.getTech(28));
+					this.hud.setTechCheck(0);
+					timeManager.unPause();
+					techtree.hide();
+				}
+				break;
+		}
+		this.hud.updateShop();
+
+		timeManager.unPause();
+
 		}
 
-		if (techID == 0) {
-			return;
-		}
-	}
-	
-	
-	/** 
-	 * Hides the tech tree from the screen.  
+	/**
+	 * Hides the tech tree from the screen.
 	 * This function is called when the player chooses to exit the technology tree
-	 * 
+	 *
 	 */
 	public void hideTechTree(Dialog techTree) {
-		LOGGER.info("Hides the tech tree and continues the game");
 		this.hud.setTechCheck(0);
-		this.timeManager.unPause();	
 	}
-}
+	}
+	
+	
+
+
+
+

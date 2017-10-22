@@ -1,10 +1,12 @@
 package com.deco2800.marswars;
 
 
+import com.deco2800.marswars.buildings.Base;
 import com.deco2800.marswars.entities.MultiSelectionTile;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MultiSelection;
 import com.deco2800.marswars.worlds.BaseWorld;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,8 +24,14 @@ public class MultiSelectionTest {
 	 */
 	@Before
 	public void initMultiSelectionTest(){
-
-		GameManager.get().setWorld(new BaseWorld("resources/mapAssets/tinyMars.tmx"));
+		BaseWorld world;
+		try {
+			world = new BaseWorld("resources/mapAssets/tinyMars.tmx");
+		} catch (NullPointerException e) {
+			world = null;
+		}
+		Assume.assumeNotNull(world);
+		GameManager.get().setWorld(world);
 	}
 
 

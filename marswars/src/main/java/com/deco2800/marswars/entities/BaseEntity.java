@@ -69,6 +69,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public BaseEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
+		this.modifyCollisionMap(true);
 	}
 
 	/**
