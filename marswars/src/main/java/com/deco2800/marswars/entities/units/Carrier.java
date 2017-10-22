@@ -335,5 +335,14 @@ public class Carrier extends Soldier {
 	    this.nextAction = a;
 	}
     }
-
+    
+    /**
+     * Returns the current action of the entity
+     * 
+     * @return current action
+     */
+    @Override
+    public Optional<DecoAction> getCurrentAction() {
+	return this.currentAction;
+    }
 }
