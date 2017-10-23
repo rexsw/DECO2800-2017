@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.initiategame.InputProcessor;
 import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
@@ -132,7 +133,7 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
-				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
+				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Tick: " + Game.ticktime);
 		//trying to eliminate render crashes in the most naive way possible:
 		//will likely cause frames to drop, if the problem is present in sequential frames then
 		//this will imporve nothing

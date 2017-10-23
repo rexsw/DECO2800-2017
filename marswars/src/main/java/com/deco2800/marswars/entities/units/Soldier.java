@@ -83,6 +83,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		super(posX, posY, posZ, 1, 1, 1);
 		super.setOwner(owner);
 		this.name = "Soldier";
+		this.setSpeed(2f);
 
 		//Accessing the technology manager which contains unit Attributes
 
@@ -223,6 +224,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 			turret.setNumOfSolider(turret.getNumOfSolider() + 1);
 			turret.powerUpTurret();
 			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
+			turret.addNewAction(EntityID.SOLDIER);
 			this.setHealth(0);
 			LOGGER.error("solider in the tower now");
 		}else {
@@ -256,29 +258,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.currentAction = currentAction;
 	}
 
-
-	int selectedmovemode = 0;
 	@Override
 	public void onTick(int tick) {
-
-		if (this.isSelected()) {
-			if (selectedmovemode == 0) {
-				if (this.getPosZ() < 0.5f) {
-					this.setPosZ(this.getPosZ() + 0.01f);
-				} else {
-					selectedmovemode = 1;
-				}
-			} else {
-				if (this.getPosZ() > 0) {
-					this.setPosZ(this.getPosZ() - 0.01f);
-				} else  {
-					selectedmovemode = 0;
-				}
-			}
-
-		} else {
-			this.setPosZ(0);
-		}
 		//update fog of war for owner's entity on every tick
 		if (this.getOwner() == -1)  {
 			modifyFogOfWarMap(true,getFogRange());

@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainmenu.MainMenu;
@@ -52,10 +53,10 @@ public class Render3D implements Renderer {
         List<AbstractEntity> renderables = new ArrayList<>();
         for (BaseEntity e : renderablesBe) {
             if (e != null) {
-                if (e instanceof Soldier && ((Soldier) e).getHealth() > 0) {
+                if (e instanceof AttackableEntity && ((AttackableEntity) e).getHealth() > 0) {
                     e.getHealthBar();
                     renderables.add(e);
-                } else if (!(e instanceof Soldier)) {
+                } else if (!(e instanceof AttackableEntity)) {
                     renderables.add(e);
                 }
             }
@@ -118,13 +119,12 @@ public class Render3D implements Renderer {
         if (weather.isRaining()) {
             weather.render(batch);
         }
+
         batch.end();
         weather.renderOverlay();
 
         if(battleFlag==1)
             MainMenu.player.playBattleSoundTrack();
-
-
     }
 
     /**

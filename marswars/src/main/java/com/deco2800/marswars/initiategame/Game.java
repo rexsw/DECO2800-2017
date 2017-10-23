@@ -11,7 +11,6 @@ import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.*;
-import com.deco2800.marswars.hud.GameStats;
 import com.deco2800.marswars.hud.HUDView;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
@@ -37,6 +36,8 @@ public class Game{
 	long lastGameTick = 0;
 	long lastMenuTick = 0;
 	long pauseTime = 0;
+
+	public static float ticktime = 20;
 
 	/**
 	 * Set the renderer.
@@ -308,6 +309,10 @@ public class Game{
 				Hacker hacker = new Hacker(each.getX(), each.getY(), 0, each.getTeamId());
 				hacker.setHealth(each.getHealth());
 				GameManager.get().getWorld().addEntity(hacker);
+			}else if("Soldier".equals(each.getName())) {
+				Soldier soldier = new Soldier(each.getX(), each.getY(), 0, each.getTeamId());
+				soldier.setHealth(each.getHealth());
+				GameManager.get().getWorld().addEntity(soldier);
 			}
 
 	}
@@ -541,36 +546,27 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
-						if (TimeUtils.nanoTime() - lastGameTick > 10500000) {
-//							LOGGER.error("Tick was too slow: " + ((TimeUtils.nanoTime() - lastGameTick)/1000000.0) + "ms");
-						}
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 20000000) {
+						ticktime = ((TimeUtils.nanoTime() - lastGameTick) / 1000000.0f);
 
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
-						//initial value 100000
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
-								long startTime = TimeUtils.nanoTime();
 								((Tickable) e).onTick(0);
-								long endTime = TimeUtils.nanoTime();
-
-								if (endTime - startTime > 100000) { //0.01ms
-//									LOGGER.error("Entity " + e + " took " + ((endTime - startTime)/1000000.0) + "ms");
-								}
 							}
 						}
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
 
 					}
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						LOGGER.error(e.toString());
-						Thread.currentThread().interrupt();
-					}
+//					try {
+//						Thread.sleep(1);
+//					} catch (InterruptedException e) {
+//						LOGGER.error(e.toString());
+//						Thread.currentThread().interrupt();
+//					}
 				}
 			}
 		}).start();

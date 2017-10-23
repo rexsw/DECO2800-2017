@@ -246,8 +246,10 @@ public class BuildAction implements DecoAction{
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
-		if (temp != null && validBuild) {
-			GameManager.get().getWorld().removeEntity(temp);
+		if (validBuild) {
+			if (temp != null){
+				GameManager.get().getWorld().removeEntity(temp);
+			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			if (canAfford(actor.getOwner(), resourceManager)) {
 				createBuilding();
@@ -279,6 +281,10 @@ public class BuildAction implements DecoAction{
 	 */
 	private void createBuilding() {
 		switch(building) {
+		case WALL:
+			base = new Wall(GameManager.get().getWorld(), 
+					(int)projX, (int)projY, 0f, actor.getOwner());
+			break;
 		case TURRET:
 			base = new Turret(GameManager.get().getWorld(), 
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
