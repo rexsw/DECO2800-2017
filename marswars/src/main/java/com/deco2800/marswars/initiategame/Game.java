@@ -561,12 +561,12 @@ public class Game{
 						lastGameTick = TimeUtils.nanoTime();
 
 					}
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						LOGGER.error(e.toString());
-						Thread.currentThread().interrupt();
-					}
+//					try {
+//						Thread.sleep(1);
+//					} catch (InterruptedException e) {
+//						LOGGER.error(e.toString());
+//						Thread.currentThread().interrupt();
+//					}
 				}
 			}
 		}).start();
