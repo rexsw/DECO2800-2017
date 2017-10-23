@@ -16,11 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.deco2800.marswars.actions.ActionList;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
-import com.deco2800.marswars.actions.BuildWallAction;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
@@ -34,8 +30,6 @@ import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
-import com.deco2800.marswars.hud.EntityPortrait;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -862,7 +856,7 @@ public class HUDView extends ApplicationAdapter{
 		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
-			buttonList.get(index).clearChildren();
+//			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
 			Label costRocks = new Label("", skin);
 			Label costCrystal = new Label("", skin);

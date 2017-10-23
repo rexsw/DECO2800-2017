@@ -119,13 +119,12 @@ public class Render3D implements Renderer {
         if (weather.isRaining()) {
             weather.render(batch);
         }
+
         batch.end();
         weather.renderOverlay();
 
         if(battleFlag==1)
             MainMenu.player.playBattleSoundTrack();
-
-
     }
 
     /**

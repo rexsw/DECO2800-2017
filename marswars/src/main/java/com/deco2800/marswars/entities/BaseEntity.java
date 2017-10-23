@@ -37,7 +37,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected int owner = 0;
 	private boolean fixPos = false;
 	private HealthBar healthBar;
-	protected float speed = 0.05f;
+	protected float speed = 0.1f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
