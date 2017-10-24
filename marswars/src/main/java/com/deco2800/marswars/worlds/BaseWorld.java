@@ -1,6 +1,7 @@
 package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -16,12 +17,16 @@ import com.deco2800.marswars.util.Array2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A base world for the game. Use this not AbstractWorld
  */
 public class BaseWorld extends AbstractWorld {
 	
 	/* Crappy way of storing collision */
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseWorld.class);
 	protected Array2D<List<BaseEntity>> collisionMap;
 	protected ArrayList<BaseEntity> floodableEntities;
 	/**
@@ -256,16 +261,7 @@ public class BaseWorld extends AbstractWorld {
 		if (build == BuildingType.BARRACKS) {
 			checkX = 1;
 		}
-		if ((int)objectSize == 1) {
-			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
-				if (hasUnmovableEntity(left, bottom)) {
-					return false;
-				}
-			}else {
-				return false;
-			}
-			return true;
-		}
+
 		for (int x = left+checkX; x < right+checkX; x++) {
 			for (int y = bottom-checkY; y < top-checkY; y++) {
 				if (x >= 0 && y >= 0  && x < this.getWidth() && y < this.getLength()){

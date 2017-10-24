@@ -53,10 +53,10 @@ public class Render3D implements Renderer {
         List<AbstractEntity> renderables = new ArrayList<>();
         for (BaseEntity e : renderablesBe) {
             if (e != null) {
-                if (e instanceof AttackableEntity && ((AttackableEntity) e).getHealth() > 0) {
+                if (e instanceof Soldier && ((Soldier) e).getHealth() > 0) {
                     e.getHealthBar();
                     renderables.add(e);
-                } else if (!(e instanceof AttackableEntity)) {
+                } else if (!(e instanceof Soldier)) {
                     renderables.add(e);
                 }
             }

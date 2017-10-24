@@ -59,7 +59,7 @@ public class TextureManager extends Manager {
         //Buildings
 	        //Walls
 	        textureMap.put("wall1",new Texture("resources/BuildingAssets/Wall/LeftSideWall.png"));
-	        textureMap.put("wall2",new Texture("resources/BuildingAssets/Wall/LeftUpWall.png"));
+	        textureMap.put("wall2",new Texture("resources/BuildingAssets/Wall/RightDownwall.png"));
 	        textureMap.put("wall3",new Texture("resources/BuildingAssets/Wall/wall.png"));
 	        textureMap.put("wall4",new Texture("resources/BuildingAssets/Wall/RightDownwall.png"));
         	//Base Stages

@@ -21,4 +21,28 @@ public class Wall extends BuildingEntity {
 	public Wall(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.WALL, owner);
 	}
+	
+	@Override
+	/**
+	 * Load first building stage
+	 */
+	public void animate1() {
+		//do nothing
+	}
+	
+	@Override
+	/**
+	 * Load second building stage
+	 */
+	public void animate2() {
+		//do nothing
+	}
+	
+	@Override
+	/**
+	 * Load final building stage
+	 */
+	public void animate3() {
+		//do nothing
+	}
 }

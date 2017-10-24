@@ -57,7 +57,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		switch(building) {
 		case WALL:
 			graphics = Arrays.asList("wall1"+colour, "wall1"+colour, "wall1"+colour, "wall1"+colour);
-			setBuilding("Wall", graphics.get(graphics.size()-2), 3f, 1550, 5, 10);
+			setBuilding("Wall", graphics.get(graphics.size()-2), 5f, 3550, 5, 0);
 			addActions(building);
 			break;
 		case TURRET:

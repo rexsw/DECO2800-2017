@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.deco2800.marswars.actions.BuildAction.State;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.buildings.Wall;
@@ -134,7 +135,6 @@ public class BuildWallAction implements DecoAction{
 							CheckSelect select = new CheckSelect(parse[0], parse[1], 0, 1, 1, 0);
 							select.setGreen();
 							selectionCheck.add(select);
-
 						}
 						if (validBuild == false) {
 							for (CheckSelect a : selectionCheck) {
@@ -154,29 +154,24 @@ public class BuildWallAction implements DecoAction{
 						for (CheckSelect wallSelect: selectionCheck) {
 							GameManager.get().getWorld().removeEntity(wallSelect);
 						}	
-				
-					int index = 0;
-					if (currentAction != null) {
-						if (index == wallProject.size()) {
-							completed = true;
-							LOGGER.debug("COMPLETE");
-						}
-						if (currentAction.completed()) {
-							currentAction = null;
-							index = index + 1;
-							LOGGER.debug("INDEX" + index);
-						}
-						if (currentAction != null) {
-							currentAction.doAction();
-						}
-					}else {
-						currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(index).getX(), (int)wallProject.get(index).getY());
-						actor.setAction(currentAction);
-						currentAction.doAction();
+						selectionCheck = null;
 					}
+					if (currentAction != null) {
+						if (currentAction.completed()) {
+							LOGGER.debug("listsize "+wallProject.size());
+							if (wallProject.size()==1) {
+								completed = true;
+								return;
+							}
+							wallProject.remove(0);
+						} else if (currentAction.actionProgress() > 0) {
+							currentAction.doAction();
+							return;
+						}
+					}
+					currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(0).getX(), (int)wallProject.get(0).getY());
 				}
 			}
-		}
 		}
 	}
 

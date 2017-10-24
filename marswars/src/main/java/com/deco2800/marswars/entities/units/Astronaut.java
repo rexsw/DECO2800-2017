@@ -199,12 +199,18 @@ public class Astronaut extends Soldier {
 			this.setGotHit(true);
 		}
 		if (health <= 0) {
-			if (this.getAction().isPresent() && this.getAction().get() instanceof BuildAction) {
+			if (this.getAction().isPresent() && (this.getAction().get() instanceof BuildAction || this.getAction().get() instanceof BuildWallAction)) {
 
 					LOGGER.info("TRIED AT LEAST");
-					BuildAction destroyBuild = (BuildAction)this.getAction().get();
-					destroyBuild.cancelBuild();
-					destroyBuild.doAction();
+					if (this.getAction().get() instanceof BuildAction) {
+						BuildAction destroyBuild = (BuildAction)this.getAction().get();
+						destroyBuild.cancelBuild();
+						destroyBuild.doAction();
+					}else {
+						BuildWallAction destroyBuild = (BuildWallAction)this.getAction().get();
+						destroyBuild.cancelBuild();
+						destroyBuild.doAction();
+					}
 
 			}
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
