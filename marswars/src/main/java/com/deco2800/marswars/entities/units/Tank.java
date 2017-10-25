@@ -11,19 +11,14 @@ public class Tank extends Soldier {
 	
 	public Tank(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
-		//this.movementSound = "tankMovementSound";
-		
-		// set all the attack attributes
-		this.setMaxHealth(10000);
-		this.setHealth(10000);
-		this.setDamage(1);
-		this.setArmor(500);
-		this.setArmorDamage(150);
-		this.setAttackRange(10);
-		this.setAttackSpeed(20);
-		//setAttributes();
-		this.setAreaDamage(1);
-		
+		this.name = "Tank";
+		setXRenderLength(2.2f);
+		setYRenderLength(2.2f);
+		this.setAttributes();
+		this.setMaxSpeed(0.025f);
+		this.setMoveSpeed(0.025f);
+		this.setAreaDamage(2);
+		setStance(1); // Default stance for tank is defensive
 	}
 	/*
 	 * Will override the default action of soldier on being attacked to attack the

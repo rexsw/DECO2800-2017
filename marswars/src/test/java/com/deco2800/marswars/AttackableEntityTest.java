@@ -1,21 +1,25 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
-import java.util.Optional;
-
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.entities.units.Carrier;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.hud.MiniMap;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
-import java.util.List;
-import com.deco2800.marswars.actions.AttackAction;
-
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.Before;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AttackableEntityTest {
 	AttackableEntity test;
@@ -31,7 +35,7 @@ public class AttackableEntityTest {
 		test.setOwner(-1);
 		enemy = new AttackableEntity(10, 10, 10, 1, 1, 1);
 		enemy.setOwner(1);
-		constructor2Test = new AttackableEntity(5, 5, 5, 2, 2, 2, 2, 2, true);
+		constructor2Test = new AttackableEntity(new Box3D(5, 5, 5, 2, 2, 2), 2, 2, true);
 		constructor2Test.setOwner(0);
 		position = new Box3D(15, 15, 15, 2, 3, 1);
 		constructor3Test = new AttackableEntity(position, 2, 3, true);
@@ -79,7 +83,7 @@ public class AttackableEntityTest {
 		assertEquals(constructor2Test.getArmorDamage(), 0);
 		
 		assertEquals(constructor3Test.getPosX(), 15, 0.1);
-		assertEquals(constructor3Test.getPosY(), 15.5, 0.1);
+		assertEquals(constructor3Test.getPosY(), 15, 0.1);
 		assertEquals(constructor3Test.getPosZ(), 15, 0.1);
 		assertEquals(constructor3Test.getXLength(), 2, 0.1);
 		assertEquals(constructor3Test.getYLength(), 3, 0.1);
@@ -166,6 +170,12 @@ public class AttackableEntityTest {
 		assertEquals(test.showProgress(), false);
 	}
 
+	@Test public void testAttackAction(){
+		AttackAction act = new AttackAction(test, enemy);
+		assertTrue(act.actionProgress()==0);
+		assertFalse(act.completed());
+	}
+
 	@Test
 	public void testSetOwner() {
 		test.setOwner(-1);
@@ -188,6 +198,15 @@ public class AttackableEntityTest {
 	public void testSetAttackSpeed() {
 		test.setAttackSpeed(20);
 		assertEquals(test.getAttackSpeed(), 20);
+	}
+	
+	@Test
+	public void testSetLoyalty() {
+		Soldier soldier = new Soldier(1, 0, 0, 1);
+		Carrier carrier = new Carrier(1, 0, 0, 1);
+		int maxLoyalty = carrier.getMaxLoyalty();
+		carrier.setLoyalty(maxLoyalty + 1);
+		Assert.assertTrue(carrier.getLoyalty() == maxLoyalty);
 	}
 
 }

@@ -3,9 +3,12 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.units.*;
+import com.deco2800.marswars.managers.AiManager;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,8 @@ public final class ActionSetter {
                 return doUnload((Soldier) performer);
             case UNLOADINDIVIDUAL:
                 return doUnloadIndividual((Soldier) performer);
+            case ATTACKMOVE:
+            	return doAttackMove(performer, x, y);
             default:
                 return false;
         }
@@ -183,6 +188,18 @@ public final class ActionSetter {
         performer.setAction(processBuild);
         return processBuild;
     }
+    
+    /**
+     * Assigns the attack move action to the entity
+     * @param performer the entity to be assigned the action
+     * @param x the x co-ordinates of the action
+     * @param y the y co-ordinates of the action
+     * @return true
+     */
+    private static boolean doAttackMove(BaseEntity performer, float x, float y) {
+        performer.setAction(new AttackMoveAction((int)x, (int)y, (AttackableEntity) performer));
+        return true;
+    }
 
     /**
      * This function is used to get the string for the name of the action denoted by the enumerated type
@@ -202,18 +219,101 @@ public final class ActionSetter {
             case BUILD:
                 return "Construct";
             case LOAD:
-        	return "Load";
+            	return "Load";
             case UNLOAD:
-        	return "Unload";
+            	return "Unload";
             case UNLOADINDIVIDUAL:
-        	return "Unload Individual";
+            	return "Unload Individual";
+            case ATTACKMOVE:
+            	return "Attack Move";
             default:
                 return "PLEASE SET IN ACTIONS/ACTIONSETTER.JAVA";
         }
     }
 
+    private static double setDifficultyMultiplier(Difficulty difficulty) {
+		double difficultyMultiplier;
+    	switch(difficulty) {
+		case EASY:
+			difficultyMultiplier = 2.0;
+			break;
+		case HARD:
+			difficultyMultiplier = 0.8;
+			break;
+		default: //NORMAL
+			difficultyMultiplier = 1.0;
+			break;
+		}
+		return difficultyMultiplier;
+	}
+    
+    /**
+     * checks if there are enough resources to pay for the selected entity (and pop limit)
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    public static boolean canAfford(int owner, boolean isAi, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree() && !isAi) {
+    		return true;
+    	}
+    	if (resourceManager.getPopulation(owner) > resourceManager.getMaxPopulation(owner)) {
+    		return false;
+    	}
+    	if (!isAi) {
+	    	if (resourceManager.getRocks(owner) >= c.getCostRocks()
+	    			&& resourceManager.getCrystal(owner) >= c.getCostCrystals()
+	    			&& resourceManager.getBiomass(owner) >= c.getCostBiomass()) {
+	    		return true;
+	    	}
+    	} else {
+    		AiManager am = (AiManager) GameManager.get().getManager(AiManager.class);
+			double difficultyMultiplier = setDifficultyMultiplier(am.getDifficulty());
+			if (resourceManager.getRocks(owner) >= (int)(c.getCostRocks()*difficultyMultiplier)
+	    			&& resourceManager.getCrystal(owner) >= (int)(c.getCostCrystals()*difficultyMultiplier)
+	    			&& resourceManager.getBiomass(owner) >= (int)(c.getCostBiomass()*difficultyMultiplier)) {
+	    		return true;
+	    	}
+		}
+    	return false;
+    }
+    
+    /**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    public static void payForEntity(int owner, boolean isAi, EntityID c, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree() && !isAi) {
+    		// no payment
+    	} else if (!isAi) {
+			resourceManager.setRocks(resourceManager.getRocks(owner) - c.getCostRocks(), owner);
+			resourceManager.setCrystal(resourceManager.getCrystal(owner) - c.getCostCrystals(), owner);
+			resourceManager.setBiomass(resourceManager.getBiomass(owner) - c.getCostBiomass(), owner);
+		} else {
+			AiManager am = (AiManager) GameManager.get().getManager(AiManager.class);
+			double difficultyMultiplier = setDifficultyMultiplier(am.getDifficulty());
+			
+			resourceManager.setRocks(resourceManager.getRocks(owner) - (int)(c.getCostRocks()*difficultyMultiplier), owner);
+			resourceManager.setCrystal(resourceManager.getCrystal(owner) - (int)(c.getCostCrystals()*difficultyMultiplier), owner);
+			resourceManager.setBiomass(resourceManager.getBiomass(owner) - (int)(c.getCostBiomass()*difficultyMultiplier), owner);
+		}
+    }
+    
     public static void setGenerate(BaseEntity target, EntityID c) {
-        LOGGER.info("Building " + c.name());
+        // entity costs
+        ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+        if (canAfford(target.getOwner(), target.isAi(), c, resourceManager)) {
+        	LOGGER.info("Building " + c.name());
+			payForEntity(target.getOwner(), target.isAi(), c, resourceManager);
+        } else {
+        	LOGGER.info("CAN'T AFFORD ENTITY!");
+        	LOGGER.info("Biomass: " + resourceManager.getBiomass(target.getOwner()) + " | Cost: " + (int)(c.getCostBiomass()*1.0));
+        	return;
+        }
         switch (c) {
             case ASTRONAUT:
                 target.setAction(new GenerateAction(new Astronaut(target.getPosX(), target.getPosY(), 0, target.getOwner())));
@@ -225,7 +325,7 @@ public final class ActionSetter {
                 target.setAction(new GenerateAction(new Commander(target
                         .getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
-            case HEALER:
+            case MEDIC:
                 target.setAction(new GenerateAction(new Medic(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             case SOLDIER:
@@ -233,6 +333,18 @@ public final class ActionSetter {
                 break;
             case TANK:
                 target.setAction(new GenerateAction(new Tank(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case HACKER:
+            	target.setAction(new GenerateAction(new Hacker(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SNIPER:
+            	target.setAction(new GenerateAction(new Sniper(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case TANKDESTROYER:
+            	target.setAction(new GenerateAction(new TankDestroyer(target.getPosX(), target.getPosY(), 0, target.getOwner())));
+                break;
+            case SPATMAN:
+            	target.setAction(new GenerateAction(new Spatman(target.getPosX(), target.getPosY(), 0, target.getOwner())));
                 break;
             default:
                 break;

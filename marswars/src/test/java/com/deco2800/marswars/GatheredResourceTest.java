@@ -1,11 +1,10 @@
 package com.deco2800.marswars;
 
-import static org.junit.Assert.*;
-
+import com.deco2800.marswars.entities.GatheredResource;
+import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import org.junit.Test;
 
-import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.TerrainElements.ResourceType;
+import static org.junit.Assert.assertEquals;
 
 public class GatheredResourceTest {
 	@Test

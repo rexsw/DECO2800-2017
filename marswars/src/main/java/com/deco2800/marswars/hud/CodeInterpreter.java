@@ -2,16 +2,12 @@ package com.deco2800.marswars.hud;
 
 import com.deco2800.marswars.MarsWars;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class is to interprete and excute the cheatcode catched in chatbox
@@ -20,6 +16,7 @@ public class CodeInterpreter {
     private TimeManager tm = (TimeManager)GameManager.get().getManager(TimeManager.class);
     private ResourceManager rm = (ResourceManager)GameManager.get().getManager(ResourceManager.class);
     private TechnologyManager tem = (TechnologyManager)GameManager.get().getManager(TechnologyManager.class);
+    private WeatherManager wm = (WeatherManager)GameManager.get().getManager(WeatherManager.class);
 
 
 
@@ -165,6 +162,12 @@ public class CodeInterpreter {
 
     }
 
+    /**
+     * If the code contains "hurryup", increase the in-game time by three hours.
+     */
+    public void hurryup() {
+        tm.addTime(10800);
+    }
 
     /**
      * If the code is "whosyourdaddy", set the enemies attack to be of no effect.
@@ -192,10 +195,35 @@ public class CodeInterpreter {
     }
 
 
+    /**
+     * Turns the flood effect on when floodon is typed into the chat window
+     * during a single player game.
+     */
+    public void floodon(){
+        wm.toggleFlood(true);
+    }
 
-
-
-
+    /**
+     * Turns the flood effect off when "floodoff" is typed into the chat window
+     * during a single player game.
+     */
+    public void floodoff(){
+        wm.toggleFlood(false);
+    }
+    
+    /**
+     * Gets whether or not costs of buildings and units are free
+     */
+    public void costsFree(){
+        GameManager.get().setCostsFree(true);
+    }
+    
+    /**
+     * Sets costs of buildings and units to be free or not
+     */
+    public void costsPaid(){
+        GameManager.get().setCostsFree(false);
+    }
 
 
 

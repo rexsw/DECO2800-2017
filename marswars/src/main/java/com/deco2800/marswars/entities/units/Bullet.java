@@ -3,7 +3,6 @@ package com.deco2800.marswars.entities.units;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.FireAction;
-import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.Tickable;
@@ -41,9 +40,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
         this.setOwnerEntity(ownerEntity);
         this.addNewAction(ActionType.FIRE);
         currentAction = Optional.of(new FireAction((int) target.getPosX(), (int) target.getPosY(), this));
-        if (ownerEntity instanceof Hacker) {
-        	this.setDamage(ownerEntity.getLoyaltyDamage());
-        }
     }
 
     @Override
@@ -53,33 +49,29 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		GameManager.get().getWorld().removeEntity(this);
     	}
     	/* If the action is completed, remove it otherwise keep doing that action */
-    	try {
-    		// check if the target still exists in the world
-    		float posX = this.getPosX();
-			float posY = this.getPosY();
-    		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
-			if (find && currentAction.get().completed()) {
-				// check for the positions
-				boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
-				boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
-				if (xPos && yPos) {
-					impact();
-					GameManager.get().getWorld().removeEntity(this);
 
-				} else {
-					GameManager.get().getWorld().removeEntity(this);
-				}
-			} else if (find) { // if target is still existing then continue the action
-				currentAction.get().doAction();
-			} else { // either the target is not existing anymore or the action is completed
+		// check if the target still exists in the world
+		float posX = this.getPosX();
+		float posY = this.getPosY();
+		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
+		if (find && currentAction.get().completed()) {
+			// check for the positions
+			boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
+			boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+			if (xPos && yPos) {
+				impact();
+				GameManager.get().getWorld().removeEntity(this);
 
-				currentAction = Optional.empty();
+			} else {
 				GameManager.get().getWorld().removeEntity(this);
 			}
-    	} catch (Exception e) {
-    		//Bullets are freezing for an unknown reason fix needed
-    		GameManager.get().getWorld().removeEntity(this);
-    	} 
+		} else if (find) { // if target is still existing then continue the action
+			currentAction.get().doAction();
+		} else { // either the target is not existing anymore or the action is completed
+
+			currentAction = Optional.empty();
+			GameManager.get().getWorld().removeEntity(this);
+		}
     }
     
     /**
@@ -109,18 +101,23 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * 			Armor damage
      */
     public void causeDamage(AttackableEntity target, int damage, int armorDamage) {
-    	if (!(this.getOwnerEntity() instanceof Hacker)) {
-	    	if (target.getArmor() > 0 && damage >= 0) {
+    	if ((this.getOwnerEntity() instanceof Hacker)) {
+    		target.setLoyalty(target.getLoyalty() - damage);
+    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());	
+    		LOGGER.info("Enemy loyalty " + target.getLoyalty());
+    	} else if ((this.getOwnerEntity() instanceof Spatman)) {
+    		target.setSpeed(target.getSpeed() - ((Spatman) this.getOwnerEntity()).getSlowMovementkSpeed());
+    		target.setAttackSpeed(target.getAttackSpeed() - damage);
+    		LOGGER.info("Enemy speed " + target.getSpeed());
+    		LOGGER.info("Enemy attack speed " + target.getAttackSpeed());
+    	} else {
+    		if (target.getArmor() > 0 && damage >= 0) {
 	    		target.setHealth(target.getHealth() - damage/2);
 	    		target.setArmor(target.getArmor() - armorDamage);
 	    	} else {
 	    		target.setHealth(target.getHealth() - damage);
 	    	}
 	    	LOGGER.info("Enemy health " + target.getHealth());
-    	} else {
-    		target.setLoyalty(target.getLoyalty() - damage);
-    		target.setEnemyHackerOwner(this.getOwnerEntity().getOwner());	
-    		LOGGER.info("Enemy loyalty " + target.getLoyalty());
     	}
     }
 

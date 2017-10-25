@@ -4,22 +4,32 @@ com.badlogic.gdx.graphics.Color: {
 	spacGreen: { r: 0.6, g: 1, b: 0.2, a: 1 },
 	light_grey: { r: 0.8, g: 0.8, b: 0.8, a: 1 },
 	white: { r: 1, g: 1, b: 1, a: 1 },
+	spacblu: { r: 0.2, g: 0.4, b: 1, a: 1 },
 	spacMaroon: { r: 0.8, b: 0.2, a: 1 },
 	red: { r: 1, a: 1 },
-	grey: { r: 0.7, g: 0.7, b: 0.7, a: 1 },
+	spacbabyblu: { r: 0.8, g: 0.8, b: 1, a: 1 },
 	spacblue: { g: 0.8, b: 0.8, a: 1 },
 	spacPurple: { r: 0.8, b: 0.8, a: 1 },
-	black: { a: 1 }
+	black: { a: 1 },
+	grey: { r: 0.7, g: 0.7, b: 0.7, a: 1 }
 },
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font_airstrikeout_56pt: { file: font_airstrikeout_56pt.fnt },
 	font_airstrikeout_46pt: { file: font_airstrikeout_46pt.fnt },
+	font_consola_16pt: { file: font_consola_16pt.fnt },
+	font_consola_18pt: { file: font_consola_18pt.fnt },
+	font_airstrike_48pt_bold: { file: font_airstrike_48pt_bold.fnt },
 	font_a_rialn_42pt_italic: { file: font_a_rialn_42pt_italic.fnt },
-	font_a_rialn_30pt_italic: { file: font_a_rialn_30pt_italic.fnt },
+	font_arial_18pt_bold: { file: font_arial_18pt_bold.fnt },
+	font_airstrike_56pt_bold: { file: font_airstrike_56pt_bold.fnt },
 	font_a_rialnb_42pt_italic: { file: font_a_rialnb_42pt_italic.fnt },
+	font_airstrike_28pt_bold: { file: font_airstrike_28pt_bold.fnt },
 	font_airstrike_42pt: { file: font_airstrike_42pt.fnt },
+	font_arial_18pt: { file: font_arial_18pt.fnt },
+	font_airstrike_56pt: { file: font_airstrike_56pt.fnt },
 	default-font: { file: default.fnt },
 	Arial_42_Italic: { file: Arial_42_Italic.fnt },
+	font_a_rialn_30pt_italic: { file: font_a_rialn_30pt_italic.fnt },
 	font_d_seg14_classic-_regular_16pt: { file: font_d_seg14_classic-_regular_16pt.fnt }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -32,14 +42,24 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default: { background: default-scroll, knobBefore: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	button2: {
+		font: font_airstrike_48pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		down: btn1,
+		over: btn1,
+		pressedOffsetX: 5
+	},
 	default: {
-		font: default-font,
-		fontColor: { a: 1, b: 1, g: 1, r: 1 },
-		downFontColor: { a: 1, b: 0.2, g: 1, r: 0.6 },
+		font: font_consola_18pt,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		overFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		disabledFontColor: { a: 1, b: 0.2, r: 0.8 },
-		up: default-round,
-		down: default-round-down
+		up: btn1,
+		down: btn1
+		pressedOffsetX: 5
 	},
 	pausemenubutton: {
 		font: font_a_rialn_30pt_italic,
@@ -51,6 +71,27 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: clear,
 		down: clear,
 		over: clear
+	},
+	buttons: {
+		font: default-font,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		pressedOffsetX: 1
+	},
+	num_button: {
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		pressedOffsetX: 10
+	},
+	pre_button: {
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		pressedOffsetX: -5
 	},
 	menubutton: {
 		font: font_airstrike_42pt,
@@ -70,10 +111,26 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: default-round,
 		down: default-round-down,
 		checked: default-round-down
+	},
+	button3: {
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		down: btn2,
+		over: btn2,
+		pressedOffsetX: 5
+	},
+	next_button: {
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		downFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		overFontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
+		pressedOffsetX: 5
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	default: { imageUp: paint_brush, up: clear, down: default-round-down }
+	default: { imageUp: paint_brush, imageOver: paint_brush, up: clear, down: clear, over: clearpmg }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-vertical: { handle: default-splitpane-vertical },
@@ -83,26 +140,56 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: { background: default-pane, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { up: default-round-large, down: default-round-down, over: cursor },
+	default: { up: btn1, down: btn1, over: btn1 },
 	toggle: { up: default-round, down: default-round-down, checked: default-round-down }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
-		background: default-window,
+		background: window_smol_final,
 		titleFont: default-font,
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
 		stageBackground: clear
+	},
+	help: {
+		background: window_even_smoller,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		stageBackground: clear
+	},
+	statusbar_back: {
+		background: 22551521_10156161181053676_1441206058_n,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
+	dialog: {
+		background: window_smol_final,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
+		stageBackground: dialogDim
+	},
+	inventory_back: {
+		background: 22538311_10156161181058676_202984801_n,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
+	clear: {
+		titleFont: font_arial_18pt_bold,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	minimap: {
 		background: clear,
 		titleFont: default-font,
 		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
-	dialog: {
-		background: default-window,
+	map_back: {
+		background: minimap_window,
 		titleFont: default-font,
-		titleFontColor: { a: 1, b: 1, g: 1, r: 1 },
-		stageBackground: dialogDim
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
+	header_back: {
+		background: 22551487_10156161182353676_1139524207_n,
+		titleFont: default-font,
+		titleFontColor: { a: 1, b: 1, g: 1, r: 1 }
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
@@ -116,7 +203,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		background: default-rect,
+		background: clear,
 		hScroll: default-scroll,
 		hScrollKnob: default-round-large,
 		vScroll: default-scroll,
@@ -129,22 +216,36 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: { a: 1, b: 0.2, g: 1, r: 0.6 }
 	},
 	default: {
-		font: default-font,
+		font: font_consola_18pt,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
+	subheading: {
+		font: font_arial_18pt,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
+	},
+	menusubheading: {
+		font: 	font_airstrike_42pt
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	error: {
-		font: default-font,
+		font: font_consola_18pt,
 		fontColor: { a: 1, b: 0.2, r: 0.8 }
 	},
-	info: { font: default-font },
-	title: {
-		font: font_airstrikeout_46pt,
-		fontColor: { a: 1, b: 0.8, g: 0.8 }
+	info: {
+		font: font_consola_18pt,
+		fontColor: { a: 1, b: 0.7, g: 0.7, r: 0.7 }
 	},
-	seven-seg: { font: font_d_seg14_classic-_regular_16pt },
-	subtitle: {
-		font: font_a_rialn_30pt_italic,
+	title: {
+		font: font_airstrike_56pt_bold,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 }
+	},
+	seven-seg: {
+		font: font_d_seg14_classic-_regular_16pt,
+		fontColor: { a: 1, b: 1, g: 0.4, r: 0.2 }
+	},
+	subtitle: {
+		font: font_arial_18pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	statsTitle: { font: font_a_rialnb_42pt_italic },
 	stats: {
@@ -172,7 +273,17 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		checkboxOn: check-on,
 		checkboxOff: check-off,
 		font: default-font,
-		fontColor: { a: 1, b: 1, g: 1, r: 1 }
+		fontColor: { a: 1, b: 1, g: 1, r: 1 },
+		pressedOffsetX: 5,
+		unpressedOffsetX: 5
+	},
+	spac_check: {
+		checkboxOn: 22635432_10156163945688676_2069349400_n,
+		checkboxOff: 22657131_10156163945683676_699462849_n_(1),
+		font: font_airstrike_28pt_bold,
+		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
+		pressedOffsetX: 5,
+		unpressedOffsetX: 5
 	},
 	spac: {
 		checkboxOn: check-on,
@@ -196,8 +307,12 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		scrollStyle: default,
 		listStyle: default
 	}
-}
+},
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
-    default: {label: {font: default-font}, background: textfield, wrapWidth: 400}
+    default: {
+    	label: default, 
+    	background: textfield, 
+    	wrapWidth: 400
+  	}
 }
 }

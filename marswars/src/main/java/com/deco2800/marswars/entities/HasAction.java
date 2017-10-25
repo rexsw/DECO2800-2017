@@ -7,6 +7,7 @@ import java.util.Optional;
 /**
  * Implemented by entities that have an action. Used in TimeManager to
  * facilitate pausing of sets of entities.
+ * @FunctionalInterface
  *
  * @author Isaac Doidge
  */

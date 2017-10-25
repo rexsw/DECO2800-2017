@@ -3,7 +3,7 @@ package com.deco2800.marswars.worlds.map.tools;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class NoiseMapTest {
     NoiseMap noise;

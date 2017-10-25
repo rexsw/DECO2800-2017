@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,16 +21,7 @@ public class TimeManager extends Manager implements TickableManager {
 	private boolean isGamePaused = false;
 	private static long time = 0;
 	private long gameStartTime = 0;
-	private static int days = 0;
 	private boolean daysIncremented = false;
-
-	/**
-	 * Calculate the number of passed in-game days
-	 * @return the in-game hour of the day
-	 */
-	public long getGameDays() {
-		return this.days;
-	}
 
 	/**
 	 * Calculate the current in-game hour
@@ -266,11 +258,23 @@ public class TimeManager extends Manager implements TickableManager {
 	}
 
 	/**
+	 * Adds the given 24 hour time values (hours, minutes, seconds), to the
+	 * in-game clock.
+	 * @param hours - the number of hours to be added
+	 * @param minutes - the number of minutes to be added
+	 * @param seconds - the number of seconds to be added
+	 */
+	public static void setGameTime(int hours, int minutes, int seconds) {
+		long hourLength = 3600;
+		long minuteLength = 60;
+		addTime(hours * hourLength + minutes * minuteLength + seconds);
+	}
+
+	/**
 	 * Sets the In-Game Time to be 0 (Resets current clock)
 	 */
 	public static void resetInGameTime() {
 		time = 0;
-		days = 0;
 	}
 
 	/**
@@ -301,19 +305,7 @@ public class TimeManager extends Manager implements TickableManager {
 		if (!isGamePaused) {
 			int dayLength = 24;
 			int window = 1;
-			this.addTime(2);
-			if ((this.getHours() % dayLength > dayLength ||
-					this.getHours() % dayLength < window) &&
-					! this.daysIncremented) {
-				incrementDays(1);
-				setDay();
-				this.daysIncremented = true;
-			}
-			if (this.getHours() % dayLength > window &&
-					this.getHours() % dayLength < dayLength &&
-					this.daysIncremented == true) {
-				this.daysIncremented = false;
-			}
+			addTime(2);
 			// Some duplicated code here (also in isNight) find way to resolve
 			// May not need isNight, or at least qualifiers
 			if (getHours() > NIGHT || getHours() < DAYBREAK) {
@@ -333,12 +325,4 @@ public class TimeManager extends Manager implements TickableManager {
 		return getHours() + ":" + getMinutes();
 	}
 
-	/**
-	 * Increment the number of days.
-	 *
-	 * @param days how many days to increment
-	 */
-	private static void incrementDays(int days) {
-		TimeManager.days += days;
-	}
 }

@@ -10,9 +10,10 @@ import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.mainMenu.MainMenu;
+import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
@@ -47,15 +48,15 @@ public class Render3D implements Renderer {
     @Override
     public void render(SpriteBatch batch, Camera camera) {
 
-        List<BaseEntity> renderables_be = GameManager.get().getWorld().getEntities();
+        List<BaseEntity> renderablesBe = GameManager.get().getWorld().getEntities();
         // Tutor approved workaround to avoid changing whole structure of game
         List<AbstractEntity> renderables = new ArrayList<>();
-        for (BaseEntity e : renderables_be) {
+        for (BaseEntity e : renderablesBe) {
             if (e != null) {
-                if (e instanceof Soldier && ((Soldier) e).getHealth() > 0) {
+                if (e instanceof AttackableEntity && ((AttackableEntity) e).getHealth() > 0) {
                     e.getHealthBar();
                     renderables.add(e);
-                } else if (!(e instanceof Soldier)) {
+                } else if (!(e instanceof AttackableEntity)) {
                     renderables.add(e);
                 }
             }
@@ -74,15 +75,23 @@ public class Render3D implements Renderer {
 
         List<AbstractEntity> multiSelection = FogWorld.getMultiSelectionTile();
 
+        FogManager fogManager = (FogManager) GameManager.get().getManager(FogManager.class);
+
 
         /* Sort entities into walkables and entities */
         for (AbstractEntity r : renderables) {
-            if (r.canWalOver()) {
-                walkables.add(r);
-            } else if (r instanceof HealthBar) {
-                hpBars.add(r);
-            } else {
-                entities.add(r);
+            int x = (int) Math.floor(r.getPosX());
+            int y = (int) Math.floor(r.getPosY());
+            if (fogManager.getBlackFog((int)Math.round(r.getPosX()),
+                    (int)Math.round(r.getPosY())) != 0 ||
+                    ! fogManager.getToggleFog()) {
+                if (r.canWalOver()) {
+                    walkables.add(r);
+                } else if (r instanceof HealthBar) {
+                    hpBars.add(r);
+                } else {
+                    entities.add(r);
+                }
             }
         }
 
@@ -105,15 +114,17 @@ public class Render3D implements Renderer {
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 
-        WeatherManager m = (WeatherManager) GameManager.get().getManager(WeatherManager.class);
-        m.render(batch);
+        WeatherManager weather = (WeatherManager)
+                GameManager.get().getManager(WeatherManager.class);
+        if (weather.isRaining()) {
+            weather.render(batch);
+        }
 
         batch.end();
+        weather.renderOverlay();
 
         if(battleFlag==1)
             MainMenu.player.playBattleSoundTrack();
-
-
     }
 
     /**
@@ -179,13 +190,16 @@ public class Render3D implements Renderer {
             }
 
             //carrier unit: if the entity is loaded, don't render him
-            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) continue;
+            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) 
+        	continue;
 
             //fog of war: leave the CheckSelect on top of everything
-            if(iteration==1 && !(entity instanceof CheckSelect)) continue;
+            if(iteration==1 && !(entity instanceof CheckSelect)) 
+        	continue;
 
             //fog of war: if it is turned off, don't render any fog of war tiles
-            if(entity instanceof FogEntity && !FogManager.getToggleFog()) continue;
+            if(entity instanceof FogEntity && !FogManager.getToggleFog()) 
+        	continue;
 
 
             //this function is for the blackFog to omit the tiles that are revealed
@@ -194,14 +208,16 @@ public class Render3D implements Renderer {
                     continue;
             //omit the tiles that are in sight
             if (entity instanceof GrayTile)
-                if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) continue;
+                if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) 
+                    continue;
 
 
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
             if (entity instanceof BaseEntity && FogManager.getToggleFog()) {
                 BaseEntity baseEntity = (BaseEntity) entity;
                 if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT || baseEntity.getEntityType() == BaseEntity.EntityType.HERO) {
-                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) continue;
+                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) 
+                	continue;
                 }
             }
 
@@ -209,8 +225,8 @@ public class Render3D implements Renderer {
             TextureManager reg = (TextureManager) GameManager.get().getManager(TextureManager.class);
             Texture tex = reg.getTexture(textureString);
 
-            float cartX = entity.getPosX();
-            float cartY = (worldWidth-1) - entity.getPosY();
+            float cartX = entity.getPosX()-entity.getXoff();
+            float cartY = (worldWidth-1) - (entity.getPosY()-entity.getYoff());
 
             float isoX = baseX + ((cartX - cartY) / 2.0f * tileWidth);
             float isoY = baseY + ((cartX + cartY) / 2.0f) * tileHeight + tileHeight*entity.getPosZ();

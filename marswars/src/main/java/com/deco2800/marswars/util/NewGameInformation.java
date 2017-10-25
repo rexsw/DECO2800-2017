@@ -1,10 +1,9 @@
 package com.deco2800.marswars.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class to keep track of the currently selected options for a new game.

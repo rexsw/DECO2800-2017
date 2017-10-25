@@ -3,6 +3,7 @@ package com.deco2800.marswars.actions;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 
@@ -10,7 +11,7 @@ import com.deco2800.marswars.managers.TimeManager;
  * A FireAction for moving missiles around
  * Created by vinsonyeung on 12/10/17.
  */
-public class FireAction implements DecoAction {
+public class FireAction extends AbstractPauseAction {
 
 	/* Goal positions */
 	private float goalX = 0;
@@ -32,7 +33,6 @@ public class FireAction implements DecoAction {
 	
 	/* Completed variable */
 	private boolean completed = false;
-	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
 
@@ -91,21 +91,24 @@ public class FireAction implements DecoAction {
 	@Override
 	public void doAction() {
 		if (! timeManager.isPaused() && ! actionPaused) {
-			
+            /* The new position */
+			float newX = entity.getPosX() + movementX;
+			float newY = entity.getPosY() + movementY;
 			/* Check if entity has reached the target square or surpassed it */
-			if ((directionX == 1 && entity.getPosX() <= goalX) || 
-					(directionX == -1 && entity.getPosX() >= goalX) || 
-					(directionY == 1 && entity.getPosY() <= goalY) || 
-					(directionY == -1 && entity.getPosY() >= goalY)) {
+			boolean reachedTarget =(directionX == 1 && entity.getPosX() <= goalX) ||
+					(directionX == -1 && entity.getPosX() >= goalX) ||
+					(directionY == 1 && entity.getPosY() <= goalY) ||
+					(directionY == -1 && entity.getPosY() >= goalY);
+			boolean offMap = newX<0 || newY<0 || newX> GameManager.get().getWorld().getWidth()||
+					newY>GameManager.get().getWorld().getLength();
+			if (reachedTarget || offMap) {
 				entity.setPosX(goalX);
 				entity.setPosY(goalY);
 				completed = true;
 				return;
 			}
 			
-			/* The new position */
-			float newX = entity.getPosX() + movementX;
-			float newY = entity.getPosY() + movementY;
+
 			
 			/* Apply these values to the entity */
 			entity.setPosX(newX);
@@ -120,31 +123,5 @@ public class FireAction implements DecoAction {
 	@Override
 	public boolean completed() {
 		return completed;
-	}
-
-	/**
-	 * Returns progress
-	 * @return
-	 */
-	@Override
-	public int actionProgress() {
-		return 0;
-	}
-	
-	
-	/**
-	 * Prevents the current action from progressing.
-	 */
-	@Override
-	public void pauseAction() {
-		actionPaused = true;
-	}
-
-	/**
-	 * Resumes the current action
-	 */
-	@Override
-	public void resumeAction() {
-		actionPaused = false;
 	}
 }

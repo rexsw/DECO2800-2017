@@ -1,9 +1,15 @@
 package com.deco2800.marswars.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
+import com.deco2800.marswars.entities.units.Medic;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.managers.TimeManager;
 
 
@@ -12,7 +18,10 @@ import com.deco2800.marswars.managers.TimeManager;
  * Created by vinsonyeung on 23/9/17.
  */
 
-public class ShootAction implements DecoAction {
+public class ShootAction extends AbstractPauseAction {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShootAction.class);
+	
 	private State state = State.COOLDOWN;
 	private AttackableEntity entity;
 	private AttackableEntity enemy;
@@ -20,10 +29,9 @@ public class ShootAction implements DecoAction {
 	private int attackInterval = 1000;
 	private int attackSpeed;
 
-	private boolean actionPaused = false;
 	private TimeManager timeManager = (TimeManager)
 			GameManager.get().getManager(TimeManager.class);
-
+	
 	
 	enum State {
 		COOLDOWN,
@@ -44,16 +52,19 @@ public class ShootAction implements DecoAction {
 					cooldown();
 					return;
 				case SHOOT:
-					if (attackInterval <= 0) {
-						shoot();
-					} else {
-						state = State.COOLDOWN;
-						break;
-					}
+					checkShoot();
 					break;
 				default:
 					break;
 			}
+		}
+	}
+	
+	private void checkShoot() {
+		if (attackInterval <= 0) {
+			shoot();
+		} else {
+			state = State.COOLDOWN; 
 		}
 	}
 	
@@ -68,6 +79,14 @@ public class ShootAction implements DecoAction {
 	}
 	
 	private void setUpMissile() {
+		try {
+		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound("shooting.mp3");
+		sound.playSound(loadedSound);
+		} catch (Exception e) {
+			LOGGER.error("Sound shootaction error");
+		}
+		
 		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
 				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}
@@ -80,7 +99,7 @@ public class ShootAction implements DecoAction {
 	
 	private void shoot() {
 		//If the enemy is converted while being attacked
-		if (entity.sameOwner(enemy)) {
+		if (entity.sameOwner(enemy) && !(entity instanceof Medic)) {
 			completed = true;
 			return;
 		}
@@ -99,26 +118,4 @@ public class ShootAction implements DecoAction {
 	public boolean completed() {
 		return completed;
 	}
-
-	@Override
-	public int actionProgress() {
-		return 0;
-	}
-
-	/**
-	 * Prevents the current action from progressing.
-	 */
-	@Override
-	public void pauseAction() {
-		actionPaused = true;
-	}
-
-	/**
-	 * Resumes the current action
-	 */
-	@Override
-	public void resumeAction() {
-		actionPaused = false;
-	}
-	
 }

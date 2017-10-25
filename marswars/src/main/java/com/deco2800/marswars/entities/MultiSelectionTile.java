@@ -1,5 +1,7 @@
 package com.deco2800.marswars.entities;
 
+import com.deco2800.marswars.util.Box3D;
+
 /**
  * this is a blue tile indicating selected area
  * Created by Treenhan on 9/20/17.
@@ -18,7 +20,7 @@ public class MultiSelectionTile extends AbstractEntity{
      */
     //the constructor for it
     public MultiSelectionTile(float posX, float posY, float posZ, float height, float width) {
-        super(posX, posY, posZ, height, width, 1f);
+        super(new Box3D(posX, posY, posZ, height, width, 1f));
         this.setTexture("multi_selection");
         this.canWalkOver = true;
     }

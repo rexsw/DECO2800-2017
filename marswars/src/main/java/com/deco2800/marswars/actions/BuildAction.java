@@ -4,12 +4,13 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.WorldUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,7 @@ public class BuildAction implements DecoAction{
 	private boolean actionPaused = false;
 	private long id;
 	private Sound sound;
+	private double difficultyMultiplier = 1.0;
 
 	/**
 	 * Constructor for the BuildAction
@@ -72,7 +74,8 @@ public class BuildAction implements DecoAction{
 		this.projX = x;
 		this.projY = y;
 		this.state = State.SETUP_MOVE;
-		createBuilding();
+		validBuild = true;
+		finaliseBuild();
 	}
 	
 	/**
@@ -174,16 +177,83 @@ public class BuildAction implements DecoAction{
 		return (int)(100 * (base.getMaxHealth() / base.getHealth()));
 	}
 	
+	public void setDifficultyMultiplier(Difficulty difficulty) {
+		switch(difficulty) {
+		case EASY:
+			difficultyMultiplier = 2.0;
+			break;
+		case NORMAL:
+			difficultyMultiplier = 1.0;
+			break;
+		case HARD:
+			difficultyMultiplier = 0.8;
+			break;
+		}
+	}
+	
+	/**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    public boolean canAfford(int owner, ResourceManager resourceManager) {
+    	if (resourceManager.getRocks(owner) >= (int)(building.getCost()*difficultyMultiplier)
+    			|| (GameManager.get().areCostsFree() && !actor.isAi())) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * checks if there are enough resources to pay for the selected entity
+     * @param owner
+     * @param c
+     * @param resourceManager
+     * @return
+     */
+    private void payForEntity(int owner, ResourceManager resourceManager) {
+    	if (GameManager.get().areCostsFree() && !actor.isAi()) {
+    		// no payment
+    	} else {
+    		resourceManager.setRocks(resourceManager.getRocks(owner)
+    				- (int)(building.getCost()*difficultyMultiplier), owner);
+    	}
+    }
+	
+    public void finaliseBuildAI() {
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if (canAfford(actor.getOwner(), resourceManager)) {
+			createBuilding();
+			payForEntity(actor.getOwner(), resourceManager);
+			GameManager.get().getWorld().addEntity(base);
+			this.buildingSpeed = base.getBuildSpeed();
+			maxHealth = base.getMaxHealth();
+			base.setHealth(currentHealth);
+			state = State.SETUP_MOVE;
+			LOGGER.info("BUILDING NEW " + building.toString());
+			GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
+			gbb.updateunit(base);
+		}
+		else {
+			LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
+			completed = true;
+		}
+	}
+    
 	/**
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
-		if (temp != null && validBuild) {
-			GameManager.get().getWorld().removeEntity(temp);
+		if (validBuild) {
+			if (temp != null){
+				GameManager.get().getWorld().removeEntity(temp);
+			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			if (resourceManager.getRocks(actor.getOwner()) >= building.getCost()) {
+			if (canAfford(actor.getOwner(), resourceManager)) {
 				createBuilding();
-				resourceManager.setRocks(resourceManager.getRocks(actor.getOwner()) - base.getCost(), actor.getOwner());
+				payForEntity(actor.getOwner(), resourceManager);
 				GameManager.get().getWorld().addEntity(base);
 				this.buildingSpeed = base.getBuildSpeed();
 				maxHealth = base.getMaxHealth();
@@ -192,7 +262,7 @@ public class BuildAction implements DecoAction{
 				LOGGER.info("BUILDING NEW " + building.toString());
 			}
 			else {
-				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BASE" + resourceManager.getRocks(actor.getOwner()));
+				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
 				completed = true;
 			}
 
@@ -211,6 +281,10 @@ public class BuildAction implements DecoAction{
 	 */
 	private void createBuilding() {
 		switch(building) {
+		case WALL:
+			base = new Wall(GameManager.get().getWorld(), 
+					(int)projX, (int)projY, 0f, actor.getOwner());
+			break;
 		case TURRET:
 			base = new Turret(GameManager.get().getWorld(), 
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());

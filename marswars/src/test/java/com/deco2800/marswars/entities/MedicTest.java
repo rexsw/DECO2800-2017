@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * 
- * @author xhy6006 on 23/09/17
+ * @author haoxuan on 23/09/17
  *
  */
 
@@ -15,6 +15,18 @@ public class MedicTest {
     public void constructorTest() {
         Medic medic = new Medic(1, 0, 0 , 1);
         Assert.assertTrue(medic != null);
+    }
+    
+    /**
+     * Test if the medic can identify different owners
+     */
+    @Test 
+    public void testSameOwner() {
+    	Medic medic = new Medic(1, 0, 0, 1);
+    	Medic medic1 = new Medic(1, 0, 0, 1);
+    	Medic medic2 = new Medic(1, 0, 0, 2);
+    	Assert.assertTrue(medic.setTargetType(medic1));
+    	Assert.assertFalse(medic.setTargetType(medic2));
     }
 
 }

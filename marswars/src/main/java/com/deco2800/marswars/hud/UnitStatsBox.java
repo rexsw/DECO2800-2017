@@ -35,6 +35,7 @@ public class UnitStatsBox extends Table{
 	private TextureManager tm;
 	private Image unitImage;
 	private Pixmap pixmap; 		   //used for progress bar 
+	private boolean enabled = false; 
 	
 	//Player stats + progress bar 
 	private Label healthLabel;     //numeric indicator for health level
@@ -52,6 +53,8 @@ public class UnitStatsBox extends Table{
 	private Label atkSpeedLabel;
 	private Label armourLabel;
 	private Label moveSpeedLabel;
+	
+	private String lockedInventoryString = "locked_inventory";
 		
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UnitStatsBox.class);
@@ -67,6 +70,7 @@ public class UnitStatsBox extends Table{
         this.tm = textureManager;
         // character table
         Table charTable = new Table();
+        charTable.setDebug(enabled);
         this.unitImage = new Image(textureManager.getTexture("spacman_blue"));
         this.nameLabel = new Label("Name", skin);
         initiateProgressBar();
@@ -78,6 +82,7 @@ public class UnitStatsBox extends Table{
 		
 		// create a table for bar and text display
 		Table statsTable = new Table();
+		statsTable.setDebug(enabled);
 		
 		//create table for health bar display
 		Table barTable = new Table();
@@ -107,6 +112,7 @@ public class UnitStatsBox extends Table{
 		
 		// table for other stats
 		Table textTable = new Table();
+		textTable.setDebug(enabled);
 		this.atkDmgLabel = new Label("Attack", skin);
 		this.atkRngLabel = new Label("Attack Range", skin);
 		this.atkSpeedLabel = new Label("Attack Speed", skin);
@@ -126,14 +132,15 @@ public class UnitStatsBox extends Table{
 		
 		// add in the hero inventory display
 		heroInventory = new Table();
+		heroInventory.setDebug(enabled);
 		setUpHeroInventory();
 		heroInventory.setVisible(false);
-		
-		rightTable.add(statsTable);
+		rightTable.setDebug(enabled);
+		rightTable.add(statsTable).pad(10);
 		rightTable.row();
 		rightTable.add(heroInventory);
 		
-		this.add(rightTable);
+		this.add(rightTable).pad(10);
 		this.row();		
 		this.setVisible(false);
     }
@@ -147,6 +154,7 @@ public class UnitStatsBox extends Table{
 		pixmap.setColor(Color.DARK_GRAY);
 		pixmap.fill();
 		heroInventory.background(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
+		heroInventory.setDebug(enabled);
 		pixmap.dispose();
 	}
 	
@@ -175,7 +183,7 @@ public class UnitStatsBox extends Table{
 		if(weapon != null) {
 			 weaponBtn= generateItemButton(tm.getTexture(weapon.getTexture()));
 		} else {
-			weaponBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			weaponBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 		}
 		weaponBtn.setText("");
 		heroInventory.add(weaponBtn).width(35).height(35).pad(3);
@@ -184,7 +192,7 @@ public class UnitStatsBox extends Table{
 			armourBtn = generateItemButton(tm.getTexture(armour.getTexture()));
 			//will add handler later
 		} else {
-			armourBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			armourBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 		}
 		armourBtn.setText("");
 		heroInventory.add(armourBtn).width(35).height(35).pad(3);
@@ -203,7 +211,7 @@ public class UnitStatsBox extends Table{
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}
 		for(int i = 0; i < 4-size; i++) {
-			ImageTextButton specialBtn = generateItemButton(tm.getTexture("locked_inventory"));
+			ImageTextButton specialBtn = generateItemButton(tm.getTexture(lockedInventoryString));
 			specialBtn.setText("");
 			heroInventory.add(specialBtn).width(35).height(35).pad(3);
 		}

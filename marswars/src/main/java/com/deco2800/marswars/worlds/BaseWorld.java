@@ -5,8 +5,10 @@ import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Selectable;
+import com.deco2800.marswars.entities.terrainelements.Resource;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Soldier;
-import com.deco2800.marswars.entities.weatherEntities.Water;
+import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
@@ -80,7 +82,28 @@ public class BaseWorld extends AbstractWorld {
 		result[3] = (int)Math.ceil(entity.getPosY() + entity.getYLength());
 		return result;
 	}
-	
+
+	/**
+	 * Fixes the collision models to better match the rendered image.
+	 * @param entity
+	 */
+	private void fixRender(BaseEntity entity) {
+		if (entity.getFix()) {
+			BuildingEntity ent = (BuildingEntity) entity;
+			if ("Base".equals(ent.getbuilding())) {
+				ent.fixPosition((int)(entity.getPosX()), (int)(entity.getPosY()
+								- ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(),
+						1, 0);
+			}
+			else {
+				ent.fixPosition((int)(entity.getPosX() +
+								((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() -
+								((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(),
+						0, 0);
+			}
+		}
+	}
+
 	/**
 	 * Adds an entity to this world.
 	 *
@@ -88,21 +111,16 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	public void addEntity(BaseEntity entity) {
 		super.addEntity(entity);
-		if (entity == null) {
+		if (entity == null || !entity.isCollidable()) {
 			return;
 		}
 		if (entity instanceof BuildingEntity || entity instanceof Soldier) {
 			floodableEntities.add(entity);
 		}
 
-		if (!entity.isCollidable())
-			return;
-
-		if (entity instanceof Soldier) {
+		if (entity instanceof Soldier && GameManager.get().getMiniMap() != null) {
 			// put things that can be attacked on the minimap
-		    if (GameManager.get().getMiniMap() != null) {
 		        GameManager.get().getMiniMap().addEntity(entity);
-		    }
 		}
 
 		//Add to the collision map
@@ -112,16 +130,7 @@ public class BaseWorld extends AbstractWorld {
 				collisionMap.get(x, y).add(entity);
 			}
 		}
-		//Fixes the collision models to better match rendered image
-		if (entity.getFix()) {
-			BuildingEntity ent = (BuildingEntity) entity;
-			if (ent.getbuilding().equals("Base")) {
-				ent.fixPosition((int)(entity.getPosX()), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 1, 0);
-			}
-			else {
-				ent.fixPosition((int)(entity.getPosX() + ((ent.getBuildSize()-1)/2)), (int)(entity.getPosY() - ((ent.getBuildSize()-1)/2)), (int)entity.getPosZ(), 0, 0);
-			}
-		}
+		fixRender(entity);
 	}
 	
 	/**
@@ -132,14 +141,17 @@ public class BaseWorld extends AbstractWorld {
 	 */
 	@Override
 	public void removeEntity(BaseEntity entity) {
-		super.removeEntity(entity);
+		if (entity instanceof AttackableEntity) {
+			entity.modifyFogOfWarMap(false,
+					((AttackableEntity) entity).getFogRange());
+		}
 		if (entity instanceof Soldier) {
-			// remove entity from the minimap when they are removed from the world
 			GameManager.get().getMiniMap().removeEntity(entity);
 		}
 		if (entity instanceof BuildingEntity || entity instanceof Soldier) {
 			floodableEntities.remove(entity);
 		}
+		super.removeEntity(entity);
 		// Ensure water is also removed from Collision map upon deletion
 		if (! entity.isCollidable() && ! (entity instanceof Water))
 			return;
@@ -166,7 +178,7 @@ public class BaseWorld extends AbstractWorld {
 	 *
 	 * @return the map of collisions of the world.
 	 */
-	public ArrayList<BaseEntity> getFloodableEntityList() {
+	public List<BaseEntity> getFloodableEntityList() {
 		return floodableEntities;
 	}
 
@@ -180,6 +192,23 @@ public class BaseWorld extends AbstractWorld {
 	public boolean hasEntity(int x, int y) {
 		return collisionMap.get(x, y).size() > 0;
 	}
+	
+	/**
+	 * Returns true if there is a building or resource here.
+	 *
+	 * @param x a tile x coordinate.
+	 * @param y a tile y coordinate.
+	 * @return whether it contains an unmovable entity
+	 */
+	public boolean hasUnmovableEntity(int x, int y) {
+		if (hasEntity(x,y)) {
+			BaseEntity collide = collisionMap.get(x, y).get(0);
+			if (collide instanceof BuildingEntity || collide instanceof Resource) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Gets the entity at an x y position.
@@ -192,18 +221,10 @@ public class BaseWorld extends AbstractWorld {
 		try {
 			return collisionMap.get(x, y);
 		} catch (IndexOutOfBoundsException e) {
-			throw new IndexOutOfBoundsException("Invalid tile coordinate.");
+			throw new IndexOutOfBoundsException(e + "Invalid tile coordinate.");
 		}
 	}
 
-	/**
-	 * Gets the entities currently in the game.
-	 *
-	 * @return a list of all entities currently in the game.
-	 */
-	public List<BaseEntity> getEntities() {
-		return super.getEntities();
-	}
 
 	/**
 	 * Deselects all entities
@@ -235,10 +256,20 @@ public class BaseWorld extends AbstractWorld {
 		if (build == BuildingType.BARRACKS) {
 			checkX = 1;
 		}
+		if ((int)objectSize == 1) {
+			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
+				if (hasUnmovableEntity(left, bottom)) {
+					return false;
+				}
+			}else {
+				return false;
+			}
+			return true;
+		}
 		for (int x = left+checkX; x < right+checkX; x++) {
 			for (int y = bottom-checkY; y < top-checkY; y++) {
 				if (x >= 0 && y >= 0  && x < this.getWidth() && y < this.getLength()){
-					if (hasEntity(x, y)) {
+					if (hasUnmovableEntity(x, y)) { //only checks buildings and resources
 						return false;
 					}
 				}

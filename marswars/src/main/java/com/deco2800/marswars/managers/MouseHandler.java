@@ -1,5 +1,7 @@
 package com.deco2800.marswars.managers;
 
+import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.Clickable;
@@ -54,10 +56,18 @@ public class MouseHandler extends Manager {
 				// Left click cancels building selection confirmation
 				if (unitSelected !=null && unitSelected instanceof Astronaut) {
 					Astronaut castAstro = (Astronaut)unitSelected;
-					if (castAstro.getBuild() !=null) {
-						if (castAstro.getBuild().selectMode()) {
+					if (castAstro.getBuild() !=null && castAstro.getBuild() instanceof BuildAction) {
+						if (((BuildAction)castAstro.getBuild()).selectMode()) {
 							LOGGER.info("cancel");
-							castAstro.getBuild().cancelBuild();
+							((BuildAction)castAstro.getBuild()).cancelBuild();
+							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
+							castAstro.deselect();
+							return;
+						}
+					} else if (castAstro.getBuild() !=null && castAstro.getBuild() instanceof BuildWallAction) {
+						if (((BuildWallAction)castAstro.getBuild()).selectMode()) {
+							LOGGER.info("cancel");
+							((BuildWallAction)castAstro.getBuild()).cancelBuild();
 							unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
 							castAstro.deselect();
 							return;
@@ -87,10 +97,12 @@ public class MouseHandler extends Manager {
 				List<BaseEntity> entities = GameManager.get().getWorld().getEntities((int)projX, (int)projY);
 				
 				if (entities.isEmpty()) {
-					if(skipChecking) return;//this line is for multiselection
+					if(skipChecking) 
+					    return;//this line is for multiselection
 					LOGGER.info(String.format("No selectable enities found at x:%f y:%f", projX,projY));
 					for (Clickable c : listeners) {
-						if (c instanceof Soldier) ((Soldier)c).resetTexture();
+						if (c instanceof Soldier) 
+						    ((Soldier)c).resetTexture();
 					}
 					((CustomizedWorld)world).deSelectAll();
 					listeners.clear();//Deselect all the entities selected before
@@ -123,7 +135,7 @@ public class MouseHandler extends Manager {
 					LOGGER.info(String.format("Clicked on %s", chosen).toString());
 					((Clickable) chosen).onClick(this);
 					//Checks if last clicked entity was unit and deselect unit if current selection is building
-					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier)) {
+					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier) && !unitSelected.getAction().isPresent()) {
 						unregisterForRightClickNotification((Clickable) unitSelected);
 						unitSelected.deselect();
 						unitSelected.setTexture(((Soldier) unitSelected).getDefaultTexture());
@@ -134,6 +146,15 @@ public class MouseHandler extends Manager {
 				}
 				
 			} else if (button == 1) {
+				if (unitSelected instanceof Astronaut && unitSelected.getAction().isPresent()) {
+					if (unitSelected.getAction().get() instanceof BuildWallAction) {
+						BuildWallAction action = (BuildWallAction)unitSelected.getAction().get();
+						if (action.selectMode()) {
+							action.projectWall();
+						}
+						
+					}
+				}
 				// Right click
 				projX = x/tileWidth;
 				projY = -(y - tileHeight / 2f) / tileHeight + projX;
@@ -141,7 +162,10 @@ public class MouseHandler extends Manager {
 
 				for (Clickable c : listeners) {
 					c.onRightClick(projX, projY);
+					((SoundManager) GameManager.get().getManager(SoundManager.class)).blockSound();
 				}
+				((SoundManager) GameManager.get().getManager(SoundManager.class)).unblockSound();
+
 				AbstractWorld world = GameManager.get().getWorld();
 				((CustomizedWorld)world).deSelectAll();
 			}

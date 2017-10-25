@@ -100,32 +100,28 @@ public class UseSpecialAction implements DecoAction {
 				boolean radiusZero = Math.abs(radius - 0) < 0.01;
 				if ((e.getTarget() == Target.SELF) && radiusZero) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
-					continue;
 				} else if (e.getTarget() == Target.SELF_TEAM) { //affect only player's team
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
-					continue;
 				} else if (e.getTarget() == Target.ENEMY_TEAM) { //affect only enemies
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
-					continue;
 				} else if (e.getTarget() == Target.GLOBAL) { //affect everyone
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfLikeClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
-					continue;
 				} else if (e.getTarget() == Target.ENEMY){ //only affect e within selected area (Target.ENEMY)
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
-//					executeEffectOnConditional(e, targets);
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(targets, AttackableEntity.class, 
-							user.getOwner())); 
+							user.getOwner()));
+					WorldUtil.removeOverlay();
 				} else {
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
-							user.getOwner())); 
+							user.getOwner()));
+					WorldUtil.removeOverlay();
 				}
-				WorldUtil.removeOverlay();
 			}
     		if(!item.useItem()) {
     			// no use limit left
@@ -165,27 +161,6 @@ public class UseSpecialAction implements DecoAction {
 			);
 		}
 	}
-	
-//	/**
-//	 * Helper method to apply an effect to a given list of targets which have already been filtered out (by class i.e.
-//	 * AttackableEntity, and owner where applicable). But this method further filters between the cases where the effect
-//	 * should be targeting the payer's entities within the selected area or enemies within the selected area. 
-//	 * 
-//	 * @param e  Effect to be applied.
-//	 * @param targets  List of BaseEntities (which are in fact all instances of AttackableEntities) to apply the effect
-//	 * 			onto.
-//	 */
-//	@Deprecated
-//	private void executeEffectOnConditional(Effect e, List<BaseEntity> targets){
-//		if (e.getTarget() == Target.SELF) {
-//			executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
-//					user.getOwner())); 
-//		}
-//		if (e.getTarget() == Target.ENEMY) {
-//			executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(targets, AttackableEntity.class, 
-//					user.getOwner())); 
-//		}
-//	}
 	
 	public void execute() {
 		GameManager.get().getWorld().removeEntity(temp);

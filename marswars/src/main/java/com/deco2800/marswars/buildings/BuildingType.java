@@ -5,12 +5,13 @@ package com.deco2800.marswars.buildings;
  */
 public enum BuildingType {
 
-	BASE(3f, 350, "base3"), 
-	BARRACKS(3f, 300, "barracks3"), 
-	BUNKER(2f, 100, "bunker3"), 
-	TURRET(2f, 200, "turret3"),
-	HEROFACTORY(3f, 300, "herofactory3"),// texture value is a placeholder
-	TECHBUILDING(2f, 100, "tech3");// texture value is a placeholder
+	WALL(1f, 5, "wall1"), 
+	BASE(3f, 150, "base3"), 
+	BARRACKS(3f, 40, "barracks3"), 
+	BUNKER(2f, 15, "bunker3"), 
+	TURRET(2f, 70, "turret3"),
+	HEROFACTORY(3f, 50, "herofactory3"),// texture value is a placeholder
+	TECHBUILDING(2f, 50, "tech3");// texture value is a placeholder
 
 
 	private final float buildingSize;
@@ -25,8 +26,7 @@ public enum BuildingType {
     	return buildingSize;
     }
     public int getCost() {
-    	return 0;
-    	//return buildCost; Free for testing atm
+    	return buildCost;
     }
     public String getBuildTexture() {
     	return buildTexture;

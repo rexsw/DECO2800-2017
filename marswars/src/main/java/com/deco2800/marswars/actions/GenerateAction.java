@@ -1,7 +1,9 @@
 package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
@@ -35,7 +37,7 @@ public class GenerateAction implements DecoAction {
 
 	/**
 	 * Completes the GenerateAction
-	 * TODO make generate check cost
+	 * 
 	 */
 	@Override
 	public void doAction() {
@@ -43,8 +45,13 @@ public class GenerateAction implements DecoAction {
 			if (progress > 0) {
 				progress--;
 			} else {
-				this.world.addEntity(actionResult);
-				actionResult = null;
+				ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+				if (resourceManager.getPopulation(actionResult.getOwner()) < resourceManager.getMaxPopulation(actionResult.getOwner())) {
+					this.world.addEntity(actionResult);
+					GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
+					black.updateunit(actionResult);
+					actionResult = null;
+				}
 			}
 		}
 	}

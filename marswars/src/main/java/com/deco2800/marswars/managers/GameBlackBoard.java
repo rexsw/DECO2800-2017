@@ -3,15 +3,12 @@ package com.deco2800.marswars.managers;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasOwner;
+import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -23,22 +20,27 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameBlackBoard extends Manager implements TickableManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameBlackBoard.class);
 	private List<Integer> teams;
-	private Map<Integer,Map<Field, List<Integer>>> values;
+	private Map<Integer,Map<Field, List<Integer>>> values = new HashMap<Integer,Map<Field, List<Integer>>>();
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	private int alive;
 	private int timer;
 	private int index = 0;
+	private boolean enableCheck = false;
 	
 	/**
 	 * acceptable fields for use in the blackboard used for type safety 
 	 */
 	public enum Field {
-		BIOMASS, CRYSTAL, ROCKS, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY
+		BIOMASS, CRYSTAL, ROCKS, UNITS, UNITS_LOST, COMBAT_UNITS, BUILDINGS, TECHNOLOGY,
+		ASTRONAUTS,
 	}
 	
 
 	@Override
 	public void onTick(long i) {
+		if (!enableCheck) {
+			return;
+		}
 		//adds to the history of each field every few ticks
 		timer++;
 		if(timer % 10 == 0) {
@@ -49,6 +51,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				values.get(teamid).get(Field.UNITS).add(this.count(teamid, Field.UNITS));
 				values.get(teamid).get(Field.UNITS_LOST).add(this.count(teamid, Field.UNITS_LOST));
 				values.get(teamid).get(Field.COMBAT_UNITS).add(this.count(teamid, Field.COMBAT_UNITS));
+				values.get(teamid).get(Field.ASTRONAUTS).add(this.count(teamid, Field.ASTRONAUTS));
 				values.get(teamid).get(Field.BUILDINGS).add(this.count(teamid, Field.BUILDINGS));
 				//currentlly not counting techology so this is for graph testing on ui
 				values.get(teamid).get(Field.TECHNOLOGY).add(ThreadLocalRandom.current().nextInt(1, 50));
@@ -67,6 +70,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		values = new HashMap<Integer,Map<Field, List<Integer>>>();
 		teams = new ArrayList<Integer>();
 		index = 0;
+		rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 		int teamid;
 		for(BaseEntity e : GameManager.get().getWorld().getEntities()) {
 			if(e instanceof HasOwner) {
@@ -81,6 +85,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 				}
 			}
 		}
+		enableCheck = true;
 	}
 	
 	/**
@@ -98,6 +103,7 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		setmap.put(Field.UNITS,  new ArrayList<Integer>(base));
 		setmap.put(Field.UNITS_LOST,  new ArrayList<Integer>(base));
 		setmap.put(Field.COMBAT_UNITS,  new ArrayList<Integer>(base));
+		setmap.put(Field.ASTRONAUTS,  new ArrayList<Integer>(base));
 		setmap.put(Field.BUILDINGS,  new ArrayList<Integer>(base));
 		setmap.put(Field.TECHNOLOGY,  new ArrayList<Integer>(base));
 		values.put(teamid, setmap);
@@ -142,6 +148,11 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 			return;
 		}
+		else if(enity instanceof Astronaut) {
+			count = values.get(teamid).get(Field.ASTRONAUTS).get(index);
+			count++;
+			values.get(teamid).get(Field.ASTRONAUTS).set(index, count);
+		}
 		else if(enity instanceof AttackableEntity) {
 			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count++;
@@ -172,6 +183,11 @@ public class GameBlackBoard extends Manager implements TickableManager {
 			values.get(teamid).get(Field.BUILDINGS).set(index, count);
 			return;
 		}
+		else if(enity instanceof Astronaut) {
+			count = values.get(teamid).get(Field.ASTRONAUTS).get(index);
+			count--;
+			values.get(teamid).get(Field.ASTRONAUTS).set(index, count);
+		}
 		else if(enity instanceof AttackableEntity) {
 			count = values.get(teamid).get(Field.COMBAT_UNITS).get(index);
 			count--;
@@ -186,11 +202,13 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 */
 	public int teamsAlive() {
 		int count = 0;
-		for(int t: values.keySet()) {
-			if(values.get(t).get(Field.UNITS).get(index) != 0) {
-				alive = t;
-				count++;
-				
+		if(values!=null) {
+			for (int t : values.keySet()) {
+				if (values.get(t).get(Field.UNITS).get(index) != 0) {
+					alive = t;
+					count++;
+
+				}
 			}
 		}
 		return count;
@@ -236,10 +254,12 @@ public class GameBlackBoard extends Manager implements TickableManager {
 	 * @return int the count of this field
 	 */
 	public int count(int teamid, Field field) {
-		if(teams.contains(teamid)) {
+		try {
 			return values.get(teamid).get(field).get(index);
 		}
-		return -1;
+		catch(NullPointerException e) {
+			return -1;
+		}
 	}
 	
 	public int highCount(Field field) {
@@ -250,5 +270,25 @@ public class GameBlackBoard extends Manager implements TickableManager {
 		return ret;
 	}
 	
+	/**
+	 * Sets the control variable to allow checking
+	 * * @param set
+	 */
+	public void setCheck(boolean set) {
+		this.enableCheck = set;
+	}
+
+	/**
+	 * Clears the board entirely back to nulls/0's. Should only be used when resetting a game.
+	 */
+	public void clear() {
+		teams = null;
+		values = null;
+		rm = null;
+		alive = 0;
+		timer = 0;
+		index = 0;
+		enableCheck  = false;
+	}
 
 }

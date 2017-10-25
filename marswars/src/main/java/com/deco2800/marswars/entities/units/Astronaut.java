@@ -2,14 +2,16 @@ package com.deco2800.marswars.entities.units;
 
 
 import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
 import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
-import com.deco2800.marswars.entities.TerrainElements.Resource;
+import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
@@ -31,13 +33,18 @@ public class Astronaut extends Soldier {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Astronaut.class);
 	private GatheredResource gatheredResource = null;
-	private BuildAction build;
+	private DecoAction build;
 
 	public Astronaut(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
+		this.removeActions(ActionType.DAMAGE);
+		this.removeActions(ActionType.ATTACKMOVE);
+		this.setFogRange(10);
 		setAttributes();
+		setStance(0); // Default stance for astronaut is passive
 	}
+	
 	
 	/**
 	 * Overrides Left click and checks if build action is in progress and handles appropriately
@@ -48,7 +55,7 @@ public class Astronaut extends Soldier {
 	@Override
 	public void onClick(MouseHandler handler) {
 		//check if this belongs to a* player (need to change for multiplayer):
-		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
+		if (this.getCurrentAction().isPresent() && (this.getCurrentAction().get() instanceof BuildAction || this.getCurrentAction().get() instanceof BuildWallAction)) {
 			return;
 		}
 		if(!this.isAi() & this.getLoadStatus() != 1) {
@@ -64,6 +71,9 @@ public class Astronaut extends Soldier {
 	
 	@Override
 	public void onRightClick(float x, float y) {
+		if (!this.isSelected()) {
+			return;
+		}
 		List<BaseEntity> entities;
 		try {
 			entities = ((BaseWorld) GameManager.get().getWorld()).getEntities((int) x, (int) y);
@@ -75,13 +85,17 @@ public class Astronaut extends Soldier {
 			this.deselect();
 			return;
 		}
-		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get() instanceof BuildAction) {
+		if (this.getCurrentAction().isPresent() && this.getCurrentAction().get()
+				instanceof BuildAction) {
+			((BuildAction)build).finaliseBuild();
+			this.setTexture(defaultTextureName);
+			this.deselect();
+			return;
 
-				build.finaliseBuild();
-				this.setTexture(defaultTextureName);
-				this.deselect();
+		}else if(this.getCurrentAction().isPresent() && this.getCurrentAction().get()
+				instanceof BuildWallAction) {
+				((BuildWallAction)build).beginWall(x, y);
 				return;
-
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
 		boolean gatherResource = !entities.isEmpty() && entities.get(0) instanceof Resource;
@@ -149,14 +163,15 @@ public class Astronaut extends Soldier {
 		currentAction = Optional.of(action);
 		if (action instanceof BuildAction) {
 			build = (BuildAction)action;
-		}
-	}
+		}else if (action instanceof BuildWallAction) {
+			build = (BuildWallAction)action;
+		}}
 	
 	/**
 	 * Gets the current build action of this entity
 	 * @return current BuildAction, null if not currently building
 	 */
-	public BuildAction getBuild() {
+	public DecoAction getBuild() {
 		if (currentAction.isPresent()) {
 			return build;
 		}
@@ -195,6 +210,7 @@ public class Astronaut extends Soldier {
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
 			GameManager.get().getWorld().removeEntity(this);
+			GameManager.get().getWorld().removeEntity(this.getHealthBar());
 			LOGGER.info("DEAD");
 		}
 		if (health >= this.getMaxHealth()) {
