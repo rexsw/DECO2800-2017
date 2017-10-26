@@ -20,7 +20,6 @@ public class WallVertical extends BuildingEntity {
 
 	public WallVertical(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.WALL, owner);
-		this.setTexture("wall2");
 	}
 	
 	@Override

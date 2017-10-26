@@ -125,7 +125,6 @@ public class BuildWallAction implements DecoAction{
 							relocateSelect = 10;
 							return;
 						}
-						LOGGER.debug(wallProject.toString());
 						validBuild = true;
 						selectionCheck = new ArrayList<CheckSelect>(wallProject.size());
 						for (Point point: wallProject) {
@@ -170,7 +169,6 @@ public class BuildWallAction implements DecoAction{
 					}
 					if (currentAction != null) {
 						if (currentAction.completed()) {
-							LOGGER.debug("listsize "+wallProject.size());
 							if (wallProject.size()==1) {
 								completed = true;
 								return;
@@ -181,7 +179,6 @@ public class BuildWallAction implements DecoAction{
 							return;
 						}
 					}
-					LOGGER.debug(wallTex);
 					currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(0).getX(), (int)wallProject.get(0).getY(), wallTex);
 				}
 			}

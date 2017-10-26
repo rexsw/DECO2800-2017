@@ -19,8 +19,8 @@ public class GateVertical extends BuildingEntity {
 	 */
 
 	public GateVertical(AbstractWorld world, float posX, float posY, float posZ, int owner) {
-		super(posX, posY, posZ, BuildingType.WALL, owner);
-		this.setTexture(this.graphics.get(1));
+		super(posX, posY, posZ, BuildingType.GATE, owner);
+		this.setTexture("gate2");
 	}
 	
 	@Override

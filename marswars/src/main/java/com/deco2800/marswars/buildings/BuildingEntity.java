@@ -38,7 +38,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	// bool for weather event tracking
 	boolean isFlooded = false;
-	private String colour;
 	//Colour for this building
 
 	protected boolean built = true;
@@ -54,11 +53,11 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 				0f), building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
 		this.setEntityType(EntityType.BUILDING);
-		colour = "";
 		this.numOfSolider = 0;
+
 		switch(building) {
 		case WALL:
-			graphics = Arrays.asList("wall1"+colour, "wall2"+colour);
+			setAllTextures(1);
 			setBuilding("Wall", graphics.get(0), 15f, 3550, 3, 0);
 			addActions(building);
 			break;
@@ -68,37 +67,35 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			addActions(building);
 			break;
 		case TURRET:
-			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
-			setBuilding("Turret", graphics.get(graphics.size()-2), 1f, 1850, 12, 10);
+			setAllTextures(5);
+			setBuilding("Turret", graphics.get(2), 1f, 1850, 12, 10);
 			addActions(building);
 			break;
 		case BASE:
-			//setAllTextures(5);
-			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
-	        setBuilding("Base", graphics.get(graphics.size()-2), 0.5f, 2500, 3);
+			setAllTextures(5);
+	        setBuilding("Base", graphics.get(2), 0.5f, 2500, 3);
 	        addActions(building);
-	        this.setFix(true);
 			break;
 		case BARRACKS:
-			graphics = Arrays.asList("barracks1"+colour, "barracks2"+colour, "barracks3"+colour, "barracks4"+colour);
-			setBuilding("Barracks", graphics.get(graphics.size()-2), 1.5f, 2000, 3);
+			setAllTextures(5);
+			setBuilding("Barracks", graphics.get(2), 1.5f, 2000, 3);
 			addActions(building);
 			break;
 		case BUNKER:
-			graphics = Arrays.asList("bunker1"+colour, "bunker2"+colour, "bunker3"+colour, "bunker4"+colour);
-			setBuilding("Bunker", graphics.get(graphics.size()-2), 0.5f, 800, 2);
+			setAllTextures(5);
+			setBuilding("Bunker", graphics.get(2), 0.5f, 800, 2);
 			addActions(building);
 			break;
 		case HEROFACTORY:
-			graphics = Arrays.asList("herofactory1"+colour, "herofactory2"+colour, "herofactory3"+colour,
-					"herofactory4"+colour);
-			setBuilding("Hero Factory", graphics.get(graphics.size()-2), 0.5f, 3000, 3);
-			addActions(building);
+			//graphics = Arrays.asList("herofactory1"+colour, "herofactory2"+colour, "herofactory3"+colour,
+					//"herofactory4"+colour);
+			//setBuilding("Hero Factory", graphics.get(graphics.size()-2), 0.5f, 3000, 3);
+			//addActions(building);
 			break;
 		case TECHBUILDING:
-			graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
-			setBuilding("TechBuilding", graphics.get(graphics.size()-2), 0.5f, 800, 2);
-			addActions(building);
+			//graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
+			//setBuilding("TechBuilding", graphics.get(graphics.size()-2), 0.5f, 800, 2);
+			//addActions(building);
 			break;
 		default:
 			break;
@@ -286,8 +283,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	@Override
 	public void setHealth(int health) {
 		super.setHealth(health);
-		if (this.getHealth() < this.getMaxHealth()/3 && built) {
-			this.setTexture(graphics.get(3));
+		if (this.getHealth() < this.getMaxHealth()/3 && built && building != "Wall" && building != "Gate") {
+			this.setTexture(graphics.get(4));
 		}
 	}
 	
@@ -383,7 +380,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		try {
 			graphics = new ArrayList<String>(loadnumber);
 			for (int a = 0 ; a < loadnumber; a++) {
-				String tex = tm.loadUnitSprite(this, String.valueOf(a+1));
+				String tex = tm.loadUnitSprite((BaseEntity)this, String.valueOf(a+1));
 				graphics.add(a, tex);
 			}
 		}

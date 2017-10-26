@@ -1,16 +1,22 @@
 package com.deco2800.marswars.buildings;
+
+import java.util.ArrayList;
+
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
+
 /**
  * /**
  * A list of all Building Types
  */
 public enum BuildingType {
 
-	WALL(1f, 5, "wall1"), 
-	GATE(1f, 0, "wall3"), 
-	BASE(3f, 150, "base3"), 
-	BARRACKS(3f, 40, "barracks3"), 
-	BUNKER(2f, 15, "bunker3"), 
-	TURRET(2f, 70, "turret3"),
+	WALL(1f, 5, "base"), 
+	GATE(1f, 0, "gate2"), 
+	BASE(3f, 150, "base"), 
+	BARRACKS(3f, 40, "barracks"), 
+	BUNKER(2f, 15, "bunker"), 
+	TURRET(2f, 70, "turret"),
 	HEROFACTORY(3f, 50, "herofactory3"),// texture value is a placeholder
 	TECHBUILDING(2f, 50, "tech3");// texture value is a placeholder
 

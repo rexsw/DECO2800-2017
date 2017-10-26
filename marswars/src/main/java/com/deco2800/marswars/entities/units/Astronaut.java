@@ -211,6 +211,9 @@ public class Astronaut extends Soldier {
 						destroyBuild.cancelBuild();
 						destroyBuild.doAction();
 					}
+					
+					
+					
 
 			}
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);

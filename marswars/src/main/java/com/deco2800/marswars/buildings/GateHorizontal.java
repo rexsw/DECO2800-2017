@@ -20,8 +20,7 @@ public class GateHorizontal extends BuildingEntity {
 
 	public GateHorizontal(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.GATE, owner);
-		this.setTexture(this.graphics.get(0));
-		this.canWalkOver = true;
+		this.setTexture("gate1");
 	}
 	
 	@Override

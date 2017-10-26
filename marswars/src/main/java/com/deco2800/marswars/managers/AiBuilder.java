@@ -21,27 +21,7 @@ public class AiBuilder extends Manager {
 	 * @param builder the builder to build something if possible
 	 */
 	public void build(Astronaut builder){
-		int team = builder.getOwner();
-		float[] xy = new float[] {builder.getPosX(), builder.getPosY()};
-		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		LOGGER.info("start");
-		LOGGER.info("Rock count: " + rm.getRocks(team));
-		// Build building
-		BuildingType building = decideBuilding(team);
-		BuildAction buildAction = new BuildAction(builder, building, xy[0], xy[1]);
-		if (buildAction.canAfford(team, rm)) {
-			if(findloc(xy, building)) {
-				return;
-			}
-			LOGGER.info("Ai - Build " + building);
-			builder.setAction(new BuildAction(builder, building, xy[0], xy[1]));
-			
-			// Finalise Build (includes payment, difficultyMultiplier and cancellation
-			//	if not enough)
-			if (builder.getAction().isPresent()) {
-				((BuildAction)(builder.getAction().get())).finaliseBuildAI();
-			}
-		}
+
 	}
 	
 	/**

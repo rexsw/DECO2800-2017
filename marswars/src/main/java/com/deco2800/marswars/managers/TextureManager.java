@@ -42,11 +42,31 @@ public class TextureManager extends Manager {
      * need to.
      */
     public TextureManager() {
-
+    	//Select indicators
+    	textureMap.put("greenSelect1", new Texture("resources/buildSelect/greenSelect1.png"));
+    	textureMap.put("redSelect1", new Texture("resources/buildSelect/redSelect1.png"));
+    	textureMap.put("greenSelect2", new Texture("resources/buildSelect/greenSelect2.png"));
+    	textureMap.put("redSelect2", new Texture("resources/buildSelect/redSelect2.png"));
+    	textureMap.put("greenSelect3", new Texture("resources/buildSelect/greenSelect3.png"));
+    	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
+    	textureMap.put("greenSelect4", new Texture("resources/buildSelect/greenSelect4.png"));
+    	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
+    	textureMap.put("greenSelect6", new Texture("resources/buildSelect/greenSelect6.png"));
+    	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
+        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
+        textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
+        //Gates
+        textureMap.put("gate1",new Texture("resources/Gate/1.png"));
+        textureMap.put("gate2",new Texture("resources/Gate/2.png"));
+        //default stuff
+        textureMap.put("base",new Texture("resources/Base/Blue/3.png"));
+        textureMap.put("bunker",new Texture("resources/Bunker/Blue/3.png"));
+        textureMap.put("wall",new Texture("resources/WallHorizontal/Blue/1.png"));
+        textureMap.put("turret",new Texture("resources/Turret/Blue/3.png"));
+        textureMap.put("barracks",new Texture("resources/Barracks/Blue/3.png"));
         
-	        textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
-	        
-	        //Environment
+	    textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
+	    //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
         textureMap.put("grass2", new Texture("resources/placeholderassets/grass2.png"));
         //environmental obstacles
@@ -73,7 +93,7 @@ public class TextureManager extends Manager {
         textureMap.put("transparent_tile",new Texture("resources/placeholderassets/transparent_tile.png"));
         textureMap.put("black_tile",new Texture("resources/placeholderassets/black_tile.png"));
         //Units
-
+        
         textureMap.put("spacman", new Texture("resources/placeholderassets/spacman.png"));
         textureMap.put("spacman_red", new Texture("resources/placeholderassets/spacman_red.png"));
         textureMap.put("spacman_blue", new Texture("resources/placeholderassets/spacman_blue.png"));
@@ -289,7 +309,7 @@ public class TextureManager extends Manager {
             unitType=sc.next();
             sc.close();
             String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(building.getOwner());
-            path = String.format("resources/BuildingAssets/%s/%s/%s.png",
+            path = String.format("resources/%s/%s/%s.png",
                     unitType,teamColour,textureType);
 			//try to load the texture into the textureMap
             String retVal = textureType + teamColour + unitType;
@@ -300,7 +320,7 @@ public class TextureManager extends Manager {
             }
             return retVal;
         } else {
-        	return null;
+        	return "default";
         }
 		
         

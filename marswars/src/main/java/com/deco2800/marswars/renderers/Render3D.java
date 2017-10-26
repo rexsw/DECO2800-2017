@@ -56,7 +56,7 @@ public class Render3D implements Renderer {
                 if (e instanceof Soldier && ((Soldier) e).getHealth() > 0) {
                     e.getHealthBar();
                     renderables.add(e);
-                } else if (!(e instanceof AttackableEntity)) {
+                } else if (!(e instanceof Soldier)) {
                     renderables.add(e);
                 }
             }

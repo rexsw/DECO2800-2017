@@ -41,72 +41,7 @@ public class BuildGateAction implements DecoAction {
 	}
 	@Override
 	public void doAction() {
-		if (! timeManager.isPaused() && ! actionPaused && !completed) {
-			currentXTile = (int)actor.getPosX();
-			currentYTile = (int)actor.getPosY();
-			thisWorld = (BaseWorld) GameManager.get().getWorld();
-			if (gateDirection.equals("gate1")) {
-				checkLocalNode(currentXTile-1, currentYTile, false, 0);
-				checkLocalNode(currentXTile+1, currentYTile, true, 0);
-				if (nodeAfter && nodeBefore) {
-					thisWorld.removeEntity(actor);
-					GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
-					gbb.updateDead(actor);
-					GateHorizontal replace = new GateHorizontal(thisWorld,currentXTile, currentYTile, 0f, owner);
-					replace.setFix(true);
-					replace.setBuilt(true);
-					thisWorld.addEntity(replace);
-					gbb.updateunit(replace);
-				}
-			} else if (gateDirection.equals("gate2")) {
-				checkLocalNode(currentXTile, currentYTile-1, false, 1);
-				checkLocalNode(currentXTile, currentYTile+1, true, 1);
-				if (nodeAfter && nodeBefore) {
-					thisWorld.removeEntity(actor);
-					GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
-					gbb.updateDead(actor);
-					GateVertical replace = new GateVertical(thisWorld,currentXTile, currentYTile, 0f, owner);
-					replace.setFix(true);
-					replace.setBuilt(true);
-					thisWorld.addEntity(replace);
-					
-					gbb.updateunit(replace);
-				}
-			}
-			completed = true;
-		}
-	}
-	
-	/**
-	 * Checks local nodes for wall or gate
-	 * @param xLoc x location to be checked
-	 * @param yLoc y location to be checked
-	 */
-	private void checkLocalNode(int xLoc, int yLoc, boolean after, int direction) {
-		
-		if (xLoc >= 0 && yLoc >= 0  && xLoc < thisWorld.getWidth() && yLoc < thisWorld.getLength()) {
-			for (BaseEntity check: thisWorld.getEntities(xLoc, yLoc)) {
-				LOGGER.debug("GOT INSIDE");
-				if (direction == 0) {
-					if (check instanceof GateHorizontal || check instanceof WallHorizontal) {
-						if (after) {
-							nodeAfter = true;
-						}else {
-							nodeBefore = true;
-						}
-					}
-				}else {
-					if (check instanceof GateVertical || check instanceof WallVertical) {
-						if (after) {
-							nodeAfter = true;
-						}else {
-							nodeBefore = true;
-						}
-					}
-				}
-			}
-			
-		}
+
 	}
 	
 	/**

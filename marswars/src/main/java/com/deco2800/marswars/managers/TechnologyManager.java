@@ -645,7 +645,7 @@ public class TechnologyManager extends Manager{
             		BuildingType.WALL, BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS, BuildingType.HEROFACTORY));
         } else {
             buildingsAvailable = new ArrayList<BuildingType>(Arrays.asList(
-            		BuildingType.WALL, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
+            		BuildingType.WALL, BuildingType.BASE, BuildingType.BUNKER, BuildingType.TURRET, BuildingType.BARRACKS));
         }
     	return buildingsAvailable;
     }
