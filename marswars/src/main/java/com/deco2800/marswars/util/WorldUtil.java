@@ -276,9 +276,6 @@ public class WorldUtil {
 		proj[0] = (int) proj[0];
 		proj[1] = (int) proj[1];
 		int dimensionsInt = (int)dimensions;
-		if (dimensionsInt == 0) {
-			proj[2] = .5f;
-		}
 		if ((int)dimensions == 1) {
 			if(!(proj[0] < 0 || proj[0] >
 			GameManager.get().getWorld().getWidth()
@@ -290,7 +287,7 @@ public class WorldUtil {
 				} else {
 					temp = new CheckSelect(proj[0], proj[1], 0f, dimensions, dimensions, 
 							0f,	building);
-					validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), 
+					validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, (int)temp.getPosX(), (int)temp.getPosY(), 
 							dimensions, 0);
 					if (validSelect[0]) {
 						temp.setGreen();
@@ -311,7 +308,7 @@ public class WorldUtil {
 			} else {
 				temp = new CheckSelect(proj[0]+proj[2]-((int)((dimensions+1)/2)), proj[1]+proj[2], 0f, dimensions, dimensions, 
 						0f,	building);
-				validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, temp.getPosX(), temp.getPosY(), 
+				validSelect[0] = GameManager.get().getWorld().checkValidPlace(building, (int)temp.getPosX(), (int)temp.getPosY(), 
 						dimensions, proj[2]);
 				if (validSelect[0]) {
 					temp.setGreen();

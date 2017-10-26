@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deco2800.marswars.actions.*;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
@@ -24,6 +25,7 @@ import com.deco2800.marswars.entities.Selectable;
 import com.deco2800.marswars.entities.units.Astronaut;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.worlds.CustomizedWorld;
@@ -601,7 +603,11 @@ public class HUDView extends ApplicationAdapter{
 				if (index < currentActions.size() && index >= 0) {
 					Object current = currentActions.get(index);
 					if (current instanceof ActionType) {
-						selectedEntity.setNextAction((ActionType)current);
+						if (((ActionType)current) == ActionType.BUILDGATE) {
+							selectedEntity.setAction(new BuildGateAction((BuildingEntity) selectedEntity));
+						}else {
+							selectedEntity.setNextAction((ActionType)current);
+						}
 					} else if (currentActions.get(index) instanceof BuildingType) {
 						LOGGER.info("Try to build");
 						if (currentActions.get(index) == BuildingType.WALL) {
@@ -610,9 +616,19 @@ public class HUDView extends ApplicationAdapter{
 								cancelBuild.cancelBuild();
 								cancelBuild.doAction();
 							}
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+								BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
 							selectedEntity.setAction(new BuildWallAction(selectedEntity));
 						}
 						else {
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildWallAction) {
+								BuildWallAction cancelBuild = (BuildWallAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
 							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
 								BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
 								cancelBuild.cancelBuild();
@@ -751,7 +767,9 @@ public class HUDView extends ApplicationAdapter{
 
 	private void updateHealthBars() {
 		for (BaseEntity b : selectedList) {
-			b.getHealthBar();
+			if (b instanceof Soldier){
+				b.getHealthBar();
+			}
 		}
 
 	}
@@ -856,7 +874,7 @@ public class HUDView extends ApplicationAdapter{
 		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
-//			buttonList.get(index).clearChildren();
+			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
 			Label costRocks = new Label("", skin);
 			Label costCrystal = new Label("", skin);

@@ -1,16 +1,19 @@
 package com.deco2800.marswars.buildings;
 
 import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Box3D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingEntity.class);
 	// list of available graphic for this building	
-	private List<String> graphics;
+	protected List<String> graphics;
 	// Size of this building (must be isometric, 2x2, 3x3 etc)
 	private float buildSize;
 	private String building;
@@ -53,11 +56,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		this.setEntityType(EntityType.BUILDING);
 		colour = "";
 		this.numOfSolider = 0;
-		
 		switch(building) {
 		case WALL:
-			graphics = Arrays.asList("wall1"+colour, "wall1"+colour, "wall1"+colour, "wall1"+colour);
-			setBuilding("Wall", graphics.get(graphics.size()-2), 5f, 3550, 5, 0);
+			graphics = Arrays.asList("wall1"+colour, "wall2"+colour);
+			setBuilding("Wall", graphics.get(0), 15f, 3550, 3, 0);
+			addActions(building);
+			break;
+		case GATE:
+			graphics = Arrays.asList("gate1", "gate2");
+			setBuilding("Gate", graphics.get(0), 15f, 2550, 3, 0);
 			addActions(building);
 			break;
 		case TURRET:
@@ -66,7 +73,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			addActions(building);
 			break;
 		case BASE:
-			graphics = Arrays.asList("base1"+colour, "base2"+colour, "base3"+colour, "base4"+colour);
+			//setAllTextures(5);
+			graphics = Arrays.asList("turret1"+colour, "turret2"+colour, "turret3"+colour, "turret4"+colour);
 	        setBuilding("Base", graphics.get(graphics.size()-2), 0.5f, 2500, 3);
 	        addActions(building);
 	        this.setFix(true);
@@ -95,8 +103,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		default:
 			break;
 		}
-		this.setCost(building.getCost());
 		buildSize = building.getBuildSize();
+		
 	}
 	
 
@@ -189,7 +197,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			if (!this.isSelected()) {
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
-				LOGGER.info("clicked on base");
 				Sound loadedSound = sound.loadSound("closed.wav");
 				sound.playSound(loadedSound);
 			}
@@ -217,6 +224,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public void onTick(int i) {
 		if (this.getOwner() == -1 && built)  {
 			modifyFogOfWarMap(true, getFogRange());
+		}
+		if(getHealth()<=0 && built) {
+			modifyFogOfWarMap(false,getFogRange());
 		}
 		if (currentAction.isPresent()) {
 			currentAction.get().doAction();
@@ -320,6 +330,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
     private void addActions(BuildingType type) {
         switch (type) {
         case WALL:  
+        	this.addNewAction(ActionType.BUILDGATE);
+            break;
+        case GATE:  
             break;
         case TURRET:  
             break;
@@ -363,5 +376,20 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	@Override
 	public EntityStats getStats() {
 		return new EntityStats(building,this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
+	}
+	
+	public void setAllTextures(int loadnumber) {
+		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
+		try {
+			graphics = new ArrayList<String>(loadnumber);
+			for (int a = 0 ; a < loadnumber; a++) {
+				String tex = tm.loadUnitSprite(this, String.valueOf(a+1));
+				graphics.add(a, tex);
+			}
+		}
+		catch(NullPointerException n){
+			LOGGER.error("setAlltexture has error");
+			return;
+		}
 	}
 }

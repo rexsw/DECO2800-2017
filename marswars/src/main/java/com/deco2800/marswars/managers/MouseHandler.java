@@ -132,7 +132,6 @@ public class MouseHandler extends Manager {
 					}
 				}
 				if (chosen != null) {
-					LOGGER.info(String.format("Clicked on %s", chosen).toString());
 					((Clickable) chosen).onClick(this);
 					//Checks if last clicked entity was unit and deselect unit if current selection is building
 					if (chosen instanceof BuildingEntity && (unitSelected instanceof Soldier) && !unitSelected.getAction().isPresent()) {

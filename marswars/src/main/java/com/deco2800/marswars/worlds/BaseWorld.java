@@ -251,7 +251,7 @@ public class BaseWorld extends AbstractWorld {
 	 * @param fixPos float which fixes the position of building to line up with tile
 	 * @return true if valid location
 	 */
-	public boolean checkValidPlace(BuildingType build, float xPos, float yPos, float objectSize, float fixPos) {
+	public boolean checkValidPlace(BuildingType build, int xPos, int yPos, float objectSize, float fixPos) {
 		int checkX = 0;
 		int checkY = 1;
 		int left = (int) (xPos + fixPos);
@@ -261,11 +261,10 @@ public class BaseWorld extends AbstractWorld {
 		if (build == BuildingType.BARRACKS) {
 			checkX = 1;
 		}
-		LOGGER.debug("WIDTH "+ this.getWidth() +" LENGTH "+ this.getLength());
-		LOGGER.debug("Xcord "+ left +" Ycord "+ bottom);
+		LOGGER.debug("Xcord "+ left +" Ycord "+ bottom +" SIZE " + objectSize);
 		if ((int)objectSize == 1) {
 			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
-				if (hasUnmovableEntity(left, bottom)) {
+				if (hasUnmovableEntity(xPos, yPos)) {
 					return false;
 				}
 			}else {

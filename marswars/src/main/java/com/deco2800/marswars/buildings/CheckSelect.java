@@ -37,7 +37,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param lengthZ  The length of the overlaying image in the z coordinate direction
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ) {
-		super(new Box3D(posX, posY, posZ, lengthX, lengthY, lengthZ), lengthX, lengthY, false);
+		super(new Box3D(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ), lengthX, lengthY, false);
 		super.canWalkOver = true;
 	}
 	
@@ -52,7 +52,7 @@ public class CheckSelect extends BaseEntity{
 	 * @param centered  whether so spawn centered.
 	 */
 	public CheckSelect(float posX, float posY, float posZ, float lengthX, float lengthY, float lengthZ, boolean centered) {
-		super(new Box3D(posX, posY, posZ, lengthX, lengthY, lengthZ), lengthX, lengthY, centered);
+		super(new Box3D(posX, posY, posZ, lengthX+.25f, lengthY+.25f, lengthZ), lengthX, lengthY, centered);
 		super.canWalkOver = true;
 	}
 	

@@ -11,9 +11,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.actions.BuildAction.State;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.buildings.CheckSelect;
-import com.deco2800.marswars.buildings.Wall;
+import com.deco2800.marswars.buildings.WallHorizontal;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
@@ -42,8 +43,7 @@ public class BuildWallAction implements DecoAction{
 	private State state = State.SELECT_START;
 	private int relocateSelect = 10;
 	private boolean validBuild;
-	private float projX;
-	private float projY;
+	private String wallTex;
 	private int stage = 0;
 	private float startX;
 	private float startY;
@@ -97,6 +97,7 @@ public class BuildWallAction implements DecoAction{
 						Point endPoint = new Point(endX, endY);
 						if ((int)startPoint.getX() == (int)endPoint.getX()) {
 							//Vertical wall build
+							wallTex = "wall2";
 							wallProject = new ArrayList<Point>(Math.abs((int)endPoint.getY()+1-(int)startPoint.getY())+1);
 							if (startPoint.getY() >= endPoint.getY()) {
 								for (int start = (int)endPoint.getY(); start <= (int)startPoint.getY(); start ++) {
@@ -109,6 +110,7 @@ public class BuildWallAction implements DecoAction{
 							}
 						}else if ((int)startPoint.getY() == (int)endPoint.getY()) {
 							//Horizontal wall build
+							wallTex = "wall1";
 							wallProject = new ArrayList<Point>(Math.abs((int)endPoint.getX()-(int)startPoint.getX())+1);
 							if (startPoint.getX() >= endPoint.getX()) {
 								for (int start = (int)endPoint.getX(); start <= (int)startPoint.getX(); start ++) {
@@ -120,7 +122,7 @@ public class BuildWallAction implements DecoAction{
 								}
 							}
 						}else {
-							relocateSelect = 30;
+							relocateSelect = 10;
 							return;
 						}
 						LOGGER.debug(wallProject.toString());
@@ -128,27 +130,37 @@ public class BuildWallAction implements DecoAction{
 						selectionCheck = new ArrayList<CheckSelect>(wallProject.size());
 						for (Point point: wallProject) {
 							float[] parse = new float[]{point.getX(), point.getY()};
+							ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+
 							if (!GameManager.get().getWorld().checkValidPlace(BuildingType.WALL, (int)parse[0], (int)parse[1], 1, 0)) {
 								validBuild = false;
 								break;
 							}
-							CheckSelect select = new CheckSelect(parse[0], parse[1], 0, 1, 1, 0);
-							select.setGreen();
-							selectionCheck.add(select);
+					    	if (resourceManager.getRocks(actor.getOwner()) >= (int)(BuildingType.WALL.getCost()*wallProject.size())
+					    			|| (GameManager.get().areCostsFree() && !actor.isAi())) {
+								CheckSelect select = new CheckSelect(parse[0], parse[1], 0, 1, 1, 0);
+								selectionCheck.add(select);
+					    	}
 						}
 						if (validBuild == false) {
-							for (CheckSelect a : selectionCheck) {
-								a.setRed();
+							for (CheckSelect wallSelect : selectionCheck) {
+								wallSelect.setRed();
+								GameManager.get().getWorld().addEntity(wallSelect);
 							}
 						}else {
 							for (CheckSelect wallSelect: selectionCheck) {
+								wallSelect.setGreen();
 								GameManager.get().getWorld().addEntity(wallSelect);
 							}
 						}
-					relocateSelect = 30;
+					relocateSelect = 10;
 				}
 			}
 			if (state == State.BUILD_WALL) {
+				if (validBuild == false) {
+					state = State.CANCEL_BUILD;
+					return;
+				}
 				if (wallProject != null && wallProject.size() >= 1) {
 					if (selectionCheck != null) {
 						for (CheckSelect wallSelect: selectionCheck) {
@@ -169,7 +181,8 @@ public class BuildWallAction implements DecoAction{
 							return;
 						}
 					}
-					currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(0).getX(), (int)wallProject.get(0).getY());
+					LOGGER.debug(wallTex);
+					currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(0).getX(), (int)wallProject.get(0).getY(), wallTex);
 				}
 			}
 		}

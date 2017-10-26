@@ -530,6 +530,7 @@ public class Game{
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
 		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
+		base.setFix(true);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(ai2);

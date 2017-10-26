@@ -71,7 +71,7 @@ public class HealthBarTest {
         healthBar.update();
         Assert.assertTrue(healthBar.getPosX() == 5);
         Assert.assertTrue(healthBar.getPosY() == 4);
-        Assert.assertFalse(healthBar.getPosZ() == 5);
+        Assert.assertFalse(healthBar.getPosZ() == 2);
     }
 
     @Test

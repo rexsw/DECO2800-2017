@@ -55,6 +55,8 @@ public class BuildAction implements DecoAction{
 	private long id;
 	private Sound sound;
 	private double difficultyMultiplier = 1.0;
+	private String wallDirection;
+	private int startMove;
 
 	/**
 	 * Constructor for the BuildAction
@@ -68,6 +70,17 @@ public class BuildAction implements DecoAction{
 	}
 	
 	public BuildAction(BaseEntity builder, BuildingType building, float x, float y) {
+		this.actor = builder;
+		this.building = building;
+		this.buildingDims = (int)(building.getBuildSize());
+		this.projX = x;
+		this.projY = y;
+		this.state = State.SETUP_MOVE;
+		validBuild = true;
+		finaliseBuild();
+	}
+	public BuildAction(BaseEntity builder, BuildingType building, float x, float y, String wallDirection) {
+		this.wallDirection = wallDirection;
 		this.actor = builder;
 		this.building = building;
 		this.buildingDims = (int)(building.getBuildSize());
@@ -147,12 +160,18 @@ public class BuildAction implements DecoAction{
 					
 				}
 			} else if (state == State.SETUP_MOVE) {
-				moveAction = new MoveAction(projX, projY, actor);
+				startMove = -1;
+				moveAction = new MoveAction(projX + startMove, projY + startMove, actor);
 				state = State.MOVE_ACTION;
 			} else if (state == State.MOVE_ACTION) {
 				if (moveAction.completed()) {
-					state = State.BUILD_STRUCTURE;
-					return;
+					if (!(actor.getPosX() == (projX + startMove) && actor.getPosY() == (projY + startMove))) {
+						startMove ++;
+						moveAction = new MoveAction(projX + startMove, projY + startMove, actor);
+					}
+					else {
+						state = State.BUILD_STRUCTURE;
+					}
 				}
 				moveAction.doAction();
 			}
@@ -282,32 +301,40 @@ public class BuildAction implements DecoAction{
 	private void createBuilding() {
 		switch(building) {
 		case WALL:
-			base = new Wall(GameManager.get().getWorld(), 
-					(int)projX, (int)projY, 0f, actor.getOwner());
+			if (wallDirection != null) {
+				if (wallDirection.equals("wall1")) {
+					base = new WallHorizontal(GameManager.get().getWorld(), 
+							(int)projX, (int)projY, 0f, actor.getOwner());
+				} else if (wallDirection.equals("wall2")) {
+					base = new WallVertical(GameManager.get().getWorld(), 
+							(int)projX, (int)projY, 0f, actor.getOwner());
+				}
+			}
 			break;
 		case TURRET:
 			base = new Turret(GameManager.get().getWorld(), 
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		case BASE:
 			base = new Base(GameManager.get().getWorld(), 
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		case BARRACKS:
 			base = new Barracks(GameManager.get().getWorld(), 
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		case BUNKER:
 			base = new Bunker(GameManager.get().getWorld(), 
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		case HEROFACTORY:
+			
 			base = new HeroFactory(GameManager.get().getWorld(),
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		case TECHBUILDING:
 			base = new TechBuilding(GameManager.get().getWorld(), 
-					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());
+					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
 		default:
 			break;

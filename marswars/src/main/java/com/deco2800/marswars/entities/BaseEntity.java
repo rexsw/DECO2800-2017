@@ -72,7 +72,7 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public BaseEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
-		this.modifyCollisionMap(true);
+
 	}
 
 	/**
@@ -146,6 +146,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 				return;
 			}
 			modifyCollisionMap(false);
+			if ((int)this.getXLength() == 1 && (int)this.getYLength() == 1) {
+				modifyCollisionMap(true);
+			}
 			for (int x = left; x < right+addxWidth; x++) {
 				for (int y = bottom; y < top+addYLength; y++) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
@@ -350,23 +353,29 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param add
 	 */
 	protected void modifyCollisionMap(boolean add) {
-		if (GameManager.get().getWorld() == null) {
+		if (GameManager.get().getWorld() == null || !this.isCollidable()) {
 			return;
 		}
 
-		BaseWorld baseWorld = GameManager.get().getWorld();
+		BaseWorld baseWorld = (BaseWorld)GameManager.get().getWorld();
 		int left = (int) getPosX();
 		int right = (int) Math.ceil(getPosX() + getXLength());
 		int bottom = (int) getPosY();
 		int top = (int) Math.ceil(getPosY() + getYLength());
-
+		if ((int)this.getXLength() == 1 && (int)this.getYLength() == 1) {
+			if (add) {
+				baseWorld.getCollisionMap().get((int)this.getPosX(),(int)this.getPosY()).add(this);
+			} else {
+				baseWorld.getCollisionMap().get((int)this.getPosX(),(int)this.getPosY()).remove(this);
+			}	
+			return;
+		}
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
 						baseWorld.getCollisionMap().get(x, y).add(this);
 				} else {
 						baseWorld.getCollisionMap().get(x, y).remove(this);
-
 				}
 			}
 		}

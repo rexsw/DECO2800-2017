@@ -89,7 +89,7 @@ public class AiBuilder extends Manager {
 		LOGGER.info("find");
 		int x = 0;
 		int i = 0;
-		while(!(GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], (type.getBuildSize()), (float)0))) {
+		while(!(GameManager.get().getWorld().checkValidPlace(type, (int)xy[0], (int)xy[1], (type.getBuildSize()), (float)0))) {
 			if(x == 0) {
 				x = 1;
 				xy[0] = (float) (xy[0] + 1.0);

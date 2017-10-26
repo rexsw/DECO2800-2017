@@ -6,6 +6,7 @@ package com.deco2800.marswars.buildings;
 public enum BuildingType {
 
 	WALL(1f, 5, "wall1"), 
+	GATE(1f, 0, "wall3"), 
 	BASE(3f, 150, "base3"), 
 	BARRACKS(3f, 40, "barracks3"), 
 	BUNKER(2f, 15, "bunker3"), 

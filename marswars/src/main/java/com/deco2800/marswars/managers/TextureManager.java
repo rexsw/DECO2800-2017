@@ -1,6 +1,7 @@
 package com.deco2800.marswars.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.units.AmbientAnimal;
@@ -41,61 +42,7 @@ public class TextureManager extends Manager {
      * need to.
      */
     public TextureManager() {
-    	//Select indicators
-	    	textureMap.put("greenSelect1", new Texture("resources/buildSelect/greenSelect1.png"));
-	    	textureMap.put("redSelect1", new Texture("resources/buildSelect/redSelect1.png"));
-	    	textureMap.put("greenSelect2", new Texture("resources/buildSelect/greenSelect2.png"));
-	    	textureMap.put("redSelect2", new Texture("resources/buildSelect/redSelect2.png"));
-	    	textureMap.put("greenSelect3", new Texture("resources/buildSelect/greenSelect3.png"));
-	    	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
-	    	textureMap.put("greenSelect4", new Texture("resources/buildSelect/greenSelect4.png"));
-	    	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
-	    	textureMap.put("greenSelect6", new Texture("resources/buildSelect/greenSelect6.png"));
-	    	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
-	        this.saveTexture("selected", "resources/placeholderassets/selected.png");
-	        this.saveTexture("selected_black", "resources/placeholderassets/selected_black.png");
-	        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
-	        textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
-        //Buildings
-	        //Walls
-	        textureMap.put("wall1",new Texture("resources/BuildingAssets/Wall/LeftSideWall.png"));
-	        textureMap.put("wall2",new Texture("resources/BuildingAssets/Wall/RightDownwall.png"));
-	        textureMap.put("wall3",new Texture("resources/BuildingAssets/Wall/wall.png"));
-	        textureMap.put("wall4",new Texture("resources/BuildingAssets/Wall/RightDownwall.png"));
-        	//Base Stages
-        	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/base1.png"));
-        	textureMap.put("base2", new Texture("resources/BuildingAssets/Building process/Homebase/base2.png"));
-        	textureMap.put("base3", new Texture("resources/BuildingAssets/Building process/Homebase/base3.png"));
-        	textureMap.put("base4", new Texture("resources/BuildingAssets/Building process/Homebase/base4.png"));
-        	//Barracks Stages
-        	textureMap.put("barracks1",new Texture("resources/BuildingAssets/Building process/Barracks/barracks1.png"));
-        	textureMap.put("barracks2",new Texture("resources/BuildingAssets/Building process/Barracks/barracks2.png"));
-        	textureMap.put("barracks3",new Texture("resources/BuildingAssets/Building process/Barracks/barracks3.png"));
-        	textureMap.put("barracks4",new Texture("resources/BuildingAssets/Building process/Barracks/barracks4.png"));
-        	//Turret Stages
-        	textureMap.put("turret1",new Texture("resources/BuildingAssets/Building process/Turret/turret1.png"));
-        	textureMap.put("turret2",new Texture("resources/BuildingAssets/Building process/Turret/turret2.png"));
-        	textureMap.put("turret3",new Texture("resources/BuildingAssets/Building process/Turret/turret3.png"));
-        	textureMap.put("turret4",new Texture("resources/BuildingAssets/Building process/Turret/turret4.png"));
-	        //Bunker Stages
-	        textureMap.put("bunker1",new Texture("resources/BuildingAssets/Building process/Bunker/bunker1.png"));
-	        textureMap.put("bunker2",new Texture("resources/BuildingAssets/Building process/Bunker/bunker2.png"));
-	        textureMap.put("bunker3",new Texture("resources/BuildingAssets/Building process/Bunker/bunker3.png"));
-	        textureMap.put("bunker4",new Texture("resources/BuildingAssets/Building process/Bunker/bunker4.png"));
-	        //HeroFactory Stages
-            textureMap.put("herofactory1",new Texture
-                    ("resources/BuildingAssets/Building process/HeroFactory/factory1.png"));
-            textureMap.put("herofactory2",new Texture
-            		("resources/BuildingAssets/Building process/HeroFactory/factory2.png"));
-            textureMap.put("herofactory3",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory3.png"));
-            textureMap.put("herofactory4",new Texture("resources/BuildingAssets/Building process/HeroFactory/factory4.png"));
 
-
-	        //TechBuilding Stages
-	        textureMap.put("tech1",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech1.png"));
-	        textureMap.put("tech2",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech2.png"));
-	        textureMap.put("tech3",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech3.png"));
-	        textureMap.put("tech4",new Texture("resources/BuildingAssets/Building process/TechBuilding/tech4.png"));
         
 	        textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
 	        
@@ -331,9 +278,31 @@ public class TextureManager extends Manager {
                 saveTexture(retVal,path);
             }
             return retVal;
+        } else if (unit instanceof BuildingEntity){
+        	BuildingEntity building = (BuildingEntity) unit;
+            String path;
+            String unitType = unit.getClass().toString();
+            //filter out class name qualifier, this may be changed later to extend it 
+            // to other entity types
+            Scanner sc = new Scanner (unitType);
+            sc.useDelimiter("buildings.").next();
+            unitType=sc.next();
+            sc.close();
+            String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(building.getOwner());
+            path = String.format("resources/BuildingAssets/%s/%s/%s.png",
+                    unitType,teamColour,textureType);
+			//try to load the texture into the textureMap
+            String retVal = textureType + teamColour + unitType;
+            if (!textureMap.containsKey(retVal)) {
+                LOGGER.info(String.format("Loading texture %s for %s from %s",
+                        textureType, unitType, path));
+                saveTexture(retVal,path);
+            }
+            return retVal;
         } else {
         	return null;
         }
+		
         
     }
 

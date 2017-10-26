@@ -1,6 +1,9 @@
 package com.deco2800.marswars.util;
 
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
 import java.util.*;
@@ -15,7 +18,15 @@ public class Pathfinder {
 	 * @param baseWorld the world where the search is run.
 	 * @return a path from start to goal
 	 */
+	
 	public static List<Point> aStar(Point start, Point goal, BaseWorld baseWorld) {
+		AttackableEntity actor = null;
+		List<BaseEntity> entitiesAtStart = GameManager.get().getWorld().getEntities((int)goal.getX(), (int)goal.getY());
+		for (BaseEntity b: entitiesAtStart) {
+			if (b instanceof AttackableEntity) {
+				actor = (AttackableEntity)b;
+			}
+		}
 		//Truncate points to the tile grid
 		Point truncGoal = new Point((int)goal.getX(), (int)goal.getY());
 
@@ -58,7 +69,7 @@ public class Pathfinder {
 			openSet.remove(current);
 			closedSet.add(current);
 
-			for (Point p : getAdjacentNodes(current, baseWorld)) {
+			for (Point p : getAdjacentNodes(current, baseWorld, actor)) {
 				List<BaseEntity> entities = new ArrayList<BaseEntity>(baseWorld.getEntities((int)p.getX(), (int)p.getY()));
 
 				int cost = 0;
@@ -129,14 +140,28 @@ public class Pathfinder {
 	 * @param baseWorld the world that contains all adjacent nodes.
 	 * @return  a list of adjacent node points.
 	 */
-	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld) {
+	private static List<Point> getAdjacentNodes(Point p, BaseWorld baseWorld, AttackableEntity actor) {
 		List<Point> adjacencies = new ArrayList<>();
 		
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j<= 1; j++) {
 				if (!(i == 0 && j == 0)) {
-					if (p.getX() + i >= 0 && p.getX() + i < baseWorld.getWidth() && p.getY() + j >= 0 && p.getY() + j < baseWorld.getLength()) {
-						adjacencies.add(new Point(p.getX() + i, p.getY() + j));
+					if (p.getX() + i >= 0 && p.getX() + i < baseWorld.getWidth() && p.getY() + j >= 0 && p.getY() + j < baseWorld.getLength()){
+						List<BaseEntity> checkWall = baseWorld.getEntities((int)p.getX() + i, (int)p.getY() + j);
+						boolean add = true;
+						for (BaseEntity b : checkWall) {
+							if (b instanceof BuildingEntity) {
+								if(((BuildingEntity) b).getbuilding() == "Wall") {
+									add = false;
+								}else if (((BuildingEntity) b).getbuilding() == "Gate" && actor != null) {
+									if (!(actor.getOwner() == ((BuildingEntity)b).getOwner())) {
+										add = false;
+									}
+								}
+							}
+						}
+						if (add)
+							adjacencies.add(new Point(p.getX() + i, p.getY() + j));
 					}
 				}
 			}

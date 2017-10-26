@@ -53,13 +53,11 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	public AttackableEntity(float posX, float posY, float posZ, float xLength, float yLength, float zLength) {
 		super(posX, posY, posZ, xLength, yLength, zLength);
 		this.setAreaDamage(0);
-		this.modifyCollisionMap(true);
 	}
 	
 	public AttackableEntity(Box3D position, float xRenderLength, float yRenderLength, boolean centered) {
 		super(position, xRenderLength, yRenderLength, centered);
 	      this.setAreaDamage(0);
-	      this.modifyCollisionMap(true);
 	}
 
     /**

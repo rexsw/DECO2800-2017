@@ -1,5 +1,6 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
@@ -73,6 +74,8 @@ public final class ActionSetter {
                 return doUnloadIndividual((Soldier) performer);
             case ATTACKMOVE:
             	return doAttackMove(performer, x, y);
+            case BUILDGATE:
+                return doBuildGate((BuildingEntity)performer);
             default:
                 return false;
         }
@@ -167,6 +170,18 @@ public final class ActionSetter {
 
     /**
      * Assigns the move action to the entity
+     * @param performer the entity to be assigned the action
+     * @param x the x co-ordinates of the action
+     * @param y the y co-ordinates of the action
+     * @return true
+     */
+    private static boolean doBuildGate(BuildingEntity performer) {
+        performer.setAction(new BuildGateAction(performer));
+        return true;
+    }
+    
+    /**
+     * Assigns the buildgate action to the entity
      * @param performer the entity to be assigned the action
      * @param x the x co-ordinates of the action
      * @param y the y co-ordinates of the action

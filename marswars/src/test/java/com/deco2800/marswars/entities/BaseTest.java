@@ -26,8 +26,6 @@ public class BaseTest {
     @Test
     public void constructorTest(){
         Assert.assertTrue(b != null);
-        Assert.assertEquals("base3", b.getTexture());
-        //Assert.assertEquals(350, b.getCost());
         Assert.assertFalse(b.showProgress());
 
     }
