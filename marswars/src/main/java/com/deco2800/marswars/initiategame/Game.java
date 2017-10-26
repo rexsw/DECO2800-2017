@@ -217,6 +217,16 @@ public class Game{
 	private void loadBuildings(GameSave loadedGame){
 		for(SavedBuilding e : loadedGame.data.getBuilding()){
 			switch(e.getBuildingType()){
+				case WALL:
+					WallHorizontal wall = new WallHorizontal(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					wall.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(wall);
+					break;
+				case GATE:
+					GateHorizontal gate = new GateHorizontal(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
+					gate.setHealth(e.getHealth());
+					GameManager.get().getWorld().addEntity(gate);
+					break;
 				case TURRET:
 					Turret turret = new Turret(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
 					turret.setHealth(e.getHealth());

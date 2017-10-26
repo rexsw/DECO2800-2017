@@ -21,10 +21,12 @@ public class Pathfinder {
 	
 	public static List<Point> aStar(Point start, Point goal, BaseWorld baseWorld) {
 		AttackableEntity actor = null;
-		List<BaseEntity> entitiesAtStart = GameManager.get().getWorld().getEntities((int)goal.getX(), (int)goal.getY());
-		for (BaseEntity b: entitiesAtStart) {
-			if (b instanceof AttackableEntity) {
-				actor = (AttackableEntity)b;
+		if (0 <= (int)goal.getX() && 0 <= (int)goal.getY() && (int)goal.getX() < baseWorld.getWidth() && (int)goal.getY() < baseWorld.getLength()) {
+			List<BaseEntity> entitiesAtStart = GameManager.get().getWorld().getEntities((int)goal.getX(), (int)goal.getY());
+			for (BaseEntity b: entitiesAtStart) {
+				if (b instanceof AttackableEntity) {
+					actor = (AttackableEntity)b;
+				}
 			}
 		}
 		//Truncate points to the tile grid

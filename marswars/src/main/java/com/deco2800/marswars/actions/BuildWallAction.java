@@ -12,6 +12,7 @@ import com.deco2800.marswars.actions.BuildAction.State;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.buildings.WallHorizontal;
+import com.deco2800.marswars.buildings.WallVertical;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
@@ -179,6 +180,10 @@ public class BuildWallAction implements DecoAction{
 							return;
 						}
 					}
+					WallHorizontal tempbase1 = new WallHorizontal(GameManager.get().getWorld(), 
+								(int)1, (int)1, 0f, actor.getOwner());
+					WallVertical tempbase2 = new WallVertical(GameManager.get().getWorld(), 
+								(int)1, (int)1, 0f, actor.getOwner());
 					currentAction = new BuildAction(actor, BuildingType.WALL, (int)wallProject.get(0).getX(), (int)wallProject.get(0).getY(), wallTex);
 				}
 			}

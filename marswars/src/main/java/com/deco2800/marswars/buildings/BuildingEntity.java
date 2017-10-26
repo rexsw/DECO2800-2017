@@ -39,6 +39,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	// bool for weather event tracking
 	boolean isFlooded = false;
 	//Colour for this building
+	protected TextureManager tm;
 
 	protected boolean built = true;
 	//building has functionality if built is true
@@ -52,9 +53,9 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		super(new Box3D(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
 				0f), building.getBuildSize(), building.getBuildSize(), false);
 		this.setOwner(owner);
+		tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		this.setEntityType(EntityType.BUILDING);
 		this.numOfSolider = 0;
-
 		switch(building) {
 		case WALL:
 			setAllTextures(1);
@@ -376,7 +377,6 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	}
 	
 	public void setAllTextures(int loadnumber) {
-		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		try {
 			graphics = new ArrayList<String>(loadnumber);
 			for (int a = 0 ; a < loadnumber; a++) {

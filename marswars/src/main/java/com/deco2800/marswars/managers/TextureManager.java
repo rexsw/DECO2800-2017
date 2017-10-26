@@ -320,7 +320,7 @@ public class TextureManager extends Manager {
             }
             return retVal;
         } else {
-        	return "default";
+        	return null;
         }
 		
         
@@ -349,6 +349,24 @@ public class TextureManager extends Manager {
             saveTexture(retVal,path);
         }
 
+        return retVal;
+    }
+    
+    /**
+     * This method takes an EntityId and returns the default sprite in the players colour
+     * @param wall up or down wall
+     * @return
+     */
+    public String loadUnitSprite(String wall, BuildingEntity owner){
+        String path;
+        String unitType = wall;
+        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner.getOwner());
+        path = String.format("resources/%s/%s/%s.png",
+                unitType,teamColour,"1");
+		//try to load the texture into the textureMap
+        String retVal = "1" + teamColour + unitType;
+        Texture loadtex = new Texture(path);
+        textureMap.put(retVal, loadtex);
         return retVal;
     }
     

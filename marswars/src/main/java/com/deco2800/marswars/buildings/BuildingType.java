@@ -11,7 +11,7 @@ import com.deco2800.marswars.managers.TextureManager;
  */
 public enum BuildingType {
 
-	WALL(1f, 5, "base"), 
+	WALL(1f, 5, "wall"), 
 	GATE(1f, 0, "gate2"), 
 	BASE(3f, 150, "base"), 
 	BARRACKS(3f, 40, "barracks"), 

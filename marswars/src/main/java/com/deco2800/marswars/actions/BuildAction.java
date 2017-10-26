@@ -75,7 +75,6 @@ public class BuildAction implements DecoAction{
 		this.buildingDims = (int)(building.getBuildSize());
 		this.projX = x;
 		this.projY = y;
-		this.state = State.SETUP_MOVE;
 		validBuild = true;
 		finaliseBuild();
 	}
@@ -86,7 +85,6 @@ public class BuildAction implements DecoAction{
 		this.buildingDims = (int)(building.getBuildSize());
 		this.projX = x;
 		this.projY = y;
-		this.state = State.SETUP_MOVE;
 		validBuild = true;
 		finaliseBuild();
 	}
