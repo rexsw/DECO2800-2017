@@ -2,6 +2,7 @@ package com.deco2800.marswars.managers;
 
 import com.deco2800.marswars.util.Array2D;
 import com.deco2800.marswars.worlds.AbstractWorld;
+import com.deco2800.marswars.worlds.FogWorld;
 
 /**this class will contain info for multi selection
  * Created by Treenhan on 9/19/17.
@@ -41,6 +42,7 @@ public class MultiSelection extends Manager {
      * reset the whole array to 0 after selecting
      */
     public static void resetSelectedTiles() {
+        FogWorld.clearSelectedTiles();
         AbstractWorld world = GameManager.get().getWorld();
         if (world != null){
             int width=world.getWidth();
@@ -86,12 +88,14 @@ public class MultiSelection extends Manager {
                 for (int i = tiles[2]; i <= tiles[0]; i++) {
                     for (int j = tiles[3]; j <= tiles[1]; j++) {
                         selectedTiles.set(i,j,1);
+                        FogWorld.addSelectedTile(i,j);
                     }
                 }
             } else {
                 for (int i = tiles[2]; i <= tiles[0]; i++) {
                     for (int j = tiles[1]; j <= tiles[3]; j++) {
                         selectedTiles.set(i,j,1);
+                        FogWorld.addSelectedTile(i,j);
                     }
                 }
             }
@@ -100,12 +104,14 @@ public class MultiSelection extends Manager {
                 for (int i = tiles[0]; i <= tiles[2]; i++) {
                     for (int j = tiles[3]; j <= tiles[1]; j++) {
                         selectedTiles.set(i,j,1);
+                        FogWorld.addSelectedTile(i,j);
                     }
                 }
             } else {
                 for (int i = tiles[0]; i <= tiles[2]; i++) {
                     for (int j = tiles[1]; j <= tiles[3]; j++) {
                         selectedTiles.set(i,j,1);
+                        FogWorld.addSelectedTile(i,j);
                     }
                 }
             }

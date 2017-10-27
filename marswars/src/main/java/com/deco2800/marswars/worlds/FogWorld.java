@@ -40,6 +40,20 @@ public class FogWorld {
     }
 
     /**
+     * clear the selected tiles
+     */
+    public static void clearSelectedTiles(){
+        selectedTileMap = new ArrayList<AbstractEntity>();
+    }
+
+    /**
+     * add a selected tile to render
+     */
+    public static void addSelectedTile(int x, int y){
+        addEntity(new MultiSelectionTile(x,y,0,1f,1f),selectedTileMap);
+    }
+
+    /**
      * this function initialize selected tiles by putting the tile everywhere throughout the array
      * @param width
      * @param length
