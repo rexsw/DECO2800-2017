@@ -82,9 +82,7 @@ public class Render3D implements Renderer {
         for (AbstractEntity r : renderables) {
             int x = (int) Math.floor(r.getPosX());
             int y = (int) Math.floor(r.getPosY());
-            if (fogManager.getBlackFog((int)Math.round(r.getPosX()),
-                    (int)Math.round(r.getPosY())) != 0 ||
-                    ! fogManager.getToggleFog()) {
+            if (fogManager.getBlackFog((int)Math.round(r.getPosX()), (int)Math.round(r.getPosY())) != 0 ||!fogManager.getToggleFog()) {
                 if (r.canWalOver()) {
                     walkables.add(r);
                 } else if (r instanceof HealthBar) {
@@ -104,6 +102,9 @@ public class Render3D implements Renderer {
         renderEntities(walkables, batch, camera,0);
         renderEntities(entities, batch, camera,0);
         renderEntities(hpBars, batch, camera,0);
+
+        renderEntities(fogs, batch, camera, 0);
+        renderEntities(blackFogs, batch, camera, 0);
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
@@ -188,13 +189,21 @@ public class Render3D implements Renderer {
 //        	continue;
 //
 
+            if (entity instanceof BlackTile)
+                if (FogManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
+                    continue;
+            //omit the tiles that are in sight
+            if (entity instanceof GrayTile)
+                if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2)
+                continue;
+
 
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
             if (entity instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) entity;
                 if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT || baseEntity.getEntityType() == BaseEntity.EntityType.HERO) {
-                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0)
-                	continue;
+//                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0)
+//                        continue;
                 }
             }
 
