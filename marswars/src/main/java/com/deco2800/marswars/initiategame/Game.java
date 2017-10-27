@@ -559,14 +559,7 @@ public class Game{
 						}
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
-
 					}
-//					try {
-//						Thread.sleep(1);
-//					} catch (InterruptedException e) {
-//						LOGGER.error(e.toString());
-//						Thread.currentThread().interrupt();
-//					}
 				}
 			}
 		}).start();

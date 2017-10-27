@@ -5,7 +5,6 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -117,16 +116,16 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Render background first
-		String backgroundString = this.bgManager.getBackground();
-		Texture background = this.reg.getTexture(backgroundString);
-		batch.begin();
-		batch.draw(background, this.camera.position.x -
-						this.camera.viewportWidth*this.camera.zoom/2 ,
-				this.camera.position.y -
-						this.camera.viewportHeight*this.camera.zoom/2,
-				this.camera.viewportWidth*this.camera.zoom,
-				this.camera.viewportHeight*this.camera.zoom);
-		batch.end();
+//		String backgroundString = this.bgManager.getBackground();
+//		Texture background = this.reg.getTexture(backgroundString);
+//		batch.begin();
+//		batch.draw(background, this.camera.position.x -
+//						this.camera.viewportWidth*this.camera.zoom/2 ,
+//				this.camera.position.y -
+//						this.camera.viewportHeight*this.camera.zoom/2,
+//				this.camera.viewportWidth*this.camera.zoom,
+//				this.camera.viewportHeight*this.camera.zoom);
+//		batch.end();
 
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);

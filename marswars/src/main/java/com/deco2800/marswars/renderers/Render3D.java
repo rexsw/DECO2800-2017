@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.deco2800.marswars.buildings.CheckSelect;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
-import com.deco2800.marswars.entities.units.MissileEntity;
-import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainmenu.MainMenu;
-import com.deco2800.marswars.managers.*;
+import com.deco2800.marswars.managers.FogManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
+import com.deco2800.marswars.managers.WeatherManager;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,12 +105,6 @@ public class Render3D implements Renderer {
         renderEntities(entities, batch, camera,0);
         renderEntities(hpBars, batch, camera,0);
 
-        //render the gray fog of war first
-        renderEntities(fogs,batch,camera,0);
-
-        //render the black fog of war later
-        renderEntities(blackFogs,batch,camera,0);
-
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
 
@@ -179,44 +173,27 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
-                setBattleFlag(1);
-            }
-
-            //multi selection entities
-            if(entity instanceof MultiSelectionTile){
-                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
-                continue;
-            }
-
-            //carrier unit: if the entity is loaded, don't render him
-            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1) 
-        	continue;
-
-            //fog of war: leave the CheckSelect on top of everything
-            if(iteration==1 && !(entity instanceof CheckSelect)) 
-        	continue;
-
-            //fog of war: if it is turned off, don't render any fog of war tiles
-            if(entity instanceof FogEntity && !FogManager.getToggleFog()) 
-        	continue;
-
-
-            //this function is for the blackFog to omit the tiles that are revealed
-            if (entity instanceof BlackTile)
-                if (FogManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
-                    continue;
-            //omit the tiles that are in sight
-            if (entity instanceof GrayTile)
-                if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 2) 
-                    continue;
+//            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
+//                setBattleFlag(1);
+//            }
+//
+//            //multi selection entities
+//            if(entity instanceof MultiSelectionTile){
+//                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
+//                continue;
+//            }
+//
+//            //carrier unit: if the entity is loaded, don't render him
+//            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1)
+//        	continue;
+//
 
 
             //fog of war part of the game: eliminate enemies outside fog of war if fog of war is on
-            if (entity instanceof BaseEntity && FogManager.getToggleFog()) {
+            if (entity instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) entity;
                 if (baseEntity.getEntityType() == BaseEntity.EntityType.UNIT || baseEntity.getEntityType() == BaseEntity.EntityType.HERO) {
-                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0) 
+                    if (FogManager.getFog((int) entity.getPosX(), (int) entity.getPosY()) == 0)
                 	continue;
                 }
             }
