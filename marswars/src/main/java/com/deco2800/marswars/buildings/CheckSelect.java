@@ -95,7 +95,7 @@ public class CheckSelect extends BaseEntity{
 	 */
 	public void setRed() {
 		if (buildingType == null) { //should find a better way to do this
-			this.setTexture("redSelect6");
+			this.setTexture("tileSelectRed");
 			return;
 		}
 		switch(buildingType) {

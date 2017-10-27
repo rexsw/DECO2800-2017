@@ -9,6 +9,7 @@ import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.util.WorldUtil;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class BuildAction implements DecoAction{
 	private BuildingType building;
 	private float fixPos = 0f;
 	private TimeManager timeManager = (TimeManager)
-			GameManager.get().getManager(TimeManager.class);
+			GameManager.get().getManager(TimeManager.class);		
 	private boolean actionPaused = false;
 	private long id;
 	private Sound sound;
@@ -238,26 +239,6 @@ public class BuildAction implements DecoAction{
     				- (int)(building.getCost()*difficultyMultiplier), owner);
     	}
     }
-	
-    public void finaliseBuildAI() {
-		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-		if (canAfford(actor.getOwner(), resourceManager)) {
-			createBuilding();
-			payForEntity(actor.getOwner(), resourceManager);
-			GameManager.get().getWorld().addEntity(base);
-			this.buildingSpeed = base.getBuildSpeed();
-			maxHealth = base.getMaxHealth();
-			base.setHealth(currentHealth);
-			state = State.SETUP_MOVE;
-			LOGGER.info("BUILDING NEW " + building.toString());
-			GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
-			gbb.updateunit(base);
-		}
-		else {
-			LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
-			completed = true;
-		}
-	}
     
 	/**
 	 * Can be called on to force this action to begin building.
@@ -277,6 +258,8 @@ public class BuildAction implements DecoAction{
 				base.setHealth(currentHealth);
 				state = State.SETUP_MOVE;
 				LOGGER.info("BUILDING NEW " + building.toString());
+				GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
+				gbb.updateunit(base);
 			}
 			else {
 				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));

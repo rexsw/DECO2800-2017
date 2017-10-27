@@ -887,7 +887,14 @@ public class HUDView extends ApplicationAdapter{
 			boolean dispCrystal = false;
 			boolean dispBiomass = false;
 			if (e instanceof BuildingType) {
-				entity = textureManager.getTexture(((BuildingType) e).getBuildTexture());
+				if (((BuildingType)e) == BuildingType.WALL) {
+					entity = textureManager.getTexture(textureManager.getBuildingSprite(((BuildingType)e).getTextName(), 
+							((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner), "1"));
+				}
+				else {
+					entity = textureManager.getTexture(textureManager.getBuildingSprite(((BuildingType)e).getTextName(), 
+							((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner), "3"));
+				}
 				name = new Label(e.toString(), skin);
 				costRocks = new Label(String.valueOf(((BuildingType) e).getCost()), skin);
 				dispRock = true;

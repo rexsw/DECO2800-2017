@@ -12,7 +12,7 @@ import com.deco2800.marswars.worlds.AbstractWorld;
  * A bunker that can be used to increase population
  */
 
-public class Bunker extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Bunker extends BuildingEntity {
 	private int popAdd = 5;
 	/**
 	 * Constructor for the bunker.

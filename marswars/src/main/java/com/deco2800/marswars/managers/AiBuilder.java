@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class AiBuilder extends Manager {
@@ -21,7 +22,21 @@ public class AiBuilder extends Manager {
 	 * @param builder the builder to build something if possible
 	 */
 	public void build(Astronaut builder){
-
+		int team = builder.getOwner();
+		float[] xy = new float[] {(int)builder.getPosX(), (int)builder.getPosY()};
+		ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		LOGGER.info("Rock count: " + rm.getRocks(team));
+		// Build building
+		BuildingType building = decideBuilding(team);
+		if (rm.getRocks(team) > building.getCost()) {
+			if(findloc(xy, building)) {
+				BuildAction buildAction = new BuildAction(builder, building, xy[0], xy[1]);
+				LOGGER.info("Ai - Build " + building);
+				builder.setAction(buildAction);
+			}
+			// Finalise Build (includes payment, difficultyMultiplier and cancellation
+			//	if not enough)
+		}
 	}
 	
 	/**
@@ -66,24 +81,30 @@ public class AiBuilder extends Manager {
 	 * @return true if no location can be found
 	 */
 	private boolean findloc(float[] xy, BuildingType type) {
-		LOGGER.info("find");
-		int x = 0;
-		int i = 0;
-		while(!(GameManager.get().getWorld().checkValidPlace(type, (int)xy[0], (int)xy[1], (type.getBuildSize()), (float)0))) {
-			if(x == 0) {
-				x = 1;
-				xy[0] = (float) (xy[0] + 1.0);
-			}
-			else {
-				x = 0;
-				xy[1] = (float) (xy[1] + 1.0);
-			}
-			i++;
-			if(i > 50) {
-				return true;
-			}
+		LOGGER.info("find ai build location");
+		int originalX = (int) xy[0];
+		int originalY = (int) xy[1];
+		int xbuildArea = (int)(GameManager.get().getWorld().getWidth()*.15f);
+		int ybuildArea = (int)(GameManager.get().getWorld().getLength()*.15f);
+		int worldXBoundary = (GameManager.get().getWorld().getWidth() - 1);
+		int worldYBoundary = (GameManager.get().getWorld().getLength() - 1);
+		int avoidInfinite = 0;
+		int randx, randy;
+		do {
+			int lowx = 1 < originalX - xbuildArea ? (originalX - xbuildArea) : 1;
+			int highx = worldXBoundary > (originalX + xbuildArea) ? (originalX + xbuildArea) : worldXBoundary;
+			int lowy = 1 < originalY - ybuildArea ? (originalY - ybuildArea) : 1;
+			int highy = worldYBoundary > originalY + ybuildArea ? originalY + ybuildArea : worldYBoundary;
+			randx = ThreadLocalRandom.current().nextInt(lowx, highx);
+			randy = ThreadLocalRandom.current().nextInt(lowy, highy);
+			avoidInfinite ++;
+		}  while(!GameManager.get().getWorld().checkValidPlace(type, randx, randy, (type.getBuildSize()+1), 0) && avoidInfinite < 100);
+		if (avoidInfinite == 100) {
+			return false;
 		}
-		return false;
+		xy[0] = randx;
+		xy[1] = randy;
+		return true;
 	}
 	
 

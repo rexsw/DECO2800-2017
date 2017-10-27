@@ -11,23 +11,25 @@ import com.deco2800.marswars.managers.TextureManager;
  */
 public enum BuildingType {
 
-	WALL(1f, 5, "wall"), 
-	GATE(1f, 0, "gate2"), 
-	BASE(3f, 150, "base"), 
-	BARRACKS(3f, 40, "barracks"), 
-	BUNKER(2f, 15, "bunker"), 
-	TURRET(2f, 70, "turret"),
-	HEROFACTORY(3f, 50, "herofactory3"),// texture value is a placeholder
-	TECHBUILDING(2f, 50, "tech3");// texture value is a placeholder
+	WALL(1f, 5, "wall","WallHorizontal"), 
+	GATE(1f, 0, "gate2", "GateHorizontal"), 
+	BASE(3f, 150, "base", "Base"), 
+	BARRACKS(3f, 40, "barracks", "Barracks"), 
+	BUNKER(2f, 15, "bunker", "Bunker"), 
+	TURRET(2f, 70, "turret", "Turret"),
+	HEROFACTORY(3f, 50, "herofactory3", "HeroFactory"),// texture value is a placeholder
+	TECHBUILDING(2f, 50, "tech3", "TechBuilding");// texture value is a placeholder
 
 
 	private final float buildingSize;
 	private final int buildCost;
 	private final String buildTexture;
-    BuildingType(float buildingSize, int buildCost, String buildTexture) {
+	private final String textName;
+    BuildingType(float buildingSize, int buildCost, String buildTexture, String textName) {
         this.buildingSize = buildingSize;
         this.buildCost = buildCost;
         this.buildTexture = buildTexture;	
+        this.textName = textName;
     }
     public float getBuildSize() {
     	return buildingSize;
@@ -37,5 +39,8 @@ public enum BuildingType {
     }
     public String getBuildTexture() {
     	return buildTexture;
+    }
+    public String getTextName() {
+    	return textName;
     }
 }

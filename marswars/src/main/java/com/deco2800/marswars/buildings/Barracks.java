@@ -1,9 +1,5 @@
 package com.deco2800.marswars.buildings;
 
-import com.deco2800.marswars.entities.Clickable;
-import com.deco2800.marswars.entities.HasOwner;
-import com.deco2800.marswars.entities.HasProgress;
-import com.deco2800.marswars.entities.Tickable;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
@@ -11,7 +7,7 @@ import com.deco2800.marswars.worlds.AbstractWorld;
  *
  * A barracks to build an army
  */
-public class Barracks extends BuildingEntity implements Clickable, Tickable, HasProgress, HasOwner {
+public class Barracks extends BuildingEntity {
 
 	/**
 	 * Constructor for the barracks.

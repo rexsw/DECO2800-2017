@@ -8,8 +8,9 @@ import com.deco2800.marswars.entities.units.AmbientAnimal;
 import com.deco2800.marswars.entities.units.Soldier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -55,16 +56,14 @@ public class TextureManager extends Manager {
     	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
         textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
         textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
-        //Gates
-        textureMap.put("gate1",new Texture("resources/Gate/1.png"));
-        textureMap.put("gate2",new Texture("resources/Gate/2.png"));
         //default stuff
         textureMap.put("base",new Texture("resources/Base/Blue/3.png"));
         textureMap.put("bunker",new Texture("resources/Bunker/Blue/3.png"));
         textureMap.put("wall",new Texture("resources/WallHorizontal/Blue/1.png"));
         textureMap.put("turret",new Texture("resources/Turret/Blue/3.png"));
         textureMap.put("barracks",new Texture("resources/Barracks/Blue/3.png"));
-        
+        //Load walls
+        loadAllBuildingTextures();
 	    textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
 	    //Environment
         textureMap.put("grass", new Texture("resources/placeholderassets/grass.png"));
@@ -298,34 +297,13 @@ public class TextureManager extends Manager {
                 saveTexture(retVal,path);
             }
             return retVal;
-        } else if (unit instanceof BuildingEntity){
-        	BuildingEntity building = (BuildingEntity) unit;
-            String path;
-            String unitType = unit.getClass().toString();
-            //filter out class name qualifier, this may be changed later to extend it 
-            // to other entity types
-            Scanner sc = new Scanner (unitType);
-            sc.useDelimiter("buildings.").next();
-            unitType=sc.next();
-            sc.close();
-            String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(building.getOwner());
-            path = String.format("resources/%s/%s/%s.png",
-                    unitType,teamColour,textureType);
-			//try to load the texture into the textureMap
-            String retVal = textureType + teamColour + unitType;
-            if (!textureMap.containsKey(retVal)) {
-                LOGGER.info(String.format("Loading texture %s for %s from %s",
-                        textureType, unitType, path));
-                saveTexture(retVal,path);
-            }
-            return retVal;
         } else {
         	return null;
         }
 		
         
     }
-
+    
     /**
      * This method takes an EntityId and returns the default sprite in the players colour
      * @param unit the unit to get sprite of
@@ -337,9 +315,6 @@ public class TextureManager extends Manager {
         String path;
         //Determine the unit type
         String unitType = unit.name().toLowerCase();
-        //unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
-        //find the team colour of the owner:
-       // String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
         String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
         path = String.format("resources/UnitAssets/%s/%s/%s.png", unitType, teamColour.toLowerCase(),textureType);
 
@@ -353,22 +328,70 @@ public class TextureManager extends Manager {
     }
     
     /**
-     * This method takes an EntityId and returns the default sprite in the players colour
-     * @param wall up or down wall
-     * @return
+     * This method loads building textures into the game
+     * 
      */
-    public String loadUnitSprite(String wall, BuildingEntity owner){
-        String path;
-        String unitType = wall;
-        String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner.getOwner());
-        path = String.format("resources/%s/%s/%s.png",
-                unitType,teamColour,"1");
-		//try to load the texture into the textureMap
-        String retVal = "1" + teamColour + unitType;
-        Texture loadtex = new Texture(path);
-        textureMap.put(retVal, loadtex);
-        return retVal;
+    public void loadAllBuildingTextures(){
+    	List<String> BuildingEntity =  Arrays.asList("Base", "Wall", "Gate", "Turret", "Bunker", "Barracks");
+    	for (String b : BuildingEntity) {
+    		switch(b) {
+    		case "Wall":
+    			loadBuildingtextures("WallHorizontal", 1);
+    			loadBuildingtextures("WallVertical", 1);
+    			break;
+    		case "Gate":
+    	        textureMap.put("gate1",new Texture("resources/Gate/1.png"));
+    	        textureMap.put("gate2",new Texture("resources/Gate/2.png"));
+    			break;
+    		case "Turret":
+    			loadBuildingtextures("Turret", 5);
+    			break;
+    		case "Base":
+    			loadBuildingtextures("Base", 5);
+    			break;
+    		case "Barracks":
+    			loadBuildingtextures("Barracks", 5);
+    			break;
+    		case "Bunker":
+    			loadBuildingtextures("Bunker", 5);
+    			break;
+    		default:
+    			break;
+    		}
+    	}
     }
+    
+    /**
+     * Gets a sprite for building
+     * @param building the entity to load sprite for
+     * @param numbTex how many sprites to load for building
+     */
+    public void loadBuildingtextures(String building, int numbTex){
+    	List<String> colours;
+    	colours =  Arrays.asList("Blue", "Red", "Yellow", "Green", "Purple", "Pink");
+    	for (int count = 1; count < (numbTex+1); count++) {
+    		for (String colour : colours) {
+   			 	String path = String.format("resources/%s/%s/%s.png",
+   					 building,colour,count);
+   			 	String id = count + colour + building;
+   			 	if (!textureMap.containsKey(id)) {
+   			 		saveTexture(id, path);
+   			 	}
+    		}
+    	}
+
+    }
+    
+    /**
+     * Gets a sprite for building
+     * @param unitType the entity to get sprite for
+     * @param textureType which sprite number to load
+     * @return String name of sprite
+     */
+    public String getBuildingSprite(String textureType, String colour, String unitType){
+        String retVal = unitType + colour + textureType;
+        return retVal;
+    } 
     
     /**
      * Gets a texture object for a given string id

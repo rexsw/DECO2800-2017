@@ -275,7 +275,6 @@ public class WorldUtil {
 		proj[0] -= proj[1] - proj[0];
 		proj[0] = (int) proj[0];
 		proj[1] = (int) proj[1];
-		int dimensionsInt = (int)dimensions;
 		if ((int)dimensions == 1) {
 			if(!(proj[0] < 0 || proj[0] >
 			GameManager.get().getWorld().getWidth()

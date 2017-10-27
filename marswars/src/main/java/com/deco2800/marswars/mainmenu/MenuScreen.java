@@ -119,14 +119,13 @@ public class MenuScreen extends Table{
 	//Managers
     // The Net Manager so you can communicate with the server
     private NetManager netManager = (NetManager) GameManager.get().getManager(NetManager.class);
-	private TextureManager textureManager; //for loading in resource images
 	
 	public MenuScreen(Skin skin, Window window, Stage stage, MainMenu mainMenu) {
 		this.skin = skin;
 		this.menu = mainMenu;
 		this.stage = stage; 
 		MenuScreen.mainmenu = window;
-		this.textureManager = (TextureManager)(GameManager.get().getManager(TextureManager.class));
+
 		
 		/* UI prompts */
 		currentWorldSelection = new Label("No type selected, ", skin);
@@ -247,20 +246,20 @@ public class MenuScreen extends Table{
 		Table worldTypeButtons = new Table();		
 		worldTypeButtons.setDebug(enabled);
 		//Mars tile button
-		Texture marsImage =  this.textureManager.getTexture("mars_map");
+		Texture marsImage =  ((TextureManager)GameManager.get().getManager(TextureManager.class)).getTexture("mars_map");
 		TextureRegion marsRegion = new TextureRegion(marsImage);
 		TextureRegionDrawable marsRegionDraw = new TextureRegionDrawable(marsRegion);
 		ImageButton mars = new ImageButton(marsRegionDraw);
 		
 		//Moon tile button
-		Texture moonImage =  this.textureManager.getTexture("moon_map");
+		Texture moonImage =  ((TextureManager)GameManager.get().getManager(TextureManager.class)).getTexture("moon_map");
 		TextureRegion moonRegion = new TextureRegion(moonImage);
 		TextureRegionDrawable moonRegionDraw = new TextureRegionDrawable(moonRegion);
 		ImageButton moon = new ImageButton(moonRegionDraw);
 		moon.background(moonRegionDraw);
 		
 		//Desert tile button
-		Texture desertImage =  this.textureManager.getTexture("desert_map");
+		Texture desertImage =  ((TextureManager)GameManager.get().getManager(TextureManager.class)).getTexture("desert_map");
 		TextureRegion desertRegion = new TextureRegion(desertImage);
 		TextureRegionDrawable desertRegionDraw = new TextureRegionDrawable(desertRegion);
 		ImageButton desert = new ImageButton(desertRegionDraw);
@@ -701,7 +700,7 @@ public class MenuScreen extends Table{
 	private void addPlayButton(){	
 		//PlayButton
 		TextureRegionDrawable marsRegionDraw = 
-				new TextureRegionDrawable(new TextureRegion(textureManager.getTexture("play_button")));
+				new TextureRegionDrawable(new TextureRegion(((TextureManager)GameManager.get().getManager(TextureManager.class)).getTexture("play_button")));
 		ImageButton playButton = new ImageButton(marsRegionDraw);
 		playButton.pad(BUTTONPAD).setSize(40, 40);
 		playButton.addListener(new ChangeListener() {

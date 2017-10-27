@@ -322,7 +322,7 @@ public final class ActionSetter {
         // entity costs
         ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
         if (canAfford(target.getOwner(), target.isAi(), c, resourceManager)) {
-        	LOGGER.info("Building " + c.name());
+        	LOGGER.info("Building entity " + c.name());
 			payForEntity(target.getOwner(), target.isAi(), c, resourceManager);
         } else {
         	LOGGER.info("CAN'T AFFORD ENTITY!");

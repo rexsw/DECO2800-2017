@@ -142,6 +142,15 @@ public class GameManager implements TickableManager {
 	}
 	
 	/**
+	 * Sets the TextureManager for world
+	 * @param texture
+	 */
+	public void setTextureManager(TextureManager texture) {
+		this.gameTexture = texture;
+		managers.add(gameTexture);
+	}
+	
+	/**
 	 * Sets the current main menu display
 	 * @param menu
 	 */

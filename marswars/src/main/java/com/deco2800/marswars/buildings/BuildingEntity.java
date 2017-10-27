@@ -5,6 +5,7 @@ import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.MouseHandler;
 import com.deco2800.marswars.managers.SoundManager;
@@ -40,6 +41,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	boolean isFlooded = false;
 	//Colour for this building
 	protected TextureManager tm;
+	private String teamColour;
+	private String buildingTexture;
 
 	protected boolean built = true;
 	//building has functionality if built is true
@@ -52,13 +55,15 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
 		super(new Box3D(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
 				0f), building.getBuildSize(), building.getBuildSize(), false);
-		this.setOwner(owner);
+		super.setOwner(owner);
 		tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
-		this.setEntityType(EntityType.BUILDING);
-		this.numOfSolider = 0;
+		teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
+		this.buildingTexture = building.getTextName();
 		switch(building) {
 		case WALL:
-			setAllTextures(1);
+			String wall1 = "1"+teamColour+"WallHorizontal";
+			String wall2 = "1"+teamColour+"WallVertical";
+			graphics = Arrays.asList(wall1, wall2);
 			setBuilding("Wall", graphics.get(0), 15f, 3550, 3, 0);
 			addActions(building);
 			break;
@@ -69,7 +74,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case TURRET:
 			setAllTextures(5);
-			setBuilding("Turret", graphics.get(2), 1f, 1850, 12, 10);
+			setBuilding("Turret", graphics.get(2), 1f, 1850, 12, 16);
 			addActions(building);
 			break;
 		case BASE:
@@ -102,6 +107,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		}
 		buildSize = building.getBuildSize();
+		this.setEntityType(EntityType.BUILDING);
+		this.numOfSolider = 0;
 		
 	}
 	
@@ -380,7 +387,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		try {
 			graphics = new ArrayList<String>(loadnumber);
 			for (int a = 0 ; a < loadnumber; a++) {
-				String tex = tm.loadUnitSprite((BaseEntity)this, String.valueOf(a+1));
+				String tex = tm.getBuildingSprite(buildingTexture, teamColour, String.valueOf(a+1));
 				graphics.add(a, tex);
 			}
 		}

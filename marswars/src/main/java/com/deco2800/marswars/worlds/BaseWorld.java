@@ -127,7 +127,10 @@ public class BaseWorld extends AbstractWorld {
 			// put things that can be attacked on the minimap
 		        GameManager.get().getMiniMap().addEntity(entity);
 		}
-
+		if ((int)entity.getXLength() == 1 && (int)entity.getYLength() == 1) {
+			collisionMap.get((int)entity.getPosX(), (int)entity.getPosY()).add(entity);
+			return;
+		}
 		//Add to the collision map
 		int[] collisionCoords = makeCollisionCoords(entity);
 		for (int x = collisionCoords[0]; x < collisionCoords[1]; x++) {
@@ -157,6 +160,10 @@ public class BaseWorld extends AbstractWorld {
 			floodableEntities.remove(entity);
 		}
 		super.removeEntity(entity);
+		if ((int)entity.getXLength() == 1 && (int)entity.getYLength() == 1) {
+			collisionMap.get((int)entity.getPosX(), (int)entity.getPosY()).remove(entity);
+			return;
+		}
 		// Ensure water is also removed from Collision map upon deletion
 		if (! entity.isCollidable() && ! (entity instanceof Water))
 			return;
@@ -261,7 +268,6 @@ public class BaseWorld extends AbstractWorld {
 		if (build == BuildingType.BARRACKS) {
 			checkX = 1;
 		}
-		LOGGER.debug("Xcord "+ left +" Ycord "+ bottom +" SIZE " + objectSize);
 		if ((int)objectSize == 1) {
 			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
 				if (hasUnmovableEntity(xPos, yPos)) {

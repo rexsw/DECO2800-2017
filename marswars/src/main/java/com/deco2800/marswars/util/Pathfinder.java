@@ -156,7 +156,7 @@ public class Pathfinder {
 								if(((BuildingEntity) b).getbuilding() == "Wall") {
 									add = false;
 								}else if (((BuildingEntity) b).getbuilding() == "Gate" && actor != null) {
-									if (!(actor.getOwner() == ((BuildingEntity)b).getOwner())) {
+									if (!(actor.sameOwner((BuildingEntity)b))) {
 										add = false;
 									}
 								}
