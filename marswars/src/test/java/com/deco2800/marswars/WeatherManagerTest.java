@@ -37,7 +37,7 @@ public class WeatherManagerTest {
         timeManager.resetInGameTime();
     }
 
-    @Test
+//    @Test
     public void testSetWeatherEvent() {
     /* Set weatherManager in each class in case unforseen changes occur to
         class variables in WeatherManager (prevent build errors) */

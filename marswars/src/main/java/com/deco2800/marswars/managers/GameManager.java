@@ -13,6 +13,7 @@ import com.deco2800.marswars.worlds.map.tools.MapTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -172,6 +173,9 @@ public class GameManager implements TickableManager {
 	 * @return The minimap
 	 */
 	public MiniMap getMiniMap() {
+		if (miniMap == null) {
+			throw new NotImplementedException();
+		}
 		return miniMap;
 	}
 
