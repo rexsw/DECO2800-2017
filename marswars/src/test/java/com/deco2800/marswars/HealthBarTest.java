@@ -1,11 +1,14 @@
 package com.deco2800.marswars;
 
-import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.buildings.GateHorizontal;
 import com.deco2800.marswars.entities.HealthBar;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.hud.MiniMap;
+import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.ResourceManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +21,7 @@ import org.junit.Test;
 
 public class HealthBarTest {
     Soldier t1,t3,t4,t5,t6;
-    Base t2;
+    GateHorizontal t2;
     HealthBar healthBar;
     BaseWorld baseWorld;
 
@@ -28,8 +31,13 @@ public class HealthBarTest {
         GameManager.get().setWorld(baseWorld);
         GameManager.get().setMiniMap(new MiniMap());
         GameManager.get().getManager(GameBlackBoard.class);
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+		ResourceManager rm = (ResourceManager) GameManager.get()
+				.getManager(ResourceManager.class);
+        cm.setColour(1);
         t1 = new Soldier(0,1,0,0);
-        t2 = new Base(baseWorld,3,2,0,0);
+        t2 = new GateHorizontal(baseWorld,3,2,0,1);
         t3 = new Soldier(0,3,0,0);
         t4 = new Soldier(0,4,0,0);
         t5 = new Soldier(0,5,0,0);

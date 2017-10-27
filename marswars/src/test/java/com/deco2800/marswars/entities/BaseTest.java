@@ -2,6 +2,9 @@ package com.deco2800.marswars.entities;
 
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.buildings.Base;
+import com.deco2800.marswars.managers.ColourManager;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +23,12 @@ public class BaseTest {
     @Before
     public void setup(){
         world = new BaseWorld(10, 15);
+		GameManager.get().getManager(TextureManager.class);
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+        cm.setColour(-1);
+        cm.setColour(0);
+        cm.setColour(1);
         b = new Base(world, 0, 0, 0, -1);
     }
 

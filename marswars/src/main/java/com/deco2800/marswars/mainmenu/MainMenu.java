@@ -119,7 +119,6 @@ public class MainMenu {
 			openMusic.dispose();
 			game = new Game(mapType, mapSize, aITeams, playerTeams, aiDifficulty); //Start up a new game
 			game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
 		}
 	}
 	

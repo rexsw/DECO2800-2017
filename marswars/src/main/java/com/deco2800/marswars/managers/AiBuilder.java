@@ -98,7 +98,7 @@ public class AiBuilder extends Manager {
 			randx = ThreadLocalRandom.current().nextInt(lowx, highx);
 			randy = ThreadLocalRandom.current().nextInt(lowy, highy);
 			avoidInfinite ++;
-		}  while(!GameManager.get().getWorld().checkValidPlace(type, randx, randy, (type.getBuildSize()+1), 0) && avoidInfinite < 100);
+		}  while(!GameManager.get().getWorld().checkValidPlace(type, randx, randy, (type.getBuildSize()), 0) && avoidInfinite < 100);
 		if (avoidInfinite == 100) {
 			return false;
 		}

@@ -8,6 +8,7 @@ import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GenerateAction;
 import com.deco2800.marswars.buildings.HeroFactory;
 import com.deco2800.marswars.entities.units.Commander;
+import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -28,6 +29,11 @@ public class HeroFactoryTest extends BaseTest{
 
     @Before
     public void setUp() {
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+        cm.setColour(-1);
+        cm.setColour(0);
+        cm.setColour(1);
         world = new BaseWorld(10, 10);
         hero = new Commander(3,3,3,-1);
         heroFactory = new HeroFactory(world, 2, 2, 2, -1);

@@ -103,6 +103,12 @@ public class AiManagerTest {
 	@Test
 	public void decideChangeStateTest(){
 		am.addTeam(1);
+		GameManager.get().getManager(TextureManager.class);
+		ColourManager cm = (ColourManager) GameManager.get()
+				.getManager(ColourManager.class);
+        cm.setColour(-1);
+        cm.setColour(0);
+        cm.setColour(1);
 		Base b = new Base(baseWorld, 1, 1, 0, 1);
 		AttackableEntity r = new AttackableEntity(2,1,0,1, 1, 1);
 		AttackableEntity p = new AttackableEntity(2,2,0,1, 1, 1);

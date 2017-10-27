@@ -63,6 +63,8 @@ public class ColourManager extends Manager {
 		switch(teamcolour){
 			case BLUE:
 				return Color.BLUE;
+			case RED:
+				return Color.RED;
 			case YELLOW:
 				return Color.YELLOW;
 			case PINK:
@@ -71,6 +73,7 @@ public class ColourManager extends Manager {
 				return Color.PURPLE;
 			case GREEN:
 				return Color.GREEN;
+
 		}
 		return null;
 	}
@@ -82,6 +85,7 @@ public class ColourManager extends Manager {
 	 */
 	private ArrayList<Colours> setColour(){
 		ArrayList<Colours> list = new ArrayList<Colours>();
+		list.add(Colours.RED);
 		list.add(Colours.BLUE);
 		list.add(Colours.YELLOW);
 		list.add(Colours.PINK);

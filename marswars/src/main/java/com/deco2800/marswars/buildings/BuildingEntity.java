@@ -69,39 +69,38 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case GATE:
 			graphics = Arrays.asList("gate1", "gate2");
-			setBuilding("Gate", graphics.get(0), 15f, 2550, 3, 0);
+			setBuilding("Gate", graphics.size() >1 ? graphics.get(0):"spacman_ded", 15f, 2550, 3, 0);
 			addActions(building);
 			break;
 		case TURRET:
 			setAllTextures(5);
-			setBuilding("Turret", graphics.get(2), 1f, 1850, 12, 16);
+			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1850, 12, 16);
 			addActions(building);
 			break;
 		case BASE:
 			setAllTextures(5);
-	        setBuilding("Base", graphics.get(2), 0.5f, 2500, 3);
+	        setBuilding("Base", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 2500, 3);
 	        addActions(building);
 			break;
 		case BARRACKS:
 			setAllTextures(5);
-			setBuilding("Barracks", graphics.get(2), 1.5f, 2000, 3);
+			setBuilding("Barracks", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1.5f, 2000, 3);
 			addActions(building);
 			break;
 		case BUNKER:
 			setAllTextures(5);
-			setBuilding("Bunker", graphics.get(2), 0.5f, 800, 2);
+			setBuilding("Bunker", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 800, 2);
 			addActions(building);
 			break;
 		case HEROFACTORY:
-			//graphics = Arrays.asList("herofactory1"+colour, "herofactory2"+colour, "herofactory3"+colour,
-					//"herofactory4"+colour);
-			//setBuilding("Hero Factory", graphics.get(graphics.size()-2), 0.5f, 3000, 3);
-			//addActions(building);
+			graphics = null;
+			setBuilding("Hero Factory", "spacman_ded", 0.5f, 3000, 3);
+			addActions(building);
 			break;
 		case TECHBUILDING:
-			//graphics = Arrays.asList("tech1"+colour, "tech2"+colour, "tech3"+colour, "tech4"+colour);
-			//setBuilding("TechBuilding", graphics.get(graphics.size()-2), 0.5f, 800, 2);
-			//addActions(building);
+			graphics = null;
+			setBuilding("TechBuilding", "spacman_ded", 0.5f, 800, 2);
+			addActions(building);
 			break;
 		default:
 			break;
