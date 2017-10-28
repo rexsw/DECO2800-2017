@@ -50,4 +50,9 @@ public class Corn extends AmbientAnimal{
 		}
 		timidBehaviour(enemy);
 	}
+	
+	@Override
+	public String toString(){
+		return "Unispac";
+	}
 }

@@ -105,6 +105,16 @@ public class BuildAction implements DecoAction{
 		finaliseBuild();
 	}
 	
+	public BuildAction(BaseEntity builder, BuildingType building, boolean vaild) {
+		this.actor = builder;
+		this.building = building;
+		this.buildingDims = (int)(building.getBuildSize());
+		this.projX = 1;
+		this.projY = 1;
+		this.state = State.SETUP_MOVE;
+		validBuild = vaild;
+	}
+	
 	/**
 	 * Keeps getting current position of mouse pointer and checks if it's a valid build area
 	 * When called on, switches state to move builder and begin building

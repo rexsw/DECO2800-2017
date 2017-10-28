@@ -151,7 +151,7 @@ public class MapContainer {
     private void placeCliff(int x, int y, boolean direction, String colour) {
         Random r = new Random();
         int maxCliffLength = 10;
-        float linearTerminateFactor = 0.05f; //how much more likely a cliff is to end after each segment
+        float linearTerminateFactor = 0.08f; //how much more likely a cliff is to end after each segment
         boolean cont = true;
         for (int i = 0; i < maxCliffLength && cont; i++) {
             cont = r.nextFloat()>(linearTerminateFactor*i);
@@ -206,7 +206,7 @@ public class MapContainer {
             }
             tree = new Obstacle(r.nextInt(this.length), r.nextInt(this.width), 0, 4, 4,
                     type, colour, false);
-            if(r.nextInt(200) < 30) {
+            if(r.nextInt(200) < 20) {
             	int x = r.nextInt(101);
             	AmbientAnimal animal;
             	if(x == 42) {
@@ -220,6 +220,8 @@ public class MapContainer {
             }
             world.addEntity(tree);
         }
+        Dinoking king = new Dinoking(r.nextInt(this.length), r.nextInt(this.width), 0, 0);
+        world.addEntity(king);
     }
 
     /**
@@ -438,7 +440,7 @@ public class MapContainer {
      */
     protected void generateResourcePattern(){
         ResourceType resource = ResourceType.ROCK;
-        for (int i =0; i<4; i++){
+        for (int i =0; i<8; i++){
             generateResourcePatternFor(resource);
             switch (resource) {
                 case ROCK:
