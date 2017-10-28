@@ -257,7 +257,7 @@ public class BaseWorld extends AbstractWorld {
 			checkX = 1;
 		}
 		if ((int)objectSize == 1) {
-			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
+			if (left >= 0 && bottom >= 0  && left < this.getLength() && bottom < this.getWidth()){
 				if (hasUnmovableEntity(left, bottom)) {
 					return false;
 				}

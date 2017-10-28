@@ -28,7 +28,7 @@ public class AiBuilder extends Manager {
 		LOGGER.info("Rock count: " + rm.getRocks(team));
 		// Build building
 		BuildingType building = decideBuilding(team);
-		BuildAction buildAction = new BuildAction(builder, building, xy[0], xy[1]);
+		BuildAction buildAction = new BuildAction(builder, building, false);
 		if (buildAction.canAfford(team, rm)) {
 			if(findloc(xy, building)) {
 				return;

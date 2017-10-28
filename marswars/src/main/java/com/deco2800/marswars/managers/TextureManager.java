@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.deco2800.marswars.entities.AbstractEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.units.AmbientAnimal;
+import com.deco2800.marswars.entities.units.Dinoking;
 import com.deco2800.marswars.entities.units.Soldier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -305,6 +306,9 @@ public class TextureManager extends Manager {
             unitType=sc.next().toLowerCase();
             sc.close();
             if (soldier instanceof AmbientAnimal) {
+            	if(soldier instanceof Dinoking) {
+            		unitType  = "dino";
+            	}
             	String mapcolour = GameManager.get().getMapType().toSColour();
             	 path = String.format("resources/UnitAssets/%s/%s/%s.png",
                          unitType,mapcolour,textureType);

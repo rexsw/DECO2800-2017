@@ -138,12 +138,13 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		AmbientState as = animal.getState();
 		switch(as){
 		case TRAVEL:
-			animalTravelState(animal);
+			animal.move();
 			break;
 		case ATTACKBACK:
+			animal.attack();
 			break;
 		default:
-			animalDefaultState(animal);
+			animal.move();
 			break;
 		}
 	}
@@ -247,7 +248,7 @@ public class AiManager extends AbstractPlayerManager implements TickableManager 
 		BaseEntity commander = null;
 		for( BaseEntity newCommander : GameManager.get().getWorld().getEntities()) {
 			if (newCommander instanceof HasOwner && newCommander.sameOwner(soldier)) {
-				if (newCommander instanceof Commander) {
+				if (newCommander instanceof Commander || (soldier instanceof Dino && newCommander instanceof Dinoking)) {
 					// found a commander; choose if none selected already or is closer
 					if (commander == null) {
 						commander = newCommander;

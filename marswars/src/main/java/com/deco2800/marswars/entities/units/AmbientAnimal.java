@@ -90,7 +90,6 @@ public class AmbientAnimal extends Soldier{
 				}
 			}
 		}
-		
 		skirmishingBehaviour(enemy);
 	}
 	
@@ -124,26 +123,12 @@ public class AmbientAnimal extends Soldier{
 		 * place to move to
 		 */
 		Random r = new Random();
-		Point p = new Point(this.getPosX() + r.nextInt(2) - 1, this.getPosY() + r.nextInt(2) - 1);
 		/* Ensure new position is on the map */
-		if (p.getX() < 0 || p.getY() < 0 
-				|| p.getX() >= world.getWidth() 
-				|| p.getY() >= world.getLength()) {
-			return;
-		}
 		/* Check that the new position is free
 		with the exception of Water entities */
-		List<BaseEntity> tileEntities =
-				world.getEntities((int)p.getX(), (int)p.getY());
-
-		if (this.moveAway(tileEntities)) {
-			// No good
-			return;
-		}
-		LOGGER.info("Aniaml is on a tile with another entity, move out of the way");
 		/* Finally move to that position using a move action */
-		currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
-		this.setAction(new MoveAction((int)p.getX(), (int)p.getY(), this));
+		this.setAction(new MoveAction(r.nextInt((int) this.getPosX() + 10) % world.getWidth(), 
+				r.nextInt((int) this.getPosY() + 10)% world.getLength(), this));
 	
 	}
 	
@@ -232,13 +217,13 @@ public class AmbientAnimal extends Soldier{
 	public void setAllTextture() {
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		try {
-			this.selectedTextureName = null;
-			this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
-			this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
-			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
-			this.defaultMissileName = null;
+			this.selectedTextureName = tm.loadUnitSprite(this, "default") ;
+			this.defaultTextureName = tm.loadUnitSprite(this, "default") ;
+			this.upleftTextureName = tm.loadUnitSprite(this, "upleft") ;
+			this.uprightTextureName = tm.loadUnitSprite(this, "upright") ;
+			this.downleftTextureName = tm.loadUnitSprite(this, "downleft") ;
+			this.downrightTextureName = tm.loadUnitSprite(this, "downright") ;
+			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}
 		catch(NullPointerException n){

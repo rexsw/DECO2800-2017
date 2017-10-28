@@ -8,8 +8,8 @@ public class Dino extends AmbientAnimal{
 
 	public Dino(float posX, float posY, float posZ, int onwer) {
 		super(posX, posY, posZ);
-		this.setXRenderLength(3.2f);
-		this.setYRenderLength(3.2f);
+		this.setXRenderLength(2.5f);
+		this.setYRenderLength(2.5f);
 	}
 	
 	@Override 
@@ -20,7 +20,7 @@ public class Dino extends AmbientAnimal{
 		this.setArmor(0);
 		this.setMaxArmor(0);
 		this.setArmorDamage(20);
-		this.setAttackRange(1);
+		this.setAttackRange(5);
 		this.setAttackSpeed(1);
 		this.setDrop(ResourceType.BIOMASS);
 		this.setSpeed(0.01f);
@@ -29,5 +29,10 @@ public class Dino extends AmbientAnimal{
 	@Override 
 	public void move(){
 		((AiManager) GameManager.get().getManager(AiManager.class)).soldierGroupAttack(this);
+	}
+	
+	@Override
+	public String toString(){
+		return "Spacasaur";
 	}
 }
