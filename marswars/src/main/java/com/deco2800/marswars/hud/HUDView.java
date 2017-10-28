@@ -12,15 +12,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.deco2800.marswars.actions.ActionList;
-import com.deco2800.marswars.actions.ActionSetter;
-import com.deco2800.marswars.actions.ActionType;
-import com.deco2800.marswars.actions.BuildAction;
+import com.deco2800.marswars.actions.*;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
@@ -34,8 +30,6 @@ import com.deco2800.marswars.worlds.CustomizedWorld;
 import com.deco2800.marswars.worlds.MapSizeTypes;
 import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
-import com.deco2800.marswars.hud.EntityPortrait;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +67,8 @@ public class HUDView extends ApplicationAdapter{
 	Window actionsWindow;        //window for the players actions
 	private ShopDialog shopDialog; // Dialog for shop page
 
-	private TechTreeView techTree; //view for tech tree
-
+	private Dialog techTree; //view for tech tree
+	private Dialog pauseMenu;
 
 	private Image statsbg; 
 	private Image headerbg;
@@ -282,7 +276,15 @@ public class HUDView extends ApplicationAdapter{
 		dispMainMenu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			}
+				if (getPauseCheck() == 0) {
+					setPauseCheck(1);
+					pauseMenu = new PauseMenu("Pause Menu", skin, stage, stats, hud).show(stage);			
+					setPause(pauseMenu);
+				} else {
+					setPauseCheck(0);
+					hidePause();
+				}
+			}
 		});
 		dispMainMenu.addListener(new TextTooltip("Pause Game and to go menu", skin));
 
@@ -406,13 +408,20 @@ public class HUDView extends ApplicationAdapter{
 
 		hudManip.add(options);
 		stage.addActor(hudManip);
-
+		
 		techTree = new TechTreeView("TechTree", skin, hud);
-
 		dispTech.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor){
-				techTree.show(stage);
+				if (getTechCheck() == 0) {
+					setTechCheck(1);
+					techTree = new TechTreeView("TechTree", skin, hud).show(HUDView.this.stage);
+					setTechTree(techTree);
+				} else {
+					setTechCheck(0);
+					timeManager.pause();
+					hideTechTree();
+				}
 			}
 		});
 		dispTech.addListener(new TextTooltip("Open Technology", skin));
@@ -545,11 +554,11 @@ public class HUDView extends ApplicationAdapter{
 		Image crystal = new Image(textureManager.getTexture("crystal_HUD"));
 
 		resourceTable.add(rock).width(40).height(40).pad(10);
-		resourceTable.add(rockCount).padRight(60);
+		resourceTable.add(rockCount).padRight(50);
 		resourceTable.add(crystal).width(40).height(40).pad(10);
-		resourceTable.add(crystalCount).padRight(60);
+		resourceTable.add(crystalCount).padRight(50);
 		resourceTable.add(biomass).width(40).height(40).pad(10);
-		resourceTable.add(biomassCount).padRight(60);
+		resourceTable.add(biomassCount).padRight(50);
 		resourceTable.add(popCount).padRight(10);
 		resourceTable.add(maxPopCount);
 
@@ -594,14 +603,23 @@ public class HUDView extends ApplicationAdapter{
 					if (current instanceof ActionType) {
 						selectedEntity.setNextAction((ActionType)current);
 					} else if (currentActions.get(index) instanceof BuildingType) {
-						LOGGER.info("Is entity");
 						LOGGER.info("Try to build");
-						if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
-							BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
-							cancelBuild.cancelBuild();
-							cancelBuild.doAction();
+						if (currentActions.get(index) == BuildingType.WALL) {
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildWallAction) {
+								BuildWallAction cancelBuild = (BuildWallAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
+							selectedEntity.setAction(new BuildWallAction(selectedEntity));
 						}
-						selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
+						else {
+							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildAction) {
+								BuildAction cancelBuild = (BuildAction) selectedEntity.getAction().get();
+								cancelBuild.cancelBuild();
+								cancelBuild.doAction();
+							}
+							selectedEntity.setAction(new BuildAction(selectedEntity, (BuildingType) currentActions.get(index)));
+						}
 					} else {
 						if((EntityID) currentActions.get(index) == EntityID.COMMANDER) {
 							if(heroExist != null) {
@@ -674,10 +692,16 @@ public class HUDView extends ApplicationAdapter{
 	 * then updates the image from the texture manager.
 	 */
 	public void updateMiniMapMenu() {
-		//clear the current image
-		minimap.clearChildren();
-		//get the new image
-		minimap.add(GameManager.get().getMiniMap().getBackground());
+		try {
+			//clear the current image
+			minimap.clearChildren();
+			//get the new image
+			minimap.add(GameManager.get().getMiniMap().getBackground());
+		}
+		catch(NullPointerException NPE){
+			LOGGER.error("NULL child in minimap table");
+			return;
+		}
 	}
 
 	/**
@@ -701,8 +725,6 @@ public class HUDView extends ApplicationAdapter{
 		if (selectedEntity instanceof Astronaut) { //For Testing Purposes
 			selectedEntity.giveAllBuilding();
 		}
-		currentActions = target.getValidActions();
-		enterActions(true); //Set up the buttons
 		if (target instanceof AttackableEntity) {
 			// display the stats once a unit been selected
 			this.statsTable.setVisible(true);
@@ -720,6 +742,10 @@ public class HUDView extends ApplicationAdapter{
 					this.statsTable.updateHeroInventory((Commander) target);
 				}
 			}
+		}
+		if (!target.isAi()) {
+			currentActions = target.getValidActions();
+			enterActions(true); //Set up the buttons
 		}
 	}
 
@@ -821,7 +847,7 @@ public class HUDView extends ApplicationAdapter{
      * Sets up all buttons for available actions
      */
 	private void actionsButtons() {
-		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size();
+		float buttonWidth = (actionsWindow.getWidth() - actionsWindow.getPadX())/ currentActions.size() *.7f;
 		float buttonHeight = actionsWindow.getHeight();
 		if (buttonWidth >= (actionsWindow.getWidth()/4)){
 			buttonWidth = (actionsWindow.getWidth()/4);
@@ -830,7 +856,7 @@ public class HUDView extends ApplicationAdapter{
 		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
 			buttonList.get(index).setVisible(true);
-			buttonList.get(index).clearChildren();
+//			buttonList.get(index).clearChildren();
 			Label name = new Label("", skin);
 			Label costRocks = new Label("", skin);
 			Label costCrystal = new Label("", skin);
@@ -868,7 +894,6 @@ public class HUDView extends ApplicationAdapter{
 				if (valCrystal>0) {
 					dispCrystal = true;
 				}
-
 
 			} else if (e instanceof ActionType) {
 				entity = textureManager.getTexture("PLACEHOLDER");
@@ -1097,6 +1122,22 @@ public class HUDView extends ApplicationAdapter{
 		help.setPosition(width/2 - help.getWidth()/2, height/2 - help.getHeight()/2);
 
     }
+	
+	public void setTechTree(Dialog techtree) {
+		this.techTree = techtree;
+	}
+	
+	public void hideTechTree() {
+		this.techTree.hide();
+	}
+	
+	public void setPause(Dialog pause) {
+		this.pauseMenu = pause;
+	}
+	
+	public void hidePause() {
+		this.pauseMenu.hide();
+	}
 
 	/**When used in the code will set the pauseCheck integer to 1 when there
 	 * is an active Pause menu and 0 otherwise

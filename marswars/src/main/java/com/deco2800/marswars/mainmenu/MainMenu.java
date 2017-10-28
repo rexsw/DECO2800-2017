@@ -141,7 +141,7 @@ public class MainMenu {
 				openMusic.stop();
 				openMusic.dispose();
 				try {
-					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams(), aiDifficulty); //Start up a new game
+					game = new Game(loadedGame.data.getaITeams(), loadedGame.data.getPlayerTeams(), loadedGame.data.getAiDifficulty()); //Start up a new game
 				} catch (FileNotFoundException e2) {}//do nothing
 					game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				}

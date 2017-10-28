@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameBlackBoard extends Manager implements TickableManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameBlackBoard.class);
 	private List<Integer> teams;
-	private Map<Integer,Map<Field, List<Integer>>> values;
+	private Map<Integer,Map<Field, List<Integer>>> values = new HashMap<Integer,Map<Field, List<Integer>>>();
 	private ResourceManager rm = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 	private int alive;
 	private int timer;

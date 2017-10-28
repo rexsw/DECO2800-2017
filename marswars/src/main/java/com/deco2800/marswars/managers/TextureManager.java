@@ -57,6 +57,11 @@ public class TextureManager extends Manager {
 	        textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
 	        textureMap.put("tileSelectRed", new Texture("resources/shopAssets/redSelect.png"));
         //Buildings
+	        //Walls
+	        textureMap.put("wall1",new Texture("resources/BuildingAssets/Wall/LeftSideWall.png"));
+	        textureMap.put("wall2",new Texture("resources/BuildingAssets/Wall/LeftUpWall.png"));
+	        textureMap.put("wall3",new Texture("resources/BuildingAssets/Wall/wall.png"));
+	        textureMap.put("wall4",new Texture("resources/BuildingAssets/Wall/RightDownwall.png"));
         	//Base Stages
         	textureMap.put("base1", new Texture("resources/BuildingAssets/Building process/Homebase/base1.png"));
         	textureMap.put("base2", new Texture("resources/BuildingAssets/Building process/Homebase/base2.png"));
@@ -199,33 +204,26 @@ public class TextureManager extends Manager {
         this.saveTexture("mars_map", "resources/mapAssets/tileset/mars007.png");
         this.saveTexture("moon_map", "resources/mapAssets/tileset/moon007.png");
         this.saveTexture("desert_map", "resources/mapAssets/tileset/moon010.png");
-        this.saveTexture("astro_blue", "resources/UnitAssets/Astronaut/Blue/default.png");
-        this.saveTexture("astro_green", "resources/UnitAssets/Astronaut/Green/default.png");
-        this.saveTexture("astro_pink", "resources/UnitAssets/Astronaut/Pink/default.png");
-        this.saveTexture("astro_purple", "resources/UnitAssets/Astronaut/Purple/default.png");
-        this.saveTexture("astro_red", "resources/UnitAssets/Astronaut/Red/default.png");
-        this.saveTexture("astro_yellow", "resources/UnitAssets/Astronaut/Yellow/default.png");
-        
+        this.saveTexture("astro_blue", "resources/UnitAssets/astronaut/blue/default.png");
+        this.saveTexture("astro_green", "resources/UnitAssets/astronaut/green/default.png");
+        this.saveTexture("astro_pink", "resources/UnitAssets/astronaut/pink/default.png");
+        this.saveTexture("astro_purple", "resources/UnitAssets/astronaut/purple/default.png");
+        this.saveTexture("astro_red", "resources/UnitAssets/astronaut/red/default.png");
+        this.saveTexture("astro_yellow", "resources/UnitAssets/astronaut/yellow/default.png");
+        this.saveTexture("play_button", "resources/MainMenu/playButton.png");        
+        this.saveTexture("back_button", "resources/MainMenu/backButton.png");
         
         //----------Unit Assets:
         //Soldier:
-        this.saveTexture("bullet", "resources/UnitAssets/Neutral/bullet_1.png");
-        this.saveTexture("soldier", "resources/UnitAssets/Neutral/Soldier_1.png");
-        this.saveTexture("soldierSelected", "resources/UnitAssets/Neutral/Soldier_2.png");
+        this.saveTexture("bullet", "resources/UnitAssets/neutral/bullet_1.png");
         //Tank:
-        
-        this.saveTexture("missile", "resources/UnitAssets/Neutral//Missile_3.png");
-        this.saveTexture("tank", "resources/UnitAssets/Neutral/Tank_1.png");
-        this.saveTexture("tankSelected", "resources/UnitAssets/Neutral/Tank_2.png");
-        
+
+        this.saveTexture("missile", "resources/UnitAssets/neutral//missile_3.png");
+
         //Carrier:
-        this.saveTexture("carrier", "resources/UnitAssets/Neutral/Carrier_1.png");
-        this.saveTexture("carrierSelected", "resources/UnitAssets/Neutral/Carrier_2.png");
-        
+
         //Commander:
-        this.saveTexture("commander", "resources/UnitAssets/Neutral/Commander_1.png");
-        this.saveTexture("commanderSelected", "resources/UnitAssets/Neutral/Commander_2.png");
-        
+
         //Backgrounds:
         this.saveTexture("dawn_Bg", "resources/Backgrounds/daybg.png");
         this.saveTexture("day_Bg", "resources/Backgrounds/daybg.png");
@@ -282,7 +280,7 @@ public class TextureManager extends Manager {
 
         //Health Bars
         for (int i = 0; i < 21; i++) {
-            this.saveTexture("Health"+i , "resources/UnitAssets/HealthBar/Health"+i+".png");
+            this.saveTexture("Health"+i , "resources/UnitAssets/healthbar/health"+i+".png");
         }
         
     }
@@ -304,7 +302,7 @@ public class TextureManager extends Manager {
             // to other entity types
             Scanner sc = new Scanner (unitType);
             sc.useDelimiter("units.").next();
-            unitType=sc.next();
+            unitType=sc.next().toLowerCase();
             sc.close();
             if (soldier instanceof AmbientAnimal) {
             	String mapcolour = GameManager.get().getMapType().toSColour();
@@ -324,12 +322,12 @@ public class TextureManager extends Manager {
             //find the team colour of the owner:
             String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(soldier.getOwner());
             path = String.format("resources/UnitAssets/%s/%s/%s.png",
-                    unitType,teamColour,textureType);
+                    unitType,teamColour.toLowerCase(),textureType);
 			//try to load the texture into the textureMap
-            LOGGER.info(String.format("Loading texture %s for %s from %s", 
-            		textureType, unitType, path));
             String retVal = textureType + teamColour + unitType;
             if (!textureMap.containsKey(retVal)) {
+                LOGGER.info(String.format("Loading texture %s for %s from %s",
+                        textureType, unitType, path));
                 saveTexture(retVal,path);
             }
             return retVal;
@@ -349,12 +347,12 @@ public class TextureManager extends Manager {
         String textureType = "default";
         String path;
         //Determine the unit type
-        String unitType = unit.name();
-        unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
+        String unitType = unit.name().toLowerCase();
+        //unitType = unitType.substring(0,1).toUpperCase() + unitType.substring(1).toLowerCase();
         //find the team colour of the owner:
        // String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(((PlayerManager) GameManager.get().getManager(PlayerManager.class)).getTeam()); //TODO fix this
         String teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
-        path = String.format("resources/UnitAssets/%s/%s/%s.png", unitType, teamColour,textureType);
+        path = String.format("resources/UnitAssets/%s/%s/%s.png", unitType, teamColour.toLowerCase(),textureType);
 
         //try to load the texture into the textureMap
         String retVal = textureType + unitType;

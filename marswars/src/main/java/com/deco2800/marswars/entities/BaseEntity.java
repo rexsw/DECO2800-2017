@@ -17,6 +17,8 @@ import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.util.Box3D;
 import com.deco2800.marswars.worlds.BaseWorld;
 import com.deco2800.marswars.worlds.CustomizedWorld;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,13 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	protected int owner = 0;
 	private boolean fixPos = false;
 	private HealthBar healthBar;
-	protected float speed = 0.05f;
+	protected float speed = 0.1f;
 	protected Optional<DecoAction> currentAction = Optional.empty();
 	protected ActionType nextAction;
 	OrthographicCamera camera = GameManager.get().getCamera();
 	private EntityPortrait portrait;
 	private EntityPortrait babyPortrait;
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseEntity.class);
 
 	public BaseEntity(){
 	  //NEVER DELETE THIS
@@ -158,12 +161,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosX(float x) {
-		//fog of war: delete the previous line of sight position
+
 		modifyCollisionMap(false);
 
 		super.setPosX(x);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -173,12 +174,9 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosY(float y) {
-		//fog of war: delete the previous line of sight position
+
 		modifyCollisionMap(false);
-
 		super.setPosY(y);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -188,12 +186,8 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	@Override
 	public void setPosZ(float z) {
-		//fog of war: delete the previous line of sight position
 		modifyCollisionMap(false);
-
 		super.setPosZ(z);
-
-		//fog of war: update the new line of sight position
 		modifyCollisionMap(true);
 	}
 
@@ -369,9 +363,10 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 		for (int x = left; x < right; x++) {
 			for (int y = bottom; y < top; y++) {
 				if (add) {
-					baseWorld.getCollisionMap().get(x, y).add(this);
+						baseWorld.getCollisionMap().get(x, y).add(this);
 				} else {
-					baseWorld.getCollisionMap().get(x, y).remove(this);
+						baseWorld.getCollisionMap().get(x, y).remove(this);
+
 				}
 			}
 		}

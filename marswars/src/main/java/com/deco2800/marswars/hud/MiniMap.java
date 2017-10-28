@@ -110,8 +110,10 @@ public class MiniMap {
         } catch (NullPointerException e) {
             //actor was already removed
         }
+        catch (IllegalStateException e) {
+            //occurs when there is no entity there
+        }
         entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
-
     }
 
     /**

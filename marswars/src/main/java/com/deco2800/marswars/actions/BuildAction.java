@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.deco2800.marswars.buildings.*;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.managers.AiManager.Difficulty;
+import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.ResourceManager;
 import com.deco2800.marswars.managers.SoundManager;
@@ -73,9 +74,6 @@ public class BuildAction implements DecoAction{
 		this.projX = x;
 		this.projY = y;
 		this.state = State.SETUP_MOVE;
-		float[] parse = new float[]{projX, projY, fixPos};
-		//this.temp = WorldUtil.selectionStage(temp, buildingDims, parse, building);
-		//temp.setGreen();
 		validBuild = true;
 		finaliseBuild();
 	}
@@ -225,30 +223,22 @@ public class BuildAction implements DecoAction{
     }
 	
     public void finaliseBuildAI() {
-		if (true) { //TODO
-			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
-			if (canAfford(actor.getOwner(), resourceManager)) {
-				createBuilding();
-				payForEntity(actor.getOwner(), resourceManager);
-				GameManager.get().getWorld().addEntity(base);
-				this.buildingSpeed = base.getBuildSpeed();
-				maxHealth = base.getMaxHealth();
-				base.setHealth(currentHealth);
-				state = State.SETUP_MOVE;
-				LOGGER.info("BUILDING NEW " + building.toString());
-			}
-			else {
-				LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
-				completed = true;
-			}
-
+		ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
+		if (canAfford(actor.getOwner(), resourceManager)) {
+			createBuilding();
+			payForEntity(actor.getOwner(), resourceManager);
+			GameManager.get().getWorld().addEntity(base);
+			this.buildingSpeed = base.getBuildSpeed();
+			maxHealth = base.getMaxHealth();
+			base.setHealth(currentHealth);
+			state = State.SETUP_MOVE;
+			LOGGER.info("BUILDING NEW " + building.toString());
+			GameBlackBoard gbb = (GameBlackBoard)GameManager.get().getManager(GameBlackBoard.class);
+			gbb.updateunit(base);
 		}
 		else {
-			LOGGER.error("CANNOT BUILD HERE");
-			if (temp != null) {
-				GameManager.get().getWorld().removeEntity(temp);
-				completed = true;
-			}
+			LOGGER.error("NEED MORE ROCKS TO CONSTRUCT BUILDING" + resourceManager.getRocks(actor.getOwner()));
+			completed = true;
 		}
 	}
     
@@ -256,8 +246,10 @@ public class BuildAction implements DecoAction{
 	 * Can be called on to force this action to begin building.
 	 */
 	public void finaliseBuild() {
-		if (temp != null && validBuild) {
-			GameManager.get().getWorld().removeEntity(temp);
+		if (validBuild) {
+			if (temp != null){
+				GameManager.get().getWorld().removeEntity(temp);
+			}
 			ResourceManager resourceManager = (ResourceManager) GameManager.get().getManager(ResourceManager.class);
 			if (canAfford(actor.getOwner(), resourceManager)) {
 				createBuilding();
@@ -289,6 +281,10 @@ public class BuildAction implements DecoAction{
 	 */
 	private void createBuilding() {
 		switch(building) {
+		case WALL:
+			base = new Wall(GameManager.get().getWorld(), 
+					(int)projX, (int)projY, 0f, actor.getOwner());
+			break;
 		case TURRET:
 			base = new Turret(GameManager.get().getWorld(), 
 					(int)projX+fixPos-((int)((buildingDims+1)/2)), (int)projY+fixPos, 0f, actor.getOwner());

@@ -5,13 +5,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.units.MissileEntity;
+import com.deco2800.marswars.initiategame.Game;
 import com.deco2800.marswars.initiategame.InputProcessor;
 import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.managers.BackgroundManager;
@@ -116,26 +116,33 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Render background first
-		String backgroundString = this.bgManager.getBackground();
-		Texture background = this.reg.getTexture(backgroundString);
-		batch.begin();
-		batch.draw(background, this.camera.position.x -
-						this.camera.viewportWidth*this.camera.zoom/2 ,
-				this.camera.position.y -
-						this.camera.viewportHeight*this.camera.zoom/2,
-				this.camera.viewportWidth*this.camera.zoom,
-				this.camera.viewportHeight*this.camera.zoom);
-		batch.end();
+//		String backgroundString = this.bgManager.getBackground();
+//		Texture background = this.reg.getTexture(backgroundString);
+//		batch.begin();
+//		batch.draw(background, this.camera.position.x -
+//						this.camera.viewportWidth*this.camera.zoom/2 ,
+//				this.camera.position.y -
+//						this.camera.viewportHeight*this.camera.zoom/2,
+//				this.camera.viewportWidth*this.camera.zoom,
+//				this.camera.viewportHeight*this.camera.zoom);
+//		batch.end();
 
 		//Render the rest of the game
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		/* Dispose of the spritebatch to not have memory leaks */
 		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
-				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond());
-		this.stage.act();
-		this.stage.draw();
-		GameManager.get().setCamera(this.camera);
+				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Tick: " + Game.ticktime);
+		//trying to eliminate render crashes in the most naive way possible:
+		//will likely cause frames to drop, if the problem is present in sequential frames then
+		//this will imporve nothing
+		try {
+			this.stage.act();
+			this.stage.draw();
+			GameManager.get().setCamera(this.camera);
+		} catch(NullPointerException e){
+			LOGGER.error("Failed to render frame due to NullPointerException");
+		}
 		batch.dispose();
 
 		setInvincible();

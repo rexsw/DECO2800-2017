@@ -256,6 +256,16 @@ public class BaseWorld extends AbstractWorld {
 		if (build == BuildingType.BARRACKS) {
 			checkX = 1;
 		}
+		if ((int)objectSize == 1) {
+			if (left >= 0 && bottom >= 0  && left < this.getWidth() && bottom < this.getLength()){
+				if (hasUnmovableEntity(left, bottom)) {
+					return false;
+				}
+			}else {
+				return false;
+			}
+			return true;
+		}
 		for (int x = left+checkX; x < right+checkX; x++) {
 			for (int y = bottom-checkY; y < top-checkY; y++) {
 				if (left+checkX >= 0 && bottom-checkY >= 0  && right+checkX < this.getWidth() && top-checkY < this.getLength()){

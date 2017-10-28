@@ -100,31 +100,28 @@ public class UseSpecialAction implements DecoAction {
 				boolean radiusZero = Math.abs(radius - 0) < 0.01;
 				if ((e.getTarget() == Target.SELF) && radiusZero) {//affect only the Commander that owns the item.
 					e.applyEffect(user);
-					continue;
 				} else if (e.getTarget() == Target.SELF_TEAM) { //affect only player's team
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
-					continue;
 				} else if (e.getTarget() == Target.ENEMY_TEAM) { //affect only enemies
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(
 							GameManager.get().getWorld().getEntities(),	AttackableEntity.class, user.getOwner()));
-					continue;
 				} else if (e.getTarget() == Target.GLOBAL) { //affect everyone
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfLikeClass(GameManager.get().getWorld().getEntities(),
 							AttackableEntity.class));
-					continue;
 				} else if (e.getTarget() == Target.ENEMY){ //only affect e within selected area (Target.ENEMY)
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndNotOwner(targets, AttackableEntity.class, 
-							user.getOwner())); 
+							user.getOwner()));
+					WorldUtil.removeOverlay();
 				} else {
 					List<BaseEntity> targets = WorldUtil.getEntitiesAroundWithClass(AttackableEntity.class, pointX, 
 							pointY,	radius, radius);
 					executeEffectOnTargets(e, WorldUtil.getEntitiesOfClassAndOwner(targets, AttackableEntity.class, 
-							user.getOwner())); 
+							user.getOwner()));
+					WorldUtil.removeOverlay();
 				}
-				WorldUtil.removeOverlay();
 			}
     		if(!item.useItem()) {
     			// no use limit left

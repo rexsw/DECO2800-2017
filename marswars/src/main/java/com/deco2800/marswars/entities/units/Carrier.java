@@ -33,6 +33,7 @@ public class Carrier extends Soldier {
 
     private String loadSound = "carrier-loading-sound.mp3";
     private String unableLoad = "cant unload while doing something else";
+    private String noSound = "no sound";
 
     private Soldier[] loadedUnits = new Soldier[CAPACITY];
     private ActionType nextAction;
@@ -48,9 +49,11 @@ public class Carrier extends Soldier {
 		this.addNewAction(ActionType.UNLOAD);
 		this.addNewAction(ActionType.UNLOADINDIVIDUAL);
 		this.removeActions(ActionType.DAMAGE);
+		this.removeActions(ActionType.ATTACKMOVE);
 		this.isCarrier();
+		setStance(0); // Default stance for carrier is passive
     }
-
+	
     /**
      * On rightclick method for carrier. If clicked on an allied unit that is
      * loadable, it will load the unit if theres space, else it will move to
@@ -218,10 +221,14 @@ public class Carrier extends Soldier {
      * @return true if able to load the target, false otherwise
      */
     public boolean loadPassengers(Soldier target) {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+			.getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error(noSound);
+	}
 	for (int i = 0; i < CAPACITY; i++) {
 	    if (loadedUnits[i] == null) {
 		loadedUnits[i] = target;
@@ -249,10 +256,14 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassenger() {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+		    .getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound(loadSound);
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error(noSound);
+	}
 	LOGGER.info("Everyone off!");
 	int empty = 0;
 	boolean flag;
@@ -279,10 +290,14 @@ public class Carrier extends Soldier {
      * @return true if units unloaded, false otherwise
      */
     public boolean unloadPassengerIndividual() {
-	SoundManager sound = (SoundManager) GameManager.get()
-		.getManager(SoundManager.class);
-	Sound loadedSound = sound.loadSound(loadSound);
-	sound.playSound(loadedSound);
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+		    .getManager(SoundManager.class);
+	    Sound loadedSound = sound.loadSound(loadSound);
+	    sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	    LOGGER.error(noSound);
+	}
 	LOGGER.info("Last in first out!");
 	int empty = 0;
 	boolean flag;
@@ -335,5 +350,14 @@ public class Carrier extends Soldier {
 	    this.nextAction = a;
 	}
     }
-
+    
+    /**
+     * Returns the current action of the entity
+     * 
+     * @return current action
+     */
+    @Override
+    public Optional<DecoAction> getCurrentAction() {
+	return this.currentAction;
+    }
 }
