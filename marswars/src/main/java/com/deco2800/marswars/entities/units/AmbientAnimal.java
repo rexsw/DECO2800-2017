@@ -14,6 +14,7 @@ import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -31,7 +32,6 @@ public class AmbientAnimal extends Soldier{
 	private int maxTravelTime;
 	private int traveledTime;
 	private int waitingTime;
-	private String name;
 	private ResourceType drop = ResourceType.BIOMASS;
 	
 	public enum AmbientState {
@@ -56,12 +56,11 @@ public class AmbientAnimal extends Soldier{
 	 * 
 	 */
 	public void setDefaultAttributes() {
-		TechnologyManager t = (TechnologyManager) GameManager.get().getManager(TechnologyManager.class);
 		this.setMaxHealth(300);
 		this.setHealth(300);
 		this.setDamage(20);
-		this.setArmor(0);
-		this.setMaxArmor(0);
+		this.setArmor(300);
+		this.setMaxArmor(300);
 		this.setArmorDamage(20);
 		this.setAttackRange(1);
 		this.setAttackSpeed(1);
@@ -73,7 +72,26 @@ public class AmbientAnimal extends Soldier{
 	 * attack the unit who attacked it
 	 */
 	public void attack() {
+		List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+		List<AttackableEntity> enemy = new ArrayList<AttackableEntity>();
+		//For each entity in the world
+		for (BaseEntity e: entityList) {
+			//If an attackable entity
+			if (e instanceof AttackableEntity) {
+				//Not owned by the same player
+				AttackableEntity attackable = (AttackableEntity) e;
+				if (!this.sameOwner(attackable)) {
+					//Within attacking distance
+					float diffX = attackable.getPosX() - this.getPosX();
+					float diffY = attackable.getPosY() - this.getPosY();
+					if (Math.abs(diffX) + Math.abs(diffY) <= this.getAttackRange()) {
+						enemy.add((AttackableEntity) e);
+					}
+				}
+			}
+		}
 		
+		skirmishingBehaviour(enemy);
 	}
 	
 	@Override

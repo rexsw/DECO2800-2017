@@ -43,6 +43,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	protected TextureManager tm;
 	private String teamColour;
 	private String buildingTexture;
+	private BuildingType buildType;
 
 	protected boolean built = true;
 	//building has functionality if built is true
@@ -59,48 +60,41 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
 		this.buildingTexture = building.getTextName();
+		this.buildType = building;
 		switch(building) {
 		case WALL:
 			String wall1 = "1"+teamColour+"WallHorizontal";
 			String wall2 = "1"+teamColour+"WallVertical";
 			graphics = Arrays.asList(wall1, wall2);
 			setBuilding("Wall", graphics.get(0), 15f, 3550, 3, 0);
-			addActions(building);
 			break;
 		case GATE:
 			graphics = Arrays.asList("gate1", "gate2");
 			setBuilding("Gate", graphics.size() >1 ? graphics.get(0):"spacman_ded", 15f, 2550, 3, 0);
-			addActions(building);
 			break;
 		case TURRET:
 			setAllTextures(5);
 			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1850, 12, 16);
-			addActions(building);
 			break;
 		case BASE:
 			setAllTextures(5);
 	        setBuilding("Base", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 2500, 3);
-	        addActions(building);
 			break;
 		case BARRACKS:
 			setAllTextures(5);
 			setBuilding("Barracks", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1.5f, 2000, 3);
-			addActions(building);
 			break;
 		case BUNKER:
 			setAllTextures(5);
 			setBuilding("Bunker", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 800, 2);
-			addActions(building);
 			break;
 		case HEROFACTORY:
 			graphics = null;
 			setBuilding("Hero Factory", "spacman_ded", 0.5f, 3000, 3);
-			addActions(building);
 			break;
 		case TECHBUILDING:
 			graphics = null;
 			setBuilding("TechBuilding", "spacman_ded", 0.5f, 800, 2);
-			addActions(building);
 			break;
 		default:
 			break;
@@ -228,6 +222,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	public void onTick(int i) {
 		if (this.getOwner() == -1 && built)  {
 			modifyFogOfWarMap(true, getFogRange());
+			addActions(buildType);
 		}
 		if(getHealth()<=0 && built) {
 			modifyFogOfWarMap(false,getFogRange());

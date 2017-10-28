@@ -422,7 +422,8 @@ public class Game{
 		//these are initialization for multiselection tiles
 		MultiSelection multiSelection = (MultiSelection) (GameManager.get().getManager(MultiSelection.class));
 		multiSelection.resetSelectedTiles();
-		FogWorld.initializeSelectedTiles(GameManager.get().getWorld().getWidth(),GameManager.get().getWorld().getLength());
+		FogWorld.clearSelectedTiles();
+
 
 		LOGGER.debug("Creation of fog of war complete");
 
@@ -541,11 +542,11 @@ public class Game{
 		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		base.setFix(true);
+		base.setBuilt(true);
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(ai2);
 		GameManager.get().getWorld().addEntity(base);
-		
 		LOGGER.info("Team units successfully set");
 	}
 	
@@ -570,14 +571,7 @@ public class Game{
 						}
 						GameManager.get().onTick(0);
 						lastGameTick = TimeUtils.nanoTime();
-
 					}
-//					try {
-//						Thread.sleep(1);
-//					} catch (InterruptedException e) {
-//						LOGGER.error(e.toString());
-//						Thread.currentThread().interrupt();
-//					}
 				}
 			}
 		}).start();

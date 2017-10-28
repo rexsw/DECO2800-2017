@@ -12,6 +12,7 @@ public class Sniper extends Soldier {
 	public Sniper(float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, owner);
 		this.name = "Sniper";
+		this.setFogRange(16);
 		this.setAttributes();		
 		setXRenderLength(2.2f);
 		setYRenderLength(2.2f);

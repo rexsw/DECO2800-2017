@@ -114,7 +114,6 @@ public class MiniMap {
             //occurs when there is no entity there
         }
         entitiesOnMiniMap[(int) coordinates.x][(int) coordinates.y] = null;
-
     }
 
     /**

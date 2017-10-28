@@ -292,7 +292,7 @@ public class WeatherManager extends Manager implements TickableManager {
             if (position.getX() != -1 && position.getY() != -1) {
                 Water floodDrop = new Water(position.getX(),
                         position.getY(), 0);
-                world.addEntity(floodDrop);
+//                world.addEntity(floodDrop);
                 floodWatersExist = true;
                 waterEntities++;
             } else {
@@ -342,7 +342,7 @@ public class WeatherManager extends Manager implements TickableManager {
         if (! checkPosition(p)) {
             Water firstDrop = new Water(p.getX(),
                     p.getY(), 0);
-            world.addEntity(firstDrop);
+//            world.addEntity(firstDrop);
             waterEntities++;
             floodWatersExist = true;
             this.generateWater(firstDrop);
