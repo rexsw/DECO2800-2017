@@ -55,7 +55,11 @@ public class ColourManager extends Manager {
 	 * @return String the colour a team is mapped to
 	 */
 	public String getColour(int teamid) {
-		return colours.get(teamid).toString();
+		if(colours.containsKey(teamid)) {
+			return colours.get(teamid).toString();
+		} else {
+			return Colours.RED.toString();
+		}
 	}
 	
 	public Color getLibColour(int teamid) {
