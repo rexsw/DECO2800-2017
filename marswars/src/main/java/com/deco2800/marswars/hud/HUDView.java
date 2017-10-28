@@ -34,6 +34,7 @@ import com.deco2800.marswars.worlds.map.tools.MapContainer;
 import com.deco2800.marswars.worlds.map.tools.MapTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.lang.Math;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -406,7 +407,8 @@ public class HUDView extends ApplicationAdapter{
 		Table options = new Table();
 		options.setDebug(enabled);
 		options.add(dispShop).width(50).height(50);
-		options.add(dispTech);
+		//REMOVING TECH BUTTON IN FAVOR OF TECH BUILDING
+		//options.add(dispTech);
 
 		hudManip.add(options);
 		stage.addActor(hudManip);
@@ -474,6 +476,35 @@ public class HUDView extends ApplicationAdapter{
 		spawnMenu = new SpawnMenu(stage, skin);
 		SpawnMenu.setupEntitiesPickerMenu();
 		spawnMenu.addEntitiesPickerMenu();
+	}
+	
+	/**
+	 * Directly oads tech menu interface
+	 */
+	private void loadTechMenu() {
+		
+		if (getTechCheck() == 0) {
+			setTechCheck(1);
+			techTree = new TechTreeView("TechTree", skin, hud).show(HUDView.this.stage);
+			setTechTree(techTree);
+		} 
+		techTree.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (techCheck == 0) {
+					techTree.show(stage);
+				}
+				if (techCheck == 1) {
+					techTree.hide();
+					selectedEntity.deselect();
+				}
+				if (x < 0 || x > techTree.getWidth() || y < 0 || y > techTree.getHeight()){
+					techTree.hide();
+					return true;
+				}
+				return false;
+			}
+		});
+
 	}
 
 	/**
@@ -760,6 +791,10 @@ public class HUDView extends ApplicationAdapter{
 			}
 		}
 		if (!target.isAi()) {
+			if (target instanceof BuildingEntity && ((BuildingEntity)target).toString().equals("TechBuilding")
+					&& ((BuildingEntity)target).getBuilt()) {
+				loadTechMenu();
+			}
 			currentActions = target.getValidActions();
 			enterActions(true); //Set up the buttons
 		}
@@ -870,6 +905,7 @@ public class HUDView extends ApplicationAdapter{
 		if (buttonWidth >= (actionsWindow.getWidth()/4)){
 			buttonWidth = (actionsWindow.getWidth()/4);
 		}
+		
 		int index = 0;
 		int owner = currentActions.getActor().getOwner();
 		for (Object e : currentActions.getallActions()) {
@@ -924,36 +960,36 @@ public class HUDView extends ApplicationAdapter{
 				entity = textureManager.getTexture("PLACEHOLDER");
 				name = new Label(e.toString(), skin);
 			}
-			name.setFontScale(.9f);
-			costRocks.setFontScale(.9f);
-			costCrystal.setFontScale(.9f);
-			costBiomass.setFontScale(.9f);
+			name.setFontScale((1.2f/(float)(Math.pow(name.getText().length,.2f))));
+			costRocks.setFontScale(.7f);
+			costCrystal.setFontScale(.7f);
+			costBiomass.setFontScale(.7f);
 			TextureRegion entityRegion = new TextureRegion(entity);
 			TextureRegionDrawable buildPreview = new TextureRegionDrawable(entityRegion);
 			ImageButton addPane = new ImageButton(buildPreview);
+			Label spacer = new Label("", skin);
 			buttonList.get(index).add(addPane).width(buttonWidth * .6f).height(buttonHeight * .5f);
 			buttonList.get(index).row().padBottom(20);
-			buttonList.get(index).add(rock).width(buttonWidth * .2f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
-			//buttonList.get(index).add(costBiomass).align(Align.left).height(buttonHeight * .2f).padLeft(-.3f*buttonWidth).padTop(20);
-			buttonList.get(index).add(name).width(buttonWidth * .2f).align(Align.right).height(buttonHeight * .2f)
-			.padLeft(-.6f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
+			buttonList.get(index).add(spacer).width(buttonWidth * .4f).height(buttonHeight * .2f).align(Align.left).padTop(20).padRight(0);
+			buttonList.get(index).add(name).width(buttonWidth * .4f).align(Align.left).height(buttonHeight * .2f)
+			.padLeft(-.63f*buttonWidth).padRight(.2f*buttonWidth).padTop(-.2f * buttonHeight);
 			if (dispRock) {
 				buttonList.get(index).add(rock).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
-				buttonList.get(index).add(costRocks).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+				.padTop(-.2f * buttonHeight).padLeft(-1.85f*buttonWidth);
+				buttonList.get(index).add(costRocks).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+						.spaceRight(0f*buttonWidth).padTop(-.6f * buttonHeight).padLeft(-1.85f*buttonWidth);;
 			}
 			if (dispCrystal) {
 				buttonList.get(index).add(crystal).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
-				buttonList.get(index).add(costCrystal).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+						.padLeft(-.0f*buttonWidth).padRight(.0f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costCrystal).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+				.padLeft(-.1f*buttonWidth).spaceRight(.02f*buttonWidth).padTop(-.6f * buttonHeight);
 			}
 			if (dispBiomass) {
 				buttonList.get(index).add(biomass).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
-				buttonList.get(index).add(costBiomass).width(buttonWidth * .0f).align(Align.right).height(buttonHeight * .2f)
-						.padLeft(-.0f*buttonWidth).padRight(.1f*buttonWidth).padTop(-.2f * buttonHeight);
+						.padLeft(-.0f*buttonWidth).padRight(.0f*buttonWidth).padTop(-.2f * buttonHeight);
+				buttonList.get(index).add(costBiomass).width(buttonWidth * .1f).align(Align.right).height(buttonHeight * .2f)
+				.padLeft(-.1f*buttonWidth).spaceRight(.02f*buttonWidth).padTop(-.6f * buttonHeight);
 			}
 
 			index++;

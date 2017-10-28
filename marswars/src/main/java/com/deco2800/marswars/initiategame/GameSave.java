@@ -251,7 +251,7 @@ public class GameSave {
             data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.HEROFACTORY,bE.getOwner(),bE.getHealth()));
         }
         else if("TechBuilding".equals(bE.getbuilding())){
-            data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.TECHBUILDING,bE.getOwner(),bE.getHealth()));
+            data.getBuilding().add(new SavedBuilding(bE.getPosX(),bE.getPosY(),BuildingType.SPACEX,bE.getOwner(),bE.getHealth()));
         }
     }
 

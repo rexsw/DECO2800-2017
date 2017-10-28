@@ -52,6 +52,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param posX
 	 * @param posY
 	 * @param posZ
+	 * @param building
+	 * @param owner
 	 */
 	public BuildingEntity(float posX, float posY, float posZ, BuildingType building, int owner) {
 		super(new Box3D(posX, posY, posZ, building.getBuildSize(), building.getBuildSize(), 
@@ -89,12 +91,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			setBuilding("Bunker", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 800, 2);
 			break;
 		case HEROFACTORY:
-			graphics = null;
-			setBuilding("Hero Factory", "spacman_ded", 0.5f, 3000, 3);
+			setAllTextures(5);
+			setBuilding("HeroFactory", graphics.size() >3 ? graphics.get(2):"spacman_ded", 55.5f, 3000, 3);
 			break;
-		case TECHBUILDING:
-			graphics = null;
-			setBuilding("TechBuilding", "spacman_ded", 0.5f, 800, 2);
+		case SPACEX:
+			setAllTextures(5);
+			setBuilding("TechBuilding", graphics.size() >3 ? graphics.get(2):"spacman_ded", 55.5f, 800, 2);
 			break;
 		default:
 			break;
@@ -108,6 +110,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 
 	/**
 	 * Return build size of this entity
+	 * @return float build size
 	 */
 	public float getBuildSize() {
 		return this.buildSize;
@@ -137,7 +140,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	@Override
 	/**
 	 * Get the progress of current action
-	 * @return int
+	 * @return int progress
 	 */
 	public int getProgress() {
 		if (currentAction.isPresent()) {
@@ -272,7 +275,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	/**
 	 * Returns the boolean describing whether or not the BuildingEntity is
 	 * currently under the flooding effect.
-	 * @return state
+	 * @return boolean state
 	 */
 	public boolean isFlooded() {
 		return this.isFlooded;
@@ -285,7 +288,10 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	@Override
 	public void setHealth(int health) {
 		super.setHealth(health);
-		if (this.getHealth() < this.getMaxHealth()/3 && built && building != "Wall" && building != "Gate") {
+		if (this.getHealth() < this.getMaxHealth()*.8 && built && building != "Wall" && building != "Gate") {
+			this.setTexture(graphics.get(3));
+		}
+		if (this.getHealth() < this.getMaxHealth()*.3 && built && building != "Wall" && building != "Gate") {
 			this.setTexture(graphics.get(4));
 		}
 	}
@@ -353,7 +359,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         case HEROFACTORY:
             this.addNewAction(EntityID.COMMANDER);
             break;
-        case TECHBUILDING:
+        case SPACEX:
             break;
         default:
             break;

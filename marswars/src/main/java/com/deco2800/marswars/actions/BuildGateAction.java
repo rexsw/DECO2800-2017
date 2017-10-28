@@ -1,21 +1,24 @@
 package com.deco2800.marswars.actions;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 
 import com.deco2800.marswars.buildings.BuildingEntity;
-import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.buildings.GateHorizontal;
 import com.deco2800.marswars.buildings.GateVertical;
 import com.deco2800.marswars.buildings.WallHorizontal;
 import com.deco2800.marswars.buildings.WallVertical;
 import com.deco2800.marswars.entities.BaseEntity;
-import com.deco2800.marswars.managers.ColourManager;
 import com.deco2800.marswars.managers.GameBlackBoard;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.managers.TimeManager;
 import com.deco2800.marswars.worlds.BaseWorld;
 
+/**
+ * A BuildGateAction for replacing 1x1 wall entity with gate
+ * Created by grumpygandalf on 22/10/17.
+ */
 public class BuildGateAction implements DecoAction {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildGateAction.class);
@@ -32,6 +35,10 @@ public class BuildGateAction implements DecoAction {
 	private boolean nodeBefore = false;
 	private boolean nodeAfter = false;
 	
+	/**
+	 * Constructor for the BuildAction
+	 * @param wall The wall to be replaced with gate
+	 */
 	public BuildGateAction(BuildingEntity wall) {
 		this.actor = wall;
 		this.owner = wall.getOwner();
@@ -41,6 +48,10 @@ public class BuildGateAction implements DecoAction {
 			this.gateDirection = "gate2";
 		}
 	}
+	
+	/**
+	 * Replaces wall entity with gate entity
+	 */
 	@Override
 	public void doAction() {
 		if (! timeManager.isPaused() && ! actionPaused && !completed) {
@@ -80,6 +91,7 @@ public class BuildGateAction implements DecoAction {
 	 * Checks local nodes for wall or gate
 	 * @param xLoc x location to be checked
 	 * @param yLoc y location to be checked
+	 * @param direction horizontal or vertical wall
 	 */
 	private void checkLocalNode(int xLoc, int yLoc, boolean after, int direction) {
 		
@@ -119,7 +131,7 @@ public class BuildGateAction implements DecoAction {
 	
 	/**
 	 * 
-	 * @return percentage of completion 
+	 * @return int percentage of completion 
 	 */
 	@Override
 	public int actionProgress() {

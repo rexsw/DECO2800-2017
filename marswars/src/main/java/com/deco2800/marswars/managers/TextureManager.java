@@ -52,6 +52,8 @@ public class TextureManager extends Manager {
     	textureMap.put("redSelect3", new Texture("resources/buildSelect/redSelect3.png"));
     	textureMap.put("greenSelect4", new Texture("resources/buildSelect/greenSelect4.png"));
     	textureMap.put("redSelect4", new Texture("resources/buildSelect/redSelect4.png"));
+    	textureMap.put("greenSelect5", new Texture("resources/buildSelect/greenSelect5.png"));
+    	textureMap.put("redSelect5", new Texture("resources/buildSelect/redSelect5.png"));
     	textureMap.put("greenSelect6", new Texture("resources/buildSelect/greenSelect6.png"));
     	textureMap.put("redSelect6", new Texture("resources/buildSelect/redSelect6.png"));
         textureMap.put("tileSelectGreen", new Texture("resources/shopAssets/greenSelect.png"));
@@ -332,7 +334,8 @@ public class TextureManager extends Manager {
      * 
      */
     public void loadAllBuildingTextures(){
-    	List<String> BuildingEntity =  Arrays.asList("Base", "Wall", "Gate", "Turret", "Bunker", "Barracks");
+    	List<String> BuildingEntity =  Arrays.asList("Base", "Wall", "Gate", 
+    			"Turret", "Bunker", "Barracks", "HeroFactory", "TechBuilding");
     	for (String b : BuildingEntity) {
     		switch(b) {
     		case "Wall":
@@ -354,6 +357,12 @@ public class TextureManager extends Manager {
     			break;
     		case "Bunker":
     			loadBuildingtextures("Bunker", 5);
+    			break;
+    		case "HeroFactory":
+    			loadBuildingtextures("HeroFactory", 5);
+    			break;
+    		case "TechBuilding":
+    			loadBuildingtextures("TechBuilding", 5);
     			break;
     		default:
     			break;

@@ -62,7 +62,6 @@ public class MoveAction implements DecoAction {
 			speed = 0.05f;
 		}
 
-		speed = speed * 4;
 
 		if (this.goalX < 0)
 			this.goalX = 0;

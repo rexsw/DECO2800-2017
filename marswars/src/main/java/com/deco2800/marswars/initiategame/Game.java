@@ -252,7 +252,7 @@ public class Game{
 					heroFactory.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(heroFactory);
 					break;
-				case TECHBUILDING:
+				case SPACEX:
 					TechBuilding techBuilding = new TechBuilding(GameManager.get().getWorld(), e.getX(), e.getY(), 0, e.getTeamId());
 					techBuilding.setHealth(e.getHealth());
 					GameManager.get().getWorld().addEntity(techBuilding);

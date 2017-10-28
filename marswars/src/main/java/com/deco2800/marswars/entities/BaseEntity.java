@@ -43,7 +43,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	OrthographicCamera camera = GameManager.get().getCamera();
 	private EntityPortrait portrait;
 	private EntityPortrait babyPortrait;
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseEntity.class);
 
 	public BaseEntity(){
 	  //NEVER DELETE THIS
@@ -89,22 +88,6 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 */
 	public void setCost(int cost) {
 		this.cost = cost;
-	}
-
-	/**
-	 * Gets the build speed modifier for this entity
-	 * @return
-	 */
-	public float getSpeed() {
-		return buildSpeed;
-	}
-
-	/**
-	 * Sets the build speed modifier for this entity
-	 * @param speed
-	 */
-	public void setSpeed(float speed) {
-		this.buildSpeed = speed;
 	}
 
 	/**

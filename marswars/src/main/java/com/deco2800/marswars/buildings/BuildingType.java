@@ -17,8 +17,8 @@ public enum BuildingType {
 	BARRACKS(3f, 40, "barracks", "Barracks"), 
 	BUNKER(2f, 15, "bunker", "Bunker"), 
 	TURRET(2f, 70, "turret", "Turret"),
-	HEROFACTORY(3f, 50, "herofactory3", "HeroFactory"),// texture value is a placeholder
-	TECHBUILDING(2f, 50, "tech3", "TechBuilding");// texture value is a placeholder
+	HEROFACTORY(2f, 50, "herofactory3", "HeroFactory"),// texture value is a placeholder
+	SPACEX(2f, 50, "tech3", "TechBuilding");// texture value is a placeholder
 
 
 	private final float buildingSize;

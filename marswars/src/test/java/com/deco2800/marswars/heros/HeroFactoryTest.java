@@ -49,17 +49,15 @@ public class HeroFactoryTest extends BaseTest{
         assertFalse(heroFactory.getOwner() == 1);
         // -1 means not AI
         assertTrue(heroFactory.getOwner() == -1);
-        assertTrue(heroFactory.getBuildSize() == 3f);
+        assertTrue(heroFactory.getBuildSize() == 2f);
         assertTrue(heroFactory.getHealth() == 3000);
-        assertTrue(heroFactory.toString() == "Hero Factory");
-        assertTrue(heroFactory.getBuildSize() == 3f);
+        assertTrue(heroFactory.toString() == "HeroFactory");
         assertTrue(heroFactory.isFlooded() == false);
         assertTrue(heroFactory.getBuilt() == true);
         assertTrue(heroFactory.getAction().equals(Optional.empty()));
         assertTrue(heroFactory.isSelected() == false);
         assertTrue(heroFactory.showProgress() == false);
         assertTrue(heroFactory.getProgress() == 0);
-        assertTrue(heroFactory.getbuilding() == "Hero Factory");
     }
 
     /**

@@ -83,7 +83,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		super(posX, posY, posZ, 1, 1, 1);
 		super.setOwner(owner);
 		this.name = "Soldier";
-		this.setSpeed(2f);
 
 		//Accessing the technology manager which contains unit Attributes
 
@@ -91,7 +90,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
-		this.setCost(10);
 		this.setEntityType(EntityType.UNIT);
 		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);

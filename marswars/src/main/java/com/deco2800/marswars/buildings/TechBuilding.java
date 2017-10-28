@@ -21,6 +21,6 @@ public class TechBuilding extends BuildingEntity {
 	 * @param posZ its z position on the world.
 	 */
 	public TechBuilding(AbstractWorld world, float posX, float posY, float posZ, int owner) {
-		super(posX, posY, posZ, BuildingType.TECHBUILDING, owner);
+		super(posX, posY, posZ, BuildingType.SPACEX, owner);
 	}
 }

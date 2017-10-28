@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
  * A BuildSelectAction for selecting a valid area to build on
  * Created by grumpygandalf on 15/8/17.
  */
-
 public class BuildAction implements DecoAction{
 	
 	enum State {
@@ -70,6 +69,13 @@ public class BuildAction implements DecoAction{
 		this.buildingDims = (int)(building.getBuildSize());
 	}
 	
+	/**
+	 * Constructor for the BuildAction
+	 * @param builder The unit assigned the construction
+	 * @param building Type of building to be constructed
+	 * @param x build pos
+	 * @param y build pos
+	 */
 	public BuildAction(BaseEntity builder, BuildingType building, float x, float y) {
 		this.actor = builder;
 		this.building = building;
@@ -79,6 +85,15 @@ public class BuildAction implements DecoAction{
 		validBuild = true;
 		finaliseBuild();
 	}
+	
+	/**
+	 * Constructor for the BuildAction
+	 * @param builder The unit assigned the construction
+	 * @param building Type of building to be constructed
+	 * @param x build pos
+	 * @param y build pos
+	 * @param wallDirection load horizontal or vertical wall
+	 */
 	public BuildAction(BaseEntity builder, BuildingType building, float x, float y, String wallDirection) {
 		this.wallDirection = wallDirection;
 		this.actor = builder;
@@ -212,9 +227,8 @@ public class BuildAction implements DecoAction{
 	/**
      * checks if there are enough resources to pay for the selected entity
      * @param owner
-     * @param c
      * @param resourceManager
-     * @return
+     * @return boolean true if can afford
      */
     public boolean canAfford(int owner, ResourceManager resourceManager) {
     	if (resourceManager.getRocks(owner) >= (int)(building.getCost()*difficultyMultiplier)
@@ -227,9 +241,7 @@ public class BuildAction implements DecoAction{
     /**
      * checks if there are enough resources to pay for the selected entity
      * @param owner
-     * @param c
      * @param resourceManager
-     * @return
      */
     private void payForEntity(int owner, ResourceManager resourceManager) {
     	if (GameManager.get().areCostsFree() && !actor.isAi()) {
@@ -313,7 +325,7 @@ public class BuildAction implements DecoAction{
 			base = new HeroFactory(GameManager.get().getWorld(),
 					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;
-		case TECHBUILDING:
+		case SPACEX:
 			base = new TechBuilding(GameManager.get().getWorld(), 
 					(int)projX +fixPos-((int)((buildingDims+1)/2)), (int)projY + fixPos, 0f, actor.getOwner());
 			break;

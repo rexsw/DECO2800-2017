@@ -83,6 +83,9 @@ public class CheckSelect extends BaseEntity{
 		case HEROFACTORY:
 			validSelect = "greenSelect6";
 			break;
+		case SPACEX:
+			validSelect = "greenSelect5";
+			break;
 		default:
 			validSelect = "tileSelectGreen";
 			break;
@@ -116,6 +119,9 @@ public class CheckSelect extends BaseEntity{
 			break;
 		case HEROFACTORY:
 			invalidSelect = "redSelect6";
+			break;
+		case SPACEX:
+			invalidSelect = "redSelect5";
 			break;
 		default:
 			invalidSelect = "tileSelectRed";

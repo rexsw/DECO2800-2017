@@ -21,7 +21,8 @@ import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.util.WorldUtil;
 
 /**
- * Builds a wall
+ * Allows actor to make a straight horizontal or vertical selection 
+ * and then assigns build actions for each wall
  * Created by grumpygandalf on 20/10/2017
  */
 public class BuildWallAction implements DecoAction{
@@ -53,6 +54,10 @@ public class BuildWallAction implements DecoAction{
 	private BuildAction currentAction;
 	BaseEntity actor;
 	
+	/**
+	 * Constructor for the BuildAction
+	 * @param builder The unit assigned the construction
+	 */
 	public BuildWallAction(BaseEntity builder) {
 		this.actor = builder;
 	}
@@ -187,12 +192,20 @@ public class BuildWallAction implements DecoAction{
 			}
 		}
 	}
-
+	
+	/**
+	 * Returns completed status
+	 * @return true if completed
+	 */
 	@Override
 	public boolean completed() {
 		return completed;
 	}
-
+	
+	/**
+	 * 
+	 * @return int percentage of completion 
+	 */
 	@Override
 	public int actionProgress() {
 		return 0;
@@ -215,12 +228,18 @@ public class BuildWallAction implements DecoAction{
 	}
 	
 	/**
+	 * Returns the stage
 	 * @return returns stage
 	 */
 	public int getStage() {
 		return stage;
 	}
 	
+	/**
+	 * Locks in initial point and waits for end point
+	 * @param x position
+	 * @param y position
+	 */
 	public void beginWall(float x, float y) {
 		startX = x;
 		startY = y;
@@ -228,6 +247,9 @@ public class BuildWallAction implements DecoAction{
 		state = State.SELECT_END;
 	}
 	
+	/**
+	 * Locks in end point and starts wall construction stage
+	 */
 	public void projectWall() {
 		state = State.BUILD_WALL;
 	}
@@ -241,7 +263,7 @@ public class BuildWallAction implements DecoAction{
 	
 	/**
 	 * Checks if build action is in selection mode
-	 * @return returns true if in select mode
+	 * @return boolean returns true if in select mode
 	 */
 	public boolean selectMode() {
 		return state == State.SELECT_END;
