@@ -92,11 +92,11 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case HEROFACTORY:
 			setAllTextures(5);
-			setBuilding("HeroFactory", graphics.size() >3 ? graphics.get(2):"spacman_ded", 55.5f, 3000, 3);
+			setBuilding("HeroFactory", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 3000, 3);
 			break;
 		case SPACEX:
 			setAllTextures(5);
-			setBuilding("TechBuilding", graphics.size() >3 ? graphics.get(2):"spacman_ded", 55.5f, 800, 2);
+			setBuilding("TechBuilding", graphics.size() >3 ? graphics.get(2):"spacman_ded", .8f, 800, 2);
 			break;
 		default:
 			break;
