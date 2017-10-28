@@ -26,6 +26,7 @@ public class ShortCutTest {
 	@Before
 	public void setup() {
 		GameManager.get().setWorld(new BaseWorld(10,10));
+		GameManager.get().setMiniMap(null);
 		shortCut = new ShortCut();
 	}
 

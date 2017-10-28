@@ -95,14 +95,14 @@ public class AiBuilder extends Manager {
 		while(!(GameManager.get().getWorld().checkValidPlace(type, xy[0], xy[1], (type.getBuildSize()), (float)0))) {
 			if(x == 0) {
 				x = 1;
-				xy[0] = (float) (xy[0] + 1.0);
+				xy[0] = (float) (xy[0] + (rand.nextFloat() * 2.0 - 1.0));
 			}
 			else {
 				x = 0;
-				xy[1] = (float) (xy[1] + 1.0);
+				xy[1] = (float) (xy[1] + (rand.nextFloat() * 2.0 - 1.0));
 			}
 			i++;
-			if(i > 50) {
+			if(i > 70) {
 				return true;
 			}
 		}

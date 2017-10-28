@@ -258,7 +258,7 @@ public class BaseWorld extends AbstractWorld {
 		}
 		for (int x = left+checkX; x < right+checkX; x++) {
 			for (int y = bottom-checkY; y < top-checkY; y++) {
-				if (x >= 0 && y >= 0  && x < this.getWidth() && y < this.getLength()){
+				if (left+checkX >= 0 && bottom-checkY >= 0  && right+checkX < this.getWidth() && top-checkY < this.getLength()){
 					if (hasUnmovableEntity(x, y)) { //only checks buildings and resources
 						return false;
 					}
