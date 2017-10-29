@@ -49,7 +49,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	
 
 	protected boolean built = true;
-	//building has functionality if built is true
+	//building has functionality if built is true (Jenkins is dumb)
 	/**
 	 * Constructor for the BuildingEntity
 	 * @param posX
