@@ -539,8 +539,6 @@ public class Game{
 		rm.setMaxPopulation(10, teamid);
 		Astronaut ai = new Astronaut(x, y, 0, teamid);
 		Astronaut ai1 = new Astronaut(x, y, 0, teamid);
-		Dino dq = new Dino(x, y, 0, teamid);
-		dq.setOwner(-1);
 		Soldier ai2 = new Soldier(x, y, 0, teamid);
 		Base base = new Base(GameManager.get().getWorld(), x, y, 0, teamid);
 		base.setFix(true);
@@ -548,7 +546,6 @@ public class Game{
 		GameManager.get().getWorld().addEntity(ai);
 		GameManager.get().getWorld().addEntity(ai1);
 		GameManager.get().getWorld().addEntity(ai2);
-		GameManager.get().getWorld().addEntity(dq);
 		GameManager.get().getWorld().addEntity(base);
 		LOGGER.info("Team units successfully set");
 	}
