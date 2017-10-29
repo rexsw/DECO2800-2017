@@ -66,7 +66,7 @@ public class TextureManager extends Manager {
         textureMap.put("wall",new Texture("resources/WallHorizontal/Blue/1.png"));
         textureMap.put("turret",new Texture("resources/Turret/Blue/3.png"));
         textureMap.put("barracks",new Texture("resources/Barracks/Blue/3.png"));
-        textureMap.put("missileturret", new Texture("resources/turret/missile.png"));
+        textureMap.put("missileturret", new Texture("resources/Turret/missile.png"));
         //Load walls
         loadAllBuildingTextures();
 	    textureMap.put("mainmenubg", new Texture("resources/MainMenu/final.png"));
