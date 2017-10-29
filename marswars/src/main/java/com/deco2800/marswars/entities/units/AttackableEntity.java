@@ -47,6 +47,7 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	private AttackableEntity enemy; // the last enemy who hit/damage the entity
 	private int stance = 0; // the behavior of the unit responding to enemies
 	private int fogRange = 3; //fog range of the entities
+	protected String defaultMissileName;
 	
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	
@@ -562,6 +563,10 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	
 	public void setOwnerChangedStatus(boolean status) {
 		this.ownerChanged = status;
+	}
+	
+	public String getMissileTexture() {
+		return defaultMissileName;
 	}
 	
 }

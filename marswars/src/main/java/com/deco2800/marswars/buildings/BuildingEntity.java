@@ -2,7 +2,9 @@ package com.deco2800.marswars.buildings;
 
 import com.badlogic.gdx.audio.Sound;
 import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.actions.AttackAction;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.*;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.ColourManager;
@@ -13,7 +15,6 @@ import com.deco2800.marswars.managers.TextureManager;
 import com.deco2800.marswars.util.Box3D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +45,8 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	private String teamColour;
 	private String buildingTexture;
 	private BuildingType buildType;
+	protected boolean canAttack = false;
+	
 
 	protected boolean built = true;
 	//building has functionality if built is true
@@ -62,21 +65,22 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		teamColour = ((ColourManager) GameManager.get().getManager(ColourManager.class)).getColour(owner);
 		this.buildingTexture = building.getTextName();
+		this.setCost(100); //Prefer avoid pathfinding through buildings but still allow it
 		this.buildType = building;
 		switch(building) {
 		case WALL:
 			String wall1 = "1"+teamColour+"WallHorizontal";
 			String wall2 = "1"+teamColour+"WallVertical";
 			graphics = Arrays.asList(wall1, wall2);
-			setBuilding("Wall", graphics.get(0), 15f, 3550, 3, 0);
+			setBuilding("Wall", graphics.get(0), 15f, 3550, 3);
 			break;
 		case GATE:
 			graphics = Arrays.asList("gate1", "gate2");
-			setBuilding("Gate", graphics.size() >1 ? graphics.get(0):"spacman_ded", 15f, 2550, 3, 0);
+			setBuilding("Gate", graphics.size() >1 ? graphics.get(0):"spacman_ded", 15f, 2550, 3);
 			break;
 		case TURRET:
 			setAllTextures(5);
-			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1850, 12, 16);
+			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1850, 20, 0);
 			break;
 		case BASE:
 			setAllTextures(5);
@@ -84,7 +88,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case BARRACKS:
 			setAllTextures(5);
-			setBuilding("Barracks", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1.5f, 2000, 3);
+			setBuilding("Barracks", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 2000, 3);
 			break;
 		case BUNKER:
 			setAllTextures(5);
@@ -198,7 +202,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			if (!this.isSelected()) {
 				this.makeSelected();
 				handler.registerForRightClickNotification(this);
-				Sound loadedSound = sound.loadSound("closed.wav");
+				Sound loadedSound = sound.loadSound("baseSelect.mp3");
 				sound.playSound(loadedSound);
 			}
 		} else {
@@ -223,9 +227,33 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param i time since last tick
 	 */
 	public void onTick(int i) {
-		if (this.getOwner() == -1 && built)  {
-			modifyFogOfWarMap(true, getFogRange());
-			addActions(buildType);
+		if (built)  {
+			if (this.getOwner() < 0) {
+				modifyFogOfWarMap(true, getFogRange());
+				addActions(buildType);
+			}
+			if (buildType == BuildingType.TURRET && !(currentAction.isPresent()) && canAttack) {
+				//Enemies within attack range are found
+				List<BaseEntity> entityList = GameManager.get().getWorld().getEntities();
+				List<AttackableEntity> enemy = new ArrayList<AttackableEntity>();
+				for (BaseEntity e: entityList) {
+					//If an attackable entity
+					if (e instanceof AttackableEntity) {
+						//Not owned by the same player
+						AttackableEntity attackable = (AttackableEntity) e;
+						if (!this.sameOwner(attackable)) {
+							//Within attacking distance
+							float diffX = attackable.getPosX() - this.getPosX();
+							float diffY = attackable.getPosY() - this.getPosY();
+							if (Math.abs(diffX) + Math.abs(diffY) <= this.getAttackRange()) {
+								LOGGER.debug("ENEMY IN SIGHTS");
+								enemy.add((AttackableEntity) e);
+							}
+						}
+					}
+				}
+				aggressiveBehaviour(enemy);
+			}
 		}
 		if(getHealth()<=0 && built) {
 			modifyFogOfWarMap(false,getFogRange());
@@ -239,7 +267,24 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		}
 	}
 	
-	
+	/**
+	 * Will attack any enemy in its attack range.
+	 * @param enemy
+	 */
+	public void aggressiveBehaviour(List<AttackableEntity> enemy) {
+		//Attack closest enemy
+		for (int i=1; i<=getAttackRange(); i++) {
+			for (AttackableEntity a: enemy) {
+				float xDistance = a.getPosX() - this.getPosX();
+				float yDistance = a.getPosY() - this.getPosY();
+				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
+				if (distanceEquality) {
+					attack(a);
+					return;
+				}
+			}
+		}
+	}
 	/**
 	 * @return Building Name
 	 */
@@ -314,7 +359,17 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         this.numOfSolider = numOfSolider;
     }
     
-    private void setBuilding(String buildingType,  String texture, float buildSpeed, int maxHealth, int fogRange) {
+	/**
+	 * Sets building details
+	 * 
+	 *  @param buildingType
+	 *  @param texture
+	 *  @param buildSpeed
+	 *  @param maxHealth
+	 *  @param fogRange
+	 */
+    private void setBuilding(String buildingType,  String texture, float buildSpeed, 
+    		int maxHealth, int fogRange) {
         this.setTexture(texture);
         this.setBuildSpeed(buildSpeed);
         this.setMaxHealth(maxHealth);
@@ -323,9 +378,24 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         setFogRange(fogRange);
     }
     
-    private void setBuilding(String buildingType, String texture, float buildSpeed, int maxHealth, int fogRange, int damage) {
+	/**
+	 * Sets building details and gives it stats for attacking
+	 * 
+	 *  @param buildingType
+	 *  @param texture
+	 *  @param buildSpeed
+	 *  @param maxHealth
+	 *  @param fogRange
+	 *  @param damage
+	 */
+    private void setBuilding(String buildingType, String texture, float buildSpeed, 
+    		int maxHealth, int fogRange, int damage) {
         setBuilding(buildingType, texture, buildSpeed, maxHealth, fogRange);
         this.setDamage(damage);
+		this.setArmorDamage(500);
+		this.setAttackRange(fogRange);
+		this.setMaxAttackSpeed(10);
+		this.setAttackSpeed(10);
     }
     
     /**
@@ -340,6 +410,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         case GATE:  
             break;
         case TURRET:  
+    		this.addNewAction(ActionType.UNLOAD);
             break;
         case BASE:
             this.addNewAction(EntityID.ASTRONAUT);
@@ -352,12 +423,12 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
             this.addNewAction(EntityID.CARRIER);
             break;
         case BUNKER:
-            this.addNewAction(EntityID.SNIPER);
-            this.addNewAction(EntityID.TANKDESTROYER);
-            this.addNewAction(EntityID.SPATMAN);
             break;
         case HEROFACTORY:
             this.addNewAction(EntityID.COMMANDER);
+            this.addNewAction(EntityID.SNIPER);
+            this.addNewAction(EntityID.TANKDESTROYER);
+            this.addNewAction(EntityID.SPATMAN);
             break;
         case SPACEX:
             break;
@@ -376,6 +447,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	}
 	
 	/**
+	 * Gets entity stats
 	 * @return The stats of the entity
 	 */
 	@Override
@@ -383,6 +455,10 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 		return new EntityStats(building,this.getHealth(),this.getMaxHealth(), null, this.getCurrentAction(), this);
 	}
 	
+	/**
+	 * Returns Sets all string textures and adds them to list
+	 * @param loadnumber how many types of textures to load
+	 */
 	public void setAllTextures(int loadnumber) {
 		try {
 			graphics = new ArrayList<String>(loadnumber);
@@ -395,5 +471,29 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			LOGGER.error("setAlltexture has error");
 			return;
 		}
+	}
+	
+	/**
+	 * Helper function for attack. Override if the entity has different types of target.
+	 * Set the target type to be enemy or friend or etc.. and check if the target is valid
+	 * @param target to be attacked
+	 * @return boolean true if valid target
+	 */
+	public boolean setTargetType(AttackableEntity target) {
+		if (!this.sameOwner(target) //(belongs to another player, currently always true)
+				&& this!= target) { //prevent soldier suicide when owner is not set
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Make the building start attacking target
+	 * @param target to be attacked
+	 */
+	public void attack(AttackableEntity target){
+		if (setTargetType(target)) {
+			currentAction = Optional.of(new AttackAction(this, target));
+		} 
 	}
 }

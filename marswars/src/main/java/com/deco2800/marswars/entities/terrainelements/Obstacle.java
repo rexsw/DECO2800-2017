@@ -37,7 +37,7 @@ public class Obstacle extends BaseEntity {
                 break;
         }
         this.canWalkOver = false;
-        this.setCost(100000); //pathfinding should never go through this
+        //this.setCost(100000); This doesn't work unfortunately. I will add a clause in the pathfinder itself
         if (type==ObstacleType.TREE1||type==ObstacleType.TREE2||type==ObstacleType.TREE3) {
             this.setXoff(width*0.7f);
             this.setYoff(width*0.15f);

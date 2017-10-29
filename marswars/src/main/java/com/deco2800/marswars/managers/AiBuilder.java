@@ -28,7 +28,7 @@ public class AiBuilder extends Manager {
 		LOGGER.info("Rock count: " + rm.getRocks(team));
 		// Build building
 		BuildingType building = decideBuilding(team);
-		if (rm.getRocks(team) > building.getCost()) {
+		if (building != null && rm.getRocks(team) > building.getCost()) {
 			if(findloc(xy, building)) {
 				BuildAction buildAction = new BuildAction(builder, building, xy[0], xy[1]);
 				LOGGER.info("Ai - Build " + building);
@@ -52,6 +52,9 @@ public class AiBuilder extends Manager {
 		int buildingNum = black.count(team, Field.BUILDINGS);
 		LOGGER.info("Building count: " + buildingNum);
 		// follow this build pattern
+		if (buildingNum >20) {
+			return null;
+		}
 		switch(buildingNum - 1){
 		case 0:
 			return BuildingType.BUNKER;
@@ -86,10 +89,10 @@ public class AiBuilder extends Manager {
 		int originalY = (int) xy[1];
 		int xbuildArea = (int)(GameManager.get().getWorld().getWidth()*.15f);
 		int ybuildArea = (int)(GameManager.get().getWorld().getLength()*.15f);
-		int worldXBoundary = (GameManager.get().getWorld().getWidth() - 1);
+		int worldXBoundary = (GameManager.get().getWorld().getWidth());
 		int worldYBoundary = (GameManager.get().getWorld().getLength() - 1);
 		int avoidInfinite = 0;
-		int randx, randy;
+		int randx, randy, xModified;
 		do {
 			int lowx = 1 < originalX - xbuildArea ? (originalX - xbuildArea) : 1;
 			int highx = worldXBoundary > (originalX + xbuildArea) ? (originalX + xbuildArea) : worldXBoundary;
@@ -97,8 +100,10 @@ public class AiBuilder extends Manager {
 			int highy = worldYBoundary > originalY + ybuildArea ? originalY + ybuildArea : worldYBoundary;
 			randx = ThreadLocalRandom.current().nextInt(lowx, highx);
 			randy = ThreadLocalRandom.current().nextInt(lowy, highy);
+			//This modifier 'centers' point to be checked
+			xModified = randx - ((int)(type.getBuildSize()+1)/2);
 			avoidInfinite ++;
-		}  while(!GameManager.get().getWorld().checkValidPlace(type, randx, randy, (type.getBuildSize()), 0) && avoidInfinite < 100);
+		}  while(!GameManager.get().getWorld().checkValidPlace(type, xModified, randy, (type.getBuildSize()), 0) && avoidInfinite < 100);
 		if (avoidInfinite == 100) {
 			return false;
 		}

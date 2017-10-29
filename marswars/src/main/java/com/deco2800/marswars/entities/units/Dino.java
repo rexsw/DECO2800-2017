@@ -24,6 +24,7 @@ public class Dino extends AmbientAnimal{
 		this.setAttackSpeed(1);
 		this.setDrop(ResourceType.BIOMASS);
 		this.setSpeed(0.01f);
+		
 	}
 	
 	@Override 
