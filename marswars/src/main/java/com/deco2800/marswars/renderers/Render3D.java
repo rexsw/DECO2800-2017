@@ -82,7 +82,7 @@ public class Render3D implements Renderer {
         for (AbstractEntity r : renderables) {
             int x = (int) Math.floor(r.getPosX());
             int y = (int) Math.floor(r.getPosY());
-            if (fogManager.getBlackFog((int)Math.round(r.getPosX()), (int)Math.round(r.getPosY())) != 0 ||!fogManager.getToggleFog()) {
+            if (FogManager.getBlackFog(Math.round(r.getPosX()), Math.round(r.getPosY())) != 0 ||!FogManager.getToggleFog()) {
                 if (r.canWalOver()) {
                     walkables.add(r);
                 } else if (r instanceof HealthBar) {
@@ -103,8 +103,10 @@ public class Render3D implements Renderer {
         renderEntities(entities, batch, camera,0);
         renderEntities(hpBars, batch, camera,0);
 
-        renderEntities(fogs, batch, camera, 0);
-        renderEntities(blackFogs, batch, camera, 0);
+        if (FogManager.getToggleFog()) {
+            renderEntities(fogs, batch, camera, 0);
+            renderEntities(blackFogs, batch, camera, 0);
+        }
 
         //rerender the clickSelection on top of everything
         renderEntities(walkables, batch, camera,1);
