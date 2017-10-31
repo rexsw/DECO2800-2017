@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainmenu.MainMenu;
 import com.deco2800.marswars.managers.FogManager;
@@ -176,9 +177,9 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-//            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
-//                setBattleFlag(1);
-//            }
+            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
+                setBattleFlag(1);
+            }
 //
 //            //multi selection entities
 //            if(entity instanceof MultiSelectionTile){
