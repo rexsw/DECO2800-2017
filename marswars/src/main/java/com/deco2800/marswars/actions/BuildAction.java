@@ -119,14 +119,14 @@ public class BuildAction implements DecoAction{
 			if (state == State.CANCEL_BUILD) {
 				if (temp != null) {
 					GameManager.get().getWorld().removeEntity(temp);
-					if (sound != null && id != 0) {
+					if (sound != null && id != 0 && !actor.isAi()) {
 						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
 						soundManager.stopSound(sound, id);
 					}
 				}
 				if (base != null){
 					GameManager.get().getWorld().removeEntity(base);
-					if (sound != null && id != 0) {
+					if (sound != null && id != 0 && !actor.isAi()) {
 						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
 						soundManager.stopSound(sound, id);
 					}
@@ -153,7 +153,7 @@ public class BuildAction implements DecoAction{
 				}
 			} else if (state == State.BUILD_STRUCTURE) {
 				if (base != null) {
-					if (currentHealth == 10) {
+					if (currentHealth == 10 && !actor.isAi()) {
 						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
 						sound = soundManager.loadSound("building.wav");
 						id = soundManager.playSound(sound);
@@ -163,8 +163,10 @@ public class BuildAction implements DecoAction{
 						currentHealth = maxHealth;
 						base.animate3();
 						base.setBuilt(true);
-						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
-						soundManager.stopSound(sound, id);
+						if (!actor.isAi()) {
+							SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
+							soundManager.stopSound(sound, id);
+						}
 						completed = true;
 						LOGGER.error("FINALISED");
 					} else if (maxHealth / 2 < currentHealth) {

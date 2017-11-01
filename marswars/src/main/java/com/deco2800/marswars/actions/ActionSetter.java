@@ -2,6 +2,7 @@ package com.deco2800.marswars.actions;
 
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityID;
 import com.deco2800.marswars.entities.terrainelements.Resource;
@@ -69,7 +70,7 @@ public final class ActionSetter {
             case MOVE:
                 return doMove(performer, x, y);
             case UNLOAD:
-                return doUnload((Soldier) performer);
+                return doUnload((AttackableEntity) performer);
             case UNLOADINDIVIDUAL:
                 return doUnloadIndividual((Soldier) performer);
             case ATTACKMOVE:
@@ -118,11 +119,21 @@ public final class ActionSetter {
      * @param performer the entity to be assigned the action
      * @return true
      */
-    private static boolean doUnload(Soldier performer) {
+    private static boolean doUnload(AttackableEntity performer) {
         LOGGER.info("Try to unload");
-        Carrier carrier =  (Carrier)performer;
-        carrier.unload();
-        return true;
+        if (performer instanceof Carrier) {
+            Carrier carrier =  (Carrier)performer;
+            carrier.unload();
+            return true;
+        }
+        else if (performer instanceof Turret) {
+        	 Turret carrier =  (Turret)performer;
+        	 carrier.setAction(new UnloadAction(carrier));
+        	 return true;
+        }
+        else {
+        	return false;
+        }
     }
     
     /**

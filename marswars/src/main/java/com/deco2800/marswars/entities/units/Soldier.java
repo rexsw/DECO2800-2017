@@ -33,7 +33,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	protected String uprightTextureName;
 	protected String downleftTextureName;
 	protected String downrightTextureName;
-	protected String defaultMissileName;
 	protected String movementSound;
 	protected String name;
 	private ActionType nextAction;
@@ -217,14 +216,6 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		if (nextAction != null) {
 			ActionSetter.setAction(this, x, y, nextAction);
 			nextAction = null;
-		}else if(!entities.isEmpty() && entities.get(0) instanceof Turret){
-			Turret turret = (Turret) entities.get(0);
-			turret.setNumOfSolider(turret.getNumOfSolider() + 1);
-			turret.powerUpTurret();
-			currentAction = Optional.of(new MoveAction((int) x - 1, (int) y - 1, this));
-			turret.addNewAction(EntityID.SOLDIER);
-			this.setHealth(0);
-			LOGGER.error("solider in the tower now");
 		}else {
 			moveOrAttack(entities, x, y);
 			this.setTexture(defaultTextureName);
@@ -572,7 +563,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	public void setNextAction(ActionType action) {
 		this.nextAction = action;
 	}
-
+	
+	@Override
 	public String getMissileTexture() {
 		return defaultMissileName;
 	}

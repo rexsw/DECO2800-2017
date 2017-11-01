@@ -188,7 +188,6 @@ public class Render3D implements Renderer {
             if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1)
         	continue;
 
-
             if (entity instanceof BlackTile)
                 if (FogManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
                     continue;

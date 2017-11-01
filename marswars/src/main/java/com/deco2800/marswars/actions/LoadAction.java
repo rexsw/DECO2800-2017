@@ -1,5 +1,8 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
@@ -27,7 +30,7 @@ public class LoadAction extends AbstractPauseAction {
     private MoveAction action = null;
     private State state = State.START_STATE;
     private Soldier carrier;
-    private Soldier target;
+    private AttackableEntity target;
     private int ticksLoad = 50;
 	// Variables for pause
 	private TimeManager timeManager = (TimeManager)
@@ -47,6 +50,21 @@ public class LoadAction extends AbstractPauseAction {
 	this.carrier = carrier;
 	this.target = target;
     }
+    
+    /**
+     * Constructor for the LoadAction
+     * 
+     * @param Astronaut
+     *            The unit to be loaded into a turret
+     * @param target
+     *            The turret to be loaded into
+     */
+    public LoadAction(Astronaut astro, Turret turret) {
+	super();
+	this.carrier = astro;
+	this.target = turret;
+    }
+    
 
     /**
      * Sets the state to move until the carrier is close to the target then
@@ -78,11 +96,12 @@ public class LoadAction extends AbstractPauseAction {
 	LOGGER.info("loaded units");
 	ticksLoad--;
 	if (ticksLoad == 0) {
-	    if (((Carrier) carrier).loadPassengers(target)) {
+		if (target instanceof Turret) {
+			if (((Turret) target).loadAstronaut((Astronaut) carrier)) {
+			}
+		}else if (((Carrier) carrier).loadPassengers((Soldier) target)) {
+	    } 
 		completed = true;
-	    } else {
-		return;
-	    }
 	    ticksLoad = 50;
 	}
 

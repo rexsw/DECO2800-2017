@@ -2,6 +2,7 @@ package com.deco2800.marswars.util;
 
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.entities.BaseEntity;
+import com.deco2800.marswars.entities.terrainelements.Obstacle;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.worlds.BaseWorld;
@@ -160,6 +161,8 @@ public class Pathfinder {
 										add = false;
 									}
 								}
+							}else if (b instanceof Obstacle) {
+								add = false;
 							}
 						}
 						if (add)

@@ -1,5 +1,7 @@
 package com.deco2800.marswars.actions;
 
+import com.deco2800.marswars.buildings.Turret;
+import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Carrier;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.managers.GameManager;
@@ -22,7 +24,7 @@ public class UnloadAction extends AbstractPauseAction {
 	    .getLogger(LoadAction.class);
     private boolean completed = false;
     private State state = State.START_STATE;
-    private Soldier carrier;
+    private AttackableEntity carrier;
     private int ticksLoad = 50;
     // Variables for pause
     private TimeManager timeManager = (TimeManager)
@@ -34,7 +36,7 @@ public class UnloadAction extends AbstractPauseAction {
      * @param carrier
      *            The carrier unit assigned to load
      */
-    public UnloadAction(Soldier carrier) {
+    public UnloadAction(AttackableEntity carrier) {
 	super();
 	this.carrier = carrier;
     }
@@ -62,11 +64,12 @@ public class UnloadAction extends AbstractPauseAction {
 	LOGGER.info("unloaded units");
 	ticksLoad--;
 	if (ticksLoad == 0) {
-	    if (((Carrier) carrier).unloadPassenger()) {
+		if (carrier instanceof Turret) {
+			if (((Turret) carrier).unloadAstronauts()) {
+			}
+		}else if (((Carrier) carrier).unloadPassenger()) {
+	    } 
 		completed = true;
-	    } else {
-		return;
-	    }
 	    ticksLoad = 50;
 	}
 

@@ -639,7 +639,14 @@ public class HUDView extends ApplicationAdapter{
 						}else {
 							selectedEntity.setNextAction((ActionType)current);
 						}
-					} else if (currentActions.get(index) instanceof BuildingType) {
+					}
+					if (current instanceof ActionType) {
+						if (((ActionType)current) == ActionType.UNLOAD) {
+							selectedEntity.setAction(new UnloadAction((BuildingEntity) selectedEntity));
+						}else {
+							selectedEntity.setNextAction((ActionType)current);
+						}
+					}else if (currentActions.get(index) instanceof BuildingType) {
 						LOGGER.info("Try to build");
 						if (currentActions.get(index) == BuildingType.WALL) {
 							if (selectedEntity.getAction().isPresent() && selectedEntity.getAction().get() instanceof BuildWallAction) {

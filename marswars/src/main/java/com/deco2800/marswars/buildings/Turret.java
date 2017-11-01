@@ -1,22 +1,22 @@
 package com.deco2800.marswars.buildings;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.deco2800.marswars.actions.AttackAction;
-import com.deco2800.marswars.actions.MoveAction;
-import com.deco2800.marswars.entities.EntityID;
-import com.deco2800.marswars.entities.units.AttackableEntity;
+import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.actions.ActionType;
+import com.deco2800.marswars.entities.units.Astronaut;
+import com.deco2800.marswars.entities.units.Soldier;
+import com.deco2800.marswars.managers.GameManager;
+import com.deco2800.marswars.managers.SoundManager;
 import com.deco2800.marswars.worlds.AbstractWorld;
 
 /**
- * Created by judahbennett on 25/8/17.
+ * Created by grumpygandalf on 25/9/17.
  *
- * A turret that can be used for base defence
+ * A turret that can be used for base defense
  */
 
 public class Turret extends BuildingEntity {
-
+	
+	int totalLoaded = 0;
 	/**
 	 * Constructor for the turret.
 	 * @param world The world that will hold the turret.
@@ -26,48 +26,65 @@ public class Turret extends BuildingEntity {
 	 */
 	public Turret(AbstractWorld world, float posX, float posY, float posZ, int owner) {
 		super(posX, posY, posZ, BuildingType.TURRET, owner);
+		this.defaultMissileName = "missileturret";
+		setStance(2);
 	}
 	
+    /**
+     * Increases damage * 2 of turret
+     */
 	public void powerUpTurret(){
 		this.setDamage(this.getDamageDeal()*2);
 	}
 	
-	public void releaseTurret(){
-		if(this.getNumOfSolider() > 0){
-			this.setNumOfSolider(this.getNumOfSolider() - 1);
-		}		
+    /**
+     * Adds loaded target into list of loaded units
+     * 
+     * @param target
+     * @return true if able to load the target, false otherwise
+     */
+    public boolean loadAstronaut(Astronaut target) {
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+			.getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound("carrier-loading-sound.mp3");
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
 	}
-	
-	public void attack(AttackableEntity target){
-		int x = (int) target.getPosX();
-		int y = (int) target.getPosY();
-		if (setTargetType(target)) {
-			currentAction = Optional.of(new AttackAction(this, target));
-		} 
-		else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+	if (totalLoaded< 5) {
+		target.setHealth(-1);
+		totalLoaded++;
+		this.setDamage(45 * totalLoaded);
+		canAttack = true;
+		return true;
+	    }
+	return false;
+    }
+    
+    /**   
+    * Unloads astronauts from turret
+    * 
+    * @param target
+    * @return true if able to unload astronauts false otherwise
+    */
+   public boolean unloadAstronauts() {
+	try {
+	    SoundManager sound = (SoundManager) GameManager.get()
+			.getManager(SoundManager.class);
+		Sound loadedSound = sound.loadSound("carrier-loading-sound.mp3");
+		sound.playSound(loadedSound);
+	} catch (NullPointerException e) {
+	}
+	if (totalLoaded >= 1) {
+		Astronaut astro = new Astronaut(this.getPosX(), this.getPosY(), 0, this.getOwner());
+		GameManager.get().getWorld().addEntity(astro);
+		totalLoaded--;
+		this.setDamage(45 * totalLoaded);
+		if (totalLoaded == 0) {
+			canAttack = false;
 		}
+		return true;
 	}
-	public boolean setTargetType(AttackableEntity target) {
-		if (!this.sameOwner(target) //(belongs to another player, currently always true)
-				&& this!= target) { //prevent soldier suicide when owner is not set
-			return true;
-		}
-		return false;
-	}
-	
-	public void aggressiveBehaviour(List<AttackableEntity> enemy) {
-		//Attack closest enemy
-		for (int i=1; i<=getAttackRange(); i++) {
-			for (AttackableEntity a: enemy) {
-				float xDistance = a.getPosX() - this.getPosX();
-				float yDistance = a.getPosY() - this.getPosY();
-				boolean distanceEquality = (Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01);
-				if (distanceEquality) {
-					attack(a);
-					return;
-				}
-			}
-		}
-	}
+	return false;
+   }
 }

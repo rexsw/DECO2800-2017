@@ -7,7 +7,9 @@ import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.actions.BuildWallAction;
 import com.deco2800.marswars.actions.DecoAction;
 import com.deco2800.marswars.actions.GatherAction;
+import com.deco2800.marswars.actions.LoadAction;
 import com.deco2800.marswars.actions.MoveAction;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.GatheredResource;
@@ -99,12 +101,25 @@ public class Astronaut extends Soldier {
 		}
 		boolean attack = !entities.isEmpty() && entities.get(0) instanceof AttackableEntity;
 		boolean gatherResource = !entities.isEmpty() && entities.get(0) instanceof Resource;
-		
+		Turret loadTurret = null;
+		for (BaseEntity b : entities) {
+			if (b instanceof Turret) {
+				loadTurret = (Turret)b;
+			}
+		}
+		if (loadTurret != null){ 
+			LOGGER.debug("LOADING INTO TURRET");
+			this.setCurrentAction(Optional.of(new LoadAction(this, loadTurret)));
+			this.setTexture(defaultTextureName);
+			SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+			Sound loadedSound = sound.loadSound(movementSound);
+			sound.playSound(loadedSound);
+			return;
+		}
 		if (attack) {
 			// we cant assign different owner yet
 			AttackableEntity target = (AttackableEntity) entities.get(0);
 			attack(target);
-			
 		} else if (gatherResource) { 
 			LOGGER.info("Gather resources");
 			this.setCurrentAction(Optional.of(new GatherAction(this, entities.get(0))));

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.audio.Sound;
+import com.deco2800.marswars.buildings.Turret;
 import com.deco2800.marswars.entities.units.AttackableEntity;
 import com.deco2800.marswars.entities.units.Bullet;
 import com.deco2800.marswars.entities.units.Medic;
@@ -80,15 +81,22 @@ public class ShootAction extends AbstractPauseAction {
 	
 	private void setUpMissile() {
 		try {
-		SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
-		Sound loadedSound = sound.loadSound("shooting.mp3");
-		sound.playSound(loadedSound);
+			if (!entity.isAi()) {
+				SoundManager sound = (SoundManager) GameManager.get().getManager(SoundManager.class);
+				Sound loadedSound = sound.loadSound("shooting.mp3");
+				sound.playSound(loadedSound);
+			}
 		} catch (Exception e) {
 			LOGGER.error("Sound shootaction error");
 		}
+		if (entity instanceof Turret) {
+			GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX()-.5f, entity.getPosY()-.5f, entity.getPosZ()+2.4f,
+					enemy, entity.getDamageDeal(), entity.getArmorDamage(), entity.getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); 
+		}else {
+			GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
+					enemy, entity.getDamageDeal(), entity.getArmorDamage(), entity.getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); 
+		}
 		
-		GameManager.get().getWorld().addEntity(new Bullet(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
-				enemy, entity.getDamageDeal(), entity.getArmorDamage(), ((Soldier) entity).getMissileTexture(), entity.getAreaDamage(), entity.getOwner(), entity)); //((Soldier) entity).getMissileTexture()
 	}
 	
 	private float getDistanceToEnemy() {
