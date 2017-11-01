@@ -538,11 +538,11 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		TextureManager tm = (TextureManager) GameManager.get().getManager(TextureManager.class);
 		try {
 			this.selectedTextureName = tm.loadUnitSprite(this, "selected");
-			this.defaultTextureName =tm.loadUnitSprite(this, "default") ;
-			this.upleftTextureName =tm.loadUnitSprite(this, "upleft") ;
-			this.uprightTextureName =tm.loadUnitSprite(this, "upright") ;
-			this.downleftTextureName =tm.loadUnitSprite(this, "downleft") ;
-			this.downrightTextureName =tm.loadUnitSprite(this, "downright") ;
+			this.defaultTextureName = tm.loadUnitSprite(this, "default") ;
+			this.upleftTextureName = tm.loadUnitSprite(this, "upleft") ;
+			this.uprightTextureName = tm.loadUnitSprite(this, "upright") ;
+			this.downleftTextureName = tm.loadUnitSprite(this, "downleft") ;
+			this.downrightTextureName = tm.loadUnitSprite(this, "downright") ;
 			this.defaultMissileName = tm.loadUnitSprite(this, "missile");
 			this.movementSound = "endturn.wav";
 		}

@@ -7,9 +7,7 @@ import com.deco2800.marswars.entities.EntityStats;
 import com.deco2800.marswars.entities.terrainelements.Resource;
 import com.deco2800.marswars.entities.terrainelements.ResourceType;
 import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TechnologyManager;
 import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.util.Point;
 import com.deco2800.marswars.worlds.BaseWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,7 @@ import java.util.Random;
  * @author Michelle Mo
  *
  */
-public class AmbientAnimal extends Soldier{
+public class AmbientAnimal extends Soldier {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AttackableEntity.class);
 	private AmbientState state;
 	private int maxTravelTime;
@@ -127,9 +125,8 @@ public class AmbientAnimal extends Soldier{
 		/* Check that the new position is free
 		with the exception of Water entities */
 		/* Finally move to that position using a move action */
-		this.setAction(new MoveAction(r.nextInt((int) this.getPosX() + 10) % world.getWidth(), 
+		this.setAction(new MoveAction(r.nextInt((int) this.getPosX() + 10) % world.getWidth(),
 				r.nextInt((int) this.getPosY() + 10)% world.getLength(), this));
-	
 	}
 	
 	

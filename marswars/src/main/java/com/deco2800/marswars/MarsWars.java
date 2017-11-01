@@ -132,8 +132,13 @@ public class MarsWars extends ApplicationAdapter implements ApplicationListener 
 		GameManager.get().getMainMenu().renderGame(batch, camera);
 
 		/* Dispose of the spritebatch to not have memory leaks */
-		Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
-				+  " - FPS: "+ Gdx.graphics.getFramesPerSecond() + " Tick: " + Game.ticktime);
+		if (GameManager.get().getWorld() != null) {
+			Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
+					+ " - FPS: " + Gdx.graphics.getFramesPerSecond() + " Tick: " + Game.ticktime + " Entities: " + GameManager.get().getWorld().getEntities().size());
+		} else {
+			Gdx.graphics.setTitle("DECO2800 " + this.getClass().getCanonicalName()
+					+ " - FPS: " + Gdx.graphics.getFramesPerSecond() + " Tick: " + Game.ticktime);
+		}
 		//trying to eliminate render crashes in the most naive way possible:
 		//will likely cause frames to drop, if the problem is present in sequential frames then
 		//this will imporve nothing

@@ -558,19 +558,19 @@ public class Game{
 			public void run() {
 				// do something important here, asynchronously to the rendering thread
 				while(true) {
-					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 20000000) {
-						ticktime = ((TimeUtils.nanoTime() - lastGameTick) / 1000000.0f);
+					if (!timeManager.isPaused() && TimeUtils.nanoTime() - lastGameTick > 10000000) {
+						ticktime = (int)(((TimeUtils.nanoTime() - lastGameTick) / 1000000.0f));
+						lastGameTick = TimeUtils.nanoTime();
 
 						/*
 						 * threshold here need to be tweaked to make things move better for different CPUs 
 						 */
 						for (Renderable e : GameManager.get().getWorld().getEntities()) {
 							if (e instanceof Tickable) {
-								((Tickable) e).onTick(0);
+									((Tickable) e).onTick(0);
 							}
 						}
 						GameManager.get().onTick(0);
-						lastGameTick = TimeUtils.nanoTime();
 					}
 				}
 			}

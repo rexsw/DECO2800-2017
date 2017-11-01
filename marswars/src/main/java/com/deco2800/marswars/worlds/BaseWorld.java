@@ -1,7 +1,6 @@
 package com.deco2800.marswars.worlds;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.deco2800.marswars.actions.BuildAction;
 import com.deco2800.marswars.buildings.BuildingEntity;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.BaseEntity;
@@ -13,12 +12,11 @@ import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.managers.GameManager;
 import com.deco2800.marswars.renderers.Renderable;
 import com.deco2800.marswars.util.Array2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A base world for the game. Use this not AbstractWorld
@@ -172,7 +170,8 @@ public class BaseWorld extends AbstractWorld {
 			for (int y = collisionCoords[2]; y < collisionCoords[3]; y++) {
 				collisionMap.get(x, y).remove(entity);
 			}
-		}	
+		}
+
 	}
 
 	/**
