@@ -68,7 +68,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 		} else if (find) { // if target is still existing then continue the action
 			currentAction.get().doAction();
 		} else { // either the target is not existing anymore or the action is completed
-
 			currentAction = Optional.empty();
 			GameManager.get().getWorld().removeEntity(this);
 		}

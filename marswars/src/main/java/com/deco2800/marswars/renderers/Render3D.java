@@ -9,12 +9,10 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.deco2800.marswars.entities.*;
+import com.deco2800.marswars.entities.units.MissileEntity;
 import com.deco2800.marswars.entities.units.Soldier;
 import com.deco2800.marswars.mainmenu.MainMenu;
-import com.deco2800.marswars.managers.FogManager;
-import com.deco2800.marswars.managers.GameManager;
-import com.deco2800.marswars.managers.TextureManager;
-import com.deco2800.marswars.managers.WeatherManager;
+import com.deco2800.marswars.managers.*;
 import com.deco2800.marswars.worlds.FogWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,20 +174,19 @@ public class Render3D implements Renderer {
 
             Renderable entity = entities.get(index);
 
-//            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
-//                setBattleFlag(1);
-//            }
-//
-//            //multi selection entities
-//            if(entity instanceof MultiSelectionTile){
-//                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
-//                continue;
-//            }
-//
-//            //carrier unit: if the entity is loaded, don't render him
-//            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1)
-//        	continue;
-//
+            if(entity instanceof MissileEntity && !MainMenu.player.battleTheme.isPlaying()) {
+                setBattleFlag(1);
+            }
+
+            //multi selection entities
+            if(entity instanceof MultiSelectionTile){
+                if(MultiSelection.getSelectedTiles((int) entity.getPosX(), (int) entity.getPosY())==0)
+                continue;
+            }
+
+            //carrier unit: if the entity is loaded, don't render him
+            if(entity instanceof Soldier && ((Soldier)entity).getLoadStatus()==1)
+        	continue;
 
             if (entity instanceof BlackTile)
                 if (FogManager.getBlackFog((int) entity.getPosX(), (int) entity.getPosY()) == 1)
