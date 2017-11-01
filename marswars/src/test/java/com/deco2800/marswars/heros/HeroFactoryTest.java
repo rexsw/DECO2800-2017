@@ -50,7 +50,7 @@ public class HeroFactoryTest extends BaseTest{
         // -1 means not AI
         assertTrue(heroFactory.getOwner() == -1);
         assertTrue(heroFactory.getBuildSize() == 2f);
-        assertTrue(heroFactory.getHealth() == 3000);
+        assertTrue(heroFactory.getHealth() == 2800);
         assertTrue(heroFactory.toString() == "HeroFactory");
         assertTrue(heroFactory.isFlooded() == false);
         assertTrue(heroFactory.getBuilt() == true);

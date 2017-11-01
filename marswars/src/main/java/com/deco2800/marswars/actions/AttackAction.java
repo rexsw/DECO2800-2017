@@ -58,7 +58,7 @@ public class AttackAction implements DecoAction {
 					attackingAction();
 					return;
 				default: //SETUP_MOVE case. should not be able to get any other state besides SETUP_MOVE here.
-					action = new MoveAction(enemy.getPosX(), enemy.getPosY(), entity);
+					action = new MoveAction((int)enemy.getPosX(), (int)enemy.getPosY(), entity);
 					state = State.MOVE_TOWARDS;
 					return;
 			}
@@ -127,7 +127,8 @@ public class AttackAction implements DecoAction {
 			return;
 		}
 		distance = getDistanceToEnemy();
-		if (distance <= entity.getAttackRange()) {
+		if (distance <= entity.getAttackRange() && Math.abs(entity.getPosX()-(int)(entity.getPosX())) < 0.5f
+				&& Math.abs(entity.getPosY()-(int)(entity.getPosY())) < 0.5f ) {
 			state = State.ATTACK;
 			return;
 		}

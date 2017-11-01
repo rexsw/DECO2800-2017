@@ -3,6 +3,7 @@ package com.deco2800.marswars.entities.units;
 
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.entities.BaseEntity;
 import com.deco2800.marswars.entities.HasAction;
 import com.deco2800.marswars.entities.HasOwner;
@@ -232,6 +233,14 @@ public class AttackableEntity extends BaseEntity implements AttackAttributes, Ha
 	 */
 	@Override
 	public void setAction(DecoAction action) {
+		if (currentAction.isPresent()) {
+			if (currentAction.get() instanceof MoveAction) {
+				if (((MoveAction)currentAction.get()).isCentered()){
+					((MoveAction)currentAction.get()).doAction();
+					return;
+				}
+			}
+		}
 		currentAction = Optional.of(action);
 	}
 

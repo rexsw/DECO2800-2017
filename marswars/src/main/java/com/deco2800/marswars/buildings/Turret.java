@@ -28,6 +28,10 @@ public class Turret extends BuildingEntity {
 		super(posX, posY, posZ, BuildingType.TURRET, owner);
 		this.defaultMissileName = "missileturret";
 		setStance(2);
+		if (this.isAi()) {
+			this.setDamage(90);
+			canAttack = true;
+		}
 	}
 	
     /**

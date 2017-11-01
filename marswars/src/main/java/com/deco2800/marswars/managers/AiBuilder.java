@@ -89,8 +89,8 @@ public class AiBuilder extends Manager {
 		int originalY = (int) xy[1];
 		int xbuildArea = (int)(GameManager.get().getWorld().getWidth()*.15f);
 		int ybuildArea = (int)(GameManager.get().getWorld().getLength()*.15f);
-		int worldXBoundary = (GameManager.get().getWorld().getWidth());
-		int worldYBoundary = (GameManager.get().getWorld().getLength() - 1);
+		int worldXBoundary = (GameManager.get().getWorld().getWidth())+1;
+		int worldYBoundary = (GameManager.get().getWorld().getLength()+1);
 		int avoidInfinite = 0;
 		int randx, randy, xModified;
 		do {

@@ -285,11 +285,11 @@ public class TechnologyManager extends Manager{
 
         // unitAttribute format; <"Name of Unit", [Cost, MaxHealth, Damage, Armor, ArmorDamage, AttackRange, AttackSpeed]>
         unitAttributes.put("TankDestroyer", new int[]{10, 800, 50, 500, 400, 10, 20});
-        unitAttributes.put(soldierString, new int[]{10, 750, 100, 500, 100, 8, 20});
+        unitAttributes.put(soldierString, new int[]{10, 400, 40, 350, 75, 8, 20});
         unitAttributes.put("Tank", new int[]{10, 2500, 100, 1500, 150, 10, 20});
         unitAttributes.put("Astronaut", new int[]{10, 250, 20, 200, 10, 5, 10});
         unitAttributes.put("Medic", new int[]{10, 250, -50, 400, 0, 8, 10});
-        unitAttributes.put("Sniper", new int[]{10, 500, 100, 200, 100, 16, 20});
+        unitAttributes.put("Sniper", new int[]{10, 500, 80, 200, 100, 16, 20});
         unitAttributes.put("Commander", new int[]{10, 1000, 100, 500, 250, 10, 40});
         unitAttributes.put("Ambient", new int[]{10,1000*1000,100,50,0,30});
         unitAttributes.put("Hacker", new int[]{10, 750, 50, 400, 0, 8, 20}); // loyalty damage

@@ -158,6 +158,9 @@ public class BuildAction implements DecoAction{
 				}
 			} else if (state == State.BUILD_STRUCTURE) {
 				if (base != null) {
+					if(base.getHealth() < 0) {
+						state = State.CANCEL_BUILD;
+					}
 					if (currentHealth == 10 && !actor.isAi()) {
 						SoundManager soundManager = (SoundManager) GameManager.get().getManager(SoundManager.class);
 						sound = soundManager.loadSound("building.wav");

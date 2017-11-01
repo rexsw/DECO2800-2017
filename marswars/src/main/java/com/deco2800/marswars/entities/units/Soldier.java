@@ -82,17 +82,16 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		super(posX, posY, posZ, 1, 1, 1);
 		super.setOwner(owner);
 		this.name = "Soldier";
-
+		this.modifyCollisionMap(false);
 		//Accessing the technology manager which contains unit Attributes
 
 		
 		// Everything is just testing
 		this.setAllTextture();
 		this.setTexture(defaultTextureName); // just for testing
-		this.setEntityType(EntityType.UNIT);
-		this.addNewAction(ActionType.DAMAGE);
 		this.addNewAction(ActionType.MOVE);
-		this.addNewAction(ActionType.ATTACKMOVE);
+		this.addNewAction(ActionType.DAMAGE);
+		this.setEntityType(EntityType.UNIT);
 		setAttributes();
 		setStance(2); // Default stance for soldier is aggressive		
 	}
@@ -109,6 +108,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		this.setAttackRange(t.getUnitAttribute(this.name, 5));
 		this.setMaxAttackSpeed(t.getUnitAttribute(this.name, 6));
 		this.setAttackSpeed(t.getUnitAttribute(this.name, 6));
+		this.setFogRange(t.getUnitAttribute(this.name, 5));
 		/*
 		 * was changed to make units moveable in game. need to test other values to make this work well in conjunction
 		 * with the nano second threshold in setThread method in MarsWars.java
@@ -122,10 +122,10 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 		int x = (int) target.getPosX();
 		int y = (int) target.getPosY();
 		if (setTargetType(target)) {
-			currentAction = Optional.of(new AttackAction(this, target));
+			this.setAction(new AttackAction(this, target));
 		} 
 		else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));
+			this.setAction(new MoveAction((int) x, (int) y, this));
 		}
 	}
 	
@@ -233,14 +233,19 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 	 * @param y coordinate along y axis of the mouse right click input
 	 */
 	protected void moveOrAttack(List<BaseEntity> entities, float x, float y) {
-		if (!entities.isEmpty() && entities.get(0) instanceof AttackableEntity) {
+		if (!entities.isEmpty()) {
 			// we cant assign different owner yet
-			AttackableEntity target = (AttackableEntity) entities.get(0);
-			attack(target);
+			AttackableEntity target = null;
+			for (BaseEntity e : entities) {
+				if (e instanceof AttackableEntity && !e.sameOwner(this)) {
+					 target = (AttackableEntity)e;
+					 attack(target);
+					 return;
+				}
+			}
 
-		} else {
-			currentAction = Optional.of(new MoveAction((int) x, (int) y, this));//, this.getSpeed()));
 		}
+		this.setAction(new MoveAction((int) x, (int) y, this));//, this.getSpeed()));
 	}
 	
 	public void setCurrentAction(Optional<DecoAction> currentAction) {
@@ -308,7 +313,8 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 					return;
 				}
 				/* Finally move to that position using a move action */
-				currentAction = Optional.of(new MoveAction((int)p.getX(), (int)p.getY(), this));
+				this.setAction(new MoveAction((int)p.getX(), (int)p.getY(), this));
+				return;
 			}
 			// Stances are considered after this point
 			
@@ -486,7 +492,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				}
 				xLocation = this.getPosX();
 			}
-			currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+			this.setAction(new MoveAction((int)xLocation , (int)yLocation, this));
 			return;
 		}
 	}
@@ -505,7 +511,7 @@ public class Soldier extends AttackableEntity implements Tickable, Clickable, Ha
 				if (distanceEquality) {
 					float xLocation = this.getPosX() + (this.getPosX() - a.getPosX());
 					float yLocation = this.getPosY() + (this.getPosY() - a.getPosY());
-					currentAction = Optional.of(new MoveAction(xLocation , yLocation, this));
+					this.setAction(new MoveAction((int)xLocation , (int)yLocation, this));
 					return;
 				}
 			}

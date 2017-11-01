@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deco2800.marswars.actions.ActionList;
 import com.deco2800.marswars.actions.ActionType;
 import com.deco2800.marswars.actions.DecoAction;
+import com.deco2800.marswars.actions.MoveAction;
 import com.deco2800.marswars.buildings.BuildingType;
 import com.deco2800.marswars.entities.weatherentities.Water;
 import com.deco2800.marswars.hud.EntityPortrait;
@@ -399,6 +400,16 @@ public class BaseEntity extends AbstractEntity implements Selectable, HasOwner {
 	 * @param action the action to perform
 	 */
 	public void setAction(DecoAction action) {
+		// This is an important fix which ensures a unit moves and snaps to a tile before trying to attack
+		// or gather etc. It means the soldier will be properly positioned in the collision map.
+		if (currentAction.isPresent()) {
+			if (currentAction.get() instanceof MoveAction) {
+				if (((MoveAction)currentAction.get()).isCentered()){
+					((MoveAction)currentAction.get()).doAction();
+					return;
+				}
+			}
+		}
 		currentAction = Optional.of(action);
 	}
 

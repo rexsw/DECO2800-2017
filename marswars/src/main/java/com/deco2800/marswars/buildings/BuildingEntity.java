@@ -80,11 +80,11 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case TURRET:
 			setAllTextures(5);
-			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1850, 20, 0);
+			setBuilding("Turret", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 2500, 20, 0);
 			break;
 		case BASE:
 			setAllTextures(5);
-	        setBuilding("Base", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 2500, 3);
+	        setBuilding("Base", graphics.size() >3 ? graphics.get(2):"spacman_ded", 0.5f, 3500, 3);
 			break;
 		case BARRACKS:
 			setAllTextures(5);
@@ -96,11 +96,11 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 			break;
 		case HEROFACTORY:
 			setAllTextures(5);
-			setBuilding("HeroFactory", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 3000, 3);
+			setBuilding("HeroFactory", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 2800, 3);
 			break;
 		case SPACEX:
 			setAllTextures(5);
-			setBuilding("TechBuilding", graphics.size() >3 ? graphics.get(2):"spacman_ded", .8f, 800, 2);
+			setBuilding("TechBuilding", graphics.size() >3 ? graphics.get(2):"spacman_ded", 1f, 1800, 2);
 			break;
 		default:
 			break;
@@ -272,9 +272,24 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
 	 * @param enemy
 	 */
 	public void aggressiveBehaviour(List<AttackableEntity> enemy) {
-		//Attack closest enemy
-		for (int i=1; i<=getAttackRange(); i++) {
-			for (AttackableEntity a: enemy) {
+		//Attack threats first
+		for (AttackableEntity a: enemy) {
+			if (a.getStance() == 2) {
+				for (int i=1; i<=getAttackRange(); i++) {
+					//Attack closest
+					float xDistance = a.getPosX() - this.getPosX();
+					float yDistance = a.getPosY() - this.getPosY();
+					boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
+					if (distanceEquality) {
+						attack(a);
+						return;
+					}
+				}
+			}
+		}
+		for (AttackableEntity a: enemy) {
+			for (int i=1; i<=getAttackRange(); i++) {
+				//Attack closest
 				float xDistance = a.getPosX() - this.getPosX();
 				float yDistance = a.getPosY() - this.getPosY();
 				boolean distanceEquality = Math.abs(Math.abs(yDistance) + Math.abs(xDistance) - i) < 0.01;
@@ -393,7 +408,7 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
         setBuilding(buildingType, texture, buildSpeed, maxHealth, fogRange);
         this.setDamage(damage);
 		this.setArmorDamage(500);
-		this.setAttackRange(fogRange);
+		this.setAttackRange(fogRange-4);
 		this.setMaxAttackSpeed(10);
 		this.setAttackSpeed(10);
     }
@@ -414,13 +429,13 @@ public class BuildingEntity extends AttackableEntity implements Clickable,
             break;
         case BASE:
             this.addNewAction(EntityID.ASTRONAUT);
-            this.addNewAction(EntityID.TANK);
             this.addNewAction(EntityID.SOLDIER);
             break;
         case BARRACKS:
             this.addNewAction(EntityID.MEDIC);
             this.addNewAction(EntityID.HACKER);
             this.addNewAction(EntityID.CARRIER);
+            this.addNewAction(EntityID.TANK);
             break;
         case BUNKER:
             break;

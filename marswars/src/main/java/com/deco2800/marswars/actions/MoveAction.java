@@ -12,16 +12,22 @@ import com.deco2800.marswars.util.Point;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A MoveAction for moving units around
  * Created by timhadwen on 23/7/17.
  */
 public class MoveAction implements DecoAction {
 
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(MoveAction.class);
 	/* Goal positions */
 	private float goalX = 0;
 	private float goalY = 0;
+	private float tmpgoalX = 0;
+	private float tmpgoalY = 0;
+	private boolean nextPath = false;
 
 	/* Entity we are trying to move towards */
 	private AbstractEntity entity;
@@ -49,8 +55,8 @@ public class MoveAction implements DecoAction {
 	 * @param entity entity to move around
 	 */
 	public MoveAction(float goalX, float goalY, AbstractEntity entity) {
-		this.goalX = goalX;
-		this.goalY = goalY;
+		this.goalX = (int)goalX;
+		this.goalY = (int)goalY;
 		this.entity = entity;
 		
 		
@@ -109,10 +115,10 @@ public class MoveAction implements DecoAction {
 				}
 				return;
 			}
-
+			
 			/* grab the next point on the path and attempt to move towards it */
-			float tmpgoalX = path.get(0).getX();
-			float tmpgoalY = path.get(0).getY();
+			tmpgoalX = (int)path.get(0).getX();
+			tmpgoalY = (int)path.get(0).getY();
 			
 			//set unit such that it is facing towards the temporary goal
 			if(entity instanceof Soldier) {
@@ -126,8 +132,8 @@ public class MoveAction implements DecoAction {
 			}
 			/* If we have arrived (or close enough to) then remove this point from the path and continue */
 			if (Math.abs(entity.getPosX() - tmpgoalX) < speed && Math.abs(entity.getPosY() - tmpgoalY) < speed) {
-				entity.setPosX(tmpgoalX);
-				entity.setPosY(tmpgoalY);
+				entity.setPosX(Math.round(tmpgoalX));
+				entity.setPosY(Math.round(tmpgoalY));
 				path.remove(0);
 				return;
 			}
@@ -146,7 +152,6 @@ public class MoveAction implements DecoAction {
 			/* Apply these values to the entity */
 			entity.setPosX(newX);
 			entity.setPosY(newY);
-
 			if (entity instanceof AttackableEntity) {
 				// add the entity back onto the minimap in the new position
 				GameManager.get().getMiniMap().addEntity((BaseEntity) entity);
@@ -185,7 +190,18 @@ public class MoveAction implements DecoAction {
 		return path.get(0).getY();
 	}
 	
+	/**
+	 * Checks if the unit is centered on tile
+	 * @return returns true if centered
+	 */
+	public boolean isCentered() {
+		if (Math.abs(entity.getPosX() - tmpgoalX) < (speed+.01f) && Math.abs(entity.getPosY() - tmpgoalY) < (speed+.01f)) {
+			return true;
+		}
+		return false;	
+	}
 	
+
 	/**
 	 * Prevents the current action from progressing.
 	 */

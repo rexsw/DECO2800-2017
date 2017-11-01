@@ -65,10 +65,10 @@ public class HealthBarTest {
     @Test
     public void SetHealthTest() {
         healthBar = t3.getHealthBar();
-        for (int i = 750; i > 0; i -=75 ) {
+        for (int i = 400; i > 0; i -=40 ) {
             t3.setHealth(i);
             healthBar.update();
-            Assert.assertTrue(healthBar.getState() == i*2/75);
+            Assert.assertTrue(healthBar.getState() == i*2/40);
         }
     }
 

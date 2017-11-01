@@ -11,12 +11,12 @@ public class Snail extends AmbientAnimal{
 	}
 	
 	@Override 
-	public void setDefaultAttributes() {
+	public void setAttributes() {
 		this.setMaxHealth(100);
 		this.setHealth(100);
 		this.setDamage(10);
-		this.setArmor(500);
 		this.setMaxArmor(500);
+		this.setArmor(500);
 		this.setArmorDamage(40);
 		this.setAttackRange(5);
 		this.setAttackSpeed(1);

@@ -47,24 +47,22 @@ public class AmbientAnimal extends Soldier{
 		this.setOwner(0);
 		this.setEntityType(EntityType.UNIT);
 		this.name = "Ambient";
-		setDefaultAttributes();
 		
 	}
 	
-	
+	@Override
 	/**
-	 * 
+	 * set attributs
 	 */
-	public void setDefaultAttributes() {
+	public void setAttributes() {
 		this.setMaxHealth(300);
 		this.setHealth(300);
 		this.setDamage(20);
-		this.setArmor(300);
-		this.setMaxArmor(300);
+		this.setArmor(0);
+		this.setMaxArmor(0);
 		this.setArmorDamage(20);
 		this.setAttackRange(1);
 		this.setAttackSpeed(1);
-		
 		this.setSpeed(0.01f);
 	}
 
@@ -95,21 +93,9 @@ public class AmbientAnimal extends Soldier{
 	
 	@Override
 	public void setHealth(int health) {
-		if (this.health > health) {
-			this.setGotHit(true);
-		}
-		if (health <= 0) {
-			GameManager.get().getWorld().removeEntity(this);
-			if (this.getHealthBar() != null) {
-				GameManager.get().getWorld().removeEntity(this.getHealthBar());
-			}
-			LOGGER.info("DEAD");
+		super.setHealth(health);
+		if (health <= 0 ) {
 			GameManager.get().getWorld().addEntity(new Resource(this.getPosX(), this.getPosY(), 0, 1f, 1f, getDrop()));
-
-		}
-		if (health >= this.getMaxHealth()) {
-			this.health = this.getMaxHealth();
-			return;
 		}
 	}
 	

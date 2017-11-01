@@ -13,12 +13,12 @@ public class Dino extends AmbientAnimal{
 	}
 	
 	@Override 
-	public void setDefaultAttributes() {
+	public void setAttributes() {
 		this.setMaxHealth(300);
 		this.setHealth(300);
 		this.setDamage(20);
-		this.setArmor(0);
-		this.setMaxArmor(0);
+		this.setMaxArmor(450);
+		this.setArmor(450);
 		this.setArmorDamage(20);
 		this.setAttackRange(5);
 		this.setAttackSpeed(1);

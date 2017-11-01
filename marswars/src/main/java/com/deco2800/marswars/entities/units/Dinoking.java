@@ -11,12 +11,12 @@ public class Dinoking extends Dino{
 	}
 	
 	@Override 
-	public void setDefaultAttributes() {
-		this.setMaxHealth(500);
-		this.setHealth(500);
+	public void setAttributes() {
+		this.setMaxHealth(900);
+		this.setHealth(900);
 		this.setDamage(50);
-		this.setArmor(0);
-		this.setMaxArmor(0);
+		this.setMaxArmor(1000);
+		this.setArmor(1000);
 		this.setArmorDamage(20);
 		this.setAttackRange(1);
 		this.setAttackSpeed(1);

@@ -14,12 +14,12 @@ public class Corn extends AmbientAnimal{
 	}
 	
 	@Override  
-	public void setDefaultAttributes() {
+	public void setAttributes() {
 		this.setMaxHealth(50);
 		this.setHealth(50);
 		this.setDamage(200);
-		this.setArmor(0);
 		this.setMaxArmor(0);
+		this.setArmor(0);
 		this.setArmorDamage(0);
 		this.setAttackRange(20);
 		this.setAttackSpeed(1);

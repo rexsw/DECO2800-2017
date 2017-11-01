@@ -14,11 +14,11 @@ public enum BuildingType {
 	WALL(1f, 5, "wall","WallHorizontal"), 
 	GATE(1f, 0, "gate2", "GateHorizontal"), 
 	BASE(3f, 150, "base", "Base"), 
-	BARRACKS(3f, 40, "barracks", "Barracks"), 
+	BARRACKS(3f, 65, "barracks", "Barracks"), 
 	BUNKER(2f, 15, "bunker", "Bunker"), 
-	TURRET(2f, 70, "turret", "Turret"),
-	HEROFACTORY(2f, 50, "herofactory3", "HeroFactory"),// texture value is a placeholder
-	SPACEX(2f, 50, "tech3", "TechBuilding");// texture value is a placeholder
+	TURRET(2f, 45, "turret", "Turret"),
+	HEROFACTORY(2f, 120, "herofactory3", "HeroFactory"),// texture value is a placeholder
+	SPACEX(2f, 85, "tech3", "TechBuilding");// texture value is a placeholder
 
 
 	private final float buildingSize;

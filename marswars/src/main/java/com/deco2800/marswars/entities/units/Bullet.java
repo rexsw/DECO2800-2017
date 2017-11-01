@@ -30,7 +30,7 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     			int areaDamage, int owner, AttackableEntity ownerEntity) {
         super(posX, posY, posZ, 1, 1, 1, target, damage, armorDamage, missileTexture, areaDamage, owner, ownerEntity);
         this.setTexture(missileTexture);
-        this.setSpeed(0.05f); 
+        this.setSpeed(0.25f); 
         this.setTarget(target);
         this.setDamage(damage);
         this.setArmorDamage(armorDamage);
@@ -56,8 +56,8 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
 		boolean find = GameManager.get().getWorld().getEntities().contains(this.getTarget());
 		if (find && currentAction.get().completed()) {
 			// check for the positions
-			boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 0.01;
-			boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 0.01;
+			boolean xPos = Math.abs(this.getTarget().getPosX() - posX) < 1;
+			boolean yPos = Math.abs(this.getTarget().getPosY() - posY) < 1;
 			if (xPos && yPos) {
 				impact();
 				GameManager.get().getWorld().removeEntity(this);
@@ -85,7 +85,6 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
     		addEnemyEntity(this.getareaDamage(), listOfEntity);
     		for (AttackableEntity entity : listOfEntity) {
     			causeDamage(entity, this.getDamageDeal(), this.getArmorDamage());
-    			
     		}
     	}
     }
@@ -129,23 +128,21 @@ public class Bullet extends MissileEntity implements Tickable, HasAction {
      * 			the list to add enemy entity
      */
     public void addEnemyEntity(int areaDamage, List<AttackableEntity> listOfEntity) {
-    	int length = 1 + 2 * areaDamage;
     	BaseWorld world = GameManager.get().getWorld();
     	int posX = (int) this.getTarget().getPosX();
 		int posY = (int) this.getTarget().getPosY();
+		int startX = posX - (areaDamage - 1);
+		int startY = posY - (areaDamage - 1);
+		int endX = posX + (areaDamage - 1);
+		int endY = posY + (areaDamage - 1);
 		// find all the position of the square
-		for (int i = 0; i < length * 2; i++) {
-			for (int y = 0; y < length; y++) {
-				int x =  length - i + length;
-				int currentX = x + posX + areaDamage;
-				int currentY = y + posY + areaDamage;
-				// invalid position
-
-				if (currentX < 0 || currentX > world.getWidth() || currentY > world.getLength()) {
+		for (int x = startX; x <= endX; x++) {
+			for (int y = startY; y <= endY; y++) {
+				if (x < 0 || x > world.getWidth() || y < 0 || y > world.getLength()) {
 					continue;
 				}
 				// check for attackablentity enemy and add them to listOfEntity
-				List<BaseEntity> entitiesList = GameManager.get().getWorld().getEntities(currentX, currentY);
+				List<BaseEntity> entitiesList = GameManager.get().getWorld().getEntities(x, y);
 				if (!entitiesList.isEmpty()) {
 					for (BaseEntity entity: entitiesList) {
 						// need to change the condition at some point

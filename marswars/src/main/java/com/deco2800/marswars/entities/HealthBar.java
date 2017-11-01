@@ -30,7 +30,7 @@ public class HealthBar extends BaseEntity {
 	    if (((Soldier) parentEntity).getLoadStatus() == 1) {
 		setVisible(false);
 	    }
-	}
+		}
         if (!visible) {
             super.setPosition(100000, 0, -4);
             return;

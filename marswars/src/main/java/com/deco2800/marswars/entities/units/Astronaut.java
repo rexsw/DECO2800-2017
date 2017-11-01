@@ -41,8 +41,6 @@ public class Astronaut extends Soldier {
 		super(posX, posY, posZ, owner);
 		this.name = "Astronaut";
 		this.removeActions(ActionType.DAMAGE);
-		this.removeActions(ActionType.ATTACKMOVE);
-		this.setFogRange(10);
 		setAttributes();
 		setStance(0); // Default stance for astronaut is passive
 	}
@@ -103,7 +101,7 @@ public class Astronaut extends Soldier {
 		boolean gatherResource = !entities.isEmpty() && entities.get(0) instanceof Resource;
 		Turret loadTurret = null;
 		for (BaseEntity b : entities) {
-			if (b instanceof Turret) {
+			if (b instanceof Turret && b.sameOwner(this)) {
 				loadTurret = (Turret)b;
 			}
 		}
@@ -124,7 +122,7 @@ public class Astronaut extends Soldier {
 			LOGGER.info("Gather resources");
 			this.setCurrentAction(Optional.of(new GatherAction(this, entities.get(0))));
 		} else {
-			this.setCurrentAction(Optional.of(new MoveAction((int) x, (int) y, this)));
+			this.setAction((new MoveAction((int) x, (int) y, this)));
 			LOGGER.error("Assigned action move to" + x + " " + y);
 		}
 		this.setTexture(defaultTextureName);
@@ -215,8 +213,6 @@ public class Astronaut extends Soldier {
 		}
 		if (health <= 0) {
 			if (this.getAction().isPresent() && (this.getAction().get() instanceof BuildAction || this.getAction().get() instanceof BuildWallAction)) {
-
-					LOGGER.info("TRIED AT LEAST");
 					if (this.getAction().get() instanceof BuildAction) {
 						BuildAction destroyBuild = (BuildAction)this.getAction().get();
 						destroyBuild.cancelBuild();
@@ -226,10 +222,6 @@ public class Astronaut extends Soldier {
 						destroyBuild.cancelBuild();
 						destroyBuild.doAction();
 					}
-					
-					
-					
-
 			}
 			GameBlackBoard black = (GameBlackBoard) GameManager.get().getManager(GameBlackBoard.class);
 			black.updateDead(this);
